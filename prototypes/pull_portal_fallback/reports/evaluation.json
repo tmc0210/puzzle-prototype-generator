@@ -1,0 +1,3056 @@
+{
+  "generatedAt": "2026-06-28T15:25:45.780Z",
+  "prototype": "pull_portal_fallback",
+  "results": [
+    {
+      "levelId": "L01",
+      "title": "First Pull",
+      "solvable": true,
+      "shortestCost": 1,
+      "solutionInputs": [
+        "right"
+      ],
+      "solutionEvents": [
+        "pull_crate:crate#1"
+      ],
+      "probeEvents": [
+        "pull_crate:crate#1",
+        "pull_crate:crate#1"
+      ],
+      "exploredStates": 2,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 4,
+        "legalTransitionCount": 3,
+        "eventOnlyTransitionCount": 4,
+        "winStateCount": 1,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_pull_single_crate",
+          "requiredEvents": [
+            "pull_crate"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "pass",
+              "evidence": "optimal",
+              "reason": "No shortest winning path bypasses the target event constraint."
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_pull_single_crate",
+          "model": "without_pull",
+          "checked": true,
+          "solvable": true,
+          "exploredStates": 2,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "fail",
+            "evidence": "trace",
+            "reason": "Counterfactual variant remains solvable."
+          },
+          "notes": "Counterfactual variant remains solvable."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "returned_solution_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "returned_solution_covers_target_events:K_pull_single_crate",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Returned winning solution satisfies the target event constraint.",
+            "evidenceId": "returned_solution_covers_target_events",
+            "knowledgeId": "K_pull_single_crate"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L02",
+      "title": "No Push",
+      "solvable": true,
+      "shortestCost": 5,
+      "solutionInputs": [
+        "down",
+        "right",
+        "right",
+        "up",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "walk",
+        "walk",
+        "walk",
+        "pull_crate:crate#1"
+      ],
+      "probeEvents": [
+        "push_crate_failed:crate#1"
+      ],
+      "exploredStates": 16,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 28,
+        "legalTransitionCount": 55,
+        "eventOnlyTransitionCount": 10,
+        "winStateCount": 2,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_cannot_push_crate",
+          "requiredEvents": [
+            "push_crate_failed"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": false,
+            "probeTraceCovers": true,
+            "basis": "probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "fail",
+              "evidence": "trace",
+              "reason": "Returned winning solution does not satisfy the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "Returned winning solution does not satisfy the target event constraint; shortest-path universality was not checked."
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "fail",
+              "evidence": "trace",
+              "reason": "A returned winning solution bypasses the target event constraint."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "fail",
+            "evidence": "trace",
+            "reason": "A returned winning solution bypasses the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_cannot_push_crate",
+          "checked": false,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "unknown",
+            "evidence": "unknown",
+            "reason": "No counterfactual model configured."
+          },
+          "notes": "No counterfactual model configured"
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "expected_trace_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "expected_trace_covers_target_events:K_cannot_push_crate",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_cannot_push_crate"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L03",
+      "title": "Open The Hall",
+      "solvable": true,
+      "shortestCost": 2,
+      "solutionInputs": [
+        "right",
+        "right"
+      ],
+      "solutionEvents": [
+        "pull_crate:crate#1",
+        "pull_crate:crate#1"
+      ],
+      "probeEvents": [],
+      "exploredStates": 3,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 4,
+        "legalTransitionCount": 3,
+        "eventOnlyTransitionCount": 4,
+        "winStateCount": 1,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_pull_opens_path",
+          "requiredEvents": [
+            "pull_crate"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "pass",
+              "evidence": "optimal",
+              "reason": "No shortest winning path bypasses the target event constraint."
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_pull_opens_path",
+          "model": "without_pull",
+          "checked": true,
+          "solvable": true,
+          "exploredStates": 3,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "fail",
+            "evidence": "trace",
+            "reason": "Counterfactual variant remains solvable."
+          },
+          "notes": "Counterfactual variant remains solvable."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_pull_opens_path",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_pull_opens_path"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L04",
+      "title": "Clean Portal",
+      "solvable": true,
+      "shortestCost": 2,
+      "solutionInputs": [
+        "right",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_teleport:A->B"
+      ],
+      "probeEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_teleport:A->B"
+      ],
+      "exploredStates": 5,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 12,
+        "legalTransitionCount": 32,
+        "eventOnlyTransitionCount": 0,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_portal_teleports_player",
+          "requiredEvents": [
+            "portal_enter",
+            "portal_teleport"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (2)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_portal_teleports_player",
+          "model": "without_portal_teleport",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 5,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "expected_trace_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "expected_trace_covers_target_events:K_portal_teleports_player",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_portal_teleports_player"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L05",
+      "title": "Blocked Exit",
+      "solvable": true,
+      "shortestCost": 2,
+      "solutionInputs": [
+        "right",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A"
+      ],
+      "probeEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A"
+      ],
+      "exploredStates": 5,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 121,
+        "legalTransitionCount": 291,
+        "eventOnlyTransitionCount": 31,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_blocked_portal_stops_teleport",
+          "requiredEvents": [
+            "portal_enter",
+            "portal_exit_blocked"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (2)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        },
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (2)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_blocked_portal_stops_teleport",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 22,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        },
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 22,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "expected_trace_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "expected_trace_covers_target_events:K_blocked_portal_stops_teleport",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_blocked_portal_stops_teleport"
+          },
+          {
+            "id": "expected_trace_covers_target_events:K_blocked_portal_pushes_entrance",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_blocked_portal_pushes_entrance"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L06",
+      "title": "Build The Block",
+      "solvable": true,
+      "shortestCost": 8,
+      "solutionInputs": [
+        "right",
+        "right",
+        "down",
+        "left",
+        "up",
+        "left",
+        "down",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_teleport:A->B",
+        "pull_crate:crate#1",
+        "walk",
+        "portal_enter:B",
+        "portal_teleport:B->A",
+        "walk",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A"
+      ],
+      "probeEvents": [],
+      "exploredStates": 157,
+      "graphAnalysis": {
+        "status": "exhausted",
+        "reachableStateCount": 100001,
+        "legalTransitionCount": 284088,
+        "eventOnlyTransitionCount": 9600,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        },
+        "reason": "state budget exceeded"
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_use_crate_to_block_portal_exit",
+          "requiredEvents": [
+            "pull_crate",
+            "portal_exit_blocked"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (8)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        },
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (8)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_use_crate_to_block_portal_exit",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 1034,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        },
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 1034,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_use_crate_to_block_portal_exit",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_use_crate_to_block_portal_exit"
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_blocked_portal_pushes_entrance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_blocked_portal_pushes_entrance"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": [
+        "Full graph analysis exhausted budget at 100001 states"
+      ]
+    },
+    {
+      "levelId": "L07",
+      "title": "Portal As Key",
+      "solvable": true,
+      "shortestCost": 5,
+      "solutionInputs": [
+        "right",
+        "right",
+        "down",
+        "left",
+        "up"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_teleport:A->B",
+        "pull_crate:crate#1",
+        "walk",
+        "portal_enter:B",
+        "portal_exit_blocked:B->A",
+        "portal_exit_blocked_by_wall",
+        "portal_fallback_push:B"
+      ],
+      "probeEvents": [],
+      "exploredStates": 23,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 34848,
+        "legalTransitionCount": 110494,
+        "eventOnlyTransitionCount": 4380,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "requiredEvents": [
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (5)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 555,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_move_portal_to_open_path",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_move_portal_to_open_path"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L08",
+      "title": "Jammed Portal",
+      "solvable": true,
+      "shortestCost": 1,
+      "solutionInputs": [
+        "right"
+      ],
+      "solutionEvents": [
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_failed:A"
+      ],
+      "probeEvents": [
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_failed:A"
+      ],
+      "exploredStates": 3,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 2,
+        "legalTransitionCount": 2,
+        "eventOnlyTransitionCount": 1,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_blocked_portal_push_can_fail",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_failed"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (1)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_blocked_portal_push_can_fail",
+          "checked": false,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "unknown",
+            "evidence": "unknown",
+            "reason": "No counterfactual model configured."
+          },
+          "notes": "No counterfactual model configured"
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "expected_trace_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "expected_trace_covers_target_events:K_blocked_portal_push_can_fail",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_blocked_portal_push_can_fail"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L09",
+      "title": "Doorway Portal",
+      "solvable": true,
+      "shortestCost": 7,
+      "solutionInputs": [
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk"
+      ],
+      "probeEvents": [],
+      "exploredStates": 12,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 20,
+        "legalTransitionCount": 34,
+        "eventOnlyTransitionCount": 8,
+        "winStateCount": 2,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "requiredEvents": [
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (7)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 2,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "player_win_standard",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "player_win_standard",
+            "evidenceId": "player_win_standard",
+            "status": "pass",
+            "evidence": "static",
+            "reason": "Level uses player-facing win standard 'player_on_goal'."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_move_portal_to_open_path",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_move_portal_to_open_path"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L10",
+      "title": "Build And Open",
+      "solvable": true,
+      "shortestCost": 8,
+      "solutionInputs": [
+        "right",
+        "right",
+        "down",
+        "left",
+        "up",
+        "left",
+        "down",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_teleport:A->B",
+        "pull_crate:crate#1",
+        "walk",
+        "portal_enter:B",
+        "portal_teleport:B->A",
+        "walk",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A"
+      ],
+      "probeEvents": [],
+      "exploredStates": 57,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 37909,
+        "legalTransitionCount": 90314,
+        "eventOnlyTransitionCount": 5592,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_use_crate_to_block_portal_exit",
+          "requiredEvents": [
+            "pull_crate",
+            "portal_exit_blocked"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (8)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        },
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "requiredEvents": [
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (8)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_use_crate_to_block_portal_exit",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 200,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        },
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 200,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_use_crate_to_block_portal_exit",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_use_crate_to_block_portal_exit"
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_move_portal_to_open_path",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_move_portal_to_open_path"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L11",
+      "title": "Long Doorway",
+      "solvable": true,
+      "shortestCost": 9,
+      "solutionInputs": [
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk"
+      ],
+      "probeEvents": [],
+      "exploredStates": 17,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 27,
+        "legalTransitionCount": 47,
+        "eventOnlyTransitionCount": 10,
+        "winStateCount": 2,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "requiredEvents": [
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (9)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 2,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "player_win_standard",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "player_win_standard",
+            "evidenceId": "player_win_standard",
+            "status": "pass",
+            "evidence": "static",
+            "reason": "Level uses player-facing win standard 'player_on_goal'."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_move_portal_to_open_path",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_move_portal_to_open_path"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L12",
+      "title": "Push Into Jam",
+      "solvable": true,
+      "shortestCost": 4,
+      "solutionInputs": [
+        "right",
+        "right",
+        "right",
+        "down"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:B",
+        "portal_exit_blocked:B->A",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_failed:B"
+      ],
+      "probeEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:B",
+        "portal_exit_blocked:B->A",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_failed:B"
+      ],
+      "exploredStates": 6,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 5,
+        "legalTransitionCount": 7,
+        "eventOnlyTransitionCount": 2,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "pass",
+              "evidence": "optimal",
+              "reason": "No shortest winning path bypasses the target event constraint."
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        },
+        {
+          "knowledgeId": "K_blocked_portal_push_can_fail",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_failed"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "pass",
+              "evidence": "optimal",
+              "reason": "No shortest winning path bypasses the target event constraint."
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 2,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        },
+        {
+          "knowledgeId": "K_blocked_portal_push_can_fail",
+          "checked": false,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "unknown",
+            "evidence": "unknown",
+            "reason": "No counterfactual model configured."
+          },
+          "notes": "No counterfactual model configured"
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "expected_trace_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "expected_trace_covers_target_events:K_blocked_portal_pushes_entrance",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_blocked_portal_pushes_entrance"
+          },
+          {
+            "id": "expected_trace_covers_target_events:K_blocked_portal_push_can_fail",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_blocked_portal_push_can_fail"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L13",
+      "title": "Longer Pull",
+      "solvable": true,
+      "shortestCost": 3,
+      "solutionInputs": [
+        "right",
+        "right",
+        "right"
+      ],
+      "solutionEvents": [
+        "pull_crate:crate#1",
+        "pull_crate:crate#1",
+        "pull_crate:crate#1"
+      ],
+      "probeEvents": [],
+      "exploredStates": 4,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 6,
+        "legalTransitionCount": 5,
+        "eventOnlyTransitionCount": 6,
+        "winStateCount": 1,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_pull_single_crate",
+          "requiredEvents": [
+            "pull_crate"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "pass",
+              "evidence": "optimal",
+              "reason": "No shortest winning path bypasses the target event constraint."
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_pull_single_crate",
+          "model": "without_pull",
+          "checked": true,
+          "solvable": true,
+          "exploredStates": 4,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "fail",
+            "evidence": "trace",
+            "reason": "Counterfactual variant remains solvable."
+          },
+          "notes": "Counterfactual variant remains solvable."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "returned_solution_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "returned_solution_covers_target_events:K_pull_single_crate",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Returned winning solution satisfies the target event constraint.",
+            "evidenceId": "returned_solution_covers_target_events",
+            "knowledgeId": "K_pull_single_crate"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L14",
+      "title": "Hard Stop",
+      "solvable": true,
+      "shortestCost": 1,
+      "solutionInputs": [
+        "right"
+      ],
+      "solutionEvents": [
+        "push_crate_failed:crate#1"
+      ],
+      "probeEvents": [
+        "push_crate_failed:crate#1"
+      ],
+      "exploredStates": 3,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 2,
+        "legalTransitionCount": 1,
+        "eventOnlyTransitionCount": 2,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_cannot_push_crate",
+          "requiredEvents": [
+            "push_crate_failed"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (1)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_cannot_push_crate",
+          "checked": false,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "unknown",
+            "evidence": "unknown",
+            "reason": "No counterfactual model configured."
+          },
+          "notes": "No counterfactual model configured"
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "expected_trace_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "expected_trace_covers_target_events:K_cannot_push_crate",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_cannot_push_crate"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L15",
+      "title": "Sealed Shuttle",
+      "solvable": true,
+      "shortestCost": 3,
+      "solutionInputs": [
+        "right",
+        "right",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_teleport:A->B",
+        "walk"
+      ],
+      "probeEvents": [],
+      "exploredStates": 4,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 5,
+        "legalTransitionCount": 8,
+        "eventOnlyTransitionCount": 0,
+        "winStateCount": 1,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_portal_teleports_player",
+          "requiredEvents": [
+            "portal_enter",
+            "portal_teleport"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (3)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_portal_teleports_player",
+          "model": "without_portal_teleport",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 2,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "player_win_standard",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "player_win_standard",
+            "evidenceId": "player_win_standard",
+            "status": "pass",
+            "evidence": "static",
+            "reason": "Level uses player-facing win standard 'player_on_goal'."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_portal_teleports_player",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_portal_teleports_player"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L16",
+      "title": "Vertical Doorway",
+      "solvable": true,
+      "shortestCost": 4,
+      "solutionInputs": [
+        "down",
+        "down",
+        "down",
+        "down"
+      ],
+      "solutionEvents": [
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_wall",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_wall",
+        "portal_fallback_push:A",
+        "walk"
+      ],
+      "probeEvents": [],
+      "exploredStates": 6,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 6,
+        "legalTransitionCount": 8,
+        "eventOnlyTransitionCount": 1,
+        "winStateCount": 1,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "requiredEvents": [
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (4)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 1,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "player_win_standard",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "player_win_standard",
+            "evidenceId": "player_win_standard",
+            "status": "pass",
+            "evidence": "static",
+            "reason": "Level uses player-facing win standard 'player_on_goal'."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_move_portal_to_open_path",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_move_portal_to_open_path"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L17",
+      "title": "Vertical Jam",
+      "solvable": true,
+      "shortestCost": 1,
+      "solutionInputs": [
+        "down"
+      ],
+      "solutionEvents": [
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_failed:A"
+      ],
+      "probeEvents": [
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_failed:A"
+      ],
+      "exploredStates": 2,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 1,
+        "legalTransitionCount": 0,
+        "eventOnlyTransitionCount": 1,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_blocked_portal_push_can_fail",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_failed"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "pass",
+              "evidence": "optimal",
+              "reason": "No shortest winning path bypasses the target event constraint."
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_blocked_portal_push_can_fail",
+          "checked": false,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "unknown",
+            "evidence": "unknown",
+            "reason": "No counterfactual model configured."
+          },
+          "notes": "No counterfactual model configured"
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "expected_trace_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "expected_trace_covers_target_events:K_blocked_portal_push_can_fail",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_blocked_portal_push_can_fail"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L18",
+      "title": "Very Long Doorway",
+      "solvable": true,
+      "shortestCost": 11,
+      "solutionInputs": [
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk"
+      ],
+      "probeEvents": [],
+      "exploredStates": 22,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 44,
+        "legalTransitionCount": 79,
+        "eventOnlyTransitionCount": 14,
+        "winStateCount": 3,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "requiredEvents": [
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (11)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_move_portal_to_open_path",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 2,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "player_win_standard",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "player_win_standard",
+            "evidenceId": "player_win_standard",
+            "status": "pass",
+            "evidence": "static",
+            "reason": "Level uses player-facing win standard 'player_on_goal'."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_move_portal_to_open_path",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_move_portal_to_open_path"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L19",
+      "title": "Three Push Jam",
+      "solvable": true,
+      "shortestCost": 4,
+      "solutionInputs": [
+        "right",
+        "right",
+        "right",
+        "down"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:B",
+        "portal_exit_blocked:B->A",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_failed:B"
+      ],
+      "probeEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A",
+        "walk",
+        "portal_enter:B",
+        "portal_exit_blocked:B->A",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_failed:B"
+      ],
+      "exploredStates": 6,
+      "graphAnalysis": {
+        "status": "complete",
+        "reachableStateCount": 9,
+        "legalTransitionCount": 14,
+        "eventOnlyTransitionCount": 4,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        }
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (4)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        },
+        {
+          "knowledgeId": "K_blocked_portal_push_can_fail",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_failed"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": true,
+            "basis": "solution_and_probe"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Expected trace satisfies the target event constraint."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (4)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 2,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        },
+        {
+          "knowledgeId": "K_blocked_portal_push_can_fail",
+          "checked": false,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "unknown",
+            "evidence": "unknown",
+            "reason": "No counterfactual model configured."
+          },
+          "notes": "No counterfactual model configured"
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "expected_trace_covers_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "expected_trace_covers_target_events:K_blocked_portal_pushes_entrance",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_blocked_portal_pushes_entrance"
+          },
+          {
+            "id": "expected_trace_covers_target_events:K_blocked_portal_push_can_fail",
+            "status": "pass",
+            "evidence": "trace",
+            "reason": "Expected trace satisfies the target event constraint.",
+            "evidenceId": "expected_trace_covers_target_events",
+            "knowledgeId": "K_blocked_portal_push_can_fail"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": []
+    },
+    {
+      "levelId": "L20",
+      "title": "Wide Build",
+      "solvable": true,
+      "shortestCost": 8,
+      "solutionInputs": [
+        "right",
+        "right",
+        "down",
+        "left",
+        "up",
+        "left",
+        "down",
+        "right"
+      ],
+      "solutionEvents": [
+        "walk",
+        "portal_enter:A",
+        "portal_teleport:A->B",
+        "pull_crate:crate#1",
+        "walk",
+        "portal_enter:B",
+        "portal_teleport:B->A",
+        "walk",
+        "walk",
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_crate:crate#1",
+        "portal_fallback_push:A"
+      ],
+      "probeEvents": [],
+      "exploredStates": 171,
+      "graphAnalysis": {
+        "status": "exhausted",
+        "reachableStateCount": 100001,
+        "legalTransitionCount": 282718,
+        "eventOnlyTransitionCount": 8644,
+        "winStateCount": 0,
+        "budget": {
+          "maxStates": 100000
+        },
+        "reason": "state budget exceeded"
+      },
+      "targetResults": [
+        {
+          "knowledgeId": "K_use_crate_to_block_portal_exit",
+          "requiredEvents": [
+            "pull_crate",
+            "portal_exit_blocked"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (8)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        },
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "requiredEvents": [
+            "portal_exit_blocked",
+            "portal_fallback_push"
+          ],
+          "forbiddenEvents": [],
+          "observations": {
+            "shortestSolutionCovers": true,
+            "probeTraceCovers": false,
+            "basis": "solution"
+          },
+          "metrics": [
+            {
+              "id": "target_event_detector_configured",
+              "status": "pass",
+              "evidence": "static",
+              "reason": "Knowledge declares an executable event constraint."
+            },
+            {
+              "id": "returned_solution_covers_target_events",
+              "status": "pass",
+              "evidence": "trace",
+              "reason": "Returned winning solution satisfies the target event constraint."
+            },
+            {
+              "id": "expected_trace_covers_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "No expected trace was provided."
+            },
+            {
+              "id": "all_shortest_solutions_cover_target_events",
+              "status": "unknown",
+              "evidence": "unknown",
+              "reason": "depth budget exceeded (8)"
+            },
+            {
+              "id": "all_winning_paths_cover_target_events",
+              "status": "pass",
+              "evidence": "full_graph",
+              "reason": "Complete product graph has no winning bypass."
+            }
+          ],
+          "acceptance": {
+            "id": "target_acceptance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Every winning path in the complete product graph satisfies the target event constraint."
+          }
+        }
+      ],
+      "counterfactuals": [
+        {
+          "knowledgeId": "K_use_crate_to_block_portal_exit",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 1596,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        },
+        {
+          "knowledgeId": "K_blocked_portal_pushes_entrance",
+          "model": "without_blocked_portal_push",
+          "checked": true,
+          "solvable": false,
+          "exploredStates": 1596,
+          "metric": {
+            "id": "counterfactual_unsolvable",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Counterfactual variant has no winning path in complete search."
+          },
+          "notes": "Counterfactual variant has no winning path in complete search."
+        }
+      ],
+      "solverContract": {
+        "expected": [
+          "solvable",
+          "all_winning_paths_cover_target_events"
+        ],
+        "metrics": [
+          {
+            "id": "solvable",
+            "evidenceId": "solvable",
+            "status": "pass",
+            "evidence": "optimal",
+            "reason": "Solver found a winning path."
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_use_crate_to_block_portal_exit",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_use_crate_to_block_portal_exit"
+          },
+          {
+            "id": "all_winning_paths_cover_target_events:K_blocked_portal_pushes_entrance",
+            "status": "pass",
+            "evidence": "full_graph",
+            "reason": "Complete product graph has no winning bypass.",
+            "evidenceId": "all_winning_paths_cover_target_events",
+            "knowledgeId": "K_blocked_portal_pushes_entrance"
+          }
+        ],
+        "status": "pass"
+      },
+      "status": "pass",
+      "notes": [
+        "Full graph analysis exhausted budget at 100001 states"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,591 @@
+mechanic: pull_portal_fallback
+status: draft
+target_level_count: 19
+
+target_policy:
+  formal_targets:
+    - F_pull_single_crate
+    - A_reposition_crate_by_pulling
+    - A_clear_choke_by_pulling_crate
+    - P_clear_choke_by_pulling_blocker
+    - F_portals_are_paired
+    - F_portal_teleports_player_to_directional_exit
+    - A_use_portal_to_enter_sealed_region
+    - P_sealed_region_requires_portal_transport
+    - I_blocked_exit_pushes_entrance_portal
+    - A_trigger_blocked_portal_fallback
+    - A_create_blocked_portal_exit_with_crate
+    - I_portal_exit_blocker_controls_entry_behavior
+    - P_remote_blocker_changes_portal_behavior
+    - P_construct_trigger_then_exploit
+    - P_portal_as_movable_door_or_key
+    - A_repeat_fallback_push_to_move_portal
+    - P_repeated_portal_push_corridor
+    - A_predict_and_use_fallback_failure
+    - P_push_until_jam_boundary
+  assumed_rules:
+    - F_player_reaches_goal_to_win
+    - C_cannot_push_crate
+  embedded_boundaries:
+    - C_pull_requires_crate_behind_player
+    - C_pull_requires_free_destination
+    - C_portal_occupies_cell_and_blocks_walking
+    - C_crate_blocks_portal_exit
+    - C_wall_blocks_portal_exit
+    - I_blocked_exit_stops_normal_teleport
+    - C_fallback_push_requires_free_portal_destination
+    - C_blocked_portal_push_can_fail
+  generator_guardrails: []
+  notes: >
+    Rules and constraints are not automatically curriculum goals. Formal targets
+    are reserved for reusable operations, interactions, patterns, and facts that
+    deserve explicit level responsibilities.
+
+assumed_known:
+  - F_player_reaches_goal_to_win
+  - C_cannot_push_crate
+
+ordering_notes: >
+  Draft curriculum plan over player_model targets. Non-curricular constraints
+  may be bundled into a formal goal when they are needed to understand that
+  goal, but they are not standalone teaching goals.
+
+units:
+  - id: pull_foundations
+    title: Pull Foundations
+    description: Establish pulling and the first reusable crate manipulation patterns.
+    goals:
+      - id: G_pull_single_crate
+        target:
+          kind: fact
+          ref: F_pull_single_crate
+        known_before: [F_player_reaches_goal_to_win, C_cannot_push_crate]
+        hard_prerequisites: []
+        role_sequence: [discovery, review]
+        support_level: high
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - solvable
+          - player_win_standard
+          - returned_solution_covers_target_events
+        expected_llm_player_evidence:
+          - forms_target_hypothesis
+          - uses_target_hypothesis_to_finish
+        soft_ordering:
+          locality: local
+          observability: direct
+          mechanism_count: 1
+          state_space_burden: low
+        ordering_rationale: >
+          Pulling is the first active operation; the no-push rule is treated as
+          an assumed rule rather than a standalone lesson.
+
+      - id: G_reposition_crate_by_pulling
+        target:
+          kind: ability
+          ref: A_reposition_crate_by_pulling
+        known_before:
+          - F_player_reaches_goal_to_win
+          - C_cannot_push_crate
+          - F_pull_single_crate
+        hard_prerequisites:
+          - F_pull_single_crate
+          - C_pull_requires_crate_behind_player
+          - C_pull_requires_free_destination
+        role_sequence: [guided_application, independent_application]
+        support_level: medium
+        bundle_with:
+          - C_pull_requires_crate_behind_player
+          - C_pull_requires_free_destination
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - returned_solution_covers_target_events
+        expected_llm_player_evidence:
+          - applies_known_target_without_relearning
+          - forms_subgoal_chain
+        soft_ordering:
+          locality: local
+          observability: direct
+          mechanism_count: 1
+          state_space_burden: low
+        ordering_rationale: >
+          Pull preconditions matter, but they are embedded in the first useful
+          crate repositioning task rather than split into standalone levels.
+
+      - id: G_clear_choke_by_pulling
+        target:
+          kind: ability
+          ref: A_clear_choke_by_pulling_crate
+        known_before:
+          - F_player_reaches_goal_to_win
+          - C_cannot_push_crate
+          - A_reposition_crate_by_pulling
+        hard_prerequisites:
+          - A_reposition_crate_by_pulling
+          - C_cannot_push_crate
+        role_sequence: [guided_application, independent_application]
+        support_level: medium
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - all_winning_paths_cover_target_events
+        expected_llm_player_evidence:
+          - identifies_bottleneck
+          - forms_subgoal_chain
+        soft_ordering:
+          locality: local
+          observability: structural
+          mechanism_count: 1
+          state_space_burden: medium
+        ordering_rationale: >
+          Clearing a choke is the first spatial use of the repositioning ability.
+
+      - id: G_clear_choke_pattern
+        target:
+          kind: pattern
+          ref: P_clear_choke_by_pulling_blocker
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_clear_choke_by_pulling_crate
+        hard_prerequisites:
+          - A_clear_choke_by_pulling_crate
+        role_sequence: [variation_transfer]
+        support_level: low
+        blocked_by_open_questions: []
+        expected_llm_player_evidence:
+          - identifies_bottleneck
+          - applies_known_target_without_relearning
+        soft_ordering:
+          locality: local
+          observability: structural
+          mechanism_count: 1
+          state_space_burden: medium
+        ordering_rationale: >
+          The pattern comes after the ability, so variations test structure
+          recognition rather than rule discovery.
+
+  - id: portal_basics
+    title: Portal Basics
+    description: Establish portal pairing, normal teleportation, and region transport.
+    goals:
+      - id: G_portals_are_paired
+        target:
+          kind: fact
+          ref: F_portals_are_paired
+        known_before: [F_player_reaches_goal_to_win]
+        hard_prerequisites: []
+        role_sequence: [discovery]
+        support_level: high
+        bundle_with:
+          - C_portal_occupies_cell_and_blocks_walking
+        blocked_by_open_questions: []
+        expected_llm_player_evidence:
+          - forms_target_hypothesis
+        soft_ordering:
+          locality: remote
+          observability: indirect
+          mechanism_count: 1
+          state_space_burden: low
+        ordering_rationale: >
+          Pairing is a player-facing fact. The portal-cell walking boundary is
+          bundled into the first portal lesson as an embedded rule.
+
+      - id: G_normal_teleport
+        target:
+          kind: fact
+          ref: F_portal_teleports_player_to_directional_exit
+        known_before:
+          - F_player_reaches_goal_to_win
+          - F_portals_are_paired
+        hard_prerequisites: [F_portals_are_paired]
+        role_sequence: [discovery, guided_application]
+        support_level: high
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - returned_solution_covers_target_events
+        expected_llm_player_evidence:
+          - forms_target_hypothesis
+          - uses_target_hypothesis_to_finish
+        soft_ordering:
+          locality: remote
+          observability: direct
+          mechanism_count: 1
+          state_space_burden: low
+        ordering_rationale: >
+          Normal teleportation is the baseline required before blocked-exit
+          behavior can be meaningful.
+
+      - id: G_use_portal_to_enter_sealed_region
+        target:
+          kind: ability
+          ref: A_use_portal_to_enter_sealed_region
+        known_before:
+          - F_player_reaches_goal_to_win
+          - F_portals_are_paired
+          - F_portal_teleports_player_to_directional_exit
+        hard_prerequisites:
+          - F_portals_are_paired
+          - F_portal_teleports_player_to_directional_exit
+        role_sequence: [guided_application, independent_application]
+        support_level: medium
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - all_winning_paths_cover_target_events
+        expected_llm_player_evidence:
+          - applies_known_target_without_relearning
+          - forms_subgoal_chain
+        soft_ordering:
+          locality: remote
+          observability: structural
+          mechanism_count: 1
+          state_space_burden: medium
+        ordering_rationale: >
+          The first portal ability applies normal teleportation to a simple
+          region-access problem.
+
+      - id: G_sealed_region_pattern
+        target:
+          kind: pattern
+          ref: P_sealed_region_requires_portal_transport
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_use_portal_to_enter_sealed_region
+        hard_prerequisites:
+          - A_use_portal_to_enter_sealed_region
+        role_sequence: [variation_transfer]
+        support_level: low
+        blocked_by_open_questions: []
+        expected_llm_player_evidence:
+          - identifies_bottleneck
+          - applies_known_target_without_relearning
+        soft_ordering:
+          locality: remote
+          observability: structural
+          mechanism_count: 1
+          state_space_burden: medium
+        ordering_rationale: >
+          This pattern checks whether the player recognizes portal transport as
+          the structural solution to separated regions.
+
+  - id: blocked_exit
+    title: Blocked Portal Exit
+    description: Teach the reusable fallback-push interaction; simpler blocked-exit stopping behavior is embedded rather than a standalone lesson.
+    goals:
+      - id: G_blocked_exit_pushes_entrance
+        target:
+          kind: interaction
+          ref: I_blocked_exit_pushes_entrance_portal
+        known_before:
+          - F_player_reaches_goal_to_win
+          - F_portal_teleports_player_to_directional_exit
+        hard_prerequisites:
+          - F_portal_teleports_player_to_directional_exit
+          - I_blocked_exit_stops_normal_teleport
+          - C_fallback_push_requires_free_portal_destination
+        role_sequence: [discovery, guided_application]
+        support_level: high
+        bundle_with:
+          - I_blocked_exit_stops_normal_teleport
+          - C_fallback_push_requires_free_portal_destination
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - expected_trace_covers_target_events
+        expected_llm_player_evidence:
+          - forms_target_hypothesis
+          - uses_target_hypothesis_to_finish
+        soft_ordering:
+          locality: remote
+          observability: direct
+          mechanism_count: 2
+          state_space_burden: medium
+        ordering_rationale: >
+          The entrance-push interaction is the formal target. The simpler
+          blocked-exit-stops-normal-teleport observation and the free-destination
+          requirement are embedded boundaries exposed inside the same lesson.
+
+      - id: G_trigger_blocked_portal_fallback
+        target:
+          kind: ability
+          ref: A_trigger_blocked_portal_fallback
+        known_before:
+          - F_player_reaches_goal_to_win
+          - I_blocked_exit_pushes_entrance_portal
+          - C_fallback_push_requires_free_portal_destination
+        hard_prerequisites:
+          - I_blocked_exit_pushes_entrance_portal
+          - C_fallback_push_requires_free_portal_destination
+        role_sequence: [guided_application, independent_application]
+        support_level: medium
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - returned_solution_covers_target_events
+        expected_llm_player_evidence:
+          - applies_known_target_without_relearning
+          - forms_subgoal_chain
+        soft_ordering:
+          locality: remote
+          observability: direct
+          mechanism_count: 2
+          state_space_burden: medium
+        ordering_rationale: >
+          Triggering fallback is the reusable operation built from the
+          blocked-exit interaction.
+
+  - id: constructed_triggers
+    title: Constructed Triggers
+    description: Turn blocked-exit behavior into player-controlled setup and patterns.
+    goals:
+      - id: G_create_blocked_portal_exit_with_crate
+        target:
+          kind: ability
+          ref: A_create_blocked_portal_exit_with_crate
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_reposition_crate_by_pulling
+          - F_portals_are_paired
+        hard_prerequisites:
+          - A_reposition_crate_by_pulling
+          - C_crate_blocks_portal_exit
+          - F_portals_are_paired
+        role_sequence: [guided_application, independent_application]
+        support_level: medium
+        bundle_with:
+          - C_crate_blocks_portal_exit
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - all_winning_paths_cover_target_events
+        expected_llm_player_evidence:
+          - forms_subgoal_chain
+          - applies_known_target_without_relearning
+        soft_ordering:
+          locality: remote
+          observability: structural
+          mechanism_count: 2
+          state_space_burden: medium
+        ordering_rationale: >
+          The crate-blocks-exit rule is embedded in the more useful ability:
+          deliberately constructing a blocked portal exit.
+
+      - id: G_portal_exit_blocker_controls_entry
+        target:
+          kind: interaction
+          ref: I_portal_exit_blocker_controls_entry_behavior
+        known_before:
+          - F_player_reaches_goal_to_win
+          - C_crate_blocks_portal_exit
+          - I_blocked_exit_stops_normal_teleport
+          - I_blocked_exit_pushes_entrance_portal
+        hard_prerequisites:
+          - C_crate_blocks_portal_exit
+          - I_blocked_exit_stops_normal_teleport
+          - I_blocked_exit_pushes_entrance_portal
+        role_sequence: [guided_application, variation_transfer]
+        support_level: medium
+        blocked_by_open_questions: []
+        expected_llm_player_evidence:
+          - forms_subgoal_chain
+          - identifies_bottleneck
+        soft_ordering:
+          locality: remote
+          observability: structural
+          mechanism_count: 2
+          state_space_burden: medium
+        ordering_rationale: >
+          This generalized interaction comes after the player can deliberately
+          create a remote blocker.
+
+      - id: G_remote_blocker_pattern
+        target:
+          kind: pattern
+          ref: P_remote_blocker_changes_portal_behavior
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_trigger_blocked_portal_fallback
+        hard_prerequisites:
+          - A_trigger_blocked_portal_fallback
+        role_sequence: [variation_transfer]
+        support_level: low
+        blocked_by_open_questions: []
+        expected_llm_player_evidence:
+          - identifies_bottleneck
+          - applies_known_target_without_relearning
+        soft_ordering:
+          locality: remote
+          observability: structural
+          mechanism_count: 2
+          state_space_burden: medium
+        ordering_rationale: >
+          This pattern checks whether the player recognizes the non-local
+          blocker relationship in varied layouts.
+
+      - id: G_construct_trigger_then_exploit
+        target:
+          kind: pattern
+          ref: P_construct_trigger_then_exploit
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_create_blocked_portal_exit_with_crate
+          - A_trigger_blocked_portal_fallback
+        hard_prerequisites:
+          - A_create_blocked_portal_exit_with_crate
+          - A_trigger_blocked_portal_fallback
+        role_sequence: [combination, challenge]
+        support_level: low
+        blocked_by_open_questions: []
+        expected_llm_player_evidence:
+          - identifies_bottleneck
+          - forms_subgoal_chain
+        soft_ordering:
+          locality: mixed
+          observability: structural
+          mechanism_count: 2
+          state_space_burden: high
+        ordering_rationale: >
+          This is the first main combination pattern: set up the exception, then
+          exploit it for progress.
+
+  - id: portal_repositioning
+    title: Portal Repositioning
+    description: Use fallback pushes to move portals through space and reason about jams.
+    goals:
+      - id: G_portal_as_movable_door_or_key
+        target:
+          kind: pattern
+          ref: P_portal_as_movable_door_or_key
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_trigger_blocked_portal_fallback
+        hard_prerequisites:
+          - A_trigger_blocked_portal_fallback
+        role_sequence: [independent_application, variation_transfer]
+        support_level: low
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - all_winning_paths_cover_target_events
+        expected_llm_player_evidence:
+          - identifies_bottleneck
+          - forms_subgoal_chain
+        soft_ordering:
+          locality: regional
+          observability: structural
+          mechanism_count: 2
+          state_space_burden: medium
+        ordering_rationale: >
+          Moving a portal to open a path is the main structural use of fallback
+          push.
+
+      - id: G_repeat_fallback_push_to_move_portal
+        target:
+          kind: ability
+          ref: A_repeat_fallback_push_to_move_portal
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_trigger_blocked_portal_fallback
+          - C_fallback_push_requires_free_portal_destination
+        hard_prerequisites:
+          - A_trigger_blocked_portal_fallback
+          - C_fallback_push_requires_free_portal_destination
+        role_sequence: [guided_application, independent_application]
+        support_level: medium
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - returned_solution_covers_target_events
+        expected_llm_player_evidence:
+          - forms_subgoal_chain
+          - applies_known_target_without_relearning
+        soft_ordering:
+          locality: regional
+          observability: direct
+          mechanism_count: 2
+          state_space_burden: medium
+        ordering_rationale: >
+          Repeated fallback push should come after a single fallback push is
+          already stable.
+
+      - id: G_repeated_portal_push_corridor
+        target:
+          kind: pattern
+          ref: P_repeated_portal_push_corridor
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_repeat_fallback_push_to_move_portal
+        hard_prerequisites:
+          - A_repeat_fallback_push_to_move_portal
+        role_sequence: [variation_transfer, combination]
+        support_level: low
+        blocked_by_open_questions: []
+        expected_llm_player_evidence:
+          - identifies_bottleneck
+          - forms_subgoal_chain
+        soft_ordering:
+          locality: regional
+          observability: structural
+          mechanism_count: 2
+          state_space_burden: high
+        ordering_rationale: >
+          Corridor variations test whether repeated movement generalizes beyond
+          one-step portal movement.
+
+      - id: G_predict_and_use_fallback_failure
+        target:
+          kind: ability
+          ref: A_predict_and_use_fallback_failure
+        known_before:
+          - F_player_reaches_goal_to_win
+          - I_blocked_exit_pushes_entrance_portal
+        hard_prerequisites:
+          - I_blocked_exit_pushes_entrance_portal
+          - C_blocked_portal_push_can_fail
+        role_sequence: [guided_application, independent_application]
+        support_level: medium
+        bundle_with:
+          - C_blocked_portal_push_can_fail
+        blocked_by_open_questions: []
+        expected_solver_evidence:
+          - player_win_standard
+          - expected_trace_covers_target_events
+        expected_llm_player_evidence:
+          - observes_old_model_failure
+          - revises_rule_model
+          - applies_known_target_without_relearning
+        soft_ordering:
+          locality: local
+          observability: direct
+          mechanism_count: 2
+          state_space_burden: medium
+        ordering_rationale: >
+          The failure branch is not a standalone lesson; it is bundled into the
+          ability to predict and use a jam.
+
+      - id: G_push_until_jam_boundary
+        target:
+          kind: pattern
+          ref: P_push_until_jam_boundary
+        known_before:
+          - F_player_reaches_goal_to_win
+          - A_repeat_fallback_push_to_move_portal
+          - A_predict_and_use_fallback_failure
+        hard_prerequisites:
+          - A_repeat_fallback_push_to_move_portal
+          - A_predict_and_use_fallback_failure
+        role_sequence: [challenge]
+        support_level: none
+        blocked_by_open_questions: []
+        expected_llm_player_evidence:
+          - identifies_bottleneck
+          - forms_subgoal_chain
+        soft_ordering:
+          locality: regional
+          observability: structural
+          mechanism_count: 2
+          state_space_burden: high
+        ordering_rationale: >
+          This challenge combines repeated movement with a later failure
+          boundary, so it belongs near the end of the draft sequence.

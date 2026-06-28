@@ -1,0 +1,117 @@
+{
+  "prototype": "pull_portal_fallback",
+  "level": {
+    "id": "dry_v2_s02_portal_discovery",
+    "title": "dry_v2_s02_portal_discovery",
+    "role": "discovery",
+    "status": "candidate",
+    "targets": [
+      "K_portal_teleports_player"
+    ],
+    "supportLevel": "high",
+    "winCondition": {
+      "type": "player_on_goal",
+      "target": "goal",
+      "description": "The player reaches a designated goal cell."
+    }
+  },
+  "initialState": "#########\n#@ A#####\n### B G #\n#########",
+  "solution": {
+    "found": true,
+    "cost": 3,
+    "depth": 3,
+    "exploredStates": 4,
+    "searchStatus": "found",
+    "inputs": [
+      "right",
+      "right",
+      "right"
+    ],
+    "events": [
+      "walk",
+      "portal_enter",
+      "portal_teleport",
+      "walk"
+    ],
+    "eventCounts": {
+      "walk": 2,
+      "portal_enter": 1,
+      "portal_teleport": 1
+    }
+  },
+  "keySnapshots": [
+    {
+      "step": 2,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "#########\n# @A#####\n### B G #\n#########",
+      "after": "#########\n#  A#####\n### B@G #\n#########"
+    }
+  ],
+  "graph": {
+    "status": "complete",
+    "reachableStateCount": 5,
+    "legalTransitionCount": 8,
+    "eventOnlyTransitionCount": 0,
+    "winStateCount": 1,
+    "budget": {
+      "maxStates": 100000
+    }
+  },
+  "counterfactuals": [
+    {
+      "model": "without_pull",
+      "solvable": true,
+      "cost": 3,
+      "exploredStates": 4,
+      "searchStatus": "found"
+    },
+    {
+      "model": "without_blocked_portal_push",
+      "solvable": true,
+      "cost": 3,
+      "exploredStates": 4,
+      "searchStatus": "found"
+    },
+    {
+      "model": "without_portal_teleport",
+      "solvable": false,
+      "exploredStates": 2,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    }
+  ],
+  "targets": [
+    {
+      "targetId": "K_portal_teleports_player",
+      "statement": "玩家进入出口未堵塞的传送门时会被传送到配对传送门出口。",
+      "requiredEvents": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 4,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (3)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 5,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    }
+  ]
+}

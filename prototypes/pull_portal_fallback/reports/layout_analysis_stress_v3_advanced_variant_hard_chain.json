@@ -1,0 +1,325 @@
+{
+  "prototype": "pull_portal_fallback",
+  "level": {
+    "id": "stress_v3_advanced_variant_hard_chain",
+    "title": "stress_v3_advanced_variant_hard_chain",
+    "role": "challenge",
+    "status": "candidate",
+    "targets": [
+      "K_portal_teleports_player",
+      "K_pull_single_crate",
+      "K_blocked_portal_pushes_entrance"
+    ],
+    "supportLevel": "none",
+    "winCondition": {
+      "type": "player_on_goal",
+      "target": "goal",
+      "description": "The player reaches a designated goal cell."
+    }
+  },
+  "initialState": "########\n# A    #\n#     B#\n# @C## #\n###### #\n#####G #\n########",
+  "solution": {
+    "found": true,
+    "cost": 23,
+    "depth": 23,
+    "exploredStates": 438,
+    "searchStatus": "found",
+    "inputs": [
+      "left",
+      "up",
+      "up",
+      "right",
+      "down",
+      "right",
+      "up",
+      "right",
+      "right",
+      "down",
+      "right",
+      "right",
+      "up",
+      "right",
+      "down",
+      "down",
+      "down",
+      "down",
+      "down",
+      "up",
+      "up",
+      "left",
+      "left"
+    ],
+    "events": [
+      "pull_crate",
+      "walk",
+      "walk",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push",
+      "walk",
+      "walk",
+      "pull_crate",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push",
+      "walk",
+      "walk",
+      "pull_crate",
+      "pull_crate",
+      "walk",
+      "walk",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push",
+      "walk",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push",
+      "walk",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push",
+      "walk",
+      "walk",
+      "walk",
+      "portal_enter",
+      "portal_teleport"
+    ],
+    "eventCounts": {
+      "pull_crate": 4,
+      "walk": 13,
+      "portal_enter": 6,
+      "portal_exit_blocked": 5,
+      "portal_fallback_push": 5,
+      "portal_teleport": 1
+    }
+  },
+  "keySnapshots": [
+    {
+      "step": 1,
+      "input": "left",
+      "legal": true,
+      "events": [
+        "pull_crate"
+      ],
+      "before": "########\n# A    #\n#     B#\n# @C## #\n###### #\n#####G #\n########",
+      "after": "########\n# A    #\n#     B#\n#@C ## #\n###### #\n#####G #\n########"
+    },
+    {
+      "step": 4,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "########\n#@A    #\n#     B#\n# C ## #\n###### #\n#####G #\n########",
+      "after": "########\n#@ A   #\n#     B#\n# C ## #\n###### #\n#####G #\n########"
+    },
+    {
+      "step": 7,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "pull_crate"
+      ],
+      "before": "########\n#  A   #\n# @   B#\n# C ## #\n###### #\n#####G #\n########",
+      "after": "########\n# @A   #\n# C   B#\n#   ## #\n###### #\n#####G #\n########"
+    },
+    {
+      "step": 8,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "########\n# @A   #\n# C   B#\n#   ## #\n###### #\n#####G #\n########",
+      "after": "########\n# @ A  #\n# C   B#\n#   ## #\n###### #\n#####G #\n########"
+    },
+    {
+      "step": 11,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "pull_crate"
+      ],
+      "before": "########\n#   A  #\n# C@  B#\n#   ## #\n###### #\n#####G #\n########",
+      "after": "########\n#   A  #\n#  C@ B#\n#   ## #\n###### #\n#####G #\n########"
+    },
+    {
+      "step": 12,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "pull_crate"
+      ],
+      "before": "########\n#   A  #\n#  C@ B#\n#   ## #\n###### #\n#####G #\n########",
+      "after": "########\n#   A  #\n#   C@B#\n#   ## #\n###### #\n#####G #\n########"
+    },
+    {
+      "step": 15,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "########\n#   A @#\n#   C B#\n#   ## #\n###### #\n#####G #\n########",
+      "after": "########\n#   A @#\n#   C  #\n#   ##B#\n###### #\n#####G #\n########"
+    },
+    {
+      "step": 17,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "########\n#   A  #\n#   C @#\n#   ##B#\n###### #\n#####G #\n########",
+      "after": "########\n#   A  #\n#   C @#\n#   ## #\n######B#\n#####G #\n########"
+    },
+    {
+      "step": 19,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "########\n#   A  #\n#   C  #\n#   ##@#\n######B#\n#####G #\n########",
+      "after": "########\n#   A  #\n#   C  #\n#   ##@#\n###### #\n#####GB#\n########"
+    },
+    {
+      "step": 23,
+      "input": "left",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "########\n#   A@ #\n#   C  #\n#   ## #\n###### #\n#####GB#\n########",
+      "after": "########\n#   A  #\n#   C  #\n#   ## #\n###### #\n#####@B#\n########"
+    }
+  ],
+  "graph": {
+    "status": "complete",
+    "reachableStateCount": 1231,
+    "legalTransitionCount": 3078,
+    "eventOnlyTransitionCount": 337,
+    "winStateCount": 14,
+    "budget": {
+      "maxStates": 100000
+    }
+  },
+  "counterfactuals": [
+    {
+      "model": "without_pull",
+      "solvable": false,
+      "exploredStates": 60,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    },
+    {
+      "model": "without_blocked_portal_push",
+      "solvable": false,
+      "exploredStates": 60,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    },
+    {
+      "model": "without_portal_teleport",
+      "solvable": false,
+      "exploredStates": 1173,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    }
+  ],
+  "targets": [
+    {
+      "targetId": "K_portal_teleports_player",
+      "statement": "玩家进入出口未堵塞的传送门时会被传送到配对传送门出口。",
+      "requiredEvents": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 853,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (23)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 2390,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    },
+    {
+      "targetId": "K_pull_single_crate",
+      "statement": "玩家可以把身后相邻的单个箱子向自己的移动方向拉动。",
+      "requiredEvents": [
+        "pull_crate"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 477,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (23)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 1217,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    },
+    {
+      "targetId": "K_blocked_portal_pushes_entrance",
+      "statement": "传送门出口被堵住且入口传送门前方可移动时，进入入口会改为推动入口传送门。",
+      "requiredEvents": [
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 477,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (23)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 1217,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    }
+  ]
+}

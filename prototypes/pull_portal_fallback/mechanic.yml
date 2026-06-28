@@ -1,0 +1,217 @@
+id: pull_portal_fallback
+title: Pull-only crates with blocked portal fallback
+version: 1
+description: >
+  A compact Sokoban-like mechanic set where crates can only be pulled, portals
+  are paired, and blocked portal exits cause the entrance portal to be pushed.
+
+layers:
+  - terrain
+  - target
+  - device
+  - solid
+  - actor
+
+objects:
+  floor:
+    glyph: "."
+    layer: terrain
+    traits: [walkable]
+  wall:
+    glyph: "#"
+    layer: terrain
+    traits: [solid]
+  goal:
+    glyph: "G"
+    layer: target
+    traits: [target]
+  player:
+    glyph: "@"
+    layer: actor
+    traits: [player]
+  crate:
+    glyph: "C"
+    layer: solid
+    traits: [pullable, portal_blocker, goal_fulfiller]
+  portalA:
+    glyph: "A"
+    layer: device
+    traits: [portal, pushable, enterable]
+    vars:
+      group: A
+      pair: portalB
+  portalB:
+    glyph: "B"
+    layer: device
+    traits: [portal, pushable, enterable]
+    vars:
+      group: A
+      pair: portalA
+
+inputs:
+  up:
+    intent: move
+    dir: up
+    cost: 1
+  down:
+    intent: move
+    dir: down
+    cost: 1
+  left:
+    intent: move
+    dir: left
+    cost: 1
+  right:
+    intent: move
+    dir: right
+    cost: 1
+
+rules:
+  - id: walk
+    priority: 10
+    phase: input
+    trigger:
+      input: move
+    when:
+      destination_has_any_trait: [walkable, target]
+      destination_has_no_traits: [solid, portal]
+    effect:
+      move_player: input.dir
+    emits: [walk]
+    effects:
+      reads: [player.position, terrain, target]
+      writes: [player.position]
+      emits: [walk]
+      locality: local
+      reversible: "true"
+
+  - id: pull_single_crate
+    priority: 20
+    phase: input
+    trigger:
+      input: move
+    when:
+      destination_has_any_trait: [walkable, target]
+      destination_has_no_traits: [solid, portal]
+      opposite_cell_has_object: crate
+      player_origin_accepts_object: crate
+    effect:
+      move_player: input.dir
+      move_object_from_opposite_cell_to_player_origin: crate
+    emits: [pull_crate]
+    teaches: [K_pull_single_crate]
+    effects:
+      reads: [player.position, crate.position, terrain, target]
+      writes: [player.position, crate.position]
+      emits: [pull_crate]
+      locality: local
+      reversible: conditional
+
+  - id: cannot_push_crate
+    priority: 30
+    phase: input
+    trigger:
+      input: move
+    when:
+      destination_has_object: crate
+    effect:
+      cancel_action: true
+    emits: [push_crate_failed]
+    teaches: [K_cannot_push_crate]
+    effects:
+      reads: [player.position, crate.position]
+      writes: []
+      emits: [push_crate_failed]
+      locality: local
+      reversible: "true"
+
+  - id: enter_portal
+    priority: 40
+    phase: input
+    trigger:
+      input: move
+    when:
+      destination_has_trait: portal
+    branches:
+      - id: normal_teleport
+        when:
+          paired_portal_exit_has_no_traits: [solid, portal_blocker]
+        effect:
+          teleport_player_to_paired_portal_exit: true
+        emits: [portal_enter, portal_teleport]
+        teaches: [K_portal_teleports_player]
+        effects:
+          reads: [player.position, portal.position, portal.pair]
+          writes: [player.position]
+          emits: [portal_enter, portal_teleport]
+          locality: spatial_nonlocal
+          reversible: conditional
+
+      - id: blocked_exit_push_entrance
+        when:
+          paired_portal_exit_has_any_trait: [solid, portal_blocker]
+          entrance_portal_destination_has_no_traits: [solid, portal, portal_blocker]
+        effect:
+          push_entered_portal: input.dir
+          keep_player_in_place: true
+        emits: [portal_enter, portal_exit_blocked, portal_fallback_push]
+        teaches: [K_blocked_portal_pushes_entrance]
+        effects:
+          reads: [player.position, portal.position, portal.pair, terrain]
+          writes: [portal.position]
+          emits: [portal_enter, portal_exit_blocked, portal_fallback_push]
+          locality: spatial_nonlocal
+          reversible: conditional
+
+      - id: blocked_exit_and_cannot_push
+        when:
+          paired_portal_exit_has_any_trait: [solid, portal_blocker]
+          entrance_portal_destination_has_any_trait: [solid, portal, portal_blocker]
+        effect:
+          cancel_action: true
+        emits: [portal_enter, portal_exit_blocked, portal_fallback_failed]
+        teaches: [K_blocked_portal_push_can_fail]
+        effects:
+          reads: [player.position, portal.position, portal.pair, terrain]
+          writes: []
+          emits: [portal_enter, portal_exit_blocked, portal_fallback_failed]
+          locality: spatial_nonlocal
+          reversible: "true"
+
+win:
+  type: player_on_goal
+  target: goal
+  description: The player reaches a designated goal cell.
+
+counterfactuals:
+  without_pull:
+    disable_rules:
+      - pull_single_crate
+  without_blocked_portal_push:
+    disable_branches:
+      - enter_portal.blocked_exit_push_entrance
+  without_portal_teleport:
+    disable_branches:
+      - enter_portal.normal_teleport
+
+optimizations:
+  reachability_macro:
+    status: unknown
+    requires:
+      - no_side_effect_rules_on_player_travel
+      - player_orientation_irrelevant_or_tracked
+      - travel_cost_can_be_summarized
+    notes: >
+      Portal movement is spatially nonlocal, so a future checker must include
+      harmless portal edges before enabling reachability compression.
+  pull_macro:
+    status: unknown
+    requires:
+      - player_walk_side_effect_free
+      - player_orientation_irrelevant_or_tracked
+      - object_motion_requires_player_adjacency
+
+export:
+  puzzlescript_next:
+    status: planned
+    notes: Exporter should keep rule, event, and knowledge ids as comments.

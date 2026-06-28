@@ -1,0 +1,194 @@
+mechanic: pull_portal_fallback
+status: generated
+generated_by: generate_v2_minimal_seed_structures
+candidates:
+  - id: C_LS01_pull_discovery_pull_line_001
+    spec_id: LS01_pull_discovery
+    title: Pull Discovery Candidate
+    status: verified
+    factory: pull_line
+    seed: 1001
+    motifs:
+      - pull_line
+    layout: |-
+      #####
+      #C@G#
+      #####
+      #####
+    solution_trace:
+      - input: right
+        events:
+          - pull_crate
+    notes: "Minimal pull witness: the player must move away from the crate onto the goal. generated checks: solution_events=pull_crate:crate#1; probe_events=none; solver=found cost 1"
+  - id: C_LS02_reposition_crate_pull_open_side_door_001
+    spec_id: LS02_reposition_crate
+    title: Reposition Crate By Pulling Candidate
+    status: verified
+    factory: pull_line
+    seed: 1102
+    motifs:
+      - pull_line
+      - opened_choke
+      - side_bypass_after_pull
+    layout: |-
+      #######
+      ###G###
+      ###C  #
+      ###@  #
+      ###   #
+      #######
+    solution_trace:
+      - input: down
+        events:
+          - pull_crate
+      - input: right
+        events:
+          - walk
+      - input: up
+        events:
+          - walk
+      - input: up
+        events:
+          - walk
+      - input: left
+        events:
+          - walk
+      - input: up
+        events:
+          - pull_crate
+    notes: "Guided pull application: the crate starts on the only door to the goal; pulling it opens the door, and the player must route around the moved crate to use the opened path. generated checks: solution_events=pull_crate:crate#1,walk,walk,walk,walk,pull_crate:crate#1; probe_events=none; solver=found cost 6"
+  - id: C_LS05_portal_pair_portal_bridge_001
+    spec_id: LS05_portal_pair
+    title: Portal Pair Candidate
+    status: verified
+    factory: portal_bridge
+    seed: 2001
+    motifs:
+      - portal_bridge
+    layout: |-
+      #######
+      #@A#BG#
+      #######
+      #######
+    solution_trace:
+      - input: right
+        events:
+          - portal_enter
+          - portal_teleport
+    notes: "Minimal portal bridge: the portal pair is the only connection to the goal cell. generated checks: solution_events=portal_enter:A,portal_teleport:A->B; probe_events=none; solver=found cost 1"
+  - id: C_LS06_normal_teleport_portal_bridge_001
+    spec_id: LS06_normal_teleport
+    title: Normal Teleport Candidate
+    status: verified
+    factory: portal_bridge
+    seed: 2001
+    motifs:
+      - portal_bridge
+    layout: |-
+      #######
+      #@A#BG#
+      #######
+      #######
+    solution_trace:
+      - input: right
+        events:
+          - portal_enter
+          - portal_teleport
+    notes: "Minimal portal bridge: the portal pair is the only connection to the goal cell. generated checks: solution_events=portal_enter:A,portal_teleport:A->B; probe_events=none; solver=found cost 1"
+  - id: C_LS07_sealed_region_transport_sealed_region_transport_001
+    spec_id: LS07_sealed_region_transport
+    title: Sealed Region Transport Candidate
+    status: verified
+    factory: portal_bridge
+    seed: 2107
+    motifs:
+      - portal_bridge
+      - sealed_region
+      - post_teleport_navigation
+    layout: |-
+      #########
+      #@A#    #
+      ####  G #
+      #   B   #
+      #########
+    solution_trace:
+      - input: right
+        events:
+          - portal_enter
+          - portal_teleport
+      - input: up
+        events:
+          - walk
+      - input: right
+        events:
+          - walk
+    notes: "Guided portal application: the start and goal regions are separated by walls; the portal is the only transfer, and the player must navigate inside the target region after teleporting. generated checks: solution_events=portal_enter:A,portal_teleport:A->B,walk,walk; probe_events=none; solver=found cost 3"
+  - id: C_LS10_blocked_exit_pushes_entrance_fallback_push_gate_001
+    spec_id: LS10_blocked_exit_pushes_entrance
+    title: Blocked Exit Pushes Entrance Candidate
+    status: verified
+    factory: fallback_push_gate
+    seed: 4001
+    motifs:
+      - fallback_push_gate
+    layout: |-
+      #######
+      #   B #
+      # A G #
+      ##@####
+      #######
+    solution_trace:
+      - input: up
+        events:
+          - portal_enter
+          - portal_exit_blocked
+          - portal_fallback_push
+      - input: up
+        events:
+          - walk
+      - input: right
+        events:
+          - walk
+      - input: right
+        events:
+          - walk
+    notes: "Fallback gate: the blocked paired exit pushes the entrance portal into an alcove, opening the path to the goal. generated checks: solution_events=portal_enter:A,portal_exit_blocked:A->B,portal_exit_blocked_by_wall,portal_fallback_push:A,walk,walk,walk; probe_events=none; solver=found cost 4"
+  - id: C_LS11_trigger_fallback_approach_and_trigger_fallback_001
+    spec_id: LS11_trigger_fallback
+    title: Trigger Blocked Portal Fallback Candidate
+    status: verified
+    factory: fallback_push_gate
+    seed: 4111
+    motifs:
+      - fallback_push_gate
+      - approach_from_trigger_side
+      - opened_corridor
+    layout: |-
+      #########
+      ####B####
+      #### ####
+      ####A G##
+      # @  ####
+      #########
+    solution_trace:
+      - input: right
+        events:
+          - walk
+      - input: right
+        events:
+          - walk
+      - input: up
+        events:
+          - portal_enter
+          - portal_exit_blocked
+          - portal_fallback_push
+      - input: up
+        events:
+          - walk
+      - input: right
+        events:
+          - walk
+      - input: right
+        events:
+          - walk
+    notes: "Guided fallback application: the player must approach the entrance from the trigger side, push it into an alcove, then use the opened corridor to reach the goal. generated checks: solution_events=walk,walk,portal_enter:A,portal_exit_blocked:A->B,portal_exit_blocked_by_wall,portal_fallback_push:A,walk,walk,walk; probe_events=none; solver=found cost 6"

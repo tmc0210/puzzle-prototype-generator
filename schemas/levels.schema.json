@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/sokoban/levels.schema.json",
+  "title": "Levels",
+  "type": "object",
+  "required": ["mechanic", "levels"],
+  "additionalProperties": false,
+  "properties": {
+    "mechanic": { "$ref": "#/$defs/id" },
+    "levels": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/level" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "diagnostic",
+        "discovery",
+        "boundary",
+        "guided_application",
+        "independent_application",
+        "variation_transfer",
+        "combination",
+        "challenge",
+        "review",
+        "mechanic_witness"
+      ]
+    },
+    "supportLevel": {
+      "type": "string",
+      "enum": ["none", "low", "medium", "high"]
+    },
+    "solverEvidence": {
+      "type": "string",
+      "enum": [
+        "solvable",
+        "player_win_standard",
+        "target_event_detector_configured",
+        "expected_trace_replays",
+        "returned_solution_covers_target_events",
+        "expected_trace_covers_target_events",
+        "all_shortest_solutions_cover_target_events",
+        "all_winning_paths_cover_target_events",
+        "counterfactual_unsolvable",
+        "full_graph_complete"
+      ]
+    },
+    "llmPlayerEvidence": {
+      "type": "string",
+      "enum": [
+        "tries_old_model",
+        "observes_old_model_failure",
+        "forms_target_hypothesis",
+        "revises_rule_model",
+        "uses_target_hypothesis_to_finish",
+        "applies_known_target_without_relearning",
+        "forms_subgoal_chain",
+        "identifies_bottleneck",
+        "reports_goal_clear",
+        "reports_rule_confusion",
+        "recovers_from_failed_model"
+      ]
+    },
+    "level": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "role",
+        "status",
+        "targets",
+        "known_before",
+        "target_learning",
+        "support_level",
+        "expected_solver_evidence",
+        "expected_llm_player_evidence",
+        "layout"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "role": { "$ref": "#/$defs/role" },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "candidate", "accepted", "rejected"]
+        },
+        "targets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "known_before": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "withheld_until_level": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "target_learning": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "support_level": { "$ref": "#/$defs/supportLevel" },
+        "expected_solver_evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/solverEvidence" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "expected_llm_player_evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/llmPlayerEvidence" },
+          "uniqueItems": true
+        },
+        "failure_interpretation": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
+        "layout": { "type": "string", "minLength": 1 },
+        "win": {
+          "type": "object",
+          "required": ["type"],
+          "additionalProperties": true,
+          "properties": {
+            "type": { "$ref": "#/$defs/id" }
+          }
+        },
+        "legend": {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              { "$ref": "#/$defs/id" },
+              {
+                "type": "array",
+                "items": { "$ref": "#/$defs/id" },
+                "minItems": 1
+              }
+            ]
+          }
+        },
+        "expected_trace": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/expectedStep" }
+        },
+        "expected_events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "design_notes": { "type": "string" },
+        "analysis": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "expectedStep": {
+      "type": "object",
+      "required": ["input"],
+      "additionalProperties": false,
+      "properties": {
+        "input": { "$ref": "#/$defs/id" },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

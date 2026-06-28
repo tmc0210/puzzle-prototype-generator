@@ -1,0 +1,272 @@
+{
+  "prototype": "pull_portal_fallback",
+  "level": {
+    "id": "stress_v3_distinct_medium_combination_try2",
+    "title": "stress_v3_distinct_medium_combination_try2",
+    "role": "combination",
+    "status": "candidate",
+    "targets": [
+      "K_portal_teleports_player",
+      "K_pull_single_crate",
+      "K_blocked_portal_pushes_entrance"
+    ],
+    "supportLevel": "low",
+    "winCondition": {
+      "type": "player_on_goal",
+      "target": "goal",
+      "description": "The player reaches a designated goal cell."
+    }
+  },
+  "initialState": "#########\n###  ####\n#G A@####\n### #####\n#  B   ##\n#    C ##\n#########",
+  "solution": {
+    "found": true,
+    "cost": 7,
+    "depth": 7,
+    "exploredStates": 16,
+    "searchStatus": "found",
+    "inputs": [
+      "up",
+      "left",
+      "down",
+      "right",
+      "up",
+      "left",
+      "left"
+    ],
+    "events": [
+      "walk",
+      "walk",
+      "portal_enter",
+      "portal_teleport",
+      "walk",
+      "walk",
+      "portal_enter",
+      "portal_teleport",
+      "walk"
+    ],
+    "eventCounts": {
+      "walk": 5,
+      "portal_enter": 2,
+      "portal_teleport": 2
+    }
+  },
+  "keySnapshots": [
+    {
+      "step": 3,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "#########\n###@ ####\n#G A ####\n### #####\n#  B   ##\n#    C ##\n#########",
+      "after": "#########\n###  ####\n#G A ####\n### #####\n#  B   ##\n#  @ C ##\n#########"
+    },
+    {
+      "step": 6,
+      "input": "left",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "#########\n###  ####\n#G A ####\n### #####\n#  B@  ##\n#    C ##\n#########",
+      "after": "#########\n###  ####\n#G@A ####\n### #####\n#  B   ##\n#    C ##\n#########"
+    }
+  ],
+  "graph": {
+    "status": "complete",
+    "reachableStateCount": 58,
+    "legalTransitionCount": 122,
+    "eventOnlyTransitionCount": 12,
+    "winStateCount": 4,
+    "budget": {
+      "maxStates": 100000
+    }
+  },
+  "counterfactuals": [
+    {
+      "model": "without_pull",
+      "solvable": true,
+      "cost": 7,
+      "exploredStates": 13,
+      "searchStatus": "found"
+    },
+    {
+      "model": "without_blocked_portal_push",
+      "solvable": true,
+      "cost": 7,
+      "exploredStates": 16,
+      "searchStatus": "found"
+    },
+    {
+      "model": "without_portal_teleport",
+      "solvable": false,
+      "exploredStates": 3,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    }
+  ],
+  "targets": [
+    {
+      "targetId": "K_portal_teleports_player",
+      "statement": "玩家进入出口未堵塞的传送门时会被传送到配对传送门出口。",
+      "requiredEvents": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 22,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (7)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 57,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    },
+    {
+      "targetId": "K_pull_single_crate",
+      "statement": "玩家可以把身后相邻的单个箱子向自己的移动方向拉动。",
+      "requiredEvents": [
+        "pull_crate"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": false,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": true,
+        "cost": 7,
+        "inputs": [
+          "up",
+          "left",
+          "down",
+          "right",
+          "up",
+          "left",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "portal_enter",
+          "portal_teleport",
+          "walk",
+          "walk",
+          "portal_enter",
+          "portal_teleport",
+          "walk"
+        ],
+        "exploredStates": 15,
+        "searchStatus": "found"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": true,
+        "cost": 7,
+        "inputs": [
+          "up",
+          "left",
+          "down",
+          "right",
+          "up",
+          "left",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "portal_enter",
+          "portal_teleport",
+          "walk",
+          "walk",
+          "portal_enter",
+          "portal_teleport",
+          "walk"
+        ],
+        "exploredStates": 15,
+        "searchStatus": "found"
+      }
+    },
+    {
+      "targetId": "K_blocked_portal_pushes_entrance",
+      "statement": "传送门出口被堵住且入口传送门前方可移动时，进入入口会改为推动入口传送门。",
+      "requiredEvents": [
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": false,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": true,
+        "cost": 7,
+        "inputs": [
+          "up",
+          "left",
+          "down",
+          "right",
+          "up",
+          "left",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "portal_enter",
+          "portal_teleport",
+          "walk",
+          "walk",
+          "portal_enter",
+          "portal_teleport",
+          "walk"
+        ],
+        "exploredStates": 15,
+        "searchStatus": "found"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": true,
+        "cost": 7,
+        "inputs": [
+          "up",
+          "left",
+          "down",
+          "right",
+          "up",
+          "left",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "portal_enter",
+          "portal_teleport",
+          "walk",
+          "walk",
+          "portal_enter",
+          "portal_teleport",
+          "walk"
+        ],
+        "exploredStates": 15,
+        "searchStatus": "found"
+      }
+    }
+  ]
+}

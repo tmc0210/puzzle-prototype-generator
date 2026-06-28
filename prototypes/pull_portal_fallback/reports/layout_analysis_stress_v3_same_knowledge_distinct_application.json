@@ -1,0 +1,241 @@
+{
+  "prototype": "pull_portal_fallback",
+  "level": {
+    "id": "stress_v3_same_knowledge_distinct_application",
+    "title": "stress_v3_same_knowledge_distinct_application",
+    "role": "independent_application",
+    "status": "candidate",
+    "targets": [
+      "K_portal_teleports_player",
+      "K_pull_single_crate"
+    ],
+    "supportLevel": "low",
+    "winCondition": {
+      "type": "player_on_goal",
+      "target": "goal",
+      "description": "The player reaches a designated goal cell."
+    }
+  },
+  "initialState": "###########\n####  #####\n####  #####\n####  #  ##\n##@ AC# B #\n#### ###  #\n####G######\n###########",
+  "solution": {
+    "found": true,
+    "cost": 18,
+    "depth": 18,
+    "exploredStates": 37,
+    "searchStatus": "found",
+    "inputs": [
+      "right",
+      "right",
+      "down",
+      "left",
+      "up",
+      "right",
+      "up",
+      "up",
+      "left",
+      "down",
+      "down",
+      "right",
+      "down",
+      "left",
+      "up",
+      "right",
+      "down",
+      "down"
+    ],
+    "events": [
+      "walk",
+      "portal_enter",
+      "portal_teleport",
+      "walk",
+      "walk",
+      "portal_enter",
+      "portal_teleport",
+      "walk",
+      "pull_crate",
+      "pull_crate",
+      "walk",
+      "walk",
+      "walk",
+      "walk",
+      "pull_crate",
+      "portal_enter",
+      "portal_teleport",
+      "walk",
+      "walk",
+      "portal_enter",
+      "portal_teleport",
+      "walk"
+    ],
+    "eventCounts": {
+      "walk": 11,
+      "portal_enter": 4,
+      "portal_teleport": 4,
+      "pull_crate": 3
+    }
+  },
+  "keySnapshots": [
+    {
+      "step": 2,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "###########\n####  #####\n####  #####\n####  #  ##\n## @AC# B #\n#### ###  #\n####G######\n###########",
+      "after": "###########\n####  #####\n####  #####\n####  #  ##\n##  AC# B@#\n#### ###  #\n####G######\n###########"
+    },
+    {
+      "step": 5,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "###########\n####  #####\n####  #####\n####  #  ##\n##  AC# B #\n#### ###@ #\n####G######\n###########",
+      "after": "###########\n####  #####\n####  #####\n####@ #  ##\n##  AC# B #\n#### ###  #\n####G######\n###########"
+    },
+    {
+      "step": 7,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "pull_crate"
+      ],
+      "before": "###########\n####  #####\n####  #####\n#### @#  ##\n##  AC# B #\n#### ###  #\n####G######\n###########",
+      "after": "###########\n####  #####\n#### @#####\n#### C#  ##\n##  A # B #\n#### ###  #\n####G######\n###########"
+    },
+    {
+      "step": 8,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "pull_crate"
+      ],
+      "before": "###########\n####  #####\n#### @#####\n#### C#  ##\n##  A # B #\n#### ###  #\n####G######\n###########",
+      "after": "###########\n#### @#####\n#### C#####\n####  #  ##\n##  A # B #\n#### ###  #\n####G######\n###########"
+    },
+    {
+      "step": 13,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "pull_crate"
+      ],
+      "before": "###########\n####  #####\n#### C#####\n#### @#  ##\n##  A # B #\n#### ###  #\n####G######\n###########",
+      "after": "###########\n####  #####\n####  #####\n#### C#  ##\n##  A@# B #\n#### ###  #\n####G######\n###########"
+    },
+    {
+      "step": 14,
+      "input": "left",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "###########\n####  #####\n####  #####\n#### C#  ##\n##  A@# B #\n#### ###  #\n####G######\n###########",
+      "after": "###########\n####  #####\n####  #####\n#### C#  ##\n##  A #@B #\n#### ###  #\n####G######\n###########"
+    },
+    {
+      "step": 17,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "###########\n####  #####\n####  #####\n#### C# @##\n##  A # B #\n#### ###  #\n####G######\n###########",
+      "after": "###########\n####  #####\n####  #####\n#### C#  ##\n##  A # B #\n####@###  #\n####G######\n###########"
+    }
+  ],
+  "graph": {
+    "status": "complete",
+    "reachableStateCount": 37,
+    "legalTransitionCount": 73,
+    "eventOnlyTransitionCount": 7,
+    "winStateCount": 1,
+    "budget": {
+      "maxStates": 100000
+    }
+  },
+  "counterfactuals": [
+    {
+      "model": "without_pull",
+      "solvable": false,
+      "exploredStates": 11,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    },
+    {
+      "model": "without_blocked_portal_push",
+      "solvable": true,
+      "cost": 18,
+      "exploredStates": 37,
+      "searchStatus": "found"
+    },
+    {
+      "model": "without_portal_teleport",
+      "solvable": false,
+      "exploredStates": 2,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    }
+  ],
+  "targets": [
+    {
+      "targetId": "K_portal_teleports_player",
+      "statement": "玩家进入出口未堵塞的传送门时会被传送到配对传送门出口。",
+      "requiredEvents": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 38,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 38,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    },
+    {
+      "targetId": "K_pull_single_crate",
+      "statement": "玩家可以把身后相邻的单个箱子向自己的移动方向拉动。",
+      "requiredEvents": [
+        "pull_crate"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 36,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 36,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    }
+  ]
+}

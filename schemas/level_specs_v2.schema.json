@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/sokoban/level_specs_v2.schema.json",
+  "title": "LevelSpecsV2",
+  "type": "object",
+  "required": ["mechanic", "status", "curriculum", "specs"],
+  "additionalProperties": false,
+  "properties": {
+    "mechanic": { "$ref": "#/$defs/id" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "reviewed", "active"]
+    },
+    "curriculum": { "type": "string", "enum": ["curriculum_v2"] },
+    "target_level_count": { "type": "integer", "minimum": 1 },
+    "specs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/spec" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "targetKind": {
+      "type": "string",
+      "enum": ["fact", "constraint", "interaction", "ability", "pattern"]
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "diagnostic",
+        "discovery",
+        "boundary",
+        "guided_application",
+        "independent_application",
+        "variation_transfer",
+        "combination",
+        "challenge",
+        "review"
+      ]
+    },
+    "supportLevel": {
+      "type": "string",
+      "enum": ["none", "low", "medium", "high"]
+    },
+    "solverEvidence": {
+      "type": "string",
+      "enum": [
+        "solvable",
+        "player_win_standard",
+        "target_event_detector_configured",
+        "expected_trace_replays",
+        "returned_solution_covers_target_events",
+        "expected_trace_covers_target_events",
+        "all_shortest_solutions_cover_target_events",
+        "all_winning_paths_cover_target_events",
+        "counterfactual_unsolvable",
+        "full_graph_complete"
+      ]
+    },
+    "llmPlayerEvidence": {
+      "type": "string",
+      "enum": [
+        "tries_old_model",
+        "observes_old_model_failure",
+        "forms_target_hypothesis",
+        "revises_rule_model",
+        "uses_target_hypothesis_to_finish",
+        "applies_known_target_without_relearning",
+        "forms_subgoal_chain",
+        "identifies_bottleneck",
+        "reports_goal_clear",
+        "reports_rule_confusion",
+        "recovers_from_failed_model"
+      ]
+    },
+    "targetRef": {
+      "type": "object",
+      "required": ["kind", "ref"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "$ref": "#/$defs/targetKind" },
+        "ref": { "$ref": "#/$defs/id" }
+      }
+    },
+    "idList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/id" },
+      "uniqueItems": true
+    },
+    "textList": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "boardSize": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_width": { "type": "integer", "minimum": 1 },
+        "max_width": { "type": "integer", "minimum": 1 },
+        "min_height": { "type": "integer", "minimum": 1 },
+        "max_height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "generationContract": {
+      "type": "object",
+      "required": [
+        "objective",
+        "win_condition",
+        "structural_requirements"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "objective": {
+          "type": "string",
+          "enum": [
+            "isolate_target",
+            "boundary_probe",
+            "guided_application",
+            "independent_application",
+            "variation_transfer",
+            "combination",
+            "challenge"
+          ]
+        },
+        "win_condition": {
+          "type": "string",
+          "enum": ["prototype_default", "custom"]
+        },
+        "board_size": { "$ref": "#/$defs/boardSize" },
+        "required_objects": { "$ref": "#/$defs/idList" },
+        "allowed_objects": { "$ref": "#/$defs/idList" },
+        "required_rules": { "$ref": "#/$defs/idList" },
+        "allowed_rules": { "$ref": "#/$defs/idList" },
+        "required_branches": { "$ref": "#/$defs/idList" },
+        "allowed_branches": { "$ref": "#/$defs/idList" },
+        "structural_requirements": { "$ref": "#/$defs/textList" },
+        "forbidden_shortcuts": { "$ref": "#/$defs/textList" }
+      }
+    },
+    "eventRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "required": { "$ref": "#/$defs/idList" },
+        "forbidden": { "$ref": "#/$defs/idList" }
+      }
+    },
+    "eventRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "winning_solution": { "$ref": "#/$defs/eventRequirement" },
+        "all_shortest_solutions": { "$ref": "#/$defs/eventRequirement" },
+        "all_winning_paths": { "$ref": "#/$defs/eventRequirement" },
+        "probe_trace": { "$ref": "#/$defs/eventRequirement" },
+        "reachable_witness": { "$ref": "#/$defs/eventRequirement" }
+      }
+    },
+    "objectParticipationScope": {
+      "type": "string",
+      "enum": [
+        "winning_solution",
+        "all_shortest_solutions",
+        "all_winning_paths",
+        "probe_trace"
+      ]
+    },
+    "objectParticipationRequirement": {
+      "type": "object",
+      "required": [
+        "object_type",
+        "role",
+        "min_distinct_instances",
+        "scope"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "object_type": { "$ref": "#/$defs/id" },
+        "role": { "$ref": "#/$defs/id" },
+        "min_distinct_instances": { "type": "integer", "minimum": 1 },
+        "scope": { "$ref": "#/$defs/objectParticipationScope" },
+        "event_type": { "$ref": "#/$defs/id" }
+      }
+    },
+    "evidenceContract": {
+      "type": "object",
+      "required": ["solver", "llm_player", "graph_scope", "event_requirements"],
+      "additionalProperties": false,
+      "properties": {
+        "solver": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/solverEvidence" },
+          "uniqueItems": true
+        },
+        "llm_player": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/llmPlayerEvidence" },
+          "uniqueItems": true
+        },
+        "graph_scope": {
+          "type": "string",
+          "enum": [
+            "full_graph_required",
+            "bounded_full_graph_preferred",
+            "trace_ok",
+            "not_applicable"
+          ]
+        },
+        "event_requirements": { "$ref": "#/$defs/eventRequirements" },
+        "object_participation_requirements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/objectParticipationRequirement" },
+          "minItems": 1
+        }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "required": [
+        "requires_player_win_standard",
+        "requires_target_on_solution_path",
+        "requires_no_event_win"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "requires_player_win_standard": { "type": "boolean" },
+        "requires_target_on_solution_path": { "type": "boolean" },
+        "requires_no_event_win": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "status",
+        "primary_goal",
+        "role",
+        "support_level",
+        "focus_targets",
+        "known_before",
+        "introduces",
+        "practices",
+        "assesses",
+        "generation_contract",
+        "evidence_contract",
+        "acceptance",
+        "blocked_by_open_questions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "ready_for_generation",
+            "generated",
+            "accepted",
+            "rejected"
+          ]
+        },
+        "primary_goal": { "$ref": "#/$defs/id" },
+        "secondary_goals": { "$ref": "#/$defs/idList" },
+        "role": { "$ref": "#/$defs/role" },
+        "support_level": { "$ref": "#/$defs/supportLevel" },
+        "focus_targets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/targetRef" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "known_before": { "$ref": "#/$defs/idList" },
+        "introduces": { "$ref": "#/$defs/idList" },
+        "practices": { "$ref": "#/$defs/idList" },
+        "assesses": { "$ref": "#/$defs/idList" },
+        "generation_contract": { "$ref": "#/$defs/generationContract" },
+        "evidence_contract": { "$ref": "#/$defs/evidenceContract" },
+        "acceptance": { "$ref": "#/$defs/acceptance" },
+        "blocked_by_open_questions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

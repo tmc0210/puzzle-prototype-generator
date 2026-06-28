@@ -1,0 +1,85 @@
+id: __mechanic_id__
+title: __MechanicPascal__
+version: 1
+description: >
+  TODO: summarize the confirmed mechanism in player-facing and implementation terms.
+
+layers:
+  - terrain
+  - target
+  - actor
+  - object
+
+objects:
+  floor:
+    glyph: "."
+    layer: terrain
+    traits: [walkable]
+  wall:
+    glyph: "#"
+    layer: terrain
+    traits: [solid]
+  goal:
+    glyph: "G"
+    layer: target
+    traits: [target]
+  player:
+    glyph: "@"
+    layer: actor
+    traits: [player]
+
+inputs:
+  up:
+    intent: move
+    dir: up
+    cost: 1
+  down:
+    intent: move
+    dir: down
+    cost: 1
+  left:
+    intent: move
+    dir: left
+    cost: 1
+  right:
+    intent: move
+    dir: right
+    cost: 1
+
+rules:
+  - id: smoke_rule
+    priority: 10
+    phase: input
+    trigger:
+      input: move
+    effect:
+      TODO: replace_with_confirmed_rule_effect
+    emits: [smoke_event]
+    effects:
+      reads: [player.position]
+      writes: [player.position]
+      emits: [smoke_event]
+      locality: local
+      reversible: unknown
+
+win:
+  type: player_on_goal
+  target: goal
+  description: The player reaches a designated goal cell.
+
+counterfactuals: {}
+
+optimizations:
+  reachability_macro:
+    status: unknown
+    requires:
+      - player_walk_side_effect_free
+      - player_orientation_irrelevant_or_tracked
+      - travel_cost_can_be_summarized
+    notes: >
+      Do not enable until the adapter and rule summaries prove the preconditions.
+
+export:
+  puzzlescript_next:
+    status: unavailable
+    notes: Implement this mechanism's exporter before relying on game.ps.

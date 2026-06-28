@@ -1,0 +1,479 @@
+title Pull-only crates with blocked portal fallback
+author Codex
+homepage https://example.local/sokoban
+
+// Generated from pull_portal_fallback.
+// Runtime-backed playable and solver reports are authoritative.
+// This PuzzleScript Next export is a conservative fixture adapter for the
+// current pull_portal_fallback prototype.
+// It uses a global Done object to support both event-style witness levels
+// and crate-on-goal levels in one exported file.
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGRAY
+.....
+.....
+.....
+.....
+.....
+
+Wall
+DARKGRAY
+00000
+00000
+00000
+00000
+00000
+
+Target
+YELLOW
+..0..
+.000.
+00000
+.000.
+..0..
+
+Player
+BLUE
+..0..
+.000.
+00000
+.0.0.
+.0.0.
+
+Crate
+BROWN
+00000
+0...0
+0...0
+0...0
+00000
+
+PortalA
+PURPLE
+.000.
+0...0
+0...0
+0...0
+.000.
+
+PortalB
+GREEN
+.000.
+0...0
+0...0
+0...0
+.000.
+
+PortalD
+PURPLE
+.000.
+0...0
+0...0
+0...0
+.000.
+
+PortalE
+GREEN
+.000.
+0...0
+0...0
+0...0
+.000.
+
+PortalH
+PURPLE
+.000.
+0...0
+0...0
+0...0
+.000.
+
+PortalI
+GREEN
+.000.
+0...0
+0...0
+0...0
+.000.
+
+DirRight
+transparent
+
+DirLeft
+transparent
+
+DirUp
+transparent
+
+DirDown
+transparent
+
+Done
+transparent
+
+========
+LEGEND
+========
+
+. = Background
+# = Wall
+G = Target
+@ = Player
+C = Crate
+A = PortalA
+B = PortalB
+D = PortalD
+E = PortalE
+H = PortalH
+I = PortalI
+
+Portal = PortalA or PortalB or PortalD or PortalE or PortalH or PortalI
+Marker = DirRight or DirLeft or DirUp or DirDown
+Blocking = Wall or Crate or PortalA or PortalB or PortalD or PortalE or PortalH or PortalI
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Marker, Done
+PortalA, PortalB, PortalD, PortalE, PortalH, PortalI
+Wall, Crate
+Player
+
+=======
+RULES
+=======
+
+// @rule cannot_push_crate
+// @emits push_crate_failed
+[ > Player | Crate ] -> CANCEL
+[ > Player | Wall ] -> CANCEL
+
+// @rule pull_single_crate
+// @emits pull_crate
+// The player moves away from an adjacent crate, pulling it into the old player cell.
+[ Crate | > Player | no Blocking no Player ] -> [ > Crate | > Player | ]
+
+// Direction markers preserve the attempted portal entry direction until late rules.
+right [ > Player | PortalA ] -> [ > Player | PortalA DirRight ]
+left [ > Player | PortalA ] -> [ > Player | PortalA DirLeft ]
+up [ > Player | PortalA ] -> [ > Player | PortalA DirUp ]
+down [ > Player | PortalA ] -> [ > Player | PortalA DirDown ]
+
+right [ > Player | PortalB ] -> [ > Player | PortalB DirRight ]
+left [ > Player | PortalB ] -> [ > Player | PortalB DirLeft ]
+up [ > Player | PortalB ] -> [ > Player | PortalB DirUp ]
+down [ > Player | PortalB ] -> [ > Player | PortalB DirDown ]
+
+right [ > Player | PortalD ] -> [ > Player | PortalD DirRight ]
+left [ > Player | PortalD ] -> [ > Player | PortalD DirLeft ]
+up [ > Player | PortalD ] -> [ > Player | PortalD DirUp ]
+down [ > Player | PortalD ] -> [ > Player | PortalD DirDown ]
+
+right [ > Player | PortalE ] -> [ > Player | PortalE DirRight ]
+left [ > Player | PortalE ] -> [ > Player | PortalE DirLeft ]
+up [ > Player | PortalE ] -> [ > Player | PortalE DirUp ]
+down [ > Player | PortalE ] -> [ > Player | PortalE DirDown ]
+
+right [ > Player | PortalH ] -> [ > Player | PortalH DirRight ]
+left [ > Player | PortalH ] -> [ > Player | PortalH DirLeft ]
+up [ > Player | PortalH ] -> [ > Player | PortalH DirUp ]
+down [ > Player | PortalH ] -> [ > Player | PortalH DirDown ]
+
+right [ > Player | PortalI ] -> [ > Player | PortalI DirRight ]
+left [ > Player | PortalI ] -> [ > Player | PortalI DirLeft ]
+up [ > Player | PortalI ] -> [ > Player | PortalI DirUp ]
+down [ > Player | PortalI ] -> [ > Player | PortalI DirDown ]
+
+// @rule enter_portal.normal_teleport
+// @emits portal_enter portal_teleport
+late right [ Player PortalA DirRight ] [ PortalB | no Blocking no Player ] -> [ PortalA ] [ PortalB | Player Done ]
+late left  [ Player PortalA DirLeft  ] [ PortalB | no Blocking no Player ] -> [ PortalA ] [ PortalB | Player Done ]
+late up    [ Player PortalA DirUp    ] [ PortalB | no Blocking no Player ] -> [ PortalA ] [ PortalB | Player Done ]
+late down  [ Player PortalA DirDown  ] [ PortalB | no Blocking no Player ] -> [ PortalA ] [ PortalB | Player Done ]
+
+late right [ Player PortalB DirRight ] [ PortalA | no Blocking no Player ] -> [ PortalB ] [ PortalA | Player Done ]
+late left  [ Player PortalB DirLeft  ] [ PortalA | no Blocking no Player ] -> [ PortalB ] [ PortalA | Player Done ]
+late up    [ Player PortalB DirUp    ] [ PortalA | no Blocking no Player ] -> [ PortalB ] [ PortalA | Player Done ]
+late down  [ Player PortalB DirDown  ] [ PortalA | no Blocking no Player ] -> [ PortalB ] [ PortalA | Player Done ]
+
+late right [ Player PortalD DirRight ] [ PortalE | no Blocking no Player ] -> [ PortalD ] [ PortalE | Player Done ]
+late left  [ Player PortalD DirLeft  ] [ PortalE | no Blocking no Player ] -> [ PortalD ] [ PortalE | Player Done ]
+late up    [ Player PortalD DirUp    ] [ PortalE | no Blocking no Player ] -> [ PortalD ] [ PortalE | Player Done ]
+late down  [ Player PortalD DirDown  ] [ PortalE | no Blocking no Player ] -> [ PortalD ] [ PortalE | Player Done ]
+
+late right [ Player PortalE DirRight ] [ PortalD | no Blocking no Player ] -> [ PortalE ] [ PortalD | Player Done ]
+late left  [ Player PortalE DirLeft  ] [ PortalD | no Blocking no Player ] -> [ PortalE ] [ PortalD | Player Done ]
+late up    [ Player PortalE DirUp    ] [ PortalD | no Blocking no Player ] -> [ PortalE ] [ PortalD | Player Done ]
+late down  [ Player PortalE DirDown  ] [ PortalD | no Blocking no Player ] -> [ PortalE ] [ PortalD | Player Done ]
+
+late right [ Player PortalH DirRight ] [ PortalI | no Blocking no Player ] -> [ PortalH ] [ PortalI | Player Done ]
+late left  [ Player PortalH DirLeft  ] [ PortalI | no Blocking no Player ] -> [ PortalH ] [ PortalI | Player Done ]
+late up    [ Player PortalH DirUp    ] [ PortalI | no Blocking no Player ] -> [ PortalH ] [ PortalI | Player Done ]
+late down  [ Player PortalH DirDown  ] [ PortalI | no Blocking no Player ] -> [ PortalH ] [ PortalI | Player Done ]
+
+late right [ Player PortalI DirRight ] [ PortalH | no Blocking no Player ] -> [ PortalI ] [ PortalH | Player Done ]
+late left  [ Player PortalI DirLeft  ] [ PortalH | no Blocking no Player ] -> [ PortalI ] [ PortalH | Player Done ]
+late up    [ Player PortalI DirUp    ] [ PortalH | no Blocking no Player ] -> [ PortalI ] [ PortalH | Player Done ]
+late down  [ Player PortalI DirDown  ] [ PortalH | no Blocking no Player ] -> [ PortalI ] [ PortalH | Player Done ]
+
+// @rule enter_portal.blocked_exit_push_entrance
+// @emits portal_enter portal_exit_blocked portal_fallback_push
+// If the paired portal's exit cell is blocked, push the entrance portal instead.
+late right [ Player PortalA DirRight | no Blocking no Player ] [ PortalB | Blocking ] -> [ Player | PortalA Done ] [ PortalB | Blocking ]
+late left  [ Player PortalA DirLeft  | no Blocking no Player ] [ PortalB | Blocking ] -> [ Player | PortalA Done ] [ PortalB | Blocking ]
+late up    [ Player PortalA DirUp    | no Blocking no Player ] [ PortalB | Blocking ] -> [ Player | PortalA Done ] [ PortalB | Blocking ]
+late down  [ Player PortalA DirDown  | no Blocking no Player ] [ PortalB | Blocking ] -> [ Player | PortalA Done ] [ PortalB | Blocking ]
+
+late right [ Player PortalB DirRight | no Blocking no Player ] [ PortalA | Blocking ] -> [ Player | PortalB Done ] [ PortalA | Blocking ]
+late left  [ Player PortalB DirLeft  | no Blocking no Player ] [ PortalA | Blocking ] -> [ Player | PortalB Done ] [ PortalA | Blocking ]
+late up    [ Player PortalB DirUp    | no Blocking no Player ] [ PortalA | Blocking ] -> [ Player | PortalB Done ] [ PortalA | Blocking ]
+late down  [ Player PortalB DirDown  | no Blocking no Player ] [ PortalA | Blocking ] -> [ Player | PortalB Done ] [ PortalA | Blocking ]
+
+late right [ Player PortalD DirRight | no Blocking no Player ] [ PortalE | Blocking ] -> [ Player | PortalD Done ] [ PortalE | Blocking ]
+late left  [ Player PortalD DirLeft  | no Blocking no Player ] [ PortalE | Blocking ] -> [ Player | PortalD Done ] [ PortalE | Blocking ]
+late up    [ Player PortalD DirUp    | no Blocking no Player ] [ PortalE | Blocking ] -> [ Player | PortalD Done ] [ PortalE | Blocking ]
+late down  [ Player PortalD DirDown  | no Blocking no Player ] [ PortalE | Blocking ] -> [ Player | PortalD Done ] [ PortalE | Blocking ]
+
+late right [ Player PortalE DirRight | no Blocking no Player ] [ PortalD | Blocking ] -> [ Player | PortalE Done ] [ PortalD | Blocking ]
+late left  [ Player PortalE DirLeft  | no Blocking no Player ] [ PortalD | Blocking ] -> [ Player | PortalE Done ] [ PortalD | Blocking ]
+late up    [ Player PortalE DirUp    | no Blocking no Player ] [ PortalD | Blocking ] -> [ Player | PortalE Done ] [ PortalD | Blocking ]
+late down  [ Player PortalE DirDown  | no Blocking no Player ] [ PortalD | Blocking ] -> [ Player | PortalE Done ] [ PortalD | Blocking ]
+
+late right [ Player PortalH DirRight | no Blocking no Player ] [ PortalI | Blocking ] -> [ Player | PortalH Done ] [ PortalI | Blocking ]
+late left  [ Player PortalH DirLeft  | no Blocking no Player ] [ PortalI | Blocking ] -> [ Player | PortalH Done ] [ PortalI | Blocking ]
+late up    [ Player PortalH DirUp    | no Blocking no Player ] [ PortalI | Blocking ] -> [ Player | PortalH Done ] [ PortalI | Blocking ]
+late down  [ Player PortalH DirDown  | no Blocking no Player ] [ PortalI | Blocking ] -> [ Player | PortalH Done ] [ PortalI | Blocking ]
+
+late right [ Player PortalI DirRight | no Blocking no Player ] [ PortalH | Blocking ] -> [ Player | PortalI Done ] [ PortalH | Blocking ]
+late left  [ Player PortalI DirLeft  | no Blocking no Player ] [ PortalH | Blocking ] -> [ Player | PortalI Done ] [ PortalH | Blocking ]
+late up    [ Player PortalI DirUp    | no Blocking no Player ] [ PortalH | Blocking ] -> [ Player | PortalI Done ] [ PortalH | Blocking ]
+late down  [ Player PortalI DirDown  | no Blocking no Player ] [ PortalH | Blocking ] -> [ Player | PortalI Done ] [ PortalH | Blocking ]
+
+// Crate-goal levels use the same Done-based win adapter.
+late [ Crate Target ] -> [ Crate Target Done ]
+late [ Player Target ] -> [ Player Target Done ]
+
+// Clean up stale markers when no portal adapter rule consumed them.
+late [ Marker ] -> []
+
+// Exported knowledge ids:
+// - K_pull_single_crate: 玩家可以把身后相邻的单个箱子向自己的移动方向拉动。
+// - K_cannot_push_crate: 玩家不能推动前方的箱子。
+// - K_pull_opens_path: 玩家可以通过拉开堵路箱子制造通路。
+// - K_portal_teleports_player: 玩家进入出口未堵塞的传送门时会被传送到配对传送门出口。
+// - K_blocked_portal_stops_teleport: 传送门出口被堵住时，玩家不会正常传送。
+// - K_blocked_portal_pushes_entrance: 传送门出口被堵住且入口传送门前方可移动时，进入入口会改为推动入口传送门。
+// - K_blocked_portal_push_can_fail: 如果传送门出口被堵住且入口传送门也推不动，那么进入传送门的动作失败。
+// - K_use_crate_to_block_portal_exit: 玩家可以故意把箱子拉到传送门出口，从而触发堵塞出口行为。
+// - K_move_portal_to_open_path: 玩家可以利用堵塞出口的 fallback 推动入口传送门，从而改变可达区域。
+
+=============
+WINCONDITIONS
+=============
+
+Some Done
+
+=======
+LEVELS
+=======
+
+// L01: First Pull
+// role: discovery
+// targets: K_pull_single_crate
+// win: mechanic default
+#######
+#C@G..#
+#######
+
+// L02: No Push
+// role: boundary
+// targets: K_cannot_push_crate
+// win: mechanic default
+########
+#@C.G..#
+#...####
+#......#
+########
+
+// L03: Open The Hall
+// role: guided_application
+// targets: K_pull_opens_path
+// win: mechanic default
+########
+#.C@.G.#
+########
+
+// L04: Clean Portal
+// role: discovery
+// targets: K_portal_teleports_player
+// win: {"type":"event_occurs","event":"portal_teleport"}
+#########
+#@.A....#
+#...B.G.#
+#########
+
+// L05: Blocked Exit
+// role: discovery
+// targets: K_blocked_portal_stops_teleport, K_blocked_portal_pushes_entrance
+// win: {"type":"event_occurs","event":"portal_fallback_push"}
+#########
+#@.A....#
+#...BC..#
+#########
+
+// L06: Build The Block
+// role: guided_application
+// targets: K_use_crate_to_block_portal_exit, K_blocked_portal_pushes_entrance
+// win: {"type":"event_occurs","event":"portal_fallback_push"}
+############
+#..........#
+#.@.A......#
+#....C.....#
+#...B......#
+#..........#
+############
+
+// L07: Portal As Key
+// role: combination
+// targets: K_move_portal_to_open_path
+// win: {"type":"event_occurs","event":"portal_fallback_push"}
+############
+#@.A.......#
+#....C.....#
+#...B......#
+#..........#
+############
+
+// L08: Jammed Portal
+// role: boundary
+// targets: K_blocked_portal_push_can_fail
+// win: {"type":"event_occurs","event":"portal_fallback_failed"}
+########
+#.@A#..#
+###BC###
+########
+
+// L09: Doorway Portal
+// role: guided_application
+// targets: K_move_portal_to_open_path
+// win: {"type":"player_on_goal"}
+#########
+#@.A.G..#
+###BC####
+#########
+
+// L10: Build And Open
+// role: combination
+// targets: K_use_crate_to_block_portal_exit, K_move_portal_to_open_path
+// win: {"type":"event_occurs","event":"portal_fallback_push"}
+############
+###..#.....#
+#.@.A.G...#
+#....C######
+####B.######
+#..........#
+############
+
+// L11: Long Doorway
+// role: variation_transfer
+// targets: K_move_portal_to_open_path
+// win: {"type":"player_on_goal"}
+###########
+#@.A..G..#
+###BC#####
+###########
+
+// L12: Push Into Jam
+// role: boundary
+// targets: K_blocked_portal_pushes_entrance, K_blocked_portal_push_can_fail
+// win: {"type":"event_occurs","event":"portal_fallback_failed"}
+##########
+#@.A.#...#
+###BC#####
+##########
+
+// L13: Longer Pull
+// role: review
+// targets: K_pull_single_crate
+// win: mechanic default
+##########
+#.C@..G..#
+##########
+
+// L14: Hard Stop
+// role: boundary
+// targets: K_cannot_push_crate
+// win: {"type":"event_occurs","event":"push_crate_failed"}
+#######
+#.@C..#
+#######
+
+// L15: Sealed Shuttle
+// role: independent_application
+// targets: K_portal_teleports_player
+// win: {"type":"player_on_goal"}
+#########
+#@.A#####
+###.B.G.#
+#########
+
+// L16: Vertical Doorway
+// role: variation_transfer
+// targets: K_move_portal_to_open_path
+// win: {"type":"player_on_goal"}
+#####
+##@##
+##A##
+##G##
+#B.##
+#####
+
+// L17: Vertical Jam
+// role: boundary
+// targets: K_blocked_portal_push_can_fail
+// win: {"type":"event_occurs","event":"portal_fallback_failed"}
+#####
+##@##
+##A##
+##B##
+##C##
+#####
+
+// L18: Very Long Doorway
+// role: challenge
+// targets: K_move_portal_to_open_path
+// win: {"type":"player_on_goal"}
+############
+#@.A...G...#
+###BC#######
+############
+
+// L19: Three Push Jam
+// role: challenge
+// targets: K_blocked_portal_pushes_entrance, K_blocked_portal_push_can_fail
+// win: {"type":"event_occurs","event":"portal_fallback_failed"}
+############
+#@.A..#....#
+###BC#######
+############
+
+// L20: Wide Build
+// role: challenge
+// targets: K_use_crate_to_block_portal_exit, K_blocked_portal_pushes_entrance
+// win: {"type":"event_occurs","event":"portal_fallback_push"}
+##############
+#............#
+#..@.A.......#
+#.....C......#
+#....B.......#
+#............#
+##############
+

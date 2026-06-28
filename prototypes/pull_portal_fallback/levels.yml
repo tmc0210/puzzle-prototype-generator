@@ -1,0 +1,717 @@
+mechanic: pull_portal_fallback
+
+levels:
+  - id: L01
+    title: First Pull
+    role: discovery
+    status: candidate
+    targets: [K_pull_single_crate]
+    known_before: []
+    target_learning: [K_pull_single_crate]
+    support_level: high
+    expected_solver_evidence:
+      - solvable
+      - returned_solution_covers_target_events
+    expected_llm_player_evidence:
+      - forms_target_hypothesis
+      - uses_target_hypothesis_to_finish
+    failure_interpretation:
+      no_pull_hypothesis: pull_motion_not_telegraphed
+      solves_without_pull: target_not_required
+    layout: |
+      #######
+      #C@G  #
+      #######
+    expected_trace:
+      - input: right
+        events: [pull_crate]
+      - input: right
+        events: [pull_crate]
+    expected_events: [pull_crate]
+    design_notes: >
+      Minimal pull witness. Solver should verify whether the current win
+      condition and layout produce the intended crate-on-goal result.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L02
+    title: No Push
+    role: boundary
+    status: candidate
+    targets: [K_cannot_push_crate]
+    known_before: [K_pull_single_crate]
+    withheld_until_level: [K_cannot_push_crate]
+    target_learning: [K_cannot_push_crate]
+    support_level: high
+    expected_solver_evidence:
+      - solvable
+      - expected_trace_covers_target_events
+    expected_llm_player_evidence:
+      - tries_old_model
+      - observes_old_model_failure
+      - revises_rule_model
+    failure_interpretation:
+      repeats_push_attempts: boundary_feedback_too_weak
+      cannot_route_to_pull: application_too_hard
+    layout: |
+      ########
+      #@C G  #
+      #   ####
+      #      #
+      ########
+    expected_trace:
+      - input: right
+        events: [push_crate_failed]
+    expected_events: [push_crate_failed, pull_crate]
+    design_notes: >
+      The first visible attempt fails because the crate cannot be pushed.
+      A verified version should require the player to route around and pull.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L03
+    title: Open The Hall
+    role: guided_application
+    status: candidate
+    targets: [K_pull_opens_path]
+    known_before: [K_pull_single_crate, K_cannot_push_crate, K_pull_opens_path]
+    target_learning: [K_pull_opens_path]
+    support_level: medium
+    expected_solver_evidence:
+      - solvable
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - forms_subgoal_chain
+    failure_interpretation:
+      solves_by_walking: target_not_required
+      cannot_name_subgoal: structural_signal_too_weak
+    layout: |
+      ########
+      # C@ G #
+      ########
+    expected_events: [pull_crate]
+    design_notes: >
+      Intended to show that pulling a crate out of a choke point can create
+      a path. The exact intended trace should be generated once runtime exists.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L04
+    title: Clean Portal
+    role: discovery
+    status: candidate
+    targets: [K_portal_teleports_player]
+    known_before: [K_pull_single_crate]
+    target_learning: [K_portal_teleports_player]
+    support_level: high
+    expected_solver_evidence:
+      - expected_trace_covers_target_events
+    expected_llm_player_evidence:
+      - forms_target_hypothesis
+      - uses_target_hypothesis_to_finish
+    failure_interpretation:
+      avoids_portal: portal_affordance_too_weak
+      reports_rule_confusion: teleport_feedback_too_weak
+    win:
+      type: event_occurs
+      event: portal_teleport
+    layout: |
+      #########
+      #@ A    #
+      #   B G #
+      #########
+    expected_trace:
+      - input: right
+        events: [walk]
+      - input: right
+        events: [portal_enter, portal_teleport]
+    expected_events: [portal_enter, portal_teleport]
+    design_notes: >
+      Establish ordinary portal behavior before blocked exits are introduced.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L05
+    title: Blocked Exit
+    role: discovery
+    status: candidate
+    targets: [K_blocked_portal_stops_teleport, K_blocked_portal_pushes_entrance]
+    known_before: [K_portal_teleports_player]
+    withheld_until_level: [K_blocked_portal_stops_teleport, K_blocked_portal_pushes_entrance]
+    target_learning: [K_blocked_portal_stops_teleport, K_blocked_portal_pushes_entrance]
+    support_level: high
+    expected_solver_evidence:
+      - expected_trace_covers_target_events
+    expected_llm_player_evidence:
+      - tries_old_model
+      - observes_old_model_failure
+      - forms_target_hypothesis
+      - uses_target_hypothesis_to_finish
+    failure_interpretation:
+      no_fallback_hypothesis: exception_signal_too_weak
+      treats_as_failed_teleport_only: movement_feedback_too_weak
+    win:
+      type: event_occurs
+      event: portal_fallback_push
+    layout: |
+      #########
+      #@ A    #
+      #   BC  #
+      #########
+    expected_trace:
+      - input: right
+        events: [walk]
+      - input: right
+        events: [portal_enter, portal_exit_blocked, portal_fallback_push]
+    expected_events: [portal_exit_blocked, portal_fallback_push]
+    design_notes: >
+      The crate blocks portal B's exit, so entering A should push A rather
+      than teleporting the player.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L06
+    title: Build The Block
+    role: guided_application
+    status: candidate
+    targets: [K_use_crate_to_block_portal_exit, K_blocked_portal_pushes_entrance]
+    known_before:
+      - K_pull_single_crate
+      - K_portal_teleports_player
+      - K_blocked_portal_pushes_entrance
+      - K_use_crate_to_block_portal_exit
+    target_learning: [K_use_crate_to_block_portal_exit]
+    support_level: medium
+    expected_solver_evidence:
+      - solvable
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - forms_subgoal_chain
+    failure_interpretation:
+      never_blocks_exit: trigger_construction_not_visible
+      blocks_exit_but_no_finish: application_too_hard
+    win:
+      type: event_occurs
+      event: portal_fallback_push
+    layout: |
+      ############
+      #          #
+      # @ A      #
+      #    C     #
+      #   B      #
+      #          #
+      ############
+    expected_events: [pull_crate, portal_exit_blocked, portal_fallback_push]
+    design_notes: >
+      Intended application: pull the crate onto the paired portal exit, then
+      use the blocked-exit fallback to move the entrance portal.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L07
+    title: Portal As Key
+    role: combination
+    status: candidate
+    targets: [K_move_portal_to_open_path]
+    known_before:
+      - K_pull_single_crate
+      - K_portal_teleports_player
+      - K_blocked_portal_pushes_entrance
+      - K_move_portal_to_open_path
+    target_learning: [K_move_portal_to_open_path]
+    support_level: medium
+    expected_solver_evidence:
+      - solvable
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - forms_subgoal_chain
+    failure_interpretation:
+      solves_without_moving_portal: target_not_required
+      cannot_identify_bottleneck: structural_signal_too_weak
+    win:
+      type: event_occurs
+      event: portal_fallback_push
+    layout: |
+      ############
+      #@ A       #
+      #    C     #
+      #   B      #
+      #          #
+      ############
+    expected_events: [pull_crate, portal_fallback_push]
+    design_notes: >
+      The moved portal should become a spatial key that opens the upper route.
+      Solver must reject this candidate if the goal is reachable without the
+      fallback push.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L08
+    title: Jammed Portal
+    role: boundary
+    status: candidate
+    targets: [K_blocked_portal_push_can_fail]
+    known_before: [K_portal_teleports_player, K_blocked_portal_pushes_entrance]
+    withheld_until_level: [K_blocked_portal_push_can_fail]
+    target_learning: [K_blocked_portal_push_can_fail]
+    support_level: high
+    expected_solver_evidence:
+      - expected_trace_covers_target_events
+    expected_llm_player_evidence:
+      - tries_old_model
+      - observes_old_model_failure
+      - revises_rule_model
+    failure_interpretation:
+      keeps_trying_blocked_entry: failure_feedback_too_weak
+      cannot_explain_failed_push: boundary_not_legible
+    win:
+      type: event_occurs
+      event: portal_fallback_failed
+    layout: |
+      ########
+      # @A#  #
+      ###BC###
+      ########
+    expected_trace:
+      - input: right
+        events: [portal_enter, portal_exit_blocked, portal_fallback_failed]
+    expected_events: [portal_exit_blocked, portal_fallback_failed]
+    design_notes: >
+      The paired exit is blocked by a crate and the entrance portal cannot
+      move because a wall is directly behind it.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L09
+    title: Doorway Portal
+    role: guided_application
+    status: candidate
+    targets: [K_move_portal_to_open_path]
+    known_before:
+      - K_portal_teleports_player
+      - K_blocked_portal_pushes_entrance
+      - K_move_portal_to_open_path
+    target_learning: [K_move_portal_to_open_path]
+    support_level: medium
+    expected_solver_evidence:
+      - solvable
+      - player_win_standard
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - identifies_bottleneck
+      - forms_subgoal_chain
+    failure_interpretation:
+      walks_directly_to_goal: bypass
+      cannot_identify_portal_as_blocker: structural_signal_too_weak
+    win:
+      type: player_on_goal
+    layout: |
+      #########
+      #@ A G  #
+      ###BC####
+      #########
+    expected_events: [portal_exit_blocked, portal_fallback_push]
+    design_notes: >
+      The portal itself blocks the corridor. Repeated blocked-exit fallback
+      pushes move it out of the way so the player can stand on the goal.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L10
+    title: Build And Open
+    role: combination
+    status: candidate
+    targets: [K_use_crate_to_block_portal_exit, K_move_portal_to_open_path]
+    known_before:
+      - K_pull_single_crate
+      - K_portal_teleports_player
+      - K_blocked_portal_pushes_entrance
+      - K_use_crate_to_block_portal_exit
+      - K_move_portal_to_open_path
+    target_learning: [K_move_portal_to_open_path]
+    support_level: low
+    expected_solver_evidence:
+      - solvable
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - forms_subgoal_chain
+      - identifies_bottleneck
+    failure_interpretation:
+      never_constructs_blocked_exit: prerequisite_not_available
+      moves_portal_without_opening_path: subgoal_order_unclear
+    win:
+      type: event_occurs
+      event: portal_fallback_push
+    layout: |
+      ############
+      ###  #     #
+      # @ A G   #
+      #    C######
+      ####B ######
+      #          #
+      ############
+    expected_events: [pull_crate, portal_exit_blocked, portal_fallback_push]
+    design_notes: >
+      First pull the crate into the paired portal's exit, then return to the
+      entrance and push the portal along the corridor until the goal opens.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L11
+    title: Long Doorway
+    role: variation_transfer
+    status: candidate
+    targets: [K_move_portal_to_open_path]
+    known_before: [K_portal_teleports_player, K_blocked_portal_pushes_entrance, K_move_portal_to_open_path]
+    target_learning: [K_move_portal_to_open_path]
+    support_level: low
+    expected_solver_evidence:
+      - solvable
+      - player_win_standard
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - forms_subgoal_chain
+    failure_interpretation:
+      fails_after_first_push: repeated_application_not_clear
+      solves_without_fallback: target_not_required
+    win:
+      type: player_on_goal
+    layout: |
+      ###########
+      #@ A  G  #
+      ###BC#####
+      ###########
+    expected_events: [portal_exit_blocked, portal_fallback_push]
+    design_notes: >
+      A longer corridor variant of Doorway Portal. The player must push the
+      entrance portal multiple times before stepping onto the goal.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L12
+    title: Push Into Jam
+    role: boundary
+    status: candidate
+    targets: [K_blocked_portal_pushes_entrance, K_blocked_portal_push_can_fail]
+    known_before: [K_portal_teleports_player, K_blocked_portal_pushes_entrance]
+    withheld_until_level: [K_blocked_portal_push_can_fail]
+    target_learning: [K_blocked_portal_push_can_fail]
+    support_level: medium
+    expected_solver_evidence:
+      - expected_trace_covers_target_events
+    expected_llm_player_evidence:
+      - tries_old_model
+      - observes_old_model_failure
+      - revises_rule_model
+    failure_interpretation:
+      cannot_predict_second_failure: boundary_sequence_not_clear
+      reports_rule_confusion: feedback_too_ambiguous
+    win:
+      type: event_occurs
+      event: portal_fallback_failed
+    layout: |
+      ##########
+      #@ A #   #
+      ###BC#####
+      ##########
+    expected_events: [portal_fallback_push, portal_fallback_failed]
+    expected_trace:
+      - input: right
+        events: [walk]
+      - input: right
+        events: [portal_enter, portal_exit_blocked, portal_fallback_push]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [portal_enter, portal_exit_blocked, portal_fallback_failed]
+    design_notes: >
+      The first blocked entry pushes A right. The second blocked entry cannot
+      push A because the next cell is a wall.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L13
+    title: Longer Pull
+    role: review
+    status: candidate
+    targets: [K_pull_single_crate]
+    known_before: [K_pull_single_crate]
+    target_learning: [K_pull_single_crate]
+    support_level: low
+    expected_solver_evidence:
+      - solvable
+      - returned_solution_covers_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+    failure_interpretation:
+      overthinks_rule: review_layout_too_noisy
+      solves_without_pull: target_not_required
+    layout: |
+      ##########
+      # C@  G  #
+      ##########
+    expected_events: [pull_crate]
+    design_notes: >
+      A longer version of the first pull witness, used to make the pull motion
+      feel deliberate rather than accidental.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L14
+    title: Hard Stop
+    role: boundary
+    status: candidate
+    targets: [K_cannot_push_crate]
+    known_before: [K_pull_single_crate]
+    withheld_until_level: [K_cannot_push_crate]
+    target_learning: [K_cannot_push_crate]
+    support_level: high
+    expected_solver_evidence:
+      - expected_trace_covers_target_events
+    expected_llm_player_evidence:
+      - tries_old_model
+      - observes_old_model_failure
+      - revises_rule_model
+    failure_interpretation:
+      repeats_push_attempts: boundary_feedback_too_weak
+      treats_as_wall_only: rule_not_distinct
+    win:
+      type: event_occurs
+      event: push_crate_failed
+    layout: |
+      #######
+      # @C  #
+      #######
+    expected_trace:
+      - input: right
+        events: [push_crate_failed]
+    expected_events: [push_crate_failed]
+    design_notes: >
+      A compact negative witness for the no-push rule.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L15
+    title: Sealed Shuttle
+    role: independent_application
+    status: candidate
+    targets: [K_portal_teleports_player]
+    known_before: [K_portal_teleports_player]
+    target_learning: [K_portal_teleports_player]
+    support_level: medium
+    expected_solver_evidence:
+      - solvable
+      - player_win_standard
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+    failure_interpretation:
+      searches_for_walk_route: portal_necessity_not_clear
+      cannot_finish_after_teleport: exit_goal_relation_unclear
+    win:
+      type: player_on_goal
+    layout: |
+      #########
+      #@ A#####
+      ### B G #
+      #########
+    expected_events: [portal_enter, portal_teleport]
+    design_notes: >
+      The goal chamber is sealed from the start area, so ordinary teleport is
+      the only way to reach it.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L16
+    title: Vertical Doorway
+    role: variation_transfer
+    status: candidate
+    targets: [K_move_portal_to_open_path]
+    known_before: [K_portal_teleports_player, K_blocked_portal_pushes_entrance, K_move_portal_to_open_path]
+    target_learning: [K_move_portal_to_open_path]
+    support_level: low
+    expected_solver_evidence:
+      - solvable
+      - player_win_standard
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - forms_subgoal_chain
+    failure_interpretation:
+      misses_vertical_equivalence: transfer_signal_too_weak
+      solves_without_fallback: target_not_required
+    win:
+      type: player_on_goal
+    layout: |
+      #####
+      ##@##
+      ##A##
+      ##G##
+      #B ##
+      #####
+    expected_events: [portal_exit_blocked, portal_fallback_push]
+    design_notes: >
+      A vertical version of the doorway idea. Blocked portal entries push A
+      downward until the goal cell opens.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L17
+    title: Vertical Jam
+    role: boundary
+    status: candidate
+    targets: [K_blocked_portal_push_can_fail]
+    known_before: [K_portal_teleports_player, K_blocked_portal_pushes_entrance]
+    withheld_until_level: [K_blocked_portal_push_can_fail]
+    target_learning: [K_blocked_portal_push_can_fail]
+    support_level: high
+    expected_solver_evidence:
+      - expected_trace_covers_target_events
+    expected_llm_player_evidence:
+      - tries_old_model
+      - observes_old_model_failure
+      - revises_rule_model
+    failure_interpretation:
+      misses_blocked_destination: boundary_not_legible
+      reports_rule_confusion: failure_feedback_too_weak
+    win:
+      type: event_occurs
+      event: portal_fallback_failed
+    layout: |
+      #####
+      ##@##
+      ##A##
+      ##B##
+      ##C##
+      #####
+    expected_trace:
+      - input: down
+        events: [portal_enter, portal_exit_blocked, portal_fallback_failed]
+    expected_events: [portal_exit_blocked, portal_fallback_failed]
+    design_notes: >
+      The paired exit is blocked by a crate, but A cannot move because B is
+      directly in its push destination.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L18
+    title: Very Long Doorway
+    role: challenge
+    status: candidate
+    targets: [K_move_portal_to_open_path]
+    known_before: [K_portal_teleports_player, K_blocked_portal_pushes_entrance, K_move_portal_to_open_path]
+    target_learning: [K_move_portal_to_open_path]
+    support_level: none
+    expected_solver_evidence:
+      - solvable
+      - player_win_standard
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - forms_subgoal_chain
+      - identifies_bottleneck
+    failure_interpretation:
+      repeated_route_search: challenge_structure_too_opaque
+      solves_without_fallback: target_not_required
+    win:
+      type: player_on_goal
+    layout: |
+      ############
+      #@ A   G   #
+      ###BC#######
+      ############
+    expected_events: [portal_exit_blocked, portal_fallback_push]
+    design_notes: >
+      A longer corridor that requires repeated fallback pushes before the
+      player can walk to the goal.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L19
+    title: Three Push Jam
+    role: challenge
+    status: candidate
+    targets: [K_blocked_portal_pushes_entrance, K_blocked_portal_push_can_fail]
+    known_before:
+      - K_portal_teleports_player
+      - K_blocked_portal_pushes_entrance
+      - K_blocked_portal_push_can_fail
+    target_learning: [K_blocked_portal_push_can_fail]
+    support_level: low
+    expected_solver_evidence:
+      - expected_trace_covers_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - identifies_bottleneck
+    failure_interpretation:
+      cannot_predict_jam: boundary_sequence_not_clear
+      reports_goal_unclear: fixture_not_player_facing
+    win:
+      type: event_occurs
+      event: portal_fallback_failed
+    layout: |
+      ############
+      #@ A  #    #
+      ###BC#######
+      ############
+    expected_events: [portal_fallback_push, portal_fallback_failed]
+    expected_trace:
+      - input: right
+        events: [walk]
+      - input: right
+        events: [portal_enter, portal_exit_blocked, portal_fallback_push]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [portal_enter, portal_exit_blocked, portal_fallback_failed]
+    design_notes: >
+      The entrance portal can move several times before reaching a wall and
+      demonstrating the fallback failure condition.
+    analysis:
+      proof_status: candidate_fixture
+
+  - id: L20
+    title: Wide Build
+    role: challenge
+    status: candidate
+    targets: [K_use_crate_to_block_portal_exit, K_blocked_portal_pushes_entrance]
+    known_before:
+      - K_pull_single_crate
+      - K_portal_teleports_player
+      - K_blocked_portal_pushes_entrance
+      - K_use_crate_to_block_portal_exit
+    target_learning: [K_use_crate_to_block_portal_exit]
+    support_level: low
+    expected_solver_evidence:
+      - solvable
+      - all_winning_paths_cover_target_events
+    expected_llm_player_evidence:
+      - applies_known_target_without_relearning
+      - forms_subgoal_chain
+      - identifies_bottleneck
+    failure_interpretation:
+      never_constructs_blocked_exit: trigger_construction_not_visible
+      solves_without_constructed_block: target_not_required
+    win:
+      type: event_occurs
+      event: portal_fallback_push
+    layout: |
+      ##############
+      #            #
+      #  @ A       #
+      #     C      #
+      #    B       #
+      #            #
+      ##############
+    expected_events: [pull_crate, portal_exit_blocked, portal_fallback_push]
+    design_notes: >
+      A wider version of Build The Block. The extra space gives the player
+      room to see that the crate must become the portal exit blocker.
+    analysis:
+      proof_status: candidate_fixture

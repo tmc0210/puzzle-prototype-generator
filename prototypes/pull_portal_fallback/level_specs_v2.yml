@@ -1,0 +1,835 @@
+mechanic: pull_portal_fallback
+status: draft
+curriculum: curriculum_v2
+target_level_count: 19
+
+specs:
+  - id: LS01_pull_discovery
+    title: Pull Discovery
+    status: draft
+    primary_goal: G_pull_single_crate
+    role: discovery
+    support_level: high
+    focus_targets:
+      - kind: fact
+        ref: F_pull_single_crate
+    known_before: [F_player_reaches_goal_to_win, C_cannot_push_crate]
+    introduces: [F_pull_single_crate]
+    practices: []
+    assesses: [F_pull_single_crate]
+    generation_contract:
+      objective: isolate_target
+      win_condition: prototype_default
+      board_size: { min_width: 4, max_width: 6, min_height: 3, max_height: 5 }
+      required_objects: [wall, player, goal, crate]
+      allowed_objects: [floor, wall, player, goal, crate]
+      required_rules: [pull_single_crate]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate]
+      structural_requirements:
+        - Player can only reach the goal after observing a crate being pulled.
+      forbidden_shortcuts:
+        - Goal must not be reachable by walking without pull_crate.
+    evidence_contract:
+      solver: [solvable, player_win_standard, returned_solution_covers_target_events]
+      llm_player: [forms_target_hypothesis, uses_target_hypothesis_to_finish]
+      graph_scope: full_graph_required
+      event_requirements:
+        winning_solution:
+          required: [pull_crate]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS02_reposition_crate
+    title: Reposition Crate By Pulling
+    status: draft
+    primary_goal: G_reposition_crate_by_pulling
+    role: guided_application
+    support_level: medium
+    focus_targets:
+      - kind: ability
+        ref: A_reposition_crate_by_pulling
+      - kind: constraint
+        ref: C_pull_requires_crate_behind_player
+      - kind: constraint
+        ref: C_pull_requires_free_destination
+    known_before:
+      - F_player_reaches_goal_to_win
+      - C_cannot_push_crate
+      - F_pull_single_crate
+    introduces:
+      - C_pull_requires_crate_behind_player
+      - C_pull_requires_free_destination
+      - A_reposition_crate_by_pulling
+    practices: [F_pull_single_crate]
+    assesses: [A_reposition_crate_by_pulling]
+    generation_contract:
+      objective: guided_application
+      win_condition: prototype_default
+      board_size: { min_width: 5, max_width: 8, min_height: 4, max_height: 7 }
+      required_objects: [wall, player, goal, crate]
+      allowed_objects: [floor, wall, player, goal, crate]
+      required_rules: [pull_single_crate]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate]
+      structural_requirements:
+        - Crate must be moved to a useful new position by pulling.
+        - The valid pull setup naturally exposes pull positioning constraints.
+      forbidden_shortcuts:
+        - Player cannot reach the goal before the crate position changes.
+    evidence_contract:
+      solver: [solvable, player_win_standard, returned_solution_covers_target_events]
+      llm_player: [applies_known_target_without_relearning, forms_subgoal_chain]
+      graph_scope: full_graph_required
+      event_requirements:
+        winning_solution:
+          required: [pull_crate]
+      object_participation_requirements:
+        - object_type: crate
+          role: moved
+          min_distinct_instances: 1
+          scope: winning_solution
+          event_type: pull_crate
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS03_clear_choke
+    title: Clear Choke By Pulling
+    status: draft
+    primary_goal: G_clear_choke_by_pulling
+    role: guided_application
+    support_level: medium
+    focus_targets:
+      - kind: ability
+        ref: A_clear_choke_by_pulling_crate
+    known_before:
+      - F_player_reaches_goal_to_win
+      - C_cannot_push_crate
+      - A_reposition_crate_by_pulling
+    introduces: [A_clear_choke_by_pulling_crate]
+    practices: [A_reposition_crate_by_pulling, C_cannot_push_crate]
+    assesses: [A_clear_choke_by_pulling_crate]
+    generation_contract:
+      objective: guided_application
+      win_condition: prototype_default
+      board_size: { min_width: 5, max_width: 8, min_height: 4, max_height: 7 }
+      required_objects: [wall, player, goal, crate]
+      allowed_objects: [floor, wall, player, goal, crate]
+      required_rules: [pull_single_crate, cannot_push_crate]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate]
+      structural_requirements:
+        - Crate starts as a choke blocker for the route to goal.
+        - Player crosses the formerly blocked route after pulling.
+      forbidden_shortcuts:
+        - No alternate route bypasses the choke.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [identifies_bottleneck, forms_subgoal_chain]
+      graph_scope: full_graph_required
+      event_requirements:
+        all_winning_paths:
+          required: [pull_crate]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS04_clear_choke_pattern
+    title: Clear Choke Pattern Variation
+    status: draft
+    primary_goal: G_clear_choke_pattern
+    role: variation_transfer
+    support_level: low
+    focus_targets:
+      - kind: pattern
+        ref: P_clear_choke_by_pulling_blocker
+    known_before:
+      - F_player_reaches_goal_to_win
+      - A_clear_choke_by_pulling_crate
+    introduces: [P_clear_choke_by_pulling_blocker]
+    practices: [A_clear_choke_by_pulling_crate]
+    assesses: [P_clear_choke_by_pulling_blocker]
+    generation_contract:
+      objective: variation_transfer
+      win_condition: prototype_default
+      board_size: { min_width: 5, max_width: 9, min_height: 4, max_height: 7 }
+      required_objects: [wall, player, goal, crate]
+      allowed_objects: [floor, wall, player, goal, crate]
+      required_rules: [pull_single_crate]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate]
+      structural_requirements:
+        - Choke relation is changed from the guided version.
+        - Same ability solves a visibly different blocker layout.
+      forbidden_shortcuts:
+        - The goal path cannot be opened without moving the blocker.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [identifies_bottleneck, applies_known_target_without_relearning]
+      graph_scope: full_graph_required
+      event_requirements:
+        all_winning_paths:
+          required: [pull_crate]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS05_portal_pair
+    title: Portal Pair
+    status: draft
+    primary_goal: G_portals_are_paired
+    role: discovery
+    support_level: high
+    focus_targets:
+      - kind: fact
+        ref: F_portals_are_paired
+      - kind: constraint
+        ref: C_portal_occupies_cell_and_blocks_walking
+    known_before: [F_player_reaches_goal_to_win]
+    introduces: [F_portals_are_paired, C_portal_occupies_cell_and_blocks_walking]
+    practices: []
+    assesses: [F_portals_are_paired]
+    generation_contract:
+      objective: isolate_target
+      win_condition: prototype_default
+      board_size: { min_width: 5, max_width: 8, min_height: 4, max_height: 6 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, enter_portal]
+      required_branches: [normal_teleport]
+      allowed_branches: [normal_teleport]
+      structural_requirements:
+        - Portal pair is the only connection between two small regions.
+      forbidden_shortcuts:
+        - Goal region cannot be reached without using the portal pair.
+    evidence_contract:
+      solver: [solvable, player_win_standard, returned_solution_covers_target_events]
+      llm_player: [forms_target_hypothesis, uses_target_hypothesis_to_finish]
+      graph_scope: full_graph_required
+      event_requirements:
+        winning_solution:
+          required: [portal_enter, portal_teleport]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS06_normal_teleport
+    title: Normal Teleport
+    status: draft
+    primary_goal: G_normal_teleport
+    role: discovery
+    support_level: high
+    focus_targets:
+      - kind: fact
+        ref: F_portal_teleports_player_to_directional_exit
+    known_before: [F_player_reaches_goal_to_win, F_portals_are_paired]
+    introduces: [F_portal_teleports_player_to_directional_exit]
+    practices: [F_portals_are_paired]
+    assesses: [F_portal_teleports_player_to_directional_exit]
+    generation_contract:
+      objective: isolate_target
+      win_condition: prototype_default
+      board_size: { min_width: 5, max_width: 8, min_height: 4, max_height: 6 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, enter_portal]
+      required_branches: [normal_teleport]
+      allowed_branches: [normal_teleport]
+      structural_requirements:
+        - Normal teleport changes the reachable region.
+        - Entry direction determines a visible exit side.
+      forbidden_shortcuts:
+        - The target region must not be walk-reachable.
+    evidence_contract:
+      solver: [solvable, player_win_standard, returned_solution_covers_target_events]
+      llm_player: [forms_target_hypothesis, uses_target_hypothesis_to_finish]
+      graph_scope: full_graph_required
+      event_requirements:
+        winning_solution:
+          required: [portal_enter, portal_teleport]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS07_sealed_region_transport
+    title: Sealed Region Transport
+    status: draft
+    primary_goal: G_use_portal_to_enter_sealed_region
+    role: guided_application
+    support_level: medium
+    focus_targets:
+      - kind: ability
+        ref: A_use_portal_to_enter_sealed_region
+    known_before:
+      - F_player_reaches_goal_to_win
+      - F_portals_are_paired
+      - F_portal_teleports_player_to_directional_exit
+    introduces: [A_use_portal_to_enter_sealed_region]
+    practices: [F_portal_teleports_player_to_directional_exit]
+    assesses: [A_use_portal_to_enter_sealed_region]
+    generation_contract:
+      objective: guided_application
+      win_condition: prototype_default
+      board_size: { min_width: 6, max_width: 9, min_height: 4, max_height: 7 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, enter_portal]
+      required_branches: [normal_teleport]
+      allowed_branches: [normal_teleport]
+      structural_requirements:
+        - Start and goal regions are separated by walls.
+        - Portal transport is required for region access.
+      forbidden_shortcuts:
+        - No walking path connects the regions.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [applies_known_target_without_relearning, forms_subgoal_chain]
+      graph_scope: full_graph_required
+      event_requirements:
+        all_winning_paths:
+          required: [portal_enter, portal_teleport]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS08_sealed_region_pattern
+    title: Sealed Region Pattern
+    status: draft
+    primary_goal: G_sealed_region_pattern
+    role: variation_transfer
+    support_level: low
+    focus_targets:
+      - kind: pattern
+        ref: P_sealed_region_requires_portal_transport
+    known_before:
+      - F_player_reaches_goal_to_win
+      - A_use_portal_to_enter_sealed_region
+    introduces: [P_sealed_region_requires_portal_transport]
+    practices: [A_use_portal_to_enter_sealed_region]
+    assesses: [P_sealed_region_requires_portal_transport]
+    generation_contract:
+      objective: variation_transfer
+      win_condition: prototype_default
+      board_size: { min_width: 6, max_width: 10, min_height: 4, max_height: 8 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, enter_portal]
+      required_branches: [normal_teleport]
+      allowed_branches: [normal_teleport]
+      structural_requirements:
+        - Portal route is structurally similar but not visually identical to the guided transport level.
+      forbidden_shortcuts:
+        - Region access cannot be solved by walking around the separation.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [identifies_bottleneck, applies_known_target_without_relearning]
+      graph_scope: full_graph_required
+      event_requirements:
+        all_winning_paths:
+          required: [portal_enter, portal_teleport]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS10_blocked_exit_pushes_entrance
+    title: Blocked Exit Pushes Entrance
+    status: draft
+    primary_goal: G_blocked_exit_pushes_entrance
+    role: discovery
+    support_level: high
+    focus_targets:
+      - kind: interaction
+        ref: I_blocked_exit_stops_normal_teleport
+      - kind: interaction
+        ref: I_blocked_exit_pushes_entrance_portal
+      - kind: constraint
+        ref: C_fallback_push_requires_free_portal_destination
+    known_before:
+      - F_player_reaches_goal_to_win
+      - F_portal_teleports_player_to_directional_exit
+    introduces:
+      - I_blocked_exit_stops_normal_teleport
+      - C_fallback_push_requires_free_portal_destination
+      - I_blocked_exit_pushes_entrance_portal
+    practices: [F_portal_teleports_player_to_directional_exit]
+    assesses: [I_blocked_exit_pushes_entrance_portal]
+    generation_contract:
+      objective: isolate_target
+      win_condition: prototype_default
+      board_size: { min_width: 6, max_width: 9, min_height: 4, max_height: 7 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [blocked_exit_push_entrance]
+      structural_requirements:
+        - Entering the blocked portal moves the entrance portal.
+        - The moved portal position is relevant to reaching the goal.
+      forbidden_shortcuts:
+        - Goal cannot be reached if the entrance portal does not move.
+    evidence_contract:
+      solver: [solvable, player_win_standard, expected_trace_covers_target_events]
+      llm_player: [forms_target_hypothesis, uses_target_hypothesis_to_finish]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        winning_solution:
+          required: [portal_enter, portal_exit_blocked, portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS11_trigger_fallback
+    title: Trigger Blocked Portal Fallback
+    status: draft
+    primary_goal: G_trigger_blocked_portal_fallback
+    role: guided_application
+    support_level: medium
+    focus_targets:
+      - kind: ability
+        ref: A_trigger_blocked_portal_fallback
+    known_before:
+      - F_player_reaches_goal_to_win
+      - I_blocked_exit_pushes_entrance_portal
+      - C_fallback_push_requires_free_portal_destination
+    introduces: [A_trigger_blocked_portal_fallback]
+    practices: [I_blocked_exit_pushes_entrance_portal]
+    assesses: [A_trigger_blocked_portal_fallback]
+    generation_contract:
+      objective: guided_application
+      win_condition: prototype_default
+      board_size: { min_width: 6, max_width: 10, min_height: 5, max_height: 8 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [blocked_exit_push_entrance]
+      structural_requirements:
+        - Player deliberately enters a blocked portal to move the entrance.
+      forbidden_shortcuts:
+        - Entrance portal movement must be needed for progress.
+    evidence_contract:
+      solver: [solvable, player_win_standard, returned_solution_covers_target_events]
+      llm_player: [applies_known_target_without_relearning, forms_subgoal_chain]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        winning_solution:
+          required: [portal_exit_blocked, portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS12_construct_blocked_exit
+    title: Construct Blocked Exit
+    status: draft
+    primary_goal: G_create_blocked_portal_exit_with_crate
+    role: guided_application
+    support_level: medium
+    focus_targets:
+      - kind: ability
+        ref: A_create_blocked_portal_exit_with_crate
+      - kind: constraint
+        ref: C_crate_blocks_portal_exit
+    known_before:
+      - F_player_reaches_goal_to_win
+      - F_portals_are_paired
+      - A_reposition_crate_by_pulling
+      - A_trigger_blocked_portal_fallback
+    introduces: [C_crate_blocks_portal_exit, A_create_blocked_portal_exit_with_crate]
+    practices: [A_reposition_crate_by_pulling, A_trigger_blocked_portal_fallback]
+    assesses: [A_create_blocked_portal_exit_with_crate]
+    generation_contract:
+      objective: guided_application
+      win_condition: prototype_default
+      board_size: { min_width: 7, max_width: 10, min_height: 5, max_height: 8 }
+      required_objects: [wall, player, goal, crate, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [pull_single_crate, enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [normal_teleport, blocked_exit_push_entrance]
+      structural_requirements:
+        - Blocked-exit trigger is initially absent and must be constructed.
+      forbidden_shortcuts:
+        - Fixed walls alone cannot trigger the required fallback.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [forms_subgoal_chain, applies_known_target_without_relearning]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        all_winning_paths:
+          required: [pull_crate, portal_exit_blocked, portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS13_remote_blocker_controls_entry
+    title: Remote Blocker Controls Entry
+    status: draft
+    primary_goal: G_portal_exit_blocker_controls_entry
+    role: guided_application
+    support_level: medium
+    focus_targets:
+      - kind: interaction
+        ref: I_portal_exit_blocker_controls_entry_behavior
+    known_before:
+      - F_player_reaches_goal_to_win
+      - C_crate_blocks_portal_exit
+      - I_blocked_exit_stops_normal_teleport
+      - I_blocked_exit_pushes_entrance_portal
+    introduces: [I_portal_exit_blocker_controls_entry_behavior]
+    practices: [C_crate_blocks_portal_exit, I_blocked_exit_pushes_entrance_portal]
+    assesses: [I_portal_exit_blocker_controls_entry_behavior]
+    generation_contract:
+      objective: guided_application
+      win_condition: prototype_default
+      board_size: { min_width: 6, max_width: 10, min_height: 5, max_height: 8 }
+      required_objects: [wall, player, goal, crate, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [pull_single_crate, enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [normal_teleport, blocked_exit_push_entrance]
+      structural_requirements:
+        - Changing remote exit occupancy changes entrance portal behavior.
+      forbidden_shortcuts:
+        - Player cannot solve without using the remote occupancy relation.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [forms_subgoal_chain, identifies_bottleneck]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        all_winning_paths:
+          required: [pull_crate, portal_exit_blocked, portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS14_remote_blocker_pattern
+    title: Remote Blocker Pattern
+    status: draft
+    primary_goal: G_remote_blocker_pattern
+    role: variation_transfer
+    support_level: low
+    focus_targets:
+      - kind: pattern
+        ref: P_remote_blocker_changes_portal_behavior
+    known_before:
+      - F_player_reaches_goal_to_win
+      - A_trigger_blocked_portal_fallback
+    introduces: [P_remote_blocker_changes_portal_behavior]
+    practices: [A_trigger_blocked_portal_fallback]
+    assesses: [P_remote_blocker_changes_portal_behavior]
+    generation_contract:
+      objective: variation_transfer
+      win_condition: prototype_default
+      board_size: { min_width: 7, max_width: 11, min_height: 5, max_height: 8 }
+      required_objects: [wall, player, goal, crate, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [pull_single_crate, enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [normal_teleport, blocked_exit_push_entrance]
+      structural_requirements:
+        - The same entry portal has different meaning because of a remote blocker.
+      forbidden_shortcuts:
+        - Progress cannot be made without recognizing the remote blocker relation.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [identifies_bottleneck, applies_known_target_without_relearning]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        all_winning_paths:
+          required: [portal_exit_blocked, portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS15_construct_then_exploit
+    title: Construct Then Exploit
+    status: draft
+    primary_goal: G_construct_trigger_then_exploit
+    role: combination
+    support_level: low
+    focus_targets:
+      - kind: pattern
+        ref: P_construct_trigger_then_exploit
+    known_before:
+      - F_player_reaches_goal_to_win
+      - A_create_blocked_portal_exit_with_crate
+      - A_trigger_blocked_portal_fallback
+    introduces: [P_construct_trigger_then_exploit]
+    practices: [A_create_blocked_portal_exit_with_crate, A_trigger_blocked_portal_fallback]
+    assesses: [P_construct_trigger_then_exploit]
+    generation_contract:
+      objective: combination
+      win_condition: prototype_default
+      board_size: { min_width: 7, max_width: 11, min_height: 5, max_height: 9 }
+      required_objects: [wall, player, goal, crate, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [pull_single_crate, enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [normal_teleport, blocked_exit_push_entrance]
+      structural_requirements:
+        - Player must first create the trigger condition, then use fallback for progress.
+      forbidden_shortcuts:
+        - Fallback cannot be useful before the crate setup is complete.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [identifies_bottleneck, forms_subgoal_chain]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        all_winning_paths:
+          required: [pull_crate, portal_exit_blocked, portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS16_portal_as_key
+    title: Portal As Movable Key
+    status: draft
+    primary_goal: G_portal_as_movable_door_or_key
+    role: independent_application
+    support_level: low
+    focus_targets:
+      - kind: pattern
+        ref: P_portal_as_movable_door_or_key
+    known_before:
+      - F_player_reaches_goal_to_win
+      - A_trigger_blocked_portal_fallback
+    introduces: [P_portal_as_movable_door_or_key]
+    practices: [A_trigger_blocked_portal_fallback]
+    assesses: [P_portal_as_movable_door_or_key]
+    generation_contract:
+      objective: independent_application
+      win_condition: prototype_default
+      board_size: { min_width: 7, max_width: 11, min_height: 5, max_height: 9 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [normal_teleport, blocked_exit_push_entrance]
+      structural_requirements:
+        - A portal occupies or controls a bottleneck that opens after it moves.
+      forbidden_shortcuts:
+        - Goal must remain unreachable while the portal stays in its initial position.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [identifies_bottleneck, forms_subgoal_chain]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        all_winning_paths:
+          required: [portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS17_repeated_portal_push
+    title: Repeated Portal Push
+    status: draft
+    primary_goal: G_repeat_fallback_push_to_move_portal
+    role: guided_application
+    support_level: medium
+    focus_targets:
+      - kind: ability
+        ref: A_repeat_fallback_push_to_move_portal
+    known_before:
+      - F_player_reaches_goal_to_win
+      - A_trigger_blocked_portal_fallback
+      - C_fallback_push_requires_free_portal_destination
+    introduces: [A_repeat_fallback_push_to_move_portal]
+    practices: [A_trigger_blocked_portal_fallback]
+    assesses: [A_repeat_fallback_push_to_move_portal]
+    generation_contract:
+      objective: guided_application
+      win_condition: prototype_default
+      board_size: { min_width: 7, max_width: 12, min_height: 5, max_height: 9 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [blocked_exit_push_entrance]
+      structural_requirements:
+        - Entrance portal must be pushed more than once along a corridor.
+      forbidden_shortcuts:
+        - One fallback push is insufficient to reach the goal.
+    evidence_contract:
+      solver: [solvable, player_win_standard, returned_solution_covers_target_events]
+      llm_player: [forms_subgoal_chain, applies_known_target_without_relearning]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        winning_solution:
+          required: [portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS18_repeated_push_corridor
+    title: Repeated Push Corridor
+    status: draft
+    primary_goal: G_repeated_portal_push_corridor
+    role: variation_transfer
+    support_level: low
+    focus_targets:
+      - kind: pattern
+        ref: P_repeated_portal_push_corridor
+    known_before:
+      - F_player_reaches_goal_to_win
+      - A_repeat_fallback_push_to_move_portal
+    introduces: [P_repeated_portal_push_corridor]
+    practices: [A_repeat_fallback_push_to_move_portal]
+    assesses: [P_repeated_portal_push_corridor]
+    generation_contract:
+      objective: variation_transfer
+      win_condition: prototype_default
+      board_size: { min_width: 7, max_width: 12, min_height: 5, max_height: 9 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_push_entrance]
+      allowed_branches: [blocked_exit_push_entrance]
+      structural_requirements:
+        - Corridor length or orientation differs from the guided repeated-push case.
+      forbidden_shortcuts:
+        - A single push or direct walk cannot solve the level.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [identifies_bottleneck, forms_subgoal_chain]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        all_winning_paths:
+          required: [portal_fallback_push]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS19_fallback_failure_prediction
+    title: Fallback Failure Prediction
+    status: draft
+    primary_goal: G_predict_and_use_fallback_failure
+    role: guided_application
+    support_level: medium
+    focus_targets:
+      - kind: ability
+        ref: A_predict_and_use_fallback_failure
+      - kind: constraint
+        ref: C_blocked_portal_push_can_fail
+    known_before:
+      - F_player_reaches_goal_to_win
+      - I_blocked_exit_pushes_entrance_portal
+    introduces: [C_blocked_portal_push_can_fail, A_predict_and_use_fallback_failure]
+    practices: [I_blocked_exit_pushes_entrance_portal]
+    assesses: [A_predict_and_use_fallback_failure]
+    generation_contract:
+      objective: guided_application
+      win_condition: prototype_default
+      board_size: { min_width: 6, max_width: 10, min_height: 4, max_height: 8 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_and_cannot_push]
+      allowed_branches: [blocked_exit_push_entrance, blocked_exit_and_cannot_push]
+      structural_requirements:
+        - Player can inspect why the entrance portal cannot move.
+      forbidden_shortcuts:
+        - Failure observation cannot be an event-only win condition.
+    evidence_contract:
+      solver: [solvable, player_win_standard, expected_trace_covers_target_events]
+      llm_player: [observes_old_model_failure, revises_rule_model, applies_known_target_without_relearning]
+      graph_scope: full_graph_required
+      event_requirements:
+        probe_trace:
+          required: [portal_exit_blocked, portal_fallback_failed]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []
+
+  - id: LS20_push_until_jam
+    title: Push Until Jam
+    status: draft
+    primary_goal: G_push_until_jam_boundary
+    role: challenge
+    support_level: none
+    focus_targets:
+      - kind: pattern
+        ref: P_push_until_jam_boundary
+    known_before:
+      - F_player_reaches_goal_to_win
+      - A_repeat_fallback_push_to_move_portal
+      - A_predict_and_use_fallback_failure
+    introduces: [P_push_until_jam_boundary]
+    practices: [A_repeat_fallback_push_to_move_portal, A_predict_and_use_fallback_failure]
+    assesses: [P_push_until_jam_boundary]
+    generation_contract:
+      objective: challenge
+      win_condition: prototype_default
+      board_size: { min_width: 8, max_width: 12, min_height: 5, max_height: 9 }
+      required_objects: [wall, player, goal, portalA, portalB]
+      allowed_objects: [floor, wall, player, goal, crate, portalA, portalB]
+      required_rules: [enter_portal]
+      allowed_rules: [walk, pull_single_crate, cannot_push_crate, enter_portal]
+      required_branches: [blocked_exit_push_entrance, blocked_exit_and_cannot_push]
+      allowed_branches: [blocked_exit_push_entrance, blocked_exit_and_cannot_push]
+      structural_requirements:
+        - Player must push a portal through a corridor until a predictable jam.
+        - The jam boundary matters to reaching the goal.
+      forbidden_shortcuts:
+        - Reaching the goal before the jam observation is not allowed.
+    evidence_contract:
+      solver: [solvable, player_win_standard, all_winning_paths_cover_target_events]
+      llm_player: [identifies_bottleneck, forms_subgoal_chain]
+      graph_scope: bounded_full_graph_preferred
+      event_requirements:
+        all_winning_paths:
+          required: [portal_fallback_push]
+        probe_trace:
+          required: [portal_fallback_failed]
+    acceptance:
+      requires_player_win_standard: true
+      requires_target_on_solution_path: true
+      requires_no_event_win: true
+    blocked_by_open_questions: []

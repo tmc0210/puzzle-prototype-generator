@@ -1,0 +1,184 @@
+{
+  "prototype": "pull_portal_fallback",
+  "level": {
+    "id": "dry_s04_fallback_discovery",
+    "title": "dry_s04_fallback_discovery",
+    "role": "discovery",
+    "status": "candidate",
+    "targets": [
+      "K_blocked_portal_stops_teleport",
+      "K_blocked_portal_pushes_entrance"
+    ],
+    "supportLevel": "high",
+    "winCondition": {
+      "type": "player_on_goal",
+      "target": "goal",
+      "description": "The player reaches a designated goal cell."
+    }
+  },
+  "initialState": "#########\n#@ A G  #\n###BC####\n#########",
+  "solution": {
+    "found": true,
+    "cost": 7,
+    "depth": 7,
+    "exploredStates": 12,
+    "searchStatus": "found",
+    "inputs": [
+      "right",
+      "right",
+      "right",
+      "right",
+      "right",
+      "right",
+      "right"
+    ],
+    "events": [
+      "walk",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push",
+      "walk",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push",
+      "walk",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push",
+      "walk"
+    ],
+    "eventCounts": {
+      "walk": 4,
+      "portal_enter": 3,
+      "portal_exit_blocked": 3,
+      "portal_fallback_push": 3
+    }
+  },
+  "keySnapshots": [
+    {
+      "step": 2,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "#########\n# @A G  #\n###BC####\n#########",
+      "after": "#########\n# @ AG  #\n###BC####\n#########"
+    },
+    {
+      "step": 4,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "#########\n#  @AG  #\n###BC####\n#########",
+      "after": "#########\n#  @ A  #\n###BC####\n#########"
+    },
+    {
+      "step": 6,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "#########\n#   @A  #\n###BC####\n#########",
+      "after": "#########\n#   @GA #\n###BC####\n#########"
+    }
+  ],
+  "graph": {
+    "status": "complete",
+    "reachableStateCount": 20,
+    "legalTransitionCount": 34,
+    "eventOnlyTransitionCount": 8,
+    "winStateCount": 2,
+    "budget": {
+      "maxStates": 100000
+    }
+  },
+  "counterfactuals": [
+    {
+      "model": "without_pull",
+      "solvable": true,
+      "cost": 7,
+      "exploredStates": 12,
+      "searchStatus": "found"
+    },
+    {
+      "model": "without_blocked_portal_push",
+      "solvable": false,
+      "exploredStates": 2,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    },
+    {
+      "model": "without_portal_teleport",
+      "solvable": true,
+      "cost": 7,
+      "exploredStates": 12,
+      "searchStatus": "found"
+    }
+  ],
+  "targets": [
+    {
+      "targetId": "K_blocked_portal_stops_teleport",
+      "statement": "传送门出口被堵住时，玩家不会正常传送。",
+      "requiredEvents": [
+        "portal_enter",
+        "portal_exit_blocked"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 11,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (7)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 13,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    },
+    {
+      "targetId": "K_blocked_portal_pushes_entrance",
+      "statement": "传送门出口被堵住且入口传送门前方可移动时，进入入口会改为推动入口传送门。",
+      "requiredEvents": [
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 11,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (7)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 13,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    }
+  ]
+}

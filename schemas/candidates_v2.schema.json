@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/sokoban/candidates_v2.schema.json",
+  "title": "CandidatesV2",
+  "type": "object",
+  "required": ["mechanic", "status", "generated_by", "candidates"],
+  "additionalProperties": false,
+  "properties": {
+    "mechanic": { "$ref": "#/$defs/id" },
+    "status": {
+      "type": "string",
+      "enum": ["generated", "reviewed"]
+    },
+    "generated_by": { "type": "string", "minLength": 1 },
+    "candidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidate" },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "traceStep": {
+      "type": "object",
+      "required": ["input"],
+      "additionalProperties": false,
+      "properties": {
+        "input": { "$ref": "#/$defs/id" },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "required": [
+        "id",
+        "spec_id",
+        "title",
+        "status",
+        "factory",
+        "seed",
+        "motifs",
+        "layout"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "spec_id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["generated", "verified", "accepted", "rejected"]
+        },
+        "factory": { "$ref": "#/$defs/id" },
+        "seed": { "type": "integer" },
+        "motifs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "layout": { "type": "string", "minLength": 1 },
+        "solution_trace": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/traceStep" }
+        },
+        "probe_trace": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/traceStep" }
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,770 @@
+{
+  "prototype": "pull_portal_fallback",
+  "level": {
+    "id": "ls20_fresh_reciprocal_blocker_v13_start_observation",
+    "title": "ls20_fresh_reciprocal_blocker_v13_start_observation",
+    "role": "challenge",
+    "status": "candidate",
+    "targets": [
+      "K_blocked_portal_pushes_entrance",
+      "K_portal_as_dynamic_blocker",
+      "K_multi_instance_same_kind"
+    ],
+    "supportLevel": "none",
+    "winCondition": {
+      "type": "player_on_goal"
+    }
+  },
+  "initialState": "##########\n#   ######\n#    ## ##\n##AE  B#@#\n## G## D #\n#####   ##\n##########",
+  "solution": {
+    "found": true,
+    "cost": 13,
+    "depth": 13,
+    "exploredStates": 38,
+    "searchStatus": "found",
+    "inputs": [
+      "down",
+      "left",
+      "left",
+      "down",
+      "left",
+      "up",
+      "left",
+      "down",
+      "right",
+      "right",
+      "down",
+      "right",
+      "right"
+    ],
+    "events": [
+      "walk",
+      "portal_enter:D",
+      "portal_exit_blocked:D->E",
+      "portal_exit_blocked_by_portal:A",
+      "portal_fallback_push:D",
+      "walk",
+      "walk",
+      "walk",
+      "portal_enter:D",
+      "portal_teleport:D->E",
+      "walk",
+      "portal_enter:A",
+      "portal_exit_blocked:A->B",
+      "portal_exit_blocked_by_portal:D",
+      "portal_fallback_push:A",
+      "walk",
+      "walk",
+      "walk",
+      "walk",
+      "portal_enter:B",
+      "portal_teleport:B->A"
+    ],
+    "eventCounts": {
+      "walk": 9,
+      "portal_enter:D": 2,
+      "portal_exit_blocked:D->E": 1,
+      "portal_exit_blocked_by_portal:A": 1,
+      "portal_fallback_push:D": 1,
+      "portal_teleport:D->E": 1,
+      "portal_enter:A": 1,
+      "portal_exit_blocked:A->B": 1,
+      "portal_exit_blocked_by_portal:D": 1,
+      "portal_fallback_push:A": 1,
+      "portal_enter:B": 1,
+      "portal_teleport:B->A": 1
+    },
+    "objectParticipation": [
+      {
+        "objectType": "portal",
+        "role": "entered",
+        "eventType": "portal_enter",
+        "distinctInstances": [
+          "A",
+          "B",
+          "D"
+        ],
+        "eventCount": 4,
+        "evidence": "trace_lineage"
+      },
+      {
+        "objectType": "portal",
+        "role": "moved",
+        "eventType": "portal_fallback_push",
+        "distinctInstances": [
+          "A",
+          "D"
+        ],
+        "eventCount": 2,
+        "evidence": "trace_lineage"
+      }
+    ]
+  },
+  "keySnapshots": [
+    {
+      "step": 2,
+      "input": "left",
+      "legal": true,
+      "events": [
+        "portal_enter:D",
+        "portal_exit_blocked:D->E",
+        "portal_exit_blocked_by_portal:A",
+        "portal_fallback_push:D"
+      ],
+      "before": "##########\n#   ######\n#    ## ##\n##AE  B# #\n## G## D@#\n#####   ##\n##########",
+      "after": "##########\n#   ######\n#    ## ##\n##AE  B# #\n## G##D @#\n#####   ##\n##########"
+    },
+    {
+      "step": 6,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "portal_enter:D",
+        "portal_teleport:D->E"
+      ],
+      "before": "##########\n#   ######\n#    ## ##\n##AE  B# #\n## G##D  #\n##### @ ##\n##########",
+      "after": "##########\n#   ######\n#  @ ## ##\n##AE  B# #\n## G##D  #\n#####   ##\n##########"
+    },
+    {
+      "step": 8,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "portal_enter:A",
+        "portal_exit_blocked:A->B",
+        "portal_exit_blocked_by_portal:D",
+        "portal_fallback_push:A"
+      ],
+      "before": "##########\n#   ######\n# @  ## ##\n##AE  B# #\n## G##D  #\n#####   ##\n##########",
+      "after": "##########\n#   ######\n# @  ## ##\n## E  B# #\n##AG##D  #\n#####   ##\n##########"
+    },
+    {
+      "step": 13,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter:B",
+        "portal_teleport:B->A"
+      ],
+      "before": "##########\n#   ######\n#    ## ##\n## E @B# #\n##AG##D  #\n#####   ##\n##########",
+      "after": "##########\n#   ######\n#    ## ##\n## E  B# #\n##A@##D  #\n#####   ##\n##########"
+    }
+  ],
+  "graph": {
+    "status": "complete",
+    "reachableStateCount": 147,
+    "legalTransitionCount": 343,
+    "eventOnlyTransitionCount": 20,
+    "winStateCount": 8,
+    "budget": {
+      "maxStates": 100000
+    }
+  },
+  "agency": {
+    "status": "complete",
+    "compressionRule": "bidirectional_edges",
+    "reachableStateCount": 147,
+    "legalTransitionCount": 343,
+    "compressedRegionCount": 10,
+    "bidirectionalTransitionCount": 334,
+    "commitmentTransitionCount": 9,
+    "winningRegionCount": 8,
+    "initialRegion": {
+      "regionId": 0,
+      "stateCount": 2,
+      "internalBidirectionalTransitionCount": 2,
+      "distanceToWin": 2,
+      "commitmentCount": 1,
+      "viableCommitmentCount": 1,
+      "deadCommitmentCount": 0,
+      "progressCommitmentCount": 1,
+      "optimalCommitmentCount": 1,
+      "isWinning": false,
+      "canReachWin": true
+    },
+    "solutionRegionPath": [
+      {
+        "regionId": 0,
+        "enteredAtStep": 0
+      },
+      {
+        "regionId": 1,
+        "enteredAtStep": 2
+      },
+      {
+        "regionId": 2,
+        "enteredAtStep": 8
+      }
+    ],
+    "forcedCommitmentPrefixLength": 2,
+    "forcedViablePrefixLength": 2,
+    "forcedOptimalPrefixLength": 2,
+    "branchCountsOnSolutionPath": [
+      {
+        "regionId": 0,
+        "stateCount": 2,
+        "internalBidirectionalTransitionCount": 2,
+        "distanceToWin": 2,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "isWinning": false,
+        "canReachWin": true,
+        "solutionNextRegion": 1,
+        "forcedCommitment": true,
+        "forcedViableProgress": true,
+        "forcedOptimalProgress": true
+      },
+      {
+        "regionId": 1,
+        "stateCount": 15,
+        "internalBidirectionalTransitionCount": 32,
+        "distanceToWin": 1,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "isWinning": false,
+        "canReachWin": true,
+        "solutionNextRegion": 2,
+        "forcedCommitment": true,
+        "forcedViableProgress": true,
+        "forcedOptimalProgress": true
+      },
+      {
+        "regionId": 2,
+        "stateCount": 17,
+        "internalBidirectionalTransitionCount": 38,
+        "distanceToWin": 0,
+        "commitmentCount": 2,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "isWinning": true,
+        "canReachWin": true,
+        "solutionNextRegion": null,
+        "forcedCommitment": false,
+        "forcedViableProgress": false,
+        "forcedOptimalProgress": false
+      }
+    ],
+    "decisionSteps": [
+      {
+        "step": 0,
+        "input": null,
+        "events": [],
+        "regionId": 0,
+        "previousRegionId": null,
+        "nextSolutionRegionId": 0,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 2,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 1,
+        "input": "down",
+        "events": [
+          "walk"
+        ],
+        "regionId": 0,
+        "previousRegionId": 0,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": true,
+        "distanceToWin": 2,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": true,
+        "nextSolutionIsProgress": true,
+        "nextSolutionIsOptimal": true,
+        "forcedViableChoice": true,
+        "forcedOptimalChoice": true
+      },
+      {
+        "step": 2,
+        "input": "left",
+        "events": [
+          "portal_enter:D",
+          "portal_exit_blocked:D->E",
+          "portal_exit_blocked_by_portal:A",
+          "portal_fallback_push:D"
+        ],
+        "regionId": 1,
+        "previousRegionId": 0,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": true,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 1,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 3,
+        "input": "left",
+        "events": [
+          "walk"
+        ],
+        "regionId": 1,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 1,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 4,
+        "input": "down",
+        "events": [
+          "walk"
+        ],
+        "regionId": 1,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 1,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 5,
+        "input": "left",
+        "events": [
+          "walk"
+        ],
+        "regionId": 1,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 1,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 6,
+        "input": "up",
+        "events": [
+          "portal_enter:D",
+          "portal_teleport:D->E"
+        ],
+        "regionId": 1,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 1,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 7,
+        "input": "left",
+        "events": [
+          "walk"
+        ],
+        "regionId": 1,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 2,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": true,
+        "distanceToWin": 1,
+        "commitmentCount": 1,
+        "viableCommitmentCount": 1,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": true,
+        "nextSolutionIsProgress": true,
+        "nextSolutionIsOptimal": true,
+        "forcedViableChoice": true,
+        "forcedOptimalChoice": true
+      },
+      {
+        "step": 8,
+        "input": "down",
+        "events": [
+          "portal_enter:A",
+          "portal_exit_blocked:A->B",
+          "portal_exit_blocked_by_portal:D",
+          "portal_fallback_push:A"
+        ],
+        "regionId": 2,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 2,
+        "enteredNewRegion": true,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 0,
+        "commitmentCount": 2,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 9,
+        "input": "right",
+        "events": [
+          "walk"
+        ],
+        "regionId": 2,
+        "previousRegionId": 2,
+        "nextSolutionRegionId": 2,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 0,
+        "commitmentCount": 2,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 10,
+        "input": "right",
+        "events": [
+          "walk"
+        ],
+        "regionId": 2,
+        "previousRegionId": 2,
+        "nextSolutionRegionId": 2,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 0,
+        "commitmentCount": 2,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 11,
+        "input": "down",
+        "events": [
+          "walk"
+        ],
+        "regionId": 2,
+        "previousRegionId": 2,
+        "nextSolutionRegionId": 2,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 0,
+        "commitmentCount": 2,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 12,
+        "input": "right",
+        "events": [
+          "walk"
+        ],
+        "regionId": 2,
+        "previousRegionId": 2,
+        "nextSolutionRegionId": 2,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 0,
+        "commitmentCount": 2,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 13,
+        "input": "right",
+        "events": [
+          "portal_enter:B",
+          "portal_teleport:B->A"
+        ],
+        "regionId": 2,
+        "previousRegionId": 2,
+        "nextSolutionRegionId": null,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 0,
+        "commitmentCount": 2,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      }
+    ],
+    "scc": {
+      "condensationRule": "strongly_connected_components",
+      "sccCount": 10,
+      "sccEdgeCount": 9,
+      "initialSccId": 0,
+      "winningSccCount": 8,
+      "winReachableSccCount": 10,
+      "winContinuationBranchingSccCount": 0,
+      "winContinuationMergingSccCount": 0,
+      "winSubgraphShape": "single_win_chain",
+      "solutionSccPath": [
+        {
+          "sccId": 0,
+          "enteredAtStep": 0
+        },
+        {
+          "sccId": 1,
+          "enteredAtStep": 2
+        },
+        {
+          "sccId": 2,
+          "enteredAtStep": 8
+        }
+      ],
+      "solutionIrreversibleStepCount": 2,
+      "forcedWinContinuationPrefixLength": 2,
+      "initialScc": {
+        "sccId": 0,
+        "stateCount": 2,
+        "representativeStateKey": "P:8,3|C:|R:A:2,3;B:6,3;D:7,4;E:3,3",
+        "isInitial": true,
+        "isWinning": false,
+        "canReachWin": true,
+        "distanceToWin": 2,
+        "incomingCount": 0,
+        "outgoingCount": 1,
+        "winReachableIncomingCount": 0,
+        "winReachableOutgoingCount": 1,
+        "deadOutgoingCount": 0,
+        "onSolutionPath": true,
+        "enteredAtStep": 0
+      },
+      "solutionPathBranches": [
+        {
+          "sccId": 0,
+          "stateCount": 2,
+          "representativeStateKey": "P:8,3|C:|R:A:2,3;B:6,3;D:7,4;E:3,3",
+          "isInitial": true,
+          "isWinning": false,
+          "canReachWin": true,
+          "distanceToWin": 2,
+          "incomingCount": 0,
+          "outgoingCount": 1,
+          "winReachableIncomingCount": 0,
+          "winReachableOutgoingCount": 1,
+          "deadOutgoingCount": 0,
+          "onSolutionPath": true,
+          "enteredAtStep": 0,
+          "solutionNextSccId": 1,
+          "forcedWinContinuation": true
+        },
+        {
+          "sccId": 1,
+          "stateCount": 15,
+          "representativeStateKey": "P:8,4|C:|R:A:2,3;B:6,3;D:6,4;E:3,3",
+          "isInitial": false,
+          "isWinning": false,
+          "canReachWin": true,
+          "distanceToWin": 1,
+          "incomingCount": 1,
+          "outgoingCount": 1,
+          "winReachableIncomingCount": 1,
+          "winReachableOutgoingCount": 1,
+          "deadOutgoingCount": 0,
+          "onSolutionPath": true,
+          "enteredAtStep": 2,
+          "solutionNextSccId": 2,
+          "forcedWinContinuation": true
+        },
+        {
+          "sccId": 2,
+          "stateCount": 17,
+          "representativeStateKey": "P:2,2|C:|R:A:2,4;B:6,3;D:6,4;E:3,3",
+          "isInitial": false,
+          "isWinning": true,
+          "canReachWin": true,
+          "distanceToWin": 0,
+          "incomingCount": 1,
+          "outgoingCount": 2,
+          "winReachableIncomingCount": 1,
+          "winReachableOutgoingCount": 0,
+          "deadOutgoingCount": 0,
+          "onSolutionPath": true,
+          "enteredAtStep": 8,
+          "solutionNextSccId": null,
+          "forcedWinContinuation": false
+        }
+      ]
+    },
+    "budget": {
+      "maxStates": 100000
+    }
+  },
+  "counterfactuals": [
+    {
+      "model": "without_pull",
+      "solvable": true,
+      "cost": 13,
+      "exploredStates": 38,
+      "searchStatus": "found"
+    },
+    {
+      "model": "without_blocked_portal_push",
+      "solvable": false,
+      "exploredStates": 2,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    },
+    {
+      "model": "without_portal_teleport",
+      "solvable": false,
+      "exploredStates": 8,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    }
+  ],
+  "targets": [
+    {
+      "targetId": "K_blocked_portal_pushes_entrance",
+      "statement": "传送门出口被堵住且入口传送门前方可移动时，进入入口会改为推动入口传送门。",
+      "requiredEvents": [
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 37,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (13)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 49,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    },
+    {
+      "targetId": "K_portal_as_dynamic_blocker",
+      "requiredEvents": [],
+      "forbiddenEvents": [],
+      "detectorConfigured": false,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": false,
+        "reason": "No event detector is configured for this target."
+      },
+      "winningBypass": {
+        "checked": false,
+        "reason": "No event detector is configured for this target."
+      }
+    },
+    {
+      "targetId": "K_multi_instance_same_kind",
+      "requiredEvents": [],
+      "forbiddenEvents": [],
+      "detectorConfigured": false,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": false,
+        "reason": "No event detector is configured for this target."
+      },
+      "winningBypass": {
+        "checked": false,
+        "reason": "No event detector is configured for this target."
+      }
+    }
+  ]
+}

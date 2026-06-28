@@ -1,0 +1,194 @@
+{
+  "prototype": "pull_portal_fallback",
+  "level": {
+    "id": "L20",
+    "title": "Wide Build",
+    "role": "challenge",
+    "status": "candidate",
+    "targets": [
+      "K_use_crate_to_block_portal_exit",
+      "K_blocked_portal_pushes_entrance"
+    ],
+    "supportLevel": "low",
+    "winCondition": {
+      "type": "event_occurs",
+      "event": "portal_fallback_push"
+    }
+  },
+  "initialState": "##############\n#            #\n#  @ A       #\n#     C      #\n#    B       #\n#            #\n##############",
+  "solution": {
+    "found": true,
+    "cost": 8,
+    "depth": 8,
+    "exploredStates": 171,
+    "searchStatus": "found",
+    "inputs": [
+      "right",
+      "right",
+      "down",
+      "left",
+      "up",
+      "left",
+      "down",
+      "right"
+    ],
+    "events": [
+      "walk",
+      "portal_enter",
+      "portal_teleport",
+      "pull_crate",
+      "walk",
+      "portal_enter",
+      "portal_teleport",
+      "walk",
+      "walk",
+      "portal_enter",
+      "portal_exit_blocked",
+      "portal_fallback_push"
+    ],
+    "eventCounts": {
+      "walk": 4,
+      "portal_enter": 3,
+      "portal_teleport": 2,
+      "pull_crate": 1,
+      "portal_exit_blocked": 1,
+      "portal_fallback_push": 1
+    }
+  },
+  "keySnapshots": [
+    {
+      "step": 2,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "##############\n#            #\n#   @A       #\n#     C      #\n#    B       #\n#            #\n##############",
+      "after": "##############\n#            #\n#    A       #\n#     C      #\n#    B@      #\n#            #\n##############"
+    },
+    {
+      "step": 3,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "pull_crate"
+      ],
+      "before": "##############\n#            #\n#    A       #\n#     C      #\n#    B@      #\n#            #\n##############",
+      "after": "##############\n#            #\n#    A       #\n#            #\n#    BC      #\n#     @      #\n##############"
+    },
+    {
+      "step": 5,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "before": "##############\n#            #\n#    A       #\n#            #\n#    BC      #\n#    @       #\n##############",
+      "after": "##############\n#    @       #\n#    A       #\n#            #\n#    BC      #\n#            #\n##############"
+    },
+    {
+      "step": 8,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "before": "##############\n#            #\n#   @A       #\n#            #\n#    BC      #\n#            #\n##############",
+      "after": "##############\n#            #\n#   @ A      #\n#            #\n#    BC      #\n#            #\n##############"
+    }
+  ],
+  "graph": {
+    "status": "exhausted",
+    "reachableStateCount": 100001,
+    "legalTransitionCount": 282718,
+    "eventOnlyTransitionCount": 8644,
+    "winStateCount": 0,
+    "budget": {
+      "maxStates": 100000
+    },
+    "reason": "state budget exceeded"
+  },
+  "counterfactuals": [
+    {
+      "model": "without_pull",
+      "solvable": false,
+      "exploredStates": 57,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    },
+    {
+      "model": "without_blocked_portal_push",
+      "solvable": false,
+      "exploredStates": 1596,
+      "searchStatus": "complete",
+      "reason": "search complete"
+    },
+    {
+      "model": "without_portal_teleport",
+      "solvable": true,
+      "cost": 12,
+      "exploredStates": 287,
+      "searchStatus": "found"
+    }
+  ],
+  "targets": [
+    {
+      "targetId": "K_use_crate_to_block_portal_exit",
+      "statement": "玩家可以故意把箱子拉到传送门出口，从而触发堵塞出口行为。",
+      "requiredEvents": [
+        "pull_crate",
+        "portal_exit_blocked"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 212,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (8)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 1653,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    },
+    {
+      "targetId": "K_blocked_portal_pushes_entrance",
+      "statement": "传送门出口被堵住且入口传送门前方可移动时，进入入口会改为推动入口传送门。",
+      "requiredEvents": [
+        "portal_exit_blocked",
+        "portal_fallback_push"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": true,
+        "scope": "shortest_cost_bound",
+        "found": false,
+        "exploredStates": 210,
+        "searchStatus": "exhausted",
+        "reason": "depth budget exceeded (8)"
+      },
+      "winningBypass": {
+        "checked": true,
+        "scope": "full_search",
+        "found": false,
+        "exploredStates": 1596,
+        "searchStatus": "complete",
+        "reason": "no uncovered goal path in complete search"
+      }
+    }
+  ]
+}

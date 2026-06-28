@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/sokoban/knowledge.schema.json",
+  "title": "KnowledgeList",
+  "type": "object",
+  "required": ["mechanic", "knowledge"],
+  "additionalProperties": false,
+  "properties": {
+    "mechanic": { "$ref": "#/$defs/id" },
+    "knowledge": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/knowledgeItem" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "knowledgeItem": {
+      "type": "object",
+      "required": ["id", "type", "statement", "source", "detector", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "vocabulary",
+            "affordance",
+            "constraint",
+            "tactic",
+            "interaction",
+            "interaction_exception",
+            "strategy"
+          ]
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "prerequisites": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "source": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": ["declared", "derived_rule", "derived_branch", "trace_mined", "manual"]
+            },
+            "rule": { "$ref": "#/$defs/id" },
+            "branch": { "$ref": "#/$defs/id" },
+            "events": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/id" },
+              "uniqueItems": true
+            },
+            "notes": { "type": "string" }
+          }
+        },
+        "detector": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "required_events": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/id" },
+              "uniqueItems": true
+            },
+            "forbidden_events": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/id" },
+              "uniqueItems": true
+            }
+          }
+        },
+        "informal_semantics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "trace_condition": { "type": "string" },
+            "notes": { "type": "string" }
+          }
+        },
+        "counterfactual": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "model": { "$ref": "#/$defs/id" },
+            "disable_rule": { "$ref": "#/$defs/id" },
+            "disable_branch": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        },
+        "importance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "centrality": { "$ref": "#/$defs/rating" },
+            "prerequisite_value": { "$ref": "#/$defs/rating" },
+            "surprise": { "$ref": "#/$defs/rating" },
+            "failure_cost": { "$ref": "#/$defs/rating" },
+            "design_power": { "$ref": "#/$defs/rating" },
+            "teachability": { "$ref": "#/$defs/rating" },
+            "interaction_depth": { "$ref": "#/$defs/rating" }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "required": ["strength"],
+          "additionalProperties": false,
+          "properties": {
+            "strength": {
+              "type": "string",
+              "enum": ["weak", "medium", "strong"]
+            },
+            "witness_level": { "$ref": "#/$defs/id" },
+            "necessary_level": { "$ref": "#/$defs/id" },
+            "notes": { "type": "string" }
+          }
+        }
+      }
+    },
+    "rating": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    }
+  }
+}

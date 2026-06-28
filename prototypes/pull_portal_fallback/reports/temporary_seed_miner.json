@@ -1,0 +1,789 @@
+{
+  "prototype": "pull_portal_fallback",
+  "generatedAt": "2026-06-27T20:56:54.236Z",
+  "options": {
+    "seed": 18422,
+    "iterations": 40,
+    "maxFindings": 8,
+    "width": 0,
+    "height": 0,
+    "minWidth": 6,
+    "maxWidth": 9,
+    "minHeight": 5,
+    "maxHeight": 8,
+    "crates": -1,
+    "portalPairs": -1,
+    "wallDensity": 0.08,
+    "minScore": 15,
+    "maxStates": 25000,
+    "maxDepth": 90,
+    "graphMaxStates": 25000
+  },
+  "stats": {
+    "generated": 40,
+    "invalid": 0,
+    "unsolved": 2,
+    "solved": 36,
+    "completeGraph": 34,
+    "completeAgency": 34,
+    "keptBeforeLimit": 27,
+    "kept": 8
+  },
+  "tagCounts": {
+    "branching_win_dag": 6,
+    "crate_blocks_exit": 1,
+    "fallback_push": 4,
+    "mixed_events": 7,
+    "multi_instance_participation": 2,
+    "multi_irreversible_chain": 2,
+    "normal_teleport": 4,
+    "open_initial_scc": 8,
+    "portal_blocks_exit": 2,
+    "pull": 3
+  },
+  "findings": [
+    {
+      "id": "MF_0022",
+      "source": {
+        "tool": "temporary_seed_miner",
+        "generator": "scatter",
+        "seed": 18422,
+        "index": 22
+      },
+      "score": 81,
+      "tags": [
+        "pull",
+        "normal_teleport",
+        "fallback_push",
+        "crate_blocks_exit",
+        "multi_instance_participation",
+        "open_initial_scc",
+        "mixed_events"
+      ],
+      "layout": "#########\n#....#@.#\n#..CAC..#\n#G.B....#\n#########",
+      "observedEvents": [
+        "walk",
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_exit_blocked_by_crate",
+        "portal_fallback_push",
+        "portal_teleport",
+        "pull_crate"
+      ],
+      "eventCounts": {
+        "walk": 5,
+        "portal_enter:B": 1,
+        "portal_exit_blocked:B->A": 1,
+        "portal_exit_blocked_by_crate:crate#1": 1,
+        "portal_fallback_push:B": 1,
+        "portal_enter:A": 1,
+        "portal_teleport:A->B": 1,
+        "pull_crate:crate#1": 1
+      },
+      "solution": {
+        "cost": 8,
+        "exploredStates": 41,
+        "inputs": [
+          "down",
+          "down",
+          "left",
+          "left",
+          "left",
+          "up",
+          "left",
+          "down"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "portal_enter:B",
+          "portal_exit_blocked:B->A",
+          "portal_exit_blocked_by_crate:crate#1",
+          "portal_fallback_push:B",
+          "portal_enter:A",
+          "portal_teleport:A->B",
+          "pull_crate:crate#1",
+          "walk"
+        ]
+      },
+      "graph": {
+        "status": "complete",
+        "reachableStates": 1832,
+        "legalTransitions": 4218,
+        "winStates": 98
+      },
+      "scc": {
+        "shape": "single_win_chain",
+        "count": 66,
+        "irreversibleSteps": 1,
+        "forcedWinPrefix": 0,
+        "initialStateCount": 80,
+        "initialOutgoing": 18,
+        "initialWinReachableOutgoing": 0,
+        "initialDeadOutgoing": 0,
+        "branchingWinSccs": 0,
+        "mergingWinSccs": 28
+      },
+      "objectParticipation": [
+        {
+          "objectType": "crate",
+          "role": "blocked_portal_exit",
+          "eventType": "portal_exit_blocked_by_crate",
+          "distinct": 1,
+          "instances": [
+            "crate#1"
+          ]
+        },
+        {
+          "objectType": "crate",
+          "role": "moved",
+          "eventType": "pull_crate",
+          "distinct": 1,
+          "instances": [
+            "crate#1"
+          ]
+        },
+        {
+          "objectType": "portal",
+          "role": "entered",
+          "eventType": "portal_enter",
+          "distinct": 2,
+          "instances": [
+            "A",
+            "B"
+          ]
+        },
+        {
+          "objectType": "portal",
+          "role": "moved",
+          "eventType": "portal_fallback_push",
+          "distinct": 1,
+          "instances": [
+            "B"
+          ]
+        }
+      ],
+      "notes": [
+        "Rewrite as a seed / combination / insight before using it in any slot.",
+        "Inspect whether the fallback state change is later consumed or merely witnessed.",
+        "Potential seed-combination material: normal transport and fallback exception both appear.",
+        "Potential multi-instance material: check whether distinct instances are coupled or just repeated."
+      ]
+    },
+    {
+      "id": "MF_0029",
+      "source": {
+        "tool": "temporary_seed_miner",
+        "generator": "scatter",
+        "seed": 18422,
+        "index": 29
+      },
+      "score": 77,
+      "tags": [
+        "pull",
+        "normal_teleport",
+        "multi_instance_participation",
+        "branching_win_dag",
+        "multi_irreversible_chain",
+        "open_initial_scc",
+        "mixed_events"
+      ],
+      "layout": "#######\n#CCGAB#\n##.E@.#\n#.....#\n##.D..#\n#######",
+      "observedEvents": [
+        "walk",
+        "portal_enter",
+        "portal_teleport",
+        "pull_crate"
+      ],
+      "eventCounts": {
+        "walk": 4,
+        "portal_enter:D": 3,
+        "portal_teleport:D->E": 3,
+        "pull_crate:crate#2": 3,
+        "pull_crate:crate#1": 1
+      },
+      "solution": {
+        "cost": 11,
+        "exploredStates": 43,
+        "inputs": [
+          "down",
+          "down",
+          "left",
+          "down",
+          "down",
+          "right",
+          "down",
+          "down",
+          "left",
+          "up",
+          "right"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "portal_enter:D",
+          "portal_teleport:D->E",
+          "pull_crate:crate#2",
+          "pull_crate:crate#2",
+          "portal_enter:D",
+          "portal_teleport:D->E",
+          "walk",
+          "walk",
+          "portal_enter:D",
+          "portal_teleport:D->E",
+          "pull_crate:crate#2",
+          "pull_crate:crate#1"
+        ]
+      },
+      "graph": {
+        "status": "complete",
+        "reachableStates": 1499,
+        "legalTransitions": 3067,
+        "winStates": 86
+      },
+      "scc": {
+        "shape": "branching_win_dag",
+        "count": 213,
+        "irreversibleSteps": 4,
+        "forcedWinPrefix": 2,
+        "initialStateCount": 11,
+        "initialOutgoing": 1,
+        "initialWinReachableOutgoing": 1,
+        "initialDeadOutgoing": 0,
+        "branchingWinSccs": 24,
+        "mergingWinSccs": 30
+      },
+      "objectParticipation": [
+        {
+          "objectType": "crate",
+          "role": "moved",
+          "eventType": "pull_crate",
+          "distinct": 2,
+          "instances": [
+            "crate#1",
+            "crate#2"
+          ]
+        },
+        {
+          "objectType": "portal",
+          "role": "entered",
+          "eventType": "portal_enter",
+          "distinct": 1,
+          "instances": [
+            "D"
+          ]
+        }
+      ],
+      "notes": [
+        "Rewrite as a seed / combination / insight before using it in any slot.",
+        "Potential multi-instance material: check whether distinct instances are coupled or just repeated.",
+        "SCC win DAG has local ordering freedom; inspect whether that freedom is meaningful."
+      ]
+    },
+    {
+      "id": "MF_0006",
+      "source": {
+        "tool": "temporary_seed_miner",
+        "generator": "two_pair_gate",
+        "seed": 18422,
+        "index": 6
+      },
+      "score": 56,
+      "tags": [
+        "fallback_push",
+        "portal_blocks_exit",
+        "branching_win_dag",
+        "open_initial_scc",
+        "mixed_events"
+      ],
+      "layout": "########\n#......#\n#.D.A@.#\n##EBG#.#\n#......#\n########",
+      "observedEvents": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_exit_blocked_by_portal",
+        "portal_fallback_push",
+        "walk"
+      ],
+      "eventCounts": {
+        "portal_enter:A": 1,
+        "portal_exit_blocked:A->B": 1,
+        "portal_exit_blocked_by_portal:E": 1,
+        "portal_fallback_push:A": 1,
+        "walk": 2
+      },
+      "solution": {
+        "cost": 3,
+        "exploredStates": 15,
+        "inputs": [
+          "left",
+          "left",
+          "down"
+        ],
+        "events": [
+          "portal_enter:A",
+          "portal_exit_blocked:A->B",
+          "portal_exit_blocked_by_portal:E",
+          "portal_fallback_push:A",
+          "walk",
+          "walk"
+        ]
+      },
+      "graph": {
+        "status": "complete",
+        "reachableStates": 13379,
+        "legalTransitions": 36033,
+        "winStates": 698
+      },
+      "scc": {
+        "shape": "branching_win_dag",
+        "count": 573,
+        "irreversibleSteps": 1,
+        "forcedWinPrefix": 0,
+        "initialStateCount": 18,
+        "initialOutgoing": 3,
+        "initialWinReachableOutgoing": 0,
+        "initialDeadOutgoing": 0,
+        "branchingWinSccs": 6,
+        "mergingWinSccs": 263
+      },
+      "objectParticipation": [
+        {
+          "objectType": "portal",
+          "role": "entered",
+          "eventType": "portal_enter",
+          "distinct": 1,
+          "instances": [
+            "A"
+          ]
+        },
+        {
+          "objectType": "portal",
+          "role": "moved",
+          "eventType": "portal_fallback_push",
+          "distinct": 1,
+          "instances": [
+            "A"
+          ]
+        }
+      ],
+      "notes": [
+        "Rewrite as a seed / combination / insight before using it in any slot.",
+        "Inspect whether the fallback state change is later consumed or merely witnessed.",
+        "SCC win DAG has local ordering freedom; inspect whether that freedom is meaningful."
+      ]
+    },
+    {
+      "id": "MF_0007",
+      "source": {
+        "tool": "temporary_seed_miner",
+        "generator": "two_pair_gate",
+        "seed": 18422,
+        "index": 7
+      },
+      "score": 56,
+      "tags": [
+        "fallback_push",
+        "portal_blocks_exit",
+        "branching_win_dag",
+        "open_initial_scc",
+        "mixed_events"
+      ],
+      "layout": "########\n##.....#\n#.@A.D.#\n#.#GBE##\n#......#\n########",
+      "observedEvents": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_exit_blocked_by_portal",
+        "portal_fallback_push",
+        "walk"
+      ],
+      "eventCounts": {
+        "portal_enter:A": 1,
+        "portal_exit_blocked:A->B": 1,
+        "portal_exit_blocked_by_portal:E": 1,
+        "portal_fallback_push:A": 1,
+        "walk": 2
+      },
+      "solution": {
+        "cost": 3,
+        "exploredStates": 15,
+        "inputs": [
+          "right",
+          "right",
+          "down"
+        ],
+        "events": [
+          "portal_enter:A",
+          "portal_exit_blocked:A->B",
+          "portal_exit_blocked_by_portal:E",
+          "portal_fallback_push:A",
+          "walk",
+          "walk"
+        ]
+      },
+      "graph": {
+        "status": "complete",
+        "reachableStates": 13890,
+        "legalTransitions": 36360,
+        "winStates": 777
+      },
+      "scc": {
+        "shape": "branching_win_dag",
+        "count": 670,
+        "irreversibleSteps": 1,
+        "forcedWinPrefix": 0,
+        "initialStateCount": 17,
+        "initialOutgoing": 3,
+        "initialWinReachableOutgoing": 0,
+        "initialDeadOutgoing": 0,
+        "branchingWinSccs": 4,
+        "mergingWinSccs": 324
+      },
+      "objectParticipation": [
+        {
+          "objectType": "portal",
+          "role": "entered",
+          "eventType": "portal_enter",
+          "distinct": 1,
+          "instances": [
+            "A"
+          ]
+        },
+        {
+          "objectType": "portal",
+          "role": "moved",
+          "eventType": "portal_fallback_push",
+          "distinct": 1,
+          "instances": [
+            "A"
+          ]
+        }
+      ],
+      "notes": [
+        "Rewrite as a seed / combination / insight before using it in any slot.",
+        "Inspect whether the fallback state change is later consumed or merely witnessed.",
+        "SCC win DAG has local ordering freedom; inspect whether that freedom is meaningful."
+      ]
+    },
+    {
+      "id": "MF_0031",
+      "source": {
+        "tool": "temporary_seed_miner",
+        "generator": "fallback_gate",
+        "seed": 18422,
+        "index": 31
+      },
+      "score": 47,
+      "tags": [
+        "normal_teleport",
+        "branching_win_dag",
+        "open_initial_scc",
+        "mixed_events"
+      ],
+      "layout": "#######\n#....E#\n#.@AC.#\n#.#GB##\n#.D...#\n#######",
+      "observedEvents": [
+        "walk",
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "eventCounts": {
+        "walk": 4,
+        "portal_enter:A": 1,
+        "portal_teleport:A->B": 1
+      },
+      "solution": {
+        "cost": 5,
+        "exploredStates": 13,
+        "inputs": [
+          "up",
+          "right",
+          "down",
+          "left",
+          "up"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "portal_enter:A",
+          "portal_teleport:A->B",
+          "walk",
+          "walk"
+        ]
+      },
+      "graph": {
+        "status": "complete",
+        "reachableStates": 1295,
+        "legalTransitions": 2899,
+        "winStates": 65
+      },
+      "scc": {
+        "shape": "branching_win_dag",
+        "count": 82,
+        "irreversibleSteps": 0,
+        "forcedWinPrefix": 0,
+        "initialStateCount": 12,
+        "initialOutgoing": 2,
+        "initialWinReachableOutgoing": 0,
+        "initialDeadOutgoing": 0,
+        "branchingWinSccs": 9,
+        "mergingWinSccs": 31
+      },
+      "objectParticipation": [
+        {
+          "objectType": "portal",
+          "role": "entered",
+          "eventType": "portal_enter",
+          "distinct": 1,
+          "instances": [
+            "A"
+          ]
+        }
+      ],
+      "notes": [
+        "Rewrite as a seed / combination / insight before using it in any slot.",
+        "SCC win DAG has local ordering freedom; inspect whether that freedom is meaningful."
+      ]
+    },
+    {
+      "id": "MF_0023",
+      "source": {
+        "tool": "temporary_seed_miner",
+        "generator": "scatter",
+        "seed": 18422,
+        "index": 23
+      },
+      "score": 46,
+      "tags": [
+        "pull",
+        "branching_win_dag",
+        "multi_irreversible_chain",
+        "open_initial_scc"
+      ],
+      "layout": "######\n#....#\n#..#.#\n#..@.#\n#A..##\n#G.C##\n##CB.#\n######",
+      "observedEvents": [
+        "walk",
+        "pull_crate"
+      ],
+      "eventCounts": {
+        "walk": 3,
+        "pull_crate:crate#1": 1
+      },
+      "solution": {
+        "cost": 4,
+        "exploredStates": 22,
+        "inputs": [
+          "down",
+          "left",
+          "down",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "walk",
+          "pull_crate:crate#1"
+        ]
+      },
+      "graph": {
+        "status": "complete",
+        "reachableStates": 1017,
+        "legalTransitions": 2341,
+        "winStates": 19
+      },
+      "scc": {
+        "shape": "branching_win_dag",
+        "count": 50,
+        "irreversibleSteps": 2,
+        "forcedWinPrefix": 0,
+        "initialStateCount": 13,
+        "initialOutgoing": 3,
+        "initialWinReachableOutgoing": 2,
+        "initialDeadOutgoing": 1,
+        "branchingWinSccs": 3,
+        "mergingWinSccs": 3
+      },
+      "objectParticipation": [
+        {
+          "objectType": "crate",
+          "role": "moved",
+          "eventType": "pull_crate",
+          "distinct": 1,
+          "instances": [
+            "crate#1"
+          ]
+        }
+      ],
+      "notes": [
+        "Rewrite as a seed / combination / insight before using it in any slot.",
+        "SCC win DAG has local ordering freedom; inspect whether that freedom is meaningful."
+      ]
+    },
+    {
+      "id": "MF_0033",
+      "source": {
+        "tool": "temporary_seed_miner",
+        "generator": "scatter",
+        "seed": 18422,
+        "index": 33
+      },
+      "score": 46,
+      "tags": [
+        "normal_teleport",
+        "branching_win_dag",
+        "open_initial_scc",
+        "mixed_events"
+      ],
+      "layout": "########\n#.##CA.#\n#E.B...#\n#.@C..G#\n#..D#..#\n########",
+      "observedEvents": [
+        "walk",
+        "portal_enter",
+        "portal_teleport"
+      ],
+      "eventCounts": {
+        "walk": 3,
+        "portal_enter:B": 1,
+        "portal_teleport:B->A": 1
+      },
+      "solution": {
+        "cost": 4,
+        "exploredStates": 13,
+        "inputs": [
+          "up",
+          "right",
+          "down",
+          "down"
+        ],
+        "events": [
+          "walk",
+          "portal_enter:B",
+          "portal_teleport:B->A",
+          "walk",
+          "walk"
+        ]
+      },
+      "graph": {
+        "status": "complete",
+        "reachableStates": 3608,
+        "legalTransitions": 8212,
+        "winStates": 276
+      },
+      "scc": {
+        "shape": "branching_win_dag",
+        "count": 257,
+        "irreversibleSteps": 0,
+        "forcedWinPrefix": 0,
+        "initialStateCount": 56,
+        "initialOutgoing": 3,
+        "initialWinReachableOutgoing": 0,
+        "initialDeadOutgoing": 0,
+        "branchingWinSccs": 27,
+        "mergingWinSccs": 83
+      },
+      "objectParticipation": [
+        {
+          "objectType": "portal",
+          "role": "entered",
+          "eventType": "portal_enter",
+          "distinct": 1,
+          "instances": [
+            "B"
+          ]
+        }
+      ],
+      "notes": [
+        "Rewrite as a seed / combination / insight before using it in any slot.",
+        "SCC win DAG has local ordering freedom; inspect whether that freedom is meaningful."
+      ]
+    },
+    {
+      "id": "MF_0003",
+      "source": {
+        "tool": "temporary_seed_miner",
+        "generator": "fallback_gate",
+        "seed": 18422,
+        "index": 3
+      },
+      "score": 43,
+      "tags": [
+        "fallback_push",
+        "open_initial_scc",
+        "mixed_events"
+      ],
+      "layout": "#######\n#...C.#\n##BG#.#\n#..A@.#\n#.....#\n#######",
+      "observedEvents": [
+        "portal_enter",
+        "portal_exit_blocked",
+        "portal_exit_blocked_by_wall",
+        "portal_fallback_push",
+        "walk"
+      ],
+      "eventCounts": {
+        "portal_enter:A": 1,
+        "portal_exit_blocked:A->B": 1,
+        "portal_exit_blocked_by_wall": 1,
+        "portal_fallback_push:A": 1,
+        "walk": 2
+      },
+      "solution": {
+        "cost": 3,
+        "exploredStates": 15,
+        "inputs": [
+          "left",
+          "left",
+          "up"
+        ],
+        "events": [
+          "portal_enter:A",
+          "portal_exit_blocked:A->B",
+          "portal_exit_blocked_by_wall",
+          "portal_fallback_push:A",
+          "walk",
+          "walk"
+        ]
+      },
+      "graph": {
+        "status": "complete",
+        "reachableStates": 2391,
+        "legalTransitions": 5608,
+        "winStates": 117
+      },
+      "scc": {
+        "shape": "single_win_chain",
+        "count": 77,
+        "irreversibleSteps": 1,
+        "forcedWinPrefix": 0,
+        "initialStateCount": 29,
+        "initialOutgoing": 2,
+        "initialWinReachableOutgoing": 0,
+        "initialDeadOutgoing": 0,
+        "branchingWinSccs": 0,
+        "mergingWinSccs": 24
+      },
+      "objectParticipation": [
+        {
+          "objectType": "portal",
+          "role": "entered",
+          "eventType": "portal_enter",
+          "distinct": 1,
+          "instances": [
+            "A"
+          ]
+        },
+        {
+          "objectType": "portal",
+          "role": "moved",
+          "eventType": "portal_fallback_push",
+          "distinct": 1,
+          "instances": [
+            "A"
+          ]
+        }
+      ],
+      "notes": [
+        "Rewrite as a seed / combination / insight before using it in any slot.",
+        "Inspect whether the fallback state change is later consumed or merely witnessed."
+      ]
+    }
+  ]
+}

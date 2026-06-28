@@ -1,0 +1,227 @@
+mechanic: pull_portal_fallback
+
+knowledge:
+  - id: K_pull_single_crate
+    type: affordance
+    statement: 玩家可以把身后相邻的单个箱子向自己的移动方向拉动。
+    prerequisites: []
+    source:
+      kind: derived_rule
+      rule: pull_single_crate
+      events: [pull_crate]
+    detector:
+      required_events: [pull_crate]
+    counterfactual:
+      model: without_pull
+      disable_rule: pull_single_crate
+    importance:
+      centrality: 5
+      prerequisite_value: 5
+      surprise: 2
+      failure_cost: 5
+      design_power: 5
+      teachability: 5
+      interaction_depth: 1
+    evidence:
+      strength: weak
+      notes: Declared by the core pull rule; needs witness verification.
+
+  - id: K_cannot_push_crate
+    type: constraint
+    statement: 玩家不能推动前方的箱子。
+    prerequisites: []
+    source:
+      kind: derived_rule
+      rule: cannot_push_crate
+      events: [push_crate_failed]
+    detector:
+      required_events: [push_crate_failed]
+    counterfactual:
+      description: Compare against a variant where crates are pushable.
+    importance:
+      centrality: 5
+      prerequisite_value: 4
+      surprise: 3
+      failure_cost: 4
+      design_power: 4
+      teachability: 5
+      interaction_depth: 1
+    evidence:
+      strength: weak
+
+  - id: K_pull_opens_path
+    type: tactic
+    statement: 玩家可以通过拉开堵路箱子制造通路。
+    prerequisites: [K_pull_single_crate, K_cannot_push_crate]
+    source:
+      kind: manual
+      events: [pull_crate]
+      notes: Tactic-level knowledge expected to be verified through levels.
+    detector:
+      required_events: [pull_crate]
+    informal_semantics:
+      trace_condition: crate_moved_from_blocking_cell_and_player_later_crosses_that_cell
+      notes: Non-formal design hypothesis; not used by evaluator proof.
+    counterfactual:
+      model: without_pull
+    importance:
+      centrality: 4
+      prerequisite_value: 4
+      surprise: 2
+      failure_cost: 4
+      design_power: 5
+      teachability: 4
+      interaction_depth: 2
+    evidence:
+      strength: weak
+
+  - id: K_portal_teleports_player
+    type: affordance
+    statement: 玩家进入出口未堵塞的传送门时会被传送到配对传送门出口。
+    prerequisites: []
+    source:
+      kind: derived_branch
+      rule: enter_portal
+      branch: normal_teleport
+      events: [portal_enter, portal_teleport]
+    detector:
+      required_events: [portal_enter, portal_teleport]
+    counterfactual:
+      model: without_portal_teleport
+      disable_branch: enter_portal.normal_teleport
+    importance:
+      centrality: 4
+      prerequisite_value: 5
+      surprise: 2
+      failure_cost: 3
+      design_power: 4
+      teachability: 5
+      interaction_depth: 2
+    evidence:
+      strength: weak
+
+  - id: K_blocked_portal_stops_teleport
+    type: interaction_exception
+    statement: 传送门出口被堵住时，玩家不会正常传送。
+    prerequisites: [K_portal_teleports_player]
+    source:
+      kind: derived_branch
+      rule: enter_portal
+      branch: blocked_exit_push_entrance
+      events: [portal_enter, portal_exit_blocked]
+    detector:
+      required_events: [portal_enter, portal_exit_blocked]
+    counterfactual:
+      model: without_blocked_portal_push
+      description: The blocked-exit behavior should be compared to ordinary teleport behavior.
+    importance:
+      centrality: 3
+      prerequisite_value: 4
+      surprise: 4
+      failure_cost: 4
+      design_power: 4
+      teachability: 4
+      interaction_depth: 4
+    evidence:
+      strength: weak
+
+  - id: K_blocked_portal_pushes_entrance
+    type: interaction_exception
+    statement: 传送门出口被堵住且入口传送门前方可移动时，进入入口会改为推动入口传送门。
+    prerequisites: [K_portal_teleports_player, K_blocked_portal_stops_teleport]
+    source:
+      kind: derived_branch
+      rule: enter_portal
+      branch: blocked_exit_push_entrance
+      events: [portal_exit_blocked, portal_fallback_push]
+    detector:
+      required_events: [portal_exit_blocked, portal_fallback_push]
+    counterfactual:
+      model: without_blocked_portal_push
+      disable_branch: enter_portal.blocked_exit_push_entrance
+    importance:
+      centrality: 3
+      prerequisite_value: 4
+      surprise: 5
+      failure_cost: 4
+      design_power: 5
+      teachability: 3
+      interaction_depth: 5
+    evidence:
+      strength: weak
+
+  - id: K_blocked_portal_push_can_fail
+    type: constraint
+    statement: 如果传送门出口被堵住且入口传送门也推不动，那么进入传送门的动作失败。
+    prerequisites: [K_blocked_portal_pushes_entrance]
+    source:
+      kind: derived_branch
+      rule: enter_portal
+      branch: blocked_exit_and_cannot_push
+      events: [portal_exit_blocked, portal_fallback_failed]
+    detector:
+      required_events: [portal_exit_blocked, portal_fallback_failed]
+    counterfactual:
+      description: Compare against a variant where blocked portals are always pushable.
+    importance:
+      centrality: 2
+      prerequisite_value: 2
+      surprise: 3
+      failure_cost: 3
+      design_power: 3
+      teachability: 3
+      interaction_depth: 4
+    evidence:
+      strength: weak
+
+  - id: K_use_crate_to_block_portal_exit
+    type: tactic
+    statement: 玩家可以故意把箱子拉到传送门出口，从而触发堵塞出口行为。
+    prerequisites: [K_pull_single_crate, K_portal_teleports_player, K_blocked_portal_stops_teleport]
+    source:
+      kind: manual
+      events: [pull_crate, portal_exit_blocked]
+      notes: This should become trace-mined once the solver can identify causal blocking.
+    detector:
+      required_events: [pull_crate, portal_exit_blocked]
+    informal_semantics:
+      trace_condition: crate_blocks_paired_portal_exit_before_portal_enter
+      notes: Non-formal design hypothesis; not used by evaluator proof.
+    counterfactual:
+      model: without_blocked_portal_push
+    importance:
+      centrality: 3
+      prerequisite_value: 3
+      surprise: 4
+      failure_cost: 4
+      design_power: 5
+      teachability: 3
+      interaction_depth: 5
+    evidence:
+      strength: weak
+
+  - id: K_move_portal_to_open_path
+    type: strategy
+    statement: 玩家可以利用堵塞出口的 fallback 推动入口传送门，从而改变可达区域。
+    prerequisites: [K_blocked_portal_pushes_entrance]
+    source:
+      kind: manual
+      events: [portal_fallback_push]
+      notes: Strategy-level knowledge; should be backed by necessary levels.
+    detector:
+      required_events: [portal_fallback_push]
+    informal_semantics:
+      trace_condition: portal_position_change_enables_later_goal_access
+      notes: Non-formal design hypothesis; not used by evaluator proof.
+    counterfactual:
+      model: without_blocked_portal_push
+    importance:
+      centrality: 3
+      prerequisite_value: 3
+      surprise: 5
+      failure_cost: 4
+      design_power: 5
+      teachability: 3
+      interaction_depth: 5
+    evidence:
+      strength: weak

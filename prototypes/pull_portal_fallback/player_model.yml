@@ -1,0 +1,549 @@
+mechanic: pull_portal_fallback
+
+derivation:
+  status: manual_first_pass
+  notes: >
+    First-pass player model derived from mechanic.yml, current levels, and design
+    discussion. This file does not replace knowledge.yml yet.
+  open_questions:
+    - What happens if a portal is pushed into another portal?
+    - What happens to a crate being pulled when the player enters a portal?
+    - Are portal exits always direction-relative to the entry direction?
+
+facts:
+  - id: F_player_reaches_goal_to_win
+    kind: win_condition
+    statement: 玩家到达目标格即通关。
+    source:
+      kind: win_condition
+      notes: mechanic.win.type = player_on_goal
+    evidence:
+      status: full_graph
+
+  - id: F_pull_single_crate
+    kind: basic_operation
+    statement: 玩家移动到空格时，如果身后相邻格有箱子，则箱子会被拉到玩家原位置。
+    source:
+      kind: rule
+      rule: pull_single_crate
+      events: [pull_crate]
+    evidence:
+      status: trace
+      events:
+        required: [pull_crate]
+
+  - id: F_portals_are_paired
+    kind: fact
+    statement: A/B 传送门成对工作，每个传送门有一个配对传送门。
+    source:
+      kind: object_trait
+      object: portalA
+      notes: portalA.vars.pair = portalB and portalB.vars.pair = portalA
+    evidence:
+      status: informal
+
+  - id: F_portal_teleports_player_to_directional_exit
+    kind: fact
+    statement: 玩家进入未堵塞的传送门时，会传送到配对传送门按进入方向偏移一格的位置。
+    prerequisites: [F_portals_are_paired]
+    source:
+      kind: branch
+      rule: enter_portal
+      branch: normal_teleport
+      events: [portal_enter, portal_teleport]
+    evidence:
+      status: trace
+      events:
+        required: [portal_enter, portal_teleport]
+    notes: This is a confirmed prototype semantics, but should be explicit in future preflight.
+
+constraints:
+  - id: C_cannot_push_crate
+    kind: failure_boundary
+    statement: 玩家尝试走向前方箱子时，箱子不会被推动，动作失败。
+    source:
+      kind: rule
+      rule: cannot_push_crate
+      events: [push_crate_failed]
+    evidence:
+      status: trace
+      events:
+        required: [push_crate_failed]
+
+  - id: C_pull_requires_crate_behind_player
+    kind: precondition
+    statement: 拉箱子要求玩家移动方向的反方向相邻格存在箱子。
+    prerequisites: [F_pull_single_crate]
+    source:
+      kind: rule
+      rule: pull_single_crate
+      notes: "opposite_cell_has_object: crate"
+    evidence:
+      status: future
+
+  - id: C_pull_requires_free_destination
+    kind: precondition
+    statement: 拉箱子要求玩家前方目标格可进入且没有 solid 或 portal。
+    prerequisites: [F_pull_single_crate]
+    source:
+      kind: rule
+      rule: pull_single_crate
+      notes: "destination_has_no_traits: [solid, portal]"
+    evidence:
+      status: future
+
+  - id: C_portal_occupies_cell_and_blocks_walking
+    kind: constraint
+    statement: 传送门占据格子，普通行走不能直接进入该格；进入传送门会触发传送门规则。
+    source:
+      kind: rule
+      rule: walk
+      notes: "walk excludes destination_has_no_traits: [solid, portal]"
+    evidence:
+      status: future
+
+  - id: C_crate_blocks_portal_exit
+    kind: constraint
+    statement: 箱子位于配对传送门出口格时，会堵住该出口。
+    source:
+      kind: object_trait
+      object: crate
+      notes: crate has portal_blocker trait
+    evidence:
+      status: trace
+      events:
+        required: [portal_exit_blocked]
+
+  - id: C_wall_blocks_portal_exit
+    kind: constraint
+    statement: 墙位于配对传送门出口格时，会堵住该出口。
+    source:
+      kind: branch
+      rule: enter_portal
+      branch: blocked_exit_and_cannot_push
+      notes: paired_portal_exit_has_any_trait includes solid
+    evidence:
+      status: trace
+      events:
+        required: [portal_exit_blocked]
+
+  - id: C_fallback_push_requires_free_portal_destination
+    kind: precondition
+    statement: 堵塞出口 fallback 只有在入口传送门的推动目标格没有 solid、portal 或 portal_blocker 时才会移动入口传送门。
+    source:
+      kind: branch
+      rule: enter_portal
+      branch: blocked_exit_push_entrance
+      notes: "entrance_portal_destination_has_no_traits: [solid, portal, portal_blocker]"
+    evidence:
+      status: trace
+      events:
+        required: [portal_fallback_push]
+
+  - id: C_blocked_portal_push_can_fail
+    kind: failure_boundary
+    statement: 如果出口堵住且入口传送门也推不动，进入传送门的动作失败。
+    prerequisites: [I_blocked_exit_pushes_entrance_portal]
+    source:
+      kind: branch
+      rule: enter_portal
+      branch: blocked_exit_and_cannot_push
+      events: [portal_enter, portal_exit_blocked, portal_fallback_failed]
+    evidence:
+      status: trace
+      events:
+        required: [portal_exit_blocked, portal_fallback_failed]
+
+interactions:
+  - id: I_blocked_exit_stops_normal_teleport
+    kind: interaction_exception
+    statement: 配对传送门出口被堵住时，玩家不会执行普通传送。
+    prerequisites: [F_portal_teleports_player_to_directional_exit]
+    source:
+      kind: branch
+      rule: enter_portal
+      branch: blocked_exit_push_entrance
+      events: [portal_enter, portal_exit_blocked]
+    evidence:
+      status: trace
+      events:
+        required: [portal_enter, portal_exit_blocked]
+
+  - id: I_blocked_exit_pushes_entrance_portal
+    kind: fallback
+    statement: 配对出口被堵且入口传送门前方可移动时，进入入口会改为推动入口传送门。
+    prerequisites:
+      - F_portal_teleports_player_to_directional_exit
+      - I_blocked_exit_stops_normal_teleport
+      - C_fallback_push_requires_free_portal_destination
+    source:
+      kind: branch
+      rule: enter_portal
+      branch: blocked_exit_push_entrance
+      events: [portal_exit_blocked, portal_fallback_push]
+    evidence:
+      status: trace
+      events:
+        required: [portal_exit_blocked, portal_fallback_push]
+
+  - id: I_portal_exit_blocker_controls_entry_behavior
+    kind: interaction
+    statement: 配对出口格的占用状态会非局部地改变入口传送门的行为。
+    prerequisites:
+      - C_crate_blocks_portal_exit
+      - I_blocked_exit_stops_normal_teleport
+      - I_blocked_exit_pushes_entrance_portal
+    source:
+      kind: manual
+      notes: Generalized from enter_portal branches.
+    evidence:
+      status: informal
+      structural:
+        - paired_exit_occupancy_changes_entry_result
+
+abilities:
+  - id: A_reposition_crate_by_pulling
+    kind: ability
+    statement: 玩家能通过站位和移动方向把箱子拉到目标相邻格。
+    goal_transform:
+      from: crate_at_initial_cell
+      to: crate_at_player_origin_after_move
+    prerequisites:
+      - F_pull_single_crate
+      - C_pull_requires_crate_behind_player
+      - C_pull_requires_free_destination
+    procedure_sketch:
+      - stand_adjacent_to_crate_on_pull_side
+      - move_away_from_crate_into_free_cell
+      - repeat_until_crate_reaches_desired_cell
+    source:
+      kind: manual
+      notes: Abstracted from pull_single_crate rule.
+    evidence:
+      status: trace
+      events:
+        required: [pull_crate]
+
+  - id: A_clear_choke_by_pulling_crate
+    kind: ability
+    statement: 玩家能把堵住通路的箱子拉开，从而打开通路。
+    goal_transform:
+      from: path_blocked_by_crate
+      to: path_open_after_crate_moved
+    prerequisites:
+      - A_reposition_crate_by_pulling
+      - C_cannot_push_crate
+    procedure_sketch:
+      - identify_crate_as_choke_blocker
+      - stand_on_pull_side_with_free_destination
+      - pull_crate_out_of_choke
+      - pass_through_reopened_cell
+    source:
+      kind: level_analysis
+      level: L03
+    evidence:
+      status: informal
+      events:
+        required: [pull_crate]
+      structural:
+        - crate_moved_from_blocking_cell_and_player_later_crosses_that_cell
+
+  - id: A_use_portal_to_enter_sealed_region
+    kind: ability
+    statement: 玩家能利用普通传送进入无法步行到达的区域。
+    goal_transform:
+      from: goal_region_unreachable_by_walking
+      to: player_inside_goal_region_after_teleport
+    prerequisites:
+      - F_portals_are_paired
+      - F_portal_teleports_player_to_directional_exit
+    procedure_sketch:
+      - identify_portal_pair
+      - infer_exit_cell_from_entry_direction
+      - enter_portal_from_direction_that_lands_in_target_region
+    source:
+      kind: level_analysis
+      level: L15
+    evidence:
+      status: full_graph
+      events:
+        required: [portal_enter, portal_teleport]
+
+  - id: A_create_blocked_portal_exit_with_crate
+    kind: ability
+    statement: 玩家能用箱子主动堵住配对传送门出口。
+    goal_transform:
+      from: paired_portal_exit_open
+      to: paired_portal_exit_blocked_by_crate
+    prerequisites:
+      - A_reposition_crate_by_pulling
+      - C_crate_blocks_portal_exit
+      - F_portals_are_paired
+    procedure_sketch:
+      - identify_paired_exit_cell
+      - move_crate_to_exit_cell
+      - preserve_access_to_entrance_portal
+    source:
+      kind: level_analysis
+      level: L06
+    evidence:
+      status: informal
+      events:
+        required: [pull_crate, portal_exit_blocked]
+      structural:
+        - crate_occupies_paired_exit_cell_before_portal_enter
+
+  - id: A_trigger_blocked_portal_fallback
+    kind: ability
+    statement: 玩家能在出口已堵住时进入传送门，从而触发入口传送门移动。
+    goal_transform:
+      from: entrance_portal_at_initial_cell
+      to: entrance_portal_pushed_one_cell
+    prerequisites:
+      - I_blocked_exit_pushes_entrance_portal
+      - C_fallback_push_requires_free_portal_destination
+    procedure_sketch:
+      - ensure_paired_exit_is_blocked
+      - stand_next_to_entrance_portal
+      - enter_portal_from_push_direction
+    source:
+      kind: branch
+      rule: enter_portal
+      branch: blocked_exit_push_entrance
+    evidence:
+      status: trace
+      events:
+        required: [portal_exit_blocked, portal_fallback_push]
+
+  - id: A_repeat_fallback_push_to_move_portal
+    kind: ability
+    statement: 玩家能重复触发 fallback，把入口传送门沿通道移动多格。
+    goal_transform:
+      from: portal_before_corridor
+      to: portal_after_multiple_fallback_pushes
+    prerequisites:
+      - A_trigger_blocked_portal_fallback
+      - C_fallback_push_requires_free_portal_destination
+    procedure_sketch:
+      - trigger_fallback_push_once
+      - walk_to_new_adjacent_entry_position
+      - repeat_until_portal_reaches_target_position_or_jam
+    source:
+      kind: level_analysis
+      level: L11
+    evidence:
+      status: trace
+      events:
+        required: [portal_fallback_push]
+      structural:
+        - same_portal_moves_multiple_cells_over_repeated_entries
+
+  - id: A_predict_and_use_fallback_failure
+    kind: ability
+    statement: 玩家能预测入口传送门无法继续推动的位置，并利用或避免该失败边界。
+    goal_transform:
+      from: fallback_push_possible
+      to: fallback_push_blocked_or_jammed
+    prerequisites:
+      - I_blocked_exit_pushes_entrance_portal
+      - C_blocked_portal_push_can_fail
+    procedure_sketch:
+      - inspect_entrance_portal_push_destination
+      - predict_whether_destination_is_blocked
+      - stop_or_use_failure_boundary
+    source:
+      kind: level_analysis
+      level: L12
+    evidence:
+      status: trace
+      events:
+        required: [portal_fallback_failed]
+
+  - id: A_choose_entry_direction_to_control_portal_exit
+    kind: ability_candidate
+    statement: 玩家能根据进入传送门的方向控制自己从配对传送门哪一侧出来。
+    goal_transform:
+      from: multiple_possible_entry_sides
+      to: selected_directional_exit_cell
+    prerequisites:
+      - F_portal_teleports_player_to_directional_exit
+    procedure_sketch:
+      - identify_entry_direction
+      - project_paired_exit_offset
+      - choose_entry_side_matching_desired_landing_cell
+    source:
+      kind: manual
+      notes: Important for future levels; current sample only lightly exercises it.
+    evidence:
+      status: future
+
+patterns:
+  - id: P_sealed_region_requires_portal_transport
+    kind: pattern
+    statement: 目标区无法步行到达，必须通过传送门进入。
+    structure:
+      - start_region_and_goal_region_are_disconnected_by_walls
+      - portal_pair_connects_start_region_to_goal_region
+      - goal_is_reachable_after_normal_teleport
+    required_abilities:
+      - A_use_portal_to_enter_sealed_region
+    variation_axes:
+      - entry_side
+      - exit_room_shape
+      - portal_pair_distance
+    source:
+      kind: level_analysis
+      level: L15
+    evidence:
+      status: full_graph
+      graph:
+        - all_winning_paths_require_portal_teleport
+
+  - id: P_clear_choke_by_pulling_blocker
+    kind: pattern
+    statement: 通路被箱子堵住，必须通过拉动箱子打开通路。
+    structure:
+      - crate_occupies_choke_or_near_choke
+      - player_can_access_pull_side
+      - goal_region_requires_choke_to_be_open
+    required_abilities:
+      - A_clear_choke_by_pulling_crate
+    variation_axes:
+      - choke_width
+      - pull_distance
+      - alternate_routes
+    source:
+      kind: level_analysis
+      level: L03
+    evidence:
+      status: informal
+      structural:
+        - player_crosses_cell_after_crate_is_moved
+
+  - id: P_remote_blocker_changes_portal_behavior
+    kind: pattern
+    statement: 远端出口格的占用状态决定入口传送门行为。
+    structure:
+      - entry_portal_is_accessible
+      - paired_exit_cell_can_be_blocked_or_unblocked
+      - same_entry_action_has_different_result_based_on_exit_occupancy
+    required_abilities:
+      - A_trigger_blocked_portal_fallback
+    variation_axes:
+      - blocker_type
+      - blocker_position
+      - distance_between_entry_and_exit
+    source:
+      kind: manual
+      notes: General pattern behind blocked portal fallback.
+    evidence:
+      status: informal
+      structural:
+        - paired_exit_occupancy_changes_entry_result
+
+  - id: P_construct_trigger_then_exploit
+    kind: pattern
+    statement: 初始状态不触发例外，玩家必须先构造触发条件，再利用例外推进解法。
+    structure:
+      - exception_condition_initially_false
+      - player_can_make_exception_condition_true
+      - exception_enables_goal_progress
+    required_abilities:
+      - A_create_blocked_portal_exit_with_crate
+      - A_trigger_blocked_portal_fallback
+    variation_axes:
+      - trigger_object_type
+      - setup_distance
+      - whether_setup_must_be_preserved
+    source:
+      kind: level_analysis
+      level: L06
+    evidence:
+      status: informal
+      structural:
+        - crate_blocks_exit_before_fallback_push
+
+  - id: P_portal_as_movable_door_or_key
+    kind: pattern
+    statement: 传送门本身占据关键通路，必须移动它才能打开路径。
+    structure:
+      - portal_occupies_bottleneck_or_door_cell
+      - goal_path_opens_after_portal_position_changes
+      - portal_movement_is_caused_by_blocked_exit_fallback
+    required_abilities:
+      - A_trigger_blocked_portal_fallback
+    variation_axes:
+      - corridor_orientation
+      - bottleneck_length
+      - required_push_count
+    source:
+      kind: level_analysis
+      level: L09
+    evidence:
+      status: full_graph
+      events:
+        required: [portal_fallback_push]
+      graph:
+        - all_winning_paths_require_portal_fallback_push
+
+  - id: P_repeated_portal_push_corridor
+    kind: pattern
+    statement: 入口传送门必须沿走廊被连续推动多次，直到释放通路或到达目标位置。
+    structure:
+      - entrance_portal_has_linear_push_corridor
+      - each_push_creates_next_entry_position
+      - final_portal_position_changes_access
+    required_abilities:
+      - A_repeat_fallback_push_to_move_portal
+    variation_axes:
+      - corridor_length
+      - direction
+      - intermediate_obstacles
+    source:
+      kind: level_analysis
+      level: L11
+    evidence:
+      status: trace
+      events:
+        required: [portal_fallback_push]
+
+  - id: P_push_until_jam_boundary
+    kind: pattern
+    statement: 传送门可被推动若干次后遇到堵塞，玩家必须理解何时会失败。
+    structure:
+      - portal_has_initial_free_push_space
+      - later_push_destination_is_blocked
+      - failure_boundary_is_observable
+    required_abilities:
+      - A_repeat_fallback_push_to_move_portal
+      - A_predict_and_use_fallback_failure
+    variation_axes:
+      - number_of_successful_pushes_before_jam
+      - jam_object_type
+      - whether_failure_is_goal_or_hazard
+    source:
+      kind: level_analysis
+      level: L19
+    evidence:
+      status: trace
+      events:
+        required: [portal_fallback_push, portal_fallback_failed]
+
+  - id: P_directional_portal_exit_routing
+    kind: pattern_candidate
+    statement: 同一对传送门可因进入方向不同而通向不同落点，关卡要求选择正确进入方向。
+    structure:
+      - portal_has_multiple_accessible_entry_sides
+      - only_some_directional_exit_cells_make_progress
+      - wrong_exit_side causes dead end or detour
+    required_abilities:
+      - A_choose_entry_direction_to_control_portal_exit
+    variation_axes:
+      - number_of_entry_sides
+      - exit_room_constraints
+      - whether_wrong_exit_is_recoverable
+    source:
+      kind: manual
+      notes: Important future pattern; not yet strongly represented in sample levels.
+    evidence:
+      status: future

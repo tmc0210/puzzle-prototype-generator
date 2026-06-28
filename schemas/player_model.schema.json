@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/sokoban/player_model.schema.json",
+  "title": "PlayerModel",
+  "type": "object",
+  "required": ["mechanic", "derivation", "facts", "constraints", "interactions", "abilities", "patterns"],
+  "additionalProperties": false,
+  "properties": {
+    "mechanic": { "$ref": "#/$defs/id" },
+    "derivation": {
+      "type": "object",
+      "required": ["status", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["manual_first_pass", "llm_assisted", "generated", "validated"]
+        },
+        "notes": { "type": "string" },
+        "open_questions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "facts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ruleFact" },
+      "uniqueItems": true
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/constraint" },
+      "uniqueItems": true
+    },
+    "interactions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/interaction" },
+      "uniqueItems": true
+    },
+    "abilities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ability" },
+      "uniqueItems": true
+    },
+    "patterns": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/pattern" },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "textList": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "source": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["rule", "branch", "object_trait", "win_condition", "level_analysis", "manual"]
+        },
+        "rule": { "$ref": "#/$defs/id" },
+        "branch": { "$ref": "#/$defs/id" },
+        "object": { "$ref": "#/$defs/id" },
+        "level": { "$ref": "#/$defs/id" },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "events": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "required": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/id" },
+              "uniqueItems": true
+            },
+            "forbidden": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/id" },
+              "uniqueItems": true
+            }
+          }
+        },
+        "structural": { "$ref": "#/$defs/textList" },
+        "graph": { "$ref": "#/$defs/textList" },
+        "status": {
+          "type": "string",
+          "enum": ["future", "informal", "trace", "full_graph", "unknown"]
+        }
+      }
+    },
+    "baseItem": {
+      "type": "object",
+      "required": ["id", "kind", "statement", "source", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "type": "string" },
+        "statement": { "type": "string", "minLength": 1 },
+        "prerequisites": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ref" },
+          "uniqueItems": true
+        },
+        "source": { "$ref": "#/$defs/source" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "notes": { "type": "string" }
+      }
+    },
+    "ruleFact": {
+      "allOf": [
+        { "$ref": "#/$defs/baseItem" },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": ["fact", "basic_operation", "win_condition"]
+            }
+          }
+        }
+      ]
+    },
+    "constraint": {
+      "allOf": [
+        { "$ref": "#/$defs/baseItem" },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": ["constraint", "failure_boundary", "precondition"]
+            }
+          }
+        }
+      ]
+    },
+    "interaction": {
+      "allOf": [
+        { "$ref": "#/$defs/baseItem" },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": ["interaction", "interaction_exception", "fallback"]
+            }
+          }
+        }
+      ]
+    },
+    "ability": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "statement",
+        "goal_transform",
+        "prerequisites",
+        "procedure_sketch",
+        "source",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": {
+          "type": "string",
+          "enum": ["ability", "ability_candidate"]
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "goal_transform": {
+          "type": "object",
+          "required": ["from", "to"],
+          "additionalProperties": false,
+          "properties": {
+            "from": { "type": "string", "minLength": 1 },
+            "to": { "type": "string", "minLength": 1 }
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ref" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "procedure_sketch": { "$ref": "#/$defs/textList" },
+        "source": { "$ref": "#/$defs/source" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "notes": { "type": "string" }
+      }
+    },
+    "pattern": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "statement",
+        "structure",
+        "required_abilities",
+        "variation_axes",
+        "source",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": {
+          "type": "string",
+          "enum": ["pattern", "pattern_candidate"]
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "structure": { "$ref": "#/$defs/textList" },
+        "required_abilities": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ref" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "variation_axes": { "$ref": "#/$defs/textList" },
+        "source": { "$ref": "#/$defs/source" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

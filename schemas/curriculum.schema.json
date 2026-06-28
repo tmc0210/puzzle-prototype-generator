@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/sokoban/curriculum.schema.json",
+  "title": "Curriculum",
+  "type": "object",
+  "required": ["mechanic", "tracks"],
+  "additionalProperties": false,
+  "properties": {
+    "mechanic": { "$ref": "#/$defs/id" },
+    "target_level_count": { "type": "integer", "minimum": 1 },
+    "tracks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/track" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "diagnostic",
+        "discovery",
+        "boundary",
+        "guided_application",
+        "independent_application",
+        "variation_transfer",
+        "combination",
+        "challenge",
+        "review"
+      ]
+    },
+    "track": {
+      "type": "object",
+      "required": ["id", "title", "goals"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "goals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/goal" },
+          "minItems": 1
+        }
+      }
+    },
+    "goal": {
+      "type": "object",
+      "required": ["knowledge", "roles"],
+      "additionalProperties": false,
+      "properties": {
+        "knowledge": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "roles": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/role" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "count": { "type": "integer", "minimum": 1 },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
