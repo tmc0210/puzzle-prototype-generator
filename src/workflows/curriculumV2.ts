@@ -2,12 +2,12 @@ import {
   buildPlayerModelIndex,
   computeTopologicalLayers,
   getDirectHardPrerequisites,
-} from "./playerModelGraph.js";
+} from "../core/playerModelGraph.js";
 import type {
   CurriculumV2Goal,
   CurriculumV2Package,
   PlayerModelTargetKind,
-} from "./types.js";
+} from "../core/types.js";
 
 export type CurriculumV2Analysis = {
   prototype: string;

@@ -1,5 +1,8 @@
-import type { LevelDoc, PrototypePackage } from "./types.js";
+import type { LevelDoc, PrototypePackage } from "../core/types.js";
 import { analyzeLevel, type LevelAnalysis } from "./levelAnalyzer.js";
+import { runGenericSampler } from "./genericSampler.js";
+import { iceSlideSamplerProfile } from "../prototypes/ice_slide_escape/samplerProfile.js";
+import { unavailableToolMessage } from "./toolMaturity.js";
 
 type Rng = () => number;
 
@@ -32,7 +35,7 @@ export type MineOptions = {
 export type MinerFinding = {
   id: string;
   source: {
-    tool: "temporary_seed_miner";
+    tool: string;
     generator: string;
     seed: number;
     index: number;
@@ -40,6 +43,12 @@ export type MinerFinding = {
   score: number;
   tags: string[];
   layout: string;
+  solveInstance?: {
+    id: string;
+    playerStart?: [number, number];
+    playerGoal?: [number, number];
+    winCondition?: unknown;
+  };
   observedEvents: string[];
   eventCounts: Record<string, number>;
   solution: {
@@ -79,6 +88,8 @@ export type MinerFinding = {
 export type MinerReport = {
   prototype: string;
   generatedAt: string;
+  toolMaturity?: string;
+  searchSpace?: string;
   options: Required<MineOptions>;
   stats: {
     generated: number;
@@ -120,10 +131,12 @@ const defaultOptions: Required<MineOptions> = {
 };
 
 export function mineSeeds(pkg: PrototypePackage, options: MineOptions = {}): MinerReport {
+  if (pkg.mechanic.id === "ice_slide_escape") {
+    return runGenericSampler(pkg, iceSlideSamplerProfile, options);
+  }
+
   if (pkg.mechanic.id !== "pull_portal_fallback") {
-    throw new Error(
-      `temporary_seed_miner currently supports only pull_portal_fallback, not '${pkg.mechanic.id}'.`,
-    );
+    throw new Error(unavailableToolMessage(pkg.mechanic.id, "temporary_miner"));
   }
 
   const normalized = { ...defaultOptions, ...definedOptions(options) };
@@ -250,14 +263,17 @@ export function formatMinerReportMarkdown(report: MinerReport): string {
   const lines: string[] = [
     `# Temporary Seed Miner Report: ${report.prototype}`,
     "",
-    "Status: raw mined evidence. These are not accepted levels, slots, or quality verdicts.",
+    report.toolMaturity === "curated_miner"
+      ? "Status: heuristic mined evidence. These are not accepted levels, slots, or quality verdicts."
+      : "Status: raw mined evidence. These are not accepted levels, slots, or quality verdicts.",
+    ...(report.toolMaturity ? [`Maturity: ${report.toolMaturity}.`, ""] : []),
     "",
     "## Run",
     "",
     `- Generated at: ${report.generatedAt}`,
     `- Seed: ${report.options.seed}`,
     `- Iterations: ${report.options.iterations}`,
-    `- Search space: mixed small-board probes with scatter, pull-biased, fallback-biased, and multi-pair-biased candidates`,
+    `- Search space: ${report.searchSpace ?? "mixed small-board probes with scatter, pull-biased, fallback-biased, and multi-pair-biased candidates"}`,
     `- Budgets: maxStates=${report.options.maxStates}, maxDepth=${report.options.maxDepth}, graphMaxStates=${report.options.graphMaxStates}`,
     `- Filters: minScore=${report.options.minScore}, maxFindings=${report.options.maxFindings}`,
     "",
@@ -289,7 +305,8 @@ export function formatMinerReportMarkdown(report: MinerReport): string {
     lines.push(
       `### ${finding.id}: score ${finding.score}`,
       "",
-      `- Source: ${finding.source.generator}, seed=${finding.source.seed}, index=${finding.source.index}`,
+      `- Source: ${finding.source.tool}/${finding.source.generator}, seed=${finding.source.seed}, index=${finding.source.index}`,
+      ...formatSolveInstance(finding),
       `- Tags: ${finding.tags.join(", ") || "none"}`,
       `- Solution: cost=${finding.solution.cost}, explored=${finding.solution.exploredStates}`,
       `- Inputs: ${finding.solution.inputs.join(" ")}`,
@@ -697,6 +714,16 @@ function formatFindingScc(finding: MinerFinding): string[] {
     `- Initial SCC: states=${scc.initialStateCount}, out=${scc.initialOutgoing}, winOut=${scc.initialWinReachableOutgoing}, deadOut=${scc.initialDeadOutgoing}`,
     `- Win DAG: branching=${scc.branchingWinSccs}, merging=${scc.mergingWinSccs}`,
   ];
+}
+
+function formatSolveInstance(finding: MinerFinding): string[] {
+  const instance = finding.solveInstance;
+  if (!instance) {
+    return [];
+  }
+  const start = instance.playerStart ? `[${instance.playerStart.join(", ")}]` : "n/a";
+  const goal = instance.playerGoal ? `[${instance.playerGoal.join(", ")}]` : "n/a";
+  return [`- Solve instance: ${instance.id}, start=${start}, goal=${goal}`];
 }
 
 function formatFindingParticipation(finding: MinerFinding): string[] {

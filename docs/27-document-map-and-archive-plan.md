@@ -48,6 +48,14 @@ docs/20-multi-agent-prompt-templates.md
 docs/18-validated-level-design-loop.md, as detailed support only
 ```
 
+如果本轮目标是让人类设计师参与筛选规则事实、观察 LLM designer
+候选并沉淀审美依据，再读：
+
+```text
+docs/29-design-archive-contract.md
+templates/design_archive/README.md
+```
+
 ### Future Full Skill With Knowledge Restored
 
 用于未来把机制 -> 玩家模型 -> 课程 -> level specs -> 候选设计完整链路恢复并 skill 化：
@@ -115,6 +123,7 @@ prototypes/pull_portal_fallback/reports/*
 | `docs/26-tool-contracts-and-conformance.md` | 工具抽象、输出契约、conformance 方案。 | generalized capability standard | 保留；需要继续落地 schema 和 CLI。 |
 | `docs/27-document-map-and-archive-plan.md` | 本文档。 | documentation governance | 保留；每次文档重组后更新。 |
 | `docs/28-mechanic-disambiguation-and-ascii-probes.md` | 实现前机制语义确认和 ASCII probe 流程。 | generalized capability standard | 保留；新机制实现前必须先用它确认 runtime-critical 语义。 |
+| `docs/29-design-archive-contract.md` | clean archive 入档边界、流程完整性、人类评语和检索元数据合约。 | active validation standard | 保留为 docs/21 / docs/20 之后的薄归档层；不定义单关设计或审查流程，不作为自动 curriculum 生成标准。 |
 
 ## Template And Prompt Surface
 
@@ -127,6 +136,15 @@ templates/new_mechanic/PROMPT.md
 templates/new_mechanic/src/*.template.ts
 templates/new_mechanic/prototype/*.template.yml
 templates/new_mechanic/conformance.template.md
+```
+
+人类设计师参与的设计归档实验模板在：
+
+```text
+templates/design_archive/README.md
+templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md
+templates/design_archive/ARCHIVE_PASS_PROMPT.md
+templates/design_archive/CANDIDATE_RECORD.template.md
 ```
 
 它们属于 generalized capability implementation，而不是历史文档。下一步应围绕这些模板继续补：

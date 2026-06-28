@@ -6,10 +6,11 @@ import type {
   InputId,
   LevelDoc,
   LevelSpecV2,
-} from "./types.js";
-import { solveWithRuntime } from "./solver.js";
-import { eventsMatchPattern } from "./events.js";
-import { getRuntimeAdapter } from "./runtimeAdapter.js";
+} from "../core/types.js";
+import { solveWithRuntime } from "../core/solver.js";
+import { eventsMatchPattern } from "../core/events.js";
+import { getRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
+import { unavailableToolMessage } from "./toolMaturity.js";
 
 type CandidateFactory = {
   id: string;
@@ -161,7 +162,7 @@ export function generateCandidatesV2Package(pkg: CurriculumV2Package): Candidate
 
   const factories = factoriesForMechanic(pkg.mechanic.id);
   if (factories.length === 0) {
-    throw new Error(`No candidate seed factories registered for mechanic '${pkg.mechanic.id}'.`);
+    throw new Error(unavailableToolMessage(pkg.mechanic.id, "candidate_seed_factories"));
   }
 
   const candidates = pkg.levelSpecsV2.specs.flatMap((spec) =>

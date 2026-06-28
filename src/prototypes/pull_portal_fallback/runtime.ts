@@ -1,6 +1,6 @@
-import type { GameState, InputId, MechanicDoc, SolverOptions } from "./types.js";
-import type { PuzzleRuntime } from "./puzzleRuntime.js";
-import type { RuntimeAdapter } from "./runtimeAdapter.js";
+import type { InputId, MechanicDoc, SolverOptions } from "../../core/types.js";
+import type { PuzzleRuntime } from "../../core/puzzleRuntime.js";
+import type { RuntimeAdapter } from "../runtimeAdapter.js";
 import {
   isEventWin,
   isWin,
@@ -9,7 +9,8 @@ import {
   replay,
   stateKey,
   step,
-} from "./pullPortalMechanics.js";
+  type GameState,
+} from "./mechanics.js";
 
 const defaultInputs: InputId[] = ["up", "down", "left", "right"];
 

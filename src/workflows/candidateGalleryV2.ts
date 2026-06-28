@@ -1,4 +1,4 @@
-import type { CandidateLevelV2, CandidatesV2Doc, CurriculumV2Package } from "./types.js";
+import type { CandidateLevelV2, CandidatesV2Doc, CurriculumV2Package } from "../core/types.js";
 
 export function formatCandidateGalleryV2Markdown(pkg: CurriculumV2Package): string {
   if (!pkg.candidatesV2) {

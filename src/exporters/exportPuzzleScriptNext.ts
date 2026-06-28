@@ -1,7 +1,8 @@
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
-import { loadPrototypePackage } from "../io.js";
-import type { LevelDoc, PrototypePackage } from "../types.js";
+import { loadPrototypePackage } from "../core/io.js";
+import type { LevelDoc, PrototypePackage } from "../core/types.js";
+import { unavailableToolMessage } from "../workflows/toolMaturity.js";
 
 const portalPairs = [
   ["A", "B"],
@@ -14,9 +15,7 @@ const portalGlyphs = portalPairs.flat();
 const packagePath = process.argv[2] ?? "prototypes/pull_portal_fallback";
 const pkg = await loadPrototypePackage(packagePath);
 if (pkg.mechanic.id !== "pull_portal_fallback") {
-  throw new Error(
-    `PuzzleScript Next export currently supports only pull_portal_fallback, not '${pkg.mechanic.id}'.`,
-  );
+  throw new Error(unavailableToolMessage(pkg.mechanic.id, "puzzlescript_exporter"));
 }
 const outPath = path.join(pkg.root, "game.ps");
 

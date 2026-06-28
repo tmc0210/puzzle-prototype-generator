@@ -15,8 +15,10 @@ PROMPT.md
 The implementation templates are intentionally more concrete than the design docs:
 
 ```text
-src/*.template.ts
-  Copy into src/, replace placeholders, and wire into the registries / CLI.
+templates/new_mechanic/src/*.template.ts
+  Copy into src/prototypes/<mechanic_id>/, rename to mechanics.ts / runtime.ts /
+  tools.ts / conformance.ts as appropriate, replace placeholders, and wire into
+  the registries / CLI.
 
 prototype/*.template.yml
   Copy into prototypes/<mechanic_id>/ as the initial package skeleton.
@@ -61,12 +63,10 @@ __StateName__          state type name, e.g. GravitySwapState
 Recommended target files after instantiation:
 
 ```text
-src/__mechanicCamel__Mechanics.ts
-src/__mechanicCamel__Runtime.ts
-src/__mechanicCamel__Generator.ts
-src/__mechanicCamel__Miner.ts
-src/__mechanicCamel__PuzzleScript.ts
-src/__mechanicCamel__Conformance.ts
+src/prototypes/__mechanic_id__/mechanics.ts
+src/prototypes/__mechanic_id__/runtime.ts
+src/prototypes/__mechanic_id__/tools.ts
+src/prototypes/__mechanic_id__/conformance.ts
 prototypes/__mechanic_id__/mechanic.yml
 prototypes/__mechanic_id__/levels.yml
 prototypes/__mechanic_id__/README.md
@@ -75,9 +75,9 @@ prototypes/__mechanic_id__/README.md
 Then wire:
 
 ```text
-src/runtimeAdapter.ts
-src/generatorV2.ts or a future generator registry
-src/seedMiner.ts or a future miner registry
+src/prototypes/runtimeAdapter.ts
+src/workflows/generatorV2.ts or a future generator registry
+src/workflows/seedMiner.ts or a future miner registry
 src/exporters/exportPuzzleScriptNext.ts or a future exporter registry
 src/exporters/checkPuzzleScriptNext.ts or a future checker registry
 src/cli.ts for tool-conformance once implemented
@@ -88,6 +88,21 @@ src/cli.ts for tool-conformance once implemented
 Each mechanism-specific tool must either write/return the expected artifact or fail with an
 explicit `__mechanic_id__ ... unavailable` error. A tool is not considered implemented just
 because a registry entry exists.
+
+Tool maturity is not boolean. New mechanisms should start with honest maturity labels:
+
+```text
+unavailable
+scaffold
+probe_seed_suite
+raw_sampler
+candidate_seed_factories
+curated_miner
+```
+
+Only the runtime adapter defaults to implemented. Probe fixtures, raw samplers, seed factories,
+miners, and exporters must stay unavailable until the mechanism supplies the corresponding
+fixtures, profile hooks, generation logic, or export rules.
 
 ```text
 Runtime adapter
@@ -102,9 +117,11 @@ Seed factories / candidate generator
   Check: every generated candidate parses; verified candidates are solvable by the adapter runtime.
 
 Temporary miner
-  Output: mechanism-specific miner report with prototype, generatedAt, stats, findings[],
+  Output: raw sampler or mechanism-specific miner report with prototype, generatedAt, stats, findings[],
   source seed/index, layout, observedEvents, solver result, graphStatus, notes.
   Check: report schema is stable enough to diff; kept findings parse and solve.
+  Maturity: raw_sampler for generic profile output; curated_miner only after mechanism-calibrated
+  tags, scoring, filtering, and designer-useful interpretation exist.
 
 PuzzleScript exporter / checker
   Output: exporter returns source text; checker reports pass/fail for that source.

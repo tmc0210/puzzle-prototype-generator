@@ -1,6 +1,5 @@
-import type { GameState, GraphAnalysis, MechanicDoc, SolverOptions } from "./types.js";
+import type { GraphAnalysis } from "./types.js";
 import type { PuzzleRuntime, RuntimeSearchOptions } from "./puzzleRuntime.js";
-import { createPullPortalRuntime } from "./pullPortalRuntime.js";
 
 export type GraphAnalysisOptions = RuntimeSearchOptions & {
   maxTransitions?: number;
@@ -10,16 +9,6 @@ type QueueItem<State> = {
   state: State;
   depth: number;
 };
-
-export function analyzeGraph(
-  mechanic: MechanicDoc,
-  initialState: GameState,
-  options: SolverOptions & GraphAnalysisOptions = {},
-): GraphAnalysis {
-  // Compatibility wrapper for the current pull_portal_fallback adapter.
-  // New prototype code should prefer analyzeGraphWithRuntime.
-  return analyzeGraphWithRuntime(createPullPortalRuntime(mechanic), initialState, options);
-}
 
 export function analyzeGraphWithRuntime<
   State,

@@ -40,10 +40,13 @@ Pre-implementation gate:
   unless the packet confirms them.
 
 Implementation requirements:
-1. Create mechanism-specific runtime files from templates/new_mechanic/src:
-   - __mechanicCamel__Mechanics.ts
-   - __mechanicCamel__Runtime.ts
-2. Register the adapter in src/runtimeAdapter.ts.
+1. Create mechanism-specific runtime files from templates/new_mechanic/src under
+   src/prototypes/__mechanic_id__/:
+   - mechanics.ts
+   - runtime.ts
+   - tools.ts
+   - conformance.ts
+2. Register the adapter in src/prototypes/runtimeAdapter.ts.
 3. Create prototypes/__mechanic_id__/mechanic.yml and minimal smoke levels from the templates.
 4. Make solver / graph / agency / layout analyzer run through the registered adapter.
 5. Implement or explicitly mark unavailable:
@@ -52,6 +55,10 @@ Implementation requirements:
    - temporary miner
    - seed factories / candidate generator
    - candidate gallery if candidates exist
+   Use maturity labels instead of a boolean implemented/unavailable claim:
+   unavailable, scaffold, probe_seed_suite, raw_sampler, candidate_seed_factories,
+   curated_miner. Only mark a tool at the maturity level its mechanism-specific
+   fixtures/profile/scoring actually support.
 6. Add or update a conformance report path:
    - reports/tool_conformance.md
    - reports/tool_conformance.json once schema exists

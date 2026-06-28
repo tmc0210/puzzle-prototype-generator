@@ -1,13 +1,12 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { loadPrototypePackage } from "../io.js";
+import { loadPrototypePackage } from "../core/io.js";
+import { unavailableToolMessage } from "../workflows/toolMaturity.js";
 
 const packagePath = process.argv[2] ?? "prototypes/pull_portal_fallback";
 const pkg = await loadPrototypePackage(packagePath);
 if (pkg.mechanic.id !== "pull_portal_fallback") {
-  throw new Error(
-    `PuzzleScript Next check currently supports only pull_portal_fallback, not '${pkg.mechanic.id}'.`,
-  );
+  throw new Error(unavailableToolMessage(pkg.mechanic.id, "puzzlescript_checker"));
 }
 const psPath = path.join(pkg.root, "game.ps");
 const source = await readFile(psPath, "utf8");

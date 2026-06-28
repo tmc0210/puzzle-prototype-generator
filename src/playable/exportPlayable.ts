@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { build } from "esbuild";
-import { loadPrototypePackage } from "../io.js";
+import { loadPrototypePackage } from "../core/io.js";
 
 const packagePath = process.argv[2] ?? "prototypes/pull_portal_fallback";
 const pkg = await loadPrototypePackage(packagePath);

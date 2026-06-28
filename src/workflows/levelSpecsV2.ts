@@ -1,7 +1,7 @@
 import type {
   CurriculumV2Package,
   LevelSpecV2,
-} from "./types.js";
+} from "../core/types.js";
 
 export type LevelSpecsV2Analysis = {
   prototype: string;

@@ -1,0 +1,225 @@
+mechanic: ice_slide_escape
+
+levels:
+  - id: P01_short_stop
+    title: P01 Short Stop
+    role: diagnostic
+    status: candidate
+    targets: [K_ice_runtime_smoke]
+    known_before: []
+    target_learning: [K_ice_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I..#"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_stop_short]
+
+  - id: P02_immediate_obstacle
+    title: P02 Immediate Obstacle Illegal Push
+    role: boundary
+    status: candidate
+    targets: [K_ice_runtime_smoke]
+    known_before: []
+    target_learning: [K_ice_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [0, 0]
+    layout: "@I#G"
+    expected_trace:
+      - input: right
+        events: [push_ice_failed]
+
+  - id: P03_destroy_moving_ice
+    title: P03 Distance Three Destroys Moving Ice
+    role: diagnostic
+    status: candidate
+    targets: [K_ice_runtime_smoke]
+    known_before: []
+    target_learning: [K_ice_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I...#"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_destroyed_d3]
+
+  - id: P04_rebound
+    title: P04 Distance Four Rebound
+    role: diagnostic
+    status: candidate
+    targets: [K_ice_runtime_smoke]
+    known_before: []
+    target_learning: [K_ice_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I....#"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_rebound_d4]
+
+  - id: P05_pass_through_d5
+    title: P05 Distance Five Pass Through
+    role: diagnostic
+    status: candidate
+    targets: [K_ice_pass_through_d5]
+    known_before: []
+    target_learning: [K_ice_pass_through_d5]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I.....##...#"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_pass_through_d5, slide_restart_after_group]
+
+  - id: P06_destroy_group_d6_plus
+    title: P06 Distance Six Plus Destroys Group
+    role: diagnostic
+    status: candidate
+    targets: [K_ice_destroy_group_d6_plus]
+    known_before: []
+    target_learning: [K_ice_destroy_group_d6_plus]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I......##...#"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_destroy_group_d6_plus, slide_restart_after_group]
+
+  - id: P07_ice_as_obstacle
+    title: P07 Ice Blocks Ice
+    role: boundary
+    status: candidate
+    targets: [K_ice_runtime_smoke]
+    known_before: []
+    target_learning: [K_ice_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I..I"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_stop_short]
+
+  - id: P08_restart_after_pass
+    title: P08 Restart Counting After Pass Through
+    role: diagnostic
+    status: candidate
+    targets: [K_ice_pass_through_d5]
+    known_before: []
+    target_learning: [K_ice_pass_through_d5]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I.....##...#"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_pass_through_d5, slide_restart_after_group, ice_destroyed_d3]
+
+  - id: P09_restart_after_destroy
+    title: P09 Restart Counting After Destroy Group
+    role: diagnostic
+    status: candidate
+    targets: [K_ice_destroy_group_d6_plus]
+    known_before: []
+    target_learning: [K_ice_destroy_group_d6_plus]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I......##...#"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_destroy_group_d6_plus, slide_restart_after_group, ice_destroyed_d3]
+
+  - id: P10_immediate_boundary
+    title: P10 Immediate Boundary Disappearance
+    role: boundary
+    status: candidate
+    targets: [K_ice_runtime_smoke]
+    known_before: []
+    target_learning: [K_ice_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [0, 0]
+      player_goal: [1, 0]
+    layout: "@I"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_boundary_disappear]
+
+  - id: P11_explicit_goal_wall
+    title: Explicit Start Goal With Walled Edge Goal
+    role: diagnostic
+    status: candidate
+    targets: [K_explicit_edge_goal, K_ice_destroy_group_d6_plus]
+    known_before: []
+    target_learning: [K_explicit_edge_goal, K_ice_destroy_group_d6_plus]
+    support_level: high
+    expected_solver_evidence: [solvable, expected_trace_replays]
+    expected_llm_player_evidence: []
+    win:
+      type: ice_slide_escape_explicit_goal
+      player_start: [1, 0]
+      player_goal: [9, 0]
+    layout: "*@I......#"
+    expected_trace:
+      - input: right
+        events: [push_ice, ice_destroy_group_d6_plus]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]

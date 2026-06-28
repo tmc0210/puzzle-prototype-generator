@@ -1,15 +1,14 @@
 import type {
-  GameState,
   InputId,
   KnowledgeDoc,
   LevelDoc,
   LevelsDoc,
   MechanicDoc,
-  StepResult,
   WinCondition,
-} from "../types.js";
-import { eventsMatchPattern } from "../events.js";
-import { getRuntimeAdapter } from "../runtimeAdapter.js";
+} from "../core/types.js";
+import { eventsMatchPattern } from "../core/events.js";
+import { getRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
+import type { GameState, StepResult } from "../prototypes/pull_portal_fallback/mechanics.js";
 
 declare const __BUILD_ID__: string | undefined;
 

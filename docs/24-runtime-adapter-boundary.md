@@ -24,23 +24,17 @@ prototype package / knowledge workflow:
 当前通用入口是：
 
 ```text
-src/puzzleRuntime.ts
-src/runtimeAdapter.ts
-src/solver.ts solveWithRuntime / findUncoveredGoalPathWithRuntime
-src/graphAnalyzer.ts analyzeGraphWithRuntime
-src/agencyAnalyzer.ts analyzeAgencyWithRuntime
+src/core/puzzleRuntime.ts
+src/core/solver.ts solveWithRuntime / findUncoveredGoalPathWithRuntime
+src/core/graphAnalyzer.ts analyzeGraphWithRuntime
+src/core/agencyAnalyzer.ts analyzeAgencyWithRuntime
 ```
 
-旧的便捷 wrapper：
+`src/core/*` 不应导入任何具体原型。所有调用方必须显式提供 runtime，或通过
+`src/prototypes/runtimeAdapter.ts` 取得已注册 adapter 后再调用通用工具。
 
-```text
-solve(...)
-findUncoveredGoalPath(...)
-analyzeGraph(...)
-analyzeAgency(...)
-```
-
-仍然保留，但它们是 `pull_portal_fallback` 兼容入口。新机制开发不应把这些 wrapper 当成泛化基础。
+旧的 `pull_portal_fallback` 便捷 wrapper 已移除；不要重新引入“无 adapter 时默认使用
+pull_portal”的入口。
 
 ## Adapter-Owned Surface
 
@@ -60,11 +54,11 @@ isEventWin(events, winCondition)
 当前 adapter：
 
 ```text
-src/pullPortalRuntime.ts
-src/pullPortalMechanics.ts
+src/prototypes/pull_portal_fallback/runtime.ts
+src/prototypes/pull_portal_fallback/mechanics.ts
 ```
 
-`src/pullPortalMechanics.ts` 是当前示例机制实现，不是通用 runtime。
+`src/prototypes/pull_portal_fallback/mechanics.ts` 是当前示例机制实现，不是通用 runtime。
 
 ## Registered Adapter Boundary
 
@@ -72,6 +66,12 @@ src/pullPortalMechanics.ts
 
 ```ts
 getRuntimeAdapter(pkg.mechanic)
+```
+
+注册表位置：
+
+```text
+src/prototypes/runtimeAdapter.ts
 ```
 
 如果一个新机制没有注册 adapter，runtime 相关命令应直接失败，而不是落回
@@ -82,8 +82,8 @@ getRuntimeAdapter(pkg.mechanic)
 以下工具目前仍是 `pull_portal_fallback` 专用，并且应显式拒绝其它机制：
 
 ```text
-src/seedMiner.ts
-src/generatorV2.ts seed factories
+src/workflows/seedMiner.ts
+src/workflows/generatorV2.ts seed factories
 src/exporters/exportPuzzleScriptNext.ts
 src/exporters/checkPuzzleScriptNext.ts
 ```

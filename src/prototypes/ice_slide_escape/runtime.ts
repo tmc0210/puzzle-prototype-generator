@@ -9,21 +9,16 @@ import {
   replay,
   stateKey,
   step,
-  type __ActionId__,
-  type __StateName__,
+  type IceSlideAction,
+  type IceSlideState,
+  type IceSlideStepOptions,
 } from "./mechanics.js";
 
-export type __MechanicPascal__RuntimeOptions = {
-  disabledRules?: Set<string>;
-  disabledBranches?: Set<string>;
-  winCondition?: MechanicDoc["win"];
-  maxStates?: number;
-  maxDepth?: number;
-};
+const defaultActions: IceSlideAction[] = ["up", "down", "left", "right"];
 
-export function create__MechanicPascal__Runtime(
+export function createIceSlideRuntime(
   mechanic: MechanicDoc,
-): PuzzleRuntime<__StateName__, __ActionId__, __MechanicPascal__RuntimeOptions> {
+): PuzzleRuntime<IceSlideState, IceSlideAction, IceSlideStepOptions> {
   return {
     defaultWin: mechanic.win,
     key: stateKey,
@@ -43,21 +38,20 @@ export function create__MechanicPascal__Runtime(
   };
 }
 
-function legalActions(mechanic: MechanicDoc): __ActionId__[] {
-  const actions = Object.keys(mechanic.inputs) as __ActionId__[];
-  if (actions.length === 0) {
-    throw new Error(`Mechanic '${mechanic.id}' declares no inputs`);
-  }
-  return actions;
+function legalActions(mechanic: MechanicDoc): IceSlideAction[] {
+  const actions = Object.entries(mechanic.inputs)
+    .filter(([, input]) => input.intent === "move" && input.dir)
+    .map(([, input]) => input.dir as IceSlideAction);
+  return actions.length > 0 ? actions : defaultActions;
 }
 
-export const __mechanicCamel__Adapter: RuntimeAdapter<
-  __StateName__,
-  __ActionId__,
-  __MechanicPascal__RuntimeOptions
+export const iceSlideAdapter: RuntimeAdapter<
+  IceSlideState,
+  IceSlideAction,
+  IceSlideStepOptions
 > = {
-  id: "__mechanic_id__",
-  createRuntime: create__MechanicPascal__Runtime,
+  id: "ice_slide_escape",
+  createRuntime: createIceSlideRuntime,
   parseLevel,
   renderState,
   step,

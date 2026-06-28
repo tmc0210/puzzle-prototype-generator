@@ -243,7 +243,9 @@ The intended workflow is:
 ```text
 1. If the mechanism is underspecified, use PREFLIGHT_PROMPT.md to produce a confirmed packet.
 2. Paste PROMPT.md into a fresh Codex thread with that confirmed mechanic packet.
-3. Copy and instantiate the code templates into src/.
+3. Copy and instantiate the code templates into
+   `src/prototypes/<mechanic_id>/` as `mechanics.ts`, `runtime.ts`, `tools.ts`,
+   and `conformance.ts`.
 4. Copy and instantiate the prototype templates into prototypes/<mechanic_id>/.
 5. Register the adapter and tool availability.
 6. Run conformance checks before serious designer testing.

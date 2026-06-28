@@ -81,6 +81,7 @@ The validated level-design workflow is two nested loops plus campaign placement.
    write concrete causal_chain
    build compact layout
    treat layout size as an adjustable design variable, not a fixed constraint
+   若任务不是单个人类定向修改，而是探索设计空间，则记录 design_search_ledger
    run solver / analyzer / formal_evaluator
    read trace, snapshots, counterfactuals, and graph facts
    answer the routed taste probes with concrete mechanism-language evidence
@@ -313,6 +314,111 @@ Stop local repair when:
 
 Then either accept the best local version with caveats, hold it as related material, or start `structural_redesign`. Do not keep micro-editing a 4/5 family while pretending it is converging to a different kind of puzzle.
 
+## 设计搜索账本
+
+当任务目标是探索设计空间、比较候选、验证某个规则事实是否值得教学，或让
+LLM designer 自主产出候选时，designer 必须留下可审计的
+`design_search_ledger`。它记录“尝试过什么、为什么放弃、为什么当前候选值得进
+入证据流程”，而不是用一句“尝试若干版本”代替搜索过程。
+
+通用流程只规定搜索证据的形状，不规定具体搜索哪些机制组合。具体搜索预算和探
+索轴应由 experiment brief、人类设计师或当前任务声明。不同原型、不同规则事实
+可以给出不同预算；不要在本标准中硬编码某个原型的机制、数量或几何模式。
+
+如果没有声明搜索预算：
+
+- 人类明确指定的单个候选或局部修改可以继续，但不得声称已经系统探索过设计空
+  间。
+- 设计实验、能力验证、机制价值判断必须先补充预算，或在结果中标记为
+  `search_budget_missing`。
+- 不能把一次失败草稿归因于机制不适合、LLM 能力不足或工具不足。
+
+推荐的 brief 字段形状：
+
+```yaml
+design_search:
+  scope: experiment_run | candidate | family
+  budget_owner: human | controller | inferred
+  goal: exploratory | fill_library | repair | compare_families | calibration
+  hypothesis_family_min: set_by_brief
+  variant_per_family_min: set_by_brief
+  repair_round_min: set_by_brief
+  evidence_gate_candidates_min: set_by_brief
+  stop_conditions:
+    - accepted_with_evidence
+    - budget_exhausted
+    - hard_constraint_conflict
+    - tool_gap
+    - human_stop
+  exploration_axes:
+    - prototype-specific causal-chain families or structural directions
+```
+
+`scope` 决定预算如何消耗。`experiment_run` 表示整轮实验共享一份搜索账本，多个
+候选可以从同一批尝试中被选出；`candidate` 表示每个候选都必须单独满足预算；
+`family` 表示预算围绕某个指定因果链族消耗。若 brief 未声明 scope，designer
+必须说明自己的解释，且不得把未覆盖的范围当成已探索。
+
+`exploration_axes` 是实验局部内容。它可以写“不同因果链族”“不同入口/出口关系”
+“不同资源耦合方式”等，也可以在具体原型中写成更明确的机制组合。通用流程不
+解释这些轴的好坏，只要求 designer 对照它们留下尝试记录。
+
+每次尝试至少记录：
+
+```yaml
+attempt:
+  attempt_id:
+  hypothesis_family:
+  candidate_or_sketch_ref:
+  structural_delta:
+  intended_player_logic:
+  expected_core_responsibility:
+  validation_summary:
+  critic_or_self_attack:
+  repair_or_abandon_reason:
+  evidence_refs:
+```
+
+`hypothesis_family` 指玩家面对的因果链族或设计假设族，不是旋转、平移、换起点
+这类表面变体。`structural_delta` 必须说明真实结构变化；如果只是微调表现、移
+动目标、拉长路线或调整起点，应明确标记为 local repair，而不是新 family。
+
+搜索账本状态：
+
+```text
+no_search_evidence:
+  没有留下可审计尝试。视为没有系统搜索。
+
+search_budget_missing:
+  任务需要探索，但 brief / 人类没有声明预算。结果只能作为草稿或人类定向候选。
+
+under_budget:
+  声明了预算，但尝试数量、family 覆盖、修复轮次或证据候选数未达要求。
+
+shallow_search:
+  有尝试记录，但变化主要是微调、重复同一思路、缺少失败归因，或没有进入足够
+  证据检查。可以产生候选，但不能证明机制难、工具差或 LLM 已尽力。
+
+searched_but_unresolved:
+  达到声明预算，失败原因有聚类和证据边界，但仍没有合格候选。
+
+ready_for_evidence_after_search:
+  达到声明预算，且至少有一个候选有资格进入证据 / critic / final gates。
+  这只说明搜索过程足够进入验证，不说明候选已经有效。
+
+capability_or_tool_limit:
+  达到声明预算，失败集中在工具不可观测、评估不可复现、或 designer 无法稳定
+  改善，并且不能被单个布局失败解释。
+
+valid_candidate_after_search:
+  候选通过证据 / critic / final gate，且搜索账本解释了它为何从尝试集中胜出。
+```
+
+Final decision 必须引用搜索账本状态。若状态是 `no_search_evidence`、
+`search_budget_missing`、`under_budget` 或 `shallow_search`，候选仍可归档为
+草稿、失败例、held material 或人类待看样本，但不得作为“已经充分探索后仍失败”
+的证据，也不得用来推广为课程结论。
+
 ## Variant Vocabulary
 
 `variant` is a relationship between candidates, not a quality grade and not an automatic reserve pool.
@@ -400,6 +506,13 @@ forced_win_prefix:
   challenge caveat unless the forced steps still carry visible planning,
   resource coupling, or changing interpretation.
 
+handoff_scriptiness:
+  Returned-solution diagnostic for each SCC-to-SCC handoff. If the source SCC is
+  trivial, or the state that enters the SCC is also the state that takes the
+  next irreversible exit, the step may feel like "the previous move placed the
+  player exactly in front of the next move." This increases scriptiness, but it
+  is not automatically bad.
+
 tail:
   Inputs after first entering an SCC that already contains a winning state.
   A long tail may be harmless finish movement, incidental busywork, or a sign
@@ -414,6 +527,12 @@ Reading rules:
 - If branches reach different wins without sharing the intended core chain, inspect for bypass or alternative solution families.
 - If repeated branches are independent subproblems, campaign placement should usually reject or split them.
 - If `single_win_chain` combines with high `forced_win_prefix`, the level may still be good, but challenge claims need extra justification from the causal chain and player-facing reasoning.
+- If many solution handoffs are `trivial_source_scc` or `entry_equals_exit_source`,
+  inspect whether key steps are becoming an execution script. This is especially
+  relevant for application / challenge / capstone claims. It may be acceptable
+  when the player-facing insight was the prior setup, the forced handoff is a
+  payoff, or failed edits show that extra local room would introduce bypasses or
+  destroy the core chain.
 - If SCC evidence is unavailable, mark SCC-dependent probes unknown / qualitative.
 
 Lead designer should label interesting win-reaching branches as one of:
@@ -561,6 +680,7 @@ opening commitment:
     - initial_win_exit_source_distances
     - dead_exits_before_first_win_exit
     - forced_win_prefix, if the SCC reporter provides it
+    - scc_handoff_scriptiness, if the SCC reporter provides it
   For application / challenge candidates, does the initial SCC give the player
   nontrivial reversible room before the first win-reaching irreversible commitment?
   If the initial SCC is a single state, or the first win-reaching irreversible exit is
@@ -588,6 +708,17 @@ opening commitment:
         a compact causal-chain puzzle, but it is a caveat for a broad challenge
         unless the forced steps carry visible planning, resource coupling, or
         changing interpretation.
+
+handoff scriptiness:
+  For application / challenge / capstone candidates with complete SCC evidence,
+  inspect the returned-solution handoffs between SCCs. Are many key steps:
+    - sourced from trivial SCCs, or
+    - exiting from the exact same state that entered the SCC?
+  If yes, the critic should ask whether the level is becoming a scripted chain
+  of "do the next obvious move from the posture just created." This is a warning
+  sign, not a hard rejection. Designer may defend it by citing concrete prior
+  planning, role changes, state consumption, or failed attempts to add local
+  repositioning space without breaking the puzzle.
 
 salient element use:
   Does the candidate emphasize an element that the intended player already expects

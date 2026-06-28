@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { buildAgencyDigest, type AgencyDigest } from "./agencyDigest.js";
+import { buildAgencyDigest, type AgencyDigest } from "../core/agencyDigest.js";
 import { analyzeLevel, type LevelAnalysis } from "./levelAnalyzer.js";
-import type { LevelDoc, PrototypePackage } from "./types.js";
+import type { LevelDoc, PrototypePackage } from "../core/types.js";
 
 export type CalibrationSample = {
   id: string;

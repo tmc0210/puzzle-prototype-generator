@@ -9,11 +9,11 @@ import type {
   LevelSpecObjectParticipationRequirement,
   LevelSpecObjectParticipationScope,
   LevelSpecV2,
-} from "./types.js";
-import { solveWithRuntime } from "./solver.js";
-import { coversEventPatterns } from "./events.js";
-import { analyzeObjectParticipation } from "./objectParticipation.js";
-import { getRuntimeAdapter } from "./runtimeAdapter.js";
+} from "../core/types.js";
+import { solveWithRuntime } from "../core/solver.js";
+import { coversEventPatterns } from "../core/events.js";
+import { analyzeObjectParticipation } from "../prototypes/objectParticipation.js";
+import { getRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
 
 const eventRequirementScopes = [
   "winning_solution",
@@ -371,7 +371,7 @@ function evaluateScopedObjectParticipation(
       .filter((result) => result.solution.found);
 
     const covering = solved.find((result) =>
-      coversObjectParticipation(result.solution.events, requirement),
+      coversObjectParticipation(pkg.mechanic.id, result.solution.events, requirement),
     );
     if (covering) {
       return {
@@ -393,7 +393,7 @@ function evaluateScopedObjectParticipation(
       const replay = replayCandidateTrace(pkg, candidate, candidate.probe_trace ?? [], {
         allowIllegal: true,
       });
-      return replay.tracePresent && coversObjectParticipation(replay.events, requirement);
+      return replay.tracePresent && coversObjectParticipation(pkg.mechanic.id, replay.events, requirement);
     });
     if (covering) {
       return {
@@ -678,10 +678,11 @@ function coversEvents(
 }
 
 function coversObjectParticipation(
+  mechanicId: string,
   events: string[],
   requirement: LevelSpecObjectParticipationRequirement,
 ): boolean {
-  return analyzeObjectParticipation(events).some(
+  return analyzeObjectParticipation(mechanicId, events).some(
     (summary) =>
       summary.objectType === requirement.object_type &&
       summary.role === requirement.role &&

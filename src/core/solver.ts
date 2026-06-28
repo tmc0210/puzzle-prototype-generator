@@ -1,6 +1,4 @@
 import type {
-  GameState,
-  InputId,
   MechanicDoc,
   Solution,
   SolutionStep,
@@ -8,7 +6,6 @@ import type {
 } from "./types.js";
 import type { PuzzleRuntime, RuntimeSearchOptions } from "./puzzleRuntime.js";
 import { isEventWinCondition } from "./puzzleRuntime.js";
-import { createPullPortalRuntime } from "./pullPortalRuntime.js";
 import { eventMatchesPattern } from "./events.js";
 
 type GenericSolution<Action extends string> = Omit<Solution, "inputs" | "steps"> & {
@@ -36,16 +33,6 @@ type CoverageQueueItem<State, Action extends string> = {
   cost: number;
   depth: number;
 };
-
-export function solve(
-  mechanic: MechanicDoc,
-  initialState: GameState,
-  options: SolverOptions = {},
-): Solution {
-  // Compatibility wrapper for the current pull_portal_fallback adapter.
-  // New prototype code should prefer solveWithRuntime plus a registered runtime adapter.
-  return solveWithRuntime(createPullPortalRuntime(mechanic), initialState, options);
-}
 
 export function solveWithRuntime<
   State,
@@ -203,26 +190,6 @@ export function counterfactualOptions(
     disabledRules: new Set(model.disable_rules ?? []),
     disabledBranches: new Set(model.disable_branches ?? []),
   };
-}
-
-export function findUncoveredGoalPath(
-  mechanic: MechanicDoc,
-  initialState: GameState,
-  requiredEvents: string[],
-  forbiddenEvents: string[],
-  options: SolverOptions,
-  maxDepth?: number,
-): Solution {
-  // Compatibility wrapper for the current pull_portal_fallback adapter.
-  // New prototype code should prefer findUncoveredGoalPathWithRuntime.
-  return findUncoveredGoalPathWithRuntime(
-    createPullPortalRuntime(mechanic),
-    initialState,
-    requiredEvents,
-    forbiddenEvents,
-    options,
-    maxDepth,
-  );
 }
 
 export function findUncoveredGoalPathWithRuntime<

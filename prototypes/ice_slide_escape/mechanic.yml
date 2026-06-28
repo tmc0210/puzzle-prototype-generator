@@ -1,0 +1,196 @@
+id: ice_slide_escape
+title: Ice Slide Escape
+version: 1
+description: >
+  A rectangular-grid prototype where the player pushes indistinguishable ice
+  blocks that slide automatically and resolve distance-based obstacle branches.
+
+layers:
+  - terrain
+  - target
+  - movable
+  - actor
+
+objects:
+  floor:
+    glyph: "."
+    layer: terrain
+    traits: [walkable]
+  wall:
+    glyph: "#"
+    layer: terrain
+    traits: [solid, ice_obstacle, destructible_by_long_ice_slide]
+  target:
+    glyph: "G"
+    layer: target
+    traits: [target, overlay]
+  player:
+    glyph: "@"
+    layer: actor
+    traits: [player]
+  ice:
+    glyph: "I"
+    layer: movable
+    traits: [pushable, ice_obstacle, target_fulfiller]
+
+inputs:
+  up:
+    intent: move
+    dir: up
+    cost: 1
+  down:
+    intent: move
+    dir: down
+    cost: 1
+  left:
+    intent: move
+    dir: left
+    cost: 1
+  right:
+    intent: move
+    dir: right
+    cost: 1
+
+rules:
+  - id: walk
+    priority: 10
+    phase: input
+    trigger:
+      input: move
+    when:
+      destination_is: empty_or_target
+      destination_has_no: [wall, ice, boundary]
+    effect:
+      move_player: input.dir
+    emits: [walk]
+    effects:
+      reads: [player.position, terrain, target, ice.position]
+      writes: [player.position]
+      emits: [walk]
+      locality: local
+      reversible: "true"
+
+  - id: push_ice
+    priority: 20
+    phase: input
+    trigger:
+      input: move
+    when:
+      destination_has_object: ice
+    branches:
+      - id: immediate_obstacle_failed
+        when:
+          ice_next_cell: wall_or_ice
+          slide_distance: 0
+        effect:
+          cancel_action: true
+        emits: [push_ice_failed]
+        effects:
+          reads: [player.position, ice.position, wall.position]
+          writes: []
+          emits: [push_ice_failed]
+          locality: local
+          reversible: "true"
+      - id: boundary_disappear
+        when:
+          ice_hits_boundary: true
+        effect:
+          remove_moving_ice: true
+          player_enters_ice_origin: true
+        emits: [push_ice, ice_boundary_disappear]
+        effects:
+          reads: [player.position, ice.position, boundary]
+          writes: [player.position, ice.position]
+          emits: [push_ice, ice_boundary_disappear]
+          locality: local
+          reversible: "false"
+      - id: stop_short_d1_d2
+        when:
+          obstacle_hit_after_distance: [1, 2]
+        effect:
+          ice_stops_before_obstacle: true
+          player_enters_ice_origin: true
+        emits: [push_ice, ice_stop_short]
+        effects:
+          reads: [player.position, ice.position, wall.position]
+          writes: [player.position, ice.position]
+          emits: [push_ice, ice_stop_short]
+          locality: local
+          reversible: conditional
+      - id: destroy_moving_ice_d3
+        when:
+          obstacle_hit_after_distance: 3
+        effect:
+          remove_moving_ice: true
+          obstacle_remains: true
+        emits: [push_ice, ice_destroyed_d3]
+        effects:
+          reads: [player.position, ice.position, wall.position]
+          writes: [player.position, ice.position]
+          emits: [push_ice, ice_destroyed_d3]
+          locality: local
+          reversible: "false"
+      - id: rebound_d4
+        when:
+          obstacle_hit_after_distance: 4
+        effect:
+          rebound_moving_ice_one_cell: true
+          no_recursive_collision: true
+        emits: [push_ice, ice_rebound_d4]
+        effects:
+          reads: [player.position, ice.position, wall.position]
+          writes: [player.position, ice.position]
+          emits: [push_ice, ice_rebound_d4]
+          locality: local
+          reversible: conditional
+      - id: pass_through_d5
+        when:
+          obstacle_hit_after_distance: 5
+        effect:
+          pass_through_contiguous_obstacle_group: true
+          obstacles_remain: true
+          restart_counting_after_group: true
+        emits: [push_ice, ice_pass_through_d5, slide_restart_after_group]
+        effects:
+          reads: [player.position, ice.position, wall.position]
+          writes: [player.position, ice.position]
+          emits: [push_ice, ice_pass_through_d5, slide_restart_after_group]
+          locality: spatial_nonlocal
+          reversible: conditional
+      - id: destroy_group_d6_plus
+        when:
+          obstacle_hit_after_distance_at_least: 6
+        effect:
+          destroy_contiguous_obstacle_group: true
+          restart_counting_after_group: true
+        emits: [push_ice, ice_destroy_group_d6_plus, slide_restart_after_group]
+        effects:
+          reads: [player.position, ice.position, wall.position]
+          writes: [player.position, ice.position, wall.position]
+          emits: [push_ice, ice_destroy_group_d6_plus, slide_restart_after_group]
+          locality: spatial_nonlocal
+          reversible: "false"
+
+win:
+  type: ice_slide_escape_explicit_goal
+  description: >
+    All target overlays have ice, and the player is on the explicit edge
+    player_goal from the solve request. Extra ice is allowed.
+
+optimizations:
+  reachability_macro:
+    status: unknown
+    requires:
+      - player_walk_has_no_side_effect
+      - player_orientation_irrelevant
+      - action_cost_unit
+    notes: >
+      Ice pushes have large irreversible effects; future reachability macros
+      must prove that pure walking regions are side-effect free before use.
+
+export:
+  puzzlescript_next:
+    status: unavailable
+    notes: >
+      Distance-counting, contiguous obstacle groups, restart counting, and wall
+      destruction are not exported in this bring-up.

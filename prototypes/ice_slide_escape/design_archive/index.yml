@@ -1,0 +1,77 @@
+schema_version: 1
+mechanic: ice_slide_escape
+status: experimental
+source_of_truth: candidate_records
+notes:
+  - Human comments live in candidate files and should be read before using an example.
+  - Tags and retrieval summaries are for navigation and prompt calibration only.
+tag_vocabulary:
+  status:
+    - rejected
+    - held
+    - promising
+    - reference
+    - accepted
+    - unknown
+  motifs:
+    - short_stop_d1_d2
+    - destroy_moving_ice_d3
+    - d4_rebound
+    - d5_pass_through
+    - d6_destroy_group
+    - restart_counting
+    - target_ice_coverage
+    - explicit_edge_goal
+    - walled_edge_goal
+  archive_use:
+    - positive_reference
+    - negative_example
+    - critic_calibration
+    - designer_calibration
+    - human_taste_reference
+  archive_eligibility:
+    - clean_archive
+    - human_pending
+    - raw_run_only
+    - reject_do_not_archive
+  review_integrity:
+    - independent_review
+    - human_review
+    - self_review_only
+    - missing
+    - blocked
+  strengths:
+    - coupled_state_change
+    - readable_geometry
+    - compact_causal_chain
+    - pacing_buffer
+    - good_core_with_bad_claim
+  failure_modes:
+    - witness_not_application
+    - forced_linearity
+    - claim_underfit
+    - critic_missed_issue
+    - critic_over_rejected
+    - bypass
+    - unconsumed_state_change
+experiments:
+  - experiment_id: ICE_EXP_001_d4_rebound_edge_goal
+    file: experiments/ICE_EXP_001_d4_rebound_edge_goal.md
+    status: ready
+    selected_rule_facts:
+      - RF_d4_rebound
+      - RF_target_ice_requirement
+      - RF_explicit_edge_goal
+  - experiment_id: ICE_EXP_002_d4_pre_d5_capstone
+    file: experiments/ICE_EXP_002_d4_pre_d5_capstone.md
+    status: ready
+    selected_rule_facts:
+      - RF_d4_rebound
+      - RF_target_ice_requirement
+      - RF_explicit_edge_goal
+candidates: []
+example_queries:
+  - Find positive or negative d4 rebound examples before designing another rebound level.
+  - Find high-difficulty d4 capstone examples before introducing d5.
+  - Find critic calibration cases where the critic missed forced linearity.
+  - Find designer calibration cases where the designer claim missed the real highlight.

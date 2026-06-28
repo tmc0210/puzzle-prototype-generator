@@ -413,6 +413,7 @@ export type WinCondition = {
   object?: string;
   target?: string;
   description?: string;
+  [key: string]: unknown;
 };
 
 export type PrototypePackage = {
@@ -433,24 +434,6 @@ export type CurriculumV2Package = {
   levelSpecsV2?: LevelSpecsV2Doc;
   candidatesV2?: CandidatesV2Doc;
   levels?: LevelsDoc;
-};
-
-export type GameState = {
-  width: number;
-  height: number;
-  walls: Set<string>;
-  goals: Set<string>;
-  player: Point;
-  crates: Point[];
-  portals: Record<string, Point>;
-};
-
-export type StepResult = {
-  legal: boolean;
-  input: InputId;
-  state: GameState;
-  events: string[];
-  reason?: string;
 };
 
 export type SolutionStep = {

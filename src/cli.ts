@@ -1,30 +1,43 @@
 #!/usr/bin/env node
-import { loadCurriculumV2Package, loadPrototypePackage } from "./io.js";
-import { auditPrototype, formatAuditMarkdown } from "./audit.js";
+import { loadCurriculumV2Package, loadPrototypePackage } from "./core/io.js";
+import { auditPrototype, formatAuditMarkdown } from "./workflows/audit.js";
 import {
   analyzeCurriculumV2Package,
   formatCurriculumV2Markdown,
-} from "./curriculumV2.js";
+} from "./workflows/curriculumV2.js";
 import {
   analyzeLevelSpecsV2Package,
   formatLevelSpecsV2Markdown,
-} from "./levelSpecsV2.js";
+} from "./workflows/levelSpecsV2.js";
 import {
   evaluateLevelSpecsV2Package,
   formatEvaluationV2Markdown,
-} from "./evaluatorV2.js";
+} from "./workflows/evaluatorV2.js";
 import {
   generateCandidatesV2Package,
   summarizeCandidatesV2,
-} from "./generatorV2.js";
-import { formatCandidateGalleryV2Markdown } from "./candidateGalleryV2.js";
-import { evaluatePackage, summarizeEvaluation } from "./evaluator.js";
-import { analyzeLevel, formatLevelAnalysisMarkdown } from "./levelAnalyzer.js";
-import { formatCalibrationReport } from "./calibrationReport.js";
-import { formatMinerReportMarkdown, mineSeeds } from "./seedMiner.js";
-import { solveWithRuntime } from "./solver.js";
-import { getRuntimeAdapter } from "./runtimeAdapter.js";
-import type { LevelDoc, LevelRole, WinCondition } from "./types.js";
+} from "./workflows/generatorV2.js";
+import { formatCandidateGalleryV2Markdown } from "./workflows/candidateGalleryV2.js";
+import { evaluatePackage, summarizeEvaluation } from "./workflows/evaluator.js";
+import { analyzeLevel, formatLevelAnalysisMarkdown } from "./workflows/levelAnalyzer.js";
+import { formatCalibrationReport } from "./workflows/calibrationReport.js";
+import { formatMinerReportMarkdown, mineSeeds } from "./workflows/seedMiner.js";
+import { solveWithRuntime } from "./core/solver.js";
+import { getRuntimeAdapter } from "./prototypes/runtimeAdapter.js";
+import {
+  compareIceSlideStarts,
+  formatIceSlideStartComparisonMarkdown,
+} from "./prototypes/ice_slide_escape/tools/startComparison.js";
+import {
+  formatRemoveArchiveCandidateReport,
+  removeArchiveCandidate,
+} from "./archive/designArchiveMaintenance.js";
+import {
+  capabilityForMechanic,
+  formatToolCapabilitiesMarkdown,
+  unavailableToolMessage,
+} from "./workflows/toolMaturity.js";
+import type { LevelDoc, LevelRole, WinCondition } from "./core/types.js";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
@@ -47,11 +60,14 @@ async function main(): Promise<void> {
       "calibration-report",
       "explain-level",
       "explain-layout",
+      "compare-starts-layout",
+      "archive-remove-candidate",
       "coverage",
       "audit",
       "curriculum-v2",
       "level-specs-v2",
       "mine",
+      "tool-maturity",
     ].includes(command)
   ) {
     printUsage();
@@ -102,6 +118,10 @@ async function main(): Promise<void> {
   }
 
   if (command === "generate-v2") {
+    const basePkg = await loadPrototypePackage(packagePath);
+    if (capabilityForMechanic(basePkg.mechanic.id, "candidate_seed_factories").status === "unavailable") {
+      throw new Error(unavailableToolMessage(basePkg.mechanic.id, "candidate_seed_factories"));
+    }
     const pkg = await loadCurriculumV2Package(packagePath);
     const candidates = generateCandidatesV2Package(pkg);
     console.log(summarizeCandidatesV2(candidates));
@@ -160,6 +180,25 @@ async function main(): Promise<void> {
     }
     console.log(`Target levels: ${pkg.curriculum.target_level_count ?? "(none)"}`);
     console.log(`Levels: ${pkg.levels.levels.length}`);
+    return;
+  }
+
+  if (command === "tool-maturity") {
+    console.log(formatToolCapabilitiesMarkdown(pkg.mechanic.id).trimEnd());
+    return;
+  }
+
+  if (command === "archive-remove-candidate") {
+    const candidateId = maybeLevelId;
+    if (!candidateId || candidateId.startsWith("--")) {
+      throw new Error("archive-remove-candidate requires a candidate id");
+    }
+    const optionArgs = args.slice(3);
+    const report = await removeArchiveCandidate(pkg, candidateId, {
+      apply: hasFlag(optionArgs, "--apply"),
+      keepFile: hasFlag(optionArgs, "--keep-file"),
+    });
+    console.log(formatRemoveArchiveCandidateReport(report).trimEnd());
     return;
   }
 
@@ -261,7 +300,11 @@ async function main(): Promise<void> {
     const title = getOption(optionArgs, "--title") ?? id;
     const role = parseRole(getOption(optionArgs, "--role") ?? "challenge");
     const supportLevel = parseSupportLevel(getOption(optionArgs, "--support") ?? "none");
-    const winCondition = parseWinCondition(getOption(optionArgs, "--win"), pkg.mechanic.win);
+    const winCondition = parseExplainLayoutWinCondition(
+      pkg.mechanic.id,
+      parseWinCondition(getOption(optionArgs, "--win"), pkg.mechanic.win),
+      optionArgs,
+    );
     const layout = await readLayoutInput(layoutPath);
     const level: LevelDoc = {
       id,
@@ -288,6 +331,53 @@ async function main(): Promise<void> {
       await mkdir(path.dirname(markdownPath), { recursive: true });
       await writeFile(markdownPath, report, "utf8");
       await writeFile(jsonPath, `${JSON.stringify(analysis, null, 2)}\n`, "utf8");
+      console.log(`\nWrote ${markdownPath}`);
+      console.log(`Wrote ${jsonPath}`);
+    }
+    return;
+  }
+
+  if (command === "compare-starts-layout") {
+    const layoutPath = maybeLevelId;
+    if (!layoutPath || layoutPath.startsWith("--")) {
+      throw new Error("compare-starts-layout requires a layout file path, or '-' for stdin");
+    }
+
+    const optionArgs = args.slice(3);
+    const playerGoal = parsePointOption(optionArgs, "--player-goal") ?? parsePointOption(optionArgs, "--goal");
+    if (!playerGoal) {
+      throw new Error("compare-starts-layout requires --player-goal x,y");
+    }
+    const id = getOption(optionArgs, "--id") ?? "start_comparison";
+    const title = getOption(optionArgs, "--title") ?? id;
+    const role = parseRole(getOption(optionArgs, "--role") ?? "challenge");
+    const supportLevel = parseSupportLevel(getOption(optionArgs, "--support") ?? "none");
+    const targets = parseCsvOption(optionArgs, "--targets");
+    const layout = await readLayoutInput(layoutPath);
+    const report = compareIceSlideStarts(pkg, layout, {
+      id,
+      title,
+      role,
+      supportLevel,
+      targets,
+      playerGoal,
+      starts: parsePointListOption(optionArgs, "--starts"),
+      requiredEvents: parseCsvOption(optionArgs, "--required-events"),
+      forbiddenEvents: parseCsvOption(optionArgs, "--forbidden-events"),
+      reportEvents: parseCsvOption(optionArgs, "--report-events"),
+      maxStates: parseNumberOption(optionArgs, "--max-states"),
+      maxDepth: parseNumberOption(optionArgs, "--max-depth"),
+      graphMaxStates: parseNumberOption(optionArgs, "--graph-max-states"),
+    });
+    const markdown = formatIceSlideStartComparisonMarkdown(report);
+    console.log(markdown.trimEnd());
+    if (writeReports) {
+      const safeId = id.replace(/[^a-zA-Z0-9_-]/g, "_");
+      const markdownPath = path.join(pkg.root, "reports", `start_comparison_${safeId}.md`);
+      const jsonPath = path.join(pkg.root, "reports", `start_comparison_${safeId}.json`);
+      await mkdir(path.dirname(markdownPath), { recursive: true });
+      await writeFile(markdownPath, markdown, "utf8");
+      await writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
       console.log(`\nWrote ${markdownPath}`);
       console.log(`Wrote ${jsonPath}`);
     }
@@ -362,7 +452,9 @@ function printUsage(): void {
   console.log("  npm run inspect");
   console.log("  tsx src/cli.ts solve <prototype-path> [level-id]");
   console.log("  tsx src/cli.ts explain-level <prototype-path> <level-id> [--write]");
-  console.log("  tsx src/cli.ts explain-layout <prototype-path> <layout-file|-> [--id id] [--targets K1,K2] [--win player_on_goal|event_occurs:event] [--write]");
+  console.log("  tsx src/cli.ts explain-layout <prototype-path> <layout-file|-> [--id id] [--targets K1,K2] [--win player_on_goal|event_occurs:event] [--player-start x,y] [--player-goal x,y] [--write]");
+  console.log("  tsx src/cli.ts compare-starts-layout <prototype-path> <layout-file|-> --player-goal x,y [--starts x1,y1 x2,y2] [--required-events E1,E2] [--forbidden-events E1,E2] [--report-events E1,E2] [--write]");
+  console.log("  tsx src/cli.ts archive-remove-candidate <prototype-path> <candidate-id> [--apply] [--keep-file]");
   console.log("  tsx src/cli.ts evaluate <prototype-path>");
   console.log("  tsx src/cli.ts coverage <prototype-path>");
   console.log("  tsx src/cli.ts audit <prototype-path> [--write]");
@@ -373,6 +465,7 @@ function printUsage(): void {
   console.log("  tsx src/cli.ts candidate-gallery-v2 <prototype-path> [--write]");
   console.log("  tsx src/cli.ts calibration-report <prototype-path> [--write]");
   console.log("  tsx src/cli.ts mine <prototype-path> [--iterations n] [--max-findings n] [--write]");
+  console.log("  tsx src/cli.ts tool-maturity <prototype-path>");
 }
 
 function getOption(args: string[], name: string): string | undefined {
@@ -422,6 +515,52 @@ function parseNumberOption(args: string[], name: string): number | undefined {
   return value;
 }
 
+function parsePointListOption(
+  args: string[],
+  name: string,
+): Array<[number, number]> | undefined {
+  const index = args.indexOf(name);
+  if (index === -1) {
+    return undefined;
+  }
+  const values: string[] = [];
+  for (let cursor = index + 1; cursor < args.length; cursor += 1) {
+    const value = args[cursor];
+    if (!value || value.startsWith("--")) {
+      break;
+    }
+    values.push(value);
+  }
+  if (values.length === 0) {
+    throw new Error(`${name} requires at least one point formatted as x,y`);
+  }
+
+  return values.flatMap((value) =>
+    value
+      .split(/[;\s]+/)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0)
+      .map(parsePointToken),
+  );
+}
+
+function parsePointToken(raw: string): [number, number] {
+  const [xRaw, yRaw] = raw.split(",");
+  if (!xRaw || !yRaw) {
+    throw new Error(`Point '${raw}' must be formatted as x,y`);
+  }
+  const x = Number(xRaw);
+  const y = Number(yRaw);
+  if (!Number.isInteger(x) || !Number.isInteger(y)) {
+    throw new Error(`Point '${raw}' must use integer coordinates`);
+  }
+  return [x, y];
+}
+
+function hasFlag(args: string[], name: string): boolean {
+  return args.includes(name);
+}
+
 function parseWinCondition(raw: string | undefined, fallback: WinCondition): WinCondition {
   if (!raw) {
     return fallback;
@@ -434,6 +573,66 @@ function parseWinCondition(raw: string | undefined, fallback: WinCondition): Win
     return { type: "event_occurs", event };
   }
   return { type: raw };
+}
+
+function parseExplainLayoutWinCondition(
+  mechanicId: string,
+  base: WinCondition,
+  args: string[],
+): WinCondition {
+  const playerStart = parsePointOption(args, "--player-start") ?? parsePointOption(args, "--start");
+  const playerGoal = parsePointOption(args, "--player-goal") ?? parsePointOption(args, "--goal");
+
+  if (mechanicId === "ice_slide_escape") {
+    if (!playerStart || !playerGoal) {
+      throw new Error(
+        "ice_slide_escape explain-layout requires explicit --player-start x,y and --player-goal x,y. " +
+          "Each start/goal pair is a separate solve instance.",
+      );
+    }
+    return {
+      ...base,
+      type: base.type === "event_occurs" ? base.type : "ice_slide_escape_explicit_goal",
+      player_start: playerStart,
+      player_goal: playerGoal,
+    };
+  }
+
+  if (playerStart || playerGoal) {
+    return {
+      ...base,
+      ...(playerStart ? { player_start: playerStart } : {}),
+      ...(playerGoal ? { player_goal: playerGoal } : {}),
+    };
+  }
+
+  return base;
+}
+
+function parsePointOption(
+  args: string[],
+  name: string,
+): [number, number] | undefined {
+  const index = args.indexOf(name);
+  if (index === -1) {
+    return undefined;
+  }
+  const first = args[index + 1];
+  if (!first || first.startsWith("--")) {
+    throw new Error(`${name} requires a point formatted as x,y or x y`);
+  }
+  const parts = first.includes(",")
+    ? first.split(",").map((part) => part.trim())
+    : [first, args[index + 2]];
+  if (parts.length !== 2 || !parts[0] || !parts[1] || parts[1].startsWith("--")) {
+    throw new Error(`${name} requires a point formatted as x,y or x y`);
+  }
+  const x = Number(parts[0]);
+  const y = Number(parts[1]);
+  if (!Number.isInteger(x) || !Number.isInteger(y)) {
+    throw new Error(`${name} requires integer coordinates formatted as x,y or x y`);
+  }
+  return [x, y];
 }
 
 function parseRole(raw: string): LevelRole {

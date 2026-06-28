@@ -28,12 +28,12 @@ Useful implementation files:
 
 ```text
 prototypes/pull_portal_fallback/mechanic.yml
-src/pullPortalRuntime.ts
-src/solver.ts
-src/graphAnalyzer.ts
-src/agencyAnalyzer.ts
-src/levelAnalyzer.ts
-src/seedMiner.ts
+src/prototypes/pull_portal_fallback/runtime.ts
+src/core/solver.ts
+src/core/graphAnalyzer.ts
+src/core/agencyAnalyzer.ts
+src/workflows/levelAnalyzer.ts
+src/workflows/seedMiner.ts
 src/cli.ts
 ```
 

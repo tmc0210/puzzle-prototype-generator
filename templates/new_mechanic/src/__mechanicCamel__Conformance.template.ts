@@ -1,9 +1,9 @@
-import type { PrototypePackage } from "./types.js";
-import { analyzeGraphWithRuntime } from "./graphAnalyzer.js";
-import { analyzeLevel } from "./levelAnalyzer.js";
-import { solveWithRuntime } from "./solver.js";
-import { getRuntimeAdapter } from "./runtimeAdapter.js";
-import { __mechanicCamel__ToolAvailability } from "./__mechanicCamel__Tools.js";
+import type { PrototypePackage } from "../../core/types.js";
+import { analyzeGraphWithRuntime } from "../../core/graphAnalyzer.js";
+import { analyzeLevel } from "../../workflows/levelAnalyzer.js";
+import { solveWithRuntime } from "../../core/solver.js";
+import { getRuntimeAdapter } from "../runtimeAdapter.js";
+import { __mechanicCamel__ToolCapabilities } from "./tools.js";
 
 export type ToolConformanceStatus = "pass" | "fail" | "unknown" | "unavailable";
 
@@ -29,10 +29,11 @@ export function check__MechanicPascal__ToolConformance(
   checks.push(checkSolverSmoke(pkg));
   checks.push(checkGraphSmoke(pkg));
   checks.push(checkLayoutAnalyzerSmoke(pkg));
-  checks.push(checkAvailability("runtime_playable", "implemented"));
-  checks.push(checkAvailability("puzzlescript_exporter", __mechanicCamel__ToolAvailability.puzzleScriptExporter.status));
-  checks.push(checkAvailability("temporary_miner", __mechanicCamel__ToolAvailability.temporaryMiner.status));
-  checks.push(checkAvailability("seed_factories", __mechanicCamel__ToolAvailability.seedFactories.status));
+  checks.push(checkCapability("probe_seed_suite", __mechanicCamel__ToolCapabilities.probeSeedSuite));
+  checks.push(checkCapability("raw_sampler", __mechanicCamel__ToolCapabilities.rawSampler));
+  checks.push(checkCapability("candidate_seed_factories", __mechanicCamel__ToolCapabilities.candidateSeedFactories));
+  checks.push(checkCapability("curated_miner", __mechanicCamel__ToolCapabilities.curatedMiner));
+  checks.push(checkCapability("puzzlescript_exporter", __mechanicCamel__ToolCapabilities.puzzleScriptExporter));
 
   const status = checks.some((check) => check.status === "fail")
     ? "fail"
@@ -138,11 +139,19 @@ function checkLayoutAnalyzerSmoke(pkg: PrototypePackage): ToolConformanceCheck {
   }
 }
 
-function checkAvailability(
+function checkCapability(
   id: string,
-  status: "implemented" | "unavailable",
+  capability: { status: "implemented" | "unavailable"; maturity: string; reason?: string },
 ): ToolConformanceCheck {
-  return status === "implemented"
-    ? { id, status: "pass", reason: "Marked implemented; smoke checks should be added for this tool." }
-    : { id, status: "unavailable", reason: "Tool explicitly marked unavailable for this mechanism." };
+  return capability.status === "implemented"
+    ? {
+        id,
+        status: capability.maturity === "scaffold" ? "unknown" : "pass",
+        reason: `Marked ${capability.status} at maturity '${capability.maturity}'. ${capability.reason ?? ""}`.trim(),
+      }
+    : {
+        id,
+        status: "unavailable",
+        reason: `Maturity '${capability.maturity}'. ${capability.reason ?? ""}`.trim(),
+      };
 }

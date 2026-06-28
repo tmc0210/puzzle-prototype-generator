@@ -1,5 +1,5 @@
-import type { LevelDoc, MechanicDoc, WinCondition } from "./types.js";
-import { eventsMatchPattern } from "./events.js";
+import type { LevelDoc, MechanicDoc, WinCondition } from "../../core/types.js";
+import { eventsMatchPattern } from "../../core/events.js";
 
 export type __ActionId__ = string;
 

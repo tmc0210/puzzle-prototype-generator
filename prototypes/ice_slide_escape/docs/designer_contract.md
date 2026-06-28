@@ -1,29 +1,27 @@
 # Ice Slide Escape Designer Contract
 
-Status: designer-facing constraints for `ice_slide_escape`.
+状态：`ice_slide_escape` 原型的 designer-facing 约束。
 
-This document is for level designers and level-spec agents. It should be read
-alongside `rules.md` and `solver_contract.md`.
-
-## Package Boundary
-
-`ice_slide_escape` is a prototype-local mechanism. Its special edge start/goal
-contract and distance-based ice rules are not generic Sokoban rules.
-
-Designer agents should reference:
+本文档供关卡设计者和 level-spec agent 阅读。使用时也应阅读：
 
 ```text
 prototypes/ice_slide_escape/docs/rules.md
 prototypes/ice_slide_escape/docs/solver_contract.md
 prototypes/ice_slide_escape/docs/designer_contract.md
 prototypes/ice_slide_escape/docs/meta_interfaces.md
+prototypes/ice_slide_escape/docs/design_directives.md
 ```
 
-Do not infer additional behavior from `pull_portal_fallback`.
+## 包边界
 
-## Level Shape
+`ice_slide_escape` 是原型局部机制。它的显式边缘起终点契约和按距离分支的冰块
+规则不是通用 Sokoban 规则。
 
-All levels for this prototype must be rectangular grids:
+不要从 `pull_portal_fallback` 推断额外行为。
+
+## 关卡形状
+
+本原型关卡必须是矩形网格：
 
 ```yaml
 rectangular_grid_required: true
@@ -31,26 +29,24 @@ all_rows_same_width: true
 formal_width_and_height: to_be_specified_later
 ```
 
-Scratch layouts may vary in size while testing the mechanism. Final accepted
-levels must use the later specified fixed size.
+scratch layout 在机制测试时可以变化尺寸。最终 accepted levels 应使用后续指定
+的固定尺寸。
 
-An edge cell is any in-grid cell on the outer row or outer column. A wall on the
-outer row or column is still an edge cell.
+edge cell 指外圈行或外圈列上的任意格。外圈墙格仍然是 edge cell。
 
-## Start And Goal Authoring
+## 起点与终点写法
 
-Each formal solve or review instance must explicitly declare:
+每个正式 solve 或 review instance 必须显式声明：
 
 ```yaml
 player_start: edge_cell
 player_goal: edge_cell
 ```
 
-This does not mean the level has exactly one fixed start or exit. A level may be
-reviewed under multiple edge start/goal pairs. Each pair is a separate solve
-instance.
+这不表示关卡只有一个固定起点或出口。同一布局可以用多个 edge start / edge
+goal pair 审查；每个 pair 都是独立 solve instance。
 
-The player start must be initially standable:
+玩家起点必须初始可站立：
 
 ```yaml
 start_may_be:
@@ -61,91 +57,98 @@ start_must_not_be:
   - ice
 ```
 
-The player goal may initially be a wall. Such a goal is valid if ice can destroy
-that wall and make the cell reachable.
+玩家终点可以初始是墙。只要冰能破坏该墙并让该格可达，这个 goal 就是合法的。
 
-Start and goal may be the same cell. This is solver-legal but usually
-uninteresting; formal level specs may exclude it when defining quality gates.
+起点和终点可以是同一格。solver 允许这种实例，但通常缺乏设计价值；正式质量门
+可以在 level spec 中排除它。
 
-## Meta Interface Pass
+## 元重读实例对
 
-After a conventional single-level candidate is already working, designers may
-run a meta-interface pass. This pass looks for edge cells that could later
-connect this rectangle to other rectangles in a large map.
-
-Interface labels:
+常规单关候选已经工作后，designer 应执行 meta reinterpretation pass。这个 pass
+不是给关卡多开几个门，而是寻找同一重置布局下的两条定向 solve instance：
 
 ```yaml
-obvious_exit:
-  use: visible or guided exit for the normal route
+base_instance:
+  start: A
+  goal: B
+  role: 当前流程中的基础关
 
-optional_exit:
-  use: extra reachable exit with its own interesting solution
-
-hidden_destructible_exit:
-  use: edge wall or blocked edge route opened by ice destruction
-
-return_only_entry:
-  use: edge cell not reachable from the current ordinary start, reserved for a
-    future route entering from another level
+meta_instance:
+  start: C
+  goal: D
+  role: 重访时的同结构重读
 ```
 
-For each proposed interface, the designer should record:
+`base_instance` 必须作为普通关扎实成立。`meta_instance` 应复用同一结构材料，
+但产生显著不同的解法逻辑链。它默认可以使用本原型所有知识，因为元机制被视为
+最后期知识；只有 experiment brief 明确限制时才收窄。
+
+Designer 应记录：
 
 ```yaml
-interface_claim:
-  cell: [x, y]
-  type: obvious_exit | optional_exit | hidden_destructible_exit | return_only_entry
-  preserves_original_solution: true | false | unknown
-  adds_distinct_solution: true | false | unknown
-  creates_bypass: true | false | unknown
+meta_reinterpretation_claim:
+  base_instance:
+    start: [x, y]
+    goal: [x, y]
+    causal_chain: ""
+  meta_instance:
+    start: [x, y]
+    goal: [x, y]
+    knowledge_scope: all_prototype_knowledge | restricted_by_brief
+    causal_chain: ""
+  chain_delta_from_base: ""
+  shared_structure: []
+  latent_elements_from_base: []
+  non_target_pairs: []
+  classification: meaningful_reinterpretation | interface_clone | connectivity_note_only | bypass_risk
 ```
 
-The pass may suggest small edge edits, such as opening an edge cell or leaving a
-destructible edge wall. These edits are design candidates, not automatic
-improvements. They need solver/analyzer evidence before being accepted.
+base 解中看似无用、弱作用、甚至当前不可推动的元素不自动扣分。若它不严重污染
+base 阅读，并在 meta 解中获得明确 payoff，它可以是正向潜伏结构。若没有 payoff，
+critic 仍应把它当作噪声攻击。
 
-Cross-level movement itself remains future scope. The current designer loop only
-checks single-level consequences of these interfaces.
+`C->B`、`A->D` 或其它非目标 pair 的存在不自动构成 bypass。只有当它们明显抢
+走目标 meta 解读、破坏 base 解，或违反 experiment brief 时，才应打回。
 
-## Win Design
+跨关移动本身仍是未来范围。当前 designer loop 只检查这些接口的单关后果。
 
-A winning state requires both:
+## 胜利设计
+
+胜利状态同时要求：
 
 ```yaml
 all_targets_have_ice: true
 player_reaches_specific_edge_goal: true
 ```
 
-Every target cell must be occupied by some ice block at win time. Extra ice on
-non-target cells is allowed.
+每个目标格在胜利时都必须被某块冰占据。非目标格上允许有额外冰块。
 
-Targets are overlays. They do not stop, slow, redirect, or otherwise affect ice
-movement.
+目标是 overlay。目标不会停止、减速、转向或以其它方式影响冰块运动。
 
 ## Designer Checklist
 
-Before submitting a formal candidate, check:
+提交正式候选前，检查：
 
 ```text
-[ ] The grid is rectangular.
-[ ] A concrete edge start cell is declared.
-[ ] The start cell is initially standable.
-[ ] A concrete edge goal cell is declared.
-[ ] Each solve instance treats the goal as a specific cell, not "any edge".
-[ ] Every target can be occupied by ice at win time.
-[ ] Extra ice, if present, does not accidentally create a bypass.
-[ ] If the goal starts as a wall, some required ice interaction can destroy it.
-[ ] The candidate is solved for the declared start/goal pair.
-[ ] If meta interfaces are proposed, each interface is labeled and reviewed.
-[ ] Interface edits preserve the original solution or explicitly revise the
-    level's role.
-[ ] Added exits are checked for bypasses.
+[ ] 网格是矩形。
+[ ] 声明了具体 edge start。
+[ ] start 初始可站立。
+[ ] 声明了具体 edge goal。
+[ ] 每个 solve instance 都把 goal 当作具体格，而不是 "any edge"。
+[ ] 每个 target 在胜利时都能被冰占据。
+[ ] 额外冰块不会意外制造 base bypass。
+[ ] 如果 goal 初始是墙，某个必要冰块交互可以破坏它。
+[ ] 候选已针对声明的 start/goal pair 求解。
+[ ] 如果提出 meta reinterpretation，A->B 和 C->D 都分别记录 solve instance。
+[ ] meta claim 写明 chain_delta_from_base 和 shared_structure。
+[ ] base 中的潜伏元素被标记为 payoff 或噪声风险。
+[ ] 非目标 pair 被记录为阅读风险，而不是自动当作失败。
+[ ] 已应用 docs/design_directives.md 中的原型专属指令。
 ```
 
-## Rule Motifs Designers May Intentionally Teach
+## Designer 可主动教学的规则 motif
 
-The mechanism's core teachable motifs include:
+这些 motif 是初始设计词汇，不是最终 curriculum：
 
 ```yaml
 motifs:
@@ -157,9 +160,6 @@ motifs:
   - restart_counting_after_group_interaction
   - use_ice_to_open_edge_goal_wall
   - coordinate_target_ice_with_player_edge_escape
-  - retrofit_edge_interfaces_without_losing_original_solution
-  - create_hidden_or_return_only_edge_interfaces
+  - reinterpret_same_layout_with_new_entry_exit
+  - preserve_base_while_adding_meta_instance
 ```
-
-These are not yet a finalized curriculum. They are initial design vocabulary for
-future knowledge and level-spec work.

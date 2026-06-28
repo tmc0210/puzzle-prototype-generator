@@ -1,186 +1,206 @@
-# Ice Slide Escape Meta Interfaces
+# Ice Slide Escape 元接口说明
 
-Status: future-facing design note. This is not part of the current single-level
-runtime implementation.
+状态：面向未来大地图设计的原型专属设计说明。它不是当前单关 runtime 的新增规
+则。
 
-`ice_slide_escape` is currently designed and verified one rectangular level at a
-time. The long-term project may connect many rectangular levels into one large
-map. In that larger structure, edge cells become interfaces between levels.
+`ice_slide_escape` 当前仍按单个矩形关卡设计和验证。未来项目可能把多个矩形关
+卡拼成大地图；玩家从一个关卡切换到另一个关卡时，进入的关卡会重置。因此，本
+原型的元接口重点不是“一个正常解同时打开多个方向”，而是：
 
-This document records that future direction so single-level designers can leave
-useful hooks without changing the current runtime rules.
+```text
+同一个重置布局
++ 不同入口 / 出口 solve instance
++ 可能更后期的玩家知识
+=> 同结构材料被读成另一条有趣解法
+```
 
-## Current Scope
+## 当前范围
 
-Current implementation scope:
+当前已经实现：
 
 ```yaml
 implemented_now:
-  - single rectangular level runtime
-  - single-level solver instances
-  - explicit edge start and explicit edge goal per solve request
-  - designer evidence for one level at a time
+  - 单矩形关卡 runtime
+  - 单关 solver instance
+  - 每次 solve request 显式指定一个 edge start 和一个 edge goal
+  - 单关工具证据
+```
 
+当前未实现：
+
+```yaml
 not_implemented_now:
-  - cross-level movement
-  - global overworld state
-  - routing between multiple rectangles
-  - correspondence rules between two connected level edges
-  - persistent multi-level target state
+  - 跨关移动 runtime
+  - 大地图全局状态
+  - 多矩形关卡路由
+  - 邻接关边缘坐标映射
+  - 多关持久目标状态
 ```
 
-The single-level solver still receives one concrete start and one concrete goal
-for each solve request. However, the level itself does not own a single fixed
-start or a single fixed exit. Tools may enumerate many `(edge_start, edge_goal)`
-pairs and report them as separate problem instances.
+单关 solver 每次仍只接收一个具体 `player_start` 和一个具体 `player_goal`。同
+一个布局可以被多个 `(edge_start, edge_goal)` pair 检查，但每个 pair 都是独立
+problem instance，不能合并成 “any edge” 证明。
 
-## Long-Term Big-Map Model
+## 长期大地图模型
 
-The future big map is expected to be made from multiple rectangular levels.
-Level edges may connect to corresponding positions in neighboring levels.
+未来大地图可能由多个矩形关卡拼接而成，边缘格对应邻接关的入口格。具体坐标映
+射、跨关移动、持久状态和全局路由仍是未来范围，当前文档不发明这些细节。
 
-Conceptually:
+设计上只保留一个重要假设：
 
 ```text
-Level A right edge cell (x=max, y=k)
-connects to
-Level B left edge cell (x=0, y=k)
+玩家第一次从 A 入口解到 B 出口后，未来可能从 C 入口重访同一布局。
+因为切换地图会重置关卡，C->D 面对的是同一初始布局，而不是 A->B 结束后的状态。
 ```
 
-The exact coordinate mapping, persistence model, and global routing rules are
-future scope. Current documents should not invent those details.
+## 元接口定义
 
-The intended high-level behavior is:
+一个有价值的元接口应被写成一对定向实例：
 
 ```yaml
-future_cross_level_transition:
-  precondition:
-    - current_level_targets_are_satisfied
-    - player_attempts_to_move_outward_from_an_edge_cell
-    - connected_destination_cell_exists
-    - connected_destination_cell_is_empty_or_otherwise_enterable
-  effect:
-    - player_enters_connected_level_at_corresponding_edge_position
+base_instance:
+  start: A
+  goal: B
+  role: 当前流程中的基础关
+  requirement:
+    - 解法扎实
+    - 读题干净
+    - 工具证据成立
+
+meta_instance:
+  start: C
+  goal: D
+  role: 重访时的同结构重读
+  default_knowledge_scope: all_prototype_knowledge
+  requirement:
+    - 与 A->B 共享关键结构材料
+    - 解法逻辑链显著不同
+    - 不是换入口 / 换出口 / 缩短路线
 ```
 
-Hidden routes may also exist when an edge wall is destroyed by ice before the
-player reaches that edge.
+`meta_instance` 默认可以使用本原型所有知识，因为元机制在本原型中被视为最后
+期知识。它也不必须使用未来知识：如果 A->B 是低知识低难度，C->D 使用相近知
+识但难度、耦合或规划深度高很多档，也可以成立。
 
-## Edge Interface Types
+## 潜伏元素
 
-An edge interface is an edge cell that may matter for future cross-level
-composition.
-
-Recommended labels:
-
-```yaml
-edge_interface_types:
-  obvious_exit:
-    meaning: visible or clearly guided route for the normal solution
-
-  optional_exit:
-    meaning: additional reachable edge route that gives a distinct valid solve
-
-  hidden_destructible_exit:
-    meaning: edge wall or blocked edge route that can be opened by ice destruction
-
-  return_only_entry:
-    meaning: not reachable from the current level's normal start, but useful as
-      a future entry when the player arrives from another connected level
-```
-
-These labels are designer-facing claims. They are not new runtime objects.
-
-## Meta Interface Pass
-
-After a normal single-level candidate already works, a designer may run a
-meta-interface pass.
-
-The pass asks:
+元接口候选允许存在 base 解中看似无用、弱作用、甚至当前根本不可推动的元素。
+这不自动构成审美扣分。判断标准是：
 
 ```text
-1. Which edge cells are already meaningful exits?
-2. Which edge walls could be opened by the existing ice-destruction rules?
-3. Which edge cells could be made empty without breaking the original solution?
-4. Which edge cells are unreachable from the current start, but could make good
-   return-only entries from another level?
-5. Which modifications create extra solutions, and are those solutions
-   interesting rather than bypasses?
+- 它是否严重污染 A->B 的阅读？
+- 它是否在 C->D 中获得明确角色或 payoff？
+- 它是否让同一结构在重访时被重新理解？
 ```
 
-For each proposed interface, record:
+如果潜伏元素只制造噪声、没有 meta payoff，critic 仍应攻击它。
+
+## Meta Reinterpretation Pass
+
+普通候选的 A->B 已经成立后，designer 应执行 meta reinterpretation pass。
+
+这一步问：
+
+```text
+1. A->B 是否作为普通关独立成立？
+2. 是否存在或可通过小改动形成 C->D？
+3. C->D 的 causal_chain 与 A->B 有什么实质差异？
+4. 哪些墙、冰、目标、边缘位置或空间关系被两条解法共同使用？
+5. 哪些 base 潜伏元素在 C->D 中获得意义？
+6. C->D 是否只是 interface_clone？
+7. C->B、A->D 或其它非目标 pair 是否会抢走 C->D 的阅读？
+```
+
+推荐记录格式：
 
 ```yaml
-meta_interface_candidate:
-  cell: [x, y]
-  type: obvious_exit | optional_exit | hidden_destructible_exit | return_only_entry
-  expected_access:
-    from_current_level: reachable | unreachable | requires_target_completion | requires_ice_destruction
-    from_connected_level: unknown | intended_future_entry
-  evidence:
-    preserves_original_solution: true | false | unknown
-    adds_distinct_solution: true | false | unknown
-    creates_bypass: true | false | unknown
-  notes: string
+meta_reinterpretation_candidate:
+  base_instance:
+    start: [x, y]
+    goal: [x, y]
+    causal_chain: ""
+    evidence_refs: []
+  meta_instance:
+    start: [x, y]
+    goal: [x, y]
+    knowledge_scope: all_prototype_knowledge | restricted_by_brief
+    causal_chain: ""
+    evidence_refs: []
+  chain_delta_from_base: ""
+  shared_structure:
+    - ""
+  latent_elements_from_base:
+    - element: ""
+      base_reading: unused | weak_role | impossible_now | incidental | other
+      meta_payoff: ""
+  non_target_pairs:
+    - pair: "C->B"
+      result: unknown | unsolved | solved
+      risk: none | steals_reading | bypasses_base | confusing | other
+  classification: meaningful_reinterpretation | interface_clone | connectivity_note_only | bypass_risk
+  notes: ""
 ```
 
-## Composition Opportunities
+## 非目标 Pair
 
-Useful meta-interface patterns include:
+`C->B`、`A->D` 或其它非目标 pair 的存在通常不是失败。玩家从 C 进入时，B 通
+常指向已经去过的区域；这个方向在大地图语义下没有强动机。
+
+需要升级为问题的情况：
+
+```text
+- C->B 比 C->D 更显眼、更短、更自然，导致玩家不读 C->D；
+- 非目标 pair 绕过了 A->B 的核心义务，破坏 base 关；
+- 非目标 pair 让 C->D 的目标出口变得不可读或像误导；
+- experiment brief 明确要求排除某类额外解。
+```
+
+## 审美标签
+
+推荐标签：
 
 ```yaml
-patterns:
-  preserve_main_route_add_hidden_exit:
-    description: keep the normal start/exit solve, but add an edge wall that can
-      be destroyed only by a later or harder route.
+meaningful_reinterpretation:
+  meaning: A->B 与 C->D 共享结构，但解法逻辑链显著不同。
 
-  unreachable_return_entry:
-    description: leave an edge cell unreachable from the normal start so another
-      level can later send the player back into this map at a new position.
+interface_clone:
+  meaning: 新入口 / 出口只是复制原解、缩短路线或移动起终点。
 
-  multi_exit_difficulty_split:
-    description: allow several exits from one solved level, with each exit
-      requiring a meaningfully different route or difficulty.
+connectivity_note_only:
+  meaning: 技术上可连通或可求解，但没有明确重读价值。
 
-  retrofit_existing_level:
-    description: take a finished conventional level and test small edge edits
-      that create future interfaces while preserving the accepted solution.
+bypass_risk:
+  meaning: 新 pair 绕过核心义务、抢走目标阅读，或破坏 base 解。
 ```
 
-The designer must not assume that every extra edge route is good. A route that
-skips the intended target/ice interaction is a bypass unless the level's role is
-explicitly revised.
+## 工具与证据
 
-## Solver And Review Expectations
-
-For current tools, meta-interface exploration should be represented as multiple
-single-level solve instances:
+当前工具层不需要实现完整大地图 runtime。元接口证据应退回到多个单关 solve
+instance：
 
 ```yaml
 solve_instances:
-  - start: [0, 2]
-    goal: [8, 2]
-    claim: normal_route
-  - start: [0, 2]
-    goal: [4, 0]
-    claim: optional_exit
-  - start: [8, 4]
-    goal: [8, 2]
-    claim: return_route_from_future_level
+  - start: A
+    goal: B
+    claim: base_instance
+  - start: C
+    goal: D
+    claim: meta_instance
+  - start: C
+    goal: B
+    claim: non_target_pair_note
 ```
 
-Each instance keeps its own evidence. Do not combine them into one "any edge"
-solve proof.
+每个 instance 分别保存 solver trace、事件证据、forbidden/report-only 检查和图
+证据边界。不要把多个出口合并成一个 “any edge” proof。
 
-Reviewer questions:
+Reviewer / critic 应重点检查：
 
 ```text
-- Does the interface preserve the original accepted solution?
-- Does it add a distinct solution, and is that solution desirable?
-- Does it allow the player to ignore the core target/ice obligation?
-- If the interface is return-only, is it actually unreachable from the current
-  ordinary start?
-- If the interface is hidden/destructible, does ice destruction meaningfully
-  enable it instead of making it incidental?
+- A->B 是否仍是扎实普通关？
+- C->D 是否是同结构重读，而不是第二关硬缝上去？
+- chain_delta_from_base 是否具体？
+- 潜伏元素是否有 payoff？
+- 非目标 pair 是否真的抢走阅读，还是只是可记录的旁路？
+- D 的大地图方向是否被过度解读？除非 brief 要求，本关不需要证明 D 的独立方向意义。
 ```
-

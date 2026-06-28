@@ -5,8 +5,8 @@ import {
   buildPlayerModelIndex,
   computeTopologicalLayers,
   getDirectHardPrerequisites,
-} from "./playerModelGraph.js";
-import type { CurriculumDoc, PrototypePackage } from "./types.js";
+} from "../core/playerModelGraph.js";
+import type { CurriculumDoc, PrototypePackage } from "../core/types.js";
 
 export type PrototypeAudit = {
   prototype: string;

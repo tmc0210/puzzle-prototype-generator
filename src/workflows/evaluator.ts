@@ -1,7 +1,6 @@
 import type {
   CounterfactualEvaluation,
   EvaluationResult,
-  GameState,
   InputId,
   KnowledgeItem,
   LevelDoc,
@@ -12,16 +11,18 @@ import type {
   SolverEvidenceId,
   TargetEvaluation,
   WinCondition,
-} from "./types.js";
-import { analyzeGraphWithRuntime } from "./graphAnalyzer.js";
+} from "../core/types.js";
+import { analyzeGraphWithRuntime } from "../core/graphAnalyzer.js";
 import {
   counterfactualOptions,
   findUncoveredGoalPathWithRuntime,
   solveWithRuntime,
-} from "./solver.js";
-import type { PrototypePackage } from "./types.js";
-import { coversEventPatterns, eventsMatchPattern } from "./events.js";
-import { getRuntimeAdapter, type CurrentRuntimeAdapter } from "./runtimeAdapter.js";
+} from "../core/solver.js";
+import type { PrototypePackage } from "../core/types.js";
+import { coversEventPatterns, eventsMatchPattern } from "../core/events.js";
+import { getRuntimeAdapter, type CurrentRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
+
+type RuntimeState = unknown;
 
 type ExpectedTraceReplay = {
   events: string[];
@@ -190,7 +191,7 @@ export function evaluatePackage(pkg: PrototypePackage): EvaluationResult[] {
 function replayExpectedTrace(
   adapter: CurrentRuntimeAdapter,
   mechanic: MechanicDoc,
-  initial: GameState,
+  initial: RuntimeState,
   level: LevelDoc,
   winCondition: WinCondition,
 ): ExpectedTraceReplay {
@@ -558,7 +559,7 @@ function evaluateCounterfactual(
   mechanic: MechanicDoc,
   knowledge: KnowledgeItem[],
   targetId: string,
-  initial: GameState,
+  initial: RuntimeState,
   winCondition: MechanicDoc["win"],
 ): CounterfactualEvaluation {
   const item = knowledge.find((candidate) => candidate.id === targetId);

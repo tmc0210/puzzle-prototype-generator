@@ -1,5 +1,4 @@
 import type {
-  GameState,
   GraphAnalysis,
   InputId,
   KnowledgeItem,
@@ -9,18 +8,18 @@ import type {
   SearchStatus,
   Solution,
   WinCondition,
-} from "./types.js";
-import { analyzeGraphWithRuntime } from "./graphAnalyzer.js";
+} from "../core/types.js";
+import { analyzeGraphWithRuntime } from "../core/graphAnalyzer.js";
 import {
   counterfactualOptions,
   findUncoveredGoalPathWithRuntime,
   solveWithRuntime,
-} from "./solver.js";
-import { coversEventPatterns } from "./events.js";
+} from "../core/solver.js";
+import { coversEventPatterns } from "../core/events.js";
 import {
   analyzeObjectParticipation,
   type ObjectParticipationSummary,
-} from "./objectParticipation.js";
+} from "../prototypes/objectParticipation.js";
 import {
   analyzeAgencyWithRuntime,
   type AgencyAnalysis,
@@ -28,9 +27,11 @@ import {
   type AgencySolutionBranchSummary,
   type SccAnalysis,
   type SccSolutionBranchSummary,
-} from "./agencyAnalyzer.js";
-import { buildAgencyDigest, formatAgencyDigestMarkdown } from "./agencyDigest.js";
-import { getRuntimeAdapter, type CurrentRuntimeAdapter } from "./runtimeAdapter.js";
+} from "../core/agencyAnalyzer.js";
+import { buildAgencyDigest, formatAgencyDigestMarkdown } from "../core/agencyDigest.js";
+import { getRuntimeAdapter, type CurrentRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
+
+type RuntimeState = unknown;
 
 export type LevelAnalysisOptions = {
   maxStates?: number;
@@ -178,7 +179,7 @@ export function analyzeLevel(
       inputs: solution.inputs,
       events: solution.events,
       eventCounts: countEvents(solution.events),
-      objectParticipation: analyzeObjectParticipation(solution.events),
+      objectParticipation: analyzeObjectParticipation(pkg.mechanic.id, solution.events),
     },
     keySnapshots,
     graph,
@@ -191,7 +192,7 @@ export function analyzeLevel(
 function collectKeySnapshots(
   adapter: CurrentRuntimeAdapter,
   mechanic: MechanicDoc,
-  initial: GameState,
+  initial: RuntimeState,
   solution: Solution,
   winCondition: WinCondition,
 ): TraceSnapshot[] {
@@ -225,7 +226,7 @@ function collectKeySnapshots(
 function analyzeCounterfactuals(
   adapter: CurrentRuntimeAdapter,
   mechanic: MechanicDoc,
-  initial: GameState,
+  initial: RuntimeState,
   winCondition: WinCondition,
   options: { maxStates: number; maxDepth: number },
 ): CounterfactualAnalysis[] {
@@ -266,7 +267,7 @@ function analyzeTargetEvents({
   adapter: CurrentRuntimeAdapter;
   knowledge: KnowledgeItem[];
   targetId: string;
-  initial: GameState;
+  initial: RuntimeState;
   winCondition: WinCondition;
   solution: Solution;
   maxStates: number;
@@ -616,12 +617,25 @@ function formatSccAnalysis(scc: SccAnalysis | undefined): string[] {
         `branchingWinSccs=${scc.winContinuationBranchingSccCount}`,
         `mergingWinSccs=${scc.winContinuationMergingSccCount}`,
       ].join(", "),
+    "- Handoff scriptiness: " +
+      [
+        `scope=${scc.handoffProfile.scope}`,
+        `scripted=${scc.handoffProfile.scriptedHandoffCount}/${scc.handoffProfile.handoffCount}`,
+        `trivial=${scc.handoffProfile.trivialSourceSccCount}`,
+        `sameEntryExit=${scc.handoffProfile.sameEntryExitStateCount}`,
+        `forcedScripted=${scc.handoffProfile.forcedScriptedHandoffCount}`,
+        `maxRun=${scc.handoffProfile.maxConsecutiveScriptedHandoffs}`,
+      ].join(", "),
     `- Initial SCC: ${formatSccNode(scc.initialScc)}`,
     `- SCC path: ${formatSccPath(scc.solutionSccPath)}`,
     "",
     "#### SCC Solution Path",
     "",
     ...formatSccSolutionBranches(scc.solutionPathBranches),
+    "",
+    "#### SCC Handoff Scriptiness",
+    "",
+    ...formatSccHandoffs(scc.handoffProfile.handoffs),
   ];
 }
 
@@ -668,6 +682,33 @@ function formatSccSolutionBranchRow(branch: SccSolutionBranchSummary): string {
     branch.winReachableIncomingCount,
     branch.solutionNextSccId === null ? "win/end" : `s${branch.solutionNextSccId}`,
     branch.forcedWinContinuation ? "yes" : "no",
+  ].join(" | ").replace(/^/, "| ").replace(/$/, " |");
+}
+
+function formatSccHandoffs(handoffs: SccAnalysis["handoffProfile"]["handoffs"]): string[] {
+  if (handoffs.length === 0) {
+    return ["No SCC handoffs were found on the returned solution."];
+  }
+
+  return [
+    "| From | Enter step | Exit step | To | States | Entry=exit | Forced | Input | Events | Reading |",
+    "| --- | ---: | ---: | --- | ---: | --- | --- | --- | --- | --- |",
+    ...handoffs.map(formatSccHandoffRow),
+  ];
+}
+
+function formatSccHandoffRow(handoff: SccAnalysis["handoffProfile"]["handoffs"][number]): string {
+  return [
+    `s${handoff.fromSccId}`,
+    handoff.sourceEnteredAtStep,
+    handoff.exitActionStep,
+    `s${handoff.toSccId}`,
+    handoff.sourceStateCount,
+    handoff.entryEqualsExitSource ? "yes" : "no",
+    handoff.forcedWinContinuation ? "yes" : "no",
+    handoff.input ?? "n/a",
+    escapeCell(handoff.events.join(", ") || "none"),
+    handoff.reading,
   ].join(" | ").replace(/^/, "| ").replace(/$/, " |");
 }
 

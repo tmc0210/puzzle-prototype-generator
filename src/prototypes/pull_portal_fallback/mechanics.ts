@@ -1,15 +1,31 @@
 import type {
   Direction,
-  GameState,
   InputId,
   LevelDoc,
   MechanicDoc,
   Point,
   SolverOptions,
-  StepResult,
   WinCondition,
-} from "./types.js";
-import { eventsMatchPattern } from "./events.js";
+} from "../../core/types.js";
+import { eventsMatchPattern } from "../../core/events.js";
+
+export type GameState = {
+  width: number;
+  height: number;
+  walls: Set<string>;
+  goals: Set<string>;
+  player: Point;
+  crates: Point[];
+  portals: Record<string, Point>;
+};
+
+export type StepResult = {
+  legal: boolean;
+  input: InputId;
+  state: GameState;
+  events: string[];
+  reason?: string;
+};
 
 const vectors: Record<Direction, Point> = {
   up: { x: 0, y: -1 },

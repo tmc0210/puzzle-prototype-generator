@@ -476,12 +476,21 @@ It contains:
 
 ```text
 PROMPT.md
-src/__mechanicCamel__Mechanics.template.ts
-src/__mechanicCamel__Runtime.template.ts
-src/__mechanicCamel__Tools.template.ts
-src/__mechanicCamel__Conformance.template.ts
+templates/new_mechanic/src/__mechanicCamel__Mechanics.template.ts
+templates/new_mechanic/src/__mechanicCamel__Runtime.template.ts
+templates/new_mechanic/src/__mechanicCamel__Tools.template.ts
+templates/new_mechanic/src/__mechanicCamel__Conformance.template.ts
 prototype/*.template.yml
 conformance.template.md
+```
+
+Instantiate those source templates under:
+
+```text
+src/prototypes/<mechanic_id>/mechanics.ts
+src/prototypes/<mechanic_id>/runtime.ts
+src/prototypes/<mechanic_id>/tools.ts
+src/prototypes/<mechanic_id>/conformance.ts
 ```
 
 These templates are the practical starting point for satisfying the contracts in this document.

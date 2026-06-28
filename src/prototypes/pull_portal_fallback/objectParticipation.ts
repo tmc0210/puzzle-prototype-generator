@@ -15,7 +15,7 @@ type ParsedObjectEvent = {
   instance: string;
 };
 
-export function analyzeObjectParticipation(events: string[]): ObjectParticipationSummary[] {
+export function analyzePullPortalObjectParticipation(events: string[]): ObjectParticipationSummary[] {
   const groups = new Map<
     string,
     {

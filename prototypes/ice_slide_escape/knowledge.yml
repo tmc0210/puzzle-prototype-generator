@@ -1,0 +1,54 @@
+mechanic: ice_slide_escape
+
+knowledge:
+  - id: K_ice_runtime_smoke
+    type: vocabulary
+    statement: Ice blocks slide automatically after a successful push.
+    source:
+      kind: declared
+      rule: push_ice
+      events: [push_ice]
+    detector:
+      required_events: [push_ice]
+    evidence:
+      strength: weak
+      notes: Runtime bring-up smoke target only; not a finalized curriculum item.
+
+  - id: K_ice_pass_through_d5
+    type: interaction_exception
+    statement: At distance 5, moving ice passes through a contiguous obstacle group and restarts counting.
+    source:
+      kind: derived_branch
+      rule: push_ice
+      branch: pass_through_d5
+      events: [ice_pass_through_d5, slide_restart_after_group]
+    detector:
+      required_events: [ice_pass_through_d5, slide_restart_after_group]
+    evidence:
+      strength: weak
+      notes: Probe fixture target, not a certified teaching target.
+
+  - id: K_ice_destroy_group_d6_plus
+    type: interaction_exception
+    statement: At distance 6 or more, moving ice destroys the contiguous obstacle group and restarts counting.
+    source:
+      kind: derived_branch
+      rule: push_ice
+      branch: destroy_group_d6_plus
+      events: [ice_destroy_group_d6_plus, slide_restart_after_group]
+    detector:
+      required_events: [ice_destroy_group_d6_plus, slide_restart_after_group]
+    evidence:
+      strength: weak
+      notes: Probe fixture target, not a certified teaching target.
+
+  - id: K_explicit_edge_goal
+    type: constraint
+    statement: A solve instance uses one explicit edge start and one explicit edge goal.
+    source:
+      kind: declared
+      notes: From the ice_slide_escape solver contract.
+    detector: {}
+    evidence:
+      strength: weak
+      notes: Static contract note for smoke reports.

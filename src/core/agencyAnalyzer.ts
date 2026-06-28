@@ -1,6 +1,5 @@
-import type { GameState, MechanicDoc, Solution, SolverOptions, WinCondition } from "./types.js";
+import type { Solution, WinCondition } from "./types.js";
 import type { PuzzleRuntime, RuntimeSearchOptions } from "./puzzleRuntime.js";
-import { createPullPortalRuntime } from "./pullPortalRuntime.js";
 
 export type AgencyAnalysisOptions = RuntimeSearchOptions & {
   maxTransitions?: number;
@@ -81,6 +80,38 @@ export type SccSolutionBranchSummary = SccNodeSummary & {
   forcedWinContinuation: boolean;
 };
 
+export type SccHandoffReading =
+  | "scripted_trivial_scc"
+  | "scripted_same_state_handoff"
+  | "has_reposition_room";
+
+export type SccHandoffSummary = {
+  fromSccId: number;
+  toSccId: number;
+  sourceEnteredAtStep: number;
+  exitActionStep: number;
+  input: string | null;
+  events: string[];
+  sourceStateCount: number;
+  sourceEntryStateKey: string;
+  exitSourceStateKey: string;
+  entryEqualsExitSource: boolean;
+  trivialSourceScc: boolean;
+  forcedWinContinuation: boolean;
+  reading: SccHandoffReading;
+};
+
+export type SccHandoffProfile = {
+  scope: "returned_solution";
+  handoffCount: number;
+  scriptedHandoffCount: number;
+  trivialSourceSccCount: number;
+  sameEntryExitStateCount: number;
+  forcedScriptedHandoffCount: number;
+  maxConsecutiveScriptedHandoffs: number;
+  handoffs: SccHandoffSummary[];
+};
+
 export type SccAnalysis = {
   condensationRule: "strongly_connected_components";
   sccCount: number;
@@ -96,6 +127,7 @@ export type SccAnalysis = {
   forcedWinContinuationPrefixLength: number;
   initialScc: SccNodeSummary;
   solutionPathBranches: SccSolutionBranchSummary[];
+  handoffProfile: SccHandoffProfile;
 };
 
 export type AgencyAnalysis = {
@@ -142,17 +174,6 @@ type ReplayedSolutionStep<Action extends string> = {
   events: string[];
   key: string;
 };
-
-export function analyzeAgency(
-  mechanic: MechanicDoc,
-  initialState: GameState,
-  solution: Solution,
-  options: SolverOptions & AgencyAnalysisOptions = {},
-): AgencyAnalysis {
-  // Compatibility wrapper for the current pull_portal_fallback adapter.
-  // New prototype code should prefer analyzeAgencyWithRuntime.
-  return analyzeAgencyWithRuntime(createPullPortalRuntime(mechanic), initialState, solution, options);
-}
 
 export function analyzeAgencyWithRuntime<
   State,
@@ -686,6 +707,12 @@ function analyzeSccCondensation<Action extends string>(
     condensation.outgoing,
     winReachableSccs,
   );
+  const handoffProfile = summarizeSccHandoffs({
+    solutionSccPath,
+    nodeSummaries,
+    replayedSolution,
+    solutionPathBranches,
+  });
   const winContinuationBranchingSccCount = nodeSummaries.filter(
     (node) => node.canReachWin && !node.isWinning && node.winReachableOutgoingCount > 1,
   ).length;
@@ -713,6 +740,7 @@ function analyzeSccCondensation<Action extends string>(
     forcedWinContinuationPrefixLength: countForcedSccPrefix(solutionPathBranches),
     initialScc: nodeSummaries[sccs.sccOfState[0]!]!,
     solutionPathBranches,
+    handoffProfile,
   };
 }
 
@@ -902,6 +930,98 @@ function summarizeSccSolutionPathBranches(
         winReachableTargets[0] === solutionNextSccId,
     };
   });
+}
+
+function summarizeSccHandoffs<Action extends string>(input: {
+  solutionSccPath: SccPathEntry[];
+  nodeSummaries: SccNodeSummary[];
+  replayedSolution: Array<ReplayedSolutionStep<Action>>;
+  solutionPathBranches: SccSolutionBranchSummary[];
+}): SccHandoffProfile {
+  const handoffs: SccHandoffSummary[] = [];
+
+  for (let index = 0; index < input.solutionSccPath.length - 1; index += 1) {
+    const source = input.solutionSccPath[index]!;
+    const target = input.solutionSccPath[index + 1]!;
+    const sourceNode = input.nodeSummaries[source.sccId]!;
+    const branch = input.solutionPathBranches[index]!;
+    const sourceEntry = input.replayedSolution[source.enteredAtStep];
+    const exitAction = input.replayedSolution[target.enteredAtStep];
+    const exitSource =
+      target.enteredAtStep > 0 ? input.replayedSolution[target.enteredAtStep - 1] : undefined;
+
+    if (!sourceEntry || !exitSource) {
+      continue;
+    }
+
+    const entryEqualsExitSource = sourceEntry.key === exitSource.key;
+    const trivialSourceScc = sourceNode.stateCount === 1;
+    const reading = classifySccHandoff({
+      trivialSourceScc,
+      entryEqualsExitSource,
+    });
+
+    handoffs.push({
+      fromSccId: source.sccId,
+      toSccId: target.sccId,
+      sourceEnteredAtStep: source.enteredAtStep,
+      exitActionStep: target.enteredAtStep,
+      input: exitAction?.input ?? null,
+      events: exitAction?.events ?? [],
+      sourceStateCount: sourceNode.stateCount,
+      sourceEntryStateKey: sourceEntry.key,
+      exitSourceStateKey: exitSource.key,
+      entryEqualsExitSource,
+      trivialSourceScc,
+      forcedWinContinuation: branch.forcedWinContinuation,
+      reading,
+    });
+  }
+
+  const scriptedHandoffCount = handoffs.filter(isScriptedHandoff).length;
+  return {
+    scope: "returned_solution",
+    handoffCount: handoffs.length,
+    scriptedHandoffCount,
+    trivialSourceSccCount: handoffs.filter((handoff) => handoff.trivialSourceScc).length,
+    sameEntryExitStateCount: handoffs.filter((handoff) => handoff.entryEqualsExitSource).length,
+    forcedScriptedHandoffCount: handoffs.filter(
+      (handoff) => handoff.forcedWinContinuation && isScriptedHandoff(handoff),
+    ).length,
+    maxConsecutiveScriptedHandoffs: countMaxConsecutive(handoffs.map(isScriptedHandoff)),
+    handoffs,
+  };
+}
+
+function classifySccHandoff(input: {
+  trivialSourceScc: boolean;
+  entryEqualsExitSource: boolean;
+}): SccHandoffReading {
+  if (input.trivialSourceScc) {
+    return "scripted_trivial_scc";
+  }
+  if (input.entryEqualsExitSource) {
+    return "scripted_same_state_handoff";
+  }
+  return "has_reposition_room";
+}
+
+function isScriptedHandoff(handoff: Pick<SccHandoffSummary, "trivialSourceScc" | "entryEqualsExitSource">): boolean {
+  return handoff.trivialSourceScc || handoff.entryEqualsExitSource;
+}
+
+function countMaxConsecutive(values: boolean[]): number {
+  let best = 0;
+  let current = 0;
+  for (const value of values) {
+    if (value) {
+      current += 1;
+      best = Math.max(best, current);
+    } else {
+      current = 0;
+    }
+  }
+  return best;
 }
 
 function compressSolutionSccPath(sccIds: number[]): SccPathEntry[] {
