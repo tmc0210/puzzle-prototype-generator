@@ -95,15 +95,40 @@ meta_instance:
 
 如果潜伏元素只制造噪声、没有 meta payoff，critic 仍应攻击它。
 
-## Meta Reinterpretation Pass
+## Meta Reinterpretation Redesign
 
-普通候选的 A->B 已经成立后，designer 应执行 meta reinterpretation pass。
+meta reinterpretation 不是机械筛查，也不是遍历所有边缘 pair 的工具流程。它是
+在普通候选 A->B 已经有保留价值后，对同一布局材料进行二次设计和优化。
 
-这一步问：
+正确入口：
+
+```text
+A->B 作为普通关扎实成立，或至少是 promising base candidate
+-> 在不破坏 A->B 核心解结构的前提下，阅读它是否有 C->D 同结构重读潜力
+-> 主动改造结构来构造 C->D 新逻辑链，例如开墙、加冰、加入潜伏障碍、
+   改变入口出口读法，或让 base 中弱作用元素在 C->D 中获得角色
+-> 分别验证 A->B 和 C->D
+-> critic 判断 redesign 是否真正增值
+```
+
+这里的重点是主动构造，而不是从工具结果中寻找巧合。Designer 应先提出 C->D
+的读法假设，再用工具验证；不要通过枚举 start/goal pair 来寻找 meta insight。
+start/goal pair 检查只能验证已经构造出的 C->D 假设，或记录非目标 pair 风险。
+
+meta redesign 的基本约束是保护 A->B：改动后 A->B 仍应成立，且核心逻辑链不应
+被替换成另一条解或被明显 bypass。C->D 则应形成不同 causal_chain；如果只是原
+解克隆、缩短路线、纯连通性或换出口，不构成有价值的 meta redesign。
+
+meta redesign 可以抬升可用但偏薄的 base，但不能替代普通设计循环：成功时评
+审 base+meta；失败时回到 base 的普通质量判断。A->B 如果只是太简单、太薄或有
+轻微路线瑕疵，可以作为 meta 材料；但核心 claim、工具证据、可读性或未授权变
+体问题不能靠 meta 洗白。
+
+再设计阶段问：
 
 ```text
 1. A->B 是否作为普通关独立成立？
-2. 是否存在或可通过小改动形成 C->D？
+2. 是否值得通过小改动、潜伏元素或入口出口重读形成 C->D？
 3. C->D 的 causal_chain 与 A->B 有什么实质差异？
 4. 哪些墙、冰、目标、边缘位置或空间关系被两条解法共同使用？
 5. 哪些 base 潜伏元素在 C->D 中获得意义？
@@ -115,6 +140,8 @@ meta_instance:
 
 ```yaml
 meta_reinterpretation_candidate:
+  base_candidate_status: solid | promising | weak | rejected | unknown
+  redesign_decision: skipped_no_base | skipped_no_opportunity | attempted | recommended
   base_instance:
     start: [x, y]
     goal: [x, y]
@@ -193,6 +220,10 @@ solve_instances:
 
 每个 instance 分别保存 solver trace、事件证据、forbidden/report-only 检查和图
 证据边界。不要把多个出口合并成一个 “any edge” proof。
+
+工具检查是验证步骤，不是洞察来源。若没有先形成 C->D 的 player-facing 读法和
+chain_delta_from_base，start/goal pair 结果通常只能说明连通性、原解克隆或风
+险，不能单独支持 meaningful_reinterpretation。
 
 Reviewer / critic 应重点检查：
 

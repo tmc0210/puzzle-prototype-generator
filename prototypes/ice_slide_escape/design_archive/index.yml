@@ -7,6 +7,12 @@ notes:
   - Tags and retrieval summaries are for navigation and prompt calibration only.
 tag_vocabulary:
   status:
+    - proposal_ready
+    - proposal_ready_with_caveats
+    - held_proposal
+    - rejected_candidate
+    - failed_search
+    - structural_redesign_needed
     - rejected
     - held
     - promising
@@ -20,9 +26,12 @@ tag_vocabulary:
     - d5_pass_through
     - d6_destroy_group
     - restart_counting
+    - boundary_disappear
     - target_ice_coverage
     - explicit_edge_goal
     - walled_edge_goal
+    - all_knowledge_endgame
+    - meta_reinterpretation
   archive_use:
     - positive_reference
     - negative_example
@@ -69,9 +78,204 @@ experiments:
       - RF_d4_rebound
       - RF_target_ice_requirement
       - RF_explicit_edge_goal
-candidates: []
+  - experiment_id: ICE_EXP_003_all_knowledge_endgame_capstone
+    file: experiments/ICE_EXP_003_all_knowledge_endgame_capstone.md
+    status: ready
+    selected_rule_facts:
+      - RF_d1_d2_stop
+      - RF_d3_destroy_moving_ice
+      - RF_d4_rebound
+      - RF_d5_pass_through
+      - RF_d6_plus_destroy_group
+      - RF_restart_counting_after_group
+      - RF_boundary_disappear
+      - RF_target_ice_requirement
+      - RF_explicit_edge_goal
+candidates:
+  - candidate_id: ICE_CAND_0001
+    file: candidates/ICE_CAND_0001.md
+    experiment_id: ICE_EXP_002_d4_pre_d5_capstone
+    status: rejected_candidate
+    archive_eligibility: human_pending
+    motifs:
+      - d4_rebound
+      - target_ice_coverage
+      - explicit_edge_goal
+    archive_use:
+      - negative_example
+    strengths:
+      - readable_geometry
+    failure_modes:
+      - forced_linearity
+      - witness_not_application
+      - claim_underfit
+    search_ledger_status: light_exploration_log_present
+    review_integrity: independent_review
+    review_loop_state: rejected_candidate
+    retrieval_summary: >
+      Negative example for the d4 pre-d5 capstone slot: the returned win has
+      two d4 rebounds and no forbidden winning-path events, but critic review
+      found the two d4 uses too stitched and forced because the second d4 does
+      not consume the first d4 product.
+    human_comment_ids: []
+  - candidate_id: ICE_CAND_0002
+    file: candidates/ICE_CAND_0002.md
+    experiment_id: ICE_EXP_002_d4_pre_d5_capstone
+    status: rejected_candidate
+    archive_eligibility: clean_archive
+    motifs:
+      - d4_rebound
+      - target_ice_coverage
+      - explicit_edge_goal
+    archive_use:
+      - negative_example
+      - critic_calibration
+      - designer_calibration
+      - human_taste_reference
+    strengths: []
+    failure_modes:
+      - forced_linearity
+      - witness_not_application
+      - critic_missed_issue
+      - claim_underfit
+    search_ledger_status: light_exploration_log_present
+    review_integrity: human_review
+    review_loop_state: rejected_candidate
+    retrieval_summary: >
+      Human-rejected d4 pre-d5 candidate. It looked tool-supported because the
+      winning path used two d4 rebounds and a local probe found dead
+      commitments, but human review found reachable d5 fatal and the actual
+      play pattern too obvious: push what is visible and win.
+    human_comment_ids:
+      - HC_001
+  - candidate_id: ICE_CAND_0003
+    file: candidates/ICE_CAND_0003.md
+    experiment_id: ICE_EXP_002_d4_pre_d5_capstone
+    status: held_proposal
+    archive_eligibility: clean_archive
+    motifs:
+      - d4_rebound
+      - target_ice_coverage
+      - explicit_edge_goal
+    archive_use:
+      - negative_example
+      - designer_calibration
+    strengths:
+      - readable_geometry
+      - coupled_state_change
+      - compact_causal_chain
+    failure_modes:
+      - witness_not_application
+      - forced_linearity
+      - claim_underfit
+    search_ledger_status: light_exploration_log_present
+    review_integrity: independent_review
+    review_loop_state: held_proposal
+    retrieval_summary: >
+      Held d4 pre-d5 order-gate candidate. Tool evidence is clean: two d4
+      rebounds, no reachable d5/d6/restart/boundary report hits, and no
+      d4-free or forbidden winning path. Critic held it because it remains a
+      two-push single-win-chain role-flip witness rather than a capstone.
+    human_comment_ids: []
+  - candidate_id: ICE_CAND_0004
+    file: candidates/ICE_CAND_0004.md
+    experiment_id: ICE_EXP_002_d4_pre_d5_capstone
+    status: rejected_candidate
+    archive_eligibility: clean_archive
+    motifs:
+      - d4_rebound
+      - target_ice_coverage
+      - explicit_edge_goal
+    archive_use:
+      - negative_example
+      - critic_calibration
+      - designer_calibration
+      - human_taste_reference
+    strengths:
+      - readable_geometry
+    failure_modes:
+      - witness_not_application
+      - claim_underfit
+      - unconsumed_state_change
+      - forced_linearity
+    search_ledger_status: light_exploration_log_present
+    review_integrity: human_review
+    review_loop_state: rejected_candidate
+    retrieval_summary: >
+      Human-rejected post-miner-fix d4 capstone attempt. Clean evidence: three
+      d4 rebounds, complete graph, no d5/d6/restart/boundary report-only hits.
+      Independent critic held it as three repeated d4 target-cover applications;
+      human review agreed and added that same start/goal is inappropriate here.
+    human_comment_ids:
+      - HC_001
+  - candidate_id: ICE_CAND_0005
+    file: candidates/ICE_CAND_0005.md
+    experiment_id: ICE_EXP_003_all_knowledge_endgame_capstone
+    status: held_proposal
+    archive_eligibility: human_pending
+    motifs:
+      - d5_pass_through
+      - d6_destroy_group
+      - restart_counting
+      - target_ice_coverage
+      - explicit_edge_goal
+    archive_use:
+      - negative_example
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - coupled_state_change
+    failure_modes:
+      - forced_linearity
+      - witness_not_application
+      - claim_underfit
+    search_ledger_status: light_exploration_log_present
+    review_integrity: independent_review
+    review_loop_state: held_proposal
+    retrieval_summary: >
+      Held all-knowledge endgame attempt. d5 setup creates a target ice later
+      consumed by d6 restart as an obstacle, and d6 destruction opens explicit
+      goal access. Strong mechanism interlock, but independent critic held it
+      as a two-push forced single-win-chain below final-game capstone quality.
+    human_comment_ids: []
+  - candidate_id: ICE_CAND_0006
+    file: candidates/ICE_CAND_0006.md
+    experiment_id: ICE_EXP_003_all_knowledge_endgame_capstone
+    status: proposal_ready_with_caveats
+    archive_eligibility: clean_archive
+    motifs:
+      - d4_rebound
+      - d5_pass_through
+      - d6_destroy_group
+      - restart_counting
+      - target_ice_coverage
+      - explicit_edge_goal
+      - all_knowledge_endgame
+    archive_use:
+      - critic_calibration
+      - designer_calibration
+      - human_taste_reference
+    strengths:
+      - coupled_state_change
+      - readable_geometry
+    failure_modes:
+      - claim_underfit
+    search_ledger_status: exploration_log_present
+    review_integrity: independent_review
+    review_loop_state: proposal_ready_with_caveats
+    retrieval_summary: >
+      Human-reviewed proposal-ready-with-caveats all-knowledge candidate. d4
+      creates [11,1] stopper, d5 uses it to create [11,2], and d6 uses [11,2]
+      after wall destruction to cover the final target. Human comment confirms
+      the left-ice misdirection and three-ice order are solid, with wrong orders
+      failing later but not too late. Best calibrated as a solid post-unlock
+      mainline combination puzzle rather than final-game capstone; caveat is
+      left-side detour overhead and slightly low capstone difficulty.
+    human_comment_ids:
+      - HC_001
 example_queries:
   - Find positive or negative d4 rebound examples before designing another rebound level.
   - Find high-difficulty d4 capstone examples before introducing d5.
+  - Find all-knowledge endgame capstone examples using d5/d6/restart/boundary mechanics.
   - Find critic calibration cases where the critic missed forced linearity.
   - Find designer calibration cases where the designer claim missed the real highlight.

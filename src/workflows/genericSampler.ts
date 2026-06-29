@@ -2,7 +2,13 @@ import type { LevelDoc, PrototypePackage, WinCondition } from "../core/types.js"
 import { analyzeLevel, type LevelAnalysis } from "./levelAnalyzer.js";
 import { getRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
 import { eventType } from "../core/events.js";
-import type { MineOptions, MinerFinding, MinerReport } from "./seedMiner.js";
+import type {
+  MineOptions,
+  MinerFinding,
+  MinerObjective,
+  MinerReport,
+  NormalizedMineOptions,
+} from "./seedMiner.js";
 
 export type Rng = () => number;
 
@@ -27,19 +33,21 @@ export type GenericSamplerProfile = {
   mechanicId: string;
   reportToolId: string;
   maturity?: "raw_sampler" | "curated_miner";
+  scoreLabel?: string;
+  supportedTags?: string[];
   searchSpace: string;
-  defaultOptions?: Partial<Required<MineOptions>>;
+  defaultOptions?: Partial<NormalizedMineOptions>;
   sample(input: {
     index: number;
     seed: number;
     rng: Rng;
-    options: Required<MineOptions>;
+    options: NormalizedMineOptions;
   }): GenericSample;
   enumerateSolveInstances(input: {
     sample: GenericSample;
     pkg: PrototypePackage;
     rng: Rng;
-    options: Required<MineOptions>;
+    options: NormalizedMineOptions;
   }): GenericSolveInstance[];
   classifyTags(input: {
     analysis: LevelAnalysis;
@@ -59,6 +67,11 @@ export type GenericSamplerProfile = {
     sample: GenericSample;
     instance: GenericSolveInstance;
   }): string | undefined;
+  selectFindings?(input: {
+    findings: MinerFinding[];
+    maxFindings: number;
+    options: NormalizedMineOptions;
+  }): MinerFinding[];
   notes?(input: {
     analysis: LevelAnalysis;
     tags: string[];
@@ -67,7 +80,7 @@ export type GenericSamplerProfile = {
   }): string[];
 };
 
-const genericDefaults: Required<MineOptions> = {
+const genericDefaults: NormalizedMineOptions = {
   seed: 18422,
   iterations: 120,
   maxFindings: 12,
@@ -100,6 +113,7 @@ export function runGenericSampler(
     ...(profile.defaultOptions ?? {}),
     ...definedOptions(options),
   };
+  const objective = normalizeObjective(profile, normalized.objective);
   const rng = mulberry32(normalized.seed);
   const seen = new Set<string>();
   const findings: MinerFinding[] = [];
@@ -174,7 +188,9 @@ export function runGenericSampler(
       }
 
       const tags = profile.classifyTags({ analysis, sample, instance });
-      const score = profile.scoreFinding({ analysis, tags, sample, instance });
+      const baseScore = profile.scoreFinding({ analysis, tags, sample, instance });
+      const objectiveScore = scoreObjective(tags, objective);
+      const score = baseScore + objectiveScore;
       const rejectReason = profile.rejectFinding?.({
         analysis,
         tags,
@@ -185,7 +201,14 @@ export function runGenericSampler(
       if (rejectReason || score < normalized.minScore) {
         continue;
       }
-      findings.push(toFinding(profile, sample, instance, analysis, tags, score));
+      findings.push(
+        toFinding(profile, sample, instance, analysis, tags, {
+          baseScore,
+          objectiveScore,
+          finalScore: score,
+          objectiveName: objective?.name,
+        }),
+      );
     }
   }
 
@@ -197,13 +220,21 @@ export function runGenericSampler(
   });
 
   stats.keptBeforeLimit = findings.length;
-  const kept = selectDiverseFindings(findings, normalized.maxFindings);
+  const kept = profile.selectFindings
+    ? profile.selectFindings({
+        findings,
+        maxFindings: normalized.maxFindings,
+        options: normalized,
+      })
+    : findings.slice(0, normalized.maxFindings);
   stats.kept = kept.length;
 
   return {
     prototype: pkg.mechanic.id,
     generatedAt: new Date().toISOString(),
     toolMaturity: profile.maturity ?? "raw_sampler",
+    scoreLabel: profile.scoreLabel,
+    objective,
     searchSpace: profile.searchSpace,
     options: normalized,
     stats,
@@ -251,7 +282,12 @@ function toFinding(
   instance: GenericSolveInstance,
   analysis: LevelAnalysis,
   tags: string[],
-  score: number,
+  scoreBreakdown: {
+    baseScore: number;
+    objectiveScore: number;
+    finalScore: number;
+    objectiveName?: string;
+  },
 ): MinerFinding {
   const scc = analysis.agency.scc;
   return {
@@ -262,7 +298,8 @@ function toFinding(
       seed: sample.seed,
       index: sample.index,
     },
-    score,
+    score: scoreBreakdown.finalScore,
+    scoreBreakdown,
     tags,
     layout: sample.layout,
     solveInstance: {
@@ -308,7 +345,7 @@ function toFinding(
     })),
     notes: [
       profile.maturity === "curated_miner"
-        ? "Heuristic miner finding. Use as designer-review evidence only, not as accepted level material."
+        ? "Curated miner finding. Use as designer-review evidence only, not as accepted level material."
         : "Raw sampler finding. Use as discovery evidence only, not as accepted level material.",
       ...(instance.notes ?? []),
       ...(profile.notes?.({ analysis, tags, sample, instance }) ?? []),
@@ -316,34 +353,33 @@ function toFinding(
   };
 }
 
-function selectDiverseFindings(findings: MinerFinding[], maxFindings: number): MinerFinding[] {
-  const selected: MinerFinding[] = [];
-  const signatureCounts = new Map<string, number>();
-  const generatorCounts = new Map<string, number>();
-  const generatorCap = Math.max(2, Math.ceil(maxFindings * 0.5));
-
-  for (const finding of findings) {
-    const signature = [
-      finding.source.generator,
-      finding.solution.events.map(eventType).join(">"),
-      finding.tags.sort().join("+"),
-      finding.solveInstance?.playerStart?.join(",") ?? "",
-      finding.solveInstance?.playerGoal?.join(",") ?? "",
-    ].join("|");
-    const signatureCount = signatureCounts.get(signature) ?? 0;
-    const generatorCount = generatorCounts.get(finding.source.generator) ?? 0;
-    if (signatureCount >= 2 || generatorCount >= generatorCap) {
-      continue;
-    }
-    selected.push(finding);
-    signatureCounts.set(signature, signatureCount + 1);
-    generatorCounts.set(finding.source.generator, generatorCount + 1);
-    if (selected.length >= maxFindings) {
-      break;
-    }
+function normalizeObjective(
+  profile: GenericSamplerProfile,
+  objective: MinerObjective | undefined,
+): MinerObjective | undefined {
+  if (!objective) {
+    return undefined;
   }
+  const supported = new Set(profile.supportedTags ?? []);
+  const unknown = Object.keys(objective.tagWeights).filter((tag) => !supported.has(tag));
+  if (unknown.length > 0) {
+    throw new Error(
+      `${profile.mechanicId} miner objective references unsupported tag(s): ${unknown.join(", ")}. ` +
+        `Supported tags: ${[...supported].sort().join(", ") || "(none)"}`,
+    );
+  }
+  return {
+    name: objective.name,
+    tagWeights: { ...objective.tagWeights },
+    note: objective.note,
+  };
+}
 
-  return selected;
+function scoreObjective(tags: string[], objective: MinerObjective | undefined): number {
+  if (!objective) {
+    return 0;
+  }
+  return tags.reduce((sum, tag) => sum + (objective.tagWeights[tag] ?? 0), 0);
 }
 
 function countTags(findings: MinerFinding[]): Record<string, number> {

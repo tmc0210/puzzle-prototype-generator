@@ -1,797 +1,534 @@
 # Current Level Design And Review Standard
 
-Status: provisional standard for level design, candidate review, and campaign placement. This is not the full project workflow standard.
+Status: active execution contract for level design, review, and archive-facing
+proposal states.
 
-This document intentionally covers the part of the project that starts after a prototype has enough confirmed rules, runtime behavior, and analysis tooling to design candidate levels. It does not replace the broader chain:
+本文档只定义当前可执行的单关设计与审查协议。它不定义
+`ruleset -> player_model -> curriculum -> level_specs` 的完整自动流程，也不把
+SCC、variant、taste 或 prototype-specific redesign 当成每关必跑的通过条件。
 
-```text
-user brief
--> agent preflight
--> mechanism IR / runtime
--> PuzzleScript Next export
--> solver / analyzer / formal evaluator hooks
--> player abilities / curriculum draft
--> level design and review
--> campaign selection
--> reports / playable package
--> future skill / plugin packaging
-```
-
-The broader chain is still distributed across docs such as `00-prototype-package.md`, `01-engine-and-scope.md`, `09-agent-preflight.md`, and `11-design-consensus-and-skill-notes.md`.
+旧版本中很多流程片段已经在实践中有效，例如 analyzer-backed revision、
+reuse-strengthen、critic attack / designer action、SCC reading、variant
+family、taste probes。它们没有被废弃；本版本把它们从主流程中拆出来，改为
+**由 routing 触发的诊断或再设计阶段**。主流程必须短、硬、可执行。
 
 ## Scope
 
-This level-design workflow is mechanism-independent. Examples from `pull_portal_fallback` are case studies, not built-in assumptions.
+使用本流程前，controller / lead designer 必须确认：
 
-Before applying it to a new prototype, the controller must confirm:
+- 原型规则、对象语义、胜利条件和求解实例语义；
+- 可用 solver / analyzer / graph / archive 工具；
+- 本轮 brief 的目标、玩家已知知识、机制范围和禁止机制；
+- 是否存在原型专属工作，例如额外诊断或 base-after redesign stage。
 
-- player-facing win condition;
-- object vocabulary and instance semantics;
-- movement / action inputs;
-- interaction order and unspecified edge cases;
-- intended campaign size and rough role mix;
-- which mechanisms are central, incidental, or boundary-only.
-
-If these are not confirmed, the agent should ask or explicitly mark them as assumptions before generating serious candidates. If an open decision affects runtime behavior, solver soundness, or the intended slot, serious level design should stop.
+如果这些信息缺失，必须标记为 assumption / unknown。影响 runtime、solver
+soundness 或求解实例语义的问题不得靠关卡设计流程补齐。
 
 ## Roles
 
 ```text
-main-thread lead designer:
-  owns the design, reads analyzer evidence, revises candidates, and makes final placement decisions.
+lead_designer / controller:
+  主线程。负责设计、读工具证据、修正候选、调用 reviewer / critic，并决定
+  review loop 的下一步。
 
-solver / analyzer:
-  code tools. They report solvability, traces, events, object participation, graph/SCC facts, counterfactuals, and bypass evidence.
-
-formal_evaluator:
-  code hard-gate over declared evidence contracts. It can pass/fail/unknown only concrete facts. It does not judge fun, role, elegance, or curriculum fit.
+solver / analyzer / formal_evaluator:
+  代码工具。只报告硬事实、trace、事件、对象参与、图事实、反事实和 bypass
+  证据。它们不判断好玩、优雅、教学价值或 campaign 位置。
 
 evidence_reviewer:
-  LLM/human reviewer. It checks whether analyzer/evaluator evidence supports the designer's concrete claim.
+  检查工具证据是否支持 designer 的 design_claim。
 
 puzzle_design_critic:
-  LLM/human reviewer. It attacks player-facing role fit, elegance, redundancy, repetition, and placement risks.
+  攻击玩家侧体验、角色适配、重复、脚本感、审美风险和证据过度解释。
 
-LLM player:
-  future optional diagnostic. It is not part of the current acceptance gate.
+archive_pass:
+  记录已经发生的流程和 terminal state。它不是新的 designer / reviewer /
+  critic / judge，不能升级候选状态。
 ```
 
-`evaluator`, `reviewer`, and `critic` must not be collapsed into one vague quality oracle.
+这些角色不能合并成一个含糊的“质量判断”。如果无法产生独立 reviewer /
+critic artifact，必须把 review_integrity 标为 `self_review_only`、`missing` 或
+`blocked`。
 
-## Main Workflow
+## Core Loop
 
-The validated level-design workflow is two nested loops plus campaign placement.
+当前流程是嵌套循环，不是线性流水线，也不是固定“两审”流程：
 
 ```text
-0. preflight
-   confirm rules, win condition, edge cases, object instances, and player model
+外层设计家族循环:
+  family_iteration_1:
+    选择一个玩家侧因果链 family
+    做出 candidate_version_1
+    运行工具并读取证据
+    若证据或 design_claim 失败，局部修改或放弃该 family
 
-1. slot viability
-   inspect the intended level role / slot
-   merge, rewrite, defer, or reject bad slots before designing maps
+    内层 review-modify 循环:
+      candidate_version_1 -> review_1
+      review_1 攻击 -> designer_action_1
+      designer_action_1 产出 candidate_version_2、evidence_disagreement_2、
+        hold、reject 或 change_family
+      candidate_version_2 / evidence_disagreement_2 -> review_2
+      review_2 攻击 -> designer_action_2
+      ...
+      重复，直到最新材料上的最新 review 达到 terminal state，或该 family 被放弃
 
-2. choose candidate generation mode
-   fresh_chain
-   reuse_strengthen
-   refine_existing
-   structural_redesign
-   seed_or_witness_factory
+  family_iteration_2:
+    如有必要，开始不同的因果链 family
 
-3. designer inner loop
-   write concrete causal_chain
-   build compact layout
-   treat layout size as an adjustable design variable, not a fixed constraint
-   若任务不是单个人类定向修改，而是探索设计空间，则记录 design_search_ledger
-   run solver / analyzer / formal_evaluator
-   read trace, snapshots, counterfactuals, and graph facts
-   answer the routed taste probes with concrete mechanism-language evidence
-   revise, defend with failed attempts, downgrade, or discard
-   repeat until hard evidence supports the claim or the attempt is abandoned
-
-4. reviewer outer loop
-   send only evidence-supported candidates to evidence_reviewer and design_critic
-   critic attacks the relevant taste probes, not just analyzer pass/fail
-   main-thread designer responds to each serious attack:
-     accept_and_revise
-     defend_with_attempts
-     downgrade_or_hold
-     reject_and_redesign
-   any edited candidate returns to step 3
-
-5. campaign placement gate
-   compare against accepted and held candidates
-   reject duplicate fills, uncoupled repeated subproblems, and slot relabeling
-   keep only candidates with a real role in the campaign
-
-6. over-generate then select
-   keep more good candidates than the target count
-   choose the final sequence only after group-level rhythm, novelty, and coverage are visible
+archive pass:
+  只记录循环达到的 terminal state；不得升级状态
 ```
 
-The loop is not:
+`designer_action_N` 永远不能关闭 review loop。核心攻击只能由后续
+`review_N+1`、更晚的独立 review，或人类 review 关闭。designer 若认为 critic
+漏读证据，只能提交 `evidence_disagreement` 给下一轮 review；这不是提交给人类
+的最终材料。
 
-```text
-slot -> map -> analyzer pass -> reviewer score -> accept
-```
+critic 之后没有“继续下一个阶段”。`review_N` 之后只有这些动作：
 
-That shortcut is a known failure mode.
+- 修改结构 / claim / 起点 / 机制范围，并重跑必要证据，进入 `review_N+1`；
+- 提交具体证据异议或失败尝试给 `review_N+1` 判断；
+- 降级 / hold；
+- reject / change family；
+- failed_search。
 
-## Slot Viability Gate
+## Candidate Packet
 
-Do not design maps for a bad slot. First check whether the slot has a real player-facing role.
+任何 serious candidate 进入 review loop 前，必须有下面的最小 packet：
 
-A level role is not just a label. It must include:
-
-```text
-known_before:
-  what the intended player already knows
-
-target:
-  what the level introduces, practices, combines, or challenges
-
-support_level:
-  how much the layout guides the player
-
-evidence_contract:
-  what hard evidence, graph evidence, reviewer evidence, or future LLM-player
-  evidence would support the role
-```
-
-Viability questions:
-
-- Does this mechanism / ability / pattern actually need this level role?
-- Is this slot just a renamed part of an already accepted candidate?
-- Is it a boundary / failure / constraint that should be embedded in a positive puzzle instead of becoming a standalone mainline level?
-- Can the target be expressed as a consumed causal responsibility, or only as an event witness?
-- Does the slot require upstream work in `ruleset -> abilities -> curriculum` before level design can proceed?
-
-Actions:
-
-```text
-clean:
-  design a candidate.
-
-rewrite:
-  restate the slot as a concrete player-facing task before designing.
-
-merge:
-  combine with a neighboring role or existing target.
-
-defer:
-  keep as backlog until upstream curriculum / ability work is clearer.
-
-fixture_only:
-  use only as a mechanism witness, analyzer test, or reviewer calibration sample.
-
-reject:
-  do not spend design effort on this slot.
-```
-
-Boundary or negative facts are allowed as part of a puzzle, but they should not automatically become positive teaching targets. A failure event can be a probe, fairness guardrail, or counterfactual check without occupying a mainline level slot.
-
-## Required Candidate Packet
-
-Every serious candidate sent to reviewers or campaign placement must carry enough structured context to prevent relabeling and overclaiming.
-
-Minimum packet:
-
-```text
+```yaml
 prototype_context:
-  confirmed win condition
-  relevant rules and interaction order
-  object / event instance semantics relevant to this claim
-  graph completeness or budget status
+  confirmed_rules:
+  win_condition:
+  object_and_event_semantics:
+  tool_boundary:
 
 slot_brief:
-  intended_role
-  known_before
-  target claims
-  support_level
-  slot_viability result
+  intended_role:
+  known_before:
+  target:
+  difficulty_or_support_expectation:
 
-candidate_identity:
-  candidate_id
-  candidate_mode
-  origin:
-    fresh / reuse_strengthened_from:<id> / refined_from:<id> /
-    structural_redesign_for:<slot_or_insight> / seed_or_witness
-  variant_family, if known
+solve_instance:
+  layout:
+  player_start:
+  player_goal:
+  win_condition:
+
+mechanism_scope:
+  central:
+  allowed_support:
+  incidental_allowed:
+  forbidden_in_winning_solution:
+  must_report_if_seen_anywhere:
 
 design_claim:
-  concrete causal_chain:
-    Do not write only the returned event sequence.
-    Describe the puzzle relationship: what changes, what is reused, what is
-    reinterpreted, and why the required actions are more than route execution.
-    Analyzer events and counts are evidence for the chain, not the chain itself.
-  consumed_state_changes
-  chain_delta_from_previous, if applicable
-  why_mainline_not_hold, if asking for mainline placement
+  player_insight:
+  causal_chain:
+  why_not_execution:
+  falsification:
 
 evidence:
-  solver/analyzer commands or report references
-  solution trace
-  key snapshots or state changes
-  event evidence
-  object participation evidence, if claimed
-  SCC / graph facts, if complete graph is available
-  counterfactuals or bypass checks, if available
+  commands_run:
+  solver_result:
+  trace_summary:
+  target_events:
+  object_or_instance_evidence:
+  forbidden_or_report_only_events:
+  graph_or_counterfactual_evidence:
+  evidence_limits:
 
-taste_probe_answers:
-  only the routed probes relevant to this candidate
+diagnostic_routing:
+  activated:
+  not_applicable:
+  unknown_or_unavailable:
 
-known_caveats:
-  role uncertainty, graph incompleteness, possible family overlap, or reviewer risks
+attempt_log:
+  serious_structural_attempts:
+  local_repairs:
+  abandoned_families:
 ```
 
-If this packet is missing for a serious candidate, do not ask reviewers to rescue it. Send it back to the lead designer loop.
+`causal_chain` 说明解法如何工作。`player_insight` 和 `why_not_execution` 说明这
+个解法为什么对目标玩家有设计价值。一个候选可以有有效 causal_chain，但仍然
+无法支撑自己的 design_claim。
 
-## Evidence Claim Hygiene
+## Design Studio Loop
 
-Hard evidence must be scoped. Do not turn a weak trace observation into a broad design claim.
+lead designer 在 review 前必须自己完成设计和证据读取：
 
-Rules:
+1. 写一个可被攻击的 `design_claim`，不要只写事件序列。
+2. 设计 layout，并声明求解实例。
+3. 运行 solver / analyzer / evaluator 中本轮允许的工具。
+4. 读 trace、事件、对象参与、图事实、反事实和工具边界。
+5. 完成 diagnostic routing。
+6. 若证据不支持 claim，修正、降级、放弃或换 family。
+7. 只有 evidence-supported candidate 才进入 review loop。
 
-- Distinguish event patterns from event instances. A generic event pattern can prove that a type of event occurred; it cannot prove that a named object or pair caused it.
-- Distinguish event counts from object participation. Repeating an action twice does not prove two distinct object instances participated.
-- Distinguish trace evidence from all-solution evidence. A returned solution trace supports only that solution unless the graph evidence explicitly proves a broader scope.
-- Distinguish complete graph facts from budgeted search facts. If graph search is incomplete, graph-dependent claims are `unknown`, not `pass`.
-- If a claim names a source object, blocker, exit, relation, or state change, require source-specific evidence when the analyzer can provide it.
-- Counterfactuals and bypass checks must state their scope. A local no-bypass check is not a proof of all possible player behavior.
-- `event_occurs`-style wins are acceptable for mechanism witnesses and fixtures, but they are not player-facing mainline win conditions unless the prototype's confirmed win condition says so.
-- Analyzer pass proves hard facts, not role fit, teaching quality, or fun.
+如果修改了 layout、起点、终点、胜利条件、核心机制使用或 design_claim，旧证据
+和旧 critic 结论不得继承。必须重跑必要证据，并把新版本送入下一轮
+`review_N+1`。
 
-## Candidate Generation Modes
+## Diagnostic Routing
 
-```text
-fresh_chain:
-  Design a new core causal chain for the slot.
-
-reuse_strengthen:
-  Start from an already good level as an immutable base. Reuse an existing element,
-  state change, or tail segment and give it a new necessary causal responsibility
-  that is later consumed by the solution.
-
-refine_existing:
-  Repair a specific flaw in the same candidate after reading analyzer evidence
-  or reviewer attacks. This is not a new candidate family.
-
-structural_redesign:
-  Stop local repair and design a new causal-chain family for the same slot,
-  target insight, or caveat. Use this when the current family keeps producing
-  useful but capped candidates.
-
-seed_or_witness_factory:
-  Produce minimal structures that prove a mechanism can happen or feed later design.
-  These can become fixtures or raw material, but they are not application/challenge
-  levels by default.
-```
-
-`reuse_strengthen` is a first-class generation mode. It is often the best way to grow a strong puzzle because it preserves a working structure while asking whether an existing element can gain a second, later-consumed role.
-
-Valid `reuse_strengthen` flow:
-
-```text
-1. Keep the base level immutable.
-2. Read its solution trace, key snapshots, and graph evidence.
-3. Pick an existing object, state change, route, lock, or tail segment.
-4. Assign a new causal responsibility to it.
-5. Make the smallest layout change that could make that responsibility necessary.
-6. Rerun solver / analyzer / evaluator.
-7. Check that the old core still works and the new responsibility is necessary.
-8. Submit as a strengthened candidate only if the new responsibility is consumed later.
-```
-
-Invalid versions:
-
-- adding walking distance;
-- moving the goal;
-- rotating, mirroring, translating, or resizing;
-- appending a second unrelated puzzle after the old one;
-- repeating the same operation without changing later meaning.
-
-## Local Repair Stop Rule
-
-Local repair is useful for fixing a concrete flaw in an otherwise promising candidate. It is not an infinite quality machine.
-
-```text
-local repair:
-  preserves the same causal-chain family.
-  Examples: adjust start, remove clutter, shorten execution, close a bypass,
-  make a claimed event necessary.
-
-structural redesign:
-  preserves the target insight or slot but creates a new causal-chain family.
-  Examples: turn a weak repeated action into a choice, timing question,
-  local order window, shared dependency, route comparison, or role switch.
-```
-
-Stop local repair when:
-
-- repeated edits keep producing the same caveat;
-- reviewer repeatedly returns strong-but-capped judgments;
-- changes are only local geometry, presentation, or start-state tweaks around the same forced script;
-- the candidate is valid but cannot support the intended role without a new chain.
-
-Then either accept the best local version with caveats, hold it as related material, or start `structural_redesign`. Do not keep micro-editing a 4/5 family while pretending it is converging to a different kind of puzzle.
-
-## 设计搜索账本
-
-当任务目标是探索设计空间、比较候选、验证某个规则事实是否值得教学，或让
-LLM designer 自主产出候选时，designer 必须留下可审计的
-`design_search_ledger`。它记录“尝试过什么、为什么放弃、为什么当前候选值得进
-入证据流程”，而不是用一句“尝试若干版本”代替搜索过程。
-
-通用流程只规定搜索证据的形状，不规定具体搜索哪些机制组合。具体搜索预算和探
-索轴应由 experiment brief、人类设计师或当前任务声明。不同原型、不同规则事实
-可以给出不同预算；不要在本标准中硬编码某个原型的机制、数量或几何模式。
-
-如果没有声明搜索预算：
-
-- 人类明确指定的单个候选或局部修改可以继续，但不得声称已经系统探索过设计空
-  间。
-- 设计实验、能力验证、机制价值判断必须先补充预算，或在结果中标记为
-  `search_budget_missing`。
-- 不能把一次失败草稿归因于机制不适合、LLM 能力不足或工具不足。
-
-推荐的 brief 字段形状：
+每个 serious candidate 必须完成 diagnostic routing。必跑的是“是否触发诊断”的
+判断，不是每个诊断本身。
 
 ```yaml
-design_search:
-  scope: experiment_run | candidate | family
-  budget_owner: human | controller | inferred
-  goal: exploratory | fill_library | repair | compare_families | calibration
-  hypothesis_family_min: set_by_brief
-  variant_per_family_min: set_by_brief
-  repair_round_min: set_by_brief
-  evidence_gate_candidates_min: set_by_brief
-  stop_conditions:
-    - accepted_with_evidence
-    - budget_exhausted
-    - hard_constraint_conflict
-    - tool_gap
-    - human_stop
-  exploration_axes:
-    - prototype-specific causal-chain families or structural directions
+diagnostic_routing:
+  hard_evidence:
+    status: required
+    reason: serious candidate must have solver/analyzer evidence
+  mechanism_scope:
+    status: required
+    reason: central/support/forbidden/report-only mechanisms must be checked
+  claim_hygiene:
+    status: required
+    reason: claims must not exceed evidence
+  taste_probes:
+    status: routed
+    selected: []
+  scc_graph:
+    status: triggered | not_applicable | unavailable | unknown
+    reason:
+  variant_family:
+    status: light | full | not_applicable | unknown
+    reason:
+  start_position:
+    status: triggered | not_applicable | unavailable | unknown
+    reason:
+  prototype_specific_work:
+    kind: diagnostic | redesign_stage | not_applicable | unknown
+    status: triggered | not_applicable | unavailable | unknown
+    reason:
 ```
 
-`scope` 决定预算如何消耗。`experiment_run` 表示整轮实验共享一份搜索账本，多个
-候选可以从同一批尝试中被选出；`candidate` 表示每个候选都必须单独满足预算；
-`family` 表示预算围绕某个指定因果链族消耗。若 brief 未声明 scope，designer
-必须说明自己的解释，且不得把未覆盖的范围当成已探索。
+### Always Required Diagnostics
 
-`exploration_axes` 是实验局部内容。它可以写“不同因果链族”“不同入口/出口关系”
-“不同资源耦合方式”等，也可以在具体原型中写成更明确的机制组合。通用流程不
-解释这些轴的好坏，只要求 designer 对照它们留下尝试记录。
+`hard_evidence`、`mechanism_scope` 和 `claim_hygiene` 对 serious candidate 必
+跑：
 
-每次尝试至少记录：
+- solver / analyzer 是否找到声明的 player-facing win；
+- winning solution 是否触发 central mechanism；
+- forbidden 机制是否出现在 winning solution；
+- report-only 机制是否在可达诊断中出现；
+- event count、trace observation、object participation 和 graph claim 是否被
+  正确限定范围；
+- analyzer pass 是否被误写成设计质量 pass。
+
+### Routed Taste Probes
+
+taste 不是 checklist。designer / critic 应按 candidate mode、role 和 brief 选
+择少量 probe，通常 2-4 个。
+
+常用 probe families：
+
+- `player_insight`: 玩家是否真的需要理解 claim，还是只是在执行下一个显然动作？
+- `state_consumption`: 声称的状态变化在哪里被后续消费？
+- `why_not_execution`: 难度是否来自因果关系，而不是长度、走廊、重复动作或噪声？
+- `repetition_coupling`: 重复操作 / 重复 causal chain 是否通过共享资源、顺序、
+  路线含义、角色切换或后续消费耦合？
+- `role_fit`: 候选是否真是 application / challenge / capstone，而不是 witness
+  或简单教学关？
+- `salient_element_use`: 显眼元素是否只是 filler / blocker / counter / 装饰？
+
+未被 routing 触发的 taste probe 不得作为隐藏通过条件运行。
+
+### SCC / Graph Diagnostic
+
+SCC / graph 不是通用必跑项。它在以下条件下触发：
+
+- 候选声称是 application / challenge / capstone；
+- 需要判断脚本感、开局自由度、分支、多解、bypass 或 forced chain；
+- 当前原型有可靠 complete graph / SCC 工具，或 brief 明确要求使用。
+
+若工具不可用，记录 `unavailable` 或 `unknown`，不能伪造图结论。
+
+SCC 读法只提供证据，不自动给分。`single_win_chain`、`branching_win_dag`、
+`forced_win_prefix`、`trivial_source_scc`、`entry_equals_exit_source` 都是
+拓扑事实，不是硬 pass/fail。
+
+具体字段含义和允许推论见
+`docs/30-scc-graph-diagnostic-reading.md`。任何把 SCC / graph fact 用作设计
+攻击或设计背书的 reviewer / critic，都必须说明：
+
+```text
+graph fact -> neutral meaning -> player-facing interpretation -> verdict effect
+```
+
+如果缺少 player-facing interpretation，该 SCC / graph fact 对 verdict 的影响
+必须是 `none`。
+
+### Variant / Family Diagnostic
+
+默认规则：除非人类请求或 experiment brief 明确授权变体、修补、强化、延展、
+remix 或基于某个 archive candidate 继续设计，lead designer 不得设计、优化或
+提交已有 archive candidate 的变体。`archive_taste_context` 是审美校准和失败
+模式校准，不是可复用 base。
+
+如果设计过程中发现当前候选继承了 archive candidate 的主要玩家侧因果链、对象
+角色或布局骨架，而本轮没有明确授权变体工作，必须 reject / hold / change
+family，不能进入 `proposal_ready` 或 `proposal_ready_with_caveats`。坐标变化、
+起终点变化、路线缩短、替换一个末端机制、追加一个小机制或给某个对象增加次要
+职责，都不能把未授权变体变成新候选。
+
+轻量 family 标注对 archive proposal 默认需要：
+
+```text
+fresh | related_to:<id> | refined_from:<id> | strengthened_from:<id> |
+transform_clone | stitched_extension | unknown
+```
+
+`related_to`、`refined_from`、`strengthened_from` 只描述事实来源；它们不授权
+变体设计，也不能把未授权变体变成可提交 proposal。
+
+完整 variant 审查只在下面条件触发：
+
+- 候选来自已有候选、变体、修补或复用；
+- 本轮生成多个候选，存在 family 重复风险；
+- 要做 campaign selection；
+- archive 中已有相关正反例。
+
+variant 诊断的目的不是打分，而是防止旋转、平移、加长、移动目标、换起点、拼接
+独立小题被包装成新设计。
+
+### Start-Position Diagnostic
+
+起点诊断在以下条件触发：
+
+- 起点影响 opening commitment、可读性、核心机制覆盖或 bypass；
+- 候选声称是 application / challenge / capstone；
+- brief 或原型文档要求显式起点比较；
+- 修改起点会改变 solve instance。
+
+若推荐起点不同于已验证实例，必须重跑相关证据。起点诊断不是独立通过条件。
+
+### Prototype-Specific Work
+
+原型专属工作分两类：
+
+```text
+diagnostic:
+  对候选做额外检查或证据读取。
+
+redesign_stage:
+  基于一个已经有价值的 base candidate 做二次设计、优化或变体提案。
+```
+
+meta-interface、重访入口、跨关连通、大地图接口等都不是通用流程默认项。只有
+prototype docs 或 experiment brief 明确声明时才触发。通用流程不得假设所有游
+戏都有 meta 机制。
+
+如果原型专属工作是 `redesign_stage`，不要把它执行成机械筛查或边缘枚举。只有
+prototype docs、experiment brief 或人类请求明确授权基于某个 base candidate
+做 redesign / variant 时，才允许提出变体。正确入口是：
+
+这里的授权可以来自原型文档本身；不需要另行包装成普通 archive-variant 授权。
+未授权变体禁令只限制从 archive candidate 派生的普通设计，不限制原型文档或
+experiment brief 明确声明的 prototype-specific meta / redesign 流程。
+
+```text
+base candidate 已经作为普通关有保留价值
+-> 阅读它是否有再设计潜力
+-> 如果有，提出 redesign variant
+-> 重新验证 base instance 和 redesigned / meta instance
+-> critic 同时评价 base 质量和 redesign 是否真正增值
+```
+
+弱 base candidate 不能靠 redesign stage 挽救。若 base 的核心 design_claim、证
+据或 role fit 已经失败，应先回到 design studio loop 或降级 / reject，而不是继
+续包装 prototype-specific 亮点。
+
+## Review Loop
+
+reviewer / critic 接收的是 candidate packet，不是自由讨论材料。
+
+### Archive Taste Context
+
+`archive_taste_context` 只允许包含带有人类评语的 candidate。critic 不负责自己
+全库检索；它只消费 packet 中的人类评语支持的审美证据。
+
+没有人类评语的 candidate 可以在普通 attempt log / exploration log 中作为历史
+尝试或证据记录提及，但不得放入 `archive_taste_context`，也不得作为审美正例、
+审美反例或 human taste calibration 使用。
+
+默认数量：
+
+```text
+normal experiment: 0-2 examples
+challenge / capstone / redesign_stage / recent drift calibration: 1-3 examples
+absolute max: 4 examples
+```
+
+如果归档为空，或没有相关且带有人类评语的 clean archive 条目，写
+`none_found` 和原因。
+
+选择前提和优先级：
+
+- 人类评语是进入 `archive_taste_context` 的前提，不是优先级；
+- 同机制 / motif；
+- 同角色或同阶段；
+- 同失败模式；
+- critic_calibration / designer_calibration 只有在对应 candidate 同时带有人类
+  评语时，才能作为 `archive_taste_context` 的选择理由。
+
+归档 taste 例子只用于人类评语支持的审美校准、失败模式和批评校准。不要复制或
+复用例子的 layout、几何结构、因果链、求解路线、对象摆放或入口出口关系。若
+人类没有明确授权变体设计，当前候选不得从归档例子派生。若已获授权并从归档例
+子派生，必须显式标记 `related_to` / `strengthened_from`，说明授权范围和新的
+player-facing meaning。
+
+evidence reviewer 判断：
+
+- 工具证据是否支持 `design_claim`；
+- claim 是否过度解释 trace、event count、object participation 或 graph fact；
+- 证据边界是否清楚。
+
+puzzle critic 判断：
+
+- `player_insight` 是否真实；
+- `why_not_execution` 是否成立；
+- role fit 是否符合玩家模型和本轮 brief；
+- routed diagnostics 的解释是否可信。
+
+每次 review 都必须标记它评价的是哪一版材料。`review_N` 只对收到的
+`candidate_version_N` 或 `evidence_disagreement_N` 负责，不能替之后的
+designer 修改背书。
+
+输出必须包含：
 
 ```yaml
+review_iteration:
+candidate_version_reviewed:
+review_input_type: candidate_version | evidence_disagreement | revised_claim | other
+verdict:
+review_loop_state:
+required_action:
+core_attacks:
+noncore_caveats:
+questions_for_designer:
+```
+
+如果 `required_action` 不是 `none`，`review_loop_state` 不能是
+`proposal_ready` 或 `proposal_ready_with_caveats`。
+
+如果 reviewer / critic 攻击 central `player_insight`、`why_not_execution`、证
+据支持或 role fit，候选不能进入 `proposal_ready` 或
+`proposal_ready_with_caveats`。lead designer 必须选择：
+
+- 结构修改并重跑证据；
+- 提交具体证据异议或失败尝试给下一轮 review 判断；
+- 降级 / hold；
+- reject / change family；
+- failed_search。
+
+证据异议只适用于 critic 漏看或误读已有工具证据、反事实或失败尝试。它不适用
+于未解决的 `player_insight`、`why_not_execution`、role fit、未授权变体、
+lineage/taste 失败；这些问题必须通过结构修改、claim 收窄后进入下一轮 review、
+hold、reject 或 change family 处理。
+
+“承认核心 caveat 但仍通过”不是有效动作。
+
+`designer_action_N` 之后如果还想推进候选，必须进入 `review_N+1`。没有后续独
+立 review 或人类 review 的 designer action 不能关闭核心攻击，也不能产生
+`proposal_ready*`。
+
+## Terminal States
+
+设计循环的 terminal states 不等于 campaign 接受状态。
+
+```text
+proposal_ready:
+  最新 review iteration 对最新 candidate version 输出 required_action: none，
+  且没有未关闭核心攻击。可提交给人类设计师或进入 campaign-level comparison，
+  但不是 accepted。
+
+proposal_ready_with_caveats:
+  最新 review iteration 对最新 candidate version 输出 required_action: none。
+  核心 design_claim 成立，剩余 caveats 不破坏 player_insight、
+  why_not_execution、evidence support、role fit，也不是未授权变体问题。
+
+revise_required:
+  存在可修复的结构或证据问题。必须回到 design studio loop。
+
+held_proposal:
+  有材料价值，但当前不足以作为 proposal_ready。可供人类查看、归档为 held，或
+  未来复用。
+
+rejected_candidate:
+  design_claim 失败、证据矛盾、role 失败、核心 critic 攻击未解决，或属于
+  transform / stitched / relabeled shortcut。
+
+failed_search:
+  本轮没有得到 proposal-ready candidate。保留失败分布和有代表性的废案，不要降
+  低目标来声称成功。
+
+structural_redesign_needed:
+  局部修补耗尽，需要换 causal-chain family 或重写 slot。
+```
+
+`accepted`、`mainline`、`positive_reference` 和 `reference` 不是 LLM designer
+自有状态。它们只能由人类设计师或显式授权的 campaign selection 过程授予。
+
+## Exploration Log
+
+探索记录是设计记忆，不是质量证明。
+
+当任务要求探索设计空间、比较候选、判断机制是否值得教学、或让 LLM designer 自
+主设计时，应记录 attempt log：
+
+```yaml
+family_iteration:
+  family_id:
+  causal_chain_family:
+  why_not_archive_variant:
+  family_result: continue | enter_review_loop | abandon_family | failed_search
+
 attempt:
   attempt_id:
+  family_id:
   hypothesis_family:
-  candidate_or_sketch_ref:
   structural_delta:
   intended_player_logic:
-  expected_core_responsibility:
-  validation_summary:
-  critic_or_self_attack:
-  repair_or_abandon_reason:
-  evidence_refs:
+  evidence_or_reason:
+  self_attack_or_critic_attack:
+  outcome: continue | repair | abandon | send_to_review | hold
 ```
 
-`hypothesis_family` 指玩家面对的因果链族或设计假设族，不是旋转、平移、换起点
-这类表面变体。`structural_delta` 必须说明真实结构变化；如果只是微调表现、移
-动目标、拉长路线或调整起点，应明确标记为 local repair，而不是新 family。
-
-搜索账本状态：
-
-```text
-no_search_evidence:
-  没有留下可审计尝试。视为没有系统搜索。
-
-search_budget_missing:
-  任务需要探索，但 brief / 人类没有声明预算。结果只能作为草稿或人类定向候选。
-
-under_budget:
-  声明了预算，但尝试数量、family 覆盖、修复轮次或证据候选数未达要求。
-
-shallow_search:
-  有尝试记录，但变化主要是微调、重复同一思路、缺少失败归因，或没有进入足够
-  证据检查。可以产生候选，但不能证明机制难、工具差或 LLM 已尽力。
-
-searched_but_unresolved:
-  达到声明预算，失败原因有聚类和证据边界，但仍没有合格候选。
-
-ready_for_evidence_after_search:
-  达到声明预算，且至少有一个候选有资格进入证据 / critic / final gates。
-  这只说明搜索过程足够进入验证，不说明候选已经有效。
-
-capability_or_tool_limit:
-  达到声明预算，失败集中在工具不可观测、评估不可复现、或 designer 无法稳定
-  改善，并且不能被单个布局失败解释。
-
-valid_candidate_after_search:
-  候选通过证据 / critic / final gate，且搜索账本解释了它为何从尝试集中胜出。
-```
-
-Final decision 必须引用搜索账本状态。若状态是 `no_search_evidence`、
-`search_budget_missing`、`under_budget` 或 `shallow_search`，候选仍可归档为
-草稿、失败例、held material 或人类待看样本，但不得作为“已经充分探索后仍失败”
-的证据，也不得用来推广为课程结论。
-
-## Variant Vocabulary
-
-`variant` is a relationship between candidates, not a quality grade and not an automatic reserve pool.
-
-```text
-variant_family:
-  A group of candidates sharing the same core insight, causal skeleton,
-  object roles, or player-facing solution posture.
-
-transform_clone:
-  Rotation, mirror, translation, goal shift, size change, route length change,
-  or cosmetic relabeling. This is not valid new design work.
-
-stitched_extension:
-  An old level with another independent segment attached. If the new segment
-  does not change the old structure's meaning, this is not a valid strengthened variant.
-
-strengthened_variant:
-  A valid advanced variant. It gives an existing element, state change, or
-  chain segment a new necessary causal responsibility, and that responsibility
-  is consumed later.
-
-weakened_variant:
-  A shortened, simplified, or decomposed version of a stronger level. It can be
-  useful for pacing or teaching, but it cannot automatically coexist with the
-  stronger version in the mainline.
-
-fresh_chain:
-  A candidate whose core causal chain is not in the same variant_family.
-```
-
-The default campaign rule is strict:
-
-```text
-one variant_family -> usually one mainline representative
-```
-
-Multiple candidates from the same family may enter the final campaign only when the lead designer explicitly justifies all of the following:
-
-- they serve different campaign stages or player models;
-- their player-facing solution meanings are substantially different;
-- the later level adds a new necessary consumed responsibility, not just length;
-- they are spaced and sequenced so the player does not read the later level as padding;
-- reviewers and lead designer both answer why this is not lazy slot filling.
-
-Otherwise, even two excellent related candidates should be held together and selected later, not placed into separate slots.
-
-Provenance rule:
-
-- A transformed, shortened, lengthened, or renamed old level cannot be submitted as a fresh candidate.
-- A strengthened variant must name its base and chain delta.
-- A reclassified held candidate must keep its origin. Do not present it as newly generated work.
-- An accepted mainline level should not be taken back to fill another slot unless the campaign plan is explicitly reopened; otherwise it destroys selection slack.
-- Held candidates are selection material. They are not a promised future level and not a place to hide weak slot fit.
-
-## SCC Evidence Reading
-
-When a complete graph is available, prefer the SCC condensation view for design reading. It collapses reversible wandering and shows irreversible commitments between mutually reachable state regions.
-
-These terms are evidence vocabulary, not automatic scores:
-
-```text
-raw_state_count / scc_count:
-  Raw reachable states versus reversible-state regions. A high raw count can be
-  mostly harmless wandering if it collapses into few SCCs.
-
-scc edge:
-  An irreversible transition from one mutually reachable region to another.
-
-single_win_chain:
-  Along the win-reaching SCC subgraph, each solution-prefix SCC has exactly one
-  win-reaching continuation. This can mean clean focus, but it can also mean a
-  forced script.
-
-branching_win_dag:
-  At least one SCC has multiple win-reaching continuations or later merge paths.
-  This is evidence to inspect, not automatic multi-solution failure.
-
-initial out/win/dead:
-  Irreversible exits from the initial SCC, how many can still reach a win, and
-  how many are dead exits.
-
-forced_win_prefix:
-  How much of the win-reaching irreversible path is forced. High values are a
-  challenge caveat unless the forced steps still carry visible planning,
-  resource coupling, or changing interpretation.
-
-handoff_scriptiness:
-  Returned-solution diagnostic for each SCC-to-SCC handoff. If the source SCC is
-  trivial, or the state that enters the SCC is also the state that takes the
-  next irreversible exit, the step may feel like "the previous move placed the
-  player exactly in front of the next move." This increases scriptiness, but it
-  is not automatically bad.
-
-tail:
-  Inputs after first entering an SCC that already contains a winning state.
-  A long tail may be harmless finish movement, incidental busywork, or a sign
-  that the win condition / goal placement should be inspected.
-```
-
-Reading rules:
-
-- Do not treat `branching_win_dag` as bad by itself. It may indicate a local order window or diamond structure.
-- If win-reaching branches merge after completing different necessary state changes, they may be good local order flexibility.
-- If branches are recoverable detours, they are not meaningful agency.
-- If branches reach different wins without sharing the intended core chain, inspect for bypass or alternative solution families.
-- If repeated branches are independent subproblems, campaign placement should usually reject or split them.
-- If `single_win_chain` combines with high `forced_win_prefix`, the level may still be good, but challenge claims need extra justification from the causal chain and player-facing reasoning.
-- If many solution handoffs are `trivial_source_scc` or `entry_equals_exit_source`,
-  inspect whether key steps are becoming an execution script. This is especially
-  relevant for application / challenge / capstone claims. It may be acceptable
-  when the player-facing insight was the prior setup, the forced handoff is a
-  payoff, or failed edits show that extra local room would introduce bypasses or
-  destroy the core chain.
-- If SCC evidence is unavailable, mark SCC-dependent probes unknown / qualitative.
-
-Lead designer should label interesting win-reaching branches as one of:
-
-```text
-local_order_window
-recoverable_detour
-alternative_solution_branch
-independent_subproblem_branch
-bypass_risk
-```
-
-These labels are design interpretations. They must cite concrete state changes, merge points, trace events, or counterfactuals.
-
-## Reviewer Context And Calibration
-
-Reviewers are useful only when they receive enough context. They do not automatically inherit the main thread's design memory.
-
-Reviewer context must include:
-
-- confirmed win condition;
-- relevant rules and interaction semantics;
-- player model / known-before for this role;
-- role rubric for the current slot;
-- designer claim and chain delta;
-- analyzer evidence with graph completeness status;
-- routed taste probe answers;
-- known related candidates or family risks;
-- allowed evidence sources and allowed tools.
-
-For each new prototype, calibrate reviewers with at least:
-
-```text
-negative fixture:
-  analyzer passes but designer overclaims the role, such as witness -> application.
-
-positive fixture:
-  a human-accepted or lead-designer-accepted good candidate for this prototype.
-```
-
-Calibration checks verdict category and reasoning shape, not exact wording. Positive/negative fixtures from one prototype do not prove reviewers will work on another prototype.
-
-## Taste Probe Integration
-
-Taste notes are not passive reminders. They must enter the loop as a small set of routed structural questions.
-
-They are still not formal evaluator metrics:
-
-```text
-formal_evaluator:
-  checks declared hard evidence only.
-
-taste probes:
-  force designer / critic / lead decision to discuss puzzle structure.
-```
-
-Do not hardcode Sokoban objects, wall/crate examples, or generic placeholder vocabulary into these probes. The probe should ask a structural question; the answer must use the current prototype's concrete mechanism language, causal chain, and analyzer evidence.
-
-Bad answer shape:
-
-```text
-No affordance is wasted.
-The variant is different.
-The repeated operation is necessary.
-```
-
-Good answer shape:
-
-```text
-This candidate reuses the same entrance from the base level, but the moved object now also
-opens the later return route. The new route is consumed before the win path, and the
-counterfactual without that movement is unsolved.
-```
-
-### Probe Router
-
-Each serious candidate should activate only a few relevant probes. Do not ask every question on every level.
-
-```text
-fresh_chain:
-  causal responsibility
-  role fit
-  opening commitment, if application / challenge
-
-reuse_strengthen:
-  causal responsibility
-  strengthened responsibility
-  variant family
-  repeated operation / coupling, if present
-
-refine_existing:
-  original flaw
-  repair evidence
-  whether the repair introduced padding or clutter
-
-structural_redesign:
-  original capped caveat
-  new causal-chain family
-  whether the old caveat became a new reasoning task
-
-seed_or_witness_factory:
-  witness scope
-  not application / challenge by default
-
-campaign placement:
-  variant family
-  role uniqueness
-  sequence / pacing justification
-```
-
-### Core Structural Probes
-
-Use these as question families, not as a mandatory checklist.
-
-```text
-causal responsibility:
-  What state change or relationship change is the core of this candidate?
-  Where is that change consumed later?
-  If it is not consumed, why is this not merely a witness?
-  If a salient object, route, entry/exit, relation, or state change appears more
-  than once, does its player-facing role change across the chain?
-  If yes, describe that role timeline. If no, do not use repetition or event
-  count as depth.
-
-strengthened responsibility:
-  If this extends an existing good level, which already-existing element,
-  state change, or chain segment gained a new necessary responsibility?
-  How does the later solution consume that new responsibility?
-
-variant family:
-  Does this share the same core insight, causal skeleton, object roles,
-  or player-facing solution posture with an existing candidate?
-  If yes, why should it not be held for family-level selection?
-
-repeated operation / repeated chain:
-  Is the repetition just repeated input/event execution, or a repeated causal subproblem?
-  If it is a repeated causal subproblem, how are the repetitions coupled?
-  If they are not coupled, should this be split, held, or rejected?
-
-opening commitment:
-  Use graph / SCC evidence when available. Report:
-    - initial_scc_size
-    - initial_scc_exit_count
-    - initial_exit_source_distances
-    - initial_win_exit_source_distances
-    - dead_exits_before_first_win_exit
-    - forced_win_prefix, if the SCC reporter provides it
-    - scc_handoff_scriptiness, if the SCC reporter provides it
-  For application / challenge candidates, does the initial SCC give the player
-  nontrivial reversible room before the first win-reaching irreversible commitment?
-  If the initial SCC is a single state, or the first win-reaching irreversible exit is
-  immediately forced, is that intentional and appropriate for this role?
-  If complete graph evidence is unavailable, mark this probe unknown / qualitative;
-  do not replace it with a fake metric.
-
-  Role-specific reading:
-    - discovery / witness:
-        A near-immediate forced commitment can be acceptable, especially when the
-        level is meant to show a rule or fixture event. It should not be upgraded
-        to application just because the event is necessary.
-    - guided_application:
-        Some guidance and narrowness are acceptable, but the target use should not
-        be merely a one-corridor forced witness. Prefer at least a nontrivial
-        initial SCC or nearest win-reaching irreversible exit distance >= 1.
-    - independent_application:
-        Should normally give the player room to choose, arrange, route, preview,
-        or otherwise actively apply known knowledge before the first decisive
-        win-reaching commitment. A single forced win-reaching exit from the initial
-        SCC is a role-fit caveat unless strongly justified.
-    - combination / challenge:
-        Opening comfort is not enough. Also inspect whether the later win-reaching
-        SCC path is mostly forced. A high forced_win_prefix can be acceptable for
-        a compact causal-chain puzzle, but it is a caveat for a broad challenge
-        unless the forced steps carry visible planning, resource coupling, or
-        changing interpretation.
-
-handoff scriptiness:
-  For application / challenge / capstone candidates with complete SCC evidence,
-  inspect the returned-solution handoffs between SCCs. Are many key steps:
-    - sourced from trivial SCCs, or
-    - exiting from the exact same state that entered the SCC?
-  If yes, the critic should ask whether the level is becoming a scripted chain
-  of "do the next obvious move from the posture just created." This is a warning
-  sign, not a hard rejection. Designer may defend it by citing concrete prior
-  planning, role changes, state consumption, or failed attempts to add local
-  repositioning space without breaking the puzzle.
-
-salient element use:
-  Does the candidate emphasize an element that the intended player already expects
-  to have a strong role, but then use it only as low-grade filler, blocker, counter,
-  or decoration?
-  If yes, is that underuse intentional and itself part of the insight?
-
-role fit:
-  Does the candidate actually perform its claimed role, or is it a witness,
-  forced demonstration, structure sample, or later challenge being relabeled?
-```
-
-### Use In The Loop
-
-```text
-designer self-check:
-  answer the activated probes before reviewer submission.
-
-design critic:
-  attack weak, vague, or unsupported probe answers.
-
-lead designer final decision:
-  accept the attack and revise, defend with concrete failed attempts / analyzer evidence,
-  downgrade to held candidate or fixture, or reject.
-
-campaign placement:
-  re-run variant-family and role-fit probes across neighboring accepted / held candidates.
-```
-
-If a probe cannot be answered without inventing upstream knowledge, mark that upstream context as missing. Do not synthesize a fake object ontology or knowledge map inside this level-design workflow.
-
-## Candidate Classifications
-
-```text
-accept_mainline:
-  evidence, role, design quality, and campaign placement all currently fit.
-
-accept_with_caveats:
-  usable mainline candidate with recorded caveats that do not invalidate its role.
-
-hold_related_candidate:
-  good or interesting candidate that belongs near an existing variant_family,
-  fits a different slot, or should wait for group selection. This is selection
-  material, not a promised future level.
-
-witness_fixture:
-  useful for proving a mechanic, test case, analyzer calibration, or reviewer calibration, but not a player-facing mainline level.
-
-reject:
-  central claim fails, design role fails, or it is a shortcut such as a transform, relabel, stitched extension, or independent repeated subproblem.
-```
-
-The old `variant pool` language should be avoided. A held candidate is not automatically a future level; it is selection material.
-
-## What Is Currently Not Solved
-
-- `ruleset -> player abilities -> curriculum slots` is still incomplete.
-- Current `level_specs_v2` for `pull_portal_fallback` is a weak draft and should not be treated as a good curriculum model.
-- Formal tools can report evidence, but they cannot yet score puzzle quality.
-- SCC / graph metrics are design evidence, not an automatic taste formula.
-- LLM player testing is intentionally deferred.
-
-## Design Taste Index
-
-These are reminders for the routed probes above, not a second checklist and not hard evaluator formulas:
-
-- A good application or challenge needs a concrete consumed causal chain, not just an event witness.
-- Extra walking, forced opening moves, and repeated same-operation padding do not create role depth.
-- Late application / challenge candidates should reject mechanism-shaped corridors: a salient interaction is weak if it only acts as a one-step access gate, route tax, or renamed hallway without changing later causal reasoning.
-- Do not rank depth by mechanism count. A shorter chain with one element or relation reused in changing roles can be stronger than a longer chain of required events.
-- Repeated actions are only a warning sign, not a flaw by themselves. They become valuable when each repetition changes context, timing, route meaning, object role, or later state consumption.
-- Repeated causal chains are acceptable only when they are coupled by shared resources, timing, order, state consumption, reinterpretation, or element role changes.
-- Suspicious repetition or apparently redundant elements may be defended only by concrete failed edits and analyzer-backed design loss, not by hand-waving.
-- Strong candidates can be compact. Adding distractors after the fact is usually worse than strengthening existing elements.
-- Compact means causally economical, not smallest possible outer rectangle; over-compression can be as harmful as padding.
-- Start-position refinements should consider the initial SCC when available, because the best readable opening may be a different reversible start state rather than a local one-tile adjustment.
+通用流程不规定固定 family 数、variant 数或 reviewer 数。实验 brief 可以给
+exploration pressure 或建议覆盖方向，但数量达标不证明质量，数量不足也不自动
+证明机制失败。
+
+`family_iteration` 不是 layout variant。移动起终点、缩短走廊、替换一个末端
+机制、追加一个小事件、调坐标、或沿用同一对象顺序链，都不能算新的外层 family。
+若没有人类明确授权，archive candidate 的变体不能作为新的 family 提交。
+
+有效的 attempt log 应回答：
+
+- 尝试过哪些不同 causal-chain family；
+- 哪些失败是工具约束，哪些是设计结构失败；
+- 哪些只是 local repair，而不是新 family；
+- 为什么某个候选值得进入 review，或为什么本轮应 failed_search。
+
+## Retained Valid Practices
+
+下面这些来自早期有效流程，但现在都通过 routing 使用，不作为默认通过条件：
+
+- analyzer-backed revision：工具证据先于角色声称。
+- reuse-strengthen：保留已有好结构，让已有元素获得新的、后续被消费的责任。
+- local repair stop：反复局部修补仍产生同一 caveat 时，hold 或 structural
+  redesign。
+- critic attack / designer action：critic 是攻击者，不是最终裁判；designer
+  的 action 必须是动作和证据，并进入下一轮 review 或降级 / reject / change
+  family。
+- SCC reading：用于读脚本感、分支、多解、bypass 和 opening commitment。
+- variant family：用于防止 clone、stitched extension 和重复填槽。
+- over-generate then select：campaign 选择时有效，但不属于单关 proposal 通过
+  条件。
+
+## What Is Not Solved
+
+- `ruleset -> player_model -> curriculum -> level_specs` 尚未验证为可靠自动流程。
+- 工具可以报告证据，但不能自动评价 puzzle quality。
+- LLM critic 仍可能误判 taste；人类评语和归档正反例仍是重要审美来源。
+- 本标准不能保证 LLM designer 会产出好关。它只能降低伪通过、伪归档和证据漂移。

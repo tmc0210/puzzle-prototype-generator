@@ -21,7 +21,7 @@ import { formatCandidateGalleryV2Markdown } from "./workflows/candidateGalleryV2
 import { evaluatePackage, summarizeEvaluation } from "./workflows/evaluator.js";
 import { analyzeLevel, formatLevelAnalysisMarkdown } from "./workflows/levelAnalyzer.js";
 import { formatCalibrationReport } from "./workflows/calibrationReport.js";
-import { formatMinerReportMarkdown, mineSeeds } from "./workflows/seedMiner.js";
+import { formatMinerReportMarkdown, mineSeeds, type MinerObjective } from "./workflows/seedMiner.js";
 import { solveWithRuntime } from "./core/solver.js";
 import { getRuntimeAdapter } from "./prototypes/runtimeAdapter.js";
 import {
@@ -38,6 +38,7 @@ import {
   unavailableToolMessage,
 } from "./workflows/toolMaturity.js";
 import type { LevelDoc, LevelRole, WinCondition } from "./core/types.js";
+import { randomInt } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import YAML from "yaml";
@@ -204,8 +205,10 @@ async function main(): Promise<void> {
 
   if (command === "mine") {
     const optionArgs = args.slice(2);
+    const objective = await parseMineObjective(optionArgs);
+    const seed = parseNumberOption(optionArgs, "--seed") ?? randomMineSeed();
     const report = mineSeeds(pkg, {
-      seed: parseNumberOption(optionArgs, "--seed"),
+      seed,
       iterations: parseNumberOption(optionArgs, "--iterations"),
       maxFindings: parseNumberOption(optionArgs, "--max-findings"),
       width: parseNumberOption(optionArgs, "--width"),
@@ -217,6 +220,7 @@ async function main(): Promise<void> {
       maxStates: parseNumberOption(optionArgs, "--max-states"),
       maxDepth: parseNumberOption(optionArgs, "--max-depth"),
       graphMaxStates: parseNumberOption(optionArgs, "--graph-max-states"),
+      objective,
     });
     const markdown = formatMinerReportMarkdown(report);
     console.log(markdown.trimEnd());
@@ -464,8 +468,12 @@ function printUsage(): void {
   console.log("  tsx src/cli.ts generate-v2 <prototype-path> [--write]");
   console.log("  tsx src/cli.ts candidate-gallery-v2 <prototype-path> [--write]");
   console.log("  tsx src/cli.ts calibration-report <prototype-path> [--write]");
-  console.log("  tsx src/cli.ts mine <prototype-path> [--iterations n] [--max-findings n] [--write]");
+  console.log("  tsx src/cli.ts mine <prototype-path> [--seed n] [--iterations n] [--max-findings n] [--objective objective.yml] [--weight tag=number] [--write]");
   console.log("  tsx src/cli.ts tool-maturity <prototype-path>");
+}
+
+function randomMineSeed(): number {
+  return randomInt(1, 0x7fffffff);
 }
 
 function getOption(args: string[], name: string): string | undefined {
@@ -513,6 +521,75 @@ function parseNumberOption(args: string[], name: string): number | undefined {
     throw new Error(`${name} requires a finite number`);
   }
   return value;
+}
+
+async function parseMineObjective(args: string[]): Promise<MinerObjective | undefined> {
+  const objectivePath = getOption(args, "--objective");
+  const fileObjective = objectivePath
+    ? parseObjectiveDoc(
+        YAML.parse(await readFile(path.resolve(objectivePath), "utf8")),
+        `--objective ${objectivePath}`,
+      )
+    : undefined;
+  const inlineWeights = parseWeightOptions(args, "--weight");
+  if (!fileObjective && Object.keys(inlineWeights).length === 0) {
+    return undefined;
+  }
+  return {
+    name: fileObjective?.name ?? (Object.keys(inlineWeights).length > 0 ? "cli_weights" : undefined),
+    tagWeights: {
+      ...(fileObjective?.tagWeights ?? {}),
+      ...inlineWeights,
+    },
+    note: fileObjective?.note,
+  };
+}
+
+function parseObjectiveDoc(raw: unknown, source: string): MinerObjective {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    throw new Error(`${source} must contain an object with tagWeights or weights.`);
+  }
+  const doc = raw as Record<string, unknown>;
+  const weightsRaw = doc.tagWeights ?? doc.weights;
+  if (!weightsRaw || typeof weightsRaw !== "object" || Array.isArray(weightsRaw)) {
+    throw new Error(`${source} must contain tagWeights or weights as a mapping.`);
+  }
+  const tagWeights: Record<string, number> = {};
+  for (const [tag, value] of Object.entries(weightsRaw as Record<string, unknown>)) {
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      throw new Error(`${source} weight for '${tag}' must be a finite number.`);
+    }
+    tagWeights[tag] = value;
+  }
+  if (Object.keys(tagWeights).length === 0) {
+    throw new Error(`${source} must contain at least one tag weight.`);
+  }
+  const name = typeof doc.name === "string" && doc.name.length > 0 ? doc.name : undefined;
+  const note = typeof doc.note === "string" && doc.note.length > 0 ? doc.note : undefined;
+  return { name, tagWeights, note };
+}
+
+function parseWeightOptions(args: string[], name: string): Record<string, number> {
+  const weights: Record<string, number> = {};
+  for (let index = 0; index < args.length; index += 1) {
+    if (args[index] !== name) {
+      continue;
+    }
+    const raw = args[index + 1];
+    if (!raw || raw.startsWith("--")) {
+      throw new Error(`${name} requires a value formatted as tag=number`);
+    }
+    const [tag, valueRaw] = raw.split("=");
+    if (!tag || valueRaw === undefined) {
+      throw new Error(`${name} value '${raw}' must be formatted as tag=number`);
+    }
+    const value = Number(valueRaw);
+    if (!Number.isFinite(value)) {
+      throw new Error(`${name} value '${raw}' must use a finite number`);
+    }
+    weights[tag] = value;
+  }
+  return weights;
 }
 
 function parsePointListOption(

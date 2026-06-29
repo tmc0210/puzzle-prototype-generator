@@ -122,6 +122,10 @@ Temporary miner
   Check: report schema is stable enough to diff; kept findings parse and solve.
   Maturity: raw_sampler for generic profile output; curated_miner only after mechanism-calibrated
   tags, scoring, filtering, and designer-useful interpretation exist.
+  Guidance: if the miner exposes a default ranking prior, document that low
+  default weight is a search preference, not a quality judgment. Provide an
+  objective/weight override path so designer agents can explicitly bias toward
+  the mechanism branch they are currently trying to study.
 
 PuzzleScript exporter / checker
   Output: exporter returns source text; checker reports pass/fail for that source.

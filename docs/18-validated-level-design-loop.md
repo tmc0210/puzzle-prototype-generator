@@ -4,6 +4,16 @@ Status: active support document. The current short level-design standard is [Cur
 
 本文档记录当前已验证有效的关卡设计流程，以及 `mini_campaign_dry_run_02` 暴露出的退化反模式。它应作为后续 skill / agent workflow 的防漂移约束。
 
+Current execution note:
+`docs/21-current-workflow-standard.md` and `docs/20-multi-agent-prompt-templates.md`
+are authoritative for the current review-loop state machine. Older examples in
+this file that use `strong_mainline_candidate`, `quality_score`,
+`accept_mainline`, or linear gate language are historical case material, not the
+current output contract. New LLM designer experiments should produce proposal
+states such as `proposal_ready`, `held_proposal`, `rejected_candidate`, or
+`failed_search` unless a human / authorized campaign-selection pass explicitly
+promotes them.
+
 ## Scope
 
 本文档首先是机制无关的通用流程文档。`pull_portal_fallback`、拉箱子、传送门、fallback 等内容只作为 case study，不应被泛化为所有原型都拥有的机制。

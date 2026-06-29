@@ -8,7 +8,7 @@
 本文不是 designer / critic workflow。
 
 ```text
-单关设计、证据读取、reviewer outer loop、critic 攻击和 designer 答辩：
+单关设计、证据读取、编号 review loop、critic 攻击和 designer action：
   以 docs/21-current-workflow-standard.md 为准。
 
 multi-agent / reviewer prompt 形状：
@@ -36,7 +36,7 @@ raw run:
 
 candidate record:
   候选的事实来源。layout、solve instance、designer claim、工具证据、review
-  artifact、designer response、人类评语和派生元数据都应直接或间接指向它。
+  artifact、designer action、人类评语和派生元数据都应直接或间接指向它。
 
 archive index:
   检索层。它只能摘要 candidate record，不是事实来源。
@@ -56,7 +56,7 @@ archive pass 可以：
 ```text
 - 检查 candidate record 是否有必要 artifact。
 - 保存或整理已有 designer claim、tool evidence、reviewer result、
-  critic result、designer response 和 human comments。
+  critic result、designer action 和 human comments。
 - 派生检索标签、retrieval summary 和完整性状态。
 - 在流程缺失时降级 archive_eligibility，或拒绝进入 clean archive。
 ```
@@ -82,9 +82,16 @@ process_integrity:
   tool_evidence: present | missing | incomplete | not_applicable
   evidence_reviewer_artifact: present | missing | blocked | not_applicable
   puzzle_critic_artifact: present | missing | blocked | not_applicable
-  designer_response_to_review: present | missing | not_needed
+  designer_actions_after_review: present | missing | not_needed
   post_revision_evidence_rerun: present | missing | not_needed
+  latest_review_iteration: null
+  latest_candidate_version_reviewed: null
+  open_required_action_after_latest_review: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family | unknown
+  designer_action_after_latest_review: missing | present | not_needed
+  review_after_designer_action: missing | present | blocked | not_needed
   review_integrity: independent_review | human_review | self_review_only | missing | blocked
+  review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_required | held_proposal | rejected_candidate | failed_search | structural_redesign_needed | unknown
+  unresolved_core_attacks: []
   archive_eligibility: clean_archive | human_pending | raw_run_only | reject_do_not_archive
   notes: ""
 ```
@@ -101,7 +108,7 @@ human_review:
 
 self_review_only:
   designer 在同一设计 pass 中写了自我攻击、自我总结或 caveat。它有记录价值，
-  但不能满足 critic gate。
+  但不能满足独立 critic review。
 
 missing:
   没有可检查的 review artifact。
@@ -111,8 +118,10 @@ blocked:
   blocked，不得降级解释成“主线程多角色 critic 已完成”。
 ```
 
-如果候选在 review 后被修改，必须按 `docs/21` 回到必要的 evidence gate。没有
-重新验证的修改不能继承旧工具证据和旧 critic 结论。
+如果候选在 `review_N` 后被修改，必须按 `docs/21` 回到必要的工具证据刷新，并
+把新版本交给 `review_N+1`。如果 designer 在 `review_N` 后提交证据异议，该异
+议也必须交给 `review_N+1` 判断。没有下一轮 review 的 designer action 不能继
+承旧 critic 结论，也不能关闭核心攻击。
 
 ## Archive Eligibility
 
@@ -120,8 +129,9 @@ blocked:
 
 ```text
 clean_archive:
-  流程 artifact 足够完整，可作为未来设计参考。候选可以是 accepted、held、
-  rejected 或 negative example。
+  流程 artifact 足够完整，可作为未来设计参考。候选可以是 proposal、held、
+  rejected、failed search material 或 negative example。`accepted` / `mainline`
+  需要人类、campaign selection 或明确授权的最终评审。
 
 human_pending:
   流程 artifact 足够完整，但还没有人类评语。可以入档，但必须标记人类评语
@@ -140,7 +150,17 @@ reject_do_not_archive:
 
 ```text
 - review_integrity 为 self_review_only、missing 或 blocked 时，不能标记
-  positive_reference、reference、accepted 或 valid_candidate_after_search。
+  positive_reference、reference 或 accepted。
+- review_loop_state 为 revise_required、held_proposal、rejected_candidate、
+  failed_search 或 structural_redesign_needed 时，archive pass 不能升级为
+  proposal_ready、accepted、positive_reference 或 reference。
+- unresolved_core_attacks 非空时，不能进入 proposal_ready / accepted。
+- open_required_action_after_latest_review 不是 none 时，不能进入
+  proposal_ready / proposal_ready_with_caveats / accepted。
+- designer_action_after_latest_review 为 present 且 review_after_designer_action
+  不是 present 时，不能进入 proposal_ready / proposal_ready_with_caveats。
+- latest review 必须对应最新 layout、solve instance、start、goal、
+  mechanism_scope 和 design_claim；否则不能进入 proposal_ready / clean_archive。
 - tool_evidence 为 missing / incomplete 且候选声称通过工具验证时，不能进入
   clean_archive。
 - search ledger 缺失或浅时，只能降低结论强度；不能声称已充分探索设计空间。
@@ -155,12 +175,13 @@ reject_do_not_archive:
 ```text
 - experiment brief 引用
 - layout 和 solve instance
-- designer claim、causal chain、claimed highlights、known risks
+- designer claim，包括 player_insight、causal_chain、why_not_execution、
+  falsification、claimed highlights、known risks
 - design search ledger 或候选相关 ledger slice
 - tool commands、evidence summary、report refs
 - evidence reviewer artifact，若适用
 - puzzle critic artifact，若适用
-- designer response to review
+- review_iterations，包括每轮 review、designer_action、下一轮 review 关系
 - start-position refinement，若角色需要
 - prototype-specific extension record，若原型或 brief 明确要求
 - process_integrity
@@ -221,6 +242,8 @@ clean archive 必须保持干净。流程错产物不应为了“留下负例”
 - self-review 被误写成 critic review。
 - candidate record 标记 positive_reference，但缺独立 review artifact。
 - 工具证据来自旧实例，候选修改后没有重跑。
+- designer action 发生在最新独立 review 之后，但没有进入下一轮 review。
+- 未获人类明确授权的 archive candidate 变体被写成 proposal。
 - archive index 摘要和 candidate record / human comments 冲突。
 - 人类明确指出该记录来自错误流程，不应作为审美或设计样本。
 ```

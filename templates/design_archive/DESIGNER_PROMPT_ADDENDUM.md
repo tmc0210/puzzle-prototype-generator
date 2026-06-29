@@ -13,7 +13,7 @@
 - 相关机制文档
 - experiment brief
 - 可用命令 / tool maturity
-- 可选 archive examples
+- archive taste context，若有相关且带有人类评语的 clean archive 条目
 ```
 
 规则：
@@ -22,10 +22,27 @@
 - 每个 serious candidate 都遵守 docs/21。
 - 不要发明 player_model、curriculum_v2 或 level_specs_v2 条目。
 - 不要因为某条 rule fact 存在，就声称它值得教学。
-- 不要复制 archive 里的布局。archive examples 只用于设计审美、失败模式和批评校准。
-- 把 archive examples 中的人类评语视为主要校准证据。
+- 不要复制 archive 里的布局、几何结构、因果链、求解路线、对象摆放或入口出口
+  关系。archive taste examples 只用于人类评语支持的设计审美、失败模式和批评
+  校准。
+- 除非人类请求或 experiment brief 明确授权变体、修补、强化、延展、remix 或
+  基于某个 archive candidate 继续设计，不要设计、优化、修补或提交已有 archive
+  candidate 的变体。archive taste context 不是可复用 base。
+- 这条禁令不覆盖原型文档或 experiment brief 明确声明的 prototype-specific
+  meta / redesign 流程；这种流程按原型文档自己的适用性、证据格式和审美标签执
+  行。
 - 把 archive tags 视为导航元数据。
+- 提交 critic-facing packet 前，应选择 0-4 个相关且带有人类评语的 clean archive
+  examples 作为 `archive_taste_context`。普通实验默认 0-2 个；challenge /
+  capstone / redesign_stage / 最近发生过流程漂移时默认 1-3 个；最多 4 个。
+- 如果没有相关且带有人类评语的 clean archive 条目，写 `none_found` 和原因。
+  不要为了凑数引用无关例子，或引用只有 LLM critic / designer 派生评价的条目。
+- 自己参考过且带有人类评语的 archive taste examples 也必须交给 critic；critic
+  不负责自己全库检索。
 - 如果候选的真实亮点不同于你的初始 claim，修改 claim，而不是强行维护旧解释。
+- 如果候选在 archive/taste review 中被发现继承了已有候选的主要玩家侧因果链、
+  对象角色或布局骨架，且本轮没有明确授权变体工作，必须 reject / hold /
+  change family，不能提交为 proposal_ready。
 - 保留能说明设计限制的失败尝试。
 - 对 application / challenge 候选，最终提交前执行 start-position refinement；
   若不适用，明确说明原因。
@@ -84,18 +101,36 @@
 candidate_id
 solve instance / win condition
 layout
-designer claim
+design_claim:
+  - player_insight
+  - causal_chain
+  - why_not_execution
+  - falsification
 claimed highlights
 known risks
 start-position refinement summary, for application / challenge candidates
-prototype-specific extension summary, if required by the prototype
+prototype-specific work summary, if required by the prototype
+archive_taste_context for critic
 tool command(s) and evidence summary
 critic-facing packet
 ```
 
-如果使用了 archive examples，应包含简短说明：
+如果使用了 archive taste examples，应包含简短说明。所有 examples 都必须有
+human comments；否则写 `none_found`：
 
-```text
-Archive examples consulted:
-- CAND_ID: 使用了哪个原则或失败模式
+```yaml
+archive_taste_context:
+  examples:
+    - candidate_id:
+      archive_use:
+      human_comment_summary:
+      relevant_lesson:
+      why_relevant_to_this_candidate:
+      do_not_copy:
+        - layout
+        - geometry
+        - causal_chain
+        - solution_route
+        - object_placement
+  none_found_reason:
 ```

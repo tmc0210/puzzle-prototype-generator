@@ -254,38 +254,39 @@ function continueSlide(state2, current, dir, initialDistance, options, events) {
   }
 }
 function resolveObstacle(state2, preObstacle, obstacle, dir, distance, options, events) {
+  const obstacleEvents = iceIndexAt(state2, obstacle) === -1 ? events : [...events, "ice_blocks_ice_no_chain_push"];
   if (distance === 0) {
     return {
       legal: false,
       reason: "push_ice_failed_immediate_obstacle",
-      events: [...events, "push_ice_failed"]
+      events: [...obstacleEvents, "push_ice_failed"]
     };
   }
   if (distance <= 2) {
     return {
       legal: true,
       state: stateWithIce(state2, preObstacle),
-      events: [...events, `ice_stop_short:d${distance}`]
+      events: [...obstacleEvents, `ice_stop_short:d${distance}`]
     };
   }
   if (distance === 3) {
     return {
       legal: true,
       state: stateWithIce(state2, void 0),
-      events: [...events, "ice_destroyed_d3"]
+      events: [...obstacleEvents, "ice_destroyed_d3"]
     };
   }
   if (distance === 4) {
     return {
       legal: true,
       state: stateWithIce(state2, subtract(preObstacle, dir)),
-      events: [...events, "ice_rebound_d4"]
+      events: [...obstacleEvents, "ice_rebound_d4"]
     };
   }
   const group = collectObstacleGroup(state2, obstacle, dir);
   const afterGroup = group.afterGroup;
   if (distance === 5) {
-    const passEvents = [...events, `ice_pass_through_d5:len${group.cells.length}`];
+    const passEvents = [...obstacleEvents, `ice_pass_through_d5:len${group.cells.length}`];
     if (!inBounds(state2, afterGroup)) {
       return {
         legal: true,
@@ -299,7 +300,7 @@ function resolveObstacle(state2, preObstacle, obstacle, dir, distance, options, 
     ]);
   }
   const destroyedState = removeObstacleGroup(state2, group.cells);
-  const destroyEvents = [...events, `ice_destroy_group_d6_plus:len${group.cells.length}`];
+  const destroyEvents = [...obstacleEvents, `ice_destroy_group_d6_plus:len${group.cells.length}`];
   if (!inBounds(destroyedState, afterGroup)) {
     return {
       legal: true,
@@ -809,7 +810,7 @@ if (!app) {
   throw new Error("Missing #app");
 }
 var appRoot = app;
-var buildId = true ? "mqyda74x" : "dev";
+var buildId = true ? "mqzcda6k" : "dev";
 var data = await fetch(`./data.json?v=${encodeURIComponent(buildId)}`).then(
   (response) => response.json()
 );

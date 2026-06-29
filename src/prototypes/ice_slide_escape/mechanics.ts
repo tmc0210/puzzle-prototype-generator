@@ -354,11 +354,14 @@ function resolveObstacle(
   options: IceSlideStepOptions,
   events: string[],
 ): SlideResult {
+  const obstacleEvents =
+    iceIndexAt(state, obstacle) === -1 ? events : [...events, "ice_blocks_ice_no_chain_push"];
+
   if (distance === 0) {
     return {
       legal: false,
       reason: "push_ice_failed_immediate_obstacle",
-      events: [...events, "push_ice_failed"],
+      events: [...obstacleEvents, "push_ice_failed"],
     };
   }
 
@@ -366,7 +369,7 @@ function resolveObstacle(
     return {
       legal: true,
       state: stateWithIce(state, preObstacle),
-      events: [...events, `ice_stop_short:d${distance}`],
+      events: [...obstacleEvents, `ice_stop_short:d${distance}`],
     };
   }
 
@@ -374,7 +377,7 @@ function resolveObstacle(
     return {
       legal: true,
       state: stateWithIce(state, undefined),
-      events: [...events, "ice_destroyed_d3"],
+      events: [...obstacleEvents, "ice_destroyed_d3"],
     };
   }
 
@@ -382,7 +385,7 @@ function resolveObstacle(
     return {
       legal: true,
       state: stateWithIce(state, subtract(preObstacle, dir)),
-      events: [...events, "ice_rebound_d4"],
+      events: [...obstacleEvents, "ice_rebound_d4"],
     };
   }
 
@@ -390,7 +393,7 @@ function resolveObstacle(
   const afterGroup = group.afterGroup;
 
   if (distance === 5) {
-    const passEvents = [...events, `ice_pass_through_d5:len${group.cells.length}`];
+    const passEvents = [...obstacleEvents, `ice_pass_through_d5:len${group.cells.length}`];
     if (!inBounds(state, afterGroup)) {
       return {
         legal: true,
@@ -405,7 +408,7 @@ function resolveObstacle(
   }
 
   const destroyedState = removeObstacleGroup(state, group.cells);
-  const destroyEvents = [...events, `ice_destroy_group_d6_plus:len${group.cells.length}`];
+  const destroyEvents = [...obstacleEvents, `ice_destroy_group_d6_plus:len${group.cells.length}`];
   if (!inBounds(destroyedState, afterGroup)) {
     return {
       legal: true,

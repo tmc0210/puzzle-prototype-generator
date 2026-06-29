@@ -24,30 +24,20 @@ request:
   expected_role: late_d4_pre_d5_capstone
   difficulty_target: high
   campaign_position: after_d4_introduction_before_d5_introduction
-prototype_extensions:
+prototype_specific_work:
   - name: meta_reinterpretation
-    applicability: required
+    kind: redesign_stage
+    applicability: required_after_solid_base
+    meta_knowledge_scope: all_prototype_knowledge_by_default
+    base_scope_guard: base_instance_must_remain_pre_d5
     authority:
       - prototypes/ice_slide_escape/docs/design_directives.md
       - prototypes/ice_slide_escape/docs/meta_interfaces.md
-design_search:
-  scope: experiment_run
-  budget_owner: human
+exploration_guidance:
   goal: exploratory
-  hypothesis_family_min: 8
-  variant_per_family_min: 4
-  repair_round_min: 3
-  evidence_gate_candidates_min: 8
-  critic_gate_candidates_min: 4
-  final_candidate_target: 2
-  budget_is_hard_floor: true
-  stop_conditions:
-    - accepted_with_evidence
-    - budget_exhausted
-    - hard_constraint_conflict
-    - tool_gap
-    - human_stop
-  exploration_axes:
+  record_attempts: true
+  quality_guard: critic_loop
+  family_directions:
     - d4 rebound creates a later-consumed target coverage obligation
     - d4 rebound creates a later-consumed explicit edge-goal access obligation
     - repeated or chained d4 rebound changes later route meaning
@@ -56,27 +46,27 @@ design_search:
     - d4 rebound changes the role of the same ice, blocker, target, or route across the solution
     - d4 rebound creates an order dependency between target coverage and edge-goal access
     - d4 rebound appears in a compact high-coupling layout rather than a long execution chain
-  attempt_counting_rules:
-    structural_variant_must_change:
+  attempt_recording:
+    structural_delta_should_note:
       - wall topology
       - ice / target responsibility
       - blocker relation
       - route dependency
       - required order or later consumption
-    does_not_count_as_new_variant:
+    local_repairs_do_not_count_as_new_family:
       - moving only the start
       - moving only the goal
       - translating, rotating, or mirroring the same layout
       - adding walking distance
       - making the same chain longer without new coupling
       - changing only labels or explanation
-  required_search_outputs:
-    - At least 8 hypothesis families are named before selecting final candidates.
-    - At least 32 structural variants are sketched or tested across the run.
-    - At least 8 variants enter tool evidence checks.
-    - At least 4 variants enter critic review.
-    - At least 2 different families survive to final candidate consideration.
-    - If fewer than 2 final candidates pass, report the full failure distribution instead of weakening the role.
+  failure_distribution_should_cluster:
+    - d4 witness without later consumption
+    - d4-free bypass or d4-not-necessary solve
+    - forbidden mechanism triggered
+    - single-corridor execution
+    - d1_d2 or d3 becomes the real core while d4 is decorative
+    - high-difficulty potential but evidence/tooling is insufficient
 player_model_assumption:
   known_before:
     - d1_d2_stop
@@ -108,6 +98,9 @@ challenge_floor:
     - difficulty comes mainly from length, clutter, hidden information, or arbitrary search
     - allowed support mechanisms become the real puzzle while d4 is only decorative
 mechanism_scope:
+  applies_to:
+    - base_instance
+    - submitted_base_flow
   central:
     - d4_rebound
   allowed_support:
@@ -125,17 +118,76 @@ mechanism_scope:
     - d6_plus_destroy_group
     - slide_restart_after_group
     - boundary_disappear
+base_hard_reject_policy:
+  applies_to:
+    - base_instance
+    - submitted_base_flow
+  reject_if_winning_solution_uses:
+    - d5_pass_through
+    - d6_plus_destroy_group
+    - slide_restart_after_group
+    - boundary_disappear
+  reject_if_design_claim_requires:
+    - d5_pass_through
+    - d6_plus_destroy_group
+    - slide_restart_after_group
+    - boundary_disappear
+  report_if_seen_outside_target_solution:
+    - d5_pass_through
+    - d6_plus_destroy_group
+    - slide_restart_after_group
+    - boundary_disappear
+  required_action: reject_or_change_family
+  notes: >
+    This is a pre-d5 capstone for the base A->B flow. The base instance and any
+    submitted base-flow proposal must not require or trigger d5+ mechanics.
+    Meta redesign is a separate C->D future-knowledge instance and may use d5
+    when that creates a meaningful reinterpretation.
+meta_scope_policy:
+  applies_to:
+    - meta_instance
+  knowledge_scope: all_prototype_knowledge_by_default
+  d5_pass_through: allowed_if_part_of_meaningful_reinterpretation
+  must_record:
+    - meta_instance_trace
+    - future_knowledge_used
+    - chain_delta_from_base
+    - why_base_flow_does_not_trigger_d5
+  notes: >
+    A valid meta reinterpretation may use d5 or later knowledge. That does not
+    weaken the hard pre-d5 requirement for the base A->B flow.
 minimum_evidence:
   - Solver finds the explicit player-facing win for each candidate.
   - Returned winning solution includes ice_rebound_d4.
   - Designer explains where each claimed d4 rebound state change is later consumed.
   - Designer provides a d4-free bypass check or explains the strongest available substitute.
-  - Search ledger satisfies the hard design_search floor or the candidate is not treated as a completed capstone result.
+  - Exploration log records representative abandoned directions and why the submitted candidate was sent to review.
   - High-difficulty claim cites concrete chain structure, coupling, role changes, SCC/opening evidence when available, and failed simplification attempts.
-  - Forbidden mechanisms do not appear in the winning solution.
+  - Forbidden mechanisms do not appear in the base A->B winning solution.
+  - Any submitted base A->B flow that uses d5_pass_through,
+    d6_plus_destroy_group, slide_restart_after_group, or boundary_disappear in
+    its winning solution is rejected or changed-family.
+  - If a recommended C->D meta instance uses d5 or later knowledge, designer
+    records it as meta/future-knowledge evidence and also proves the base A->B
+    flow does not require or trigger d5+.
   - Report-only mechanisms are reported if seen anywhere in reachable diagnostics.
   - Critic explicitly evaluates whether the candidate is high-difficulty rather than tutorial/application.
 archive_examples_to_consult:
+  target_count: 1-3
+  max_count: 4
+  required_if_relevant: true
+  use_for:
+    - human_taste_calibration
+    - negative_failure_pattern
+    - critic_calibration
+    - designer_claim_calibration
+  do_not_copy:
+    - layout
+    - geometry
+    - causal_chain
+    - solution_route
+    - object_placement
+    - entrance_exit_relation
   positive: []
   negative: []
 ```
@@ -161,9 +213,10 @@ prototypes/ice_slide_escape/design_archive/index.yml
 如果当前最好结果只是 tutorial、witness 或 simple application，只能作为 failed
 或 held search result 归档，并保留诚实的 search ledger。
 
-本实验的 `design_search` 是硬下限，不是建议值。Designer 不得用少量失败草图
-证明“高难 d4 做不出来”，也不得把未达预算的结果包装成能力或机制结论。若搜索
-达到预算后仍无法产出两个合格候选，应输出 failure distribution，例如：
+本实验不设置硬性 family 数、硬性 variant 数或硬性 critic 数。质量由
+工具证据和 critic loop 打回保证，而不是由尝试次数保证。Designer 应记录有代表性
+的探索方向、局部修补和失败原因；不得用“尝试很多次”让候选通过，也不得用“尝试
+很少次”证明机制失败。若无法产出合格候选，应输出 failure distribution，例如：
 
 ```text
 - N 个 family 退化成 d4 witness；
@@ -174,15 +227,24 @@ prototypes/ice_slide_escape/design_archive/index.yml
 - N 个 variants 有高难潜力但工具证据不足。
 ```
 
-只有完整 search ledger 达到预算，才能把失败解释为 searched_but_unresolved、
-capability_or_tool_limit 或 design-space risk。
+exploration log 只是设计记忆和失败分布，不是质量证明。候选必须先通过工具证据，
+再进入 evidence reviewer / puzzle critic；critic loop 未闭合时不得包装成
+proposal_ready。
 
-`design_search.scope: experiment_run` 表示搜索预算由整轮实验共享。先生成
-run-level search ledger，再把选出的候选串行送入 evidence / critic / start /
-prototype-specific extension / archive gates。
+`prototype_specific_work` 显式启用本原型的 `meta_reinterpretation` redesign
+stage。这不是通用流程默认项，也不是边缘枚举检查。对每个有保留价值的 base
+candidate，designer 应尝试把 A->B 优化为带 C->D 重读潜力的变体；如果推荐变
+体，必须重新验证 A->B 和 C->D。弱 base candidate 不靠 meta 挽救。
 
-`prototype_extensions` 显式启用本原型的 `meta_reinterpretation`。这不是通用流程
-默认项；本实验按 `design_directives.md` 的 A->B / C->D 同结构重读口径执行。
+本轮是 d4 引入后、d5 引入前的收束考察，这个限制约束 A->B base flow：base
+instance 和提交的基础解不得触发或依赖 d5_pass_through、d6_plus_destroy_group、
+slide_restart_after_group 或 boundary_disappear。若 base flow 触发这些机制，
+必须 reject_or_change_family。
+
+meta redesign 是单独的 C->D future-knowledge instance，继承
+`meta_interfaces.md` 中 meta_instance 默认可使用全部原型知识的一般规则。因此
+有效 meta 可以使用 d5 或更后期知识，但必须单独记录为 meta 证据，并说明它与
+A->B 的 chain_delta；不得把 meta 中使用的 d5 证据混入 base flow 的合格证明。
 
 本实验不要创建 `player_model.yml`、`curriculum_v2.yml` 或 `level_specs_v2.yml`。
 输出只应包含候选记录和证据。
@@ -204,15 +266,15 @@ Scratch `explain-layout` 通过下面参数指定显式起终点：
 --player-start x,y --player-goal x,y
 ```
 
-Start Gate 应使用正式起点比较工具产出可复现证据。示例：
+起点诊断若被 routing 触发，应使用正式起点比较工具产出可复现证据。示例：
 
 ```text
 npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape <layout-file|-> --player-goal x,y --starts x1,y1 x2,y2 --required-events ice_rebound_d4 --forbidden-events ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_boundary_disappear,ice_boundary_disappear_after_group --report-events ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_boundary_disappear,ice_boundary_disappear_after_group
 ```
 
-归档时必须记录每个 solve instance。Prototype-specific Extension Gate 应按
-`design_directives.md` 的 A->B / C->D 同结构重读口径执行；C->B、A->D 或其它
-非目标 pair 需要记录阅读风险，但不要自动当作 bypass。
+归档时必须记录每个 solve instance。Meta redesign 应按 `design_directives.md`
+的 A->B / C->D 同结构重读口径执行；C->B、A->D 或其它非目标 pair 需要记录阅
+读风险，但不要自动当作 bypass。
 
 ## 预期结束状态
 

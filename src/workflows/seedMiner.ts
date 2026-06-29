@@ -30,6 +30,17 @@ export type MineOptions = {
   maxStates?: number;
   maxDepth?: number;
   graphMaxStates?: number;
+  objective?: MinerObjective;
+};
+
+export type MinerObjective = {
+  name?: string;
+  tagWeights: Record<string, number>;
+  note?: string;
+};
+
+export type NormalizedMineOptions = Required<Omit<MineOptions, "objective">> & {
+  objective?: MinerObjective;
 };
 
 export type MinerFinding = {
@@ -41,6 +52,12 @@ export type MinerFinding = {
     index: number;
   };
   score: number;
+  scoreBreakdown?: {
+    baseScore: number;
+    objectiveScore: number;
+    finalScore: number;
+    objectiveName?: string;
+  };
   tags: string[];
   layout: string;
   solveInstance?: {
@@ -89,8 +106,10 @@ export type MinerReport = {
   prototype: string;
   generatedAt: string;
   toolMaturity?: string;
+  scoreLabel?: string;
+  objective?: MinerObjective;
   searchSpace?: string;
-  options: Required<MineOptions>;
+  options: NormalizedMineOptions;
   stats: {
     generated: number;
     invalid: number;
@@ -111,7 +130,7 @@ const portalPairs = [
   ["H", "I"],
 ] as const;
 
-const defaultOptions: Required<MineOptions> = {
+const defaultOptions: NormalizedMineOptions = {
   seed: 18422,
   iterations: 120,
   maxFindings: 12,
@@ -137,6 +156,10 @@ export function mineSeeds(pkg: PrototypePackage, options: MineOptions = {}): Min
 
   if (pkg.mechanic.id !== "pull_portal_fallback") {
     throw new Error(unavailableToolMessage(pkg.mechanic.id, "temporary_miner"));
+  }
+
+  if (options.objective) {
+    throw new Error(`${pkg.mechanic.id} temporary_miner does not support objective weights.`);
   }
 
   const normalized = { ...defaultOptions, ...definedOptions(options) };
@@ -260,12 +283,14 @@ function definedOptions(options: MineOptions): Partial<MineOptions> {
 }
 
 export function formatMinerReportMarkdown(report: MinerReport): string {
+  const scoreLabel = report.scoreLabel ?? "score";
   const lines: string[] = [
     `# Temporary Seed Miner Report: ${report.prototype}`,
     "",
     report.toolMaturity === "curated_miner"
       ? "Status: heuristic mined evidence. These are not accepted levels, slots, or quality verdicts."
       : "Status: raw mined evidence. These are not accepted levels, slots, or quality verdicts.",
+    "Score note: ranking scores are search preferences, not mechanism quality judgments.",
     ...(report.toolMaturity ? [`Maturity: ${report.toolMaturity}.`, ""] : []),
     "",
     "## Run",
@@ -276,6 +301,7 @@ export function formatMinerReportMarkdown(report: MinerReport): string {
     `- Search space: ${report.searchSpace ?? "mixed small-board probes with scatter, pull-biased, fallback-biased, and multi-pair-biased candidates"}`,
     `- Budgets: maxStates=${report.options.maxStates}, maxDepth=${report.options.maxDepth}, graphMaxStates=${report.options.graphMaxStates}`,
     `- Filters: minScore=${report.options.minScore}, maxFindings=${report.options.maxFindings}`,
+    ...formatObjective(report.objective),
     "",
     "## Stats",
     "",
@@ -303,9 +329,10 @@ export function formatMinerReportMarkdown(report: MinerReport): string {
 
   for (const finding of report.findings) {
     lines.push(
-      `### ${finding.id}: score ${finding.score}`,
+      `### ${finding.id}: ${scoreLabel} ${finding.score}`,
       "",
       `- Source: ${finding.source.tool}/${finding.source.generator}, seed=${finding.source.seed}, index=${finding.source.index}`,
+      ...formatScoreBreakdown(finding),
       ...formatSolveInstance(finding),
       `- Tags: ${finding.tags.join(", ") || "none"}`,
       `- Solution: cost=${finding.solution.cost}, explored=${finding.solution.exploredStates}`,
@@ -319,11 +346,12 @@ export function formatMinerReportMarkdown(report: MinerReport): string {
       "",
       codeBlock(finding.layout),
       "",
+      ...formatSolveOverlay(finding),
       "Object participation:",
       "",
       ...formatFindingParticipation(finding),
       "",
-      "Interpretation prompts:",
+      "Review notes:",
       "",
       ...finding.notes.map((note) => `- ${note}`),
       "",
@@ -354,7 +382,7 @@ function generateCandidate(
   index: number,
   seed: number,
   rng: Rng,
-  options: Required<MineOptions>,
+  options: NormalizedMineOptions,
 ): GeneratedCandidate {
   const roll = rng();
   if (roll < 0.2) {
@@ -394,7 +422,7 @@ function fromTemplate(
   index: number,
   seed: number,
   rng: Rng,
-  options: Required<MineOptions>,
+  options: NormalizedMineOptions,
   generator: string,
   rows: string[],
 ): GeneratedCandidate {
@@ -420,7 +448,7 @@ function scatterCandidate(
   index: number,
   seed: number,
   rng: Rng,
-  options: Required<MineOptions>,
+  options: NormalizedMineOptions,
 ): GeneratedCandidate {
   const width = options.width > 0 ? options.width : randInt(rng, options.minWidth, options.maxWidth);
   const height = options.height > 0 ? options.height : randInt(rng, options.minHeight, options.maxHeight);
@@ -716,6 +744,28 @@ function formatFindingScc(finding: MinerFinding): string[] {
   ];
 }
 
+function formatObjective(objective: MinerObjective | undefined): string[] {
+  if (!objective) {
+    return ["- Objective: none; using mechanism default ranking prior"];
+  }
+  return [
+    `- Objective: ${objective.name ?? "inline"}`,
+    `- Objective weights: ${formatCounts(objective.tagWeights)}`,
+    ...(objective.note ? [`- Objective note: ${objective.note}`] : []),
+  ];
+}
+
+function formatScoreBreakdown(finding: MinerFinding): string[] {
+  const breakdown = finding.scoreBreakdown;
+  if (!breakdown) {
+    return [];
+  }
+  const objectiveName = breakdown.objectiveName ? `, objective=${breakdown.objectiveName}` : "";
+  return [
+    `- Score breakdown: base=${breakdown.baseScore}, objective=${breakdown.objectiveScore}, final=${breakdown.finalScore}${objectiveName}`,
+  ];
+}
+
 function formatSolveInstance(finding: MinerFinding): string[] {
   const instance = finding.solveInstance;
   if (!instance) {
@@ -724,6 +774,58 @@ function formatSolveInstance(finding: MinerFinding): string[] {
   const start = instance.playerStart ? `[${instance.playerStart.join(", ")}]` : "n/a";
   const goal = instance.playerGoal ? `[${instance.playerGoal.join(", ")}]` : "n/a";
   return [`- Solve instance: ${instance.id}, start=${start}, goal=${goal}`];
+}
+
+function formatSolveOverlay(finding: MinerFinding): string[] {
+  const instance = finding.solveInstance;
+  if (!instance?.playerStart && !instance?.playerGoal) {
+    return [];
+  }
+  const overlay = overlaySolvePoints(finding.layout, instance.playerStart, instance.playerGoal);
+  if (!overlay || overlay === finding.layout) {
+    return [];
+  }
+  return [
+    "带起终点标记的布局（S=玩家起点，X=玩家终点，B=起终点同格；原始物件以 Layout 为准）:",
+    "",
+    codeBlock(overlay),
+    "",
+  ];
+}
+
+function overlaySolvePoints(
+  layout: string,
+  playerStart: [number, number] | undefined,
+  playerGoal: [number, number] | undefined,
+): string | undefined {
+  const rows = layout.replace(/\r/g, "").split("\n").map((line) => line.split(""));
+  let marked = false;
+  const mark = (point: [number, number] | undefined, glyph: string): void => {
+    if (!point) {
+      return;
+    }
+    const [x, y] = point;
+    const row = rows[y];
+    if (!row || x < 0 || x >= row.length) {
+      return;
+    }
+    row[x] = glyph;
+    marked = true;
+  };
+
+  if (
+    playerStart &&
+    playerGoal &&
+    playerStart[0] === playerGoal[0] &&
+    playerStart[1] === playerGoal[1]
+  ) {
+    mark(playerStart, "B");
+  } else {
+    mark(playerStart, "S");
+    mark(playerGoal, "X");
+  }
+
+  return marked ? rows.map((row) => row.join("")).join("\n") : undefined;
 }
 
 function formatFindingParticipation(finding: MinerFinding): string[] {

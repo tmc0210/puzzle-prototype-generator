@@ -87,6 +87,8 @@ Designer tool requirements:
 Tool output requirements:
 - seed factories return CandidatesV2Doc with verified/failed status per candidate
 - temporary miner returns a mechanism-specific raw findings report with stats and solver evidence
+- if a temporary miner exposes ranking weights, document that low default weight is a search
+  preference rather than a bad-mechanic judgment, and provide an objective/weight override path
 - PuzzleScript exporter returns source text, checker validates that source, or both fail explicitly
 - conformance report lists pass/fail/unknown/unavailable checks with command evidence
 - unavailable tools name __mechanic_id__ and must not call pull_portal_fallback code

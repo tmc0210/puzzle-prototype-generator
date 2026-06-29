@@ -23,7 +23,7 @@ templates/design_archive/CANDIDATE_RECORD.template.md
 - tool / analyzer evidence
 - evidence reviewer artifact，若有
 - puzzle critic artifact，若有
-- designer responses or revisions
+- review_iterations、designer actions or revisions
 - human freeform comments，若有
 - current archive index，若有
 ```
@@ -33,7 +33,7 @@ templates/design_archive/CANDIDATE_RECORD.template.md
 ```text
 1. Candidate record update
 2. Index entry update
-3. process_integrity / archive_eligibility
+3. process_integrity / review_loop_state / archive_eligibility
 4. unresolved archive questions
 ```
 
@@ -47,12 +47,21 @@ templates/design_archive/CANDIDATE_RECORD.template.md
 - 如果 human comment 指出 designer 漏掉真实亮点，把它记录为
   designer_calibration 和检索元数据。
 - 如果证据中没有某个细节，写 unknown，不要补。
-- 保留 design search ledger。若缺失、浅、未达预算，只能记录为证据强度限制，
-  不能升级候选。
+- 保留 exploration log。若缺失或很浅，只能记录为流程完整性限制，不能升级候选。
 - 如果缺少独立 review artifact，process_integrity 必须标记 missing / blocked
   或 self_review_only。
-- self_review_only 不能满足 Critic Gate，不能标记 positive_reference、
-  reference、accepted 或 valid_candidate_after_search。
+- self_review_only 不能满足 review loop，不能标记 positive_reference、
+  reference 或 accepted。
+- archive pass 只能记录 review_loop_state，不能升级它。若 review loop 没有闭合，
+  必须标记 held_proposal、rejected_candidate、failed_search 或 raw_run_only。
+- unresolved_core_attacks 非空时，不能标记 proposal_ready、accepted、
+  positive_reference 或 reference。
+- open_required_action_after_latest_review 不是 none 时，不能标记
+  proposal_ready 或 proposal_ready_with_caveats。
+- designer action 发生在最新独立 review 之后但没有进入下一轮 review 时，不能
+  标记 proposal_ready 或 proposal_ready_with_caveats。
+- latest review 必须对应最新 layout、solve instance、start、goal、
+  mechanism_scope 和 design_claim；否则不能进入 proposal_ready 或 clean_archive。
 - 如果 candidate record、index 摘要和 evidence / human comments 冲突，以
   candidate record 和 human comments 为准，并把冲突列为 unresolved question。
 ```
@@ -65,14 +74,22 @@ process_integrity:
   tool_evidence: present | missing | incomplete | not_applicable
   evidence_reviewer_artifact: present | missing | blocked | not_applicable
   puzzle_critic_artifact: present | missing | blocked | not_applicable
-  designer_response_to_review: present | missing | not_needed
+  designer_actions_after_review: present | missing | not_needed
   post_revision_evidence_rerun: present | missing | not_needed
+  latest_review_iteration: null
+  latest_candidate_version_reviewed: null
+  open_required_action_after_latest_review: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family | unknown
+  designer_action_after_latest_review: missing | present | not_needed
+  review_after_designer_action: missing | present | blocked | not_needed
   review_integrity: independent_review | human_review | self_review_only | missing | blocked
+  review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_required | held_proposal | rejected_candidate | failed_search | structural_redesign_needed | unknown
+  unresolved_core_attacks: []
   archive_eligibility: clean_archive | human_pending | raw_run_only | reject_do_not_archive
   notes: ""
 
 archive_pass_derived:
   status: unknown
+  review_loop_state: unknown
   search_ledger_status: unknown
   motifs: []
   archive_use: []
@@ -98,6 +115,7 @@ archive_pass_derived:
   failure_modes: []
   search_ledger_status: unknown
   review_integrity: missing
+  review_loop_state: unknown
   retrieval_summary: >
     Short derived summary for search and prompt selection. Human comments remain
     in the candidate file.
