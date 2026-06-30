@@ -91,8 +91,8 @@ Why it did not become proposal_ready:
 
 ```text
 Independent critic attacked final-game role fit. The solved instance has only
-two pushes and 53 walks; SCC is single_win_chain with forcedWinPrefix=2/2; and
-start refinement found equivalent left-edge starts with the same causal chain.
+two pushes and 53 walks, and start refinement found equivalent left-edge starts
+with the same causal chain.
 The designer accepted these core attacks and held the candidate rather than
 submitting it as a final-game proposal.
 ```
@@ -153,11 +153,11 @@ failure_distribution:
     count: 1
     examples:
       - MF0058 original had d5 in returned solution but d5-free wins existed
-  graph_or_scc_scriptiness:
+  role_depth_or_route_thinness:
     count: 2
     examples:
-      - ICE_CAND_0005 forcedWinPrefix=2/2
-      - route-blocker variant forcedWinPrefix=3/3
+      - ICE_CAND_0005 had only two meaningful push commitments
+      - route-blocker variant added route structure without enough new role depth
   meta_reinterpretation_missing:
     count: 1
     examples:

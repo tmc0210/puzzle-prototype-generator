@@ -35,8 +35,9 @@ raw run:
   为设计参考。
 
 candidate record:
-  候选的事实来源。layout、solve instance、designer claim、工具证据、review
-  artifact、designer action、人类评语和派生元数据都应直接或间接指向它。
+  候选的审美校准卡和导航事实来源。它直接保存 layout、solve instance、核心逻辑、
+  人类评语、状态字段和证据引用；工具命令、完整 review loop、attempt log 和
+  SCC 细节默认引用到 experiment ledger / reports，不在候选卡片里展开。
 
 archive index:
   检索层。它只能摘要 candidate record，不是事实来源。
@@ -55,8 +56,9 @@ archive pass 可以：
 
 ```text
 - 检查 candidate record 是否有必要 artifact。
-- 保存或整理已有 designer claim、tool evidence、reviewer result、
-  critic result、designer action 和 human comments。
+- 保存或整理已有 layout、核心逻辑、human comments、状态字段和证据引用。
+- 把 reviewer / critic / tool / designer action 细节留在 ledger / reports，并在
+  candidate record 中引用。
 - 派生检索标签、retrieval summary 和完整性状态。
 - 在流程缺失时降级 archive_eligibility，或拒绝进入 clean archive。
 ```
@@ -74,7 +76,8 @@ archive pass 不可以：
 
 ## Process Integrity
 
-每个候选进入 clean archive 前，必须有可检查的流程完整性记录：
+每个候选进入 clean archive 前，必须有可检查的流程完整性记录。该记录可以在
+experiment ledger 中完整保存；candidate record 只需要保留状态快照和引用路径。
 
 ```yaml
 process_integrity:
@@ -170,26 +173,31 @@ reject_do_not_archive:
 
 ## Candidate Record 最小内容
 
-候选记录应包含：
+候选记录是给未来 designer / critic 做审美校准的短卡片，不是流程审计全文。
+它应包含：
 
 ```text
-- experiment brief 引用
+- 顶层 metadata：status、llm_candidate_strength、human_final_status、
+  archive_eligibility、review_integrity、motifs、archive_use
 - layout 和 solve instance
-- designer claim，包括 player_insight、causal_chain、why_not_execution、
-  falsification、claimed highlights、known risks
-- design search ledger 或候选相关 ledger slice
-- tool commands、evidence summary、report refs
-- evidence reviewer artifact，若适用
-- puzzle critic artifact，若适用
-- review_iterations，包括每轮 review、designer_action、下一轮 review 关系
-- start-position refinement，若角色需要
-- prototype-specific extension record，若原型或 brief 明确要求
-- process_integrity
+- core logic：3-8 行事实链，说明核心逻辑和证据支持边界
 - human comments，原文保存
-- archive pass derived metadata
+- evidence_refs / ledger_ref
+- retrieval_summary：5-8 行以内，只服务检索
 ```
 
-candidate record 是事实来源。archive index 只保存导航摘要和路径。
+以下内容默认不进入 candidate record 主体，只用引用保留可追溯性：
+
+```text
+- tool commands
+- 完整 SCC / graph 表
+- 完整 review loop 和 designer_action 流水账
+- full exploration log / attempt log
+- meta pass 明细
+- start-position comparison 明细
+```
+
+candidate record 是审美校准入口。archive index 只保存导航摘要和路径。
 
 ## Human Comments
 
@@ -208,23 +216,22 @@ human_comments:
       - tool_evidence
 ```
 
-archive pass 可以从人类评语派生标签，但必须标记为 derived。若派生摘要和人类
-原文存在张力，保留张力，不要改写人类评语。
+archive pass 可以写极短 retrieval_summary，但不得把人类评语扩写成 LLM 的
+审美课。若摘要和人类原文存在张力，保留张力，不要改写人类评语。
 
 ## Derived Metadata
 
-派生元数据只用于检索和 prompt 校准，不是最终审美裁决。
+派生元数据只用于检索和 prompt 校准，不是最终审美裁决。候选卡片中只保留
+必要字段；复杂标签和流程细节应留在 index 或 ledger。
 
 ```yaml
 archive_pass_derived:
   status: unknown
+  llm_candidate_strength: unknown
+  human_final_status: pending
   archive_use: []
   motifs: []
-  strengths: []
   failure_modes: []
-  critic_calibration: []
-  designer_calibration: []
-  human_taste_signals: []
   retrieval_summary: ""
 ```
 

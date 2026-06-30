@@ -72,7 +72,7 @@ Analyzer report:
   - Steps 4/6/8/10: D is repeatedly pushed right by blocked-exit fallback.
   - Step 17: entering A downward triggers fallback because D blocks B's exit.
 - SCC:
-  - `sccs=18`, `edges=23`, `winSubgraph=single_win_chain`.
+  - `sccs=18`, `edges=23`, `winSubgraph=one_win_continuation_per_scc`.
   - Solution irreversible path has 5 SCC steps.
   - `forcedWinPrefix=5/5`.
   - Initial SCC has 25 states, `out=2`, `winOut=1`, `deadOut=1`.
@@ -134,7 +134,7 @@ Design risks:
 - The main weakness is repetition: D fallback happens four times, and after the first or second push the remaining pushes may feel like execution padding.
 - The initial D normal teleport is thematically nice but mechanically nonessential.
 - This is a portal-fallback puzzle, not a hybrid pull / object-manipulation puzzle.
-- As a challenge, it is strict and linear: `single_win_chain` and `forcedWinPrefix=5/5`.
+- As a challenge, its risk is repeated D fallback execution after the core jam idea is understood.
 - The initial SCC has one dead exit; this is acceptable but should be intentional.
 
 Revision / placement advice:
@@ -190,4 +190,3 @@ If continuing this slot, the next design iteration should keep the clean player-
 - A later action should reinterpret an earlier D position, not merely consume the final jammed position.
 
 Do not add decorative distractors. The weakness is not lack of noise; it is insufficient coupling among repeated pushes.
-

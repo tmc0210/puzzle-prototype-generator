@@ -179,7 +179,7 @@ After:
 
 - Shape: states=421, regions=15, solution commitments=2
 - Opening: commitments=3, viable=2, dead=1, optimal=1
-- Forced chain: viable prefix=0/2, optimal prefix=0/2, forced viable commitments=1/2
+- Win-continuation prefix: viable prefix=0/2, optimal prefix=0/2, forced viable commitments=1/2
 - Endgame tail: 10 step(s) after first entering a winning region
 - Reading hints: 10 trailing step(s) after entering a winning region
 

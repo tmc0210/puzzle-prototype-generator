@@ -240,7 +240,7 @@ Why it beats the D/I variants:
 The push-until-jam segment is embedded in a richer role-changing chain.
 The crate is pulled, then becomes a remote portal-exit blocker.
 A and B both use normal teleport and fallback push.
-The graph has healthy branching / merging rather than a single forced script.
+The graph has healthy branching / merging route structure.
 The repeated B pushes change final routing instead of acting as a sealed corridor counter.
 ```
 
@@ -312,7 +312,7 @@ not merely a sealed-room route.
 
 or
 
-D's jam position creates a local order window instead of a single forced chain.
+D's jam position creates a local order window.
 
 or
 

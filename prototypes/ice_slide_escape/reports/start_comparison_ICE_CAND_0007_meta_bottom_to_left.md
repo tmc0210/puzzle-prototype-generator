@@ -13,7 +13,7 @@
 
 | 起点 | 机器闸门 | 可解 | Cost | Required 覆盖 | 返回解 forbidden | 可达 report hits | Graph | Initial SCC | Solution SCC | 原因 |
 | --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- |
-| [0,10] | pass | yes | 66 | yes | none | none | complete, states=2888, wins=1 | states=50, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
+| [0,10] | pass | yes | 66 | yes | none | none | complete, states=2888, wins=1 | states=50, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
 
 ## 细节
 

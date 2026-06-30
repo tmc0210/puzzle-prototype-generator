@@ -14,16 +14,16 @@
 | 起点 | 机器闸门 | 可解 | Cost | Required 覆盖 | 返回解 forbidden | 可达 report hits | Graph | Initial SCC | Solution SCC | 原因 |
 | --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- |
 | [11,0] | fail | no | n/a | no | none | none | complete, states=1761, wins=0 | states=1, out=1, winOut=0, deadOut=1, dist=n/a | no_win_path, forced=0/0 | 该显式起终点不可解 |
-| [0,2] | pass | yes | 91 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,3] | pass | yes | 90 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,4] | pass | yes | 89 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,5] | pass | yes | 88 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,6] | pass | yes | 87 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,7] | pass | yes | 86 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,8] | pass | yes | 85 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,9] | pass | yes | 84 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,10] | pass | yes | 83 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
-| [0,11] | pass | yes | 82 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | single_win_chain, forced=3/3 | none |
+| [0,2] | pass | yes | 91 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,3] | pass | yes | 90 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,4] | pass | yes | 89 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,5] | pass | yes | 88 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,6] | pass | yes | 87 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,7] | pass | yes | 86 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,8] | pass | yes | 85 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,9] | pass | yes | 84 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,10] | pass | yes | 83 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
+| [0,11] | pass | yes | 82 | yes | none | none | complete, states=3035, wins=1 | states=53, out=6, winOut=1, deadOut=5, dist=3 | one_win_continuation_per_scc, forced=3/3 | none |
 
 ## 细节
 

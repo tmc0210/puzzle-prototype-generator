@@ -81,7 +81,7 @@ No non-walk events were found on the returned solution.
 
 - Shape: states=42, regions=8, solution commitments=0
 - Opening: commitments=2, viable=0, dead=2, optimal=0
-- Forced chain: viable prefix=0/0, optimal prefix=0/0, forced viable commitments=0/0
+- Win-continuation prefix: viable prefix=0/0, optimal prefix=0/0, forced viable commitments=0/0
 - Endgame tail: n/a
 - Reading hints: near-discovery shape
 

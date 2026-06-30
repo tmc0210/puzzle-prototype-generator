@@ -45,8 +45,8 @@ Outcome:
 ```text
 工具证据支持顺序门：先 B-down d4 到 [8,5]，再 A-up d4 到 [5,3]。起点比较
 中 [1,8]、[2,8]、[3,8]、[4,8] 全部无 d5/d6/restart/boundary report hits。
-但是 critic 判断它仍是两推 single_win_chain，像 role-flip witness，不满足
-late d4 pre-d5 capstone。
+但是 critic 判断它仍是两推 role-flip witness，不满足 late d4 pre-d5
+capstone。
 ```
 
 ## Non-Serious Structural Attempts

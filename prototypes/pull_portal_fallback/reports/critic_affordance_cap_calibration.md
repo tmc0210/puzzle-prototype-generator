@@ -155,7 +155,7 @@ Analyzer highlights:
 pull, normal teleport, and fallback are all necessary.
 A and B are used as teleport endpoints and fallback-moved objects.
 The crate is pulled, then later becomes a remote portal-exit blocker.
-The SCC graph is branching / merging rather than a single forced script.
+The SCC graph has branching / merging route structure.
 ```
 
 Updated critic result:

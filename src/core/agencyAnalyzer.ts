@@ -121,7 +121,7 @@ export type SccAnalysis = {
   winReachableSccCount: number;
   winContinuationBranchingSccCount: number;
   winContinuationMergingSccCount: number;
-  winSubgraphShape: "single_win_chain" | "branching_win_dag" | "no_win_path";
+  winSubgraphShape: "one_win_continuation_per_scc" | "branching_win_dag" | "no_win_path";
   solutionSccPath: SccPathEntry[];
   solutionIrreversibleStepCount: number;
   forcedWinContinuationPrefixLength: number;
@@ -1061,7 +1061,7 @@ function classifyWinSubgraphShape(input: {
   const hasBranch = input.nodeSummaries.some(
     (node) => node.canReachWin && !node.isWinning && node.winReachableOutgoingCount > 1,
   );
-  return hasBranch ? "branching_win_dag" : "single_win_chain";
+  return hasBranch ? "branching_win_dag" : "one_win_continuation_per_scc";
 }
 
 function countForcedPrefix(

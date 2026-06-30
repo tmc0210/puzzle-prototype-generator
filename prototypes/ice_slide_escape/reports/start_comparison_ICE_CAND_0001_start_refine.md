@@ -13,7 +13,7 @@
 
 | 起点 | 机器闸门 | 可解 | Cost | Required 覆盖 | 返回解 forbidden | 可达 report hits | Graph | Initial SCC | Solution SCC | 原因 |
 | --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- |
-| [1,0] | fail | yes | 16 | yes | none | ice_boundary_disappear_after_group, ice_pass_through_d5:len1 | complete, states=306, wins=1 | states=4, out=1, winOut=1, deadOut=0, dist=2 | single_win_chain, forced=2/2 | 可达图中出现 report-only events |
+| [1,0] | fail | yes | 16 | yes | none | ice_boundary_disappear_after_group, ice_pass_through_d5:len1 | complete, states=306, wins=1 | states=4, out=1, winOut=1, deadOut=0, dist=2 | one_win_continuation_per_scc, forced=2/2 | 可达图中出现 report-only events |
 | [7,0] | fail | no | n/a | no | none | none | complete, states=126, wins=0 | states=11, out=3, winOut=0, deadOut=3, dist=n/a | no_win_path, forced=0/0 | 该显式起终点不可解 |
 
 ## 细节

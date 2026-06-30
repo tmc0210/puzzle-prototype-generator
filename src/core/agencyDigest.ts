@@ -117,7 +117,7 @@ export function formatAgencyDigestMarkdown(digest: AgencyDigest): string[] {
         `dead=${digest.openingDead ?? "n/a"}`,
         `optimal=${digest.openingOptimal ?? "n/a"}`,
       ].join(", "),
-    "- Forced chain: " +
+    "- Win-continuation prefix: " +
       [
         `viable prefix=${formatRatio(digest.forcedViablePrefix, digest.solutionCommitments)}`,
         `optimal prefix=${formatRatio(digest.forcedOptimalPrefix, digest.solutionCommitments)}`,

@@ -91,7 +91,7 @@ No SCC handoffs were found on the returned solution.
 
 - Shape: states=4021, regions=69, solution commitments=0
 - Opening: commitments=7, viable=0, dead=7, optimal=0
-- Forced chain: viable prefix=0/0, optimal prefix=0/0, forced viable commitments=0/0
+- Win-continuation prefix: viable prefix=0/0, optimal prefix=0/0, forced viable commitments=0/0
 - Endgame tail: n/a
 - Reading hints: near-discovery shape
 

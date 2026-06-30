@@ -67,7 +67,7 @@ Analyzer report:
 - Complete graph: 662 reachable states, 1818 legal transitions, 2 winning states.
 - `without_blocked_portal_push`: unsolvable.
 - Target event check: no shortest bypass, no winning bypass in complete graph.
-- SCC: `single_win_chain`, solution irreversible path 5 SCC steps, `forcedWinPrefix=5/5`.
+- SCC: `one_win_continuation_per_scc`, solution irreversible path 5 SCC steps, `forcedWinPrefix=5/5`.
 - At the aligned D position, the solution region has `commitments=3`, `viable=1`, `dead=2`.
 
 Designer claim:
@@ -141,7 +141,7 @@ Analyzer report:
 - `without_portal_teleport`: solvable at cost 21.
 - `without_pull`: solvable at cost 20.
 - Target event check: no shortest bypass, no winning bypass in complete graph.
-- SCC: `single_win_chain`, solution irreversible path 6 SCC steps, `forcedWinPrefix=6/6`.
+- SCC: `one_win_continuation_per_scc`, solution irreversible path 6 SCC steps, `forcedWinPrefix=6/6`.
 
 Additional jam probe:
 
@@ -221,7 +221,7 @@ Strongest merits:
 Risks:
 
 - The four D pushes are still the least interesting part.
-- The graph remains linear after commitment: `single_win_chain`, `forcedWinPrefix=6/6`.
+- The risk after commitment is repeated fallback execution rather than new portal-routing responsibility.
 - Normal teleport is nonessential, so this is specifically a fallback-jam challenge rather than a broad portal-routing challenge.
 
 Placement advice:

@@ -208,9 +208,12 @@ async function main(): Promise<void> {
     const objective = await parseMineObjective(optionArgs);
     const seed = parseNumberOption(optionArgs, "--seed") ?? randomMineSeed();
     const report = mineSeeds(pkg, {
+      preset: getOption(optionArgs, "--preset"),
       seed,
       iterations: parseNumberOption(optionArgs, "--iterations"),
       maxFindings: parseNumberOption(optionArgs, "--max-findings"),
+      maxInstances: parseNumberOption(optionArgs, "--max-instances"),
+      timeBudgetMs: parseNumberOption(optionArgs, "--time-budget-ms"),
       width: parseNumberOption(optionArgs, "--width"),
       height: parseNumberOption(optionArgs, "--height"),
       crates: parseNumberOption(optionArgs, "--crates"),
@@ -468,7 +471,7 @@ function printUsage(): void {
   console.log("  tsx src/cli.ts generate-v2 <prototype-path> [--write]");
   console.log("  tsx src/cli.ts candidate-gallery-v2 <prototype-path> [--write]");
   console.log("  tsx src/cli.ts calibration-report <prototype-path> [--write]");
-  console.log("  tsx src/cli.ts mine <prototype-path> [--seed n] [--iterations n] [--max-findings n] [--objective objective.yml] [--weight tag=number] [--write]");
+  console.log("  tsx src/cli.ts mine <prototype-path> [--preset quick|deep] [--seed n] [--iterations n] [--max-findings n] [--max-instances n] [--time-budget-ms n] [--objective objective.yml] [--weight tag=number] [--write]");
   console.log("  tsx src/cli.ts tool-maturity <prototype-path>");
 }
 

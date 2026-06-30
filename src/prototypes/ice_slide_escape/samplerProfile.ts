@@ -7,7 +7,7 @@ import type {
 import { randInt } from "../../workflows/genericSampler.js";
 import { eventType } from "../../core/events.js";
 import type { LevelAnalysis } from "../../workflows/levelAnalyzer.js";
-import type { MinerFinding } from "../../workflows/seedMiner.js";
+import type { MinerFinding, NormalizedMineOptions } from "../../workflows/seedMiner.js";
 
 type Cell = {
   x: number;
@@ -22,6 +22,7 @@ type Vector = {
 };
 
 type IceSamplerOptions = {
+  preset: string;
   width: number;
   height: number;
   minWidth: number;
@@ -36,6 +37,40 @@ type CapsuleSpec = {
   targetFinal: boolean;
   obstacleGlyph: "#" | "I";
 };
+
+type RowProbeSpec = {
+  generator: string;
+  layout: string;
+};
+
+const rowProbeSlotsPerCycle = 6;
+
+const rowProbeSpecs: RowProbeSpec[] = [
+  { generator: "short_stop_d2_probe", layout: "@I..#" },
+  { generator: "d3_destroy_probe", layout: "@I...#" },
+  { generator: "rebound_probe", layout: "@I....#" },
+  { generator: "d5_pass_restart_d3_probe", layout: "@I.....##...#" },
+  { generator: "d6_destroy_restart_d3_probe", layout: "@I......##...#" },
+  { generator: "ice_blocks_d2_probe", layout: "@I..I" },
+  { generator: "boundary_d0_probe", layout: "@I" },
+  { generator: "boundary_d1_probe", layout: "@I." },
+  { generator: "short_stop_d1_probe", layout: "@I.#" },
+  { generator: "ice_blocks_d1_probe", layout: "@I.I" },
+  { generator: "ice_blocks_d3_destroy_probe", layout: "@I...I" },
+  { generator: "ice_blocks_d4_rebound_probe", layout: "@I....I" },
+  { generator: "d5_pass_len1_boundary_probe", layout: "@I.....#" },
+  { generator: "d5_pass_restart_boundary_probe", layout: "@I.....#." },
+  { generator: "d6_destroy_len1_boundary_probe", layout: "@I......#" },
+  { generator: "d6_destroy_restart_boundary_probe", layout: "@I......#." },
+  { generator: "d5_pass_restart_short_d1_probe", layout: "@I.....#.#" },
+  { generator: "d6_destroy_restart_short_d1_probe", layout: "@I......#.#" },
+  { generator: "d5_pass_restart_rebound_probe", layout: "@I.....#....#" },
+  { generator: "d6_destroy_restart_rebound_probe", layout: "@I......#....#" },
+  { generator: "d5_pass_restart_pass_probe", layout: "@I.....#.....#" },
+  { generator: "d6_destroy_restart_pass_probe", layout: "@I......#.....#" },
+  { generator: "d5_pass_restart_destroy_probe", layout: "@I.....#......#" },
+  { generator: "d6_destroy_restart_destroy_probe", layout: "@I......#......#" },
+];
 
 export const iceSlideSamplerProfile: GenericSamplerProfile = {
   mechanicId: "ice_slide_escape",
@@ -63,18 +98,31 @@ export const iceSlideSamplerProfile: GenericSamplerProfile = {
     "heterogeneous_push_roles",
   ],
   searchSpace:
-    "ice_slide_escape curated miner v3: row probes, 2D capsule rooms with distinct exits, and design-surface ranking hints",
+    "ice_slide_escape curated miner v4: expanded row witnesses, 2D capsule rooms with distinct exits, and design-surface ranking hints",
+  defaultPreset: "quick",
   defaultOptions: {
-    iterations: 72,
-    maxFindings: 12,
     minWidth: 8,
     maxWidth: 12,
     minHeight: 1,
     maxHeight: 7,
     minScore: 5,
-    maxStates: 12_000,
     maxDepth: 100,
-    graphMaxStates: 12_000,
+  },
+  presets: {
+    quick: {
+      iterations: 32,
+      maxFindings: 6,
+      maxInstances: 180,
+      maxStates: 3_000,
+      graphMaxStates: 3_000,
+    },
+    deep: {
+      iterations: 72,
+      maxFindings: 12,
+      maxInstances: 0,
+      maxStates: 12_000,
+      graphMaxStates: 12_000,
+    },
   },
   sample: ({ index, seed, rng, options }) => sampleIceLayout(index, seed, rng, options),
   enumerateSolveInstances: ({ sample }) => enumerateIceSolveInstances(sample),
@@ -83,7 +131,8 @@ export const iceSlideSamplerProfile: GenericSamplerProfile = {
     scoreIceFinding(analysis, tags, sample, instance),
   rejectFinding: ({ analysis, tags, sample, instance }) =>
     rejectIceFinding(analysis, tags, sample, instance),
-  selectFindings: ({ findings, maxFindings }) => selectIceFindings(findings, maxFindings),
+  selectFindings: ({ findings, maxFindings, options }) =>
+    selectIceFindings(findings, maxFindings, options),
   notes: ({ analysis, tags, sample, instance }) => buildIceFindingNotes(analysis, tags, sample, instance),
 };
 
@@ -94,23 +143,8 @@ function sampleIceLayout(
   options: IceSamplerOptions,
 ): GenericSample {
   const variant = index % 16;
-  if (variant === 0) {
-    return rowSample(index, seed, "short_stop_probe", "@I..#", [0, 0], [1, 0]);
-  }
-  if (variant === 1) {
-    return rowSample(index, seed, "d3_destroy_probe", "@I...#", [0, 0], [1, 0]);
-  }
-  if (variant === 2) {
-    return rowSample(index, seed, "rebound_probe", "@I....#", [0, 0], [1, 0]);
-  }
-  if (variant === 3) {
-    return rowSample(index, seed, "d5_pass_restart_probe", "@I.....##...#", [0, 0], [1, 0]);
-  }
-  if (variant === 4) {
-    return rowSample(index, seed, "d6_destroy_restart_probe", "@I......##...#", [0, 0], [1, 0]);
-  }
-  if (variant === 5) {
-    return rowSample(index, seed, "ice_blocks_ice_probe", "@I..I", [0, 0], [1, 0]);
+  if (variant < rowProbeSlotsPerCycle) {
+    return rowProbeSample(index, seed, variant);
   }
   if (variant === 6) {
     return randomLineSample(index, seed, rng, options);
@@ -186,6 +220,13 @@ function sampleIceLayout(
     iceBackedRatio: 0.45,
     longBranchInspiration: true,
   });
+}
+
+function rowProbeSample(index: number, seed: number, slot: number): GenericSample {
+  const cycle = Math.floor(index / 16);
+  const specIndex = (cycle * rowProbeSlotsPerCycle + slot) % rowProbeSpecs.length;
+  const spec = rowProbeSpecs[specIndex]!;
+  return rowSample(index, seed, spec.generator, spec.layout, [0, 0], [1, 0]);
 }
 
 function randomLineSample(
@@ -754,13 +795,6 @@ function designSurfaceBonus(
     if (scc.initialScc.deadOutgoingCount >= 2) {
       score += 4;
     }
-    if (
-      scc.winSubgraphShape === "single_win_chain" &&
-      scc.solutionIrreversibleStepCount > 0 &&
-      scc.forcedWinContinuationPrefixLength >= scc.solutionIrreversibleStepCount
-    ) {
-      score -= 4;
-    }
   }
   return score;
 }
@@ -844,23 +878,30 @@ function buildIceFindingNotes(
   if (tags.includes("heterogeneous_push_roles")) {
     notes.push("Heterogeneous push roles: returned pushes have different observed effects; inspect whether that difference matters.");
   }
-  if (analysis.agency.scc?.winSubgraphShape === "single_win_chain") {
-    notes.push("Single win chain: useful for commitment studies, but likely needs delayed-feedback or misdirection work.");
-  }
   if (sameTuple(instance.playerStart, instance.playerGoal)) {
     notes.push("Rewrite with separate player_start/player_goal before asking critic to judge puzzle quality.");
   }
   return notes;
 }
 
-function selectIceFindings(findings: MinerFinding[], maxFindings: number): MinerFinding[] {
+function selectIceFindings(
+  findings: MinerFinding[],
+  maxFindings: number,
+  _options: NormalizedMineOptions,
+): MinerFinding[] {
   const selected: MinerFinding[] = [];
   const sampleIndexes = new Set<number>();
   const generatorCounts = new Map<string, number>();
   const generatorCap = Math.max(2, Math.ceil(maxFindings * 0.4));
+  const rowProbeCap = Math.max(1, Math.ceil(maxFindings * 0.35));
+  let rowProbeCount = 0;
 
   for (const finding of findings) {
     if (sampleIndexes.has(finding.source.index)) {
+      continue;
+    }
+    const isRowProbe = finding.tags.includes("row_probe");
+    if (isRowProbe && rowProbeCount >= rowProbeCap) {
       continue;
     }
     const generatorCount = generatorCounts.get(finding.source.generator) ?? 0;
@@ -870,6 +911,9 @@ function selectIceFindings(findings: MinerFinding[], maxFindings: number): Miner
     selected.push(finding);
     sampleIndexes.add(finding.source.index);
     generatorCounts.set(finding.source.generator, generatorCount + 1);
+    if (isRowProbe) {
+      rowProbeCount += 1;
+    }
     if (selected.length >= maxFindings) {
       return selected;
     }

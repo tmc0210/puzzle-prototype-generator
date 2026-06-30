@@ -810,7 +810,7 @@ if (!app) {
   throw new Error("Missing #app");
 }
 var appRoot = app;
-var buildId = true ? "mqzcda6k" : "dev";
+var buildId = true ? "mr0ovuuw" : "dev";
 var data = await fetch(`./data.json?v=${encodeURIComponent(buildId)}`).then(
   (response) => response.json()
 );

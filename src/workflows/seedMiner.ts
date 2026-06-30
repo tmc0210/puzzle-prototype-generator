@@ -14,9 +14,12 @@ type GeneratedCandidate = {
 };
 
 export type MineOptions = {
+  preset?: string;
   seed?: number;
   iterations?: number;
   maxFindings?: number;
+  maxInstances?: number;
+  timeBudgetMs?: number;
   width?: number;
   height?: number;
   minWidth?: number;
@@ -112,6 +115,9 @@ export type MinerReport = {
   options: NormalizedMineOptions;
   stats: {
     generated: number;
+    instances?: number;
+    fullAnalyses?: number;
+    prefilteredUnsolved?: number;
     invalid: number;
     unsolved: number;
     solved: number;
@@ -119,6 +125,7 @@ export type MinerReport = {
     completeAgency: number;
     keptBeforeLimit: number;
     kept: number;
+    stopReason?: string;
   };
   tagCounts: Record<string, number>;
   findings: MinerFinding[];
@@ -131,9 +138,12 @@ const portalPairs = [
 ] as const;
 
 const defaultOptions: NormalizedMineOptions = {
+  preset: "",
   seed: 18422,
   iterations: 120,
   maxFindings: 12,
+  maxInstances: 0,
+  timeBudgetMs: 0,
   width: 0,
   height: 0,
   minWidth: 6,
@@ -160,6 +170,9 @@ export function mineSeeds(pkg: PrototypePackage, options: MineOptions = {}): Min
 
   if (options.objective) {
     throw new Error(`${pkg.mechanic.id} temporary_miner does not support objective weights.`);
+  }
+  if (options.preset) {
+    throw new Error(`${pkg.mechanic.id} temporary_miner does not support presets.`);
   }
 
   const normalized = { ...defaultOptions, ...definedOptions(options) };
@@ -297,15 +310,21 @@ export function formatMinerReportMarkdown(report: MinerReport): string {
     "",
     `- Generated at: ${report.generatedAt}`,
     `- Seed: ${report.options.seed}`,
+    ...(report.options.preset ? [`- Preset: ${report.options.preset}`] : []),
     `- Iterations: ${report.options.iterations}`,
     `- Search space: ${report.searchSpace ?? "mixed small-board probes with scatter, pull-biased, fallback-biased, and multi-pair-biased candidates"}`,
-    `- Budgets: maxStates=${report.options.maxStates}, maxDepth=${report.options.maxDepth}, graphMaxStates=${report.options.graphMaxStates}`,
+    `- Budgets: maxStates=${report.options.maxStates}, maxDepth=${report.options.maxDepth}, graphMaxStates=${report.options.graphMaxStates}${report.options.maxInstances > 0 ? `, maxInstances=${report.options.maxInstances}` : ""}${report.options.timeBudgetMs > 0 ? `, timeBudgetMs=${report.options.timeBudgetMs}` : ""}`,
     `- Filters: minScore=${report.options.minScore}, maxFindings=${report.options.maxFindings}`,
     ...formatObjective(report.objective),
     "",
     "## Stats",
     "",
     `- Generated: ${report.stats.generated}`,
+    ...(report.stats.instances === undefined ? [] : [`- Solve instances: ${report.stats.instances}`]),
+    ...(report.stats.fullAnalyses === undefined ? [] : [`- Full analyses: ${report.stats.fullAnalyses}`]),
+    ...(report.stats.prefilteredUnsolved === undefined
+      ? []
+      : [`- Prefiltered unsolved: ${report.stats.prefilteredUnsolved}`]),
     `- Invalid: ${report.stats.invalid}`,
     `- Unsolved: ${report.stats.unsolved}`,
     `- Solved: ${report.stats.solved}`,
@@ -313,6 +332,7 @@ export function formatMinerReportMarkdown(report: MinerReport): string {
     `- Complete agency: ${report.stats.completeAgency}`,
     `- Kept before limit: ${report.stats.keptBeforeLimit}`,
     `- Kept: ${report.stats.kept}`,
+    ...(report.stats.stopReason ? [`- Stop reason: ${report.stats.stopReason}`] : []),
     "",
     "## Tag Counts",
     "",

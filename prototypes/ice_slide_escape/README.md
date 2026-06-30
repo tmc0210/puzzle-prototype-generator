@@ -16,12 +16,11 @@ Current scope:
 - single rectangular level runtime
 - explicit edge `player_start` and explicit edge `player_goal` per solve instance
 - P01-P10 probe seed suite plus one explicit walled-goal smoke fixture
-- generic raw sampler profile for discovery evidence
+- curated miner profile for discovery evidence, with quick/deep presets
 - experimental human-guided design archive at `design_archive/`
 
 Unavailable in this package:
 
-- curated miner
 - level_specs_v2 candidate seed factories
 - PuzzleScript exporter/checker
 - cross-level big-map movement

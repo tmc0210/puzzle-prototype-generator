@@ -1,5 +1,6 @@
 import type { LevelDoc, PrototypePackage, WinCondition } from "../core/types.js";
 import { analyzeLevel, type LevelAnalysis } from "./levelAnalyzer.js";
+import { solveWithRuntime } from "../core/solver.js";
 import { getRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
 import { eventType } from "../core/events.js";
 import type {
@@ -36,11 +37,15 @@ export type GenericSamplerProfile = {
   scoreLabel?: string;
   supportedTags?: string[];
   searchSpace: string;
+  defaultPreset?: string;
+  presets?: Record<string, Partial<NormalizedMineOptions>>;
+  targetMode?: "none" | "first_knowledge";
   defaultOptions?: Partial<NormalizedMineOptions>;
   sample(input: {
     index: number;
     seed: number;
     rng: Rng;
+    pkg: PrototypePackage;
     options: NormalizedMineOptions;
   }): GenericSample;
   enumerateSolveInstances(input: {
@@ -81,9 +86,12 @@ export type GenericSamplerProfile = {
 };
 
 const genericDefaults: NormalizedMineOptions = {
+  preset: "",
   seed: 18422,
   iterations: 120,
   maxFindings: 12,
+  maxInstances: 0,
+  timeBudgetMs: 0,
   width: 0,
   height: 0,
   minWidth: 6,
@@ -108,17 +116,32 @@ export function runGenericSampler(
     throw new Error(`${profile.mechanicId} sampler cannot run for mechanic '${pkg.mechanic.id}'.`);
   }
 
+  const requestedPreset = options.preset ?? profile.defaultPreset;
+  const presetOptions = requestedPreset ? profile.presets?.[requestedPreset] : undefined;
+  if (requestedPreset && !presetOptions) {
+    throw new Error(
+      `${profile.mechanicId} sampler does not support preset '${requestedPreset}'. ` +
+        `Supported presets: ${Object.keys(profile.presets ?? {}).sort().join(", ") || "(none)"}`,
+    );
+  }
+
   const normalized = {
     ...genericDefaults,
     ...(profile.defaultOptions ?? {}),
+    ...(presetOptions ?? {}),
     ...definedOptions(options),
+    preset: requestedPreset ?? "",
   };
   const objective = normalizeObjective(profile, normalized.objective);
   const rng = mulberry32(normalized.seed);
   const seen = new Set<string>();
   const findings: MinerFinding[] = [];
+  const startedAt = Date.now();
   const stats = {
     generated: 0,
+    instances: 0,
+    fullAnalyses: 0,
+    prefilteredUnsolved: 0,
     invalid: 0,
     unsolved: 0,
     solved: 0,
@@ -126,13 +149,21 @@ export function runGenericSampler(
     completeAgency: 0,
     keptBeforeLimit: 0,
     kept: 0,
+    stopReason: undefined as string | undefined,
   };
 
-  for (let index = 0; index < normalized.iterations; index += 1) {
+  outer: for (let index = 0; index < normalized.iterations; index += 1) {
+    const stopReason = samplerStopReason(normalized, stats.instances, startedAt);
+    if (stopReason) {
+      stats.stopReason = stopReason;
+      break;
+    }
+
     const sample = profile.sample({
       index,
       seed: normalized.seed,
       rng,
+      pkg,
       options: normalized,
     });
     stats.generated += 1;
@@ -149,15 +180,34 @@ export function runGenericSampler(
     }
 
     for (const instance of instances) {
+      const stopReason = samplerStopReason(normalized, stats.instances, startedAt);
+      if (stopReason) {
+        stats.stopReason = stopReason;
+        break outer;
+      }
+
       const dedupeKey = `${sample.layout}\n---\n${JSON.stringify(instance.winCondition)}`;
       if (seen.has(dedupeKey)) {
         continue;
       }
       seen.add(dedupeKey);
+      stats.instances += 1;
 
-      const level = sampleToLevel(pkg, sample, instance);
+      const level = sampleToLevel(pkg, profile, sample, instance);
+      const presolve = solveLevelForSampler(pkg, level, normalized);
+      if (!presolve.found || presolve.cost === undefined) {
+        stats.prefilteredUnsolved += 1;
+        stats.unsolved += 1;
+        continue;
+      }
+      if (!solutionReplays(pkg, level, presolve.inputs, instance.winCondition)) {
+        stats.invalid += 1;
+        continue;
+      }
+
       let analysis: LevelAnalysis;
       try {
+        stats.fullAnalyses += 1;
         analysis = analyzeLevel(pkg, level, {
           maxStates: normalized.maxStates,
           maxDepth: normalized.maxDepth,
@@ -245,23 +295,57 @@ export function runGenericSampler(
 
 function sampleToLevel(
   pkg: PrototypePackage,
+  profile: GenericSamplerProfile,
   sample: GenericSample,
   instance: GenericSolveInstance,
 ): LevelDoc {
+  const targets =
+    profile.targetMode === "first_knowledge" && pkg.knowledge.knowledge.length > 0
+      ? [pkg.knowledge.knowledge[0]!.id]
+      : [];
   return {
     id: `sample_${String(sample.index).padStart(4, "0")}_${instance.id}`,
     title: instance.title ?? `Sample ${sample.index} ${instance.id}`,
     role: "mechanic_witness",
     status: "candidate",
-    targets: pkg.knowledge.knowledge.length > 0 ? [pkg.knowledge.knowledge[0]!.id] : [],
+    targets,
     known_before: [],
-    target_learning: pkg.knowledge.knowledge.length > 0 ? [pkg.knowledge.knowledge[0]!.id] : [],
+    target_learning: targets,
     support_level: "none",
     expected_solver_evidence: ["solvable"],
     expected_llm_player_evidence: [],
     layout: sample.layout,
     win: instance.winCondition,
   };
+}
+
+function solveLevelForSampler(
+  pkg: PrototypePackage,
+  level: LevelDoc,
+  options: NormalizedMineOptions,
+) {
+  const adapter = getRuntimeAdapter(pkg.mechanic);
+  const runtime = adapter.createRuntime(pkg.mechanic);
+  const initial = adapter.parseLevel(level);
+  return solveWithRuntime(runtime, initial, {
+    winCondition: level.win ?? pkg.mechanic.win,
+    maxStates: options.maxStates,
+    maxDepth: options.maxDepth,
+  });
+}
+
+function samplerStopReason(
+  options: NormalizedMineOptions,
+  instances: number,
+  startedAt: number,
+): string | undefined {
+  if (options.maxInstances > 0 && instances >= options.maxInstances) {
+    return `maxInstances budget reached (${options.maxInstances})`;
+  }
+  if (options.timeBudgetMs > 0 && Date.now() - startedAt >= options.timeBudgetMs) {
+    return `time budget reached (${options.timeBudgetMs}ms)`;
+  }
+  return undefined;
 }
 
 function solutionReplays(

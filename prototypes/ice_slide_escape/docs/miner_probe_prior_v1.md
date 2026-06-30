@@ -126,7 +126,6 @@ design_surface_adjustments:
   branching_win_dag: +5
   initial_win_reachable_outgoing_gte_2: +4
   initial_dead_outgoing_gte_2: +4
-  fully_forced_single_win_chain: -4
 ```
 
 这些数字仍然只是搜索偏好。它们的目标是把 designer 更可能拆出结构关系的
@@ -154,16 +153,23 @@ samplers:
 CLI 默认调用会自动生成随机 seed，避免 agent 多次裸调用时反复看到同一批样本。
 报告会打印实际 seed；需要复现时再显式传 `--seed`。
 
-默认探索：
+默认探索使用 `quick` preset。它面向 LLM 高频调用：先做 solve-only 预筛，
+只对有解 instance 跑完整 graph / agency 分析，并限制 solve instance 数量。
 
 ```text
-npx tsx src/cli.ts mine prototypes/ice_slide_escape --iterations 72 --max-findings 12
+npx tsx src/cli.ts mine prototypes/ice_slide_escape
 ```
 
 复现某次报告：
 
 ```text
-npx tsx src/cli.ts mine prototypes/ice_slide_escape --seed 271828 --iterations 72 --max-findings 12
+npx tsx src/cli.ts mine prototypes/ice_slide_escape --seed 271828
+```
+
+需要旧式深挖预算时使用 `deep` preset：
+
+```text
+npx tsx src/cli.ts mine prototypes/ice_slide_escape --preset deep
 ```
 
 LLM / designer 可以多次调用矿工寻找灵感。每次应记录 seed、排名前几名的
@@ -173,19 +179,19 @@ LLM / designer 可以多次调用矿工寻找灵感。每次应记录 seed、排
 PowerShell 连跑三次示例：
 
 ```text
-1..3 | ForEach-Object { npx tsx src/cli.ts mine prototypes/ice_slide_escape --iterations 72 --max-findings 6 }
+1..3 | ForEach-Object { npx tsx src/cli.ts mine prototypes/ice_slide_escape }
 ```
 
 寻找 d4 / d5 / d6 handoff 灵感：
 
 ```text
-npx tsx src/cli.ts mine prototypes/ice_slide_escape --iterations 96 --max-findings 16 --weight stopper_cascade_candidate=30 --weight mixed_mechanic_chain=12 --weight two_dimensional_structure=8 --graph-max-states 60000 --max-states 60000
+npx tsx src/cli.ts mine prototypes/ice_slide_escape --preset deep --iterations 96 --max-findings 16 --weight stopper_cascade_candidate=30 --weight mixed_mechanic_chain=12 --weight two_dimensional_structure=8 --graph-max-states 60000 --max-states 60000
 ```
 
 只想看二维素材、压低一维 witness：
 
 ```text
-npx tsx src/cli.ts mine prototypes/ice_slide_escape --iterations 96 --max-findings 16 --weight two_dimensional_structure=12 --weight row_probe=-30
+npx tsx src/cli.ts mine prototypes/ice_slide_escape --weight two_dimensional_structure=12 --weight row_probe=-30
 ```
 
 探索低默认优先级分支时，显式改权重：
@@ -199,7 +205,7 @@ npx tsx src/cli.ts mine prototypes/ice_slide_escape --weight boundary_disappear=
 只想先让 miner 按“返回解机制越多越靠前”排序：
 
 ```text
-npx tsx src/cli.ts mine prototypes/ice_slide_escape --iterations 72 --max-findings 6 --weight row_probe=-500 --weight two_dimensional_structure=20 --weight multi_push_chain=120 --weight mixed_mechanic_chain=240 --weight heterogeneous_push_roles=500 --weight short_stop_d1_d2=100 --weight destroy_moving_ice_d3=100 --weight rebound_d4=100 --weight pass_through_d5=100 --weight destroy_group_d6_plus=100 --weight restart_after_group=100 --weight ice_blocks_ice_no_chain_push=100 --weight boundary_disappear=100
+npx tsx src/cli.ts mine prototypes/ice_slide_escape --weight row_probe=-500 --weight two_dimensional_structure=20 --weight multi_push_chain=120 --weight mixed_mechanic_chain=240 --weight heterogeneous_push_roles=500 --weight short_stop_d1_d2=100 --weight destroy_moving_ice_d3=100 --weight rebound_d4=100 --weight pass_through_d5=100 --weight destroy_group_d6_plus=100 --weight restart_after_group=100 --weight ice_blocks_ice_no_chain_push=100 --weight boundary_disappear=100
 ```
 
 负权重只能降低排序，不能当作禁止机制的 hard ban。若本轮设计要求“只能用某些

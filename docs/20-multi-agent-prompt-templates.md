@@ -35,7 +35,7 @@ review 只评价本轮收到的 candidate version 或 evidence disagreement。
 
 ## Candidate Packet Template
 
-lead designer 给 reviewer / critic 的输入包应尽量接近下面结构：
+lead designer 给 reviewer / critic 的输入包应按照下面结构：
 
 ```text
 Prototype context:
@@ -250,6 +250,13 @@ Candidate packet:
 Archive taste context:
 <archive_taste_context>
 
+SCC reading authority:
+Before reviewing SCC / graph evidence, read and follow:
+docs/30-scc-graph-diagnostic-reading.md
+
+This document is authoritative for interpreting SCC / graph diagnostics.
+SCC / graph facts are evidence, not taste and not a quality score.
+
 Review rules:
 - Analyzer pass is not a quality pass.
 - archive_taste_context contains human-comment-backed candidates only. Do not
@@ -261,14 +268,16 @@ Review rules:
   or designer-named role changes as depth.
 - Judge only routed diagnostics. Do not invent hidden hard checks for diagnostics that
   were marked not_applicable.
-- If SCC / graph evidence is supplied, use it to inspect scriptiness, branches,
-  bypass risk, and opening commitment. If it is unavailable, mark the issue
-  qualitative / unknown.
-- When using SCC / graph facts in an attack or merit, follow
-  docs/30-scc-graph-diagnostic-reading.md:
+- If SCC / graph evidence is supplied, use
+  docs/30-scc-graph-diagnostic-reading.md to interpret it.
+- Any SCC / graph fact used as merit, caveat, core_attack, or verdict support
+  must appear in `scc_graph_interpretations`:
   graph_fact -> neutral_meaning -> player_facing_interpretation ->
-  verdict_effect. Without a player-facing interpretation, the verdict effect
-  must be none.
+  verdict_effect.
+- If player_facing_interpretation is missing, verdict_effect must be none.
+- Do not treat winning_states=1, forced*Prefix, deadOut, branching_win_dag,
+  scripted/trivial handoff, has_reposition_room, or irreversible step count as
+  direct pass/fail signals.
 - For repeated actions or repeated causal chains, ask whether the repetitions
   are coupled by shared resources, timing, order, route meaning, role changes,
   or later state consumption.

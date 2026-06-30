@@ -15,7 +15,9 @@
 6. 保存或更新 candidate record 和 archive index。
 ```
 
-候选记录是事实来源；index 只是检索层。
+候选记录是短审美校准卡；index 只是检索层。工具命令、完整 review loop、SCC
+表和探索流水账默认留在 experiment ledger / reports，通过路径引用，不粘进候选
+记录主体。
 
 归档应保持干净：可以保留设计差、审美上被拒绝、机制 claim 失败的关卡，但不应保留因为流程错误、证据不可复现、误标 positive reference 等原因产生的记录。此类记录应清理后重跑实验。
 

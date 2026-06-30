@@ -560,7 +560,7 @@ After:
 
 - Shape: states=1171, regions=113, solution commitments=11
 - Opening: commitments=3, viable=3, dead=0, optimal=1
-- Forced chain: viable prefix=0/11, optimal prefix=0/11, forced viable commitments=5/11
+- Win-continuation prefix: viable prefix=0/11, optimal prefix=0/11, forced viable commitments=5/11
 - Endgame tail: 2 step(s) after first entering a winning region
 - Reading hints: none
 

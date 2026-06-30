@@ -79,7 +79,7 @@ export async function formatCalibrationReport(
     "",
     "- Raw/SCC means reachable raw states versus strongly connected components.",
     "- SCC edges are irreversible transitions between mutually reachable state regions.",
-    "- `single_win_chain` means the win-reaching SCC subgraph has exactly one win-reaching continuation at each solution SCC.",
+    "- `one_win_continuation_per_scc` is topology metadata: each relevant win-reaching SCC has one win-reaching continuation.",
     "- `branching_win_dag` means at least one SCC has multiple win-reaching irreversible continuations or merge paths; this is evidence to inspect, not an automatic failure.",
     "- Initial `out/win/dead` means irreversible exits from the initial SCC, exits that can still reach a win, and exits that cannot.",
     "- Tail means inputs after first entering an SCC that already contains a winning state.",
@@ -133,18 +133,17 @@ function makeScratchLevel(sample: CalibrationSample, layout: string): LevelDoc {
 
 function formatOverviewTable(rows: CalibrationRow[]): string[] {
   return [
-    "| Sample | Prior judgment | Graph size raw/scc | Win subgraph | Irrev steps | Forced win prefix | Initial out/win/dead | Win-branch SCCs | Tail | Reading hints |",
-    "| --- | --- | ---: | --- | ---: | --- | --- | ---: | ---: | --- |",
+    "| Sample | Prior judgment | Graph size raw/scc | Irrev steps | Win-cont prefix | Initial out/win/dead | Win branch/merge SCCs | Tail | Reading hints |",
+    "| --- | --- | ---: | ---: | --- | --- | --- | ---: | --- |",
     ...rows.map((row) =>
       [
         row.sample.id,
         escapeCell(row.sample.userJudgment),
         formatSccGraphSize(row),
-        row.analysis.agency.scc?.winSubgraphShape ?? "n/a",
         row.analysis.agency.scc?.solutionIrreversibleStepCount ?? "n/a",
         formatSccForcedPrefix(row),
         formatInitialSccOut(row),
-        row.analysis.agency.scc?.winContinuationBranchingSccCount ?? "n/a",
+        formatWinBranchMerge(row),
         formatSccTail(row),
         escapeCell(formatSccReadingHints(row).join("; ") || "none"),
       ]
@@ -163,7 +162,7 @@ function formatSampleDetails(row: CalibrationRow): string[] {
     `- Prior judgment: ${row.sample.userJudgment}`,
     `- Solver: ${row.analysis.solution.found ? `solved cost=${row.analysis.solution.cost}` : "unsolved"}`,
     `- Events: ${formatEventCounts(row.analysis.solution.eventCounts)}`,
-    `- SCC shape: ${scc ? `${scc.sccCount} SCCs, ${scc.sccEdgeCount} edges, ${scc.winSubgraphShape}, irreversible steps=${scc.solutionIrreversibleStepCount}` : "n/a"}`,
+    `- SCC topology: ${scc ? `${scc.sccCount} SCCs, ${scc.sccEdgeCount} edges, winBranching=${scc.winContinuationBranchingSccCount}, winMerging=${scc.winContinuationMergingSccCount}, irreversible steps=${scc.solutionIrreversibleStepCount}` : "n/a"}`,
     `- SCC reading hints: ${formatSccReadingHints(row).join("; ") || "none"}`,
     "",
     "Layout:",
@@ -250,6 +249,14 @@ function formatInitialSccOut(row: CalibrationRow): string {
   return `${initial.outgoingCount}/${initial.winReachableOutgoingCount}/${initial.deadOutgoingCount}`;
 }
 
+function formatWinBranchMerge(row: CalibrationRow): string {
+  const scc = row.analysis.agency.scc;
+  if (!scc) {
+    return "n/a";
+  }
+  return `${scc.winContinuationBranchingSccCount}/${scc.winContinuationMergingSccCount}`;
+}
+
 function formatSccTail(row: CalibrationRow): string | number {
   const winningEntry = row.analysis.agency.scc?.solutionPathBranches.find((branch) => branch.isWinning);
   if (!winningEntry || winningEntry.enteredAtStep === undefined || !row.analysis.solution.found) {
@@ -267,12 +274,6 @@ function formatSccReadingHints(row: CalibrationRow): string[] {
   const hints: string[] = [];
   if (scc.solutionIrreversibleStepCount <= 1) {
     hints.push("near-discovery irreversible shape");
-  }
-  if (
-    scc.solutionIrreversibleStepCount > 0 &&
-    scc.forcedWinContinuationPrefixLength === scc.solutionIrreversibleStepCount
-  ) {
-    hints.push("single forced win-reaching irreversible chain");
   }
   if (scc.winContinuationBranchingSccCount > 0) {
     hints.push(`${scc.winContinuationBranchingSccCount} SCC(s) with multiple win continuations`);

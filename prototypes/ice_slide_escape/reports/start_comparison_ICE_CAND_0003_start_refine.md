@@ -13,10 +13,10 @@
 
 | 起点 | 机器闸门 | 可解 | Cost | Required 覆盖 | 返回解 forbidden | 可达 report hits | Graph | Initial SCC | Solution SCC | 原因 |
 | --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- |
-| [1,8] | pass | yes | 35 | yes | none | none | complete, states=540, wins=1 | states=29, out=4, winOut=1, deadOut=3, dist=2 | single_win_chain, forced=2/2 | none |
-| [2,8] | pass | yes | 36 | yes | none | none | complete, states=540, wins=1 | states=29, out=4, winOut=1, deadOut=3, dist=2 | single_win_chain, forced=2/2 | none |
-| [3,8] | pass | yes | 37 | yes | none | none | complete, states=540, wins=1 | states=29, out=4, winOut=1, deadOut=3, dist=2 | single_win_chain, forced=2/2 | none |
-| [4,8] | pass | yes | 38 | yes | none | none | complete, states=540, wins=1 | states=29, out=4, winOut=1, deadOut=3, dist=2 | single_win_chain, forced=2/2 | none |
+| [1,8] | pass | yes | 35 | yes | none | none | complete, states=540, wins=1 | states=29, out=4, winOut=1, deadOut=3, dist=2 | one_win_continuation_per_scc, forced=2/2 | none |
+| [2,8] | pass | yes | 36 | yes | none | none | complete, states=540, wins=1 | states=29, out=4, winOut=1, deadOut=3, dist=2 | one_win_continuation_per_scc, forced=2/2 | none |
+| [3,8] | pass | yes | 37 | yes | none | none | complete, states=540, wins=1 | states=29, out=4, winOut=1, deadOut=3, dist=2 | one_win_continuation_per_scc, forced=2/2 | none |
+| [4,8] | pass | yes | 38 | yes | none | none | complete, states=540, wins=1 | states=29, out=4, winOut=1, deadOut=3, dist=2 | one_win_continuation_per_scc, forced=2/2 | none |
 
 ## 细节
 

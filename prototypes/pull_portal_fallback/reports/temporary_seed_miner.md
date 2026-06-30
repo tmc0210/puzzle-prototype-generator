@@ -46,7 +46,7 @@ Status: raw mined evidence. These are not accepted levels, slots, or quality ver
 - Events: walk walk walk walk portal_enter:B portal_exit_blocked:B->A portal_exit_blocked_by_crate:crate#1 portal_fallback_push:B portal_enter:A portal_teleport:A->B pull_crate:crate#1 walk
 - Event counts: walk=5, portal_enter:B=1, portal_exit_blocked:B->A=1, portal_exit_blocked_by_crate:crate#1=1, portal_fallback_push:B=1, portal_enter:A=1, portal_teleport:A->B=1, pull_crate:crate#1=1
 - Graph: status=complete, states=1832, transitions=4218, wins=98
-- SCC: shape=single_win_chain, count=66, irreversible=1, forcedPrefix=0
+- SCC: shape=one_win_continuation_per_scc, count=66, irreversible=1, forcedPrefix=0
 - Initial SCC: states=80, out=18, winOut=0, deadOut=0
 - Win DAG: branching=0, merging=28
 
@@ -289,7 +289,7 @@ Interpretation prompts:
 - Events: portal_enter:A portal_exit_blocked:A->B portal_exit_blocked_by_wall portal_fallback_push:A walk walk
 - Event counts: portal_enter:A=1, portal_exit_blocked:A->B=1, portal_exit_blocked_by_wall=1, portal_fallback_push:A=1, walk=2
 - Graph: status=complete, states=2391, transitions=5608, wins=117
-- SCC: shape=single_win_chain, count=77, irreversible=1, forcedPrefix=0
+- SCC: shape=one_win_continuation_per_scc, count=77, irreversible=1, forcedPrefix=0
 - Initial SCC: states=29, out=2, winOut=0, deadOut=0
 - Win DAG: branching=0, merging=24
 

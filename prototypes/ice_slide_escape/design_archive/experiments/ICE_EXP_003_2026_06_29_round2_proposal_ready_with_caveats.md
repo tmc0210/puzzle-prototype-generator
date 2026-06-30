@@ -52,8 +52,8 @@ selected_examples:
       repeated or forced.
   - candidate_id: ICE_CAND_0005
     calibration_use: >
-      A real consumed-state interlock can still be too thin if it is only a
-      two-push forced chain.
+      A real consumed-state interlock can still be too thin if it has only two
+      meaningful push commitments.
 ```
 
 No layout, geometry, causal chain, solution route, object placement, or
@@ -99,7 +99,8 @@ why_not_execution: >
   Complete search finds no winning path missing the required event classes.
   Three wrong-order prefixes are complete-search dead. Each serious mechanism
   product is later consumed, so it is not an independent mechanism showcase.
-  Caveat: SCC remains forced single_win_chain.
+  Caveat: the role depth is still below an absolute highest-tier final-game
+  reference.
 falsification: >
   A required-event bypass, a live wrong-order prefix, or a demand for
   object-specific all-solution necessity would falsify or downgrade the claim.
@@ -139,7 +140,7 @@ base_analysis:
   reachable_states: 1446
   legal_transitions: 2985
   winning_states: 1
-  scc_shape: single_win_chain
+  scc_shape: one_win_continuation_per_scc
   forced_win_prefix: "3/3"
   initial_scc:
     states: 38
@@ -176,7 +177,7 @@ Evidence refs:
 ```yaml
 SCC_graph:
   triggered: true
-  result: complete graph; single_win_chain; forcedWinPrefix=3/3
+  result: complete graph; one_win_continuation_per_scc; forcedWinPrefix=3/3
 variant:
   triggered: true
   result: structural repair of ICE_CAND_0005 motif; not a copied layout or route
@@ -209,10 +210,9 @@ Puzzle critic:
 critic: independent_subagent_Raman
 verdict: proposal_ready_with_caveats
 review_loop_state: proposal_ready_with_caveats
-required_action: submit_with_scriptiness_caveat
+required_action: submit_with_role_depth_caveat
 core_attacks:
   - three-push linear cascade
-  - single_win_chain and forcedWinPrefix=3/3
   - not absolute highest-tier final-game reference
 ```
 
@@ -222,7 +222,7 @@ Designer responses:
 responses:
   - attack: evidence_overclaim
     response: narrowed to event-class necessity and tested order gates
-  - attack: forced_linearity
+  - attack: limited_role_depth
     response: accepted as caveat; not claiming reference or accepted status
   - attack: needs_cross_consumption_for_highest_tier
     response: attempted scratch redesign; no clean serious candidate found
@@ -238,7 +238,7 @@ families:
     outcome: submitted_as_ICE_CAND_0006
     lesson: >
       A three-layer consumed-state chain is viable and reviewable, but still
-      carries scriptiness risk.
+      may fall short of absolute highest-tier final-game role depth.
   - family: cross_consumption_or_backflow_variant
     outcome: failed_search
     distribution:

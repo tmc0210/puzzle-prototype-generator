@@ -69,7 +69,7 @@ No non-walk events were found on the returned solution.
 
 ### SCC Irreversible Progress
 
-- Shape: sccs=165, edges=383, winReachable=156, winning=156, winSubgraph=single_win_chain
+- Shape: sccs=165, edges=383, winReachable=156, winning=156, winSubgraph=one_win_continuation_per_scc
 - Solution irreversible path: steps=0, forcedWinPrefix=0/0, branchingWinSccs=0, mergingWinSccs=121
 - Initial SCC: s0, states=72, dist=0, out=4, winOut=0, deadOut=0
 - SCC path: s0@0
@@ -84,7 +84,7 @@ No non-walk events were found on the returned solution.
 
 - Shape: states=13319, regions=370, solution commitments=0
 - Opening: commitments=4, viable=4, dead=0, optimal=0
-- Forced chain: viable prefix=0/0, optimal prefix=0/0, forced viable commitments=0/0
+- Win-continuation prefix: viable prefix=0/0, optimal prefix=0/0, forced viable commitments=0/0
 - Endgame tail: 5 step(s) after first entering a winning region
 - Reading hints: near-discovery shape; 5 trailing step(s) after entering a winning region
 

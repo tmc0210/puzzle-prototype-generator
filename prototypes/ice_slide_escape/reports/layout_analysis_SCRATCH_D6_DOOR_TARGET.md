@@ -90,7 +90,7 @@ After:
 
 ### SCC Irreversible Progress
 
-- Shape: sccs=2, edges=1, winReachable=2, winning=1, winSubgraph=single_win_chain
+- Shape: sccs=2, edges=1, winReachable=2, winning=1, winSubgraph=one_win_continuation_per_scc
 - Solution irreversible path: steps=1, forcedWinPrefix=1/1, branchingWinSccs=0, mergingWinSccs=0
 - Handoff scriptiness: scope=returned_solution, scripted=1/1, trivial=1, sameEntryExit=1, forcedScripted=1, maxRun=1
 - Initial SCC: s0, states=1, dist=1, out=1, winOut=1, deadOut=0
@@ -113,7 +113,7 @@ After:
 
 - Shape: states=16, regions=2, solution commitments=1
 - Opening: commitments=1, viable=1, dead=0, optimal=1
-- Forced chain: viable prefix=1/1, optimal prefix=1/1, forced viable commitments=1/1
+- Win-continuation prefix: viable prefix=1/1, optimal prefix=1/1, forced viable commitments=1/1
 - Endgame tail: 13 step(s) after first entering a winning region
 - Reading hints: near-discovery shape; all solution commitments are forced viable progress; all solution commitments are forced optimal progress; 13 trailing step(s) after entering a winning region
 

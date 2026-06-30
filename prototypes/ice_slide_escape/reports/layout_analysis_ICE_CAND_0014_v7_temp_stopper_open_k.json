@@ -1,0 +1,100 @@
+{
+  "prototype": "ice_slide_escape",
+  "level": {
+    "id": "ICE_CAND_0014_v7_temp_stopper_open_k",
+    "title": "ICE_CAND_0014_v7_temp_stopper_open_k",
+    "role": "challenge",
+    "status": "candidate",
+    "targets": [
+      "K_ice_pass_through_d5",
+      "K_ice_destroy_group_d6_plus"
+    ],
+    "supportLevel": "none",
+    "winCondition": {
+      "type": "ice_slide_escape_explicit_goal",
+      "description": "All target overlays have ice, and the player is on the explicit edge player_goal from the solve request. Extra ice is allowed.\n",
+      "player_start": [
+        0,
+        9
+      ],
+      "player_goal": [
+        14,
+        3
+      ]
+    }
+  },
+  "initialState": "###############\n#.GGG#......I.#\n###GG.#.....I.#\n##....I.......#\n##.I.########.#\n##.G..........#\n##...########.#\n##...########.#\n##III########.#\n@.............#\n###############",
+  "solution": {
+    "found": false,
+    "exploredStates": 100001,
+    "searchStatus": "exhausted",
+    "reason": "state budget exceeded (100000)",
+    "inputs": [],
+    "events": [],
+    "eventCounts": {},
+    "objectParticipation": []
+  },
+  "keySnapshots": [],
+  "graph": {
+    "status": "exhausted",
+    "reachableStateCount": 100001,
+    "legalTransitionCount": 233187,
+    "eventOnlyTransitionCount": 6815,
+    "winStateCount": 0,
+    "budget": {
+      "maxStates": 100000
+    },
+    "reason": "state budget exceeded"
+  },
+  "agency": {
+    "status": "exhausted",
+    "reason": "state budget exceeded",
+    "compressionRule": "bidirectional_edges",
+    "reachableStateCount": 100001,
+    "legalTransitionCount": 233186,
+    "budget": {
+      "maxStates": 100000
+    }
+  },
+  "counterfactuals": [],
+  "targets": [
+    {
+      "targetId": "K_ice_pass_through_d5",
+      "statement": "At distance 5, moving ice passes through a contiguous obstacle group and restarts counting.",
+      "requiredEvents": [
+        "ice_pass_through_d5",
+        "slide_restart_after_group"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": "unknown",
+      "shortestBypass": {
+        "checked": false,
+        "reason": "No returned winning solution; shortest bypass was not checked."
+      },
+      "winningBypass": {
+        "checked": false,
+        "reason": "No returned winning solution; winning bypass was not checked."
+      }
+    },
+    {
+      "targetId": "K_ice_destroy_group_d6_plus",
+      "statement": "At distance 6 or more, moving ice destroys the contiguous obstacle group and restarts counting.",
+      "requiredEvents": [
+        "ice_destroy_group_d6_plus",
+        "slide_restart_after_group"
+      ],
+      "forbiddenEvents": [],
+      "detectorConfigured": true,
+      "returnedSolutionCovers": "unknown",
+      "shortestBypass": {
+        "checked": false,
+        "reason": "No returned winning solution; shortest bypass was not checked."
+      },
+      "winningBypass": {
+        "checked": false,
+        "reason": "No returned winning solution; winning bypass was not checked."
+      }
+    }
+  ]
+}

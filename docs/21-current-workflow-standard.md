@@ -239,14 +239,14 @@ taste 不是 checklist。designer / critic 应按 candidate mode、role 和 brie
 SCC / graph 不是通用必跑项。它在以下条件下触发：
 
 - 候选声称是 application / challenge / capstone；
-- 需要判断脚本感、开局自由度、分支、多解、bypass 或 forced chain；
+- 需要判断开局自由度、分支、多解、bypass 或其它完整图事实；
 - 当前原型有可靠 complete graph / SCC 工具，或 brief 明确要求使用。
 
 若工具不可用，记录 `unavailable` 或 `unknown`，不能伪造图结论。
 
-SCC 读法只提供证据，不自动给分。`single_win_chain`、`branching_win_dag`、
-`forced_win_prefix`、`trivial_source_scc`、`entry_equals_exit_source` 都是
-拓扑事实，不是硬 pass/fail。
+SCC 读法只提供证据，不自动给分。`one_win_continuation_per_scc`、
+`branching_win_dag`、`forced_win_prefix`、`trivial_source_scc`、
+`entry_equals_exit_source` 都是拓扑事实，不是硬 pass/fail。
 
 具体字段含义和允许推论见
 `docs/30-scc-graph-diagnostic-reading.md`。任何把 SCC / graph fact 用作设计

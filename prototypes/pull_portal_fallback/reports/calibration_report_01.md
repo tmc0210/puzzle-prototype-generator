@@ -4,21 +4,20 @@ Purpose: compare graph-derived agency facts against prior human puzzle-design ju
 
 ## Overview
 
-| Sample | Prior judgment | Graph size raw/scc | Win subgraph | Irrev steps | Forced win prefix | Initial out/win/dead | Win-branch SCCs | Tail | Reading hints |
-| --- | --- | ---: | --- | ---: | --- | --- | ---: | ---: | --- |
-| hard_chain_trim4 | Positive: compact hard-chain candidate; remove only obvious redundancy. | 1231/43 | branching_win_dag | 9 | 0/9 | 3/3/0 | 8 | 4 | 8 SCC(s) with multiple win continuations; 11 win-reaching merge SCC(s); 4 trailing step(s) after entering winning SCC |
-| coupled_pull_d_blocks_b_trim1 | Positive/mixed: beautiful coupled chain, but player-facing agency may be low. | 100/12 | single_win_chain | 3 | 3/3 | 3/1/2 | 0 | 3 | single forced win-reaching irreversible chain; initial SCC has 2 irreversible dead branch(es); 3 trailing step(s) after entering winning SCC |
-| two_crate_participation_candidate | Positive/mixed: strong structure; late pull tail may feel incidental. | 95/16 | branching_win_dag | 5 | 0/5 | 2/2/0 | 1 | 3 | 1 SCC(s) with multiple win continuations; 1 win-reaching merge SCC(s); 3 trailing step(s) after entering winning SCC |
-| directional_pull_challenge | Positive: complex chain candidate with good structure. | 37/4 | single_win_chain | 3 | 3/3 | 1/1/0 | 0 | 5 | single forced win-reaching irreversible chain; 5 trailing step(s) after entering winning SCC |
-| stress_v3_distinct_medium_combination_try3 | Mixed: useful combination candidate, but compare for reuse/linearity. | 45/9 | single_win_chain | 4 | 4/4 | 1/1/0 | 0 | 3 | single forced win-reaching irreversible chain; 3 trailing step(s) after entering winning SCC |
-| two_crate_two_lock_chain_try3 | Negative/mixed: mechanically valid, but two locks are too independently repeated. | 64/7 | single_win_chain | 4 | 4/4 | 1/1/0 | 0 | 3 | single forced win-reaching irreversible chain; 3 trailing step(s) after entering winning SCC |
-| stress_v3_true_fallback_application | Negative: reads more like discovery than application. | 14/2 | single_win_chain | 1 | 1/1 | 1/1/0 | 0 | 3 | near-discovery irreversible shape; single forced win-reaching irreversible chain; 3 trailing step(s) after entering winning SCC |
+| Sample | Prior judgment | Graph size raw/scc | Irrev steps | Win-cont prefix | Initial out/win/dead | Win branch/merge SCCs | Tail | Reading hints |
+| --- | --- | ---: | ---: | --- | --- | --- | ---: | --- |
+| hard_chain_trim4 | Positive: compact hard-chain candidate; remove only obvious redundancy. | 1231/43 | 9 | 0/9 | 3/3/0 | 8/11 | 4 | 8 SCC(s) with multiple win continuations; 11 win-reaching merge SCC(s); 4 trailing step(s) after entering winning SCC |
+| coupled_pull_d_blocks_b_trim1 | Positive/mixed: beautiful coupled chain, but player-facing agency may be low. | 100/12 | 3 | 3/3 | 3/1/2 | 0/0 | 3 | initial SCC has 2 irreversible dead branch(es); 3 trailing step(s) after entering winning SCC |
+| two_crate_participation_candidate | Positive/mixed: strong structure; late pull tail may feel incidental. | 95/16 | 5 | 0/5 | 2/2/0 | 1/1 | 3 | 1 SCC(s) with multiple win continuations; 1 win-reaching merge SCC(s); 3 trailing step(s) after entering winning SCC |
+| directional_pull_challenge | Positive: complex chain candidate with good structure. | 37/4 | 3 | 3/3 | 1/1/0 | 0/0 | 5 | 5 trailing step(s) after entering winning SCC |
+| stress_v3_distinct_medium_combination_try3 | Mixed: useful combination candidate, but compare for reuse/linearity. | 45/9 | 4 | 4/4 | 1/1/0 | 0/0 | 3 | 3 trailing step(s) after entering winning SCC |
+| two_crate_two_lock_chain_try3 | Negative/mixed: mechanically valid, but two locks are too independently repeated. | 64/7 | 4 | 4/4 | 1/1/0 | 0/0 | 3 | 3 trailing step(s) after entering winning SCC |
+| stress_v3_true_fallback_application | Negative: reads more like discovery than application. | 14/2 | 1 | 1/1 | 1/1/0 | 0/0 | 3 | near-discovery irreversible shape; 3 trailing step(s) after entering winning SCC |
 
 ## Reading Hints
 
 - Raw/SCC means reachable raw states versus strongly connected components.
 - SCC edges are irreversible transitions between mutually reachable state regions.
-- `single_win_chain` means the win-reaching SCC subgraph has exactly one win-reaching continuation at each solution SCC.
 - `branching_win_dag` means at least one SCC has multiple win-reaching irreversible continuations or merge paths; this is evidence to inspect, not an automatic failure.
 - Initial `out/win/dead` means irreversible exits from the initial SCC, exits that can still reach a win, and exits that cannot.
 - Tail means inputs after first entering an SCC that already contains a winning state.
@@ -80,8 +79,8 @@ Bidirectional commitment digest:
 - Prior judgment: Positive/mixed: beautiful coupled chain, but player-facing agency may be low.
 - Solver: solved cost=15
 - Events: pull_crate:crate#1=1, walk=10, portal_enter:E=1, portal_teleport:E->D=1, portal_enter:D=1, portal_exit_blocked:D->E=1, portal_exit_blocked_by_crate:crate#1=1, portal_fallback_push:D=1, portal_enter:B=1, portal_teleport:B->A=1, portal_enter:A=1, portal_exit_blocked:A->B=1, portal_exit_blocked_by_portal:D=1, portal_fallback_push:A=1
-- SCC shape: 12 SCCs, 12 edges, single_win_chain, irreversible steps=3
-- SCC reading hints: single forced win-reaching irreversible chain; initial SCC has 2 irreversible dead branch(es); 3 trailing step(s) after entering winning SCC
+- SCC topology: 12 SCCs, 12 edges, winBranching=0, winMerging=0, irreversible steps=3
+- SCC reading hints: initial SCC has 2 irreversible dead branch(es); 3 trailing step(s) after entering winning SCC
 
 Layout:
 
@@ -159,8 +158,8 @@ Bidirectional commitment digest:
 - Prior judgment: Positive: complex chain candidate with good structure.
 - Solver: solved cost=18
 - Events: walk=11, portal_enter:A=2, portal_teleport:A->B=2, portal_enter:B=2, portal_teleport:B->A=2, pull_crate:crate#1=3
-- SCC shape: 4 SCCs, 3 edges, single_win_chain, irreversible steps=3
-- SCC reading hints: single forced win-reaching irreversible chain; 5 trailing step(s) after entering winning SCC
+- SCC topology: 4 SCCs, 3 edges, winBranching=0, winMerging=0, irreversible steps=3
+- SCC reading hints: 5 trailing step(s) after entering winning SCC
 
 Layout:
 
@@ -197,8 +196,8 @@ Bidirectional commitment digest:
 - Prior judgment: Mixed: useful combination candidate, but compare for reuse/linearity.
 - Solver: solved cost=14
 - Events: walk=9, portal_enter:A=2, portal_teleport:A->B=1, pull_crate:crate#1=2, portal_enter:B=1, portal_teleport:B->A=1, portal_exit_blocked:A->B=1, portal_exit_blocked_by_crate:crate#1=1, portal_fallback_push:A=1
-- SCC shape: 9 SCCs, 8 edges, single_win_chain, irreversible steps=4
-- SCC reading hints: single forced win-reaching irreversible chain; 3 trailing step(s) after entering winning SCC
+- SCC topology: 9 SCCs, 8 edges, winBranching=0, winMerging=0, irreversible steps=4
+- SCC reading hints: 3 trailing step(s) after entering winning SCC
 
 Layout:
 
@@ -236,8 +235,8 @@ Bidirectional commitment digest:
 - Prior judgment: Negative/mixed: mechanically valid, but two locks are too independently repeated.
 - Solver: solved cost=25
 - Events: walk=17, portal_enter:D=2, portal_teleport:D->E=1, pull_crate:crate#2=1, portal_enter:E=1, portal_teleport:E->D=1, portal_exit_blocked:D->E=1, portal_exit_blocked_by_crate:crate#2=1, portal_fallback_push:D=1, portal_enter:A=2, portal_teleport:A->B=1, pull_crate:crate#1=1, portal_enter:B=1, portal_teleport:B->A=1, portal_exit_blocked:A->B=1, portal_exit_blocked_by_crate:crate#1=1, portal_fallback_push:A=1
-- SCC shape: 7 SCCs, 6 edges, single_win_chain, irreversible steps=4
-- SCC reading hints: single forced win-reaching irreversible chain; 3 trailing step(s) after entering winning SCC
+- SCC topology: 7 SCCs, 6 edges, winBranching=0, winMerging=0, irreversible steps=4
+- SCC reading hints: 3 trailing step(s) after entering winning SCC
 
 Layout:
 
@@ -275,8 +274,8 @@ Bidirectional commitment digest:
 - Prior judgment: Negative: reads more like discovery than application.
 - Solver: solved cost=7
 - Events: walk=6, portal_enter:A=1, portal_exit_blocked:A->B=1, portal_exit_blocked_by_wall=1, portal_fallback_push:A=1
-- SCC shape: 2 SCCs, 1 edges, single_win_chain, irreversible steps=1
-- SCC reading hints: near-discovery irreversible shape; single forced win-reaching irreversible chain; 3 trailing step(s) after entering winning SCC
+- SCC topology: 2 SCCs, 1 edges, winBranching=0, winMerging=0, irreversible steps=1
+- SCC reading hints: near-discovery irreversible shape; 3 trailing step(s) after entering winning SCC
 
 Layout:
 

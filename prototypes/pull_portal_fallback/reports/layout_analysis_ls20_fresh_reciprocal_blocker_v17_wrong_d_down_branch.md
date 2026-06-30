@@ -213,7 +213,7 @@ After:
 
 ### SCC Irreversible Progress
 
-- Shape: sccs=4, edges=3, winReachable=3, winning=1, winSubgraph=single_win_chain
+- Shape: sccs=4, edges=3, winReachable=3, winning=1, winSubgraph=one_win_continuation_per_scc
 - Solution irreversible path: steps=2, forcedWinPrefix=2/2, branchingWinSccs=0, mergingWinSccs=0
 - Initial SCC: s0, states=3, dist=2, out=2, winOut=1, deadOut=1
 - SCC path: s0@0 -> s2@2 -> s3@8
@@ -230,7 +230,7 @@ After:
 
 - Shape: states=35, regions=4, solution commitments=2
 - Opening: commitments=2, viable=1, dead=1, optimal=1
-- Forced chain: viable prefix=2/2, optimal prefix=2/2, forced viable commitments=2/2
+- Win-continuation prefix: viable prefix=2/2, optimal prefix=2/2, forced viable commitments=2/2
 - Endgame tail: 4 step(s) after first entering a winning region
 - Reading hints: opening has apparent branches but only one viable progress; all solution commitments are forced viable progress; all solution commitments are forced optimal progress; 4 trailing step(s) after entering a winning region
 

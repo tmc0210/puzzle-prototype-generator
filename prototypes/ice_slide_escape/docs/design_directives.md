@@ -62,7 +62,6 @@ npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape candidate.t
 - Row probe 只校准距离语义，不当作布局灵感。
 - Cascade lead 要继续证明冰产物被后续消费，并用 prefix probe 检查错序。
 - Branching win DAG 要区分真实选择和无害顺序自由。
-- Single win chain 可以有价值，但要靠延迟反馈、误导或状态消费解释玩家思考。
 ```
 
 贴矿工结果时必须同时贴 `Solve instance` 的 `start / goal`，或贴带 `S / X`

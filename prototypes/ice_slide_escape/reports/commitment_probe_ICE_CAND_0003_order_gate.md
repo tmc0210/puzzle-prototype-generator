@@ -184,7 +184,7 @@ Evidence boundary:
 - This supports the limited claim that the puzzle's central choice is order:
   B must be solved before A, because A-first d4 seals the route to B.
 - It does not by itself prove high-difficulty taste. The full graph remains a
-  `single_win_chain` after the correct commitments, and the returned solution
+  `one_win_continuation_per_scc` after the correct commitments, and the returned solution
   contains substantial walking.
 - Hard scope cleanliness is supplied separately by
   `start_comparison_ICE_CAND_0003_start_refine.md`, where all checked starts
