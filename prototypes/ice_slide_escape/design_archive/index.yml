@@ -179,6 +179,17 @@ experiments:
       - RF_restart_counting_after_group
       - RF_target_ice_requirement
       - RF_explicit_edge_goal
+  - experiment_id: ICE_EXP_META_2026_06_30_round1_meta_gate_proposal_ready_with_caveats
+    file: experiments/ICE_EXP_META_2026_06_30_round1_meta_gate_proposal_ready_with_caveats.md
+    status: proposal_ready_with_caveats
+    selected_rule_facts:
+      - RF_d1_d2_stop
+      - RF_d5_pass_through
+      - RF_d6_plus_destroy_group
+      - RF_restart_counting_after_group
+      - RF_target_ice_requirement
+      - RF_explicit_edge_goal
+      - RF_meta_reinterpretation
 candidates:
   - candidate_id: ICE_CAND_0001
     file: candidates/ICE_CAND_0001.md
@@ -815,6 +826,138 @@ candidates:
       remains a composite lock rather than a true late-game aha-moment.
     human_comment_ids:
       - HC_ICE_CAND_0019_001
+  - candidate_id: ICE_CAND_0020
+    file: candidates/ICE_CAND_0020.md
+    experiment_id: ICE_EXP_META_2026_06_30_round1_meta_gate_proposal_ready_with_caveats
+    status: accepted_functional_meta_connector
+    llm_candidate_strength: functional_meta_connector_overclaimed
+    human_final_status: accepted_functional_meta_connector
+    archive_eligibility: clean_archive
+    motifs:
+      - short_stop_d1_d2
+      - d5_pass_through
+      - d6_destroy_group
+      - restart_counting
+      - target_ice_coverage
+      - explicit_edge_goal
+      - meta_reinterpretation
+    archive_use:
+      - functional_meta_connector_reference
+      - human_taste_reference
+      - overclaim_calibration
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - clean_route_connector
+      - low_meta_knowledge_exposure
+      - uncommon_left_to_left_right_to_right_interface
+    failure_modes:
+      - witness_not_application
+      - overclaimed_complexity
+      - forced_linearity
+    search_ledger_status: exploration_log_present
+    review_integrity: human_review
+    review_loop_state: proposal_ready_with_caveats
+    retrieval_summary: >
+      人类接受为功能性 meta connector / 路线调度拼图素材，而非强 application。
+      Base A->B 和 Meta C->D 单独看都偏简单 witness；它的价值在于初见低暴露、
+      回访可用、左进左出 + 右进右出的接口形态少见。该条是重要 overclaim
+      calibration：base/meta 跨时间复用只能支持回看价值，不能反过来拔高
+      base 流程或 meta 流程自身的复杂度。
+    human_comment_ids:
+      - HC_ICE_CAND_0020_001
+  - candidate_id: ICE_CAND_0021
+    file: candidates/ICE_CAND_0021.md
+    experiment_id: ICE_EXP_META_2026_06_30_round2_stopper_relay_proposal_ready_with_caveats
+    status: proposal_ready_with_caveats
+    llm_candidate_strength: functional_meta_connector_with_small_role_relay
+    human_final_status: pending
+    archive_eligibility: human_pending
+    motifs:
+      - short_stop_d1_d2
+      - d5_pass_through
+      - restart_counting
+      - target_ice_coverage
+      - explicit_edge_goal
+      - meta_reinterpretation
+      - latent_element_payoff
+    archive_use:
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - clean_reachability_gate
+      - small_meta_role_relay
+      - cross_temporal_reuse
+    failure_modes:
+      - thin_base_flow
+      - repeated_d5_corridor
+      - overclaim_risk
+    search_ledger_status: exploration_log_present
+    review_integrity: independent_review
+    review_loop_state: proposal_ready_with_caveats
+    retrieval_summary: >
+      Meta proposal with caveats. Base A->B is a light witness: one d2 push
+      sends [2,2] to [4,2] target using [5,2] target ice as stopper. Meta C->D
+      is a small stopper-relay: [12,2] first d5/restart left creates a non-target
+      stopper at [3,2], [12,4] moves up into the lane, then the second d5/restart
+      consumes [3,2] to stop at [4,2] target. Complete edge scan passes the
+      round-specific reachability gates: no ABCD->non-ABCD edge, and no A/B->C/D.
+      Independent review_1 supports proposal_ready_with_caveats, with required
+      downgrade: functional meta connector / small role-relay, not high-difficulty
+      capstone or strong application.
+    human_comment_ids: []
+  - candidate_id: ICE_CAND_0022
+    file: candidates/ICE_CAND_0022.md
+    experiment_id: ICE_EXP_META_2026_07_01_round3_double_debt_proposal_ready_with_caveats
+    status: accepted
+    llm_candidate_strength: strong_meta_connector_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    motifs:
+      - short_stop_d1_d2
+      - d5_pass_through
+      - d6_destroy_group
+      - destroy_moving_ice_d3
+      - restart_counting
+      - target_ice_coverage
+      - explicit_edge_goal
+      - meta_reinterpretation
+      - target_debt_refill
+      - hidden_stopper
+    archive_use:
+      - positive_reference
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - late_game_meta_application
+      - double_target_debt
+      - consumed_hidden_stopper
+      - clean_reachability_gate
+    failure_modes:
+      - thin_base_flow
+      - corridor_pressure
+      - limited_spatial_element_interweaving
+      - not_endgame_capstone
+      - overclaim_risk
+    search_ledger_status: exploration_log_present
+    review_integrity: human_review
+    review_loop_state: proposal_ready_with_caveats
+    retrieval_summary: >
+      人类接受的合格 meta 候选。Base A->B is a light witness: one d2 push sends
+      [2,2] to [4,2] target using [5,2] target ice. Meta C->D is a double-debt
+      chain: [13,5] correct target-ice is destroyed by d3 to open x13 push access
+      and create target debt; [12,2] d5/restart creates [3,2] hidden stopper;
+      [14,5] refills [13,5]; [14,2] d6+ destroys [6,2]+[5,2] and consumes [3,2]
+      to stop at [4,2]; [5,4] refills [5,2]. Human review accepts it as very
+      solid and fit for meta use: the light early d2 base happens to pair well
+      with near-zero right-side reading pollution, so the large latent right
+      structure does not scare or overload an early player; meta is robust.
+      Caveat: base/meta separately lack insight, and the level is not a flashy
+      top-tier meta because spatial / element interweaving is limited and most
+      right-side material is inert in base.
+    human_comment_ids:
+      - HC_ICE_CAND_0022_001
 example_queries:
   - Find positive or negative d4 rebound examples before designing another rebound level.
   - Find high-difficulty d4 capstone examples before introducing d5.
