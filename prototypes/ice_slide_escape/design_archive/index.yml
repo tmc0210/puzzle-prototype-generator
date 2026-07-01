@@ -340,6 +340,18 @@ experiments:
       - RF_target_ice_requirement
       - RF_explicit_edge_goal
       - RF_meta_reinterpretation
+  - experiment_id: ICE_EXP_META_2026_07_02_round22_same_cell_return_accepted
+    file: experiments/ICE_EXP_META_2026_07_02_round22_same_cell_return_accepted.md
+    status: accepted
+    selected_rule_facts:
+      - RF_d1_d2_stop
+      - RF_d3_destroy_moving_ice
+      - RF_d4_rebound
+      - RF_d6_plus_destroy_group
+      - RF_boundary_disappear
+      - RF_target_ice_requirement
+      - RF_explicit_edge_goal
+      - RF_meta_reinterpretation
 candidates:
   - candidate_id: ICE_CAND_0001
     file: candidates/ICE_CAND_0001.md
@@ -1597,6 +1609,75 @@ candidates:
       base 无 d5/d6/restart 暴露。
     human_comment_ids:
       - HC_ICE_CAND_0034_001
+  - candidate_id: ICE_CAND_0035
+    file: candidates/ICE_CAND_0035.md
+    experiment_id: ICE_EXP_META_2026_07_02_round22_same_cell_return_accepted
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    original_human_accepted_layout_version: ICE_EXP_META_2026_07_02_round22_v1
+    current_layout_version: ICE_EXP_META_2026_07_02_round22_v3_soft_d5d6_cap
+    not_adopted_strict_patch: ICE_EXP_META_2026_07_02_round22_v2_patch
+    patch_status: human_accepted_soft_patch
+    human_reviewed: true
+    aesthetic_score: 5
+    difficulty_score: 4
+    allowed_exposure_through: ice_boundary_disappear
+    base_no_d5d6_exposure_current: pass
+    base_strict_no_late_current: fail_boundary_only
+    motifs:
+      - short_stop_d1_d2
+      - destroy_moving_ice_d3
+      - d4_rebound
+      - boundary_disappear
+      - d6_destroy_group
+      - target_ice_coverage
+      - explicit_edge_goal
+      - walled_edge_goal
+      - meta_reinterpretation
+      - same_cell_reentry
+      - single_level_meta_reuse
+      - return_pressure_wrapper
+    archive_use:
+      - positive_reference
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+      - positive_exception
+      - abstract_meta_reference
+      - do_not_template_geometry
+    strengths:
+      - single_level_meta_reinterpretation
+      - old_exit_becomes_return_entry
+      - world_context_return_pressure
+      - no_knowledge_delta_meta_payoff
+      - same_lower_ice_group_role_change
+      - clean_reachability_gate
+      - high_aesthetic_abstract_reference
+    failure_modes:
+      - dangerous_if_templated_geometry
+      - requires_world_context_wrapper
+      - hidden_without_return_pressure
+      - compact_dwall_vocabulary_overlap
+      - boundary_only_exposure_remains_in_v3
+      - strict_v2_patch_more_linear_not_adopted
+    search_ledger_status: exploration_log_present
+    review_integrity: human_review
+    review_loop_state: proposal_ready_with_caveats
+    retrieval_summary: >
+      人类接受的审美 5 meta 单关例外正例，归档难度 4。B/C 同格不是模板，
+      而是让首访出口在周围地图 return pressure 下变成回访入口：玩家原路
+      返回刷新后，同一关被自然重读，旧出口、target、左下冰组和可破墙 D
+      组合成“一关两用”。局部 base 约 2+，显式 C->D 机制约 3；带良好
+      死路/回返 wrapper 的整体体验难度约 4。当前采用布局为
+      round22_v3_soft_d5d6_cap，已修复 v1 中 A 起点 base 可达 d5/d6/restart
+      严重外溢；但仍有 boundary-only 可达噪音，不能声明完全干净 early cutoff。
+      round22_v2_patch 是未采用 strict 备选，机器更干净但更线性。
+      未来设计只能学习“地图语境重写
+      同一关意义”的抽象原则，不能机械复用 B=C、死路返回或 D-wall 形态。
+    human_comment_ids:
+      - HC_ICE_CAND_0035_001
 example_queries:
   - Find positive or negative d4 rebound examples before designing another rebound level.
   - Find high-difficulty d4 capstone examples before introducing d5.

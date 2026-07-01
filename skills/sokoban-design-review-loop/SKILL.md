@@ -14,9 +14,11 @@ description: 编排 Sokoban-like 原型的单关设计审查循环。Use when Co
 - 工具证据先于设计声称。solver / analyzer / graph 只提供事实，不给质量通过。
 - `designer_action_N` 永远不能关闭 review loop。若还要推进候选，必须进入 `review_N+1`、人类 review、hold、reject、change family 或 failed_search。
 - 当用户目标是产出候选而非只做 audit / replay 时，`held_proposal`、`rejected_candidate`、`raw_run_only` 或 `reject_do_not_archive` 只关闭当前候选或归档出口，不能当作本次目标完成，也不能单独证明 `failed_search`；必须继续 revise / change family。
+- `candidate_packet`、`review_request`、controller summary 或 `held_proposal` / `raw_run_only` 只是中间送审材料，不是合格候选交付。用户要求设计 / 提交合格候选时，必须有 evidence reviewer 与 puzzle critic artifact，且 latest `required_action: none` 并达到 `proposal_ready` / `proposal_ready_with_caveats`，或有人类明确接收。
+- independent review artifact 优先来自真实 multi-agent / subagent。`review_request` 文件、controller summary、自问自答或同一 agent 角色扮演不算 independent review；若无法调用，标记 `review_integrity: self_review_only`、`missing` 或 `blocked`，不能把流程收束为合格候选。
 - `accepted`、`mainline`、`positive_reference`、`reference` 不是本 skill 可授予状态。
 - prototype-specific workflow 被原型声明时必须服从，未声明时绝不默认运行。
-- archive taste context 只用于审美校准和失败模式校准。设计 / 提交候选请求默认 `fresh_required`；除非本轮 brief 明确点名 archive candidate id 并要求 replay / audit / resubmit / repair / remix / continue，否则已有 archive candidate 不能作为起点、交付物或目标完成条件。
+- archive taste context 只用于审美校准和失败模式校准；检查已有工作只用于保护工作区、识别历史参考和选择校准样本。设计 / 提交候选请求默认 `fresh_required`；除非本轮 brief 明确点名 archive / run / candidate id 并要求 replay / audit / resubmit / repair / remix / continue，否则已有 archive / run / candidate 不能作为起点、independent review 对象、交付物或目标完成条件。
 
 ## 必读路由
 
