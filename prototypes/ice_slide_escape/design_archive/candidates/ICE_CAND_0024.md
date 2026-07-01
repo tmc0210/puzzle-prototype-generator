@@ -193,5 +193,6 @@ shares the middle puzzle space across base/meta instead of reading as two
 attached sublevels. Base is a 4-push d4 target-debt application; meta is a
 compact d6+/restart reinterpretation. The v5 notch / side-pocket edit masks
 the d6 read and adds a lure: C/D are physically reachable from base only in
-non-winning states. Hard edge gate passes.
+non-winning states. Hard edge gate passes. Human caveat: AB/CD adjacent or
+same-side interfaces should be actively refined in future uses of this pattern.
 ```

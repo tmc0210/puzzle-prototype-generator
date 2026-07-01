@@ -19,7 +19,8 @@ prototype_specific_workflows:
     kind: redesign_stage
     default_status: routed
     trigger:
-      - "A base candidate is solid, promising, or thin_but_valid enough to inspect for same-layout reinterpretation."
+      - "A current-run base candidate is solid, promising, or thin_but_valid enough to inspect for same-layout reinterpretation."
+      - "If the base candidate comes from archive, the human brief or experiment brief explicitly authorizes that candidate id and allowed redesign scope."
       - "The experiment brief does not disable meta routing."
       - "The experiment brief has not explicitly enabled meta_first_design."
     authority_docs:
@@ -35,21 +36,28 @@ prototype_specific_workflows:
       - meta_reinterpretation_variant.meta_instance
       - meta_reinterpretation_variant.shared_structure
       - meta_reinterpretation_variant.latent_elements_from_base
-      - meta_reinterpretation_variant.non_target_pairs
+      - meta_reinterpretation_variant.interface_pair_policy
+      - meta_reinterpretation_variant.edge_pair_diagnostics.external_edge_escape_checks
+      - meta_reinterpretation_variant.edge_pair_diagnostics.risky_internal_non_target_pairs
+      - meta_reinterpretation_variant.edge_pair_diagnostics.ignored_internal_reverse_pairs
       - meta_reinterpretation_variant.preserves_base_solution
       - meta_reinterpretation_variant.creates_base_bypass
       - meta_reinterpretation_variant.classification
     reviewer_focus:
       - "A->B and C->D are separate solve instances with explicit edge start and edge goal."
       - "Base evidence is rerun after any redesign edit that affects layout, claim, start, goal, win condition, or mechanism use."
-      - "Non-target pairs are recorded as evidence or risk notes, not automatic failures."
+      - "A/B/C/D starts that can solve to edge goals outside A/B/C/D are recorded as external edge escape risks."
+      - "C/D->A/B reverse internal pairs are ignored by default; record only as verdict_effect: none unless the brief explicitly overrides this policy."
       - "Claims stay within single-level evidence; future world-map value remains design potential."
     critic_focus:
       - "Base quality remains solid enough; weak base candidates cannot be rescued by meta payoff."
       - "C->D creates a different causal chain, reading order, state consumption, or object role from A->B."
       - "Latent or lure elements do not seriously pollute base reading unless they receive clear meta payoff."
+      - "Do not use C/D->A/B cost, salience, or route naturalness as a caveat or core attack."
       - "Classify the result as meaningful_reinterpretation, interface_clone, connectivity_note_only, or bypass_risk."
     forbidden_unless:
+      - "Do not use an archive candidate as the base unless the brief explicitly authorizes that candidate id and allowed operations."
+      - "Archive taste examples are calibration only and are not reusable bases."
       - "Do not treat this as mechanical edge-pair enumeration."
       - "Do not reward a new entrance or exit if the logic chain is only a route shortcut or clone."
 
@@ -73,18 +81,46 @@ prototype_specific_workflows:
       - meta_reinterpretation.base_time_masking
       - meta_reinterpretation.latent_or_lure_elements
       - meta_reinterpretation.interface_legality
-      - meta_reinterpretation.non_target_pairs
+      - meta_reinterpretation.interface_pair_policy
+      - meta_reinterpretation.edge_pair_diagnostics.external_edge_escape_checks
+      - meta_reinterpretation.edge_pair_diagnostics.risky_internal_non_target_pairs
+      - meta_reinterpretation.edge_pair_diagnostics.ignored_internal_reverse_pairs
       - meta_reinterpretation.design_target
     reviewer_focus:
       - "Base and meta traces are checked separately."
       - "Future-knowledge exposure in base is checked against the brief."
       - "Starts, goals, target coverage, and edge legality are explicit for both instances."
-      - "A/B/C/D non-target pairs are recorded as evidence-backed risks."
+      - "A/B/C/D starts that can solve to edge goals outside A/B/C/D are evidence-backed risks."
+      - "C/D->A/B reverse internal pairs are ignored by default and must have verdict_effect: none."
     critic_focus:
       - "Evaluate base_quality, meta_quality, and cross_visit_reuse separately."
       - "Reject two independent mini-puzzles stitched into one layout."
       - "Reject meta routes that only replay the base logic from a new entrance or shorter exit."
+      - "Do not treat C/D->A/B as stealing C->D, even when it is shorter or cheaper."
       - "Reward only meaningful reuse of shared structure, latent elements, or different state consumption."
     forbidden_unless:
       - "Do not enable this mode from generic design-review-loop routing alone."
       - "Do not submit only base or only meta to review; the packet must include both instances."
+
+  - id: pre_human_polish_pass
+    kind: pre_human_submission_pass
+    default_status: run_after_proposal_ready
+    trigger:
+      - "The candidate is proposal_ready or proposal_ready_with_caveats."
+      - "The human asks to inspect the current best candidate."
+    authority_docs:
+      - prototypes/ice_slide_escape/docs/pre_human_polish_checklist.md
+    packet_extension:
+      - pre_human_polish_pass.status
+      - pre_human_polish_pass.attempted_tweaks
+      - pre_human_polish_pass.deferred_notes_for_human
+    reviewer_focus:
+      - "This pass is not evidence review and cannot repair missing evidence."
+      - "If a polish attempt changes layout, start, goal, win condition, or core mechanism use, rerun required evidence before submission."
+    critic_focus:
+      - "This pass is not a critic gate and cannot add core attacks for polish alone."
+      - "Keep, revert, or defer small presentation tweaks without damaging base/meta causal chains."
+    forbidden_unless:
+      - "Do not run before the candidate is already proposal_ready / proposal_ready_with_caveats unless the human explicitly asks to inspect the current best version."
+      - "Do not change review_loop_state because of polish alone."
+      - "Do not use polish failure as failed_search evidence."

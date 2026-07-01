@@ -13,6 +13,8 @@ scc_graph_interpretation:
 ```
 
 如果 `player_facing_interpretation` 为空，`verdict_effect` 必须是 `none`。
+如果 packet / handoff 声明了 ignored pair classes，匹配这些类别的 graph fact
+也必须是 `verdict_effect: none`，即使它们有 cost、距离或可达性数据。
 
 ## 常见中性读法
 

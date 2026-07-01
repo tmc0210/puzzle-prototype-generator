@@ -384,6 +384,13 @@ absolute max: 4 examples
 如果归档为空，或没有相关且带有人类评语的 clean archive 条目，写
 `none_found` 和原因。
 
+如果 `archive_taste_context` 是 `none_found`、缺失，或没有可用的人类评分 /
+人类评语锚点，critic / designer 不能输出任何分数化审美或难度结论。禁止写
+`4`、`4+`、`4-`、`low 4`、`meets 4`、`3/3+` 或等价表述；只能写
+`unscored_missing_human_archive_context`、`target_fit_unknown` 或非分数的
+结构观察。solver / analyzer 事实可以支持机制声明，但不能替代 human archive
+calibration 生成分数。
+
 选择前提和优先级：
 
 - `human_reviewed: true` 和人类评语是进入 `archive_taste_context` 的前提，不

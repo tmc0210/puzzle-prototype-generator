@@ -11,7 +11,11 @@
 - Role fit 是否符合玩家模型、机制暴露窗口和难度/审美目标。
 - Routed diagnostics 是否被正确解释；未触发诊断不得作为隐藏通过条件。
 - Archive taste context 是否只用了有人类评语支持的条目。
+- 没有可用 human archive anchors 时，不输出任何分数化审美或难度结论。禁止 `4`、`4+`、`4-`、`low 4`、`meets 4`、`3/3+` 等表述；只能写 `unscored_missing_human_archive_context`、`target_fit_unknown` 或非分数结构观察。
+- 是否存在未授权 archive variant：继承旧候选主要因果链、对象角色或布局骨架，却没有明确授权 candidate id 和允许操作。
 - SCC / graph fact 是否有玩家侧解释。
+- 如果 packet / handoff 声明 ignored pair classes，匹配这些类别的 solver / graph fact 只能作为 `verdict_effect: none` 的记录项，不能生成 caveat 或 core attack。
+- 如果 packet / handoff 声明 risky pair classes，只有匹配这些类别且有玩家侧解释的事实才可成为 pair-policy caveat / attack。
 
 ## 输出
 
@@ -24,6 +28,12 @@ review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_require
 required_action: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family
 strongest_merits:
 archive_taste_context_used:
+score_calibration:
+  human_archive_anchors_present:
+  score_claim_allowed:
+  positive_anchors:
+  lower_bound_or_negative_anchors:
+  missing_anchor_effect:
 aesthetic_target_fit:
 difficulty_target_fit:
 core_attacks:

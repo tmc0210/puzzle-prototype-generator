@@ -111,7 +111,14 @@ meta_reinterpretation:
   interface_legality:
     starts_and_goals_checked: []
     d_wall_or_multi_interface_notes: ""
-  non_target_pairs: []
+  interface_pair_policy:
+    declared_interface_points: [A, B, C, D]
+    target_pairs: ["A->B", "C->D"]
+    ignored_internal_reverse_pairs: ["C->A", "C->B", "D->A", "D->B"]
+  edge_pair_diagnostics:
+    external_edge_escape_checks: []
+    risky_internal_non_target_pairs: []
+    ignored_internal_reverse_pairs: []
   classification: meaningful_reinterpretation | interface_clone | connectivity_note_only | bypass_risk
 ```
 
@@ -119,8 +126,9 @@ base 解中看似无用、弱作用、甚至当前不可推动的元素不自动
 base 阅读，并在 meta 解中获得明确 payoff，它可以是正向潜伏结构。若没有 payoff，
 critic 仍应把它当作噪声攻击。
 
-`C->B`、`A->D` 或其它非目标 pair 的存在不自动构成 bypass。只有当它们明显抢
-走目标 meta 解读、破坏 base 解，或违反 experiment brief 时，才应打回。
+非目标 pair 必须按 `interface_pair_policy` 分类。A/B/C/D 起点通向 A/B/C/D
+之外其它边缘目标，或未被忽略的内部非目标 pair，可以成为风险；`C/D->A/B` 是
+反向内部 pair，默认无风险，不比较 cost / salience，不生成 caveat。
 
 跨关移动本身仍是未来范围。当前 designer loop 只检查这些接口的单关后果。
 
@@ -158,7 +166,8 @@ player_reaches_specific_edge_goal: true
 [ ] meta claim 写明 chain_delta_from_base 和 shared_structure。
 [ ] base 中的潜伏 / 诱惑元素被标记为 payoff 或噪声风险。
 [ ] 如果使用 D-wall 或多接口结构，记录每个接口的合法性和可达性。
-[ ] 非目标 pair 被记录为阅读风险，而不是自动当作失败。
+[ ] 按 interface_pair_policy 记录 external edge escape、未忽略内部 pair 和
+    C/D->A/B ignored reverse pair；不要把 C/D->A/B 当阅读风险。
 [ ] 已应用 docs/design_directives.md 中的原型专属指令。
 ```
 

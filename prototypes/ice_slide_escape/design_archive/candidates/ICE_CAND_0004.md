@@ -103,6 +103,6 @@ comments:
 ```text
 Human-rejected post-miner-fix d4 capstone attempt. Clean evidence: three d4
 rebounds, complete graph, no d5/d6/restart/boundary forbidden-reachable hits. Rejected
-because it is a simple three-d4 stack with weak later consumption, and because
-same start/goal is inappropriate for this slot.
+because human review found it to be a very simple three-d4 stack: repeated
+simple teaching remains teaching, not a capstone or strong application.
 ```

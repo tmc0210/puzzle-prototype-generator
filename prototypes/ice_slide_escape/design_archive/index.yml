@@ -330,6 +330,16 @@ experiments:
       - RF_target_ice_requirement
       - RF_explicit_edge_goal
       - RF_meta_reinterpretation
+  - experiment_id: ICE_EXP_META_2026_07_02_round19_fresh_v7_accepted
+    file: experiments/ICE_EXP_META_2026_07_02_round19_fresh_v7_accepted.md
+    status: accepted
+    selected_rule_facts:
+      - RF_d1_d2_stop
+      - RF_d3_destroy_moving_ice
+      - RF_d4_rebound
+      - RF_target_ice_requirement
+      - RF_explicit_edge_goal
+      - RF_meta_reinterpretation
 candidates:
   - candidate_id: ICE_CAND_0001
     file: candidates/ICE_CAND_0001.md
@@ -459,8 +469,8 @@ candidates:
     retrieval_summary: >
       Human-rejected post-miner-fix d4 capstone attempt. Clean evidence: three
       d4 rebounds, complete graph, no d5/d6/restart/boundary forbidden-reachable hits.
-      Independent critic held it as three repeated d4 target-cover applications;
-      human review agreed and added that same start/goal is inappropriate here.
+      Human review rejected it as a very simple three-d4 stack: repeated simple
+      teaching remains teaching, not a capstone or strong application.
     human_comment_ids:
       - HC_001
   - candidate_id: ICE_CAND_0005
@@ -1205,7 +1215,9 @@ candidates:
       attached sublevels. Base is a 4-push d4 target-debt application; meta is a
       compact d6+/restart reinterpretation. The v5 notch / side-pocket edit
       masks the d6 read and adds a lure: C/D are physically reachable from base
-      only in non-winning states. Hard edge gate passes.
+      only in non-winning states. Hard edge gate passes. Human caveat: AB/CD
+      adjacent or same-side interfaces should be actively refined in future uses
+      of this pattern.
     human_comment_ids:
       - HC_ICE_CAND_0024_001
   - candidate_id: ICE_CAND_0025
@@ -1489,10 +1501,105 @@ candidates:
       this is key-element reuse with moderate spatial coupling, not large-area
       shared-space or top-tier endgame meta.
     human_comment_ids: []
+  - candidate_id: ICE_CAND_0033
+    file: candidates/ICE_CAND_0033.md
+    experiment_id: ICE_EXP_META_2026_07_02_round19_fresh_v7_accepted
+    status: accepted
+    llm_candidate_strength: compact_same_ice_d4_revisit_misdirection
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 5
+    difficulty_score: 2
+    allowed_exposure_through: pass_through_d5
+    motifs:
+      - short_stop_d1_d2
+      - destroy_moving_ice_d3
+      - d4_rebound
+      - target_ice_coverage
+      - explicit_edge_goal
+      - meta_reinterpretation
+      - same_ice_revisit
+      - misdirection_without_knowledge_delta
+    archive_use:
+      - positive_reference
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - low_difficulty_high_aesthetic
+      - same_core_ice_three_d4_revisit
+      - small_misdirection_and_reversal
+      - no_knowledge_delta_meta_payoff
+      - clean_reachability_gate
+      - non_adjacent_ab_interfaces
+      - identity_coverage_supported
+    failure_modes:
+      - low_difficulty_not_stage_challenge
+      - local_reuse_not_large_shared_space
+      - custom_identity_probe_dependency
+    search_ledger_status: exploration_log_present
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的低难度高审美 meta-first 参考，审美 5、难度 2。Base 是一次
+      简单 d4 rebound，meta 没有新增知识差，却把同一核心冰改造成三次 d4
+      的回访重读：玩家先以为“这关刚做过，一次 d4 就行”，随后因目标 D 和
+      路线堵塞发现旧答案不够，并继续解开同一结构。价值在小误导、小反转和
+      同冰复用，不在高难度、大空间交融或新机制展示。
+    human_comment_ids:
+      - HC_ICE_CAND_0033_001
+  - candidate_id: ICE_CAND_0034
+    file: candidates/ICE_CAND_0034.md
+    experiment_id: ICE_EXP_META_2026_07_02_round20_v22_rightD_accepted
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 4
+    difficulty_score: 2
+    allowed_exposure_through: ice_rebound_d4
+    motifs:
+      - short_stop_d1_d2
+      - destroy_moving_ice_d3
+      - d4_rebound
+      - d6_destroy_group
+      - target_ice_coverage
+      - explicit_edge_goal
+      - meta_reinterpretation
+      - shared_lower_structure_reuse
+      - meta_only_middle_disruption
+    archive_use:
+      - positive_reference
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - meta_only_middle_disruption
+      - shared_lower_structure_reuse
+      - clean_reachability_gate
+      - non_adjacent_cd_different_sides
+      - required_push_probe_pass
+    failure_modes:
+      - thin_base_flow
+      - overclaim_full_divergence_risk
+      - shell_routing_wrapper
+      - base_d3_boundary_noise
+    search_ledger_status: exploration_log_present
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 meta-first 亮点候选，审美 4、归档难度 2，细分难度为
+      base 2-、meta 约 3。Base 是干净但偏薄的 d1+d4 两推流程；meta 的价值
+      在于回访时左推 [8,5] 的冰，扰乱并改写下方结构，使后段不是完全复刻
+      base 的简单 d1+d4。证据支持 A/B->C/D 不可解、全边缘无非接口逃逸、
+      base 无 d5/d6/restart 暴露。
+    human_comment_ids:
+      - HC_ICE_CAND_0034_001
 example_queries:
   - Find positive or negative d4 rebound examples before designing another rebound level.
   - Find high-difficulty d4 capstone examples before introducing d5.
   - Find all-knowledge endgame capstone examples using d5/d6/restart/boundary mechanics.
   - Find critic calibration cases where the critic missed forced linearity.
   - Find designer calibration cases where the designer claim missed the real highlight.
-

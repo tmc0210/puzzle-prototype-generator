@@ -95,9 +95,9 @@ solve instance，必须分别验证。
 ```
 
 只有在 meta-interface redesign 中被明确声明为目标 solve instance 的一部分，
-并且形成不同解法逻辑链时，额外边缘才应被视为正向价值。非目标 pair 的可解性
-需要记录，但不默认打回；只有当它抢走目标解读、明显更自然，或破坏 base 关阅
-读时才构成问题。
+并且形成不同解法逻辑链时，额外边缘才应被视为正向价值。对于带 A/B/C/D 接口的
+候选，A/B/C/D 起点通向 A/B/C/D 之外其它边缘目标的可解性仍然是风险；`C/D->A/B`
+属于明确忽略的反向内部 pair，不比较 cost / salience，也不生成 caveat。
 
 ## 基础关后的元接口再设计
 
@@ -120,7 +120,8 @@ base candidate A->B 有保留价值
 meta redesign 的设计入口不是枚举入口 / 出口。Designer 应先读 A->B 的墙、冰、
 目标、边缘位置、潜伏元素和路线含义，主动尝试开墙、加冰、加入潜伏障碍、改变
 入口出口读法等结构改动，在保护 A->B 核心逻辑链的前提下构造 C->D。工具的
-start/goal pair 检查只用于验证已经提出的 C->D 假设，以及记录非目标 pair 风险。
+start/goal pair 检查只用于验证已经提出的 C->D 假设，以及按
+`interface_pair_policy` 记录 external edge escape / 内部 pair 类别。
 
 如果 C->D 形成有趣的同结构重读，base 解中存在无用冰、弱作用元素或轻微噪声
 可以被更宽容地看待。critic 应判断它是否严重污染 base 阅读，以及是否在 C->D
@@ -188,15 +189,26 @@ meta_reinterpretation_variant:
     - element: ""
       base_reading: unused | weak_role | impossible_now | incidental | other
       meta_payoff: ""
-  non_target_pairs:
-    - pair: "C->B"
-      result: unknown | unsolved | solved
-      risk: none | steals_reading | bypasses_base | confusing | other
+  interface_pair_policy:
+    declared_interface_points: [A, B, C, D]
+    target_pairs: ["A->B", "C->D"]
+    ignored_internal_reverse_pairs: ["C->A", "C->B", "D->A", "D->B"]
+    risky_non_target_pair_scope:
+      - "A/B/C/D -> edge goals outside A/B/C/D"
+      - "internal non-target pairs not listed under ignored_internal_reverse_pairs"
+  edge_pair_diagnostics:
+    external_edge_escape_checks: []
+    risky_internal_non_target_pairs: []
+    ignored_internal_reverse_pairs: []
   preserves_base_solution: true | false | unknown
   creates_base_bypass: true | false | unknown
   classification: meaningful_reinterpretation | interface_clone | connectivity_note_only | bypass_risk
   notes: ""
 ```
+
+`ignored_internal_reverse_pairs` 默认留空；只有工具已经枚举或报告了 `C/D->A/B`
+pair 时，才把对应事实填入这里，并保持 `verdict_effect: none`。不要为了填充
+packet 专门检查 `C/D->A/B`。
 
 ## Meta-First 设计流程
 
@@ -231,7 +243,17 @@ meta_reinterpretation:
   interface_legality:
     starts_and_goals_checked: []
     d_wall_or_multi_interface_notes: ""
-  non_target_pairs: []
+  interface_pair_policy:
+    declared_interface_points: [A, B, C, D]
+    target_pairs: ["A->B", "C->D"]
+    ignored_internal_reverse_pairs: ["C->A", "C->B", "D->A", "D->B"]
+    risky_non_target_pair_scope:
+      - "A/B/C/D -> edge goals outside A/B/C/D"
+      - "internal non-target pairs not listed under ignored_internal_reverse_pairs"
+  edge_pair_diagnostics:
+    external_edge_escape_checks: []
+    risky_internal_non_target_pairs: []
+    ignored_internal_reverse_pairs: []
   design_target:
     aesthetic_score: null
     difficulty_score: null
@@ -247,8 +269,9 @@ meta_reinterpretation:
 - meta 流程是后期玩家回访流程，难度应该以游戏终局难度考虑，不宜再使用简单顺序锁、witness拼接。
 - base 视角下可以有诱惑、疑问、可达但 target 状态不兼容的结构，回访时兑现。
 - 需要显式验证可达性和机制事件暴露。以下情况必须 reject 并调整结构：base
-  流程的完整可达事件扫描命中后期 forbidden-if-seen-anywhere 事件；以 A 或 B
-  为起点时，有 A 或 B 之外的任意边缘（尤其是 C 和 D）可解。
+  流程的完整可达事件扫描命中后期 forbidden-if-seen-anywhere 事件；A/B/C/D
+  任一起点能可解到 A/B/C/D 之外其它边缘目标；或未被忽略的内部非目标 pair
+  破坏目标入口/出口读法。`C/D->A/B` 默认无风险，不能作为 reject 或 caveat。
 - 后期机制事件在 base 流程中被合理遮蔽，不提前暴露。在 base 流程中，仅 meta
   流程中可用的机制触发结构可以被视觉上埋伏，但不能在 base 的可达事件扫描中
   实际触发；视觉遮蔽仍由 critic 从玩家视角评价。
@@ -317,8 +340,10 @@ connectivity_note_only
 bypass_risk
 ```
 
-`C->B`、`A->D` 或其它非目标 solve instance 的存在通常只是记录项，不等于
-bypass。
+非目标 solve instance 必须按 `interface_pair_policy` 分类。`C/D->A/B` 是明确
+忽略的反向内部 pair，通常只是工具事实，不等于 bypass、caveat 或 reading risk。
+`A/B/C/D -> A/B/C/D` 之外其它边缘目标，以及未被忽略的内部非目标 pair，才进入
+风险审查。
 
 `D` 的大地图方向意义不是本关 meta redesign 的核心评价项。D 可以和 B 同侧；邻接关
 或大地图结构可以承担后续差异。除非 experiment brief 明确要求，本关只需证明
@@ -333,5 +358,6 @@ C->D 是有趣的同结构重读。
 - 不要把多个出口合并成一个 any-edge proof；
 - 把未来大地图价值标记为设计潜力，而不是已实现行为。
 - base_instance 与 meta_instance 分别保存 trace、事件证据和 chain_delta；
-- 非目标 pair 可作为阅读风险记录，但不自动等同于失败。
+- external edge escape 和未被忽略的内部非目标 pair 可作为阅读风险记录，但不自动等同于失败。
+- `C/D->A/B` 反向内部 pair 默认 `verdict_effect: none`。
 ```

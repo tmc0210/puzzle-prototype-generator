@@ -118,6 +118,13 @@ designer-derived 或 tool-only 归档条目作为审美上下文。Tags、`accep
 反例，2 只能作功能库存 / 水关下界警示，3 是可用下界且默认应优化，4-5 才能
 作为正向审美参考。
 
+硬性评分闸门：如果 packet 没有提供可用的 human archive taste context，
+reviewer / critic / designer 不能输出任何分数化结论。禁止写 `4`、`4+`、
+`4-`、`low 4`、`meets 4`、`score 3/3+` 或等价表述；只能写
+`unscored_missing_human_archive_context`、`target_fit_unknown` 或非分数的
+结构性观察。工具证据可以支持机制事实，但不能替代人类归档锚点生成审美或难度
+分数。
+
 不要要求 reviewer / critic 自己补规则、补工具证据或猜测玩家模型。
 
 ## Lead Designer Studio Template
@@ -316,6 +323,9 @@ Review rules:
   attention. Do not copy or reward copying an archive example's layout, geometry,
   causal chain, solution route, object placement, or entrance/exit relation.
 - If archive_taste_context is none_found, do not invent archive precedent.
+- If archive_taste_context is none_found, missing, or lacks human calibration
+  anchors, do not output any numeric or score-like aesthetic / difficulty
+  conclusion. Mark target fit as unscored or unknown instead.
 - Critique must cite concrete puzzle structure, player-model assumptions,
   prerequisite gaps, or analyzer facts.
 - Treat the review as attacks for the lead designer to answer. Do not reduce it
@@ -330,6 +340,12 @@ review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_require
 required_action: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family
 strongest_merits:
 archive_taste_context_used:
+score_calibration:
+  human_archive_anchors_present:
+  score_claim_allowed:
+  positive_anchors:
+  lower_bound_or_negative_anchors:
+  missing_anchor_effect:
 aesthetic_target_fit:
 difficulty_target_fit:
 core_attacks:

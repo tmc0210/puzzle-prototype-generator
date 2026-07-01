@@ -214,8 +214,8 @@ Prototype-Specific Work：
   meta-reinterpretation 是本原型的 redesign_stage，则按该原型流程执行。若该
   流程基于 base candidate，正确流程是：先确认 A->B 作为 base candidate 有保
   留价值；再尝试小改动或重读形成 C->D；若推荐变体，必须重新验证 A->B 和
-  C->D，并记录 chain_delta、shared_structure、latent payoff、non-target
-  pairs 和证据边界。
+  C->D，并记录 chain_delta、shared_structure、latent payoff、原型声明的
+  interface_pair_policy / edge_pair_diagnostics 和证据边界。
 - 如果某个原型文档或 experiment brief 显式声明 `meta_first_design`，则一开始
   就共同设计 A->B 与 C->D；每次 review loop 必须同时提交 base + meta，critic
   必须分别评价 base 自身、meta 自身和 cross-visit reuse。

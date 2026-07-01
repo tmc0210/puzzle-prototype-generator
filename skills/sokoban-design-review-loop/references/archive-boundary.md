@@ -17,7 +17,9 @@ Archive pass 权限只限 formatting_and_integrity。它不是新的 designer、
 - 只选带有人类评语且 `human_reviewed: true` 的条目。
 - 优先看人类原文摘句和 human calibration scores，再看 tag / status / retrieval summary。
 - 只用于审美校准、失败模式和 critic 注意力校准；不得复制 layout、geometry、causal chain、solution route、object placement 或 entrance/exit relation。
+- 读取 candidate record 不授权把它作为 base。只有人类请求或 experiment brief 明确授权某个 archive candidate 的变体、修补、强化、延展、remix 或继续设计时，才允许从该候选派生。
 - 没有相关条目时写 `none_found`，不要用 critic-only / tool-only / designer-derived 条目补位。
+- 如果没有可用 human archive taste context，reviewer / critic / designer 不能输出任何分数化审美或难度结论。禁止 `4`、`4+`、`4-`、`low 4`、`meets 4`、`3/3+` 等表述；只能写 `unscored_missing_human_archive_context`、`target_fit_unknown` 或非分数结构观察。
 
 ## 不可以做
 
@@ -28,6 +30,7 @@ Archive pass 权限只限 formatting_and_integrity。它不是新的 designer、
 - 用派生摘要覆盖人类评语。
 - 把缺失证据、浅搜索、缺 review 的候选包装成 positive reference。
 - 在没有人类明确评分时填写 aesthetic_score 或 difficulty_score。
+- 在没有 human archive anchors 时采纳或转述 critic 的分数化结论。
 
 ## 固定枚举
 
