@@ -15,7 +15,7 @@ review_integrity:
   ICE_CAND_0003: independent_review
 notes: >
   本轮没有 proposal_ready 候选。ICE_CAND_0003 机制范围干净但被 critic held；
-  后续三段链结构有更强因果潜力，但没有通过 report-only fatal gate，因此没有作为
+  后续三段链结构有更强因果潜力，但没有通过 forbidden-reachable fatal gate，因此没有作为
   serious candidate 入库。
 ```
 
@@ -72,7 +72,7 @@ attempts:
       - ice_boundary_disappear_after_group
       - ice_pass_through_d5
       - ice_destroy_group_d6_plus
-    abandon_reason: reachable report-only hits are fatal under this experiment
+    abandon_reason: reachable forbidden-reachable hits are fatal under this experiment
 
   - attempt_id: D4_chain3_sealed
     family: third_d4_consumes_second_d4_product
@@ -138,7 +138,7 @@ failure_distribution:
     notes: >
       Three-d4 chain created real later consumption: B preserves the gate, A becomes
       the obstacle, C consumes A. However every solvable version exposed reachable
-      d5/d6/boundary report-only transitions.
+      d5/d6/boundary forbidden-reachable transitions.
 
   local_repairs_not_new_family:
     count: 4
@@ -169,6 +169,6 @@ failure_distribution:
 ```yaml
 terminal_state: failed_search
 reason: >
-  No candidate both passed the hard report-only scope and survived the critic's
+  No candidate both passed the hard forbidden-reachable scope and survived the critic's
   capstone role-fit attack. The only clean serious candidate is held, not ready.
 ```

@@ -210,25 +210,26 @@ npx tsx src/cli.ts mine prototypes/ice_slide_escape --weight row_probe=-500 --we
 
 负权重只能降低排序，不能当作禁止机制的 hard ban。若本轮设计要求“只能用某些
 机制，不能触发另一些机制”，应先用 miner 找候选，再对具体 layout 跑
-`compare-starts-layout` 的 required / forbidden event 检查。
+`compare-starts-layout` 的 required-winning / forbidden-reachable event 检查。
 
 例如：目标候选必须使用 d4 rebound，不能触发 d3 destroy、d5 pass-through、
 d6 group destroy、restart 或 boundary disappearance：
 
 ```text
-npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape candidate.txt --player-goal x,y --starts a,b --required-events ice_rebound_d4 --forbidden-events ice_destroyed_d3,ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_boundary_disappear,ice_boundary_disappear_after_group --max-states 12000 --max-depth 100 --graph-max-states 12000
+npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape candidate.txt --player-goal x,y --starts a,b --required-winning-events ice_rebound_d4 --forbidden-reachable-events ice_destroyed_d3,ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_boundary_disappear,ice_boundary_disappear_after_group --max-states 12000 --max-depth 100 --graph-max-states 12000
 ```
 
 如果报告中：
 
 ```text
 机器闸门: pass
-缺少 required events 的胜利路径: 未找到；完整搜索
-触发 forbidden events 的胜利路径: 未找到；完整搜索
+缺少 required winning events 的胜利路径: 未找到；完整搜索
+Forbidden reachable hits: none
 ```
 
-才可以把它读作“当前预算内，所有胜利路径都满足 required / forbidden 约束”。
-如果图或 product search 超预算，结论是 `unknown`，不能降级成 pass。
+才可以把它读作“当前预算内，所有胜利路径都满足 required-winning 约束，且任意
+可达尝试都没有触发 forbidden-reachable 事件”。如果图或 product search 超预算，
+结论是 `unknown`，不能降级成 pass。
 
 ## 报告解读
 

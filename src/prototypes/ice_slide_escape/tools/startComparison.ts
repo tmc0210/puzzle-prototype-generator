@@ -14,9 +14,9 @@ export type IceSlideStartComparisonOptions = {
   targets: string[];
   playerGoal: PointTuple;
   starts?: PointTuple[];
-  requiredEvents: string[];
-  forbiddenEvents: string[];
-  reportEvents: string[];
+  requiredWinningEvents: string[];
+  forbiddenWinningEvents: string[];
+  forbiddenReachableEvents: string[];
   maxStates?: number;
   maxDepth?: number;
   graphMaxStates?: number;
@@ -28,7 +28,7 @@ export type ReachableEventScan = {
   legalTransitions: number;
   eventOnlyIllegalTransitions: number;
   eventCounts: Record<string, number>;
-  reportHits: string[];
+  forbiddenReachableHits: string[];
   reason?: string;
 };
 
@@ -40,8 +40,8 @@ export type StartComparisonRow = {
   cost?: number;
   inputs: string[];
   returnedEvents: string[];
-  returnedRequiredCovered: boolean;
-  returnedForbiddenHits: string[];
+  returnedRequiredWinningCovered: boolean;
+  returnedForbiddenWinningHits: string[];
   graphStatus?: string;
   reachableStates?: number;
   winningStates?: number;
@@ -58,9 +58,9 @@ export type StartComparisonRow = {
     forcedWinPrefix: number;
   };
   firstStepLegalEvents: string[];
-  winningPathMissingRequired?: GoalPathProbe;
-  winningPathWithForbidden?: GoalPathProbe;
-  winningPathMissingRequiredOrWithForbidden?: GoalPathProbe;
+  winningPathMissingRequiredWinning?: GoalPathProbe;
+  winningPathWithForbiddenWinning?: GoalPathProbe;
+  winningPathMissingRequiredOrWithForbiddenWinning?: GoalPathProbe;
   reachableEventScan?: ReachableEventScan;
   machineGate: "pass" | "fail" | "unknown";
   machineGateReasons: string[];
@@ -81,9 +81,9 @@ export type IceSlideStartComparisonReport = {
   prototype: string;
   id: string;
   playerGoal: PointTuple;
-  requiredEvents: string[];
-  forbiddenEvents: string[];
-  reportEvents: string[];
+  requiredWinningEvents: string[];
+  forbiddenWinningEvents: string[];
+  forbiddenReachableEvents: string[];
   starts: StartComparisonRow[];
 };
 
@@ -103,9 +103,9 @@ export function compareIceSlideStarts(
     prototype: pkg.mechanic.id,
     id: options.id,
     playerGoal: options.playerGoal,
-    requiredEvents: options.requiredEvents,
-    forbiddenEvents: options.forbiddenEvents,
-    reportEvents: options.reportEvents,
+    requiredWinningEvents: options.requiredWinningEvents,
+    forbiddenWinningEvents: options.forbiddenWinningEvents,
+    forbiddenReachableEvents: options.forbiddenReachableEvents,
     starts: rows,
   };
 }
@@ -134,18 +134,18 @@ function compareSingleStart(
       maxStates: options.maxStates,
       maxDepth: options.maxDepth,
     });
-    const reachableEventScan = scanReachableEvents(runtime, initial, options.reportEvents, {
+    const reachableEventScan = scanReachableEvents(runtime, initial, options.forbiddenReachableEvents, {
       winCondition,
       maxStates: options.graphMaxStates ?? options.maxStates,
       maxDepth: options.maxDepth,
     });
-    const winningPathMissingRequired =
-      options.requiredEvents.length > 0
+    const winningPathMissingRequiredWinning =
+      options.requiredWinningEvents.length > 0
         ? toGoalPathProbe(
             findUncoveredGoalPathWithRuntime(
               runtime,
               initial,
-              options.requiredEvents,
+              options.requiredWinningEvents,
               [],
               {
                 winCondition,
@@ -155,14 +155,14 @@ function compareSingleStart(
             ),
           )
         : undefined;
-    const winningPathWithForbidden =
-      options.forbiddenEvents.length > 0
+    const winningPathWithForbiddenWinning =
+      options.forbiddenWinningEvents.length > 0
         ? toGoalPathProbe(
             findUncoveredGoalPathWithRuntime(
               runtime,
               initial,
               [],
-              options.forbiddenEvents,
+              options.forbiddenWinningEvents,
               {
                 winCondition,
                 maxStates: options.graphMaxStates ?? options.maxStates,
@@ -171,14 +171,14 @@ function compareSingleStart(
             ),
           )
         : undefined;
-    const winningPathMissingRequiredOrWithForbidden =
-      options.requiredEvents.length > 0 || options.forbiddenEvents.length > 0
+    const winningPathMissingRequiredOrWithForbiddenWinning =
+      options.requiredWinningEvents.length > 0 || options.forbiddenWinningEvents.length > 0
         ? toGoalPathProbe(
             findUncoveredGoalPathWithRuntime(
               runtime,
               initial,
-              options.requiredEvents,
-              options.forbiddenEvents,
+              options.requiredWinningEvents,
+              options.forbiddenWinningEvents,
               {
                 winCondition,
                 maxStates: options.graphMaxStates ?? options.maxStates,
@@ -193,11 +193,11 @@ function compareSingleStart(
       analysis,
       firstStepLegalEvents,
       reachableEventScan,
-      requiredEvents: options.requiredEvents,
-      forbiddenEvents: options.forbiddenEvents,
-      winningPathMissingRequired,
-      winningPathWithForbidden,
-      winningPathMissingRequiredOrWithForbidden,
+      requiredWinningEvents: options.requiredWinningEvents,
+      forbiddenWinningEvents: options.forbiddenWinningEvents,
+      winningPathMissingRequiredWinning,
+      winningPathWithForbiddenWinning,
+      winningPathMissingRequiredOrWithForbiddenWinning,
     });
     return row;
   } catch (error) {
@@ -208,8 +208,8 @@ function compareSingleStart(
       solvable: false,
       inputs: [],
       returnedEvents: [],
-      returnedRequiredCovered: false,
-      returnedForbiddenHits: [],
+      returnedRequiredWinningCovered: false,
+      returnedForbiddenWinningHits: [],
       firstStepLegalEvents: [],
       machineGate: "fail",
       machineGateReasons: ["start is not a valid solve instance"],
@@ -247,14 +247,14 @@ function buildRow(input: {
   analysis: LevelAnalysis;
   firstStepLegalEvents: string[];
   reachableEventScan: ReachableEventScan;
-  requiredEvents: string[];
-  forbiddenEvents: string[];
-  winningPathMissingRequired?: GoalPathProbe;
-  winningPathWithForbidden?: GoalPathProbe;
-  winningPathMissingRequiredOrWithForbidden?: GoalPathProbe;
+  requiredWinningEvents: string[];
+  forbiddenWinningEvents: string[];
+  winningPathMissingRequiredWinning?: GoalPathProbe;
+  winningPathWithForbiddenWinning?: GoalPathProbe;
+  winningPathMissingRequiredOrWithForbiddenWinning?: GoalPathProbe;
 }): StartComparisonRow {
-  const forbiddenHits = uniqueEventsMatching(input.analysis.solution.events, input.forbiddenEvents);
-  const returnedRequiredCovered = input.requiredEvents.every((pattern) =>
+  const forbiddenWinningHits = uniqueEventsMatching(input.analysis.solution.events, input.forbiddenWinningEvents);
+  const returnedRequiredWinningCovered = input.requiredWinningEvents.every((pattern) =>
     input.analysis.solution.events.some((event) => eventMatchesPattern(event, pattern)),
   );
   const initialScc = input.analysis.agency.scc?.initialScc;
@@ -264,23 +264,23 @@ function buildRow(input: {
   if (!input.analysis.solution.found) {
     machineGateReasons.push("该显式起终点不可解");
   }
-  if (input.analysis.solution.found && !returnedRequiredCovered) {
-    machineGateReasons.push("返回解未覆盖全部 required events");
+  if (input.analysis.solution.found && !returnedRequiredWinningCovered) {
+    machineGateReasons.push("返回解未覆盖全部 required winning events");
   }
-  if (forbiddenHits.length > 0) {
-    machineGateReasons.push("返回解触发 forbidden events");
+  if (forbiddenWinningHits.length > 0) {
+    machineGateReasons.push("返回解触发 forbidden winning events");
   }
-  if (input.winningPathMissingRequired?.found) {
-    machineGateReasons.push("存在缺少 required events 的胜利路径");
+  if (input.winningPathMissingRequiredWinning?.found) {
+    machineGateReasons.push("存在缺少 required winning events 的胜利路径");
   }
-  if (input.winningPathWithForbidden?.found) {
-    machineGateReasons.push("存在触发 forbidden events 的胜利路径");
+  if (input.winningPathWithForbiddenWinning?.found) {
+    machineGateReasons.push("存在触发 forbidden winning events 的胜利路径");
   }
   if (input.reachableEventScan.status !== "complete") {
     machineGateReasons.push("可达事件扫描未完成");
   }
-  if (input.reachableEventScan.reportHits.length > 0) {
-    machineGateReasons.push("可达图中出现 report-only events");
+  if (input.reachableEventScan.forbiddenReachableHits.length > 0) {
+    machineGateReasons.push("可达图中出现 forbidden reachable events");
   }
 
   const machineGate =
@@ -297,8 +297,8 @@ function buildRow(input: {
     cost: input.analysis.solution.found ? input.analysis.solution.cost : undefined,
     inputs: input.analysis.solution.inputs,
     returnedEvents: input.analysis.solution.events,
-    returnedRequiredCovered,
-    returnedForbiddenHits: forbiddenHits,
+    returnedRequiredWinningCovered,
+    returnedForbiddenWinningHits: forbiddenWinningHits,
     graphStatus: input.analysis.graph.status,
     reachableStates: input.analysis.graph.reachableStateCount,
     winningStates: input.analysis.graph.winStateCount,
@@ -319,9 +319,9 @@ function buildRow(input: {
         }
       : undefined,
     firstStepLegalEvents: input.firstStepLegalEvents,
-    winningPathMissingRequired: input.winningPathMissingRequired,
-    winningPathWithForbidden: input.winningPathWithForbidden,
-    winningPathMissingRequiredOrWithForbidden: input.winningPathMissingRequiredOrWithForbidden,
+    winningPathMissingRequiredWinning: input.winningPathMissingRequiredWinning,
+    winningPathWithForbiddenWinning: input.winningPathWithForbiddenWinning,
+    winningPathMissingRequiredOrWithForbiddenWinning: input.winningPathMissingRequiredOrWithForbiddenWinning,
     reachableEventScan: input.reachableEventScan,
     machineGate,
     machineGateReasons,
@@ -361,14 +361,14 @@ function scanReachableEvents<State, Action extends string, Options extends { win
     ) => { legal: boolean; state: State; events: string[] };
   },
   initial: State,
-  reportEvents: string[],
+  forbiddenReachableEvents: string[],
   options: Options,
 ): ReachableEventScan {
   const maxStates = options.maxStates ?? 100_000;
   const queue: Array<{ state: State; depth: number }> = [{ state: initial, depth: 0 }];
   const visited = new Set<string>([runtime.key(initial)]);
   const eventCounts: Record<string, number> = {};
-  const reportHits = new Set<string>();
+  const forbiddenReachableHits = new Set<string>();
   let cursor = 0;
   let legalTransitions = 0;
   let eventOnlyIllegalTransitions = 0;
@@ -384,7 +384,7 @@ function scanReachableEvents<State, Action extends string, Options extends { win
     for (const action of runtime.actions(current.state, options)) {
       const result = runtime.step(current.state, action, options);
       countEvents(result.events, eventCounts);
-      collectReportHits(result.events, reportEvents, reportHits);
+      collectForbiddenReachableHits(result.events, forbiddenReachableEvents, forbiddenReachableHits);
 
       if (!result.legal) {
         if (result.events.length > 0) {
@@ -406,7 +406,7 @@ function scanReachableEvents<State, Action extends string, Options extends { win
           legalTransitions,
           eventOnlyIllegalTransitions,
           eventCounts,
-          reportHits: [...reportHits].sort(),
+          forbiddenReachableHits: [...forbiddenReachableHits].sort(),
           reason: `state budget exceeded (${maxStates})`,
         };
       }
@@ -420,7 +420,7 @@ function scanReachableEvents<State, Action extends string, Options extends { win
     legalTransitions,
     eventOnlyIllegalTransitions,
     eventCounts,
-    reportHits: [...reportHits].sort(),
+    forbiddenReachableHits: [...forbiddenReachableHits].sort(),
   };
 }
 
@@ -477,7 +477,7 @@ function countEvents(events: string[], counts: Record<string, number>): void {
   }
 }
 
-function collectReportHits(events: string[], patterns: string[], hits: Set<string>): void {
+function collectForbiddenReachableHits(events: string[], patterns: string[], hits: Set<string>): void {
   for (const event of events) {
     if (patterns.some((pattern) => eventMatchesPattern(event, pattern))) {
       hits.add(event);
@@ -505,14 +505,14 @@ export function formatIceSlideStartComparisonMarkdown(
     "",
     `- Prototype: ${report.prototype}`,
     `- 玩家终点: ${formatPoint(report.playerGoal)}`,
-    `- Required events: ${report.requiredEvents.join(", ") || "none"}`,
-    `- Forbidden events: ${report.forbiddenEvents.join(", ") || "none"}`,
-    `- Report-only events: ${report.reportEvents.join(", ") || "none"}`,
+    `- Required winning-path events: ${report.requiredWinningEvents.join(", ") || "none"}`,
+    `- Forbidden winning-path events: ${report.forbiddenWinningEvents.join(", ") || "none"}`,
+    `- Forbidden reachable events: ${report.forbiddenReachableEvents.join(", ") || "none"}`,
     `- 已检查起点: ${report.starts.length}`,
     "",
     "## 起点表",
     "",
-    "| 起点 | 机器闸门 | 可解 | Cost | Required 覆盖 | 返回解 forbidden | 可达 report hits | Graph | Initial SCC | Solution SCC | 原因 |",
+    "| 起点 | 机器闸门 | 可解 | Cost | Required winning 覆盖 | 返回解 forbidden winning | 可达 forbidden hits | Graph | Initial SCC | Solution SCC | 原因 |",
     "| --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- |",
     ...report.starts.map(formatStartRow),
     "",
@@ -530,9 +530,9 @@ function formatStartRow(row: StartComparisonRow): string {
     row.machineGate,
     row.solvable ? "yes" : "no",
     row.cost ?? "n/a",
-    row.returnedRequiredCovered ? "yes" : "no",
-    row.returnedForbiddenHits.join(", ") || "none",
-    row.reachableEventScan?.reportHits.join(", ") || "none",
+    row.returnedRequiredWinningCovered ? "yes" : "no",
+    row.returnedForbiddenWinningHits.join(", ") || "none",
+    row.reachableEventScan?.forbiddenReachableHits.join(", ") || "none",
     row.graphStatus
       ? `${row.graphStatus}, states=${row.reachableStates ?? "n/a"}, wins=${row.winningStates ?? "n/a"}`
       : "n/a",
@@ -560,9 +560,9 @@ function formatStartDetails(row: StartComparisonRow): string[] {
     "",
     "胜利路径探针：",
     "",
-    `- 缺少 required events 的胜利路径: ${formatGoalPathProbe(row.winningPathMissingRequired)}`,
-    `- 触发 forbidden events 的胜利路径: ${formatGoalPathProbe(row.winningPathWithForbidden)}`,
-    `- 缺少 required 或触发 forbidden 的胜利路径: ${formatGoalPathProbe(row.winningPathMissingRequiredOrWithForbidden)}`,
+    `- 缺少 required winning events 的胜利路径: ${formatGoalPathProbe(row.winningPathMissingRequiredWinning)}`,
+    `- 触发 forbidden winning events 的胜利路径: ${formatGoalPathProbe(row.winningPathWithForbiddenWinning)}`,
+    `- 缺少 required winning 或触发 forbidden winning 的胜利路径: ${formatGoalPathProbe(row.winningPathMissingRequiredOrWithForbiddenWinning)}`,
     "",
     "可达事件扫描：",
     "",
@@ -594,7 +594,7 @@ function formatReachableEventScan(scan: ReachableEventScan | undefined): string[
     `- 可达状态: ${scan.reachableStates}`,
     `- 合法转移: ${scan.legalTransitions}`,
     `- 仅事件非法转移: ${scan.eventOnlyIllegalTransitions}`,
-    `- Report hits: ${scan.reportHits.join(", ") || "none"}`,
+    `- Forbidden reachable hits: ${scan.forbiddenReachableHits.join(", ") || "none"}`,
     `- 事件计数: ${formatEventCounts(scan.eventCounts)}`,
     ...(scan.reason ? [`- Reason: ${scan.reason}`] : []),
   ];

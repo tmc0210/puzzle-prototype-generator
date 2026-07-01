@@ -1,0 +1,90 @@
+mechanic: ice_slide_escape
+
+required_docs:
+  - prototypes/ice_slide_escape/docs/rules.md
+  - prototypes/ice_slide_escape/docs/solver_contract.md
+  - prototypes/ice_slide_escape/docs/mechanic_exposure_sequence.yml
+  - prototypes/ice_slide_escape/docs/designer_contract.md
+  - prototypes/ice_slide_escape/docs/meta_interfaces.md
+  - prototypes/ice_slide_escape/docs/design_directives.md
+
+tool_commands:
+  tool_maturity: "npx tsx src/cli.ts tool-maturity prototypes/ice_slide_escape"
+  mine: "npx tsx src/cli.ts mine prototypes/ice_slide_escape [--preset quick|deep] [--seed n] [--weight tag=number] [--write]"
+  explain_layout: "npx tsx src/cli.ts explain-layout prototypes/ice_slide_escape <layout-file|-> --player-start x,y --player-goal x,y [--targets K1,K2] [--write]"
+  compare_starts_layout: "npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape <layout-file> --player-goal x,y --starts a,b [--required-winning-events X] [--forbidden-reachable-events Y]"
+
+prototype_specific_workflows:
+  - id: meta_redesign
+    kind: redesign_stage
+    default_status: routed
+    trigger:
+      - "A base candidate is solid, promising, or thin_but_valid enough to inspect for same-layout reinterpretation."
+      - "The experiment brief does not disable meta routing."
+      - "The experiment brief has not explicitly enabled meta_first_design."
+    authority_docs:
+      - prototypes/ice_slide_escape/docs/designer_contract.md
+      - prototypes/ice_slide_escape/docs/meta_interfaces.md
+      - prototypes/ice_slide_escape/docs/design_directives.md
+    packet_extension:
+      - meta_reinterpretation_variant.meta_design_mode
+      - meta_reinterpretation_variant.base_candidate_status
+      - meta_reinterpretation_variant.redesign_decision
+      - meta_reinterpretation_variant.edits
+      - meta_reinterpretation_variant.base_instance
+      - meta_reinterpretation_variant.meta_instance
+      - meta_reinterpretation_variant.shared_structure
+      - meta_reinterpretation_variant.latent_elements_from_base
+      - meta_reinterpretation_variant.non_target_pairs
+      - meta_reinterpretation_variant.preserves_base_solution
+      - meta_reinterpretation_variant.creates_base_bypass
+      - meta_reinterpretation_variant.classification
+    reviewer_focus:
+      - "A->B and C->D are separate solve instances with explicit edge start and edge goal."
+      - "Base evidence is rerun after any redesign edit that affects layout, claim, start, goal, win condition, or mechanism use."
+      - "Non-target pairs are recorded as evidence or risk notes, not automatic failures."
+      - "Claims stay within single-level evidence; future world-map value remains design potential."
+    critic_focus:
+      - "Base quality remains solid enough; weak base candidates cannot be rescued by meta payoff."
+      - "C->D creates a different causal chain, reading order, state consumption, or object role from A->B."
+      - "Latent or lure elements do not seriously pollute base reading unless they receive clear meta payoff."
+      - "Classify the result as meaningful_reinterpretation, interface_clone, connectivity_note_only, or bypass_risk."
+    forbidden_unless:
+      - "Do not treat this as mechanical edge-pair enumeration."
+      - "Do not reward a new entrance or exit if the logic chain is only a route shortcut or clone."
+
+  - id: meta_first_design
+    kind: paired_design_mode
+    default_status: disabled_unless_brief_enabled
+    trigger:
+      - "The human brief explicitly asks for direct meta + base design."
+      - "The experiment brief writes meta_design_mode: meta_first_design."
+    authority_docs:
+      - prototypes/ice_slide_escape/docs/designer_contract.md
+      - prototypes/ice_slide_escape/docs/meta_interfaces.md
+      - prototypes/ice_slide_escape/docs/design_directives.md
+    packet_extension:
+      - meta_reinterpretation.meta_design_mode
+      - meta_reinterpretation.base_instance
+      - meta_reinterpretation.meta_instance
+      - meta_reinterpretation.shared_structure
+      - meta_reinterpretation.chain_delta_from_base
+      - meta_reinterpretation.cross_visit_payoff
+      - meta_reinterpretation.base_time_masking
+      - meta_reinterpretation.latent_or_lure_elements
+      - meta_reinterpretation.interface_legality
+      - meta_reinterpretation.non_target_pairs
+      - meta_reinterpretation.design_target
+    reviewer_focus:
+      - "Base and meta traces are checked separately."
+      - "Future-knowledge exposure in base is checked against the brief."
+      - "Starts, goals, target coverage, and edge legality are explicit for both instances."
+      - "A/B/C/D non-target pairs are recorded as evidence-backed risks."
+    critic_focus:
+      - "Evaluate base_quality, meta_quality, and cross_visit_reuse separately."
+      - "Reject two independent mini-puzzles stitched into one layout."
+      - "Reject meta routes that only replay the base logic from a new entrance or shorter exit."
+      - "Reward only meaningful reuse of shared structure, latent elements, or different state consumption."
+    forbidden_unless:
+      - "Do not enable this mode from generic design-review-loop routing alone."
+      - "Do not submit only base or only meta to review; the packet must include both instances."

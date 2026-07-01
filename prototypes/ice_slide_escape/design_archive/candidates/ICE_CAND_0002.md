@@ -9,6 +9,12 @@ llm_candidate_strength: rejected_candidate
 human_final_status: rejected_candidate
 archive_eligibility: clean_archive
 review_integrity: human_review
+human_reviewed: true
+aesthetic_score: 1
+aesthetic_label: 反例样本
+difficulty_score: 1
+difficulty_label: 教学见证
+allowed_exposure_through: ice_boundary_disappear
 motifs:
   - d4_rebound
   - target_ice_coverage

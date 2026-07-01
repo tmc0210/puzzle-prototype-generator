@@ -72,6 +72,7 @@ archive pass 不可以：
 - 根据自己的审美提升 status。
 - 用派生摘要覆盖人类评语。
 - 把缺失证据、浅搜索、缺 review 的候选包装成 positive reference。
+- 在没有人类明确评分时替人类填写 aesthetic_score 或 difficulty_score。
 ```
 
 ## Process Integrity
@@ -179,6 +180,8 @@ reject_do_not_archive:
 ```text
 - 顶层 metadata：status、llm_candidate_strength、human_final_status、
   archive_eligibility、review_integrity、motifs、archive_use
+- human_calibration：human_reviewed、aesthetic_score、difficulty_score、
+  allowed_exposure_through
 - layout 和 solve instance
 - core logic：3-8 行事实链，说明核心逻辑和证据支持边界
 - human comments，原文保存
@@ -219,6 +222,51 @@ human_comments:
 archive pass 可以写极短 retrieval_summary，但不得把人类评语扩写成 LLM 的
 审美课。若摘要和人类原文存在张力，保留张力，不要改写人类评语。
 
+## Human Calibration Scores
+
+人类评分是给未来 designer / critic 的审美与难度校准入口。它们是序数轴，不是
+工具分数，也不是 LLM 自评。
+
+```yaml
+human_calibration:
+  human_reviewed: true | false
+  aesthetic_score: 1 | 2 | 3 | 4 | 5 | null
+  aesthetic_label: 反例样本 | 功能库存 | 可用下界 | 亮点候选 | 标杆范例 | null
+  difficulty_score: 1 | 2 | 3 | 4 | 5 | null
+  difficulty_label: 教学见证 | 简单练习 | 常规流程 | 阶段挑战 | 高难终局 | null
+  allowed_exposure_through: null
+  score_source:
+    - human_comment_id
+```
+
+审美分含义：
+
+```text
+1 反例样本：明显审美负例，例如冗余、拼接、洞见缺失或过度包装。
+2 功能库存：流程完整但基本无审美价值；只在纯功能位、缓冲、水关时取材。
+3 可用下界：常规备选；为防止滑档，默认应要求 designer / critic 尝试优化。
+4 亮点候选：有明确审美亮点或解谜洞见，值得学习，较可能进入流程。
+5 标杆范例：模板级参考，具有很高审美校准价值。
+```
+
+难度分含义：
+
+```text
+1 教学见证：强引导玩家学习某机制事件或规则现象时可用的最小结构。
+2 简单练习：机制简单组合或练习关；无显式需求时不应批量生产。
+3 常规流程：有一定思考量但不多，常见于主流程水关 / 过渡关。
+4 阶段挑战：流程中的较难关卡，可作为阶段挑战。
+5 高难终局：高难关卡，适合支线、后期或终局内容。
+```
+
+难度是相对 `allowed_exposure_through` 的判断。同一关在前期机制暴露 cutoff
+可能是 4 分，放到全机制解锁后可能只有 3 分。
+
+默认审美检索只使用 `human_reviewed: true` 的候选。没有人类评语或没有人类评分
+的候选可以保留为历史材料、工具证据或 attempt log，但不得作为 human taste
+calibration。标签、`accepted`、`archive_use` 和 retrieval summary 只能帮助检索；
+真正的审美引用必须回到人类评语原文、关键原文摘句或上述评分字段。
+
 ## Derived Metadata
 
 派生元数据只用于检索和 prompt 校准，不是最终审美裁决。候选卡片中只保留
@@ -229,6 +277,10 @@ archive_pass_derived:
   status: unknown
   llm_candidate_strength: unknown
   human_final_status: pending
+  human_reviewed: false
+  aesthetic_score: null
+  difficulty_score: null
+  allowed_exposure_through: null
   archive_use: []
   motifs: []
   failure_modes: []

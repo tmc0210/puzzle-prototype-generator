@@ -16,7 +16,7 @@ motifs:
   - restart_counting
   - target_ice_coverage
   - explicit_edge_goal
-  - all_knowledge_endgame
+  - all_mechanic_endgame
 archive_use:
   - critic_calibration
   - designer_calibration

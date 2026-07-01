@@ -9,6 +9,12 @@ llm_candidate_strength: proposal_ready_with_caveats
 human_final_status: accepted
 archive_eligibility: clean_archive
 review_integrity: human_review
+human_reviewed: true
+aesthetic_score: 2
+aesthetic_label: 功能库存
+difficulty_score: 3
+difficulty_label: 常规流程
+allowed_exposure_through: ice_destroy_group_d6_plus
 motifs:
   - d4_rebound
   - d5_pass_through
@@ -16,7 +22,7 @@ motifs:
   - restart_counting
   - target_ice_coverage
   - explicit_edge_goal
-  - all_knowledge_endgame
+  - all_mechanic_endgame
 archive_use:
   - positive_reference
   - critic_calibration

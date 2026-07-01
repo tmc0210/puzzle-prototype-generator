@@ -17,7 +17,7 @@ motifs:
   - target_ice_coverage
   - explicit_edge_goal
   - walled_edge_goal
-  - all_knowledge_endgame
+  - all_mechanic_endgame
 archive_use:
   - negative_example
   - critic_calibration

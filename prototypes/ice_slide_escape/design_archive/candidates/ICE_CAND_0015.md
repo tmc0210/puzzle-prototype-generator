@@ -7,8 +7,14 @@ experiment_id: ICE_EXP_003_2026_06_30_round8_target_eject_gated_pocket
 status: structural_redesign_needed
 llm_candidate_strength: held_proposal
 human_final_status: structural_redesign_needed
-archive_eligibility: human_pending
+archive_eligibility: clean_archive
 review_integrity: human_review
+human_reviewed: true
+aesthetic_score: 1
+aesthetic_label: 反例样本
+difficulty_score: 2
+difficulty_label: 简单练习
+allowed_exposure_through: ice_destroy_group_d6_plus
 motifs:
   - short_stop_d1_d2
   - d5_pass_through
@@ -17,7 +23,7 @@ motifs:
   - restart_counting
   - target_ice_coverage
   - explicit_edge_goal
-  - all_knowledge_endgame
+  - all_mechanic_endgame
 archive_use:
   - negative_example
   - critic_calibration

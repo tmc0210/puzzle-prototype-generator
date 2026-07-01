@@ -1,0 +1,40 @@
+schema_version: 1
+prototype: ice_slide_escape
+status: human_maintained_draft
+event_authority: prototypes/ice_slide_escape/mechanic.yml
+description: >
+  Linear exposure order for observable ice_slide_escape mechanism events. This
+  file only lists events/branches that already exist in mechanic.yml and can be
+  checked by existing probes. Abstract design concepts such as target debt,
+  state debt, explicit edge goals, or meta reinterpretation do not belong here.
+  By default, exposure is linear: events at or before allowed_exposure_through
+  are allowed, and later listed events are forbidden-if-seen-anywhere. Events
+  not listed here are ignored by this hard exposure gate unless a brief says
+  otherwise.
+
+event_exposure_sequence:
+  - branch: stop_short_d1_d2
+    source_rule: push_ice
+    new_events:
+      - ice_stop_short
+  - branch: destroy_moving_ice_d3
+    source_rule: push_ice
+    new_events:
+      - ice_destroyed_d3
+  - branch: rebound_d4
+    source_rule: push_ice
+    new_events:
+      - ice_rebound_d4
+  - branch: boundary_disappear
+    source_rule: push_ice
+    new_events:
+      - ice_boundary_disappear
+  - branch: pass_through_d5
+    source_rule: push_ice
+    new_events:
+      - ice_pass_through_d5
+      - slide_restart_after_group
+  - branch: destroy_group_d6_plus
+    source_rule: push_ice
+    new_events:
+      - ice_destroy_group_d6_plus

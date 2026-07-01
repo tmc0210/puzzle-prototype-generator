@@ -105,7 +105,7 @@ forbidden_in_declared_winning_solutions:
   - ice_rebound_d4
   - ice_boundary_disappear
   - ice_boundary_disappear_after_group
-must_report_if_seen_anywhere:
+forbidden_reachable_conditions:
   - ABCD_to_non_ABCD_edge_solve
   - A_or_B_to_C_or_D_solve
 ```

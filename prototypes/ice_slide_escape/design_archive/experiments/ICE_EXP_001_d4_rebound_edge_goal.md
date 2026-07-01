@@ -50,12 +50,12 @@ mechanism_scope:
     - d3_destroy_moving_ice
   incidental_allowed:
     - walk
-  forbidden_in_winning_solution:
+  forbidden_winning_path_events:
     - d5_pass_through
     - d6_plus_destroy_group
     - slide_restart_after_group
     - boundary_disappear
-  must_report_if_seen_anywhere:
+  forbidden_reachable_events:
     - d5_pass_through
     - d6_plus_destroy_group
     - slide_restart_after_group
@@ -154,7 +154,7 @@ Scratch `explain-layout` 通过下面参数指定显式起终点：
 起点诊断若被 routing 触发，应使用正式起点比较工具产出可复现证据。示例：
 
 ```text
-npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape <layout-file|-> --player-goal x,y --starts x1,y1 x2,y2 --required-events ice_rebound_d4 --forbidden-events ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_boundary_disappear,ice_boundary_disappear_after_group --report-events ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_boundary_disappear,ice_boundary_disappear_after_group
+npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape <layout-file|-> --player-goal x,y --starts x1,y1 x2,y2 --required-winning-events ice_rebound_d4 --forbidden-winning-events ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_boundary_disappear,ice_boundary_disappear_after_group --forbidden-reachable-events ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_boundary_disappear,ice_boundary_disappear_after_group
 ```
 
 归档时必须记录每个 solve instance。Meta redesign 应按 `design_directives.md`

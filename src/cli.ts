@@ -277,7 +277,14 @@ async function main(): Promise<void> {
       throw new Error(`No level found for id '${levelId}'`);
     }
 
-    const analysis = analyzeLevel(pkg, level);
+    const optionArgs = args.slice(2);
+    const analysis = analyzeLevel(pkg, level, {
+      maxStates: parseNumberOption(optionArgs, "--max-states"),
+      maxDepth: parseNumberOption(optionArgs, "--max-depth"),
+      graphMaxStates: parseNumberOption(optionArgs, "--graph-max-states"),
+      bypassMaxStates: parseNumberOption(optionArgs, "--bypass-max-states"),
+      counterfactualMaxStates: parseNumberOption(optionArgs, "--counterfactual-max-states"),
+    });
     const report = formatLevelAnalysisMarkdown(analysis);
     console.log(report.trimEnd());
     if (writeReports) {
@@ -328,7 +335,13 @@ async function main(): Promise<void> {
       win: winCondition,
     };
 
-    const analysis = analyzeLevel(pkg, level);
+    const analysis = analyzeLevel(pkg, level, {
+      maxStates: parseNumberOption(optionArgs, "--max-states"),
+      maxDepth: parseNumberOption(optionArgs, "--max-depth"),
+      graphMaxStates: parseNumberOption(optionArgs, "--graph-max-states"),
+      bypassMaxStates: parseNumberOption(optionArgs, "--bypass-max-states"),
+      counterfactualMaxStates: parseNumberOption(optionArgs, "--counterfactual-max-states"),
+    });
     const report = formatLevelAnalysisMarkdown(analysis);
     console.log(report.trimEnd());
     if (writeReports) {
@@ -351,6 +364,23 @@ async function main(): Promise<void> {
     }
 
     const optionArgs = args.slice(3);
+    assertAllowedOptions(optionArgs, new Set([
+      "--id",
+      "--title",
+      "--role",
+      "--support",
+      "--targets",
+      "--player-goal",
+      "--goal",
+      "--starts",
+      "--required-winning-events",
+      "--forbidden-winning-events",
+      "--forbidden-reachable-events",
+      "--max-states",
+      "--max-depth",
+      "--graph-max-states",
+      "--write",
+    ]));
     const playerGoal = parsePointOption(optionArgs, "--player-goal") ?? parsePointOption(optionArgs, "--goal");
     if (!playerGoal) {
       throw new Error("compare-starts-layout requires --player-goal x,y");
@@ -369,9 +399,9 @@ async function main(): Promise<void> {
       targets,
       playerGoal,
       starts: parsePointListOption(optionArgs, "--starts"),
-      requiredEvents: parseCsvOption(optionArgs, "--required-events"),
-      forbiddenEvents: parseCsvOption(optionArgs, "--forbidden-events"),
-      reportEvents: parseCsvOption(optionArgs, "--report-events"),
+      requiredWinningEvents: parseCsvOption(optionArgs, "--required-winning-events"),
+      forbiddenWinningEvents: parseCsvOption(optionArgs, "--forbidden-winning-events"),
+      forbiddenReachableEvents: parseCsvOption(optionArgs, "--forbidden-reachable-events"),
       maxStates: parseNumberOption(optionArgs, "--max-states"),
       maxDepth: parseNumberOption(optionArgs, "--max-depth"),
       graphMaxStates: parseNumberOption(optionArgs, "--graph-max-states"),
@@ -459,8 +489,8 @@ function printUsage(): void {
   console.log("  npm run inspect");
   console.log("  tsx src/cli.ts solve <prototype-path> [level-id]");
   console.log("  tsx src/cli.ts explain-level <prototype-path> <level-id> [--write]");
-  console.log("  tsx src/cli.ts explain-layout <prototype-path> <layout-file|-> [--id id] [--targets K1,K2] [--win player_on_goal|event_occurs:event] [--player-start x,y] [--player-goal x,y] [--write]");
-  console.log("  tsx src/cli.ts compare-starts-layout <prototype-path> <layout-file|-> --player-goal x,y [--starts x1,y1 x2,y2] [--required-events E1,E2] [--forbidden-events E1,E2] [--report-events E1,E2] [--write]");
+  console.log("  tsx src/cli.ts explain-layout <prototype-path> <layout-file|-> [--id id] [--targets K1,K2] [--win player_on_goal|event_occurs:event] [--player-start x,y] [--player-goal x,y] [--max-states n] [--graph-max-states n] [--write]");
+  console.log("  tsx src/cli.ts compare-starts-layout <prototype-path> <layout-file|-> --player-goal x,y [--starts x1,y1 x2,y2] [--required-winning-events E1,E2] [--forbidden-winning-events E1,E2] [--forbidden-reachable-events E1,E2] [--write]");
   console.log("  tsx src/cli.ts archive-remove-candidate <prototype-path> <candidate-id> [--apply] [--keep-file]");
   console.log("  tsx src/cli.ts evaluate <prototype-path>");
   console.log("  tsx src/cli.ts coverage <prototype-path>");
@@ -477,6 +507,14 @@ function printUsage(): void {
 
 function randomMineSeed(): number {
   return randomInt(1, 0x7fffffff);
+}
+
+function assertAllowedOptions(args: string[], allowed: Set<string>): void {
+  for (const arg of args) {
+    if (arg.startsWith("--") && !allowed.has(arg)) {
+      throw new Error(`Unknown option '${arg}'`);
+    }
+  }
 }
 
 function getOption(args: string[], name: string): string | undefined {

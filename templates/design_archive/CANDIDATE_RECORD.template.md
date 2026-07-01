@@ -9,6 +9,12 @@ llm_candidate_strength: unknown
 human_final_status: pending
 archive_eligibility: unknown
 review_integrity: unknown
+human_reviewed: false
+aesthetic_score: null
+aesthetic_label: null
+difficulty_score: null
+difficulty_label: null
+allowed_exposure_through: null
 motifs: []
 archive_use: []
 human_comment_ids: []
@@ -37,10 +43,9 @@ PASTE_LAYOUT_HERE
 不要写流程流水账、工具命令、完整 review loop 或审美 lesson。
 ```
 
-## Human Verdict
+## Human Verdict（人类裁决）
 
-Keep human comments verbatim. If there is no human comment yet, write
-`status: pending`.
+保留人类评语原文。若还没有人类评语，写 `status: pending`。
 
 ```yaml
 human_comments:
@@ -48,6 +53,22 @@ human_comments:
     author: human_designer
     text: >
       PASTE_HUMAN_COMMENT_HERE
+```
+
+## Human Calibration（人类校准）
+
+这些评分只能来自人类判断。若不存在人类评分，保持 `human_reviewed: false`，
+分数保持 `null`。
+
+```yaml
+human_calibration:
+  human_reviewed: false
+  aesthetic_score: null
+  aesthetic_label: null
+  difficulty_score: null
+  difficulty_label: null
+  allowed_exposure_through: null
+  score_source: []
 ```
 
 ## Evidence Refs
@@ -62,4 +83,5 @@ human_comments:
 ```text
 5-8 行以内。服务检索，不替代人类评语，不扩写审美课。
 必须区分 llm_candidate_strength 和 human_final_status。
+如果涉及审美地位，必须与 human_calibration 和人类评语一致。
 ```

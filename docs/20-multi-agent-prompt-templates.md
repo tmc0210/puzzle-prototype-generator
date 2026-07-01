@@ -42,7 +42,16 @@ Prototype context:
 <confirmed rules, win condition, object/event semantics, tool boundary>
 
 Slot brief:
-<intended role, known-before, target, difficulty/support expectation>
+<design purpose, flow position, support/challenge expectation>
+
+Mechanic exposure context:
+allowed_exposure_through:
+claimed_core_events:
+
+Design target:
+aesthetic_score_target:
+difficulty_score_target:
+target_role_notes:
 
 Solve instance:
 <layout, player_start, player_goal, win condition>
@@ -51,8 +60,9 @@ Mechanism scope:
 central:
 allowed_support:
 incidental_allowed:
-forbidden_in_winning_solution:
-must_report_if_seen_anywhere:
+required_winning_path_events:
+forbidden_winning_path_events:
+forbidden_if_seen_anywhere:
 
 Design claim:
 player_insight:
@@ -66,7 +76,8 @@ solver_result:
 trace_summary:
 target_events:
 object_or_instance_evidence:
-forbidden_or_report_only_events:
+winning_path_event_checks:
+reachable_event_exposure:
 graph_or_counterfactual_evidence:
 evidence_limits:
 
@@ -84,9 +95,11 @@ abandoned_families:
 Archive taste context:
 examples:
   - candidate_id:
-    archive_use:
-    human_comment_summary:
-    relevant_lesson:
+    human_reviewed:
+    aesthetic_score:
+    difficulty_score:
+    human_comment_ref:
+    human_comment_excerpt:
     why_relevant_to_this_candidate:
     do_not_copy:
       - layout
@@ -97,9 +110,13 @@ examples:
 none_found_reason:
 ```
 
-`archive_taste_context` must contain only candidates with human comments. If no
-relevant human-comment-backed candidate exists, use `none_found`; do not include
-critic-only, designer-derived, or tool-only archive entries as taste context.
+`archive_taste_context` 只能包含 `human_reviewed: true` 且带有人类评语的候选。
+如果没有相关的人类评语候选，使用 `none_found`；不要把 critic-only、
+designer-derived 或 tool-only 归档条目作为审美上下文。Tags、`accepted`、
+`archive_use` 和 retrieval summary 只是索引提示；任何审美判断都必须引用
+人类原文摘句或人类校准评分。`aesthetic_score` 决定例子的使用方式：1 只能作
+反例，2 只能作功能库存 / 水关下界警示，3 是可用下界且默认应优化，4-5 才能
+作为正向审美参考。
 
 不要要求 reviewer / critic 自己补规则、补工具证据或猜测玩家模型。
 
@@ -122,6 +139,12 @@ Prototype context:
 Slot brief:
 <slot_brief>
 
+Mechanic exposure context:
+<mechanic_exposure_context>
+
+Design target:
+<design_target>
+
 Tool boundary:
 <allowed tools and allowed evidence sources>
 
@@ -136,10 +159,9 @@ Rules:
 - Design and test serious candidates in the design studio loop:
   design_claim -> layout -> tools -> evidence reading ->
   revise / discard / hold / change family.
-- Complete routing. Run only diagnostics that are required or triggered. If a
-  prototype-specific work item is a redesign stage, treat it as base-after
-  redesign, not as mechanical screening. Mark unavailable / unknown instead of
-  inventing evidence.
+- 完成 routing。只运行被要求或被触发的诊断。如果 prototype-specific work item
+  是 redesign 或 paired-design mode，按原型文档执行；不要把它变成机械筛查。
+  没有证据时标记 unavailable / unknown，不要编造证据。
 - Unless the human request or experiment brief explicitly authorizes variant
   work, do not design, optimize, or submit variants of existing archive
   candidates. Archive taste context is calibration, not a reusable base.
@@ -205,6 +227,11 @@ Allowed evidence sources:
 
 Review rules:
 - Analyzer output is evidence, not a quality verdict.
+- 如果提供了 mechanic exposure context，检查 trace events 和 object facts 是否
+  支持 `claimed_core_events`。这里检查的是已有 probe event，不检查抽象知识。
+- 区分 winning-path event gate 和 reachable exposure gate。`forbidden_if_seen_anywhere`
+  一旦在完整可达扫描中命中，就是 scope failure；扫描未完成时结论是 unknown，
+  不能当作 clean pass。
 - Distinguish event pattern, event instance, object participation, and
   per-object necessity.
 - Distinguish returned trace evidence from all-solution / complete-graph claims.
@@ -259,9 +286,13 @@ SCC / graph facts are evidence, not taste and not a quality score.
 
 Review rules:
 - Analyzer pass is not a quality pass.
-- archive_taste_context contains human-comment-backed candidates only. Do not
-  treat critic-only archive records, designer notes, tool evidence, or
-  archive_pass_derived metadata as taste evidence.
+- archive_taste_context 只能包含有人类评语支持的候选。不要把 critic-only
+  archive records、designer notes、tool evidence 或 archive_pass_derived
+  metadata 当成审美证据。
+- 不要只根据 tags、`accepted`、`archive_use` 或 retrieval summary 推断审美地位。
+  必须使用人类评语摘句和 human calibration scores。
+- 攻击候选是否达到 brief 中的 `aesthetic_score_target` 和
+  `difficulty_score_target`；不要把 critique 降格为数字打分。
 - Attack player_insight first: does the intended player need to understand it,
   or can they win by local execution / nearest affordance?
 - Attack why_not_execution before accepting event counts, repeated operations,
@@ -299,6 +330,8 @@ review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_require
 required_action: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family
 strongest_merits:
 archive_taste_context_used:
+aesthetic_target_fit:
+difficulty_target_fit:
 core_attacks:
   - attack:
     target: player_insight | why_not_execution | role_fit | evidence_support | diagnostic_reading

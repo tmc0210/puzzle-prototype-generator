@@ -146,8 +146,8 @@ mechanism_scope:
     - explicit_edge_goal_access
   allowed_support:
     - walk
-  forbidden_in_winning_solution: []
-  must_report_if_seen_anywhere: []
+  forbidden_winning_path_events: []
+  forbidden_reachable_events: []
   required_claim_discipline:
     - Designer must name which mechanisms are central for each candidate.
     - A mechanism event is not central unless its state change is later consumed.

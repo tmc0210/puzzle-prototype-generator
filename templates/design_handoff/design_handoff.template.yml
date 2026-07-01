@@ -1,0 +1,28 @@
+mechanic: MECHANIC_ID
+
+required_docs:
+  - prototypes/MECHANIC_ID/docs/rules.md
+  - prototypes/MECHANIC_ID/docs/solver_contract.md
+  - prototypes/MECHANIC_ID/docs/designer_contract.md
+
+tool_commands:
+  tool_maturity: "npx tsx src/cli.ts tool-maturity prototypes/MECHANIC_ID"
+  explain_layout: "npx tsx src/cli.ts explain-layout prototypes/MECHANIC_ID <layout-file|-> [options]"
+  solve: "npx tsx src/cli.ts solve prototypes/MECHANIC_ID <level-id>"
+
+prototype_specific_workflows:
+  - id: WORKFLOW_ID
+    kind: diagnostic | redesign_stage | paired_design_mode
+    default_status: routed | disabled_unless_brief_enabled | not_applicable
+    trigger:
+      - "When this workflow should be considered."
+    authority_docs:
+      - prototypes/MECHANIC_ID/docs/designer_contract.md
+    packet_extension:
+      - field_name
+    reviewer_focus:
+      - "Evidence-specific checks."
+    critic_focus:
+      - "Player-facing design checks."
+    forbidden_unless:
+      - "Condition required before this workflow may be used."

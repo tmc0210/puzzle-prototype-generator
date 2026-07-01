@@ -9,6 +9,12 @@ llm_candidate_strength: proposal_candidate_no_major_caveat
 human_final_status: accepted
 archive_eligibility: clean_archive
 review_integrity: human_review
+human_reviewed: true
+aesthetic_score: 4
+aesthetic_label: 亮点候选
+difficulty_score: 4
+difficulty_label: 阶段挑战
+allowed_exposure_through: ice_destroy_group_d6_plus
 final_version: ICE_CAND_0019_v4_remove_left_hint_target
 predecessor_version: ICE_CAND_0019_v3_f_as_final_target_after_a
 motifs:
@@ -19,7 +25,7 @@ motifs:
   - target_ice_coverage
   - explicit_edge_goal
   - walled_edge_goal
-  - all_knowledge_endgame
+  - all_mechanic_endgame
 archive_use:
   - positive_reference
   - critic_calibration

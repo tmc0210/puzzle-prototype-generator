@@ -7,6 +7,7 @@
 ```text
 prototypes/ice_slide_escape/docs/rules.md
 prototypes/ice_slide_escape/docs/solver_contract.md
+prototypes/ice_slide_escape/docs/mechanic_exposure_sequence.yml
 prototypes/ice_slide_escape/docs/designer_contract.md
 prototypes/ice_slide_escape/docs/meta_interfaces.md
 prototypes/ice_slide_escape/docs/design_directives.md
@@ -64,8 +65,10 @@ start_must_not_be:
 
 ## 元重读实例对
 
-常规单关候选已经工作后，designer 应执行 meta reinterpretation pass。这个 pass
-不是给关卡多开几个门，而是寻找同一重置布局下的两条定向 solve instance：
+常规单关候选已经工作后，designer 应完成 meta routing：判断是否存在值得尝试
+的 base-after redesign 机会。这个 routing 不是给关卡多开几个门，也不是机械枚
+举入口 / 出口；只有发现有价值的重读潜力，或 brief 显式要求时，才进入完整
+meta redesign / meta-first 设计。
 
 ```yaml
 base_instance:
@@ -80,25 +83,34 @@ meta_instance:
 ```
 
 `base_instance` 必须作为普通关扎实成立。`meta_instance` 应复用同一结构材料，
-但产生显著不同的解法逻辑链。它默认可以使用本原型所有知识，因为元机制被视为
-最后期知识；只有 experiment brief 明确限制时才收窄。
+但产生显著不同的解法逻辑链。它默认可以使用本原型所有已暴露机制事件，因为
+meta 流程被视为最后期流程；只有 experiment brief 明确限制时才收窄。
 
-Designer 应记录：
+若提出 meta redesign 或 brief 显式启用 `meta_first_design`，designer 应记录：
 
 ```yaml
-meta_reinterpretation_claim:
+meta_reinterpretation:
+  meta_design_mode: base_after_redesign | meta_first_design
   base_instance:
     start: [x, y]
     goal: [x, y]
+    allowed_exposure_through: null
+    claimed_core_events: []
     causal_chain: ""
   meta_instance:
     start: [x, y]
     goal: [x, y]
-    knowledge_scope: all_prototype_knowledge | restricted_by_brief
+    allowed_exposure_through: ice_destroy_group_d6_plus
+    claimed_core_events: []
     causal_chain: ""
   chain_delta_from_base: ""
+  cross_visit_payoff: ""
+  base_time_masking: ""
   shared_structure: []
-  latent_elements_from_base: []
+  latent_or_lure_elements: []
+  interface_legality:
+    starts_and_goals_checked: []
+    d_wall_or_multi_interface_notes: ""
   non_target_pairs: []
   classification: meaningful_reinterpretation | interface_clone | connectivity_note_only | bypass_risk
 ```
@@ -140,8 +152,12 @@ player_reaches_specific_edge_goal: true
 [ ] 如果 goal 初始是墙，某个必要冰块交互可以破坏它。
 [ ] 候选已针对声明的 start/goal pair 求解。
 [ ] 如果提出 meta reinterpretation，A->B 和 C->D 都分别记录 solve instance。
+[ ] 如果 brief 限制机制暴露窗口，使用 mechanic_exposure_sequence.yml 派生
+    forbidden_if_seen_anywhere，并用完整可达事件扫描检查。
+[ ] 如果 brief 没有显式启用 meta_first_design，只完成 meta routing 或 base-after redesign。
 [ ] meta claim 写明 chain_delta_from_base 和 shared_structure。
-[ ] base 中的潜伏元素被标记为 payoff 或噪声风险。
+[ ] base 中的潜伏 / 诱惑元素被标记为 payoff 或噪声风险。
+[ ] 如果使用 D-wall 或多接口结构，记录每个接口的合法性和可达性。
 [ ] 非目标 pair 被记录为阅读风险，而不是自动当作失败。
 [ ] 已应用 docs/design_directives.md 中的原型专属指令。
 ```

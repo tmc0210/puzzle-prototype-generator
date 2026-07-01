@@ -74,7 +74,7 @@ Verification result:
 Type check passed. Default miner findings now include 2D generators at the top:
 icebacked_capsule_room, long_branch_inspiration_room, and dual_d4_capsule_room.
 The custom-weight run also surfaces 2D inspiration structures before many row
-probes. Some mined 2D structures still contain report-only future mechanics;
+probes. Some mined 2D structures still contain forbidden-reachable future mechanics;
 they remain inspiration only.
 ```
 
@@ -106,7 +106,7 @@ Returned solution cost=24 with three push_ice + ice_rebound_d4 events.
 Complete graph: 2254 states, 5914 legal transitions, 1 winning state.
 Start/goal machine gate passed: no returned forbidden hits, no forbidden
 winning path found, no missing-required winning path found, and no reachable
-report-only hits in the complete scan.
+forbidden-reachable hits in the complete scan.
 ```
 
 Independent evidence reviewer:
@@ -175,7 +175,7 @@ attempts:
     summary: >
       A more promising interlock motif made the first d4 product become the
       obstacle for the second d4. Scratch versions repeatedly triggered
-      reachable d5/boundary report-only branches when the new obstacle could be
+      reachable d5/boundary forbidden-reachable branches when the new obstacle could be
       shifted, so it failed the experiment hard gate.
 ```
 
@@ -198,7 +198,7 @@ failure_distribution:
       - dynamic-obstacle interlock sketches
       - long-branch inspiration seeds
     lesson: >
-      Strict report-only scanning is the main practical constraint on using
+      Strict forbidden-reachable scanning is the main practical constraint on using
       dynamic ice obstacles; shifted obstacle states often create d5/boundary
       branches.
   evidence_overclaim:
@@ -214,7 +214,7 @@ failure_distribution:
       - d4_creates_obstacle_for_next_d4
     lesson: >
       This motif is worth future work if a locking geometry can prevent the
-      newly placed obstacle from being shifted into d5/report-only states.
+      newly placed obstacle from being shifted into d5/forbidden-reachable states.
 ```
 
 ## Terminal State
@@ -225,7 +225,7 @@ reason: >
   No candidate survived independent critic as proposal_ready. The only
   serious candidate is mechanically clean but rejected for repeated-application
   structure, weak later consumption, and same start/goal. More aggressive
-  interlock designs failed the report-only hard gate.
+  interlock designs failed the forbidden-reachable hard gate.
 next_recommended_direction: >
   Continue from dynamic d4 obstacle interlocks, but first solve the locking
   problem: once a d4 product becomes an obstacle for another ice, the player

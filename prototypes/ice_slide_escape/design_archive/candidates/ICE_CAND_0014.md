@@ -17,7 +17,7 @@ motifs:
   - target_ice_coverage
   - explicit_edge_goal
   - walled_edge_goal
-  - all_knowledge_endgame
+  - all_mechanic_endgame
 archive_use:
   - critic_calibration
   - designer_calibration
@@ -124,4 +124,3 @@ the explicit edge goal. Initial standable edge cells are limited to [0,9].
 Not proposal-ready because complete graph and required-event probes exhausted,
 so bypass exclusion is unknown. Independent critic review holds it rather than passing it until no-low-push-bypass or all-winning-path evidence is stronger.
 ```
-

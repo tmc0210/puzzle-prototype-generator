@@ -9,6 +9,12 @@ llm_candidate_strength: proposal_ready_with_caveats
 human_final_status: proposal_ready_with_caveats
 archive_eligibility: clean_archive
 review_integrity: independent_review
+human_reviewed: true
+aesthetic_score: 3
+aesthetic_label: 可用下界
+difficulty_score: 3
+difficulty_label: 常规流程
+allowed_exposure_through: ice_destroy_group_d6_plus
 motifs:
   - d4_rebound
   - d5_pass_through
@@ -16,7 +22,7 @@ motifs:
   - restart_counting
   - target_ice_coverage
   - explicit_edge_goal
-  - all_knowledge_endgame
+  - all_mechanic_endgame
 archive_use:
   - critic_calibration
   - designer_calibration
@@ -98,7 +104,7 @@ comments:
       （因为几个错误顺序导致的deadend下，冰仍然会落在目标上，错误会在更后
       步骤被发现而非在第一步，但也不会过晚得到反馈），整体而言是非常扎实的
       关卡。审美上的一个瑕疵是左侧绕路过多，我认为应该可以通过左下方的横廊
-      上移来缓解。虽然设计目标是游戏的最后期挑战关，这关的难度还是稍低了
+      上移来缓解。虽然设计目标是游戏的最后期挑战关，这关的难度还是过低了
       一点，但是完全可以作为一个扎实的组合关填充进机制都解锁后的主线流程中。
     attached_to:
       - candidate

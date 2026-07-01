@@ -103,6 +103,8 @@ failure distribution，不要降格提交教学关、witness 关、简单 applic
    诊断；prototype-specific redesign stage 不是机械筛查。若原型声明
    meta-interface / meta-reinterpretation 是 redesign stage，它应基于已有
    base candidate 做再设计、优化或变体提案，而不是枚举边缘入口出口。
+   若原型和本轮 brief 显式声明 `meta_first_design` 或其它 paired-design mode，
+   则按原型文档提交完整配对 packet；不要把它当成默认流程。
 6. 除非人类请求或 <experiment_brief_path> 明确授权变体、修补、强化、延展、
    remix 或基于某个 archive candidate 继续设计，不得设计、优化或提交已有
    archive candidate 的变体。archive taste context 只用于审美和失败模式校准，
@@ -123,12 +125,16 @@ Exploration Log：
 Archive Taste Context：
 
 - 如果实验 brief 要求参考 archive examples，`archive_taste_context` 只能包含带
-  人类评语的 clean archive candidate。
+  人类评语且 `human_reviewed: true` 的 clean archive candidate。
 - 没有人类评语的 prior candidate 可以作为普通 exploration / prior attempt
   context 记录，但不能作为审美正例、审美反例、human taste calibration、
   critic_calibration 或 designer_claim_calibration。
 - 如果没有相关且带人类评语的 archive 条目，写 `none_found`，不要用
   critic-only / designer-derived / tool-only 归档条目补位。
+- archive tags、status、accepted、archive_use 和 retrieval_summary 只能用于检索；
+  真正的审美引用必须引用人类原文摘句或 human_calibration 分数。
+- `aesthetic_score` 决定 archive 例子的使用方式：1 只能作反例，2 只能作功能
+  库存 / 水关下界警示，3 是可用下界且默认应优化，4-5 才能作为正向审美参考。
 
 Design Studio Loop 要求：
 
@@ -147,17 +153,22 @@ review loop 的候选必须至少有：
 
 - intended_role
 - candidate_mode
+- mechanic_exposure_context：allowed_exposure_through、claimed_core_events
+- design_target：aesthetic_score_target、difficulty_score_target、
+  target_role_notes
 - design_claim
 - solve instance / win condition
 - player_start / player_goal，或该原型等价的显式求解参数
-- mechanism_scope 预期：central / allowed_support / incidental / forbidden /
-  report-only
+- mechanism_scope 预期：central / allowed_support / incidental /
+  required_winning_path_events / forbidden_winning_path_events /
+  forbidden_if_seen_anywhere
 - layout
 - tool commands / evidence summary / evidence_refs
 - start-position 诊断，若该角色或原型需要
 - prototype-specific work 结论，若 brief 或原型明确要求；若原型文档或 brief
   声明它是 redesign_stage，应按该原型流程判断是否提出 redesign variant，并说
   明 base 是否值得打磨、是否重跑证据
+  若声明 `meta_first_design`，必须把 base + meta 作为一个整体 packet 提交
 - 失败尝试摘要：哪些修改、删减、换 family 或工具证据导致放弃
 
 如果工具证据不支持 design_claim，必须在 studio loop 中 revise、downgrade、
@@ -205,6 +216,9 @@ Prototype-Specific Work：
   留价值；再尝试小改动或重读形成 C->D；若推荐变体，必须重新验证 A->B 和
   C->D，并记录 chain_delta、shared_structure、latent payoff、non-target
   pairs 和证据边界。
+- 如果某个原型文档或 experiment brief 显式声明 `meta_first_design`，则一开始
+  就共同设计 A->B 与 C->D；每次 review loop 必须同时提交 base + meta，critic
+  必须分别评价 base 自身、meta 自身和 cross-visit reuse。
 - redesign 的存在不会自动提升候选质量。若 C->D 只是入口/出口变化、走路路线变
   化或同一链路复述，应按原型文档降级为 interface_clone / connectivity note /
   risk。弱 base candidate 不能靠 meta redesign 挽救。
@@ -237,7 +251,8 @@ Archive Pass：
    - falsification
 4. 每个 proposal 的 reviewer / critic review_loop_state 和 required_action。
 5. 每个 proposal 是否满足 central mechanism 核心约束。
-6. 每个 proposal 是否触发 / 可能触发 forbidden 或 report-only 机制。
+6. 每个 proposal 是否满足 required winning-path gate、forbidden winning-path
+   gate 和 forbidden reachable exposure gate。
 7. 每个 proposal 的 start-position refinement 结论，若适用。
 8. 每个 proposal 的 prototype-specific work 结论，若适用；若无，写
    not_applicable；若是 redesign_stage，说明是否提出推荐变体。

@@ -9,6 +9,12 @@ llm_candidate_strength: rejected_candidate
 human_final_status: rejected_candidate
 archive_eligibility: clean_archive
 review_integrity: human_review
+human_reviewed: true
+aesthetic_score: 1
+aesthetic_label: 反例样本
+difficulty_score: 1
+difficulty_label: 教学见证
+allowed_exposure_through: ice_boundary_disappear
 motifs:
   - d4_rebound
   - target_ice_coverage
@@ -78,7 +84,7 @@ comments:
       - puzzle_critic_artifact
       - layout
     text: >
-      critic评的很准。这是非常简单的三次d4堆叠，没啥可说的。另外起点和终点不应该一样
+      这是非常简单的三次d4堆叠，三次重复的简单教学仍然是教学，没啥可说的。
 ```
 
 ## Evidence Refs
@@ -96,7 +102,7 @@ comments:
 
 ```text
 Human-rejected post-miner-fix d4 capstone attempt. Clean evidence: three d4
-rebounds, complete graph, no d5/d6/restart/boundary report-only hits. Rejected
+rebounds, complete graph, no d5/d6/restart/boundary forbidden-reachable hits. Rejected
 because it is a simple three-d4 stack with weak later consumption, and because
 same start/goal is inappropriate for this slot.
 ```

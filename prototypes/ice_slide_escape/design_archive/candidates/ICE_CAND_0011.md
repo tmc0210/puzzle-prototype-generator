@@ -9,6 +9,12 @@ llm_candidate_strength: proposal_ready_with_caveats
 human_final_status: held_proposal
 archive_eligibility: clean_archive
 review_integrity: human_review
+human_reviewed: true
+aesthetic_score: 1
+aesthetic_label: 反例样本
+difficulty_score: 2
+difficulty_label: 简单练习
+allowed_exposure_through: ice_destroy_group_d6_plus
 motifs:
   - d4_rebound
   - d5_pass_through
@@ -16,7 +22,7 @@ motifs:
   - destroy_moving_ice_d3
   - target_ice_coverage
   - explicit_edge_goal
-  - all_knowledge_endgame
+  - all_mechanic_endgame
 archive_use:
   - negative_example
   - critic_calibration
@@ -85,7 +91,7 @@ human_comments:
       左下方大量冗余空地（这并非要求玩家行动空地必定紧缩，而是这块空地实在是太多了）；
       唯一开局导向一个d3推动，删去这个步骤对于后续谜题无任何影响。这个关卡需要在大量
       审美精修后才可能作为流程备选。以及这关的左推下方第二个箱子会导致不同出口多解，
-      这不能算很大的问题，但是我没有被显式告知。另外，此关在“三次强顺序要求的远距离推动”
+      我没有被显式告知。另外，此关在“三次强顺序要求的远距离推动”
       这点上，逻辑链路仍然和0006太像，我认为这有可能受到了正例的污染。
 ```
 

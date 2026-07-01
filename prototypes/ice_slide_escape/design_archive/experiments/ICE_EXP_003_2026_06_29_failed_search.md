@@ -57,7 +57,7 @@ npx tsx src/cli.ts mine prototypes/ice_slide_escape --iterations 96 --max-findin
 npx tsx src/cli.ts mine prototypes/ice_slide_escape --iterations 96 --max-findings 16 --weight destroy_group_d6_plus=30 --weight restart_after_group=24 --weight pass_through_d5=16 --weight boundary_disappear=18 --weight rebound_d4=10 --weight destroy_moving_ice_d3=8 --weight short_stop_d1_d2=4 --graph-max-states 200000
 npx tsx src/cli.ts mine prototypes/ice_slide_escape --iterations 512 --max-findings 40 --weight destroy_group_d6_plus=32 --weight restart_after_group=24 --weight pass_through_d5=24 --weight boundary_disappear=16 --weight rebound_d4=12 --weight destroy_moving_ice_d3=10 --weight short_stop_d1_d2=6 --graph-max-states 200000
 npx tsx src/cli.ts explain-layout prototypes/ice_slide_escape - --id ICE_CAND_0005_base --player-start "0,2" --player-goal "9,0" --write
-npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape - --id ICE_CAND_0005_start_refine --player-goal "9,0" --required-events ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_blocks_ice_no_chain_push,ice_stop_short --max-states 200000 --graph-max-states 200000 --write
+npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape - --id ICE_CAND_0005_start_refine --player-goal "9,0" --required-winning-events ice_pass_through_d5,ice_destroy_group_d6_plus,slide_restart_after_group,ice_blocks_ice_no_chain_push,ice_stop_short --max-states 200000 --graph-max-states 200000 --write
 runtime prefix probe for ICE_CAND_0005 first input right
 meta reinterpretation probes for ICE_CAND_0005 top/bottom edge pairs
 scratch explain-layout / compare-starts-layout checks for MF0058-derived and route-blocker variants
