@@ -16,7 +16,7 @@ description: 编排 Sokoban-like 原型的单关设计审查循环。Use when Co
 - 当用户目标是产出候选而非只做 audit / replay 时，`held_proposal`、`rejected_candidate`、`raw_run_only` 或 `reject_do_not_archive` 只关闭当前候选或归档出口，不能当作本次目标完成，也不能单独证明 `failed_search`；必须继续 revise / change family。
 - `accepted`、`mainline`、`positive_reference`、`reference` 不是本 skill 可授予状态。
 - prototype-specific workflow 被原型声明时必须服从，未声明时绝不默认运行。
-- archive taste context 只用于审美校准和失败模式校准。除非人类请求或 experiment brief 明确授权某个 archive candidate 的变体、修补、强化、延展、remix 或继续设计，否则不得从旧题开始改。
+- archive taste context 只用于审美校准和失败模式校准。设计 / 提交候选请求默认 `fresh_required`；除非本轮 brief 明确点名 archive candidate id 并要求 replay / audit / resubmit / repair / remix / continue，否则已有 archive candidate 不能作为起点、交付物或目标完成条件。
 
 ## 必读路由
 
