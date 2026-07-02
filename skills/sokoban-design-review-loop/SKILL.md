@@ -18,7 +18,7 @@ description: 编排 Sokoban-like 原型的单关设计审查循环。Use when Co
 - independent review artifact 优先来自真实 multi-agent / subagent。`review_request` 文件、controller summary、自问自答或同一 agent 角色扮演不算 independent review；若无法调用，标记 `review_integrity: self_review_only`、`missing` 或 `blocked`，不能把流程收束为合格候选。
 - `accepted`、`mainline`、`positive_reference`、`reference` 不是本 skill 可授予状态。
 - prototype-specific workflow 被原型声明时必须服从，未声明时绝不默认运行。
-- archive taste context 只用于审美校准和失败模式校准；检查已有工作只用于保护工作区、识别历史参考和选择校准样本。设计 / 提交候选请求默认 `fresh_required`；除非本轮 brief 明确点名 archive / run / candidate id 并要求 replay / audit / resubmit / repair / remix / continue，否则已有 archive / run / candidate 不能作为起点、independent review 对象、交付物或目标完成条件。
+- archive taste context 只用于审美校准和失败模式校准；检查已有工作只用于保护工作区、识别历史参考和选择校准样本。设计 / 提交候选请求默认 `fresh_required`；除非本轮 brief 明确点名 archive / run / candidate id 并要求 replay / audit / resubmit / repair / remix / continue，否则已有 archive / run / candidate 不能作为设计起点，包括布局、接口、对象角色、因果链或最小改动变体的起点，也不能作为 independent review 对象、交付物或目标完成条件。
 
 ## 必读路由
 
@@ -40,14 +40,15 @@ description: 编排 Sokoban-like 原型的单关设计审查循环。Use when Co
 5. 写可被攻击的 `design_claim`：`player_insight`、`causal_chain`、`why_not_execution`、`falsification`。
 6. 运行或整理本轮允许的 solver / analyzer / graph / counterfactual / start-position 证据。graph exhausted 时，相关完整图结论为 `unknown`。
 7. 用 `candidate-packet.md` 组装 serious candidate packet。证据不支持 claim 时，先 revise、downgrade、discard 或 change family，不送 review。
-8. 需要硬证据审查时，把 packet 和 allowed evidence sources 交给 evidence reviewer。
-9. 需要玩家侧设计攻击时，先由 controller / lead designer 从本原型 clean archive 中选择 `archive_taste_context`；若没有相关且带人类评语的条目，写 `none_found` 和原因。不要要求 critic 自己检索归档，也不要要求用户手动指定候选，除非归档路径或实验意图本身不清楚。
-10. 把 packet、archive taste context 或 `none_found`、routed diagnostics 交给 puzzle critic。
-11. 若 critic 没有可用 human archive anchors，controller 不得采纳任何分数化审美 / 难度结论；把 `4`、`4+`、`4-`、`low 4`、`meets 4` 等结论降级为 `unscored_missing_human_archive_context` 或 `target_fit_unknown`。
-12. 读取 reviewer / critic 的 `required_action`。若不是 `none`，`review_loop_state` 不能是 `proposal_ready` 或 `proposal_ready_with_caveats`。
-13. 若 handoff 声明 `pre_human_submission_pass`，只在候选已 `proposal_ready` / `proposal_ready_with_caveats` 或人类要求查看当前最好版本前运行；它不能作为 review gate，也不能因 polish alone 改变 `review_loop_state`。
-14. 输出 `designer_action_N`：`revise_structure`、`revise_claim`、`evidence_disagreement_for_next_review`、`downgrade_or_hold`、`reject_or_change_family`、`failed_search` 或 `unresolved`。
-15. 若修改了 layout、start、goal、win condition、核心机制使用或 design_claim，重跑必要证据并进入 `review_N+1`。
+8. 需要硬证据审查时，必须显式调用 `$sokoban-evidence-reviewer` 或 repo-local `skills/sokoban-evidence-reviewer`，并要求其读取 `references/evidence-reviewer-template.md`。自由格式 evidence review 或缺少模板关键字段的输出不算 independent evidence reviewer artifact。
+9. 需要玩家侧设计攻击时，先由 controller / lead designer 从本原型 clean archive 中选择 `archive_taste_context`；若没有相关且带人类评语的条目，写 `none_found` 和原因。默认选 2 个成对校准案例（目标正例 + 下界/反例）；复杂目标、近期漂移或高分目标选 3 个；最多 4 个。不要要求 critic 自己检索归档，也不要要求用户手动指定候选，除非归档路径或实验意图本身不清楚。
+10. 缺少 `archive_taste_context` 或明确 `none_found` 的 packet 不得发送给 puzzle critic。
+11. 把 packet、archive taste context 或 `none_found`、routed diagnostics 交给 puzzle critic 时，必须显式调用 `$sokoban-puzzle-critic` 或 repo-local `skills/sokoban-puzzle-critic`，并要求其读取 `references/puzzle-critic-template.md`。自由格式 critic 或缺少模板关键字段的输出不算 independent critic artifact。
+12. 若 critic 没有可用 human archive anchors，controller 不得采纳任何分数化审美 / 难度结论；把 `4`、`4+`、`4-`、`low 4`、`meets 4` 等结论降级为 `unscored_missing_human_archive_context` 或 `target_fit_unknown`。
+13. 读取 reviewer / critic 的 `required_action`。若不是 `none`，`review_loop_state` 不能是 `proposal_ready` 或 `proposal_ready_with_caveats`。
+14. 若 handoff 声明 `pre_human_submission_pass`，只在候选已 `proposal_ready` / `proposal_ready_with_caveats` 或人类要求查看当前最好版本前运行；它不能作为 review gate，也不能因 polish alone 改变 `review_loop_state`。
+15. 输出 `designer_action_N`：`revise_structure`、`revise_claim`、`evidence_disagreement_for_next_review`、`downgrade_or_hold`、`reject_or_change_family`、`failed_search` 或 `unresolved`。
+16. 若修改了 layout、start、goal、win condition、核心机制使用或 design_claim，重跑必要证据并进入 `review_N+1`。
 
 ## 固定状态
 

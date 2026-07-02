@@ -18,6 +18,7 @@
 | SCC / graph 解释链 | `docs/30-scc-graph-diagnostic-reading.md` `## Core Rule` |
 | Prototype-specific workflow 不默认泛化 | `docs/21-current-workflow-standard.md` `### Prototype-Specific Work`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md` `## Prototype-specific Extension Requirement` |
 | 未授权 archive candidate 变体禁令 | `docs/21-current-workflow-standard.md` `### Variant / Family Diagnostic`, `### Archive Taste Context`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md` |
+| 机制暴露 sequence 与 `allowed_exposure_through` 硬证据门 | `prototypes/ice_slide_escape/docs/mechanic_exposure_sequence.yml`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md`; `new_glue_rule`: 最高知识 / exposure claim 必须由 all-solution required gate 和完整 reachable scan 支持 |
 | design handoff 文件 | `new_glue_rule`: 将已存在的 prototype docs 以机器可读索引交给通用 skill |
 | interface pair policy 由原型 handoff / brief 声明，generic critic 只服从不发明 | `new_glue_rule`: 防止原型专属 pair 风险在通用 skill 中漂移 |
 | pre-human polish pass 只在候选提交给人类前运行，不能作为 review gate | `new_glue_rule`: 将原型专属自然语言 polish checklist 接入通用编排 |
@@ -33,6 +34,7 @@
 - critic 把 graph fact 直接当作质量判决。
 - archive taste context 使用没有人类评语的条目。
 - critic / designer 在没有 human archive anchors 时输出 `4`、`4+`、`4-`、`low 4`、`meets 4` 或其他分数化结论。
+- evidence reviewer 用 `supports_with_caveats` 保留不被证据支持的 central mechanism / knowledge / exposure claim。
 - prototype-specific workflow 在未声明时被默认执行。
 - designer 从 archive candidate 开始改题，但 brief 没有明确授权候选 id 和允许操作。
 - critic 把 handoff 声明为 ignored 的 pair 解读成 caveat、core attack 或审美风险。
