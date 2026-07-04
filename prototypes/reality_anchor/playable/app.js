@@ -86,7 +86,7 @@ function parseLevel(level) {
   if (!player) {
     throw new Error(`Level ${level.id} has no player marker and no explicit player_start`);
   }
-  const state2 = {
+  const state = {
     width,
     height,
     walls,
@@ -94,8 +94,8 @@ function parseLevel(level) {
     player,
     ice: sortPoints(ice)
   };
-  validateExplicitRequest(level, state2);
-  return state2;
+  validateExplicitRequest(level, state);
+  return state;
 }
 function assignPlayer(level, current, point) {
   if (current) {
@@ -103,62 +103,62 @@ function assignPlayer(level, current, point) {
   }
   return point;
 }
-function validateExplicitRequest(level, state2) {
+function validateExplicitRequest(level, state) {
   const start = readWinPoint(level.win, "player_start");
   if (start) {
     const point = toPoint(start);
-    if (!isEdgeCell(state2, point)) {
+    if (!isEdgeCell(state, point)) {
       throw new Error(`Level ${level.id} player_start must be an edge cell`);
     }
-    if (!isCellFreeForPlayer(state2, point)) {
+    if (!isCellFreeForPlayer(state, point)) {
       throw new Error(`Level ${level.id} player_start must initially be standable`);
     }
   }
   const goal = readWinPoint(level.win, "player_goal");
   if (goal) {
     const point = toPoint(goal);
-    if (!isEdgeCell(state2, point)) {
+    if (!isEdgeCell(state, point)) {
       throw new Error(`Level ${level.id} player_goal must be an edge cell`);
     }
   }
 }
-function cloneState(state2) {
+function cloneState(state) {
   return {
-    width: state2.width,
-    height: state2.height,
-    walls: new Set(state2.walls),
-    targets: new Set(state2.targets),
-    player: { ...state2.player },
-    ice: state2.ice.map((point) => ({ ...point }))
+    width: state.width,
+    height: state.height,
+    walls: new Set(state.walls),
+    targets: new Set(state.targets),
+    player: { ...state.player },
+    ice: state.ice.map((point) => ({ ...point }))
   };
 }
-function stateKey(state2) {
+function stateKey(state) {
   return [
-    `P:${pointKey(state2.player)}`,
-    `I:${state2.ice.map(pointKey).sort().join(";")}`,
-    `W:${[...state2.walls].sort().join(";")}`
+    `P:${pointKey(state.player)}`,
+    `I:${state.ice.map(pointKey).sort().join(";")}`,
+    `W:${[...state.walls].sort().join(";")}`
   ].join("|");
 }
-function renderState(state2) {
+function renderState(state) {
   const rows = Array.from(
-    { length: state2.height },
-    () => Array.from({ length: state2.width }, () => ".")
+    { length: state.height },
+    () => Array.from({ length: state.width }, () => ".")
   );
-  for (const key of state2.targets) {
+  for (const key of state.targets) {
     const point = pointFromKey(key);
     rows[point.y][point.x] = "G";
   }
-  for (const key of state2.walls) {
+  for (const key of state.walls) {
     const point = pointFromKey(key);
     rows[point.y][point.x] = "#";
   }
-  for (const icePoint of state2.ice) {
-    rows[icePoint.y][icePoint.x] = state2.targets.has(pointKey(icePoint)) ? "*" : "I";
+  for (const icePoint of state.ice) {
+    rows[icePoint.y][icePoint.x] = state.targets.has(pointKey(icePoint)) ? "*" : "I";
   }
-  rows[state2.player.y][state2.player.x] = state2.targets.has(pointKey(state2.player)) ? "+" : "@";
+  rows[state.player.y][state.player.x] = state.targets.has(pointKey(state.player)) ? "+" : "@";
   return rows.map((row) => row.join("")).join("\n");
 }
-function isWin(state2, winCondition = { type: "ice_slide_escape_explicit_goal" }) {
+function isWin(state, winCondition = { type: "ice_slide_escape_explicit_goal" }) {
   if (winCondition.type !== "ice_slide_escape_explicit_goal") {
     return false;
   }
@@ -167,44 +167,44 @@ function isWin(state2, winCondition = { type: "ice_slide_escape_explicit_goal" }
     return false;
   }
   const goal = toPoint(goalRaw);
-  const iceKeys = new Set(state2.ice.map(pointKey));
-  return pointKey(state2.player) === pointKey(goal) && [...state2.targets].every((target) => iceKeys.has(target));
+  const iceKeys = new Set(state.ice.map(pointKey));
+  return pointKey(state.player) === pointKey(goal) && [...state.targets].every((target) => iceKeys.has(target));
 }
 function isEventWin(events, winCondition) {
   const event = winCondition?.event;
   return winCondition?.type === "event_occurs" && event !== void 0 && eventsMatchPattern(events, event);
 }
 function replay(mechanic, initialState, inputs, options = {}) {
-  let state2 = initialState;
+  let state = initialState;
   const events = [];
   let legal = true;
   for (const input of inputs) {
-    const result = step(mechanic, state2, input, options);
+    const result = step(mechanic, state, input, options);
     events.push(...result.events);
     if (result.legal) {
-      state2 = result.state;
+      state = result.state;
     } else {
       legal = false;
     }
   }
-  return { state: state2, events, legal };
+  return { state, events, legal };
 }
-function step(mechanic, state2, input, options = {}) {
+function step(mechanic, state, input, options = {}) {
   const inputDef = mechanic.inputs[input];
   if (!inputDef || inputDef.intent !== "move" || !inputDef.dir) {
-    return illegal(state2, input, "unsupported_input");
+    return illegal(state, input, "unsupported_input");
   }
   const dir = inputDef.dir;
-  const destination = add(state2.player, dir);
-  if (!inBounds(state2, destination) || state2.walls.has(pointKey(destination))) {
-    return illegal(state2, input, "destination_blocked");
+  const destination = add(state.player, dir);
+  if (!inBounds(state, destination) || state.walls.has(pointKey(destination))) {
+    return illegal(state, input, "destination_blocked");
   }
-  const iceIndex = iceIndexAt(state2, destination);
+  const iceIndex = iceIndexAt(state, destination);
   if (iceIndex !== -1) {
     if (isRuleDisabled("push_ice", options)) {
-      return illegal(state2, input, "push_ice_disabled");
+      return illegal(state, input, "push_ice_disabled");
     }
-    const next = cloneState(state2);
+    const next = cloneState(state);
     next.ice.splice(iceIndex, 1);
     next.player = destination;
     const slide = settleIce(next, destination, dir, options);
@@ -212,7 +212,7 @@ function step(mechanic, state2, input, options = {}) {
       return {
         legal: false,
         input,
-        state: state2,
+        state,
         events: slide.events,
         reason: slide.reason
       };
@@ -224,37 +224,37 @@ function step(mechanic, state2, input, options = {}) {
       events: ["push_ice", ...slide.events]
     };
   }
-  if (iceIndexAt(state2, destination) === -1 && isCellFreeForPlayer(state2, destination)) {
-    const next = cloneState(state2);
+  if (iceIndexAt(state, destination) === -1 && isCellFreeForPlayer(state, destination)) {
+    const next = cloneState(state);
     next.player = destination;
     return { legal: true, input, state: next, events: ["walk"] };
   }
-  return illegal(state2, input, "no_matching_rule");
+  return illegal(state, input, "no_matching_rule");
 }
 function settleIce(stateWithoutMovingIce, origin, dir, options) {
   return continueSlide(stateWithoutMovingIce, origin, dir, 0, options, []);
 }
-function continueSlide(state2, current, dir, initialDistance, options, events) {
+function continueSlide(state, current, dir, initialDistance, options, events) {
   let cursor = current;
   let distance = initialDistance;
   while (true) {
     const next = add(cursor, dir);
-    if (!inBounds(state2, next)) {
+    if (!inBounds(state, next)) {
       return {
         legal: true,
-        state: stateWithIce(state2, void 0),
+        state: stateWithIce(state, void 0),
         events: [...events, `ice_boundary_disappear:d${distance}`]
       };
     }
-    if (isIceObstacle(state2, next)) {
-      return resolveObstacle(state2, cursor, next, dir, distance, options, events);
+    if (isIceObstacle(state, next)) {
+      return resolveObstacle(state, cursor, next, dir, distance, options, events);
     }
     cursor = next;
     distance += 1;
   }
 }
-function resolveObstacle(state2, preObstacle, obstacle, dir, distance, options, events) {
-  const obstacleEvents = iceIndexAt(state2, obstacle) === -1 ? events : [...events, "ice_blocks_ice_no_chain_push"];
+function resolveObstacle(state, preObstacle, obstacle, dir, distance, options, events) {
+  const obstacleEvents = iceIndexAt(state, obstacle) === -1 ? events : [...events, "ice_blocks_ice_no_chain_push"];
   if (distance === 0) {
     return {
       legal: false,
@@ -265,41 +265,41 @@ function resolveObstacle(state2, preObstacle, obstacle, dir, distance, options, 
   if (distance <= 2) {
     return {
       legal: true,
-      state: stateWithIce(state2, preObstacle),
+      state: stateWithIce(state, preObstacle),
       events: [...obstacleEvents, `ice_stop_short:d${distance}`]
     };
   }
   if (distance === 3) {
     return {
       legal: true,
-      state: stateWithIce(state2, void 0),
+      state: stateWithIce(state, void 0),
       events: [...obstacleEvents, "ice_destroyed_d3"]
     };
   }
   if (distance === 4) {
     return {
       legal: true,
-      state: stateWithIce(state2, subtract(preObstacle, dir)),
+      state: stateWithIce(state, subtract(preObstacle, dir)),
       events: [...obstacleEvents, "ice_rebound_d4"]
     };
   }
-  const group = collectObstacleGroup(state2, obstacle, dir);
+  const group = collectObstacleGroup(state, obstacle, dir);
   const afterGroup = group.afterGroup;
   if (distance === 5) {
     const passEvents = [...obstacleEvents, `ice_pass_through_d5:len${group.cells.length}`];
-    if (!inBounds(state2, afterGroup)) {
+    if (!inBounds(state, afterGroup)) {
       return {
         legal: true,
-        state: stateWithIce(state2, void 0),
+        state: stateWithIce(state, void 0),
         events: [...passEvents, "ice_boundary_disappear_after_group"]
       };
     }
-    return continueSlide(state2, afterGroup, dir, 1, options, [
+    return continueSlide(state, afterGroup, dir, 1, options, [
       ...passEvents,
       "slide_restart_after_group"
     ]);
   }
-  const destroyedState = removeObstacleGroup(state2, group.cells);
+  const destroyedState = removeObstacleGroup(state, group.cells);
   const destroyEvents = [...obstacleEvents, `ice_destroy_group_d6_plus:len${group.cells.length}`];
   if (!inBounds(destroyedState, afterGroup)) {
     return {
@@ -313,17 +313,17 @@ function resolveObstacle(state2, preObstacle, obstacle, dir, distance, options, 
     "slide_restart_after_group"
   ]);
 }
-function collectObstacleGroup(state2, start, dir) {
+function collectObstacleGroup(state, start, dir) {
   const cells = [];
   let cursor = start;
-  while (inBounds(state2, cursor) && isIceObstacle(state2, cursor)) {
+  while (inBounds(state, cursor) && isIceObstacle(state, cursor)) {
     cells.push(cursor);
     cursor = add(cursor, dir);
   }
   return { cells, afterGroup: cursor };
 }
-function removeObstacleGroup(state2, cells) {
-  const next = cloneState(state2);
+function removeObstacleGroup(state, cells) {
+  const next = cloneState(state);
   const destroyed = new Set(cells.map(pointKey));
   for (const key of destroyed) {
     next.walls.delete(key);
@@ -331,32 +331,32 @@ function removeObstacleGroup(state2, cells) {
   next.ice = next.ice.filter((icePoint) => !destroyed.has(pointKey(icePoint)));
   return next;
 }
-function stateWithIce(state2, point) {
-  const next = cloneState(state2);
+function stateWithIce(state, point) {
+  const next = cloneState(state);
   next.ice = point ? sortPoints([...next.ice, point]) : sortPoints(next.ice);
   return next;
 }
 function isRuleDisabled(ruleId, options) {
   return options.disabledRules?.has(ruleId) ?? false;
 }
-function illegal(state2, input, reason) {
-  return { legal: false, input, state: state2, events: [], reason };
+function illegal(state, input, reason) {
+  return { legal: false, input, state, events: [], reason };
 }
-function inBounds(state2, point) {
-  return point.x >= 0 && point.y >= 0 && point.x < state2.width && point.y < state2.height;
+function inBounds(state, point) {
+  return point.x >= 0 && point.y >= 0 && point.x < state.width && point.y < state.height;
 }
-function isEdgeCell(state2, point) {
-  return inBounds(state2, point) && (point.x === 0 || point.y === 0 || point.x === state2.width - 1 || point.y === state2.height - 1);
+function isEdgeCell(state, point) {
+  return inBounds(state, point) && (point.x === 0 || point.y === 0 || point.x === state.width - 1 || point.y === state.height - 1);
 }
-function isCellFreeForPlayer(state2, point) {
-  return inBounds(state2, point) && !state2.walls.has(pointKey(point)) && iceIndexAt(state2, point) === -1;
+function isCellFreeForPlayer(state, point) {
+  return inBounds(state, point) && !state.walls.has(pointKey(point)) && iceIndexAt(state, point) === -1;
 }
-function isIceObstacle(state2, point) {
-  return state2.walls.has(pointKey(point)) || iceIndexAt(state2, point) !== -1;
+function isIceObstacle(state, point) {
+  return state.walls.has(pointKey(point)) || iceIndexAt(state, point) !== -1;
 }
-function iceIndexAt(state2, point) {
+function iceIndexAt(state, point) {
   const key = pointKey(point);
-  return state2.ice.findIndex((icePoint) => pointKey(icePoint) === key);
+  return state.ice.findIndex((icePoint) => pointKey(icePoint) === key);
 }
 function sortPoints(points) {
   return [...points].sort((left, right) => left.y - right.y || left.x - right.x);
@@ -386,8 +386,8 @@ function createIceSlideRuntime(mechanic) {
     defaultWin: mechanic.win,
     key: stateKey,
     actions: () => legalActions(mechanic),
-    step: (state2, action, options) => {
-      const result = step(mechanic, state2, action, options);
+    step: (state, action, options) => {
+      const result = step(mechanic, state, action, options);
       return {
         action,
         legal: result.legal,
@@ -508,30 +508,30 @@ function parseLevel2(level) {
   }
   return { width, height, walls, goals, player, crates, portals };
 }
-function cloneState2(state2) {
+function cloneState2(state) {
   return {
-    width: state2.width,
-    height: state2.height,
-    walls: new Set(state2.walls),
-    goals: new Set(state2.goals),
-    player: { ...state2.player },
-    crates: state2.crates.map((crate) => ({ ...crate })),
+    width: state.width,
+    height: state.height,
+    walls: new Set(state.walls),
+    goals: new Set(state.goals),
+    player: { ...state.player },
+    crates: state.crates.map((crate) => ({ ...crate })),
     portals: Object.fromEntries(
-      Object.entries(state2.portals).map(([id, point]) => [id, { ...point }])
+      Object.entries(state.portals).map(([id, point]) => [id, { ...point }])
     )
   };
 }
-function stateKey2(state2) {
-  const crates = state2.crates.map(pointKey2).sort().join(";");
-  const portals = Object.entries(state2.portals).sort(([a], [b]) => a.localeCompare(b)).map(([id, point]) => `${id}:${pointKey2(point)}`).join(";");
-  return `P:${pointKey2(state2.player)}|C:${crates}|R:${portals}`;
+function stateKey2(state) {
+  const crates = state.crates.map(pointKey2).sort().join(";");
+  const portals = Object.entries(state.portals).sort(([a], [b]) => a.localeCompare(b)).map(([id, point]) => `${id}:${pointKey2(point)}`).join(";");
+  return `P:${pointKey2(state.player)}|C:${crates}|R:${portals}`;
 }
-function isWin2(state2, winCondition = { type: "all_objects_on_targets" }) {
+function isWin2(state, winCondition = { type: "all_objects_on_targets" }) {
   switch (winCondition.type) {
     case "all_objects_on_targets":
-      return state2.crates.length > 0 && state2.crates.every((crate) => state2.goals.has(pointKey2(crate)));
+      return state.crates.length > 0 && state.crates.every((crate) => state.goals.has(pointKey2(crate)));
     case "player_on_goal":
-      return state2.goals.has(pointKey2(state2.player));
+      return state.goals.has(pointKey2(state.player));
     default:
       return false;
   }
@@ -541,80 +541,80 @@ function isEventWin2(events, winCondition) {
   return winCondition?.type === "event_occurs" && event !== void 0 && eventsMatchPattern(events, event);
 }
 function replay2(mechanic, initialState, inputs, options = {}) {
-  let state2 = initialState;
+  let state = initialState;
   const events = [];
   let legal = true;
   for (const input of inputs) {
-    const result = step2(mechanic, state2, input, options);
+    const result = step2(mechanic, state, input, options);
     events.push(...result.events);
     if (result.legal) {
-      state2 = result.state;
+      state = result.state;
     } else {
       legal = false;
     }
   }
-  return { state: state2, events, legal };
+  return { state, events, legal };
 }
-function renderState2(state2) {
+function renderState2(state) {
   const rows = Array.from(
-    { length: state2.height },
-    () => Array.from({ length: state2.width }, () => " ")
+    { length: state.height },
+    () => Array.from({ length: state.width }, () => " ")
   );
-  for (const key of state2.goals) {
+  for (const key of state.goals) {
     const [xRaw, yRaw] = key.split(",");
     const x = Number(xRaw);
     const y = Number(yRaw);
     rows[y][x] = "G";
   }
-  for (const key of state2.walls) {
+  for (const key of state.walls) {
     const [xRaw, yRaw] = key.split(",");
     const x = Number(xRaw);
     const y = Number(yRaw);
     rows[y][x] = "#";
   }
-  for (const [id, point] of Object.entries(state2.portals)) {
+  for (const [id, point] of Object.entries(state.portals)) {
     rows[point.y][point.x] = id;
   }
-  for (const crate of state2.crates) {
+  for (const crate of state.crates) {
     rows[crate.y][crate.x] = "C";
   }
-  rows[state2.player.y][state2.player.x] = "@";
+  rows[state.player.y][state.player.x] = "@";
   return rows.map((row) => row.join("").trimEnd()).join("\n");
 }
-function step2(mechanic, state2, input, options = {}) {
+function step2(mechanic, state, input, options = {}) {
   const inputDef = mechanic.inputs[input];
   if (!inputDef || inputDef.intent !== "move" || !inputDef.dir) {
-    return illegal2(state2, input, "unsupported_input");
+    return illegal2(state, input, "unsupported_input");
   }
   const dir = inputDef.dir;
-  const destination = add2(state2.player, dir);
-  const behind = opposite(state2.player, dir);
-  if (isBlockedByWallOrBounds(state2, destination)) {
-    return illegal2(state2, input, "destination_blocked");
+  const destination = add2(state.player, dir);
+  const behind = opposite(state.player, dir);
+  if (isBlockedByWallOrBounds(state, destination)) {
+    return illegal2(state, input, "destination_blocked");
   }
-  if (crateIndexAt(state2, destination) !== -1) {
-    const pushedCrateIndex = crateIndexAt(state2, destination);
+  if (crateIndexAt(state, destination) !== -1) {
+    const pushedCrateIndex = crateIndexAt(state, destination);
     if (isRuleDisabled2("cannot_push_crate", options)) {
-      return illegal2(state2, input, "crate_push_rule_disabled");
+      return illegal2(state, input, "crate_push_rule_disabled");
     }
     return {
       legal: false,
       input,
-      state: state2,
+      state,
       events: [`push_crate_failed:crate#${pushedCrateIndex + 1}`],
       reason: "cannot_push_crate"
     };
   }
-  const portalId = portalIdAt(state2, destination);
+  const portalId = portalIdAt(state, destination);
   if (portalId) {
-    return enterPortal(state2, input, dir, portalId, options);
+    return enterPortal(state, input, dir, portalId, options);
   }
-  const pulledCrateIndex = crateIndexAt(state2, behind);
-  const canPull = pulledCrateIndex !== -1 && !isRuleDisabled2("pull_single_crate", options) && isCellFreeForPlayer2(state2, destination);
+  const pulledCrateIndex = crateIndexAt(state, behind);
+  const canPull = pulledCrateIndex !== -1 && !isRuleDisabled2("pull_single_crate", options) && isCellFreeForPlayer2(state, destination);
   if (canPull) {
-    const next = cloneState2(state2);
+    const next = cloneState2(state);
     next.player = destination;
-    next.crates[pulledCrateIndex] = { ...state2.player };
+    next.crates[pulledCrateIndex] = { ...state.player };
     return {
       legal: true,
       input,
@@ -622,37 +622,37 @@ function step2(mechanic, state2, input, options = {}) {
       events: [`pull_crate:crate#${pulledCrateIndex + 1}`]
     };
   }
-  if (!isRuleDisabled2("walk", options) && isCellFreeForPlayer2(state2, destination)) {
-    const next = cloneState2(state2);
+  if (!isRuleDisabled2("walk", options) && isCellFreeForPlayer2(state, destination)) {
+    const next = cloneState2(state);
     next.player = destination;
     return { legal: true, input, state: next, events: ["walk"] };
   }
-  return illegal2(state2, input, "no_matching_rule");
+  return illegal2(state, input, "no_matching_rule");
 }
-function enterPortal(state2, input, dir, entrancePortalId, options) {
+function enterPortal(state, input, dir, entrancePortalId, options) {
   if (isRuleDisabled2("enter_portal", options)) {
-    return illegal2(state2, input, "enter_portal_disabled");
+    return illegal2(state, input, "enter_portal_disabled");
   }
-  const entrance = state2.portals[entrancePortalId];
+  const entrance = state.portals[entrancePortalId];
   if (!entrance) {
-    return illegal2(state2, input, "missing_entrance_portal");
+    return illegal2(state, input, "missing_entrance_portal");
   }
   const pairedPortalId = portalPairs[entrancePortalId];
   if (!pairedPortalId) {
-    return illegal2(state2, input, "missing_paired_portal");
+    return illegal2(state, input, "missing_paired_portal");
   }
-  const paired = state2.portals[pairedPortalId];
+  const paired = state.portals[pairedPortalId];
   if (!paired) {
-    return illegal2(state2, input, "missing_paired_portal");
+    return illegal2(state, input, "missing_paired_portal");
   }
   const exit = add2(paired, dir);
-  const exitBlocked = !isCellFreeForPlayer2(state2, exit);
-  const exitBlockerEvents = exitBlocked ? describePortalExitBlocker(state2, exit) : [];
+  const exitBlocked = !isCellFreeForPlayer2(state, exit);
+  const exitBlockerEvents = exitBlocked ? describePortalExitBlocker(state, exit) : [];
   if (!exitBlocked) {
     if (isBranchDisabled("enter_portal.normal_teleport", options)) {
-      return illegal2(state2, input, "normal_teleport_disabled");
+      return illegal2(state, input, "normal_teleport_disabled");
     }
-    const next = cloneState2(state2);
+    const next = cloneState2(state);
     next.player = exit;
     return {
       legal: true,
@@ -662,12 +662,12 @@ function enterPortal(state2, input, dir, entrancePortalId, options) {
     };
   }
   const pushedPortalDestination = add2(entrance, dir);
-  const canPushEntrance = isCellFreeForPortal(state2, pushedPortalDestination);
+  const canPushEntrance = isCellFreeForPortal(state, pushedPortalDestination);
   if (canPushEntrance) {
     if (isBranchDisabled("enter_portal.blocked_exit_push_entrance", options)) {
-      return illegal2(state2, input, "blocked_exit_push_entrance_disabled");
+      return illegal2(state, input, "blocked_exit_push_entrance_disabled");
     }
-    const next = cloneState2(state2);
+    const next = cloneState2(state);
     next.portals[entrancePortalId] = pushedPortalDestination;
     return {
       legal: true,
@@ -684,7 +684,7 @@ function enterPortal(state2, input, dir, entrancePortalId, options) {
   return {
     legal: false,
     input,
-    state: state2,
+    state,
     events: [
       `portal_enter:${entrancePortalId}`,
       `portal_exit_blocked:${entrancePortalId}->${pairedPortalId}`,
@@ -700,45 +700,45 @@ function isRuleDisabled2(ruleId, options) {
 function isBranchDisabled(branchId, options) {
   return options.disabledBranches?.has(branchId) ?? false;
 }
-function illegal2(state2, input, reason) {
-  return { legal: false, input, state: state2, events: [], reason };
+function illegal2(state, input, reason) {
+  return { legal: false, input, state, events: [], reason };
 }
-function isBlockedByWallOrBounds(state2, point) {
-  return !inBounds2(state2, point) || state2.walls.has(pointKey2(point));
+function isBlockedByWallOrBounds(state, point) {
+  return !inBounds2(state, point) || state.walls.has(pointKey2(point));
 }
-function inBounds2(state2, point) {
-  return point.x >= 0 && point.y >= 0 && point.x < state2.width && point.y < state2.height;
+function inBounds2(state, point) {
+  return point.x >= 0 && point.y >= 0 && point.x < state.width && point.y < state.height;
 }
-function crateIndexAt(state2, point) {
+function crateIndexAt(state, point) {
   const key = pointKey2(point);
-  return state2.crates.findIndex((crate) => pointKey2(crate) === key);
+  return state.crates.findIndex((crate) => pointKey2(crate) === key);
 }
-function portalIdAt(state2, point) {
+function portalIdAt(state, point) {
   const key = pointKey2(point);
-  return Object.entries(state2.portals).find(([, portal]) => pointKey2(portal) === key)?.[0];
+  return Object.entries(state.portals).find(([, portal]) => pointKey2(portal) === key)?.[0];
 }
-function describePortalExitBlocker(state2, point) {
-  if (!inBounds2(state2, point)) {
+function describePortalExitBlocker(state, point) {
+  if (!inBounds2(state, point)) {
     return ["portal_exit_blocked_by_bounds"];
   }
-  if (state2.walls.has(pointKey2(point))) {
+  if (state.walls.has(pointKey2(point))) {
     return ["portal_exit_blocked_by_wall"];
   }
-  const crateIndex = crateIndexAt(state2, point);
+  const crateIndex = crateIndexAt(state, point);
   if (crateIndex !== -1) {
     return [`portal_exit_blocked_by_crate:crate#${crateIndex + 1}`];
   }
-  const portalId = portalIdAt(state2, point);
+  const portalId = portalIdAt(state, point);
   if (portalId) {
     return [`portal_exit_blocked_by_portal:${portalId}`];
   }
   return ["portal_exit_blocked_by_unknown"];
 }
-function isCellFreeForPlayer2(state2, point) {
-  return inBounds2(state2, point) && !state2.walls.has(pointKey2(point)) && crateIndexAt(state2, point) === -1 && !portalIdAt(state2, point);
+function isCellFreeForPlayer2(state, point) {
+  return inBounds2(state, point) && !state.walls.has(pointKey2(point)) && crateIndexAt(state, point) === -1 && !portalIdAt(state, point);
 }
-function isCellFreeForPortal(state2, point) {
-  return inBounds2(state2, point) && !state2.walls.has(pointKey2(point)) && crateIndexAt(state2, point) === -1 && !portalIdAt(state2, point) && pointKey2(state2.player) !== pointKey2(point);
+function isCellFreeForPortal(state, point) {
+  return inBounds2(state, point) && !state.walls.has(pointKey2(point)) && crateIndexAt(state, point) === -1 && !portalIdAt(state, point) && pointKey2(state.player) !== pointKey2(point);
 }
 
 // src/prototypes/pull_portal_fallback/runtime.ts
@@ -748,8 +748,8 @@ function createPullPortalRuntime(mechanic) {
     defaultWin: mechanic.win,
     key: stateKey2,
     actions: () => legalInputs(mechanic),
-    step: (state2, action, options) => {
-      const result = step2(mechanic, state2, action, options);
+    step: (state, action, options) => {
+      const result = step2(mechanic, state, action, options);
       return {
         action,
         legal: result.legal,
@@ -883,7 +883,7 @@ function parseLevel3(level) {
     sCells,
     rawSticky
   );
-  const state2 = {
+  const state = {
     width,
     height,
     walls,
@@ -894,8 +894,8 @@ function parseLevel3(level) {
     ...pushPullAnchor ? { pushPullAnchor } : {},
     ...boxStickyAnchor ? { boxStickyAnchor } : {}
   };
-  validateNoOverlap(level, state2);
-  return normalizeState(state2, { emitEvents: false }).state;
+  validateNoOverlap(level, state);
+  return normalizeState(state, { emitEvents: false }).state;
 }
 function assignPlayer2(level, current, point) {
   if (current) {
@@ -939,11 +939,11 @@ function parseBoxStickyAnchor(level, bCells, sCells, rawSticky) {
     stickyCells: rawSticky
   };
 }
-function validateNoOverlap(level, state2) {
+function validateNoOverlap(level, state) {
   const occupied = /* @__PURE__ */ new Map();
   const claim = (point, label) => {
     const key = pointKey3(point);
-    if (state2.walls.has(key)) {
+    if (state.walls.has(key)) {
       throw new Error(`Level ${level.id} places ${label} on a wall at ${key}`);
     }
     const previous = occupied.get(key);
@@ -952,101 +952,218 @@ function validateNoOverlap(level, state2) {
     }
     occupied.set(key, label);
   };
-  claim(state2.player, "player");
-  for (const [index, crate] of state2.crates.entries()) {
+  claim(state.player, "player");
+  for (const [index, crate] of state.crates.entries()) {
     claim(crate, `crate#${index + 1}`);
   }
-  for (const [groupIndex, group] of state2.stickyGroups.entries()) {
+  for (const [groupIndex, group] of state.stickyGroups.entries()) {
     for (const point of group) {
       claim(point, `sticky#${groupIndex + 1}`);
     }
   }
-  for (const point of pushPullCells(state2)) {
+  for (const point of pushPullCells(state)) {
     claim(point, "push_pull_anchor");
   }
-  for (const point of boxStickyCells(state2)) {
+  for (const point of boxStickyCells(state)) {
     claim(point, "box_sticky_anchor");
   }
 }
-function cloneState3(state2) {
+function cloneState3(state) {
   return {
-    width: state2.width,
-    height: state2.height,
-    walls: new Set(state2.walls),
-    goals: new Set(state2.goals),
-    player: { ...state2.player },
-    crates: state2.crates.map((point) => ({ ...point })),
-    stickyGroups: state2.stickyGroups.map((group) => group.map((point) => ({ ...point }))),
-    ...state2.pushPullAnchor ? {
+    width: state.width,
+    height: state.height,
+    walls: new Set(state.walls),
+    goals: new Set(state.goals),
+    player: { ...state.player },
+    crates: state.crates.map((point) => ({ ...point })),
+    stickyGroups: state.stickyGroups.map((group) => group.map((point) => ({ ...point }))),
+    ...state.pushPullAnchor ? {
       pushPullAnchor: {
-        push: { ...state2.pushPullAnchor.push },
-        pull: { ...state2.pushPullAnchor.pull }
+        push: { ...state.pushPullAnchor.push },
+        pull: { ...state.pushPullAnchor.pull }
       }
     } : {},
-    ...state2.boxStickyAnchor ? {
+    ...state.boxStickyAnchor ? {
       boxStickyAnchor: {
-        box: { ...state2.boxStickyAnchor.box },
-        sticky: { ...state2.boxStickyAnchor.sticky }
+        box: { ...state.boxStickyAnchor.box },
+        sticky: { ...state.boxStickyAnchor.sticky }
       }
     } : {}
   };
 }
-function stateKey3(state2) {
-  const crates = state2.crates.map(pointKey3).sort().join(";");
-  const sticky = state2.stickyGroups.map(groupKey).sort().join("|");
-  const pushPull = state2.pushPullAnchor ? `P:${pointKey3(state2.pushPullAnchor.push)};L:${pointKey3(state2.pushPullAnchor.pull)}` : "none";
-  const boxSticky = state2.boxStickyAnchor ? `B:${pointKey3(state2.boxStickyAnchor.box)};S:${pointKey3(state2.boxStickyAnchor.sticky)}` : "none";
+function stateKey3(state) {
+  const crates = state.crates.map(pointKey3).sort().join(";");
+  const sticky = state.stickyGroups.map(groupKey).sort().join("|");
+  const pushPull = state.pushPullAnchor ? `P:${pointKey3(state.pushPullAnchor.push)};L:${pointKey3(state.pushPullAnchor.pull)}` : "none";
+  const boxSticky = state.boxStickyAnchor ? `B:${pointKey3(state.boxStickyAnchor.box)};S:${pointKey3(state.boxStickyAnchor.sticky)}` : "none";
   return [
-    `Ply:${pointKey3(state2.player)}`,
+    `Ply:${pointKey3(state.player)}`,
     `C:${crates}`,
     `M:${sticky}`,
     `PL:${pushPull}`,
     `BS:${boxSticky}`
   ].join("|");
 }
-function renderState3(state2) {
+function renderState3(state) {
   const rows = Array.from(
-    { length: state2.height },
-    () => Array.from({ length: state2.width }, () => ".")
+    { length: state.height },
+    () => Array.from({ length: state.width }, () => ".")
   );
-  for (const key of state2.goals) {
+  for (const key of state.goals) {
     const point = pointFromKey2(key);
     rows[point.y][point.x] = "G";
   }
-  for (const key of state2.walls) {
+  for (const key of state.walls) {
     const point = pointFromKey2(key);
     rows[point.y][point.x] = "#";
   }
-  for (const crate of state2.crates) {
-    rows[crate.y][crate.x] = state2.goals.has(pointKey3(crate)) ? "*" : "C";
+  for (const crate of state.crates) {
+    rows[crate.y][crate.x] = state.goals.has(pointKey3(crate)) ? "*" : "C";
   }
-  for (const group of state2.stickyGroups) {
+  for (const group of state.stickyGroups) {
     for (const point of group) {
-      rows[point.y][point.x] = state2.goals.has(pointKey3(point)) ? "m" : "M";
+      rows[point.y][point.x] = state.goals.has(pointKey3(point)) ? "m" : "M";
     }
   }
-  if (state2.pushPullAnchor) {
-    rows[state2.pushPullAnchor.push.y][state2.pushPullAnchor.push.x] = "P";
-    rows[state2.pushPullAnchor.pull.y][state2.pushPullAnchor.pull.x] = "L";
+  if (state.pushPullAnchor) {
+    rows[state.pushPullAnchor.push.y][state.pushPullAnchor.push.x] = "P";
+    rows[state.pushPullAnchor.pull.y][state.pushPullAnchor.pull.x] = "L";
   }
-  if (state2.boxStickyAnchor) {
-    rows[state2.boxStickyAnchor.box.y][state2.boxStickyAnchor.box.x] = "B";
-    rows[state2.boxStickyAnchor.sticky.y][state2.boxStickyAnchor.sticky.x] = "S";
+  if (state.boxStickyAnchor) {
+    rows[state.boxStickyAnchor.box.y][state.boxStickyAnchor.box.x] = "B";
+    rows[state.boxStickyAnchor.sticky.y][state.boxStickyAnchor.sticky.x] = "S";
   }
-  rows[state2.player.y][state2.player.x] = state2.goals.has(pointKey3(state2.player)) ? "+" : "@";
+  rows[state.player.y][state.player.x] = state.goals.has(pointKey3(state.player)) ? "+" : "@";
   return rows.map((row) => row.join("").trimEnd()).join("\n");
 }
-function isWin3(state2, winCondition = { type: "all_targets_covered_by_objects" }) {
+function renderVisualState(state) {
+  const tiles = Array.from(
+    { length: state.height },
+    (_, y) => Array.from({ length: state.width }, (_2, x) => {
+      const point = { x, y };
+      const terrainSide = boxStickySideAt(state, point);
+      return {
+        x,
+        y,
+        terrain: state.walls.has(pointKey3(point)) ? visualLayer(
+          `ra.terrain.wall.${terrainSide}_side`,
+          "#",
+          `${terrainSide} side wall`,
+          ["terrain", "wall", `${terrainSide}_side`]
+        ) : visualLayer(
+          `ra.terrain.floor.${terrainSide}_side`,
+          " ",
+          `${terrainSide} side floor`,
+          ["terrain", "floor", `${terrainSide}_side`]
+        )
+      };
+    })
+  );
+  const tileAt = (point) => tiles[point.y][point.x];
+  for (const key of state.goals) {
+    const point = pointFromKey2(key);
+    tileAt(point).target = visualLayer("target.goal", "G", "goal");
+  }
+  for (const crate of state.crates) {
+    const side = boxStickySideAt(state, crate);
+    pushLayer(tileAt(crate), "objects", visualLayer(
+      `ra.crate.${side}_side`,
+      "C",
+      `${side} side crate`,
+      ["crate", `${side}_side`]
+    ));
+  }
+  for (const [groupIndex, group] of state.stickyGroups.entries()) {
+    for (const point of group) {
+      const side = boxStickySideAt(state, point);
+      pushLayer(tileAt(point), "objects", visualLayer(
+        `ra.sticky.${side}_side`,
+        "M",
+        `${side} side sticky block`,
+        ["sticky", `${side}_side`, `group_${groupIndex}`, ...stickyJoinTags(group, point)]
+      ));
+    }
+  }
+  if (state.pushPullAnchor) {
+    const pushJoin = joinDirection(state.pushPullAnchor.push, state.pushPullAnchor.pull);
+    const pullJoin = joinDirection(state.pushPullAnchor.pull, state.pushPullAnchor.push);
+    pushLayer(tileAt(state.pushPullAnchor.push), "objects", visualLayer(
+      `ra.anchor.push_end.join_${pushJoin}`,
+      "P",
+      "push anchor end",
+      ["anchor", "push_side", `join_${pushJoin}`]
+    ));
+    pushLayer(tileAt(state.pushPullAnchor.pull), "objects", visualLayer(
+      `ra.anchor.pull_end.join_${pullJoin}`,
+      "L",
+      "pull anchor end",
+      ["anchor", "pull_side", `join_${pullJoin}`]
+    ));
+  }
+  if (state.boxStickyAnchor) {
+    const boxJoin = joinDirection(state.boxStickyAnchor.box, state.boxStickyAnchor.sticky);
+    const stickyJoin = joinDirection(state.boxStickyAnchor.sticky, state.boxStickyAnchor.box);
+    pushLayer(tileAt(state.boxStickyAnchor.box), "objects", visualLayer(
+      `ra.anchor.box_end.join_${boxJoin}`,
+      "B",
+      "box anchor end",
+      ["anchor", "box_side", `join_${boxJoin}`]
+    ));
+    pushLayer(tileAt(state.boxStickyAnchor.sticky), "objects", visualLayer(
+      `ra.anchor.sticky_end.join_${stickyJoin}`,
+      "S",
+      "sticky anchor end",
+      ["anchor", "sticky_side", `join_${stickyJoin}`]
+    ));
+  }
+  const mode = forceModeAt(state, state.player);
+  pushLayer(tileAt(state.player), "actors", visualLayer(
+    `ra.player.${mode}_side`,
+    "@",
+    `${mode} side player`,
+    ["player", `${mode}_side`]
+  ));
+  return { width: state.width, height: state.height, tiles: tiles.flat() };
+}
+function visualLayer(visualKey, fallbackGlyph, label, tags = []) {
+  return { visualKey, fallbackGlyph, label, tags };
+}
+function pushLayer(tile, slot, layer2) {
+  tile[slot] = [...tile[slot] ?? [], layer2];
+}
+function joinDirection(from, to) {
+  if (to.x < from.x) {
+    return "left";
+  }
+  if (to.x > from.x) {
+    return "right";
+  }
+  if (to.y < from.y) {
+    return "up";
+  }
+  return "down";
+}
+function stickyJoinTags(group, point) {
+  const cells = new Set(group.map(pointKey3));
+  const tags = [];
+  for (const dir of Object.keys(vectors3)) {
+    if (cells.has(pointKey3(add3(point, dir)))) {
+      tags.push(`join_${dir}`);
+    }
+  }
+  return tags;
+}
+function isWin3(state, winCondition = { type: "all_targets_covered_by_objects" }) {
   switch (winCondition.type) {
     case "all_targets_covered_by_objects": {
-      if (state2.goals.size === 0) {
+      if (state.goals.size === 0) {
         return false;
       }
-      const occupied = objectOccupancy(state2);
-      return [...state2.goals].every((goal) => occupied.has(goal));
+      const occupied = objectOccupancy(state);
+      return [...state.goals].every((goal) => occupied.has(goal));
     }
     case "player_on_goal":
-      return state2.goals.has(pointKey3(state2.player));
+      return state.goals.has(pointKey3(state.player));
     default:
       return false;
   }
@@ -1056,45 +1173,45 @@ function isEventWin3(events, winCondition) {
   return winCondition?.type === "event_occurs" && event !== void 0 && eventsMatchPattern(events, event);
 }
 function replay3(mechanic, initialState, inputs, options = {}) {
-  let state2 = initialState;
+  let state = initialState;
   const events = [];
   let legal = true;
   for (const input of inputs) {
-    const result = step3(mechanic, state2, input, options);
+    const result = step3(mechanic, state, input, options);
     events.push(...result.events);
     if (result.legal) {
-      state2 = result.state;
+      state = result.state;
     } else {
       legal = false;
     }
   }
-  return { state: state2, events, legal };
+  return { state, events, legal };
 }
-function step3(mechanic, state2, input, options = {}) {
+function step3(mechanic, state, input, options = {}) {
   const inputDef = mechanic.inputs[input];
   if (!inputDef || inputDef.intent !== "move" || !inputDef.dir) {
-    return illegal3(state2, input, "unsupported_input");
+    return illegal3(state, input, "unsupported_input");
   }
   const dir = inputDef.dir;
-  return forceModeAt(state2, state2.player) === "pull" ? stepPull(state2, input, dir, options) : stepPush(state2, input, dir, options);
+  return forceModeAt(state, state.player) === "pull" ? stepPull(state, input, dir, options) : stepPush(state, input, dir, options);
 }
-function stepPush(state2, input, dir, options) {
-  const destination = add3(state2.player, dir);
-  if (isWallOrBounds(state2, destination)) {
-    return illegal3(state2, input, "destination_blocked");
+function stepPush(state, input, dir, options) {
+  const destination = add3(state.player, dir);
+  if (isWallOrBounds(state, destination)) {
+    return illegal3(state, input, "destination_blocked");
   }
-  const targetObject = objectIdAt(state2, destination);
+  const targetObject = objectIdAt(state, destination);
   if (targetObject) {
     if (isRuleDisabled3("push_force", options)) {
-      return illegal3(state2, input, "push_force_disabled");
+      return illegal3(state, input, "push_force_disabled");
     }
-    const plan = planObjectMove(state2, targetObject, dir, {
-      playerBlocks: /* @__PURE__ */ new Set([pointKey3(state2.player)])
+    const plan = planObjectMove(state, targetObject, dir, {
+      playerBlocks: /* @__PURE__ */ new Set([pointKey3(state.player)])
     });
     if (!plan.legal) {
-      return illegal3(state2, input, plan.reason);
+      return illegal3(state, input, plan.reason);
     }
-    const moved2 = translatePlannedObjects(state2, plan.objectIds, dir);
+    const moved2 = translatePlannedObjects(state, plan.objectIds, dir);
     moved2.player = destination;
     const normalized2 = normalizeState(moved2, { emitEvents: true, options });
     return {
@@ -1103,40 +1220,40 @@ function stepPush(state2, input, dir, options) {
       state: normalized2.state,
       events: [
         `push_object:${describeObject(targetObject)}`,
-        ...forceEvents(state2, plan.objectIds),
+        ...forceEvents(state, plan.objectIds),
         ...normalized2.events
       ]
     };
   }
-  if (!isFreeForPlayer(state2, destination)) {
-    return illegal3(state2, input, "destination_occupied");
+  if (!isFreeForPlayer(state, destination)) {
+    return illegal3(state, input, "destination_occupied");
   }
-  const moved = cloneState3(state2);
+  const moved = cloneState3(state);
   moved.player = destination;
   const normalized = normalizeState(moved, { emitEvents: true, options });
   return { legal: true, input, state: normalized.state, events: ["walk", ...normalized.events] };
 }
-function stepPull(state2, input, dir, options) {
-  const destination = add3(state2.player, dir);
-  if (isWallOrBounds(state2, destination)) {
-    return illegal3(state2, input, "destination_blocked");
+function stepPull(state, input, dir, options) {
+  const destination = add3(state.player, dir);
+  if (isWallOrBounds(state, destination)) {
+    return illegal3(state, input, "destination_blocked");
   }
-  if (objectIdAt(state2, destination)) {
-    return illegal3(state2, input, "pull_world_front_blocked");
+  if (objectIdAt(state, destination)) {
+    return illegal3(state, input, "pull_world_front_blocked");
   }
-  const behind = subtract2(state2.player, dir);
-  const targetObject = objectIdAt(state2, behind);
+  const behind = subtract2(state.player, dir);
+  const targetObject = objectIdAt(state, behind);
   if (targetObject) {
     if (isRuleDisabled3("pull_force", options)) {
-      return illegal3(state2, input, "pull_force_disabled");
+      return illegal3(state, input, "pull_force_disabled");
     }
-    const plan = planObjectMove(state2, targetObject, dir, {
+    const plan = planObjectMove(state, targetObject, dir, {
       playerBlocks: /* @__PURE__ */ new Set([pointKey3(destination)])
     });
     if (!plan.legal) {
-      return illegal3(state2, input, plan.reason);
+      return illegal3(state, input, plan.reason);
     }
-    const moved2 = translatePlannedObjects(state2, plan.objectIds, dir);
+    const moved2 = translatePlannedObjects(state, plan.objectIds, dir);
     moved2.player = destination;
     const normalized2 = normalizeState(moved2, { emitEvents: true, options });
     return {
@@ -1145,31 +1262,31 @@ function stepPull(state2, input, dir, options) {
       state: normalized2.state,
       events: [
         `pull_object:${describeObject(targetObject)}`,
-        ...forceEvents(state2, plan.objectIds),
+        ...forceEvents(state, plan.objectIds),
         ...normalized2.events
       ]
     };
   }
-  if (!isFreeForPlayer(state2, destination)) {
-    return illegal3(state2, input, "destination_occupied");
+  if (!isFreeForPlayer(state, destination)) {
+    return illegal3(state, input, "destination_occupied");
   }
-  const moved = cloneState3(state2);
+  const moved = cloneState3(state);
   moved.player = destination;
   const normalized = normalizeState(moved, { emitEvents: true, options });
   return { legal: true, input, state: normalized.state, events: ["walk", ...normalized.events] };
 }
-function planObjectMove(state2, startObject, dir, context) {
+function planObjectMove(state, startObject, dir, context) {
   const moving = /* @__PURE__ */ new Set();
-  const occupancy = objectOccupancy(state2);
+  const occupancy = objectOccupancy(state);
   const visit = (objectId) => {
     if (moving.has(objectId)) {
       return void 0;
     }
     moving.add(objectId);
-    for (const cell of objectCells(state2, objectId)) {
+    for (const cell of objectCells(state, objectId)) {
       const target = add3(cell, dir);
       const targetKey = pointKey3(target);
-      if (!inBounds3(state2, target) || state2.walls.has(targetKey)) {
+      if (!inBounds3(state, target) || state.walls.has(targetKey)) {
         return "force_blocked";
       }
       if (context.playerBlocks.has(targetKey)) {
@@ -1188,8 +1305,8 @@ function planObjectMove(state2, startObject, dir, context) {
   const reason = visit(startObject);
   return reason ? { legal: false, reason } : { legal: true, objectIds: moving };
 }
-function translatePlannedObjects(state2, objectIds, dir) {
-  const next = cloneState3(state2);
+function translatePlannedObjects(state, objectIds, dir) {
+  const next = cloneState3(state);
   for (const objectId of objectIds) {
     if (objectId.startsWith("crate:")) {
       const index = Number(objectId.slice("crate:".length));
@@ -1223,17 +1340,17 @@ function translatePlannedObjects(state2, objectIds, dir) {
   }
   return next;
 }
-function normalizeState(state2, config) {
+function normalizeState(state, config) {
   if (isRuleDisabled3("box_sticky_normalize", config.options)) {
-    return { state: cloneState3(state2), events: [] };
+    return { state: cloneState3(state), events: [] };
   }
   const sources = [
-    ...state2.crates.map((point, index) => ({
+    ...state.crates.map((point, index) => ({
       point,
       source: `crate:${index}`,
       sourceKind: "crate"
     })),
-    ...state2.stickyGroups.flatMap(
+    ...state.stickyGroups.flatMap(
       (group, index) => group.map((point) => ({
         point,
         source: `sticky:${index}`,
@@ -1246,7 +1363,7 @@ function normalizeState(state2, config) {
   let boxToSticky = 0;
   let stickyToBox = 0;
   for (const source of sources) {
-    const side = boxStickySideAt(state2, source.point);
+    const side = boxStickySideAt(state, source.point);
     if (side === "sticky") {
       stickyCells.push(source);
       if (source.sourceKind === "crate") {
@@ -1289,7 +1406,7 @@ function normalizeState(state2, config) {
     }
   }
   const normalized = {
-    ...cloneState3(state2),
+    ...cloneState3(state),
     crates: sortPoints2(crateCells),
     stickyGroups: sortGroups(components.map((component) => sortPoints2(component.map((cell) => cell.point))))
   };
@@ -1324,7 +1441,7 @@ function connectedStickyComponents(cells) {
   }
   return components;
 }
-function forceEvents(state2, objectIds) {
+function forceEvents(state, objectIds) {
   const events = [];
   if (objectIds.size > 1) {
     events.push(`force_chain:n${objectIds.size}`);
@@ -1335,21 +1452,21 @@ function forceEvents(state2, objectIds) {
   if (objectIds.has("anchor:box_sticky")) {
     events.push("anchor_boundary_shift:box_sticky");
   }
-  const movedKinds = new Set([...objectIds].map((id) => objectKind(state2, id)));
+  const movedKinds = new Set([...objectIds].map((id) => objectKind(state, id)));
   if (movedKinds.has("sticky")) {
     events.push("move_sticky_rigid");
   }
   return events;
 }
-function forceModeAt(state2, point) {
-  const anchor = state2.pushPullAnchor;
+function forceModeAt(state, point) {
+  const anchor = state.pushPullAnchor;
   if (!anchor) {
     return "push";
   }
   return isOnFirstAnchorSide(anchor.push, anchor.pull, point) ? "push" : "pull";
 }
-function boxStickySideAt(state2, point) {
-  const anchor = state2.boxStickyAnchor;
+function boxStickySideAt(state, point) {
+  const anchor = state.boxStickyAnchor;
   if (!anchor) {
     return "box";
   }
@@ -1361,48 +1478,48 @@ function isOnFirstAnchorSide(first, second, point) {
   }
   return first.y < second.y ? point.y <= first.y : point.y >= first.y;
 }
-function objectIdAt(state2, point) {
-  return objectOccupancy(state2).get(pointKey3(point));
+function objectIdAt(state, point) {
+  return objectOccupancy(state).get(pointKey3(point));
 }
-function objectOccupancy(state2) {
+function objectOccupancy(state) {
   const occupancy = /* @__PURE__ */ new Map();
-  for (const [index, crate] of state2.crates.entries()) {
+  for (const [index, crate] of state.crates.entries()) {
     occupancy.set(pointKey3(crate), `crate:${index}`);
   }
-  for (const [index, group] of state2.stickyGroups.entries()) {
+  for (const [index, group] of state.stickyGroups.entries()) {
     for (const point of group) {
       occupancy.set(pointKey3(point), `sticky:${index}`);
     }
   }
-  if (state2.pushPullAnchor) {
-    for (const point of pushPullCells(state2)) {
+  if (state.pushPullAnchor) {
+    for (const point of pushPullCells(state)) {
       occupancy.set(pointKey3(point), "anchor:push_pull");
     }
   }
-  if (state2.boxStickyAnchor) {
-    for (const point of boxStickyCells(state2)) {
+  if (state.boxStickyAnchor) {
+    for (const point of boxStickyCells(state)) {
       occupancy.set(pointKey3(point), "anchor:box_sticky");
     }
   }
   return occupancy;
 }
-function objectCells(state2, objectId) {
+function objectCells(state, objectId) {
   if (objectId.startsWith("crate:")) {
     const index = Number(objectId.slice("crate:".length));
-    const crate = state2.crates[index];
+    const crate = state.crates[index];
     return crate ? [crate] : [];
   }
   if (objectId.startsWith("sticky:")) {
     const index = Number(objectId.slice("sticky:".length));
-    return state2.stickyGroups[index] ?? [];
+    return state.stickyGroups[index] ?? [];
   }
   if (objectId === "anchor:push_pull") {
-    return pushPullCells(state2);
+    return pushPullCells(state);
   }
-  return boxStickyCells(state2);
+  return boxStickyCells(state);
 }
-function objectKind(state2, objectId) {
-  void state2;
+function objectKind(state, objectId) {
+  void state;
   if (objectId.startsWith("crate:")) {
     return "crate";
   }
@@ -1420,26 +1537,26 @@ function describeObject(objectId) {
   }
   return objectId === "anchor:push_pull" ? "push_pull_anchor" : "box_sticky_anchor";
 }
-function pushPullCells(state2) {
-  return state2.pushPullAnchor ? [state2.pushPullAnchor.push, state2.pushPullAnchor.pull] : [];
+function pushPullCells(state) {
+  return state.pushPullAnchor ? [state.pushPullAnchor.push, state.pushPullAnchor.pull] : [];
 }
-function boxStickyCells(state2) {
-  return state2.boxStickyAnchor ? [state2.boxStickyAnchor.box, state2.boxStickyAnchor.sticky] : [];
+function boxStickyCells(state) {
+  return state.boxStickyAnchor ? [state.boxStickyAnchor.box, state.boxStickyAnchor.sticky] : [];
 }
 function isRuleDisabled3(ruleId, options) {
   return options?.disabledRules?.has(ruleId) ?? false;
 }
-function illegal3(state2, input, reason) {
-  return { legal: false, input, state: state2, events: [], reason };
+function illegal3(state, input, reason) {
+  return { legal: false, input, state, events: [], reason };
 }
-function isFreeForPlayer(state2, point) {
-  return !isWallOrBounds(state2, point) && !objectIdAt(state2, point);
+function isFreeForPlayer(state, point) {
+  return !isWallOrBounds(state, point) && !objectIdAt(state, point);
 }
-function isWallOrBounds(state2, point) {
-  return !inBounds3(state2, point) || state2.walls.has(pointKey3(point));
+function isWallOrBounds(state, point) {
+  return !inBounds3(state, point) || state.walls.has(pointKey3(point));
 }
-function inBounds3(state2, point) {
-  return point.x >= 0 && point.y >= 0 && point.x < state2.width && point.y < state2.height;
+function inBounds3(state, point) {
+  return point.x >= 0 && point.y >= 0 && point.x < state.width && point.y < state.height;
 }
 function areAdjacent(left, right) {
   return Math.abs(left.x - right.x) + Math.abs(left.y - right.y) === 1;
@@ -1465,8 +1582,8 @@ function createRealityAnchorRuntime(mechanic) {
     defaultWin: mechanic.win,
     key: stateKey3,
     actions: () => legalInputs2(mechanic),
-    step: (state2, action, options) => {
-      const result = step3(mechanic, state2, action, options);
+    step: (state, action, options) => {
+      const result = step3(mechanic, state, action, options);
       return {
         action,
         legal: result.legal,
@@ -1488,6 +1605,7 @@ var realityAnchorAdapter = {
   createRuntime: createRealityAnchorRuntime,
   parseLevel: parseLevel3,
   renderState: renderState3,
+  renderVisualState,
   step: step3,
   replay: replay3,
   isWin: isWin3,
@@ -1495,6 +1613,65 @@ var realityAnchorAdapter = {
 };
 
 // src/prototypes/runtimeAdapter.ts
+function renderVisualStateWithFallback(adapter2, mechanic, state) {
+  return adapter2.renderVisualState?.(state, mechanic) ?? renderGlyphVisualBoard(adapter2.renderState(state), state);
+}
+function renderGlyphVisualBoard(renderedState, size) {
+  const rows = renderedState.split("\n").map((row) => row.padEnd(size.width, " "));
+  const tiles = [];
+  for (let y = 0; y < size.height; y += 1) {
+    const row = rows[y] ?? "";
+    for (let x = 0; x < size.width; x += 1) {
+      tiles.push(glyphTile(row[x] ?? " ", x, y));
+    }
+  }
+  return { width: size.width, height: size.height, tiles };
+}
+function glyphTile(glyph, x, y) {
+  const tile = {
+    x,
+    y,
+    terrain: layer("terrain.floor", " ", "floor")
+  };
+  switch (glyph) {
+    case " ":
+    case ".":
+      return tile;
+    case "#":
+      tile.terrain = layer("terrain.wall", "#", "wall");
+      return tile;
+    case "G":
+      tile.target = layer("target.goal", "G", "goal");
+      return tile;
+    case "+":
+      tile.target = layer("target.goal", "G", "goal");
+      tile.actors = [layer("actor.player", "@", "player")];
+      return tile;
+    case "@":
+      tile.actors = [layer("actor.player", "@", "player")];
+      return tile;
+    case "*":
+      tile.target = layer("target.goal", "G", "goal");
+      tile.objects = [layer("object.crate", "C", "crate")];
+      return tile;
+    case "C":
+      tile.objects = [layer("object.crate", "C", "crate")];
+      return tile;
+    case "m":
+      tile.target = layer("target.goal", "G", "goal");
+      tile.objects = [layer("object.sticky", "M", "sticky")];
+      return tile;
+    case "M":
+      tile.objects = [layer("object.sticky", "M", "sticky")];
+      return tile;
+    default:
+      tile.objects = [layer(`glyph.${glyph}`, glyph, glyph, ["glyph-fallback"])];
+      return tile;
+  }
+}
+function layer(visualKey, fallbackGlyph, label, tags = []) {
+  return { visualKey, fallbackGlyph, label, tags };
+}
 function getRuntimeAdapter(mechanic) {
   if (mechanic.id === pullPortalAdapter.id) {
     return pullPortalAdapter;
@@ -1510,335 +1687,961 @@ function getRuntimeAdapter(mechanic) {
   );
 }
 
-// src/web/app.ts
-var inputByKey = /* @__PURE__ */ new Map([
-  ["ArrowUp", "up"],
-  ["w", "up"],
-  ["W", "up"],
-  ["ArrowDown", "down"],
-  ["s", "down"],
-  ["S", "down"],
-  ["ArrowLeft", "left"],
-  ["a", "left"],
-  ["A", "left"],
-  ["ArrowRight", "right"],
-  ["d", "right"],
-  ["D", "right"]
-]);
-var app = document.querySelector("#app");
-if (!app) {
-  throw new Error("Missing #app");
+// src/web/assets/puzzlescript16/manifest.ts
+function sprite(file, label, layerRole) {
+  return {
+    file,
+    label,
+    layerRole,
+    size: 16,
+    src: `./assets/puzzlescript16/${file}`
+  };
 }
-var appRoot = app;
-var buildId = true ? "mr5z3zrs" : "dev";
-var data = await fetch(`./data.json?v=${encodeURIComponent(buildId)}`).then(
-  (response) => response.json()
-);
-var runtimeAdapter = getRuntimeAdapter(data.mechanic);
-var state = createPlayState(data, data.levels.levels[0]);
+var puzzleScript16Sprites = {
+  "terrain.floor": sprite("terrain_floor_box_side.png", "floor", "terrain"),
+  "terrain.wall": sprite("terrain_wall_box_side.png", "wall", "terrain"),
+  "target.goal": sprite("target_goal.png", "goal", "target"),
+  "actor.player": sprite("ra_player_push_side.png", "player", "actor"),
+  "object.crate": sprite("ra_crate_box_side.png", "crate", "object"),
+  "object.sticky": sprite("ra_sticky_sticky_side.png", "sticky block", "object"),
+  "ra.terrain.floor.box_side": sprite("terrain_floor_box_side.png", "box-side floor", "terrain"),
+  "ra.terrain.floor.sticky_side": sprite("terrain_floor_sticky_side.png", "sticky-side floor", "terrain"),
+  "ra.terrain.wall.box_side": sprite("terrain_wall_box_side.png", "box-side wall", "terrain"),
+  "ra.terrain.wall.sticky_side": sprite("terrain_wall_sticky_side.png", "sticky-side wall", "terrain"),
+  "ra.player.push_side": sprite("ra_player_push_side.png", "push-side player", "actor"),
+  "ra.player.pull_side": sprite("ra_player_pull_side.png", "pull-side player", "actor"),
+  "ra.crate.box_side": sprite("ra_crate_box_side.png", "box-side crate", "object"),
+  "ra.crate.sticky_side": sprite("ra_crate_sticky_side.png", "sticky-side crate", "object"),
+  "ra.sticky.box_side": sprite("ra_sticky_box_side.png", "box-side sticky block", "object"),
+  "ra.sticky.sticky_side": sprite("ra_sticky_sticky_side.png", "sticky-side sticky block", "object"),
+  "ra.anchor.push_end": sprite("ra_anchor_push_end.png", "push anchor end", "object"),
+  "ra.anchor.pull_end": sprite("ra_anchor_pull_end.png", "pull anchor end", "object"),
+  "ra.anchor.push_end.join_left": sprite("ra_anchor_push_end_join_left.png", "push anchor end joined left", "object"),
+  "ra.anchor.push_end.join_right": sprite("ra_anchor_push_end_join_right.png", "push anchor end joined right", "object"),
+  "ra.anchor.push_end.join_up": sprite("ra_anchor_push_end_join_up.png", "push anchor end joined up", "object"),
+  "ra.anchor.push_end.join_down": sprite("ra_anchor_push_end_join_down.png", "push anchor end joined down", "object"),
+  "ra.anchor.pull_end.join_left": sprite("ra_anchor_pull_end_join_left.png", "pull anchor end joined left", "object"),
+  "ra.anchor.pull_end.join_right": sprite("ra_anchor_pull_end_join_right.png", "pull anchor end joined right", "object"),
+  "ra.anchor.pull_end.join_up": sprite("ra_anchor_pull_end_join_up.png", "pull anchor end joined up", "object"),
+  "ra.anchor.pull_end.join_down": sprite("ra_anchor_pull_end_join_down.png", "pull anchor end joined down", "object"),
+  "ra.anchor.box_end": sprite("ra_anchor_box_end.png", "box anchor end", "object"),
+  "ra.anchor.sticky_end": sprite("ra_anchor_sticky_end.png", "sticky anchor end", "object"),
+  "ra.anchor.box_end.join_left": sprite("ra_anchor_box_end_join_left.png", "box anchor end joined left", "object"),
+  "ra.anchor.box_end.join_right": sprite("ra_anchor_box_end_join_right.png", "box anchor end joined right", "object"),
+  "ra.anchor.box_end.join_up": sprite("ra_anchor_box_end_join_up.png", "box anchor end joined up", "object"),
+  "ra.anchor.box_end.join_down": sprite("ra_anchor_box_end_join_down.png", "box anchor end joined down", "object"),
+  "ra.anchor.sticky_end.join_left": sprite("ra_anchor_sticky_end_join_left.png", "sticky anchor end joined left", "object"),
+  "ra.anchor.sticky_end.join_right": sprite("ra_anchor_sticky_end_join_right.png", "sticky anchor end joined right", "object"),
+  "ra.anchor.sticky_end.join_up": sprite("ra_anchor_sticky_end_join_up.png", "sticky anchor end joined up", "object"),
+  "ra.anchor.sticky_end.join_down": sprite("ra_anchor_sticky_end_join_down.png", "sticky anchor end joined down", "object")
+};
+
+// src/web/app.ts
+var defaultAestheticLabels = {
+  "1": "\u53CD\u4F8B\u6837\u672C",
+  "2": "\u529F\u80FD\u5E93\u5B58",
+  "3": "\u53EF\u7528\u4E0B\u754C",
+  "4": "\u4EAE\u70B9\u5019\u9009",
+  "5": "\u6807\u6746\u8303\u4F8B"
+};
+var defaultDifficultyLabels = {
+  "1": "\u6559\u5B66\u89C1\u8BC1",
+  "2": "\u7B80\u5355\u7EC3\u4E60",
+  "3": "\u5E38\u89C4\u6D41\u7A0B",
+  "4": "\u9636\u6BB5\u6311\u6218",
+  "5": "\u9AD8\u96BE\u7EC8\u5C40"
+};
+var inputByKey = {
+  ArrowUp: "up",
+  ArrowDown: "down",
+  ArrowLeft: "left",
+  ArrowRight: "right",
+  w: "up",
+  W: "up",
+  s: "down",
+  S: "down",
+  a: "left",
+  A: "left",
+  d: "right",
+  D: "right"
+};
+var appRoot = document.querySelector("#app");
+if (!appRoot) {
+  throw new Error("Missing #app root element");
+}
+var app = appRoot;
+var buildId = true ? "mr6nf9uv" : String(Date.now());
+var data = await fetchJson(`./data.json?v=${encodeURIComponent(buildId)}`);
+var adapter = getRuntimeAdapter(data.mechanic);
+var reviewData = await loadReviewData(data);
+var activeTab = reviewData.archiveEntries.length > 0 ? "archive" : "temporary";
+var activeFilter = "all";
+var selectedEntryKey = "";
+var playState = null;
+var saveStatus = reviewData.writable ? "\u53EF\u5199\u8BC4\u5BA1\u670D\u52A1\u5DF2\u8FDE\u63A5" : "\u9759\u6001\u53EA\u8BFB\u8BD5\u73A9";
+var replaying = false;
+var toolMenuOpen = false;
+var draftByEntry = /* @__PURE__ */ new Map();
+selectedEntryKey = pickInitialEntryKey();
+resetPlayStateForSelection();
 render();
 window.addEventListener("keydown", (event) => {
-  const input = inputByKey.get(event.key);
-  if (!input) {
+  if (isEditableTarget(event.target)) {
     return;
   }
-  event.preventDefault();
-  play(input);
+  const input = inputByKey[event.key];
+  if (input) {
+    event.preventDefault();
+    captureDraftFromDom();
+    applyInput(input);
+    render();
+    return;
+  }
+  if (event.key === "z" || event.key === "Z") {
+    event.preventDefault();
+    captureDraftFromDom();
+    undoMove();
+    render();
+    return;
+  }
+  if (event.key === "r" || event.key === "R") {
+    event.preventDefault();
+    captureDraftFromDom();
+    resetPlayStateForSelection();
+    render();
+  }
 });
-function createPlayState(playableData, level) {
-  const initial = runtimeAdapter.parseLevel(level);
-  return {
-    data: playableData,
-    level,
-    initial,
-    current: initial,
-    history: [],
-    events: [],
-    won: runtimeAdapter.isWin(initial, winFor(level))
-  };
-}
-function winFor(level) {
-  return level.win ?? data.mechanic.win;
-}
-function play(input) {
-  if (state.won) {
-    return;
-  }
-  const result = runtimeAdapter.step(data.mechanic, state.current, input, {});
-  const nextEvents = [...state.events, ...result.events];
-  if (result.legal) {
-    state = {
-      ...state,
-      current: result.state,
-      history: [...state.history, state.current],
-      events: nextEvents,
-      lastResult: result,
-      won: runtimeAdapter.isWin(result.state, winFor(state.level)) || runtimeAdapter.isEventWin(result.events, winFor(state.level))
-    };
-  } else {
-    state = {
-      ...state,
-      events: nextEvents,
-      lastResult: result,
-      won: runtimeAdapter.isEventWin(result.events, winFor(state.level))
-    };
-  }
-  render();
-}
-function reset() {
-  state = createPlayState(data, state.level);
-  render();
-}
-function undo() {
-  const previous = state.history.at(-1);
-  if (!previous) {
-    return;
-  }
-  state = {
-    ...state,
-    current: previous,
-    history: state.history.slice(0, -1),
-    events: [],
-    lastResult: void 0,
-    won: runtimeAdapter.isWin(previous, winFor(state.level))
-  };
-  render();
-}
-function selectLevel(levelId) {
-  const level = data.levels.levels.find((candidate) => candidate.id === levelId);
-  if (!level) {
-    return;
-  }
-  state = createPlayState(data, level);
-  render();
-}
-function replayExpected() {
-  const inputs = replayInputsFor(state.level);
-  if (inputs.length === 0) {
-    return;
-  }
-  const result = runtimeAdapter.replay(data.mechanic, state.initial, inputs, {});
-  state = {
-    ...state,
-    current: result.state,
-    history: [],
-    events: result.events,
-    lastResult: void 0,
-    won: runtimeAdapter.isWin(result.state, winFor(state.level)) || result.events.some((event) => runtimeAdapter.isEventWin([event], winFor(state.level)))
-  };
-  render();
-}
-function replayInputsFor(level) {
-  if (level.expected_trace && level.expected_trace.length > 0) {
-    return level.expected_trace.map((entry) => entry.input);
-  }
-  return data.evaluation?.results?.find((result) => result.levelId === level.id)?.solutionInputs ?? [];
-}
 function render() {
-  appRoot.innerHTML = `
-    <div class="shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <h1>${escapeHtml(data.mechanic.title)}</h1>
-          <p>${escapeHtml(data.mechanic.id)}</p>
-        </div>
-        <div class="level-list">
-          ${data.levels.levels.map(renderLevelButton).join("")}
-        </div>
+  const entry = currentEntry();
+  const level = entryLevel(entry);
+  const draft = entry ? draftForEntry(entry) : emptyDraft();
+  app.innerHTML = `
+    <div class="review-shell">
+      ${renderHeader()}
+      <aside class="candidate-rail" aria-label="\u5019\u9009\u5217\u8868">
+        ${renderCandidateRail()}
       </aside>
-
-      <section class="stage">
-        <div class="toolbar">
-          <div>
-            <strong>${escapeHtml(state.level.id)} ${escapeHtml(state.level.title)}</strong>
-            <div class="meta">${escapeHtml(state.level.role)} / ${escapeHtml(state.level.status)}</div>
-          </div>
-          <div class="tool-group">
-            <button class="tool-button" data-action="undo">Undo</button>
-            <button class="tool-button" data-action="reset">Reset</button>
-            <button class="tool-button" data-action="replay">Replay</button>
-          </div>
-        </div>
-        <div class="board-wrap">
-          ${renderBoard(state.current)}
-        </div>
-        <div class="controls" aria-label="movement">
-          <button class="arrow-button" data-dir="up">Up</button>
-          <button class="arrow-button" data-dir="left">Left</button>
-          <button class="arrow-button" data-dir="right">Right</button>
-          <button class="arrow-button" data-dir="down">Down</button>
-        </div>
-      </section>
-
-      <aside class="inspector">
-        <div class="section">
-          <h2>Status</h2>
-          <div class="status ${state.won ? "win" : ""}">${statusText()}</div>
-        </div>
-        <div class="section">
-          <h3>Targets</h3>
-          <div class="knowledge">${state.level.targets.map(renderKnowledge).join("")}</div>
-        </div>
-        <div class="section">
-          <h3>Events</h3>
-          <div class="event-list">${renderTargetEvents()}</div>
-        </div>
-        <div class="section">
-          <h3>Layout</h3>
-          <pre class="layout-view">${escapeHtml(renderLayoutText(state.current))}</pre>
-        </div>
-        <div class="section">
-          <h3>Trace</h3>
-          <div class="log">${escapeHtml(state.events.join("\n"))}</div>
-        </div>
+      <main class="play-area">
+        ${renderPlayArea(entry, level)}
+      </main>
+      <aside class="review-panel" aria-label="\u8BC4\u5BA1\u9762\u677F">
+        ${entry ? renderReviewPanel(entry, draft) : renderEmptyReviewPanel()}
       </aside>
     </div>
   `;
-  appRoot.querySelectorAll("[data-dir]").forEach((button) => {
-    button.addEventListener("click", () => play(button.dataset.dir));
-  });
-  appRoot.querySelectorAll("[data-level]").forEach((button) => {
-    button.addEventListener("click", () => selectLevel(button.dataset.level ?? ""));
-  });
-  appRoot.querySelector("[data-action='reset']")?.addEventListener("click", reset);
-  appRoot.querySelector("[data-action='undo']")?.addEventListener("click", undo);
-  appRoot.querySelector("[data-action='replay']")?.addEventListener("click", replayExpected);
+  bindUiEvents();
 }
-function renderLevelButton(level) {
-  return `<button class="level-button" data-level="${escapeHtml(level.id)}" aria-current="${level.id === state.level.id ? "true" : "false"}">
-    <strong>${escapeHtml(level.id)} ${escapeHtml(level.title)}</strong>
-    <span>${escapeHtml(level.role)}</span>
-  </button>`;
+function renderHeader() {
+  const archiveCount = reviewData.archiveEntries.length;
+  const temporaryCount = reviewData.temporaryEntries.length;
+  const writableLabel = reviewData.writable ? "\u53EF\u5199" : "\u53EA\u8BFB";
+  return `
+    <header class="app-header">
+      <div class="title-block">
+        <span class="eyebrow">${escapeHtml(data.mechanic.id)}</span>
+        <h1>${escapeHtml(data.mechanic.title)}</h1>
+      </div>
+      <div class="header-metrics" aria-label="\u5019\u9009\u6982\u51B5">
+        <span class="metric"><strong>${archiveCount}</strong> \u5F52\u6863\u5019\u9009</span>
+        <span class="metric"><strong>${temporaryCount}</strong> \u4E34\u65F6\u6E38\u73A9</span>
+        <span class="badge ${reviewData.writable ? "ok" : "muted"}">${writableLabel}</span>
+        <span class="save-status">${escapeHtml(saveStatus)}</span>
+      </div>
+    </header>
+  `;
 }
-function renderKnowledge(targetId) {
-  const item = data.knowledge.knowledge.find((candidate) => candidate.id === targetId);
-  return `<p><strong>${escapeHtml(targetId)}</strong><br>${escapeHtml(item?.statement ?? "")}</p>`;
+function renderCandidateRail() {
+  const entries = filteredEntries();
+  return `
+    <div class="tab-strip" role="tablist" aria-label="\u5019\u9009\u6765\u6E90">
+      ${tabButton("archive", "\u5F52\u6863\u5019\u9009", reviewData.archiveEntries.length)}
+      ${tabButton("temporary", "\u4E34\u65F6\u6E38\u73A9", reviewData.temporaryEntries.length)}
+    </div>
+    <label class="filter-row">
+      <span>\u7B5B\u9009</span>
+      <select data-filter>
+        ${filterOption("all", "\u5168\u90E8")}
+        ${filterOption("unreviewed", "\u672A\u4EBA\u5DE5\u8BC4\u5BA1")}
+        ${filterOption("ready", "\u53EF\u5F52\u6863/\u5DF2\u63A5\u53D7")}
+        ${filterOption("attention", "\u5F85\u5904\u7406")}
+      </select>
+    </label>
+    <div class="candidate-list">
+      ${entries.length > 0 ? entries.map(renderCandidateButton).join("") : `<div class="empty-state">\u5F53\u524D\u7B5B\u9009\u6CA1\u6709\u5019\u9009\u3002</div>`}
+    </div>
+  `;
 }
-function renderTargetEvents() {
-  const targetEvents = new Set(
-    state.level.targets.flatMap((targetId) => {
-      const item = data.knowledge.knowledge.find((candidate) => candidate.id === targetId);
-      return item?.detector.required_events ?? [];
-    })
-  );
-  if (targetEvents.size === 0) {
-    return "";
+function renderPlayArea(entry, level) {
+  const title = entry ? entryTitle(entry) : "\u672A\u9009\u62E9\u5019\u9009";
+  const subtitle = entry ? entrySubtitle(entry) : "\u9009\u62E9\u5019\u9009";
+  const hasReplay = Boolean(level && expectedInputsForLevel(level).length > 0);
+  const canExportAscii = Boolean(level && playState);
+  return `
+    <section class="play-card">
+      <div class="play-toolbar">
+        <div class="level-heading">
+          <span class="eyebrow">${escapeHtml(entry?.kind === "archive" ? "Archive" : "Playtest")}</span>
+          <h2>${escapeHtml(title)}</h2>
+          <p>${escapeHtml(subtitle)}</p>
+        </div>
+        <div class="play-actions">
+          <button
+            class="primary-button"
+            type="button"
+            data-action="replay"
+            ${hasReplay || level ? "" : "disabled"}
+            title="\u56DE\u653E"
+          >
+            Replay
+          </button>
+          <div class="toolbox">
+            <button
+              class="secondary-button"
+              type="button"
+              data-action="toggle-tools"
+              aria-haspopup="menu"
+              aria-expanded="${toolMenuOpen ? "true" : "false"}"
+              title="\u5DE5\u5177"
+            >
+              \u5DE5\u5177
+            </button>
+            ${toolMenuOpen ? `<div class="tool-menu" role="menu">
+                    <button
+                      class="tool-menu-item"
+                      type="button"
+                      data-action="copy-ascii"
+                      role="menuitem"
+                      ${canExportAscii ? "" : "disabled"}
+                    >
+                      \u590D\u5236 ASCII
+                    </button>
+                  </div>` : ""}
+          </div>
+        </div>
+      </div>
+      <div class="play-status-row">
+        ${renderPlayStatus()}
+        <span class="keyboard-hint">\u65B9\u5411\u952E/WASD \u79FB\u52A8\uFF0CZ \u64A4\u9500\uFF0CR \u91CD\u7F6E</span>
+      </div>
+      <div class="board-wrap">
+        ${level && playState ? renderBoard(adapter, playState) : renderNoBoard(entry)}
+      </div>
+      <div class="trace-log">
+        ${renderTraceLog()}
+      </div>
+    </section>
+  `;
+}
+function renderReviewPanel(entry, draft) {
+  const comments = entryComments(entry);
+  const readonly = reviewData.writable ? "" : "disabled";
+  return `
+    <form class="review-form" data-review-form data-entry-key="${escapeAttribute(entryKey(entry))}">
+      <div class="panel-section">
+        <div class="section-title">
+          <h2>\u8BC4\u5BA1</h2>
+          <span class="badge ${entry.kind === "archive" ? "archive" : "temporary"}">
+            ${entry.kind === "archive" ? "\u5F52\u6863\u5019\u9009" : "\u4E34\u65F6\u6E38\u73A9"}
+          </span>
+        </div>
+        ${entry.kind === "archive" ? renderArchiveFields(draft, readonly) : renderTemporaryFields(draft, readonly)}
+      </div>
+
+      <div class="panel-section">
+        <h3>\u5BA1\u7F8E\u5206</h3>
+        ${renderScoreControl("aestheticScore", draft.aestheticScore, reviewData.labels.aesthetic, readonly)}
+      </div>
+
+      <div class="panel-section">
+        <h3>\u96BE\u5EA6\u5206</h3>
+        ${renderScoreControl("difficultyScore", draft.difficultyScore, reviewData.labels.difficulty, readonly)}
+      </div>
+
+      <div class="panel-section">
+        <label class="field">
+          <span>\u65B0\u589E\u8BC4\u8BED</span>
+          <textarea
+            name="comment"
+            rows="5"
+            placeholder="\u5199\u4E0B\u4EBA\u7C7B\u8BC4\u5BA1\u610F\u89C1\u3002\u7559\u7A7A\u4FDD\u5B58\u65F6\u53EA\u66F4\u65B0\u5206\u6570/\u72B6\u6001\u3002"
+            ${readonly}
+          >${escapeHtml(draft.comment)}</textarea>
+        </label>
+        <button class="save-button" type="button" data-action="save-review" ${readonly}>
+          \u4FDD\u5B58\u8BC4\u5BA1
+        </button>
+      </div>
+
+      <div class="panel-section">
+        <h3>\u5DF2\u6709\u8BC4\u8BBA</h3>
+        ${comments.length > 0 ? renderCommentList(comments) : `<p class="muted-copy">\u6682\u65E0\u4EBA\u7C7B\u8BC4\u8BBA\u3002</p>`}
+      </div>
+
+      ${entry.kind === "archive" ? renderEvidence(entry.evidenceRefs) : renderTemporaryReviewSummary(entry)}
+    </form>
+  `;
+}
+function renderArchiveFields(draft, readonly) {
+  return `
+    <label class="field">
+      <span>\u6700\u7EC8\u72B6\u6001</span>
+      <select name="humanFinalStatus" ${readonly}>
+        ${option("pending", "pending", draft.humanFinalStatus)}
+        ${option("accepted", "accepted", draft.humanFinalStatus)}
+        ${option("proposal_ready", "proposal_ready", draft.humanFinalStatus)}
+        ${option("proposal_ready_with_caveats", "proposal_ready_with_caveats", draft.humanFinalStatus)}
+        ${option("held_proposal", "held_proposal", draft.humanFinalStatus)}
+        ${option("rejected_candidate", "rejected_candidate", draft.humanFinalStatus)}
+      </select>
+    </label>
+    <label class="field">
+      <span>\u5F52\u6863\u8D44\u683C</span>
+      <select name="archiveEligibility" ${readonly}>
+        ${option("human_pending", "human_pending", draft.archiveEligibility)}
+        ${option("clean_archive", "clean_archive", draft.archiveEligibility)}
+        ${option("raw_run_only", "raw_run_only", draft.archiveEligibility)}
+        ${option("reject_do_not_archive", "reject_do_not_archive", draft.archiveEligibility)}
+      </select>
+    </label>
+  `;
+}
+function renderTemporaryFields(draft, readonly) {
+  return `
+    <label class="field">
+      <span>\u4E34\u65F6\u72B6\u6001</span>
+      <select name="playtestStatus" ${readonly}>
+        ${option("defer", "defer", draft.playtestStatus)}
+        ${option("ready_for_archive", "ready_for_archive", draft.playtestStatus)}
+        ${option("needs_revision", "needs_revision", draft.playtestStatus)}
+        ${option("reject", "reject", draft.playtestStatus)}
+      </select>
+    </label>
+  `;
+}
+function renderScoreControl(name, current, labels, readonly) {
+  const emptyChecked = current === null ? "checked" : "";
+  const options = [1, 2, 3, 4, 5].map((score) => {
+    const value = String(score);
+    return `
+        <label class="score-option">
+          <input
+            type="radio"
+            name="${name}"
+            value="${value}"
+            ${current === score ? "checked" : ""}
+            ${readonly}
+          >
+          <span>
+            <strong>${score}</strong>
+            <small>${escapeHtml(labels[value] ?? "")}</small>
+          </span>
+        </label>
+      `;
+  }).join("");
+  return `
+    <div class="score-grid">
+      <label class="score-option empty-score">
+        <input type="radio" name="${name}" value="" ${emptyChecked} ${readonly}>
+        <span><strong>-</strong><small>\u672A\u5B9A</small></span>
+      </label>
+      ${options}
+    </div>
+  `;
+}
+function renderCommentList(comments) {
+  return `
+    <div class="comment-list">
+      ${comments.map(
+    (comment) => `
+            <article class="comment-item">
+              <div>
+                <strong>${escapeHtml(comment.id)}</strong>
+                <span>${escapeHtml(comment.status ?? "commented")}</span>
+              </div>
+              <p>${escapeHtml(comment.text)}</p>
+            </article>
+          `
+  ).join("")}
+    </div>
+  `;
+}
+function renderEvidence(refs) {
+  return `
+    <div class="panel-section">
+      <h3>\u8BC1\u636E\u5F15\u7528</h3>
+      ${refs.length > 0 ? `<ul class="evidence-list">${refs.map((ref) => `<li>${escapeHtml(ref)}</li>`).join("")}</ul>` : `<p class="muted-copy">\u6682\u65E0\u8BC1\u636E\u5F15\u7528\u3002</p>`}
+    </div>
+  `;
+}
+function renderTemporaryReviewSummary(entry) {
+  const review = entry.review;
+  return `
+    <div class="panel-section">
+      <h3>\u4E34\u65F6\u8BB0\u5F55</h3>
+      ${review ? `<p class="muted-copy">\u6700\u8FD1\u66F4\u65B0\uFF1A${escapeHtml(review.updated_at ?? "unknown")}</p>` : `<p class="muted-copy">\u5C1A\u672A\u4FDD\u5B58\u8BC4\u5BA1\u3002</p>`}
+    </div>
+  `;
+}
+function renderEmptyReviewPanel() {
+  return `
+    <div class="review-form">
+      <div class="empty-state">\u6CA1\u6709\u53EF\u663E\u793A\u7684\u5019\u9009\u3002</div>
+    </div>
+  `;
+}
+function renderCandidateButton(entry) {
+  const key = entryKey(entry);
+  const selected = key === selectedEntryKey;
+  const level = entryLevel(entry);
+  const status = entryStatus(entry);
+  const score = entryScoreSummary(entry);
+  return `
+    <button class="candidate-button" type="button" data-entry="${escapeAttribute(key)}" aria-current="${selected ? "true" : "false"}">
+      <span class="candidate-title">${escapeHtml(entryTitle(entry))}</span>
+      <span class="candidate-meta">
+        <span>${escapeHtml(status)}</span>
+        <span>${level ? `${level.layout.split("\n")[0]?.length ?? 0}x${level.layout.split("\n").length}` : "\u65E0\u5E03\u5C40"}</span>
+      </span>
+      <span class="candidate-score">${escapeHtml(score)}</span>
+    </button>
+  `;
+}
+function renderPlayStatus() {
+  if (!playState) {
+    return `<span class="play-status" title="\u672A\u9009\u62E9\u5019\u9009">\u672A\u9009\u62E9\u5019\u9009</span>`;
   }
-  return Array.from(targetEvents).map((event) => `<span class="event ${eventsMatchPattern(state.events, event) ? "hit" : ""}">${escapeHtml(event)}</span>`).join("");
+  const className = playState.won ? "play-status win" : "play-status";
+  const text = playState.won ? `\u5DF2\u8FBE\u6210\u80DC\u5229\uFF0C${playState.moveCount} \u6B65` : `${playState.moveCount} \u6B65\uFF0C${playState.lastEvents.length > 0 ? playState.lastEvents.join(", ") : "\u7B49\u5F85\u8F93\u5165"}`;
+  return `<span class="${className}" title="${escapeAttribute(text)}">${escapeHtml(text)}</span>`;
 }
-function renderBoard(boardState) {
-  const rows = renderStateRows(boardState);
-  const cells = [];
-  for (let y = 0; y < boardState.height; y += 1) {
-    const row = rows[y] ?? "";
-    for (let x = 0; x < boardState.width; x += 1) {
-      const glyph = row[x] ?? " ";
-      cells.push(renderTile(glyph, x, y));
+function renderTraceLog() {
+  if (!playState || playState.messages.length === 0) {
+    return `<div class="muted-copy">\u65E0\u64CD\u4F5C\u8BB0\u5F55</div>`;
+  }
+  return playState.messages.slice(0, 6).map((message) => `<div>${escapeHtml(message)}</div>`).join("");
+}
+function renderNoBoard(entry) {
+  const text = entry ? "\u672A\u5339\u914D\u53EF\u73A9\u5E03\u5C40" : "\u672A\u9009\u62E9\u5019\u9009";
+  return `<div class="no-board">${escapeHtml(text)}</div>`;
+}
+function renderBoard(runtimeAdapter, state) {
+  const visual = renderVisualStateWithFallback(runtimeAdapter, data.mechanic, state.current);
+  const tiles = orderedTiles(visual);
+  return `
+    <div
+      class="board"
+      style="grid-template-columns: repeat(${visual.width}, minmax(0, 1fr));"
+      aria-label="${escapeAttribute(state.level.title)}"
+    >
+      ${tiles.map(renderTile).join("")}
+    </div>
+  `;
+}
+function renderTile(tile) {
+  const layers = [
+    tile.terrain ? renderLayer(tile.terrain, "terrain") : "",
+    tile.target ? renderLayer(tile.target, "target") : "",
+    ...(tile.objects ?? []).map((layer2) => renderLayer(layer2, "object")),
+    ...(tile.actors ?? []).map((layer2) => renderLayer(layer2, "actor"))
+  ].join("");
+  return `<div class="tile" title="${escapeAttribute(tileLabel(tile))}">${layers}</div>`;
+}
+function renderLayer(layer2, layerType) {
+  const sprite2 = puzzleScript16Sprites[layer2.visualKey];
+  const label = layer2.label ?? sprite2?.label ?? layer2.visualKey;
+  const body = sprite2 ? renderSpriteImage(sprite2, label) : renderFallbackGlyph(layer2);
+  return `
+    <span
+      class="visual-layer"
+      data-layer="${escapeAttribute(layerType)}"
+      data-visual-key="${escapeAttribute(layer2.visualKey)}"
+      data-sprite-state="${sprite2 ? "sprite" : "fallback"}"
+      aria-label="${escapeAttribute(label)}"
+    >
+      ${body}
+    </span>
+  `;
+}
+function renderSpriteImage(sprite2, label) {
+  return `
+    <img
+      class="sprite-img"
+      src="${escapeAttribute(sprite2.src)}"
+      width="${sprite2.size}"
+      height="${sprite2.size}"
+      alt=""
+      title="${escapeAttribute(label)}"
+      decoding="async"
+      draggable="false"
+    >
+  `;
+}
+function renderFallbackGlyph(layer2) {
+  return `<span class="fallback-glyph">${escapeHtml(layer2.fallbackGlyph)}</span>`;
+}
+function bindUiEvents() {
+  app.querySelectorAll("[data-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      captureDraftFromDom();
+      activeTab = button.dataset.tab === "archive" ? "archive" : "temporary";
+      toolMenuOpen = false;
+      selectedEntryKey = firstEntryKeyForActiveView();
+      resetPlayStateForSelection();
+      render();
+    });
+  });
+  app.querySelector("[data-filter]")?.addEventListener("change", (event) => {
+    captureDraftFromDom();
+    activeFilter = event.currentTarget.value;
+    toolMenuOpen = false;
+    selectedEntryKey = firstEntryKeyForActiveView();
+    resetPlayStateForSelection();
+    render();
+  });
+  app.querySelectorAll("[data-entry]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const key = button.dataset.entry;
+      if (!key) {
+        return;
+      }
+      captureDraftFromDom();
+      toolMenuOpen = false;
+      selectedEntryKey = key;
+      resetPlayStateForSelection();
+      render();
+    });
+  });
+  app.querySelector("[data-action='replay']")?.addEventListener("click", () => {
+    toolMenuOpen = false;
+    void replayExpected();
+  });
+  app.querySelector("[data-action='toggle-tools']")?.addEventListener("click", () => {
+    captureDraftFromDom();
+    toolMenuOpen = !toolMenuOpen;
+    render();
+  });
+  app.querySelector("[data-action='copy-ascii']")?.addEventListener("click", () => {
+    void copyAsciiToClipboard();
+  });
+  app.querySelector("[data-action='save-review']")?.addEventListener("click", () => {
+    toolMenuOpen = false;
+    void saveReview();
+  });
+}
+async function copyAsciiToClipboard() {
+  if (!playState) {
+    saveStatus = "\u672A\u9009\u62E9\u68CB\u76D8";
+    toolMenuOpen = false;
+    render();
+    return;
+  }
+  try {
+    await writeClipboard(adapter.renderState(playState.current));
+    saveStatus = `ASCII \u5DF2\u590D\u5236 ${(/* @__PURE__ */ new Date()).toLocaleTimeString()}`;
+  } catch (error) {
+    saveStatus = error instanceof Error ? `\u590D\u5236\u5931\u8D25\uFF1A${error.message}` : "\u590D\u5236\u5931\u8D25";
+  }
+  toolMenuOpen = false;
+  render();
+}
+async function saveReview() {
+  captureDraftFromDom();
+  const entry = currentEntry();
+  if (!entry) {
+    return;
+  }
+  if (!reviewData.writable) {
+    saveStatus = "\u53EA\u8BFB\uFF1A\u672A\u8FDE\u63A5\u8BC4\u5BA1\u670D\u52A1";
+    render();
+    return;
+  }
+  const key = entryKey(entry);
+  const draft = draftForEntry(entry);
+  const payload = {
+    humanFinalStatus: draft.humanFinalStatus,
+    archiveEligibility: draft.archiveEligibility,
+    playtestStatus: draft.playtestStatus,
+    aestheticScore: draft.aestheticScore,
+    difficultyScore: draft.difficultyScore,
+    comment: draft.comment
+  };
+  saveStatus = "\u4FDD\u5B58\u4E2D...";
+  render();
+  try {
+    const endpoint = entry.kind === "archive" ? "./api/archive-review" : "./api/playtest-review";
+    const body = entry.kind === "archive" ? { candidateId: entry.candidateId, review: payload } : { levelId: entry.levelId, review: payload };
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+      throw new Error(await response.text());
     }
-  }
-  return `<div class="board" style="grid-template-columns: repeat(${boardState.width}, minmax(0, 1fr));">${cells.join("")}</div>`;
-}
-function renderStateRows(boardState) {
-  return runtimeAdapter.renderState(boardState).split("\n").map((row) => row.padEnd(boardState.width, " "));
-}
-function renderLayoutText(boardState) {
-  return renderStateRows(boardState).map((row) => row.replaceAll(" ", ".")).join("\n");
-}
-function renderTile(glyph, x, y) {
-  const className = tileClasses(glyph).join(" ");
-  const label = tileLabel(glyph);
-  return `<div class="tile ${className}" data-x="${x}" data-y="${y}">${escapeHtml(label)}</div>`;
-}
-function tileClasses(glyph) {
-  if (data.mechanic.id === "reality_anchor") {
-    return realityAnchorTileClasses(glyph);
-  }
-  return defaultTileClasses(glyph);
-}
-function realityAnchorTileClasses(glyph) {
-  switch (glyph) {
-    case "#":
-      return ["wall"];
-    case "G":
-      return ["goal"];
-    case "+":
-      return ["goal", "player"];
-    case "*":
-      return ["goal", "crate"];
-    case "m":
-      return ["goal", "sticky"];
-    case "C":
-      return ["crate"];
-    case "M":
-      return ["sticky"];
-    case "@":
-      return ["player"];
-    case "P":
-      return ["push-anchor"];
-    case "L":
-      return ["pull-anchor"];
-    case "B":
-      return ["box-anchor"];
-    case "S":
-      return ["sticky-anchor"];
-    default:
-      return [];
+    reviewData = normalizeReviewData(await response.json(), data);
+    draftByEntry.set(key, { ...draft, comment: "" });
+    saveStatus = `\u5DF2\u4FDD\u5B58 ${(/* @__PURE__ */ new Date()).toLocaleTimeString()}`;
+    render();
+  } catch (error) {
+    saveStatus = error instanceof Error ? `\u4FDD\u5B58\u5931\u8D25\uFF1A${error.message}` : "\u4FDD\u5B58\u5931\u8D25";
+    render();
   }
 }
-function defaultTileClasses(glyph) {
-  switch (glyph) {
-    case "#":
-      return ["wall"];
-    case "G":
-      return ["goal"];
-    case "+":
-      return ["goal", "player"];
-    case "*":
-      return ["goal", "crate"];
-    case "C":
-      return ["crate"];
-    case "@":
-      return ["player"];
-    case "A":
-    case "D":
-    case "H":
-      return ["portalA"];
-    case "B":
-    case "E":
-    case "I":
-      return ["portalB"];
-    default:
-      return [];
+async function replayExpected() {
+  const entry = currentEntry();
+  const level = entryLevel(entry);
+  if (!level || replaying) {
+    return;
+  }
+  captureDraftFromDom();
+  const inputs = expectedInputsForLevel(level);
+  if (inputs.length === 0) {
+    saveStatus = "\u65E0\u53EF\u7528\u56DE\u653E";
+    render();
+    return;
+  }
+  replaying = true;
+  const key = entry ? entryKey(entry) : "";
+  resetPlayStateForSelection();
+  render();
+  for (const input of inputs) {
+    await sleep(140);
+    if (selectedEntryKey !== key) {
+      break;
+    }
+    applyInput(input);
+    render();
+  }
+  replaying = false;
+  render();
+}
+function applyInput(input) {
+  if (!playState) {
+    return;
+  }
+  const winCondition = levelWin(playState.level);
+  const result = adapter.step(
+    data.mechanic,
+    playState.current,
+    input,
+    { winCondition }
+  );
+  if (!result.legal) {
+    playState.lastEvents = [];
+    playState.messages.unshift(`${input}: \u975E\u6CD5\u79FB\u52A8${result.reason ? ` (${result.reason})` : ""}`);
+    return;
+  }
+  playState.history.push(playState.current);
+  playState.current = result.state;
+  playState.lastEvents = result.events;
+  playState.moveCount += 1;
+  playState.won = isWinState(result.state, result.events, winCondition);
+  playState.messages.unshift(
+    `${String(playState.moveCount).padStart(2, "0")} ${input}: ${result.events.length > 0 ? result.events.join(", ") : "move"}`
+  );
+}
+function undoMove() {
+  if (!playState || playState.history.length === 0) {
+    return;
+  }
+  playState.current = playState.history.pop();
+  playState.moveCount = Math.max(0, playState.moveCount - 1);
+  playState.lastEvents = [];
+  playState.won = isWinState(playState.current, [], levelWin(playState.level));
+  playState.messages.unshift("Undo");
+}
+function resetPlayStateForSelection() {
+  const level = entryLevel(currentEntry());
+  playState = level ? createPlayState(level) : null;
+}
+function createPlayState(level) {
+  const initial = adapter.parseLevel(level);
+  return {
+    level,
+    current: initial,
+    history: [],
+    lastEvents: [],
+    moveCount: 0,
+    won: isWinState(initial, [], levelWin(level)),
+    messages: []
+  };
+}
+function isWinState(state, events, winCondition) {
+  return adapter.isWin(state, winCondition) || adapter.isEventWin(events, winCondition);
+}
+function levelWin(level) {
+  return level.win ?? data.mechanic.win;
+}
+function captureDraftFromDom() {
+  const form = app.querySelector("[data-review-form]");
+  const key = form?.dataset.entryKey;
+  if (!form || !key) {
+    return;
+  }
+  const formData = new FormData(form);
+  draftByEntry.set(key, {
+    humanFinalStatus: stringField(formData, "humanFinalStatus", "pending"),
+    archiveEligibility: stringField(formData, "archiveEligibility", "human_pending"),
+    playtestStatus: stringField(formData, "playtestStatus", "defer"),
+    aestheticScore: scoreField(formData, "aestheticScore"),
+    difficultyScore: scoreField(formData, "difficultyScore"),
+    comment: stringField(formData, "comment", "")
+  });
+}
+function draftForEntry(entry) {
+  const key = entryKey(entry);
+  const existing = draftByEntry.get(key);
+  if (existing) {
+    return existing;
+  }
+  const draft = entry.kind === "archive" ? archiveDraft(entry) : temporaryDraft(entry);
+  draftByEntry.set(key, draft);
+  return draft;
+}
+function archiveDraft(entry) {
+  return {
+    humanFinalStatus: stringValue(entry.metadata.human_final_status) ?? "pending",
+    archiveEligibility: stringValue(entry.metadata.archive_eligibility) ?? "human_pending",
+    playtestStatus: "defer",
+    aestheticScore: scoreValue(entry.metadata.aesthetic_score ?? entry.humanCalibration.aesthetic_score),
+    difficultyScore: scoreValue(entry.metadata.difficulty_score ?? entry.humanCalibration.difficulty_score),
+    comment: ""
+  };
+}
+function temporaryDraft(entry) {
+  return {
+    humanFinalStatus: "pending",
+    archiveEligibility: "human_pending",
+    playtestStatus: entry.review?.status ?? "defer",
+    aestheticScore: scoreValue(entry.review?.aesthetic_score),
+    difficultyScore: scoreValue(entry.review?.difficulty_score),
+    comment: ""
+  };
+}
+function emptyDraft() {
+  return {
+    humanFinalStatus: "pending",
+    archiveEligibility: "human_pending",
+    playtestStatus: "defer",
+    aestheticScore: null,
+    difficultyScore: null,
+    comment: ""
+  };
+}
+function currentEntry() {
+  const entries = filteredEntries();
+  return entries.find((entry) => entryKey(entry) === selectedEntryKey) ?? entries[0];
+}
+function filteredEntries() {
+  const entries = activeTab === "archive" ? reviewData.archiveEntries : reviewData.temporaryEntries;
+  return entries.filter(matchesFilter);
+}
+function matchesFilter(entry) {
+  if (activeFilter === "all") {
+    return true;
+  }
+  if (activeFilter === "unreviewed") {
+    return entry.kind === "archive" ? !Boolean(entry.metadata.human_reviewed) : !entry.review || entry.review.comments.length === 0;
+  }
+  if (activeFilter === "ready") {
+    return entry.kind === "archive" ? stringValue(entry.metadata.archive_eligibility) === "clean_archive" || stringValue(entry.metadata.human_final_status) === "accepted" : entry.review?.status === "ready_for_archive";
+  }
+  return entry.kind === "archive" ? stringValue(entry.metadata.archive_eligibility) !== "clean_archive" || !Boolean(entry.metadata.human_reviewed) : entry.review?.status === "needs_revision" || entry.review?.status === "reject" || entry.review?.status === "defer" || !entry.review;
+}
+function pickInitialEntryKey() {
+  const archivePlayable = reviewData.archiveEntries.find((entry) => entry.level);
+  const firstArchive = archivePlayable ?? reviewData.archiveEntries[0];
+  const firstTemporary = reviewData.temporaryEntries[0];
+  return firstArchive ? entryKey(firstArchive) : firstTemporary ? entryKey(firstTemporary) : "";
+}
+function firstEntryKeyForActiveView() {
+  const first = filteredEntries()[0];
+  return first ? entryKey(first) : "";
+}
+function entryKey(entry) {
+  return entry.kind === "archive" ? `archive:${entry.candidateId ?? entry.levelId ?? "unknown"}` : `temporary:${entry.levelId}`;
+}
+function entryLevel(entry) {
+  return entry?.kind === "archive" ? entry.level : entry?.level;
+}
+function entryTitle(entry) {
+  if (entry.kind === "archive") {
+    return entry.candidateId ?? entry.level?.id ?? "\u672A\u547D\u540D\u5F52\u6863\u5019\u9009";
+  }
+  return entry.level.title || entry.levelId;
+}
+function entrySubtitle(entry) {
+  const level = entryLevel(entry);
+  if (entry.kind === "archive") {
+    return `${entry.levelId ?? "\u672A\u5339\u914D level"} \xB7 ${level?.title ?? "\u65E0\u53EF\u73A9\u5E03\u5C40"}`;
+  }
+  return `${entry.levelId} \xB7 ${entry.level.role} \xB7 ${entry.level.status}`;
+}
+function entryStatus(entry) {
+  if (entry.kind === "archive") {
+    return stringValue(entry.metadata.human_final_status) ?? stringValue(entry.metadata.status) ?? "unknown";
+  }
+  return entry.review?.status ?? "pending_playtest";
+}
+function entryScoreSummary(entry) {
+  const aesthetic = entry.kind === "archive" ? scoreValue(entry.metadata.aesthetic_score) : scoreValue(entry.review?.aesthetic_score);
+  const difficulty = entry.kind === "archive" ? scoreValue(entry.metadata.difficulty_score) : scoreValue(entry.review?.difficulty_score);
+  return `\u5BA1\u7F8E ${aesthetic ?? "-"} / \u96BE\u5EA6 ${difficulty ?? "-"}`;
+}
+function entryComments(entry) {
+  return entry.kind === "archive" ? entry.humanComments : entry.review?.comments ?? [];
+}
+function expectedInputsForLevel(level) {
+  const fromLevel = (level.expected_trace ?? []).map((step4) => step4.input).filter(isInputId);
+  if (fromLevel.length > 0) {
+    return fromLevel;
+  }
+  const fromEvaluation = data.evaluation?.results?.find((result) => result.levelId === level.id)?.solutionInputs ?? [];
+  return fromEvaluation.filter(isInputId);
+}
+function orderedTiles(board) {
+  return [...board.tiles].sort((a, b) => a.y - b.y || a.x - b.x);
+}
+function tileLabel(tile) {
+  const labels = [
+    tile.terrain?.label,
+    tile.target?.label,
+    ...(tile.objects ?? []).map((layer2) => layer2.label),
+    ...(tile.actors ?? []).map((layer2) => layer2.label)
+  ].filter((label) => Boolean(label));
+  return labels.join(", ");
+}
+function tabButton(tab, label, count) {
+  return `
+    <button
+      type="button"
+      class="tab-button"
+      data-tab="${tab}"
+      role="tab"
+      aria-selected="${activeTab === tab ? "true" : "false"}"
+    >
+      ${escapeHtml(label)} <span>${count}</span>
+    </button>
+  `;
+}
+function filterOption(value, label) {
+  return option(value, label, activeFilter);
+}
+function option(value, label, current) {
+  return `<option value="${escapeAttribute(value)}" ${value === current ? "selected" : ""}>${escapeHtml(label)}</option>`;
+}
+async function loadReviewData(playableData) {
+  try {
+    const value = await fetchJson("./api/review-data");
+    return normalizeReviewData(value, playableData);
+  } catch {
+    return normalizeReviewData(
+      {
+        writable: false,
+        mechanic: playableData.mechanic.id,
+        archiveEntries: [],
+        temporaryEntries: playableData.levels.levels.map((level) => ({
+          kind: "temporary",
+          levelId: level.id,
+          level
+        })),
+        labels: {
+          aesthetic: defaultAestheticLabels,
+          difficulty: defaultDifficultyLabels
+        }
+      },
+      playableData
+    );
   }
 }
-function tileLabel(glyph) {
-  if (glyph === " ") {
-    return "";
-  }
-  if (glyph === "+") {
-    return "@";
-  }
-  if (glyph === "*") {
-    return "C";
-  }
-  if (glyph === "m") {
-    return "M";
-  }
-  return glyph;
+function normalizeReviewData(value, playableData) {
+  const object = isRecord(value) ? value : {};
+  return {
+    writable: object.writable === true,
+    mechanic: stringValue(object.mechanic) ?? playableData.mechanic.id,
+    archiveEntries: Array.isArray(object.archiveEntries) ? object.archiveEntries.filter(isArchiveEntry) : [],
+    temporaryEntries: Array.isArray(object.temporaryEntries) ? object.temporaryEntries.filter(isTemporaryEntry) : [],
+    labels: normalizeLabels(object.labels)
+  };
 }
-function statusText() {
-  if (state.won) {
-    return "Complete";
+function normalizeLabels(value) {
+  const labels = isRecord(value) ? value : {};
+  return {
+    aesthetic: recordOfStrings(labels.aesthetic) ?? defaultAestheticLabels,
+    difficulty: recordOfStrings(labels.difficulty) ?? defaultDifficultyLabels
+  };
+}
+function isArchiveEntry(value) {
+  return isRecord(value) && value.kind === "archive";
+}
+function isTemporaryEntry(value) {
+  return isRecord(value) && value.kind === "temporary" && isRecord(value.level);
+}
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText}`);
   }
-  if (!state.lastResult) {
-    return "Ready";
+  return response.json();
+}
+function stringField(formData, name, fallback) {
+  const value = formData.get(name);
+  return typeof value === "string" ? value.trim() : fallback;
+}
+function scoreField(formData, name) {
+  const value = formData.get(name);
+  if (typeof value !== "string" || value.length === 0) {
+    return null;
   }
-  if (!state.lastResult.legal) {
-    return state.lastResult.reason ?? "Blocked";
+  return scoreValue(Number(value));
+}
+function scoreValue(value) {
+  return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 5 ? value : null;
+}
+function stringValue(value) {
+  return typeof value === "string" && value.length > 0 ? value : void 0;
+}
+function recordOfStrings(value) {
+  if (!isRecord(value)) {
+    return void 0;
   }
-  return state.lastResult.events.join(", ");
+  const entries = Object.entries(value).filter((entry) => typeof entry[1] === "string");
+  return Object.fromEntries(entries);
+}
+function isRecord(value) {
+  return typeof value === "object" && value !== null;
+}
+function isInputId(value) {
+  return value === "up" || value === "down" || value === "left" || value === "right";
+}
+function isEditableTarget(target) {
+  return target instanceof HTMLElement && Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
+}
+async function writeClipboard(text) {
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.append(textarea);
+  textarea.select();
+  const ok = document.execCommand("copy");
+  textarea.remove();
+  if (!ok) {
+    throw new Error("\u6D4F\u89C8\u5668\u62D2\u7EDD\u526A\u8D34\u677F\u5199\u5165");
+  }
+}
+function sleep(milliseconds) {
+  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 }
 function escapeHtml(value) {
-  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+  return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+}
+function escapeAttribute(value) {
+  return escapeHtml(value);
 }
 //# sourceMappingURL=app.js.map

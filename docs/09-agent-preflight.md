@@ -182,6 +182,44 @@ curriculum variation axes
 
 如果该对象的实例身份会影响规则或胜利条件，不能把它当作普通同类对象排序。
 
+### 视觉呈现与素材层级
+
+如果本轮会产出 runtime-backed playable，必须确认或显式 default 视觉呈现策略。视觉确认不改变
+runtime 语义，但会影响玩家能否读出机制边界。
+
+必须记录：
+
+```text
+每个对象的默认视觉：例如玩家、墙、目标、箱子、传送门、锚点。
+是否存在状态/区域变体：例如同一个玩家在 push 区和 pull 区是否不同形态。
+是否启用像素素材替代 ASCII，还是只保留 ASCII fallback。
+是否允许使用临时 PuzzleScript 风格素材包。
+如果引用第三方素材，来源 URL、commit / release、license 是否记录。
+```
+
+规则可读性相关的视觉差异必须由 prototype adapter 输出视觉语义，而不是由 web 层猜 glyph。
+例如 Reality Anchor 中，P/L 两侧玩家形态、B/S 两侧箱子/黏块形态，属于原型语义投影：
+
+```text
+runtime state -> adapter-owned visualKey -> ASCII renderer / sprite renderer
+```
+
+不能回退成：
+
+```text
+runtime state -> ASCII glyph -> web hard-coded mechanic branch
+```
+
+影响：
+
+```text
+runtime-backed playable readability
+preflight report
+prototype visual adapter
+theme / asset registry
+fallback renderer
+```
+
 ### ASCII Probe 确认
 
 当机制存在多个合理解释时，agent 应主动构造最小可观测结构，而不是直接选择一种实现。
@@ -246,6 +284,21 @@ decisions:
     blocks:
       - runtime_complete
       - edge_case_levels
+
+  - id: playable_visual_strategy
+    status: defaulted
+    value:
+      renderer: pixel_sprite_with_ascii_fallback
+      asset_source: project_local_puzzlescript_style_placeholders
+    source: project_default
+
+visual_mapping:
+  - object: player
+    status: confirmed
+    variants:
+      - visualKey: player.normal
+        fallbackGlyph: "@"
+    notes: 视觉差异只影响 playable 呈现，不改变 runtime state。
 
 ascii_probes:
   - id: portal_player_destination

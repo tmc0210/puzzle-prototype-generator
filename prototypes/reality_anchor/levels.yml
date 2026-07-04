@@ -1,5 +1,109 @@
 mechanic: reality_anchor
 levels:
+  - id: RA_CURR_2026_07_05_L01_INTRO_PUSH_v1
+    title: Intro push v1
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ######
+      #@.CG#
+      ######
+    design_notes: >
+      Curriculum slot 1 intro witness. No anchors and no material mechanics: the
+      player walks once, then pushes one crate onto one target. Solver evidence
+      gives a 2-step shortest solution and complete graph; event probe proves every
+      win path requires push_object. Independent evidence reviewer returned
+      supports_claim / required_action:none; independent puzzle critic returned
+      proposal_ready_with_caveats / required_action:none for first-slot role fit.
+      Caveat: this is only an intro witness, not a depth-bearing puzzle.
+    expected_trace:
+      - input: right
+        events: [walk]
+      - input: right
+        events: [push_object]
+
+  - id: RA_CURR_2026_07_05_L02_FIXED_PL_PUSH_PULL_v1
+    title: Fixed P/L push-pull v1
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #@CG####
+      #...#P##
+      #...#L##
+      #.CG.###
+      ########
+    design_notes: >
+      Curriculum slot 2 fixed P/L teaching witness. P/L is sealed in a wall pocket:
+      complete reachable event scan reports no anchor shift or material events. The
+      top mini-task requires push_object; the bottom mini-task requires pull_object
+      after the player stands on the lower goal. Complete event probes prove every
+      win path requires both push and pull. Goal-deletion counterfactuals show the
+      upper target is the push witness and the lower target is the pull witness.
+      Independent evidence reviewer returned supports_claim / required_action:none;
+      independent puzzle critic returned proposal_ready_with_caveats /
+      required_action:none. Caveat: this is a two-witness teaching level, not a
+      depth-bearing puzzle; the lower crate has non-winning push affordances, but
+      every win still requires pull.
+    expected_trace:
+      - input: right
+        events: [push_object]
+      - input: down
+      - input: down
+      - input: right
+      - input: down
+      - input: right
+        events: [pull_object]
+
+  - id: RA_CURR_2026_07_05_L03_FIXED_PL_HANDOFF_v1
+    title: Fixed P/L handoff v1
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      ########
+      #@C.#P##
+      #..G#L##
+      #.....##
+      ########
+    design_notes: >
+      Curriculum slot 3 fixed P/L application. A single crate and single target
+      form a push-to-pull handoff: the crate must first be pushed into alignment
+      above the goal, then pulled from the pull side to cover it. Complete event
+      probes prove every win path requires both push_object and pull_object; because
+      the layout has exactly one crate, the returned push/pull events are the same
+      crate. Complete reachable scan reports no anchor shift or material events.
+      Independent evidence reviewer returned supports_claim / required_action:none;
+      independent puzzle critic returned proposal_ready_with_caveats /
+      required_action:none. Caveat: intentionally short early application witness,
+      not a challenge-depth puzzle; wall-pocketed P/L is functional rather than
+      aesthetic centerpiece.
+    expected_trace:
+      - input: right
+        events: [push_object]
+      - input: down
+      - input: right
+      - input: down
+        events: [pull_object]
+
   - id: RA_SMOKE_01_PUSH_CHAIN
     title: Push-side chain push
     role: mechanic_witness
@@ -154,7 +258,7 @@ levels:
   - id: RA_EXP_2026_07_04_FIXED_BS_STICKY_HANDLE_v1
     title: Fixed B/S sticky handle v1
     role: challenge
-    status: candidate
+    status: rejected
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -176,6 +280,9 @@ levels:
       changing material without using the changed movement would not solve the level.
       The all-solution probe for the submitted candidate found no win that avoids the
       movable P/L shift, box_to_sticky, sticky_merge, and sticky rigid movement events.
+      2026-07-04 user review rejected this as a qualified archive candidate: the sticky
+      structure is not functionally necessary because replacing the sticky cells with
+      ordinary boxes would only add pushes rather than invalidate the solve.
     expected_trace:
       - input: right
         events: [push_object, anchor_boundary_shift]
@@ -190,7 +297,7 @@ levels:
   - id: RA_EXP_2026_07_04_FIXED_PL_VERTICAL_PAIR_v2
     title: Fixed P/L vertical pair v2
     role: challenge
-    status: candidate
+    status: rejected
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -215,6 +322,9 @@ levels:
       intended route depends on the lower object changing material, merging, and then being
       pulled as a sticky rigid body; the submitted all-solution probe found no win that
       avoids B/S anchor movement, box_to_sticky, sticky_merge, and sticky rigid movement.
+      2026-07-04 user review rejected this as a qualified archive candidate: the sticky
+      structure is not functionally necessary because replacing the sticky cells with
+      ordinary boxes would only add pushes rather than invalidate the solve.
     expected_trace:
       - input: right
         events: [pull_object, anchor_boundary_shift, sticky_to_box]
@@ -288,7 +398,7 @@ levels:
   - id: RA_EXP_2026_07_04_DUAL_LOCKSTEP_v2
     title: Dual lockstep v2
     role: challenge
-    status: candidate
+    status: rejected
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -308,6 +418,9 @@ levels:
       逐格右移把合并材料转成右侧收束链；pull crate 与最终 pull P/L 完成目标覆盖。
       完整事件组探针证明所有胜路都包含两类 anchor shift、pull、material
       normalization、sticky_merge 与 sticky rigid movement；不声明唯一路线或对象身份必要性。
+      2026-07-04 human playtest marked the lower-left material cell as unclear. A wall
+      replacement probe showed the same 19-step solve remains valid, so v2 is superseded
+      rather than archived.
     expected_trace:
       - input: right
         events: [push_object, anchor_boundary_shift, sticky_to_box]
@@ -339,6 +452,483 @@ levels:
       - input: down
         events: [pull_object, anchor_boundary_shift]
 
+  - id: RA_EXP_2026_07_04_DUAL_LOCKSTEP_v3
+    title: Dual lockstep v3
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      ###.PL.####
+      ##@BSGG####
+      ###.MM...G#
+      ####...M.##
+      ###########
+    design_notes: >
+      Minimal response to the 2026-07-04 human playtest on DUAL_LOCKSTEP_v2. The lower-left
+      material cell was replaced by a wall after a wall probe confirmed it was not needed:
+      the same 19-step solution remains solvable and graph-complete. This keeps the central
+      B/S lockstep and material chain while removing the misleading unused ballast. v3 is a
+      temporary revision candidate, not yet human-accepted. 2026-07-04 follow-up playtest
+      questioned the lower-right M and empty cells; counterfactuals showed the lower-right M
+      and extra lower spaces were unnecessary, so v3 is replaced by v4.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: right
+        events: [push_object, force_chain, move_sticky_rigid, box_to_sticky, sticky_merge]
+      - input: left
+      - input: up
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid, sticky_merge]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+        events: [pull_object]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, force_chain, anchor_boundary_shift]
+      - input: up
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+
+  - id: RA_EXP_2026_07_04_DUAL_LOCKSTEP_v4
+    title: Dual lockstep v4
+    role: challenge
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      ###.PL.####
+      ##@BS.G####
+      ###.MM...G#
+      #####..####
+      ###########
+    design_notes: >
+      Feedback revision of DUAL_LOCKSTEP_v3. Human playtest liked the stacked-anchor and
+      box-chain pressure, but questioned the lower-right M and surrounding empty cells.
+      Counterfactuals showed the old lower-right M and isolated lower spaces were removable:
+      no-right-box and no-right-box-no-right-space versions remain 19-step solved. However,
+      deleting the lower row or keeping either lower buffer cell alone is complete unsolved.
+      v4 therefore keeps only the two lower buffer cells actually needed by the down-shifted
+      sticky pair, and removes the misleading extra material/space. Event probe is complete
+      with no winning bypass missing P/L shift, B/S shift, pull, material normalization,
+      sticky_merge, or sticky rigid movement. 2026-07-04 human playtest accepted it as
+      RA_CAND_0005, aesthetic 4 / difficulty 4:
+      the player-facing contradiction is clear, and constructing the sticky plus anchor
+      three-cell chain is an interesting, high-mechanism challenge. 2026-07-04 goal-prune
+      audit removed the left of the two adjacent upper targets as redundant: removing either
+      single upper target preserves 19-step cost and core-event necessity, but removing both
+      creates a 17-step bypass missing pull, so the right upper target is retained.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: right
+        events: [push_object, force_chain, move_sticky_rigid, box_to_sticky, sticky_merge]
+      - input: left
+      - input: up
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+        events: [pull_object]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, force_chain, anchor_boundary_shift]
+      - input: up
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+
+  - id: RA_EXP_2026_07_04_FIXED_BS_SIDECAR_FERRY_v2
+    title: Fixed B/S sidecar ferry v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      #####SB####
+      ####GG#####
+      ####M.C...#
+      #...#.....#
+      #....@PL..#
+      ###########
+    design_notes: >
+      review_2 合格待玩候选，proposal_ready_with_caveats。两个锚点同关，其中 B/S
+      被墙腔固定，只作为稳定材料边界；P/L 可移动但只需右推一次，用于把目标下方
+      操作点切到 push side。C 从 B 列左推到 S 列时 box_to_sticky，并与侧挂 M
+      sticky_merge；左格下方是墙、上方目标室封死，普通箱没有自己的向上施力面，
+      只能由右侧把手格作为 sticky 刚体携带上移。固定锚点探针完整证明所有胜路都
+      包含 P/L shift、box_to_sticky、sticky_merge 与 sticky rigid movement，且
+      B/S 在可达图中无位移。初始普通箱替代版与 post-merge 普通箱替代版均完整无解，
+      用于回应“黏性只是多推几步省操作”的失败模式。非核心 caveat：P/L 一次右推
+      更像区域切换提示而非独立 aha；B/S 仍可能被读成区域标签；定位为中期过渡关。
+      2026-07-04 human playtest allowed keeping it as teaching / mechanism introduction,
+      but noted redundant space. v2 is replaced by the compact v3.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: right
+      - input: up
+      - input: left
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: down
+      - input: left
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_FIXED_BS_SIDECAR_FERRY_v3
+    title: Fixed B/S sidecar ferry v3
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #####SB###
+      ####GG####
+      ####M.C.##
+      #...#...##
+      #....@PL.#
+      ##########
+    design_notes: >
+      Compact feedback revision of v2 for early/mid transition play. B/S remains fixed in
+      a wall chamber and provides the material boundary; P/L shifts right once to let the
+      player reach the upper work face. C is pushed left through the fixed B/S boundary,
+      triggers box_to_sticky, sticky_merge with the side M, and then the merged sticky pair
+      is moved upward onto the two targets. Initial ordinary-box and postmerge ordinary-box
+      analogs are complete unsolved, so the sticky conversion is structural rather than
+      just a shorter route. Fixed-anchor probe is complete: all wins require P/L shift,
+      fixed B/S material effect, box_to_sticky, sticky_merge and sticky rigid movement; no
+      reachable B/S shift. 2026-07-04 human playtest rejected the structure for this batch:
+      the movable P/L
+      mainly gets moved out of the way at the start, after which the puzzle degenerates into
+      push-world operation. It is removed from playable and kept only as a redesign note,
+      not as an archive candidate.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: right
+      - input: up
+      - input: left
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: down
+      - input: left
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_FIXED_PL_DOWNPULL_SIDECAR_v2
+    title: Fixed P/L downpull sidecar v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      ###@SB....#
+      #P#..#....#
+      #L#.M.C#..#
+      ####GG#...#
+      ###########
+    design_notes: >
+      review_1 合格待玩候选，proposal_ready_with_caveats。两个锚点同关，其中 P/L
+      被墙腔固定，不可移动，但全局提供上层 push / 下层 pull 的操作语法；B/S
+      可移动一次，作为材料窗口。玩家先右推 B/S，使 x=5 进入 sticky side，再把
+      左侧 M 存到左目标、从 pull side 把 C 拉进 sticky side 触发 box_to_sticky，
+      随后拉回 M 与新黏块 sticky_merge，形成横向二连 sticky 刚体。右目标的上/右/下
+      施力面被墙形封住，普通箱不能独立补位，只能由左把手格携带右格下落覆盖双目标。
+      固定锚点探针完整证明所有胜路都包含 B/S shift、pull、box_to_sticky、
+      sticky_merge 与 sticky rigid movement，且 P/L 在可达图中无位移。初始普通箱
+      替代版与 post-merge 普通箱替代版均完整无解，用于回应“黏性只是多推几步省操作”
+      的失败模式。非核心 caveat：B/S 是一次性材料窗口、固定 P/L 是过渡语法，解很短；
+      定位为中期 compact transition，不声明高难或分数化质量。
+      2026-07-04 human playtest noted redundant right-side space while keeping the lower
+      structure as interesting early/mid mechanism introduction. v2 is replaced by compact v3.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: down
+        events: [push_object, move_sticky_rigid]
+      - input: right
+      - input: left
+        events: [pull_object, box_to_sticky]
+      - input: up
+        events: [pull_object, move_sticky_rigid, sticky_merge]
+      - input: down
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_FIXED_PL_DOWNPULL_SIDECAR_v3
+    title: Fixed P/L downpull sidecar v3
+    role: challenge
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ###@SB.##
+      #P#..####
+      #L#.M.C##
+      ####.G###
+      #########
+    design_notes: >
+      Compact feedback revision of v2. P/L is fixed in a wall chamber and supplies the
+      pull-side grammar without moving; B/S shifts once to create the sticky material window.
+      The player stores M on the left staging/handle cell, pulls C through the sticky side to trigger
+      box_to_sticky, pulls the new sticky cell back into M for sticky_merge, then moves the
+      merged sticky pair down so the right cell covers the remaining goal while the left cell
+      acts as a handle. Initial ordinary-box and postmerge ordinary-box analogs are complete
+      unsolved, directly addressing the human criterion that sticky
+      conversion must be necessary rather than a route shortcut. Fixed-anchor probe is
+      complete: all wins require B/S shift, pull, material normalization, box_to_sticky,
+      sticky_merge and sticky rigid movement; no reachable P/L shift. 2026-07-04 human
+      playtest accepted it as RA_CAND_0004, aesthetic 4 / difficulty 3:
+      the lower push/pull sticky maneuver is interesting, while the upper B/S setup is weakly
+      coupled and therefore best positioned as an early/mid transition level. 2026-07-04
+      goal-prune audit removed the left bottom target: the 7-step solution, complete graph,
+      expected trace, and core-event necessity are unchanged, so that target was only a
+      side-effect of using the left sticky cell as a handle.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: down
+        events: [push_object, move_sticky_rigid]
+      - input: right
+      - input: left
+        events: [pull_object, box_to_sticky]
+      - input: up
+        events: [pull_object, move_sticky_rigid, sticky_merge]
+      - input: down
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_FIXED_PL_SPLIT_LIFT_v5
+    title: Fixed P/L split lift v5
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      #P#....@..#
+      #L##G#.B#.#
+      ####.##S#.#
+      ####m##.#.#
+      ####M####.#
+      ###########
+    design_notes: >
+      review_1 合格待玩候选，proposal_ready_with_caveats。两个锚点同关，其中 P/L
+      被墙腔固定，不可移动，但全局提供左侧目标列的 pull 操作语法；B/S 在右侧竖井中
+      可下推一次，作为材料边界设置。玩家先下推 B/S，再走到目标列拉动竖向黏性二连块：
+      第一次 pull 通过 sticky rigid movement 把两格一起上提，同时上格跨到 B side
+      触发 sticky_to_box，和下方黏块分离；第二次 pull 只移动上箱到上目标，下黏块留在
+      下目标。普通双箱替代版完整无解，说明这里的黏性不是省步数，而是先共同抬升、
+      再材料拆分的必要结构。固定锚点探针完整证明所有胜路都包含 B/S shift、pull、
+      material normalization，且 P/L 在可达图中无位移；自定义核心事件探针完整证明所有
+      胜路都包含 B/S shift、pull、sticky_to_box 与 sticky rigid movement。非核心
+      caveat：解短且走廊化，B/S 是一次性设置，定位为中期 witness-like transition，
+      不声明高难或分数化质量。
+      2026-07-04 human playtest noted redundant right-side space while otherwise calling it
+      an interesting small early level. v5 is replaced by compact v6.
+    expected_trace:
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+      - input: down
+      - input: up
+        events: [pull_object, move_sticky_rigid, sticky_to_box]
+      - input: up
+        events: [pull_object]
+
+  - id: RA_EXP_2026_07_04_FIXED_PL_SPLIT_LIFT_v6
+    title: Fixed P/L split lift v6
+    role: challenge
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      #P#....@###
+      #L##G#.B###
+      ####.##S###
+      ####m##.###
+      ####M######
+      ###########
+    design_notes: >
+      Compact feedback revision of v5. P/L remains fixed and supplies pull grammar; B/S is
+      pushed down once as the material boundary. The vertical sticky pair is lifted together
+      by pull-side movement, then the upper cell crosses into box side and detaches via
+      sticky_to_box; the second pull places that box on the upper target while the lower
+      sticky cell remains on the lower target. Ordinary two-box analog is complete unsolved,
+      so the sticky behavior is a necessary lift-then-split structure. Fixed-anchor probe is
+      complete with no reachable P/L shift; a core event probe is complete with no winning
+      bypass missing B/S shift, pull, sticky_to_box, or sticky rigid movement. 2026-07-04
+      human playtest accepted it as RA_CAND_0003, aesthetic 3 / difficulty 2:
+      a simple usable teaching level for using the B/S anchor to split a sticky block.
+    expected_trace:
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+      - input: down
+      - input: up
+        events: [pull_object, move_sticky_rigid, sticky_to_box]
+      - input: up
+        events: [pull_object]
+
+  - id: RA_EXP_2026_07_04_STICKY_SHADOW_HANDLE_v2
+    title: Sticky shadow handle v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #........#
+      #.#.GG#@.#
+      #...MC...#
+      #...#....#
+      #...SB...#
+      ##########
+    design_notes: >
+      review_1 曾被工具流程标为 proposal_ready_with_caveats。2026-07-04 人测反馈将其
+      打回：返回解虽然使用了 box_to_sticky、sticky_merge 和 sticky 刚体移动，但在更强
+      判据下，黏性结构没有功能必要性。若把黏块换成普通箱，似乎只是增加推数，而不是
+      让解法失效，因此这里的材料变化属于执行压缩 / 省走路，不是必要的黏箱结构转化。
+      已从临时 playable 队列移除，不具备归档资格。
+    expected_trace:
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+      - input: left
+      - input: left
+      - input: down
+      - input: down
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_FIXED_PL_SHADOW_PULL_v2
+    title: Fixed P/L shadow pull v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #...#....#
+      #.#.GG#@.#
+      ##..MC...#
+      #L#.######
+      #P#.SB.###
+      ##########
+    design_notes: >
+      review_1 曾被工具流程标为 proposal_ready_with_caveats。2026-07-04 人测反馈将其
+      打回：返回解虽然使用了固定 P/L 的 pull-side 行为、box_to_sticky、sticky_merge 和
+      sticky 刚体移动，但在更强判据下，黏性结构没有功能必要性。若把黏块换成普通箱，
+      似乎只是增加推数，而不是让解法失效，因此这里的材料变化属于执行压缩 / 省走路，
+      不是必要的黏箱结构转化。已从临时 playable 队列移除，不具备归档资格。
+    expected_trace:
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+      - input: left
+      - input: left
+      - input: down
+      - input: down
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: left
+      - input: up
+      - input: up
+      - input: up
+      - input: right
+      - input: right
+      - input: up
+        events: [pull_object, move_sticky_rigid]
+
   - id: RA_EXP_2026_07_04_PHASE_FERRY_v8
     title: Phase ferry v8
     role: challenge
@@ -363,6 +953,9 @@ levels:
       改为诚实墙约束，并将 claim 降级为双阶段相位 shuttle，不声明同一对象身份链。
       完整事件组探针证明所有胜路都包含两类 anchor shift、pull、material
       normalization、sticky_merge 与 sticky rigid movement；不声明唯一路线或对象身份必要性。
+      2026-07-04 human playtest marked the sticky-material necessity as unclear: the sticky
+      merge may be only incidental adjacency rather than a non-substitutable sticky structure
+      or a sticky-only ban on alternate solves. Kept as needs_revision, not archive-ready.
     expected_trace:
       - input: right
       - input: up
@@ -448,7 +1041,7 @@ levels:
   - id: RA_EXP_2026_07_04_SOFT_HANDOFF_v3
     title: Soft handoff v3
     role: challenge
-    status: candidate
+    status: accepted
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -470,6 +1063,9 @@ levels:
       末段 P/L 与 sticky 刚体共同覆盖目标。完整事件组探针证明所有胜路都包含
       P/L anchor shift、B/S anchor shift、pull、material normalization 与
       sticky_merge/sticky rigid movement；不声明唯一输入序列或对象实例级必要性。
+      2026-07-04 human playtest accepted this for clean archive with aesthetic_score=4
+      and difficulty_score=4, citing strong insight from pulling sticky material to break
+      the apparent one-way movement assumption for the P/L anchor.
     expected_trace:
       - input: down
       - input: up
@@ -494,10 +1090,97 @@ levels:
       - input: left
         events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid, sticky_to_box]
 
+  - id: RA_EXP_2026_07_05_SOFT_HANDOFF_NO_MERGE_LOCK_v1
+    title: Soft handoff no-merge lock v1
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ####C@.G#
+      ###G....#
+      ####PL.M#
+      ####..BS#
+      #########
+    design_notes: >
+      2026-07-05 human-requested inspection variant derived from
+      RA_EXP_2026_07_04_SOFT_HANDOFF_v3 / RA_CAND_0002. The archived version is
+      unchanged. This variant removes the middle target and adds an upper-right
+      target to make the previously discovered 40-step no-sticky-merge route the
+      shortest verified solution. Complete probes still require both anchor shifts,
+      pull, material normalization, and sticky rigid movement. A raw event-history
+      search can insert a two-step sticky_merge detour after step 17, but that loop
+      immediately returns to the same board state and then follows the same route;
+      it is treated as the same solution skeleton rather than an independent bypass.
+    expected_trace:
+      - input: down
+      - input: up
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object]
+      - input: right
+        events: [pull_object]
+      - input: down
+      - input: left
+      - input: down
+        events: [pull_object]
+      - input: left
+        events: [pull_object, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [pull_object]
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+      - input: left
+        events: [pull_object]
+      - input: down
+      - input: right
+        events: [push_object]
+      - input: down
+        events: [pull_object]
+      - input: left
+        events: [pull_object, anchor_boundary_shift, box_to_sticky]
+      - input: up
+      - input: up
+      - input: right
+      - input: right
+      - input: right
+      - input: up
+      - input: left
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+      - input: down
+      - input: left
+      - input: left
+      - input: left
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: left
+      - input: down
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+        events: [push_object]
+      - input: right
+        events: [push_object, box_to_sticky]
+      - input: up
+      - input: left
+        events: [push_object]
+      - input: left
+        events: [push_object]
+
   - id: RA_EXP_2026_07_04_COMPACT_CHAIN_v1
     title: Compact chain v1
     role: challenge
-    status: candidate
+    status: rejected
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -518,6 +1201,9 @@ levels:
       anchor shift、B/S anchor shift、pull、material normalization、sticky_merge
       与 sticky rigid movement；不声明唯一路线、对象实例级必要性、逐目标覆盖身份、
       所有胜路固定顺序或分数化审美/难度结论。
+      2026-07-04 human playtest rejected this candidate: some sticky cells are unused, and
+      others become sticky without consuming sticky-specific structure beyond incidental
+      adjacency. Discarded rather than archived.
     expected_trace:
       - input: down
       - input: right

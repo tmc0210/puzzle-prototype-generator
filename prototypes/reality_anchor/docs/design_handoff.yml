@@ -1,0 +1,42 @@
+mechanic: reality_anchor
+
+required_docs:
+  - prototypes/reality_anchor/docs/miner_probe_prior_v1.md
+  - prototypes/reality_anchor/docs/goal_prune_check.md
+
+tool_commands:
+  tool_maturity: "npx tsx src/cli.ts tool-maturity prototypes/reality_anchor"
+  explain_layout: "npx tsx src/cli.ts explain-layout prototypes/reality_anchor <layout-file|-> --id <id> --targets K_runtime_smoke --max-states 300000 --graph-max-states 300000 --write"
+  event_probe: "npx tsx prototypes/reality_anchor/reports/probe_dual_axis_candidate.ts <layout-file> <id> 300000 80"
+  fixed_anchor_probe: "npx tsx prototypes/reality_anchor/reports/probe_fixed_anchor_candidate.ts <layout-file> <id> <box_sticky|push_pull> 300000 80 strong_material"
+
+prototype_specific_workflows:
+  - id: invalid_goal_prune
+    kind: archive_candidate_cleanup
+    default_status: run_before_clean_archive_or_when_requested
+    trigger:
+      - "A Reality Anchor candidate is being prepared for clean archive."
+      - "A human asks to audit or clean already archived Reality Anchor levels."
+      - "A level has two or more targets and some targets may be only side-effect coverage."
+    authority_docs:
+      - prototypes/reality_anchor/docs/goal_prune_check.md
+    packet_extension:
+      - goal_prune_check.status
+      - goal_prune_check.targets_checked
+      - goal_prune_check.removed_targets
+      - goal_prune_check.retained_targets
+      - goal_prune_check.evidence_refs
+    reviewer_focus:
+      - "This is a Reality Anchor archive cleanup workflow, not a generic Sokoban rule."
+      - "A removed target must preserve the current intended trace as a win."
+      - "A removed target must not lower the shortest solution cost or create a missing-core-event winning bypass."
+      - "Complete graph and event-probe conclusions are required; exhausted searches are unknown, not pass."
+      - "If two neighboring targets are individually redundant, retest deletion combinations and keep the smallest set that still prevents bypass."
+    critic_focus:
+      - "Targets should encode required constraints, not merely reward objects that are already moving as handles or chains."
+      - "For current Reality Anchor archive difficulty, do not keep side-effect targets solely as guidance."
+      - "If a high-complexity future level intentionally keeps guidance targets, the packet must explicitly justify that as a teaching/readability choice."
+    forbidden_unless:
+      - "Do not write this workflow into generic skills or cross-prototype docs."
+      - "Do not delete the only target in a level."
+      - "Do not delete a target when cost drops, the expected trace stops winning, graph search is incomplete, or core event necessity fails."

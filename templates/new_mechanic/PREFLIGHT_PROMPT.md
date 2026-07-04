@@ -37,6 +37,15 @@ Rules:
   as temporary probe scaffolding.
 - Ask questions in batches ordered by blocker severity. Do not ask only abstract questions when
   an ASCII probe would make the ambiguity observable.
+- If a runtime-backed playable is in scope, confirm the visual presentation strategy separately
+  from runtime semantics:
+  - default visual for each object
+  - state or region variants that must be readable
+  - whether pixel sprites replace ASCII in the playable
+  - whether temporary PuzzleScript-style assets are allowed
+  - source URL, commit/release, and license for any third-party asset
+- Treat visual differences that communicate rules as adapter-owned visual projections, not as
+  web-layer glyph guessing.
 
 Required output:
 1. raw_brief summary without invented rules
@@ -58,9 +67,14 @@ Required output:
    - mechanism x mechanism
    - multi-instance / relation cases
    - win timing cases
-5. ASCII probes for the first batch of blockers
-6. questions for the user
-7. confirmed mechanic packet draft, with open items clearly marked
+5. playable visual decisions:
+   - renderer: ASCII fallback only | pixel sprite with ASCII fallback | external asset pack
+   - object to visualKey mapping
+   - required visual variants
+   - asset source and license status
+6. ASCII probes for the first batch of blockers
+7. questions for the user
+8. confirmed mechanic packet draft, with open items clearly marked
 
 Do not proceed to implementation until all runtime-critical items are confirmed or explicitly
 out_of_scope for the first prototype.

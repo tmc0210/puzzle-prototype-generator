@@ -8,6 +8,7 @@ import type {
   WinCondition,
 } from "../../core/types.js";
 import { eventsMatchPattern } from "../../core/events.js";
+import type { VisualBoard, VisualLayer, VisualTile } from "../runtimeAdapter.js";
 
 export type RealityAnchorAction = InputId;
 
@@ -361,6 +362,146 @@ export function renderState(state: RealityAnchorState): string {
   }
   rows[state.player.y]![state.player.x] = state.goals.has(pointKey(state.player)) ? "+" : "@";
   return rows.map((row) => row.join("").trimEnd()).join("\n");
+}
+
+export function renderVisualState(state: RealityAnchorState): VisualBoard {
+  const tiles = Array.from({ length: state.height }, (_, y) =>
+    Array.from({ length: state.width }, (_, x): VisualTile => {
+      const point = { x, y };
+      const terrainSide = boxStickySideAt(state, point);
+      return {
+        x,
+        y,
+        terrain: state.walls.has(pointKey(point))
+          ? visualLayer(
+              `ra.terrain.wall.${terrainSide}_side`,
+              "#",
+              `${terrainSide} side wall`,
+              ["terrain", "wall", `${terrainSide}_side`],
+            )
+          : visualLayer(
+              `ra.terrain.floor.${terrainSide}_side`,
+              " ",
+              `${terrainSide} side floor`,
+              ["terrain", "floor", `${terrainSide}_side`],
+            ),
+      };
+    }),
+  );
+
+  const tileAt = (point: Point): VisualTile => tiles[point.y]![point.x]!;
+
+  for (const key of state.goals) {
+    const point = pointFromKey(key);
+    tileAt(point).target = visualLayer("target.goal", "G", "goal");
+  }
+
+  for (const crate of state.crates) {
+    const side = boxStickySideAt(state, crate);
+    pushLayer(tileAt(crate), "objects", visualLayer(
+      `ra.crate.${side}_side`,
+      "C",
+      `${side} side crate`,
+      ["crate", `${side}_side`],
+    ));
+  }
+
+  for (const [groupIndex, group] of state.stickyGroups.entries()) {
+    for (const point of group) {
+      const side = boxStickySideAt(state, point);
+      pushLayer(tileAt(point), "objects", visualLayer(
+        `ra.sticky.${side}_side`,
+        "M",
+        `${side} side sticky block`,
+        ["sticky", `${side}_side`, `group_${groupIndex}`, ...stickyJoinTags(group, point)],
+      ));
+    }
+  }
+
+  if (state.pushPullAnchor) {
+    const pushJoin = joinDirection(state.pushPullAnchor.push, state.pushPullAnchor.pull);
+    const pullJoin = joinDirection(state.pushPullAnchor.pull, state.pushPullAnchor.push);
+    pushLayer(tileAt(state.pushPullAnchor.push), "objects", visualLayer(
+      `ra.anchor.push_end.join_${pushJoin}`,
+      "P",
+      "push anchor end",
+      ["anchor", "push_side", `join_${pushJoin}`],
+    ));
+    pushLayer(tileAt(state.pushPullAnchor.pull), "objects", visualLayer(
+      `ra.anchor.pull_end.join_${pullJoin}`,
+      "L",
+      "pull anchor end",
+      ["anchor", "pull_side", `join_${pullJoin}`],
+    ));
+  }
+
+  if (state.boxStickyAnchor) {
+    const boxJoin = joinDirection(state.boxStickyAnchor.box, state.boxStickyAnchor.sticky);
+    const stickyJoin = joinDirection(state.boxStickyAnchor.sticky, state.boxStickyAnchor.box);
+    pushLayer(tileAt(state.boxStickyAnchor.box), "objects", visualLayer(
+      `ra.anchor.box_end.join_${boxJoin}`,
+      "B",
+      "box anchor end",
+      ["anchor", "box_side", `join_${boxJoin}`],
+    ));
+    pushLayer(tileAt(state.boxStickyAnchor.sticky), "objects", visualLayer(
+      `ra.anchor.sticky_end.join_${stickyJoin}`,
+      "S",
+      "sticky anchor end",
+      ["anchor", "sticky_side", `join_${stickyJoin}`],
+    ));
+  }
+
+  const mode = forceModeAt(state, state.player);
+  pushLayer(tileAt(state.player), "actors", visualLayer(
+    `ra.player.${mode}_side`,
+    "@",
+    `${mode} side player`,
+    ["player", `${mode}_side`],
+  ));
+
+  return { width: state.width, height: state.height, tiles: tiles.flat() };
+}
+
+function visualLayer(
+  visualKey: string,
+  fallbackGlyph: string,
+  label: string,
+  tags: string[] = [],
+): VisualLayer {
+  return { visualKey, fallbackGlyph, label, tags };
+}
+
+function pushLayer(
+  tile: VisualTile,
+  slot: "actors" | "objects",
+  layer: VisualLayer,
+): void {
+  tile[slot] = [...(tile[slot] ?? []), layer];
+}
+
+function joinDirection(from: Point, to: Point): Direction {
+  if (to.x < from.x) {
+    return "left";
+  }
+  if (to.x > from.x) {
+    return "right";
+  }
+  if (to.y < from.y) {
+    return "up";
+  }
+  return "down";
+}
+
+function stickyJoinTags(group: Point[], point: Point): string[] {
+  const cells = new Set(group.map(pointKey));
+  const tags: string[] = [];
+  for (const dir of Object.keys(vectors) as Direction[]) {
+    if (cells.has(pointKey(add(point, dir)))) {
+      tags.push(`join_${dir}`);
+    }
+  }
+  return tags;
 }
 
 export function isWin(
@@ -738,7 +879,7 @@ function forceEvents(state: RealityAnchorState, objectIds: Set<ObjectId>): strin
   return events;
 }
 
-function forceModeAt(state: RealityAnchorState, point: Point): "push" | "pull" {
+export function forceModeAt(state: RealityAnchorState, point: Point): "push" | "pull" {
   const anchor = state.pushPullAnchor;
   if (!anchor) {
     return "push";
@@ -746,7 +887,7 @@ function forceModeAt(state: RealityAnchorState, point: Point): "push" | "pull" {
   return isOnFirstAnchorSide(anchor.push, anchor.pull, point) ? "push" : "pull";
 }
 
-function boxStickySideAt(state: RealityAnchorState, point: Point): "box" | "sticky" {
+export function boxStickySideAt(state: RealityAnchorState, point: Point): "box" | "sticky" {
   const anchor = state.boxStickyAnchor;
   if (!anchor) {
     return "box";

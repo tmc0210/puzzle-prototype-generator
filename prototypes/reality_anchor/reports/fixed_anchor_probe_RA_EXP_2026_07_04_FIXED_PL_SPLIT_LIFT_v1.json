@@ -1,0 +1,177 @@
+{
+  "id": "RA_EXP_2026_07_04_FIXED_PL_SPLIT_LIFT_v1",
+  "fixedKind": "push_pull",
+  "profile": "default",
+  "layout": "###########\n##.....@..#\n#P#....B..#\n#L#.G..S..#\n####m#....#\n####M#....#\n###########",
+  "groups": [
+    {
+      "name": "movable_box_sticky_shift",
+      "patterns": [
+        "anchor_boundary_shift:box_sticky"
+      ]
+    },
+    {
+      "name": "fixed_push_pull_effect",
+      "patterns": [
+        "pull_object"
+      ]
+    },
+    {
+      "name": "material_normalization",
+      "patterns": [
+        "box_to_sticky",
+        "sticky_to_box"
+      ]
+    }
+  ],
+  "forbiddenReachable": [
+    "anchor_boundary_shift:push_pull"
+  ],
+  "budget": {
+    "maxStates": 400000,
+    "maxDepth": 100
+  },
+  "allGroupProbe": {
+    "found": true,
+    "status": "found",
+    "exploredStates": 195,
+    "depth": 5,
+    "inputs": [
+      "right",
+      "down",
+      "left",
+      "left",
+      "left"
+    ],
+    "events": [
+      "walk",
+      "walk",
+      "push_object:box_sticky_anchor",
+      "anchor_boundary_shift:box_sticky",
+      "push_object:box_sticky_anchor",
+      "anchor_boundary_shift:box_sticky",
+      "push_object:box_sticky_anchor",
+      "anchor_boundary_shift:box_sticky"
+    ],
+    "missingGroups": [
+      "fixed_push_pull_effect",
+      "material_normalization"
+    ]
+  },
+  "individualProbes": [
+    {
+      "group": "movable_box_sticky_shift",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 195,
+        "depth": 6,
+        "inputs": [
+          "left",
+          "down",
+          "left",
+          "down",
+          "left",
+          "up"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "pull_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "missingGroups": [
+          "movable_box_sticky_shift"
+        ]
+      }
+    },
+    {
+      "group": "fixed_push_pull_effect",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 193,
+        "depth": 5,
+        "inputs": [
+          "right",
+          "down",
+          "left",
+          "left",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "push_object:box_sticky_anchor",
+          "anchor_boundary_shift:box_sticky",
+          "push_object:box_sticky_anchor",
+          "anchor_boundary_shift:box_sticky",
+          "push_object:box_sticky_anchor",
+          "anchor_boundary_shift:box_sticky"
+        ],
+        "missingGroups": [
+          "fixed_push_pull_effect"
+        ]
+      }
+    },
+    {
+      "group": "material_normalization",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 172,
+        "depth": 5,
+        "inputs": [
+          "right",
+          "down",
+          "left",
+          "left",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "push_object:box_sticky_anchor",
+          "anchor_boundary_shift:box_sticky",
+          "push_object:box_sticky_anchor",
+          "anchor_boundary_shift:box_sticky",
+          "push_object:box_sticky_anchor",
+          "anchor_boundary_shift:box_sticky"
+        ],
+        "missingGroups": [
+          "material_normalization"
+        ]
+      }
+    }
+  ],
+  "reachableScan": {
+    "status": "complete",
+    "reachableStates": 16869,
+    "legalTransitions": 46903,
+    "eventCounts": {
+      "push_object:box_sticky_anchor": 300,
+      "anchor_boundary_shift:box_sticky": 1504,
+      "walk": 43422,
+      "sticky_to_box:n1": 430,
+      "pull_object:box_sticky_anchor": 1201,
+      "box_to_sticky:n1": 473,
+      "sticky_merge:n1": 102,
+      "pull_object:crate#1": 743,
+      "pull_object:sticky#1": 484,
+      "move_sticky_rigid": 674,
+      "push_object:crate#1": 315,
+      "force_chain:n2": 170,
+      "push_object:sticky#1": 6,
+      "pull_object:sticky#2": 106,
+      "pull_object:crate#2": 248,
+      "box_to_sticky:n2": 24,
+      "push_object:crate#2": 78,
+      "sticky_to_box:n2": 36,
+      "force_chain:n3": 5
+    },
+    "forbiddenHits": []
+  }
+}
