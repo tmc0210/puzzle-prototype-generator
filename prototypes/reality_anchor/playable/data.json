@@ -1,0 +1,1183 @@
+{
+  "mechanic": {
+    "id": "reality_anchor",
+    "title": "Reality_Anchor",
+    "version": 1,
+    "description": "Reality Anchor is a Sokoban-like prototype where movable two-cell anchors split the board into rule regions. A P/L anchor selects push or pull behavior by the player's side at input time. A B/S anchor globally normalizes boxes into sticky blocks on the sticky side and back into boxes on the box side.\n",
+    "layers": [
+      "terrain",
+      "target",
+      "actor",
+      "object"
+    ],
+    "objects": {
+      "floor": {
+        "glyph": ".",
+        "layer": "terrain",
+        "traits": [
+          "walkable"
+        ]
+      },
+      "wall": {
+        "glyph": "#",
+        "layer": "terrain",
+        "traits": [
+          "solid"
+        ]
+      },
+      "goal": {
+        "glyph": "G",
+        "layer": "target",
+        "traits": [
+          "target"
+        ]
+      },
+      "player": {
+        "glyph": "@",
+        "layer": "actor",
+        "traits": [
+          "player"
+        ]
+      },
+      "crate": {
+        "glyph": "C",
+        "layer": "object",
+        "traits": [
+          "movable",
+          "pushable",
+          "pullable",
+          "target_covering",
+          "indistinguishable"
+        ]
+      },
+      "sticky_block": {
+        "glyph": "M",
+        "layer": "object",
+        "traits": [
+          "movable",
+          "pushable",
+          "pullable",
+          "rigid_group",
+          "target_covering",
+          "derived"
+        ]
+      },
+      "push_pull_anchor_push_side": {
+        "glyph": "P",
+        "layer": "object",
+        "traits": [
+          "anchor",
+          "movable",
+          "push_side_label",
+          "target_covering"
+        ]
+      },
+      "push_pull_anchor_pull_side": {
+        "glyph": "L",
+        "layer": "object",
+        "traits": [
+          "anchor",
+          "movable",
+          "pull_side_label",
+          "target_covering"
+        ]
+      },
+      "box_sticky_anchor_box_side": {
+        "glyph": "B",
+        "layer": "object",
+        "traits": [
+          "anchor",
+          "movable",
+          "box_side_label",
+          "target_covering"
+        ]
+      },
+      "box_sticky_anchor_sticky_side": {
+        "glyph": "S",
+        "layer": "object",
+        "traits": [
+          "anchor",
+          "movable",
+          "sticky_side_label",
+          "target_covering"
+        ]
+      }
+    },
+    "state": {
+      "object_instance_model": {
+        "crate": {
+          "multiplicity": "many",
+          "identity_policy": "indistinguishable",
+          "visible_distinction": "none",
+          "semantic_distinction": "none"
+        },
+        "sticky_block": {
+          "multiplicity": "many",
+          "identity_policy": "indistinguishable",
+          "visible_distinction": "current_connected_shape",
+          "semantic_distinction": "none"
+        },
+        "push_pull_anchor": {
+          "multiplicity": "optional",
+          "max_per_level": 1,
+          "identity_policy": "distinguishable",
+          "visible_distinction": "P_L_labels"
+        },
+        "box_sticky_anchor": {
+          "multiplicity": "optional",
+          "max_per_level": 1,
+          "identity_policy": "distinguishable",
+          "visible_distinction": "B_S_labels"
+        }
+      },
+      "confirmed_defaults": {
+        "no_push_pull_anchor": "all_push_world",
+        "no_box_sticky_anchor": "all_box_world"
+      }
+    },
+    "inputs": {
+      "up": {
+        "intent": "move",
+        "dir": "up",
+        "cost": 1
+      },
+      "down": {
+        "intent": "move",
+        "dir": "down",
+        "cost": 1
+      },
+      "left": {
+        "intent": "move",
+        "dir": "left",
+        "cost": 1
+      },
+      "right": {
+        "intent": "move",
+        "dir": "right",
+        "cost": 1
+      }
+    },
+    "rules": [
+      {
+        "id": "walk",
+        "priority": 10,
+        "phase": "input",
+        "trigger": {
+          "input": "move"
+        },
+        "effect": {
+          "when": "destination is empty",
+          "result": "player moves one cell"
+        },
+        "emits": [
+          "walk"
+        ],
+        "effects": {
+          "reads": [
+            "player.position",
+            "walls",
+            "movable_objects"
+          ],
+          "writes": [
+            "player.position"
+          ],
+          "emits": [
+            "walk"
+          ],
+          "locality": "local",
+          "reversible": "conditional"
+        }
+      },
+      {
+        "id": "push_force",
+        "priority": 20,
+        "phase": "input",
+        "trigger": {
+          "input": "move",
+          "region": "push"
+        },
+        "effect": {
+          "result": "player pushes the adjacent movable object; force may propagate forward"
+        },
+        "emits": [
+          "push_object",
+          "force_chain",
+          "anchor_boundary_shift",
+          "move_sticky_rigid"
+        ],
+        "effects": {
+          "reads": [
+            "player.position",
+            "push_pull_anchor",
+            "movable_objects",
+            "walls"
+          ],
+          "writes": [
+            "player.position",
+            "movable_objects"
+          ],
+          "emits": [
+            "push_object",
+            "force_chain",
+            "anchor_boundary_shift",
+            "move_sticky_rigid"
+          ],
+          "locality": "spatial_nonlocal",
+          "reversible": "conditional"
+        }
+      },
+      {
+        "id": "pull_force",
+        "priority": 30,
+        "phase": "input",
+        "trigger": {
+          "input": "move",
+          "region": "pull"
+        },
+        "effect": {
+          "result": "player moves into an empty front cell and pulls the adjacent object behind them"
+        },
+        "emits": [
+          "pull_object",
+          "force_chain",
+          "anchor_boundary_shift",
+          "move_sticky_rigid"
+        ],
+        "effects": {
+          "reads": [
+            "player.position",
+            "push_pull_anchor",
+            "movable_objects",
+            "walls"
+          ],
+          "writes": [
+            "player.position",
+            "movable_objects"
+          ],
+          "emits": [
+            "pull_object",
+            "force_chain",
+            "anchor_boundary_shift",
+            "move_sticky_rigid"
+          ],
+          "locality": "spatial_nonlocal",
+          "reversible": "conditional"
+        }
+      },
+      {
+        "id": "box_sticky_normalize",
+        "priority": 40,
+        "phase": "settle",
+        "trigger": {
+          "after": "legal_move"
+        },
+        "effect": {
+          "result": "box side cells become crates; sticky side cells become sticky cells"
+        },
+        "emits": [
+          "box_to_sticky",
+          "sticky_to_box",
+          "sticky_split"
+        ],
+        "effects": {
+          "reads": [
+            "box_sticky_anchor",
+            "crate.position",
+            "sticky_block.cells"
+          ],
+          "writes": [
+            "crate.position",
+            "sticky_block.cells"
+          ],
+          "emits": [
+            "box_to_sticky",
+            "sticky_to_box",
+            "sticky_split"
+          ],
+          "locality": "global",
+          "reversible": "conditional"
+        }
+      },
+      {
+        "id": "sticky_merge",
+        "priority": 50,
+        "phase": "settle",
+        "trigger": {
+          "after": "box_sticky_normalize"
+        },
+        "effect": {
+          "result": "orthogonally adjacent sticky cells form one rigid block"
+        },
+        "emits": [
+          "sticky_merge"
+        ],
+        "effects": {
+          "reads": [
+            "sticky_block.cells"
+          ],
+          "writes": [
+            "sticky_block.instances"
+          ],
+          "emits": [
+            "sticky_merge"
+          ],
+          "locality": "global",
+          "reversible": "conditional"
+        }
+      },
+      {
+        "id": "target_cover_win",
+        "priority": 60,
+        "phase": "win",
+        "trigger": {
+          "after": "settle"
+        },
+        "effect": {
+          "result": "all targets covered by crates, sticky blocks, or anchor cells wins"
+        },
+        "emits": [],
+        "effects": {
+          "reads": [
+            "goals",
+            "crate.position",
+            "sticky_block.cells",
+            "anchor.cells"
+          ],
+          "writes": [],
+          "emits": [],
+          "locality": "global",
+          "reversible": "unknown"
+        }
+      }
+    ],
+    "win": {
+      "type": "all_targets_covered_by_objects",
+      "target": "goal",
+      "description": "After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.\n"
+    },
+    "counterfactuals": {},
+    "optimizations": {
+      "reachability_macro": {
+        "status": "unknown",
+        "requires": [
+          "player_walk_side_effect_free",
+          "player_orientation_irrelevant_or_tracked",
+          "travel_cost_can_be_summarized"
+        ],
+        "notes": "Do not enable until Reality Anchor rule summaries prove the preconditions.\n"
+      }
+    },
+    "export": {
+      "puzzlescript_next": {
+        "status": "unavailable",
+        "notes": "Reality Anchor has no PuzzleScript Next exporter in v0."
+      }
+    }
+  },
+  "knowledge": {
+    "mechanic": "reality_anchor",
+    "knowledge": [
+      {
+        "id": "K_runtime_smoke",
+        "type": "interaction",
+        "statement": "Reality Anchor v0 runtime smoke behavior is executable through the registered adapter.",
+        "source": {
+          "kind": "manual",
+          "events": [
+            "push_object",
+            "pull_object",
+            "box_to_sticky",
+            "sticky_to_box",
+            "sticky_merge"
+          ],
+          "notes": "Temporary stub for adapter bring-up; not a formal player-model target."
+        },
+        "detector": {
+          "required_events": [],
+          "forbidden_events": []
+        },
+        "informal_semantics": {
+          "notes": "Knowledge and curriculum derivation are intentionally deferred for v0."
+        },
+        "evidence": {
+          "strength": "weak",
+          "witness_level": "RA_SMOKE_01_PUSH_CHAIN",
+          "notes": "Conformance smoke checks are the relevant v0 evidence."
+        }
+      }
+    ]
+  },
+  "levels": {
+    "mechanic": "reality_anchor",
+    "levels": [
+      {
+        "id": "RA_EXP_2026_07_04_FIXED_BS_STICKY_HANDLE_v1",
+        "title": "Fixed B/S sticky handle v1",
+        "role": "challenge",
+        "status": "candidate",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "none",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "#########\n####BS###\n#########\n#@PLG...#\n#...C.MG#\n#########",
+        "design_notes": "review_1 fixed-anchor transition candidate. B/S is deliberately isolated in a wall chamber so players can focus on moving P/L while still observing the fixed material boundary. The crate must first be brought across the fixed B/S split to become sticky, merge with the waiting sticky cell, and then move as a sticky rigid body; simply changing material without using the changed movement would not solve the level. The all-solution probe for the submitted candidate found no win that avoids the movable P/L shift, box_to_sticky, sticky_merge, and sticky rigid movement events.\n",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_EXP_2026_07_04_FIXED_PL_VERTICAL_PAIR_v2",
+        "title": "Fixed P/L vertical pair v2",
+        "role": "challenge",
+        "status": "candidate",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "none",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "###########\n####PL#####\n###########\n###BS@....#\n######.####\n#...C..G..#\n#....M.G..#\n#.........#\n###########",
+        "design_notes": "review_1 fixed-anchor transition candidate. P/L is isolated in a wall chamber while B/S remains movable, making this a midpoint lesson before both anchors must be repositioned together. The narrow shaft lets the player pull B/S to alter the lower material boundary without letting the anchor itself cover the vertical targets. The intended route depends on the lower object changing material, merging, and then being pulled as a sticky rigid body; the submitted all-solution probe found no win that avoids B/S anchor movement, box_to_sticky, sticky_merge, and sticky rigid movement.\n",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_EXP_2026_07_04_SOFT_HANDOFF_v3",
+        "title": "Soft handoff v3",
+        "role": "challenge",
+        "status": "candidate",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "none",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "#########\n####C@..#\n###G.G..#\n####PL.M#\n####..BS#\n#########",
+        "design_notes": "review_2 提交候选。v3 是对 v2 critic 的结构修订：缩短纯走位，并让 P/L 在前段、中段和末段都改变局面，而不是只作最终按钮。玩家先拉 P/L 建立 上排 crate 的 pull 通道；随后拉动 crate 与 M 形成材料债务；中段再拉 P/L、拉 B/S，触发 box_to_sticky、sticky_merge 和 sticky rigid move； 末段 P/L 与 sticky 刚体共同覆盖目标。完整事件组探针证明所有胜路都包含 P/L anchor shift、B/S anchor shift、pull、material normalization 与 sticky_merge/sticky rigid movement；不声明唯一输入序列或对象实例级必要性。\n",
+        "expected_trace": [
+          {
+            "input": "down"
+          },
+          {
+            "input": "up",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "force_chain",
+              "anchor_boundary_shift",
+              "move_sticky_rigid",
+              "sticky_to_box"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_EXP_2026_07_04_COMPACT_CHAIN_v1",
+        "title": "Compact chain v1",
+        "role": "challenge",
+        "status": "candidate",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "none",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "##########\n#G.#MPL..#\n#.@BSG.M.#\n#..C.....#\n##########",
+        "design_notes": "review_2 提交候选。较低负担的紧凑双锚材料链：B/S 承担主要材料整理和左上 目标覆盖读法，返回解中 crate 跨 B/S 边界转 sticky，随后 sticky 刚体移动、 B/S 位移和 sticky_merge 形成短链；P/L 作为较轻但不可绕过的 pull 收束锚， 在返回解末段下移覆盖中线目标。完整事件组探针证明所有胜路都包含 P/L anchor shift、B/S anchor shift、pull、material normalization、sticky_merge 与 sticky rigid movement；不声明唯一路线、对象实例级必要性、逐目标覆盖身份、 所有胜路固定顺序或分数化审美/难度结论。\n",
+        "expected_trace": [
+          {
+            "input": "down"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "box_to_sticky"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_EXP_2026_07_04_DUAL_AXIS_LOCK_v3",
+        "title": "Dual-axis anchor lock v3",
+        "role": "challenge",
+        "status": "candidate",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "none",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "##########\n#.##MG.###\n#.....P###\n#@CBSMLG##\n###..M..##\n#####G####\n##########",
+        "design_notes": "review_4 提交候选。P/L 为竖直锚点，B/S 为水平锚点。上目标左侧被墙封住， 玩家侧读法是通过 B/S 材料边界制造一个下方黏性把手。返回解中箱子转黏后触发 sticky_merge，并推动合并黏块覆盖上目标。完整事件组探针证明所有胜利路径都包含 两类 anchor shift、pull、material normalization、sticky_merge 和 sticky rigid movement；不声明唯一路线、具体对象实例或逐目标对象身份在所有胜路中必经。\n",
+        "expected_trace": [
+          {
+            "input": "up"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "pull_object",
+              "force_chain",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_EXP_2026_07_04_DUAL_LOCKSTEP_v2",
+        "title": "Dual lockstep v2",
+        "role": "challenge",
+        "status": "candidate",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "none",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "###########\n###.PL.####\n##@BSGG####\n###.MM...G#\n###.M..M.##\n###########",
+        "design_notes": "review_2 提交候选。水平 P/L 与水平 B/S 形成横向 lockstep：B/S 先制造箱/黏 材料债务，中段 box_to_sticky + sticky_merge 成为全胜路必要事件，随后 B/S 逐格右移把合并材料转成右侧收束链；pull crate 与最终 pull P/L 完成目标覆盖。 完整事件组探针证明所有胜路都包含两类 anchor shift、pull、material normalization、sticky_merge 与 sticky rigid movement；不声明唯一路线或对象身份必要性。\n",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "force_chain",
+              "move_sticky_rigid",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "force_chain",
+              "anchor_boundary_shift",
+              "move_sticky_rigid",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "pull_object"
+            ]
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "force_chain",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_EXP_2026_07_04_PHASE_FERRY_v8",
+        "title": "Phase ferry v8",
+        "role": "challenge",
+        "status": "candidate",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "none",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "########\n#..#..G#\n##GMLP.#\n#.BS.M.#\n##..@.##\n########",
+        "design_notes": "review_2 提交候选。紧凑双锚 two-stage phase shuttle：P/L 与 B/S 均为水平锚点， 左目标需要先 sticky_merge 再 sticky_to_box 转箱覆盖，右上目标需要中段 pull/推移两个锚点后把 sticky 刚体送达。v8 将 v6 的底部 movable ballast C 改为诚实墙约束，并将 claim 降级为双阶段相位 shuttle，不声明同一对象身份链。 完整事件组探针证明所有胜路都包含两类 anchor shift、pull、material normalization、sticky_merge 与 sticky rigid movement；不声明唯一路线或对象身份必要性。\n",
+        "expected_trace": [
+          {
+            "input": "right"
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "force_chain",
+              "anchor_boundary_shift",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_object",
+              "move_sticky_rigid",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_object",
+              "move_sticky_rigid",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "force_chain",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "box_to_sticky"
+            ]
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -48,6 +48,25 @@ export function capabilitiesForMechanic(mechanicId: string): ToolCapability[] {
         unavailable("puzzlescript_exporter", "Ice slide distance/group semantics are not exported yet."),
         unavailable("puzzlescript_checker", "Ice PuzzleScript export is unavailable."),
       ];
+    case "reality_anchor":
+      return [
+        capability("probe_seed_suite", "probe_seed_suite", "Reality Anchor v0 smoke fixtures cover the confirmed preflight probes."),
+        capability(
+          "raw_sampler",
+          "raw_sampler",
+          "The mine command uses reality_anchor_raw_sampler_v1 for raw discovery evidence.",
+        ),
+        capability(
+          "temporary_miner",
+          "raw_sampler",
+          "Reality Anchor mine is a raw sampler, not a calibrated curated miner.",
+        ),
+        unavailable("candidate_seed_factories", "Reality Anchor level_specs_v2 seed factories are outside the v0 scope."),
+        unavailable("curated_miner", "Reality Anchor miner scoring is not calibrated beyond raw discovery ranking."),
+        capability("runtime_backed_playable", "scaffold", "Generic runtime-backed playable builds through the registered Reality Anchor adapter."),
+        unavailable("puzzlescript_exporter", "Reality Anchor PuzzleScript export is unavailable."),
+        unavailable("puzzlescript_checker", "Reality Anchor PuzzleScript checker is unavailable."),
+      ];
     default:
       return [
         unavailable("probe_seed_suite", `No probe seed suite registered for '${mechanicId}'.`),

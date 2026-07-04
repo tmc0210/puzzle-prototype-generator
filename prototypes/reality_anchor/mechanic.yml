@@ -1,0 +1,219 @@
+id: reality_anchor
+title: Reality_Anchor
+version: 1
+description: >
+  Reality Anchor is a Sokoban-like prototype where movable two-cell anchors split
+  the board into rule regions. A P/L anchor selects push or pull behavior by the
+  player's side at input time. A B/S anchor globally normalizes boxes into sticky
+  blocks on the sticky side and back into boxes on the box side.
+
+layers:
+  - terrain
+  - target
+  - actor
+  - object
+
+objects:
+  floor:
+    glyph: "."
+    layer: terrain
+    traits: [walkable]
+  wall:
+    glyph: "#"
+    layer: terrain
+    traits: [solid]
+  goal:
+    glyph: "G"
+    layer: target
+    traits: [target]
+  player:
+    glyph: "@"
+    layer: actor
+    traits: [player]
+  crate:
+    glyph: "C"
+    layer: object
+    traits: [movable, pushable, pullable, target_covering, indistinguishable]
+  sticky_block:
+    glyph: "M"
+    layer: object
+    traits: [movable, pushable, pullable, rigid_group, target_covering, derived]
+  push_pull_anchor_push_side:
+    glyph: "P"
+    layer: object
+    traits: [anchor, movable, push_side_label, target_covering]
+  push_pull_anchor_pull_side:
+    glyph: "L"
+    layer: object
+    traits: [anchor, movable, pull_side_label, target_covering]
+  box_sticky_anchor_box_side:
+    glyph: "B"
+    layer: object
+    traits: [anchor, movable, box_side_label, target_covering]
+  box_sticky_anchor_sticky_side:
+    glyph: "S"
+    layer: object
+    traits: [anchor, movable, sticky_side_label, target_covering]
+
+state:
+  object_instance_model:
+    crate:
+      multiplicity: many
+      identity_policy: indistinguishable
+      visible_distinction: none
+      semantic_distinction: none
+    sticky_block:
+      multiplicity: many
+      identity_policy: indistinguishable
+      visible_distinction: current_connected_shape
+      semantic_distinction: none
+    push_pull_anchor:
+      multiplicity: optional
+      max_per_level: 1
+      identity_policy: distinguishable
+      visible_distinction: P_L_labels
+    box_sticky_anchor:
+      multiplicity: optional
+      max_per_level: 1
+      identity_policy: distinguishable
+      visible_distinction: B_S_labels
+  confirmed_defaults:
+    no_push_pull_anchor: all_push_world
+    no_box_sticky_anchor: all_box_world
+
+inputs:
+  up:
+    intent: move
+    dir: up
+    cost: 1
+  down:
+    intent: move
+    dir: down
+    cost: 1
+  left:
+    intent: move
+    dir: left
+    cost: 1
+  right:
+    intent: move
+    dir: right
+    cost: 1
+
+rules:
+  - id: walk
+    priority: 10
+    phase: input
+    trigger:
+      input: move
+    effect:
+      when: destination is empty
+      result: player moves one cell
+    emits: [walk]
+    effects:
+      reads: [player.position, walls, movable_objects]
+      writes: [player.position]
+      emits: [walk]
+      locality: local
+      reversible: conditional
+
+  - id: push_force
+    priority: 20
+    phase: input
+    trigger:
+      input: move
+      region: push
+    effect:
+      result: player pushes the adjacent movable object; force may propagate forward
+    emits: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+    effects:
+      reads: [player.position, push_pull_anchor, movable_objects, walls]
+      writes: [player.position, movable_objects]
+      emits: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      locality: spatial_nonlocal
+      reversible: conditional
+
+  - id: pull_force
+    priority: 30
+    phase: input
+    trigger:
+      input: move
+      region: pull
+    effect:
+      result: player moves into an empty front cell and pulls the adjacent object behind them
+    emits: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+    effects:
+      reads: [player.position, push_pull_anchor, movable_objects, walls]
+      writes: [player.position, movable_objects]
+      emits: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      locality: spatial_nonlocal
+      reversible: conditional
+
+  - id: box_sticky_normalize
+    priority: 40
+    phase: settle
+    trigger:
+      after: legal_move
+    effect:
+      result: box side cells become crates; sticky side cells become sticky cells
+    emits: [box_to_sticky, sticky_to_box, sticky_split]
+    effects:
+      reads: [box_sticky_anchor, crate.position, sticky_block.cells]
+      writes: [crate.position, sticky_block.cells]
+      emits: [box_to_sticky, sticky_to_box, sticky_split]
+      locality: global
+      reversible: conditional
+
+  - id: sticky_merge
+    priority: 50
+    phase: settle
+    trigger:
+      after: box_sticky_normalize
+    effect:
+      result: orthogonally adjacent sticky cells form one rigid block
+    emits: [sticky_merge]
+    effects:
+      reads: [sticky_block.cells]
+      writes: [sticky_block.instances]
+      emits: [sticky_merge]
+      locality: global
+      reversible: conditional
+
+  - id: target_cover_win
+    priority: 60
+    phase: win
+    trigger:
+      after: settle
+    effect:
+      result: all targets covered by crates, sticky blocks, or anchor cells wins
+    emits: []
+    effects:
+      reads: [goals, crate.position, sticky_block.cells, anchor.cells]
+      writes: []
+      emits: []
+      locality: global
+      reversible: unknown
+
+win:
+  type: all_targets_covered_by_objects
+  target: goal
+  description: >
+    After movement, box/sticky normalization, and sticky merging settle, every
+    target must be covered by a crate, sticky block cell, or anchor cell. The
+    player standing on a target does not count.
+
+counterfactuals: {}
+
+optimizations:
+  reachability_macro:
+    status: unknown
+    requires:
+      - player_walk_side_effect_free
+      - player_orientation_irrelevant_or_tracked
+      - travel_cost_can_be_summarized
+    notes: >
+      Do not enable until Reality Anchor rule summaries prove the preconditions.
+
+export:
+  puzzlescript_next:
+    status: unavailable
+    notes: Reality Anchor has no PuzzleScript Next exporter in v0.

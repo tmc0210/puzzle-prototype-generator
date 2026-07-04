@@ -2,6 +2,7 @@ import type { LevelDoc, MechanicDoc, WinCondition } from "../core/types.js";
 import type { PuzzleRuntime, RuntimeSearchOptions } from "../core/puzzleRuntime.js";
 import { iceSlideAdapter } from "./ice_slide_escape/runtime.js";
 import { pullPortalAdapter } from "./pull_portal_fallback/runtime.js";
+import { realityAnchorAdapter } from "./reality_anchor/runtime.js";
 
 export type AdapterStepResult<State, Action extends string> = {
   legal: boolean;
@@ -50,6 +51,9 @@ export function getRuntimeAdapter(mechanic: MechanicDoc): CurrentRuntimeAdapter 
   }
   if (mechanic.id === iceSlideAdapter.id) {
     return iceSlideAdapter;
+  }
+  if (mechanic.id === realityAnchorAdapter.id) {
+    return realityAnchorAdapter;
   }
 
   throw new Error(

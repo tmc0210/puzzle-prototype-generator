@@ -37,6 +37,10 @@ import {
   formatToolCapabilitiesMarkdown,
   unavailableToolMessage,
 } from "./workflows/toolMaturity.js";
+import {
+  checkToolConformance,
+  formatToolConformanceMarkdown,
+} from "./workflows/toolConformance.js";
 import type { LevelDoc, LevelRole, WinCondition } from "./core/types.js";
 import { randomInt } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -69,6 +73,7 @@ async function main(): Promise<void> {
       "level-specs-v2",
       "mine",
       "tool-maturity",
+      "tool-conformance",
     ].includes(command)
   ) {
     printUsage();
@@ -186,6 +191,25 @@ async function main(): Promise<void> {
 
   if (command === "tool-maturity") {
     console.log(formatToolCapabilitiesMarkdown(pkg.mechanic.id).trimEnd());
+    return;
+  }
+
+  if (command === "tool-conformance") {
+    const report = checkToolConformance(pkg);
+    const markdown = formatToolConformanceMarkdown(report);
+    console.log(markdown.trimEnd());
+    if (writeReports) {
+      const markdownPath = path.join(pkg.root, "reports", "tool_conformance.md");
+      const jsonPath = path.join(pkg.root, "reports", "tool_conformance.json");
+      await mkdir(path.dirname(markdownPath), { recursive: true });
+      await writeFile(markdownPath, markdown, "utf8");
+      await writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+      console.log(`\nWrote ${markdownPath}`);
+      console.log(`Wrote ${jsonPath}`);
+    }
+    if (report.status === "fail") {
+      process.exitCode = 1;
+    }
     return;
   }
 
@@ -503,6 +527,7 @@ function printUsage(): void {
   console.log("  tsx src/cli.ts calibration-report <prototype-path> [--write]");
   console.log("  tsx src/cli.ts mine <prototype-path> [--preset quick|deep] [--seed n] [--iterations n] [--max-findings n] [--max-instances n] [--time-budget-ms n] [--objective objective.yml] [--weight tag=number] [--write]");
   console.log("  tsx src/cli.ts tool-maturity <prototype-path>");
+  console.log("  tsx src/cli.ts tool-conformance <prototype-path> [--write]");
 }
 
 function randomMineSeed(): number {

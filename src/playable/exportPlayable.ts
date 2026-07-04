@@ -1,12 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { build } from "esbuild";
+import YAML from "yaml";
 import { loadPrototypePackage } from "../core/io.js";
+import type { LevelsDoc } from "../core/types.js";
 
 const packagePath = process.argv[2] ?? "prototypes/pull_portal_fallback";
 const pkg = await loadPrototypePackage(packagePath);
 const outDir = path.join(pkg.root, "playable");
 const evaluation = await readEvaluation(pkg.root);
+const playableLevels = await readPlayableLevels(pkg.root, pkg.levels);
 const assetVersion = Date.now().toString(36);
 
 await mkdir(outDir, { recursive: true });
@@ -17,7 +20,7 @@ await writeFile(
     {
       mechanic: pkg.mechanic,
       knowledge: pkg.knowledge,
-      levels: pkg.levels,
+      levels: playableLevels,
       evaluation,
     },
     null,
@@ -69,6 +72,36 @@ async function readEvaluation(root: string): Promise<unknown> {
   }
 }
 
+type PlayableLevelsConfig = {
+  levels?: string[];
+};
+
+async function readPlayableLevels(root: string, levels: LevelsDoc): Promise<LevelsDoc> {
+  let raw: string;
+  try {
+    raw = await readFile(path.join(root, "playable_levels.yml"), "utf8");
+  } catch {
+    return levels;
+  }
+
+  const config = YAML.parse(raw) as PlayableLevelsConfig | undefined;
+  const ids = config?.levels ?? [];
+  if (ids.length === 0) {
+    return levels;
+  }
+
+  const byId = new Map(levels.levels.map((level) => [level.id, level] as const));
+  const missing = ids.filter((id) => !byId.has(id));
+  if (missing.length > 0) {
+    throw new Error(`playable_levels.yml references unknown level id(s): ${missing.join(", ")}`);
+  }
+
+  return {
+    ...levels,
+    levels: ids.map((id) => byId.get(id)!),
+  };
+}
+
 function playableCss(): string {
   return `:root {
   color-scheme: light;
@@ -79,9 +112,14 @@ function playableCss(): string {
   --floor: #e8efeb;
   --goal: #f2c14e;
   --crate: #b86b3d;
+  --sticky: #6c7a18;
   --player: #2f80ed;
   --portal-a: #8f5cff;
   --portal-b: #24a67a;
+  --push-anchor: #3b7c8f;
+  --pull-anchor: #7b5aa6;
+  --box-anchor: #a6583c;
+  --sticky-anchor: #6f8f3b;
   --surface: #fbfcfd;
   --danger: #b42318;
   --ok: #166534;
@@ -279,6 +317,11 @@ select {
   background: var(--crate);
 }
 
+.tile.sticky {
+  color: #fff;
+  background: var(--sticky);
+}
+
 .tile.player {
   color: #fff;
   background: var(--player);
@@ -292,6 +335,26 @@ select {
 .tile.portalB {
   color: #fff;
   background: var(--portal-b);
+}
+
+.tile.push-anchor {
+  color: #fff;
+  background: var(--push-anchor);
+}
+
+.tile.pull-anchor {
+  color: #fff;
+  background: var(--pull-anchor);
+}
+
+.tile.box-anchor {
+  color: #fff;
+  background: var(--box-anchor);
+}
+
+.tile.sticky-anchor {
+  color: #fff;
+  background: var(--sticky-anchor);
 }
 
 .controls {

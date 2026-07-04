@@ -1,0 +1,234 @@
+{
+  "prototype": "reality_anchor",
+  "level": {
+    "id": "RA_EXP_2026_07_04_PHASE_FERRY_v1",
+    "title": "Phase ferry v1",
+    "role": "challenge",
+    "status": "candidate",
+    "targets": [
+      "K_runtime_smoke"
+    ],
+    "supportLevel": "none",
+    "winCondition": {
+      "type": "all_targets_covered_by_objects",
+      "target": "goal",
+      "description": "After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.\n"
+    }
+  },
+  "initialState": "#########\n#....#.G#\n#@#.M..M#\n#.G..M.M#\n#G.SLP..#\n##.B..C.#\n#########",
+  "solution": {
+    "found": true,
+    "cost": 22,
+    "depth": 22,
+    "exploredStates": 706,
+    "searchStatus": "found",
+    "inputs": [
+      "down",
+      "right",
+      "right",
+      "up",
+      "up",
+      "left",
+      "left",
+      "down",
+      "down",
+      "down",
+      "right",
+      "right",
+      "down",
+      "right",
+      "right",
+      "up",
+      "right",
+      "right",
+      "up",
+      "left",
+      "left",
+      "left"
+    ],
+    "events": [
+      "walk",
+      "walk",
+      "walk",
+      "pull_object:box_sticky_anchor",
+      "anchor_boundary_shift:box_sticky",
+      "pull_object:box_sticky_anchor",
+      "anchor_boundary_shift:box_sticky",
+      "sticky_to_box:n2",
+      "walk",
+      "walk",
+      "walk",
+      "walk",
+      "walk",
+      "walk",
+      "walk",
+      "pull_object:box_sticky_anchor",
+      "anchor_boundary_shift:box_sticky",
+      "box_to_sticky:n2",
+      "sticky_merge:n1",
+      "walk",
+      "walk",
+      "push_object:push_pull_anchor",
+      "force_chain:n2",
+      "anchor_boundary_shift:push_pull",
+      "move_sticky_rigid",
+      "sticky_merge:n1",
+      "walk",
+      "walk",
+      "push_object:sticky#2",
+      "move_sticky_rigid",
+      "walk",
+      "push_object:push_pull_anchor",
+      "force_chain:n2",
+      "anchor_boundary_shift:push_pull",
+      "anchor_boundary_shift:box_sticky",
+      "push_object:push_pull_anchor",
+      "force_chain:n2",
+      "anchor_boundary_shift:push_pull",
+      "anchor_boundary_shift:box_sticky"
+    ],
+    "eventCounts": {
+      "walk": 15,
+      "pull_object:box_sticky_anchor": 3,
+      "anchor_boundary_shift:box_sticky": 5,
+      "sticky_to_box:n2": 1,
+      "box_to_sticky:n2": 1,
+      "sticky_merge:n1": 2,
+      "push_object:push_pull_anchor": 3,
+      "force_chain:n2": 3,
+      "anchor_boundary_shift:push_pull": 3,
+      "move_sticky_rigid": 2,
+      "push_object:sticky#2": 1
+    },
+    "objectParticipation": []
+  },
+  "keySnapshots": [
+    {
+      "step": 4,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "pull_object:box_sticky_anchor",
+        "anchor_boundary_shift:box_sticky"
+      ],
+      "before": "#########\n#....#.G#\n#.#.M..M#\n#.G@.M.M#\n#G.SLP..#\n##.B..C.#\n#########",
+      "after": "#########\n#....#.G#\n#.#@M..M#\n#.GS.M.M#\n#G.BLP..#\n##....C.#\n#########"
+    },
+    {
+      "step": 5,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "pull_object:box_sticky_anchor",
+        "anchor_boundary_shift:box_sticky",
+        "sticky_to_box:n2"
+      ],
+      "before": "#########\n#....#.G#\n#.#@M..M#\n#.GS.M.M#\n#G.BLP..#\n##....C.#\n#########",
+      "after": "#########\n#..@.#.G#\n#.#SM..M#\n#.GB.C.C#\n#G..LP..#\n##....C.#\n#########"
+    },
+    {
+      "step": 13,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "pull_object:box_sticky_anchor",
+        "anchor_boundary_shift:box_sticky",
+        "box_to_sticky:n2",
+        "sticky_merge:n1"
+      ],
+      "before": "#########\n#....#.G#\n#.#SM..M#\n#.GB.C.C#\n#G.@LP..#\n##....C.#\n#########",
+      "after": "#########\n#....#.G#\n#.#.M..M#\n#.GS.M.M#\n#G.BLP..#\n##.@..C.#\n#########"
+    },
+    {
+      "step": 16,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "push_object:push_pull_anchor",
+        "force_chain:n2",
+        "anchor_boundary_shift:push_pull",
+        "move_sticky_rigid",
+        "sticky_merge:n1"
+      ],
+      "before": "#########\n#....#.G#\n#.#.M..M#\n#.GS.M.M#\n#G.BLP..#\n##...@C.#\n#########",
+      "after": "#########\n#....#.G#\n#.#.MM.M#\n#.GSLP.M#\n#G.B.@..#\n##....C.#\n#########"
+    },
+    {
+      "step": 19,
+      "input": "up",
+      "legal": true,
+      "events": [
+        "push_object:sticky#2",
+        "move_sticky_rigid"
+      ],
+      "before": "#########\n#....#.G#\n#.#.MM.M#\n#.GSLP.M#\n#G.B...@#\n##....C.#\n#########",
+      "after": "#########\n#....#.m#\n#.#.MM.M#\n#.GSLP.@#\n#G.B....#\n##....C.#\n#########"
+    },
+    {
+      "step": 21,
+      "input": "left",
+      "legal": true,
+      "events": [
+        "push_object:push_pull_anchor",
+        "force_chain:n2",
+        "anchor_boundary_shift:push_pull",
+        "anchor_boundary_shift:box_sticky"
+      ],
+      "before": "#########\n#....#.m#\n#.#.MM.M#\n#.GSLP@.#\n#G.B....#\n##....C.#\n#########",
+      "after": "#########\n#....#.m#\n#.#.MM.M#\n#.SLP@..#\n#GB.....#\n##....C.#\n#########"
+    },
+    {
+      "step": 22,
+      "input": "left",
+      "legal": true,
+      "events": [
+        "push_object:push_pull_anchor",
+        "force_chain:n2",
+        "anchor_boundary_shift:push_pull",
+        "anchor_boundary_shift:box_sticky"
+      ],
+      "before": "#########\n#....#.m#\n#.#.MM.M#\n#.SLP@..#\n#GB.....#\n##....C.#\n#########",
+      "after": "#########\n#....#.m#\n#.#.MM.M#\n#SLP@...#\n#B......#\n##....C.#\n#########"
+    }
+  ],
+  "graph": {
+    "status": "exhausted",
+    "reachableStateCount": 300001,
+    "legalTransitionCount": 678693,
+    "eventOnlyTransitionCount": 0,
+    "winStateCount": 3696,
+    "budget": {
+      "maxStates": 300000
+    },
+    "reason": "state budget exceeded"
+  },
+  "agency": {
+    "status": "exhausted",
+    "reason": "state budget exceeded",
+    "compressionRule": "bidirectional_edges",
+    "reachableStateCount": 300001,
+    "legalTransitionCount": 678692,
+    "budget": {
+      "maxStates": 300000
+    }
+  },
+  "counterfactuals": [],
+  "targets": [
+    {
+      "targetId": "K_runtime_smoke",
+      "statement": "Reality Anchor v0 runtime smoke behavior is executable through the registered adapter.",
+      "requiredEvents": [],
+      "forbiddenEvents": [],
+      "detectorConfigured": false,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": false,
+        "reason": "No event detector is configured for this target."
+      },
+      "winningBypass": {
+        "checked": false,
+        "reason": "No event detector is configured for this target."
+      }
+    }
+  ]
+}

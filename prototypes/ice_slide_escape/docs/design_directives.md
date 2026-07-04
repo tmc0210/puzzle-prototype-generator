@@ -24,8 +24,9 @@ docs/29-design-archive-contract.md
 prior：它会压低一维 witness 和二维同起终点样本，优先展示不同 edge start /
 edge goal 的二维素材、多 push 链、混合机制链和异质 push 角色。
 
-CLI 裸 `mine` 默认使用随机 seed，报告中会打印实际 seed。LLM / designer 可以
-多次调用矿工寻找灵感；若要复现某次结果，必须显式传 `--seed`。
+CLI 裸 `mine` 默认使用随机 seed，报告中会打印实际 seed。LLM / designer 在已有
+设计目标、design_claim 和工具问题后，可以多次调用矿工寻找结构素材；若要复现
+某次结果，必须显式传 `--seed`。
 
 默认 prior 仍会降低纯 d5、纯 d6 和 boundary disappearance witness 的优先级，
 是为了避免默认结果被大空间、开放边界或长距离分支淹没；这不表示这些机制差，
@@ -46,7 +47,7 @@ npx tsx src/cli.ts mine prototypes/ice_slide_escape --weight two_dimensional_str
 权重只影响发现排序；不能改变 runtime 规则、solver 结果、hard gates、图穷尽状态
 或候选是否可接受。
 
-负权重也只影响排序，不能当成“不能触发某机制”的 hard ban。若 brief 要求“胜利路径必须用 X 机制，且玩家任意可达尝试都不能触发 Y 机制”，应先用矿工找候选，再对具体 layout 运行：
+负权重也只影响排序，不能当成“不能触发某机制”的 hard ban。若 brief 要求“胜利路径必须用 X 机制，且玩家任意可达尝试都不能触发 Y 机制”，应先写明 X / Y 机制假设和 required / forbidden 目标，再用矿工寻找可能满足该假设的结构素材，并对具体 layout 运行：
 
 ```text
 npx tsx src/cli.ts compare-starts-layout prototypes/ice_slide_escape candidate.txt --player-goal x,y --starts a,b --required-winning-events X --forbidden-reachable-events Y1,Y2 --max-states 12000 --max-depth 100 --graph-max-states 12000
@@ -85,6 +86,17 @@ solve instance，必须分别验证。
 
 普通单关候选评审时，应围绕声明的 `player_start` 和 `player_goal`
 判断玩家面对的主要路线。
+
+接口 pair 术语只用于分类已发现的 pair fact，不要求额外枚举：
+
+```text
+- external_edge_escape：A/B/C/D 起点可解到 A/B/C/D 之外的其它边缘 goal。
+- internal_non_target_pair：起点和 goal 都在 A/B/C/D 内，但不是 target pair。
+- ignored_internal_reverse_pair：C/D->A/B，默认只记录为 verdict_effect: none。
+```
+
+不要为了填表额外枚举 `C/D->A/B`；若工具已经报告 `C->B`，它属于
+ignored internal reverse pair，不属于 external_edge_escape。
 
 在普通候选的 base solve instance 中，额外可达边缘格默认是风险：
 

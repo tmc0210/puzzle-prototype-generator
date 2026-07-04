@@ -6,15 +6,21 @@
 | --- | --- |
 | Roles: lead designer、工具、evidence reviewer、puzzle critic、archive pass | `docs/21-current-workflow-standard.md` `## Roles` |
 | 嵌套 family loop 与 review-modify loop | `docs/21-current-workflow-standard.md` `## Core Loop` |
+| Pre-review design bootstrap：先写设计目标和 fresh design_claim，再用工具找结构 / 验证；归档校准以人类原文评语 / 评分为权威，工作摘要不能替代人类评语 | `docs/21-current-workflow-standard.md` `## Design Studio Loop`; `docs/22-ruleset-to-seeds-and-slots-draft.md` `## Step 3: Miner Use`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md`; prototype `design_handoff.yml` / `design_directives.md` when present; `new_glue_rule`: 人评归档全量定位阈值与回指要求 |
+| Pre-tool design_claim ordering：运行 miner、脚本搜索或确定 layout 前，先写可攻击的 fresh design_claim 和工具问题；miner / script search 只能服务于该 claim | `docs/21-current-workflow-standard.md` `## Design Studio Loop`; `prototypes/ice_slide_escape/docs/meta_interfaces.md` meta redesign 先提出读法假设、再工具验证；`new_glue_rule`: 将该顺序显式扩展到 miner / script search 前 |
 | `designer_action_N` 不能关闭 review loop | `docs/21-current-workflow-standard.md` `## Core Loop`, `## Review Loop` |
 | Candidate packet 最小字段 | `docs/21-current-workflow-standard.md` `## Candidate Packet`; `docs/20-multi-agent-prompt-templates.md` `## Candidate Packet Template` |
 | Diagnostic routing | `docs/21-current-workflow-standard.md` `## Diagnostic Routing` |
 | Evidence reviewer 输出 | `docs/20-multi-agent-prompt-templates.md` `## Evidence Reviewer Template` |
 | Puzzle critic 输出 | `docs/20-multi-agent-prompt-templates.md` `## Puzzle Design Critic Template` |
+| Reviewer / critic invocation contract：有效 artifact 必须由对应 reviewer skill，或 repo-local skill + template 调用产生；自由 prompt 替代无效 | `docs/20-multi-agent-prompt-templates.md` reviewer / critic templates; `docs/21-current-workflow-standard.md` `## Roles`, `## Review Loop`; `new_glue_rule`: 防止 controller 手写自由 reviewer prompt 导致标准漂移 |
 | Designer action 输出 | `docs/20-multi-agent-prompt-templates.md` `## Lead Designer Review-Loop Action Template` |
 | Terminal states | `docs/21-current-workflow-standard.md` `## Terminal States` |
 | Archive pass 权限和 process integrity | `docs/29-design-archive-contract.md` `## Archive Pass 权限`, `## Process Integrity` |
 | 没有 human archive anchors 时禁止分数化审美 / 难度结论 | `docs/20-multi-agent-prompt-templates.md` `## Candidate Packet Template`, `## Puzzle Design Critic Template`; `docs/21-current-workflow-standard.md` `### Archive Taste Context` |
+| 未归档 / 未完成材料默认不能作为正向审美、难度或分数校准 | `new_glue_rule`: 未进入 clean human-reviewed archive 或未经人类明确追认的 round/report/critic-only score 默认按流程失效或未获接收处理 |
+| critic archive anchors 必须包含正例和低分 / 失败 / 下界人评例，critic 可主动读取更多 clean human-reviewed 条目增强攻击性 | `new_glue_rule`: 防止只给正例导致 critic 攻击性不足 |
+| 证据完整性不是 critic merit；`strongest_merits` 只能写玩家侧审美 / 难度 / role-fit 优点 | `docs/21-current-workflow-standard.md` `## Roles`, `## Diagnostic Routing`, `## Review Loop`; `docs/30-scc-graph-diagnostic-reading.md`; `new_glue_rule`: 防止 admission-control 事实被写成设计优点 |
 | SCC / graph 解释链 | `docs/30-scc-graph-diagnostic-reading.md` `## Core Rule` |
 | Prototype-specific workflow 不默认泛化 | `docs/21-current-workflow-standard.md` `### Prototype-Specific Work`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md` `## Prototype-specific Extension Requirement` |
 | 未授权 archive candidate 变体禁令 | `docs/21-current-workflow-standard.md` `### Variant / Family Diagnostic`, `### Archive Taste Context`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md` |
@@ -30,9 +36,11 @@
 - `accepted` 被当作 `review_loop_state`。
 - `post_designer_correction`、`independent`、`human_review_available` 等非枚举值被当作 `review_integrity`。
 - self-review 被写成 independent review。
+- controller 手写自由 reviewer / critic prompt 替代对应 skill / template，并把结果计为 independent reviewer artifact。
 - archive pass 补写缺失 critic。
 - critic 把 graph fact 直接当作质量判决。
 - archive taste context 使用没有人类评语的条目。
+- 未归档 / 未完成材料中的 critic 分数、designer 自评或 tool-only 质量结论被当作正向 taste anchor。
 - critic / designer 在没有 human archive anchors 时输出 `4`、`4+`、`4-`、`low 4`、`meets 4` 或其他分数化结论。
 - evidence reviewer 用 `supports_with_caveats` 保留不被证据支持的 central mechanism / knowledge / exposure claim。
 - prototype-specific workflow 在未声明时被默认执行。

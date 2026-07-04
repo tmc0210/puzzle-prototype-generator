@@ -1,0 +1,546 @@
+mechanic: reality_anchor
+levels:
+  - id: RA_SMOKE_01_PUSH_CHAIN
+    title: Push-side chain push
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      #@CCG.#
+      #######
+    expected_trace:
+      - input: right
+        events: [push_object, force_chain]
+
+  - id: RA_SMOKE_02_PULL_BOX
+    title: Pull-side box pull
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #PL.C+.#
+      ########
+    expected_trace:
+      - input: right
+        events: [pull_object]
+
+  - id: RA_SMOKE_03_PUSH_ANCHOR_BOUNDARY
+    title: Push/pull anchor moves and updates boundary
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #@PLCG.#
+      ########
+    expected_trace:
+      - input: right
+        events: [push_object, force_chain, anchor_boundary_shift]
+
+  - id: RA_SMOKE_04_BOX_TO_STICKY_MERGE
+    title: Box enters sticky world and merges
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      #..BS.#
+      #@C.MG#
+      #######
+    expected_trace:
+      - input: right
+        events: [push_object]
+      - input: right
+        events: [push_object, force_chain, box_to_sticky, sticky_merge]
+
+  - id: RA_SMOKE_05_STICKY_TO_BOX_PARTIAL
+    title: Sticky block partially enters box world
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #..BS..#
+      #..GMM@#
+      ########
+    expected_trace:
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+
+  - id: RA_SMOKE_06_STICKY_BLOCKED
+    title: Sticky block partial obstruction fails
+    role: diagnostic
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      #..BS.#
+      #..@M##
+      #...m.#
+      #######
+    design_notes: >
+      This fixture is initially solved because the target is under the lower sticky cell.
+      Conformance steps right and expects the rigid sticky move to fail.
+
+  - id: RA_SMOKE_07_DUAL_ANCHORS
+    title: Push/pull and box/sticky anchors coexist
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #..BS..#
+      #@PLCG.#
+      ########
+    expected_trace:
+      - input: right
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+
+  - id: RA_SMOKE_08_TARGET_COVER_WIN
+    title: Target covered by object wins
+    role: mechanic_witness
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: []
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable]
+    expected_llm_player_evidence: []
+    layout: |-
+      #####
+      #@CG#
+      #####
+    expected_trace:
+      - input: right
+        events: [push_object]
+
+  - id: RA_EXP_2026_07_04_FIXED_BS_STICKY_HANDLE_v1
+    title: Fixed B/S sticky handle v1
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ####BS###
+      #########
+      #@PLG...#
+      #...C.MG#
+      #########
+    design_notes: >
+      review_1 fixed-anchor transition candidate. B/S is deliberately isolated in a wall
+      chamber so players can focus on moving P/L while still observing the fixed material
+      boundary. The crate must first be brought across the fixed B/S split to become sticky,
+      merge with the waiting sticky cell, and then move as a sticky rigid body; simply
+      changing material without using the changed movement would not solve the level.
+      The all-solution probe for the submitted candidate found no win that avoids the
+      movable P/L shift, box_to_sticky, sticky_merge, and sticky rigid movement events.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: right
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_FIXED_PL_VERTICAL_PAIR_v2
+    title: Fixed P/L vertical pair v2
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      ####PL#####
+      ###########
+      ###BS@....#
+      ######.####
+      #...C..G..#
+      #....M.G..#
+      #.........#
+      ###########
+    design_notes: >
+      review_1 fixed-anchor transition candidate. P/L is isolated in a wall chamber while
+      B/S remains movable, making this a midpoint lesson before both anchors must be
+      repositioned together. The narrow shaft lets the player pull B/S to alter the lower
+      material boundary without letting the anchor itself cover the vertical targets. The
+      intended route depends on the lower object changing material, merging, and then being
+      pulled as a sticky rigid body; the submitted all-solution probe found no win that
+      avoids B/S anchor movement, box_to_sticky, sticky_merge, and sticky rigid movement.
+    expected_trace:
+      - input: right
+        events: [pull_object, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: down
+      - input: left
+      - input: right
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_DUAL_AXIS_LOCK_v3
+    title: Dual-axis anchor lock v3
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #.##MG.###
+      #.....P###
+      #@CBSMLG##
+      ###..M..##
+      #####G####
+      ##########
+    design_notes: >
+      review_4 提交候选。P/L 为竖直锚点，B/S 为水平锚点。上目标左侧被墙封住，
+      玩家侧读法是通过 B/S 材料边界制造一个下方黏性把手。返回解中箱子转黏后触发
+      sticky_merge，并推动合并黏块覆盖上目标。完整事件组探针证明所有胜利路径都包含
+      两类 anchor shift、pull、material normalization、sticky_merge 和 sticky rigid
+      movement；不声明唯一路线、具体对象实例或逐目标对象身份在所有胜路中必经。
+    expected_trace:
+      - input: up
+      - input: right
+      - input: right
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object]
+      - input: up
+        events: [pull_object, force_chain, anchor_boundary_shift]
+      - input: right
+      - input: up
+      - input: right
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: down
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: left
+      - input: up
+      - input: right
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_DUAL_LOCKSTEP_v2
+    title: Dual lockstep v2
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      ###.PL.####
+      ##@BSGG####
+      ###.MM...G#
+      ###.M..M.##
+      ###########
+    design_notes: >
+      review_2 提交候选。水平 P/L 与水平 B/S 形成横向 lockstep：B/S 先制造箱/黏
+      材料债务，中段 box_to_sticky + sticky_merge 成为全胜路必要事件，随后 B/S
+      逐格右移把合并材料转成右侧收束链；pull crate 与最终 pull P/L 完成目标覆盖。
+      完整事件组探针证明所有胜路都包含两类 anchor shift、pull、material
+      normalization、sticky_merge 与 sticky rigid movement；不声明唯一路线或对象身份必要性。
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: right
+        events: [push_object, force_chain, move_sticky_rigid, box_to_sticky, sticky_merge]
+      - input: left
+      - input: up
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid, sticky_merge]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+        events: [pull_object]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, force_chain, anchor_boundary_shift]
+      - input: up
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+
+  - id: RA_EXP_2026_07_04_PHASE_FERRY_v8
+    title: Phase ferry v8
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #..#..G#
+      ##GMLP.#
+      #.BS.M.#
+      ##..@.##
+      ########
+    design_notes: >
+      review_2 提交候选。紧凑双锚 two-stage phase shuttle：P/L 与 B/S 均为水平锚点，
+      左目标需要先 sticky_merge 再 sticky_to_box 转箱覆盖，右上目标需要中段
+      pull/推移两个锚点后把 sticky 刚体送达。v8 将 v6 的底部 movable ballast C
+      改为诚实墙约束，并将 claim 降级为双阶段相位 shuttle，不声明同一对象身份链。
+      完整事件组探针证明所有胜路都包含两类 anchor shift、pull、material
+      normalization、sticky_merge 与 sticky rigid movement；不声明唯一路线或对象身份必要性。
+    expected_trace:
+      - input: right
+      - input: up
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: right
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+      - input: up
+      - input: up
+      - input: left
+      - input: down
+        events: [push_object, force_chain, anchor_boundary_shift]
+      - input: left
+      - input: right
+        events: [pull_object, box_to_sticky]
+      - input: right
+      - input: down
+      - input: left
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: down
+      - input: right
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_EXP_2026_07_04_SOFT_HANDOFF_v2
+    title: Soft handoff v2
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      #...G.@.#
+      #C.GLP.##
+      #BS#.#..#
+      #########
+    design_notes: >
+      review_1 提交候选。较低难度的双锚 soft handoff：B/S 先被拉上来，带动左侧
+      crate 跨过材料边界转成 sticky，并通过短横向拉动覆盖上目标；P/L 最后作为
+      下目标覆盖锚收束。完整事件组探针证明所有胜路都包含 P/L anchor shift、
+      B/S anchor shift、pull、material normalization 与 sticky rigid movement。
+      不声明唯一解、对象实例级必要性或 sticky_merge。
+    expected_trace:
+      - input: left
+      - input: left
+      - input: left
+      - input: left
+      - input: down
+      - input: up
+        events: [pull_object, force_chain, anchor_boundary_shift]
+      - input: right
+        events: [pull_object, box_to_sticky]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+      - input: down
+      - input: left
+        events: [push_object, anchor_boundary_shift]
+
+  - id: RA_EXP_2026_07_04_SOFT_HANDOFF_v3
+    title: Soft handoff v3
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ####C@..#
+      ###G.G..#
+      ####PL.M#
+      ####..BS#
+      #########
+    design_notes: >
+      review_2 提交候选。v3 是对 v2 critic 的结构修订：缩短纯走位，并让 P/L
+      在前段、中段和末段都改变局面，而不是只作最终按钮。玩家先拉 P/L 建立
+      上排 crate 的 pull 通道；随后拉动 crate 与 M 形成材料债务；中段再拉
+      P/L、拉 B/S，触发 box_to_sticky、sticky_merge 和 sticky rigid move；
+      末段 P/L 与 sticky 刚体共同覆盖目标。完整事件组探针证明所有胜路都包含
+      P/L anchor shift、B/S anchor shift、pull、material normalization 与
+      sticky_merge/sticky rigid movement；不声明唯一输入序列或对象实例级必要性。
+    expected_trace:
+      - input: down
+      - input: up
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object]
+      - input: right
+        events: [pull_object]
+      - input: down
+      - input: left
+      - input: down
+        events: [pull_object]
+      - input: left
+        events: [pull_object, move_sticky_rigid, sticky_to_box]
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: left
+        events: [pull_object, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+      - input: left
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid, sticky_to_box]
+
+  - id: RA_EXP_2026_07_04_COMPACT_CHAIN_v1
+    title: Compact chain v1
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #G.#MPL..#
+      #.@BSG.M.#
+      #..C.....#
+      ##########
+    design_notes: >
+      review_2 提交候选。较低负担的紧凑双锚材料链：B/S 承担主要材料整理和左上
+      目标覆盖读法，返回解中 crate 跨 B/S 边界转 sticky，随后 sticky 刚体移动、
+      B/S 位移和 sticky_merge 形成短链；P/L 作为较轻但不可绕过的 pull 收束锚，
+      在返回解末段下移覆盖中线目标。完整事件组探针证明所有胜路都包含 P/L
+      anchor shift、B/S anchor shift、pull、material normalization、sticky_merge
+      与 sticky rigid movement；不声明唯一路线、对象实例级必要性、逐目标覆盖身份、
+      所有胜路固定顺序或分数化审美/难度结论。
+    expected_trace:
+      - input: down
+      - input: right
+        events: [push_object, box_to_sticky]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: up
+      - input: left
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: left
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: right
+      - input: right
+      - input: right
+      - input: right
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: up
+      - input: down
+        events: [pull_object, anchor_boundary_shift]

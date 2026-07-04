@@ -2,6 +2,7 @@ import type { LevelDoc, PrototypePackage } from "../core/types.js";
 import { analyzeLevel, type LevelAnalysis } from "./levelAnalyzer.js";
 import { runGenericSampler } from "./genericSampler.js";
 import { iceSlideSamplerProfile } from "../prototypes/ice_slide_escape/samplerProfile.js";
+import { realityAnchorSamplerProfile } from "../prototypes/reality_anchor/samplerProfile.js";
 import { unavailableToolMessage } from "./toolMaturity.js";
 
 type Rng = () => number;
@@ -162,6 +163,10 @@ const defaultOptions: NormalizedMineOptions = {
 export function mineSeeds(pkg: PrototypePackage, options: MineOptions = {}): MinerReport {
   if (pkg.mechanic.id === "ice_slide_escape") {
     return runGenericSampler(pkg, iceSlideSamplerProfile, options);
+  }
+
+  if (pkg.mechanic.id === "reality_anchor") {
+    return runGenericSampler(pkg, realityAnchorSamplerProfile, options);
   }
 
   if (pkg.mechanic.id !== "pull_portal_fallback") {

@@ -8,7 +8,7 @@ import type {
 } from "../core/types.js";
 import { eventsMatchPattern } from "../core/events.js";
 import { getRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
-import type { GameState, StepResult } from "../prototypes/pull_portal_fallback/mechanics.js";
+import type { AdapterStepResult } from "../prototypes/runtimeAdapter.js";
 
 declare const __BUILD_ID__: string | undefined;
 
@@ -24,14 +24,21 @@ type PlayableData = {
   };
 };
 
+type PlayableBoardState = {
+  width: number;
+  height: number;
+};
+
+type PlayableStepResult = AdapterStepResult<PlayableBoardState, InputId>;
+
 type PlayState = {
   data: PlayableData;
   level: LevelDoc;
-  initial: GameState;
-  current: GameState;
-  history: GameState[];
+  initial: PlayableBoardState;
+  current: PlayableBoardState;
+  history: PlayableBoardState[];
   events: string[];
-  lastResult?: StepResult;
+  lastResult?: PlayableStepResult;
   won: boolean;
 };
 
@@ -95,7 +102,7 @@ function play(input: InputId): void {
     return;
   }
 
-  const result = runtimeAdapter.step(data.mechanic, state.current, input, {});
+  const result = runtimeAdapter.step(data.mechanic, state.current, input, {}) as PlayableStepResult;
   const nextEvents = [...state.events, ...result.events];
 
   if (result.legal) {
@@ -277,7 +284,7 @@ function renderTargetEvents(): string {
     .join("");
 }
 
-function renderBoard(boardState: GameState): string {
+function renderBoard(boardState: PlayableBoardState): string {
   const rows = renderStateRows(boardState);
   const cells: string[] = [];
   for (let y = 0; y < boardState.height; y += 1) {
@@ -290,45 +297,103 @@ function renderBoard(boardState: GameState): string {
   return `<div class="board" style="grid-template-columns: repeat(${boardState.width}, minmax(0, 1fr));">${cells.join("")}</div>`;
 }
 
-function renderStateRows(boardState: GameState): string[] {
+function renderStateRows(boardState: PlayableBoardState): string[] {
   return runtimeAdapter.renderState(boardState)
     .split("\n")
     .map((row) => row.padEnd(boardState.width, " "));
 }
 
-function renderLayoutText(boardState: GameState): string {
+function renderLayoutText(boardState: PlayableBoardState): string {
   return renderStateRows(boardState)
     .map((row) => row.replaceAll(" ", "."))
     .join("\n");
 }
 
 function renderTile(glyph: string, x: number, y: number): string {
-  const className = tileClass(glyph);
-  const label = glyph === " " ? "" : glyph;
+  const className = tileClasses(glyph).join(" ");
+  const label = tileLabel(glyph);
   return `<div class="tile ${className}" data-x="${x}" data-y="${y}">${escapeHtml(label)}</div>`;
 }
 
-function tileClass(glyph: string): string {
+function tileClasses(glyph: string): string[] {
+  if (data.mechanic.id === "reality_anchor") {
+    return realityAnchorTileClasses(glyph);
+  }
+  return defaultTileClasses(glyph);
+}
+
+function realityAnchorTileClasses(glyph: string): string[] {
   switch (glyph) {
     case "#":
-      return "wall";
+      return ["wall"];
     case "G":
-      return "goal";
+      return ["goal"];
+    case "+":
+      return ["goal", "player"];
+    case "*":
+      return ["goal", "crate"];
+    case "m":
+      return ["goal", "sticky"];
     case "C":
-      return "crate";
+      return ["crate"];
+    case "M":
+      return ["sticky"];
     case "@":
-      return "player";
+      return ["player"];
+    case "P":
+      return ["push-anchor"];
+    case "L":
+      return ["pull-anchor"];
+    case "B":
+      return ["box-anchor"];
+    case "S":
+      return ["sticky-anchor"];
+    default:
+      return [];
+  }
+}
+
+function defaultTileClasses(glyph: string): string[] {
+  switch (glyph) {
+    case "#":
+      return ["wall"];
+    case "G":
+      return ["goal"];
+    case "+":
+      return ["goal", "player"];
+    case "*":
+      return ["goal", "crate"];
+    case "C":
+      return ["crate"];
+    case "@":
+      return ["player"];
     case "A":
     case "D":
     case "H":
-      return "portalA";
+      return ["portalA"];
     case "B":
     case "E":
     case "I":
-      return "portalB";
+      return ["portalB"];
     default:
-      return "";
+      return [];
   }
+}
+
+function tileLabel(glyph: string): string {
+  if (glyph === " ") {
+    return "";
+  }
+  if (glyph === "+") {
+    return "@";
+  }
+  if (glyph === "*") {
+    return "C";
+  }
+  if (glyph === "m") {
+    return "M";
+  }
+  return glyph;
 }
 
 function statusText(): string {
