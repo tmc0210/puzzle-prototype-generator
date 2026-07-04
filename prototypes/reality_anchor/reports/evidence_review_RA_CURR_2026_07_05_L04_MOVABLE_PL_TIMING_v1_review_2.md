@@ -12,8 +12,8 @@ supported_claims:
   - "reachable_scan 状态 complete，forbidden_material_hits=none；对 review_2 范围内无关材料事件外溢没有新增反证。"
 unsupported_or_overclaimed:
   - "在 review_2 packet 的限定 claim 下，未发现仍需要补证或修订的 central unsupported overclaim；review_1 针对 crate#1 pull/push 必经性的证据缺口已被新增 probe 补齐。"
-  - " caveat：新增 probe 证明的是事件组在所有胜路中的存在性，不证明所有胜路都严格保持 crate_pull -> anchor_shift -> crate_push 的完整全序，也不证明每条胜路有 exactly two crate pulls、exactly three P/L pushes、exactly two crate pushes。packet 已明确不声明这些更强内容；若后续重新引入，则仍属 unsupported overclaim。"
-  - " caveat：order_scan 只排除了 anchor shift 早于任何 crate event 的胜路；它没有单独证明第一次 crate event 必为 pull_object:crate#1，也没有证明 anchor shift 前必须完成返回解中的两次 crate pull。当前 packet 将该链条限定为 intended/shortest witness，因此不构成 required_action。"
+  - "caveat：新增 probe 证明的是事件组在所有胜路中的存在性，不证明所有胜路都严格保持 crate_pull -> anchor_shift -> crate_push 的完整全序，也不证明每条胜路有 exactly two crate pulls、exactly three P/L pushes、exactly two crate pushes。packet 已明确不声明这些更强内容；若后续重新引入，则仍属 unsupported overclaim。"
+  - "caveat：order_scan 只排除了 anchor shift 早于任何 crate event 的胜路；它没有单独证明第一次 crate event 必为 pull_object:crate#1，也没有证明 anchor shift 前必须完成返回解中的两次 crate pull。当前 packet 将该链条限定为 intended/shortest witness，因此不构成 required_action。"
 evidence_limits:
   - "本审查只判断 review_2 新增 object-specific event probe 是否解决 review_1 的证据分歧，不评价美感、难度、campaign placement，也不独自授予 archive/accepted。"
   - "本审查未运行新搜索；只使用 candidate packet 与 listed evidence refs，包括 instance_core event probe、review_1 evidence、core event probe、order_scan、reachable_scan 和 layout_analysis。"
