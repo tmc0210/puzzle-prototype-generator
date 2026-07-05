@@ -104,6 +104,38 @@ experiments:
       - material_normalization
       - sticky_merge
       - sticky_rigid_move
+  - experiment_id: RA_EXP_2026_07_05_soft_handoff_no_merge_variant
+    file: experiments/RA_EXP_2026_07_05_soft_handoff_no_merge_variant.md
+    status: archived_negative_example
+    selected_rule_facts:
+      - dual_anchor
+      - push_pull_anchor
+      - box_sticky_anchor
+      - material_normalization
+      - sticky_rigid_move
+  - experiment_id: RA_CURR_2026_07_05_intro_curriculum
+    file: experiments/RA_CURR_2026_07_05_intro_curriculum.md
+    status: accepted_partial
+    selected_rule_facts:
+      - intro_push
+      - crate_goal_witness
+  - experiment_id: RA_CURR_2026_07_05_push_pull_curriculum
+    file: experiments/RA_CURR_2026_07_05_push_pull_curriculum.md
+    status: accepted_partial
+    selected_rule_facts:
+      - push_pull_anchor
+      - fixed_anchor
+      - movable_anchor
+      - anchor_timing
+  - experiment_id: RA_CURR_2026_07_05_box_sticky_curriculum
+    file: experiments/RA_CURR_2026_07_05_box_sticky_curriculum.md
+    status: accepted_partial
+    selected_rule_facts:
+      - box_sticky_anchor
+      - fixed_anchor
+      - sticky_merge
+      - sticky_rigid_move
+      - material_normalization
 candidates:
   - candidate_id: RA_CAND_0001
     file: candidates/RA_CAND_0001.md
@@ -331,3 +363,332 @@ candidates:
       事件组必要性，但不声明唯一路线或对象实例级必要性。
     human_comment_ids:
       - HP_RA_EXP_2026_07_04_DUAL_LOCKSTEP_v4_001
+  - candidate_id: RA_CAND_0006
+    file: candidates/RA_CAND_0006.md
+    experiment_id: RA_EXP_2026_07_05_soft_handoff_no_merge_variant
+    source_candidate_version: RA_EXP_2026_07_05_SOFT_HANDOFF_NO_MERGE_LOCK_v1
+    status: rejected_candidate
+    llm_candidate_strength: raw_variant_inspection
+    human_final_status: archived_negative_example
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 2
+    aesthetic_label: 功能库存
+    difficulty_score: 5
+    difficulty_label: 高难终局
+    allowed_exposure_through: null
+    motifs:
+      - dual_anchor
+      - push_pull_anchor
+      - box_sticky_anchor
+      - material_normalization
+      - sticky_rigid_move
+    archive_use:
+      - negative_example
+      - human_taste_reference
+      - critic_calibration
+    failure_modes:
+      - goal_position_hardening
+      - mechanism_beauty_weakened
+      - difficulty_inflation_by_route_length
+      - archive_variant_negative
+    search_ledger_status: variant_record_present
+    review_integrity: human_review
+    review_loop_state: rejected_candidate
+    retrieval_summary: >
+      人类要求归档的 Reality Anchor 负向样本，审美 2、难度 5。它是
+      RA_CAND_0002 的高复杂度目标位置变体，工具证据仍支持双锚、pull、材料转换和
+      sticky rigid movement 必经；但人类明确指出小目标改动削弱机制美感，并通过
+      较差的腾挪复杂度增难。仅作 negative example / critic calibration，不得作为
+      positive reference。
+    human_comment_ids:
+      - HP_RA_EXP_2026_07_05_SOFT_HANDOFF_NO_MERGE_LOCK_v1_001
+  - candidate_id: RA_CAND_0007
+    file: candidates/RA_CAND_0007.md
+    experiment_id: RA_CURR_2026_07_05_intro_curriculum
+    source_candidate_version: RA_CURR_2026_07_05_L01_INTRO_PUSH_v1
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 2
+    aesthetic_label: 功能库存
+    difficulty_score: 1
+    difficulty_label: 教学见证
+    allowed_exposure_through: null
+    motifs:
+      - intro_push
+      - crate_goal_witness
+    archive_use:
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths: []
+    failure_modes: []
+    search_ledger_status: not_applicable
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 Reality Anchor 第一关 intro witness，审美 2、难度 1。它只教
+      走路、推箱和箱子覆盖目标胜利，没有任何锚点或材料事件。用户评价为
+      “最基本的无锚点教学关”。适合作为功能库存/课程起点校准，不应作为审美正例
+      或挑战关参考。
+    human_comment_ids:
+      - HP_RA_CURR_2026_07_05_L01_INTRO_PUSH_v1_001
+  - candidate_id: RA_CAND_0008
+    file: candidates/RA_CAND_0008.md
+    experiment_id: RA_CURR_2026_07_05_push_pull_curriculum
+    source_candidate_version: RA_CURR_2026_07_05_L02_FIXED_PL_PUSH_PULL_v2
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 2
+    aesthetic_label: 功能库存
+    difficulty_score: 1
+    difficulty_label: 教学见证
+    allowed_exposure_through: null
+    motifs:
+      - push_pull_anchor
+      - fixed_anchor
+      - push_pull_intro
+      - crate_goal_witness
+    archive_use:
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths: []
+    failure_modes: []
+    search_ledger_status: not_applicable
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 Reality Anchor 第二关固定 P/L 引入 witness，审美 2、难度 1。
+      上方一次 push、下方两次连续 pull，用低噪声结构教 push/pull side 差异。
+      适合作为功能性课程校准和早期教学下界，不应作为高审美挑战或复杂谜题范例。
+    human_comment_ids:
+      - HP_RA_CURR_2026_07_05_L02_FIXED_PL_PUSH_PULL_v2_001
+  - candidate_id: RA_CAND_0009
+    file: candidates/RA_CAND_0009.md
+    experiment_id: RA_CURR_2026_07_05_push_pull_curriculum
+    source_candidate_version: RA_CURR_2026_07_05_L03_FIXED_PL_HANDOFF_v2
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 2
+    aesthetic_label: 功能库存
+    difficulty_score: 2
+    difficulty_label: 简单练习
+    allowed_exposure_through: null
+    motifs:
+      - push_pull_anchor
+      - fixed_anchor
+      - same_crate_handoff
+      - crate_goal_witness
+    archive_use:
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths: []
+    failure_modes: []
+    search_ledger_status: not_applicable
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 Reality Anchor 第三关固定 P/L 应用 witness，审美 2、难度 2。
+      同一箱子先右推两次、再下拉两次，强调同一对象跨 push/pull side 的操作关系。
+      适合作为简单练习与课程过渡校准，不要包装为高审美或高难结构。归档后按
+      二次人评补一格左下墙，缩短开局 down-right-down 死路，不改变主解身份。
+    human_comment_ids:
+      - HP_RA_CURR_2026_07_05_L03_FIXED_PL_HANDOFF_v2_001
+      - HP_RA_CURR_2026_07_05_L03_FIXED_PL_HANDOFF_v2_002
+  - candidate_id: RA_CAND_0010
+    file: candidates/RA_CAND_0010.md
+    experiment_id: RA_CURR_2026_07_05_push_pull_curriculum
+    source_candidate_version: RA_CURR_2026_07_05_L04_MOVABLE_PL_TIMING_v1
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 3
+    aesthetic_label: 可用下界
+    difficulty_score: 2
+    difficulty_label: 简单练习
+    allowed_exposure_through: null
+    motifs:
+      - push_pull_anchor
+      - movable_anchor
+      - anchor_timing
+      - crate_pull_push
+    archive_use:
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - compact_causal_chain
+    failure_modes:
+      - repeated_anchor_sweep
+    search_ledger_status: not_applicable
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 Reality Anchor 第四关可移动 P/L timing witness，审美 3、难度 2。
+      结构简单，逻辑清晰：先拉同一箱子预处理，再推动 P/L 改边界，最后推箱收束。
+      它是可用下界/早期应用校准，亮点在时机清楚，不在复杂空间或高难搜索。
+    human_comment_ids:
+      - HP_RA_CURR_2026_07_05_L04_MOVABLE_PL_TIMING_v1_001
+  - candidate_id: RA_CAND_0011
+    file: candidates/RA_CAND_0011.md
+    experiment_id: RA_CURR_2026_07_05_push_pull_curriculum
+    source_candidate_version: RA_CURR_2026_07_05_L06_MULTI_AXIS_PL_v2
+    status: accepted
+    llm_candidate_strength: proposal_ready
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 4
+    aesthetic_label: 亮点候选
+    difficulty_score: 4
+    difficulty_label: 阶段挑战
+    allowed_exposure_through: null
+    motifs:
+      - push_pull_anchor
+      - fixed_anchor
+      - multi_axis_anchor
+      - crate_recovery
+      - temporary_goal_vacate
+    archive_use:
+      - positive_reference
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - compact_causal_chain
+      - clear_player_facing_conflict
+      - strongly_coupled_elements
+    failure_modes: []
+    search_ledger_status: not_applicable
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 Reality Anchor 第六关固定 P/L 多方向应用，审美 4、难度 4。
+      普通箱先覆盖目标、再被拉出重开通路、最后回填，P/L 下拉/右拉/右推与
+      撤销/恢复矛盾耦合在同一小空间内。适合作为紧凑强逻辑 P/L 应用正例。
+    human_comment_ids:
+      - HP_RA_CURR_2026_07_05_L06_MULTI_AXIS_PL_v2_001
+  - candidate_id: RA_CAND_0012
+    file: candidates/RA_CAND_0012.md
+    experiment_id: RA_CURR_2026_07_05_box_sticky_curriculum
+    source_candidate_version: RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 2
+    aesthetic_label: 功能库存
+    difficulty_score: 1
+    difficulty_label: 教学见证
+    allowed_exposure_through: null
+    motifs:
+      - box_sticky_anchor
+      - fixed_anchor
+      - sticky_merge
+      - sticky_rigid_move
+      - sticky_join_intro
+    archive_use:
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - compact_causal_chain
+    failure_modes:
+      - tiny_forced_witness
+    search_ledger_status: not_applicable
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 Reality Anchor 第七关固定 B/S sticky join witness，审美 2、难度 1。
+      两个黏块先拼接再作为刚体移动，目标由拼接后的下方黏块覆盖。适合作为
+      早期功能教学库存，不应包装成高难或高密度谜题。
+    human_comment_ids:
+      - HP_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_001
+  - candidate_id: RA_CAND_0013
+    file: candidates/RA_CAND_0013.md
+    experiment_id: RA_CURR_2026_07_05_box_sticky_curriculum
+    source_candidate_version: RA_CURR_2026_07_05_L09_FIXED_BS_CUT_v1
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 2
+    aesthetic_label: 功能库存
+    difficulty_score: 1
+    difficulty_label: 教学见证
+    allowed_exposure_through: null
+    motifs:
+      - box_sticky_anchor
+      - fixed_anchor
+      - material_normalization
+      - sticky_to_box_cut
+      - crate_goal_witness
+    archive_use:
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - compact_causal_chain
+    failure_modes:
+      - tiny_forced_witness
+    search_ledger_status: not_applicable
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 Reality Anchor 第九关固定 B/S sticky cut witness，审美 2、难度 1。
+      竖向黏块跨边界后上格变箱，切出的箱子被单独推上目标。适合作为简单
+      切割教学和机制库存校准，不应包装成高难或精密终局。
+    human_comment_ids:
+      - HP_RA_CURR_2026_07_05_L09_FIXED_BS_CUT_v1_001
+  - candidate_id: RA_CAND_0014
+    file: candidates/RA_CAND_0014.md
+    experiment_id: RA_CURR_2026_07_05_box_sticky_curriculum
+    source_candidate_version: RA_CURR_2026_07_05_L08_FIXED_BS_JOIN_v3
+    status: accepted
+    llm_candidate_strength: proposal_ready_with_caveats
+    human_final_status: accepted
+    archive_eligibility: clean_archive
+    human_reviewed: true
+    aesthetic_score: 2
+    aesthetic_label: 功能库存
+    difficulty_score: 1
+    difficulty_label: 教学见证
+    allowed_exposure_through: null
+    motifs:
+      - box_sticky_anchor
+      - fixed_anchor
+      - box_to_sticky
+      - sticky_merge
+      - sticky_rigid_move
+    archive_use:
+      - human_taste_reference
+      - critic_calibration
+      - designer_calibration
+    strengths:
+      - compact_causal_chain
+    failure_modes:
+      - tiny_forced_witness
+    search_ledger_status: not_applicable
+    review_integrity: human_review
+    review_loop_state: accepted
+    retrieval_summary: >
+      人类接受的 Reality Anchor 第八关固定 B/S joining witness，审美 2、难度 1。
+      普通箱跨过固定 B/S 后转为 sticky，并与下方 sticky 拼接，随后合并刚体
+      覆盖目标。适合作为“黏箱用于拼接”的短教学库存和 fixed B/S 转化下界校准。
+    human_comment_ids:
+      - HP_RA_CURR_2026_07_05_L08_FIXED_BS_JOIN_v3_001

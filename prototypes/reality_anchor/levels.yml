@@ -3,7 +3,7 @@ levels:
   - id: RA_CURR_2026_07_05_L01_INTRO_PUSH_v1
     title: Intro push v1
     role: mechanic_witness
-    status: candidate
+    status: accepted
     targets: [K_runtime_smoke]
     known_before: []
     target_learning: [K_runtime_smoke]
@@ -21,7 +21,9 @@ levels:
       win path requires push_object. Independent evidence reviewer returned
       supports_claim / required_action:none; independent puzzle critic returned
       proposal_ready_with_caveats / required_action:none for first-slot role fit.
-      Caveat: this is only an intro witness, not a depth-bearing puzzle.
+      Caveat: this is only an intro witness, not a depth-bearing puzzle. 2026-07-04
+      human playtest accepted it as RA_CAND_0007, aesthetic 2 / difficulty 1:
+      the most basic no-anchor teaching level.
     expected_trace:
       - input: right
         events: [walk]
@@ -31,7 +33,7 @@ levels:
   - id: RA_CURR_2026_07_05_L02_FIXED_PL_PUSH_PULL_v1
     title: Fixed P/L push-pull v1
     role: mechanic_witness
-    status: candidate
+    status: rejected
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -56,7 +58,9 @@ levels:
       independent puzzle critic returned proposal_ready_with_caveats /
       required_action:none. Caveat: this is a two-witness teaching level, not a
       depth-bearing puzzle; the lower crate has non-winning push affordances, but
-      every win still requires pull.
+      every win still requires pull. 2026-07-04 human playtest rejected the lower
+      affordance shape for this slot: players can first try pushing from the left
+      and receive no feedback before learning pull. Superseded by v2.
     expected_trace:
       - input: right
         events: [push_object]
@@ -67,10 +71,53 @@ levels:
       - input: right
         events: [pull_object]
 
+  - id: RA_CURR_2026_07_05_L02_FIXED_PL_PUSH_PULL_v2
+    title: Fixed P/L push-pull v2
+    role: mechanic_witness
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #@CG####
+      #...#P##
+      ###.#L##
+      #C.G.###
+      ########
+    design_notes: >
+      Human-feedback revision of L02 v1. The upper push witness is unchanged. The
+      lower crate is moved one cell left, and the cells above / upper-right of it
+      are sealed so the player is guided to stand on the right and learn pull-side
+      movement directly. The returned solution uses one upper push followed by two
+      consecutive rightward pulls on the lower crate. Complete graph analysis is
+      51 states; push/pull required probe is complete with no missing-event bypass;
+      pull-count probe is complete with no win below two pull events. Reachable scan
+      reports no P/L shift or material events. Independent review_2 evidence
+      reviewer and puzzle critic both returned proposal_ready_with_caveats /
+      required_action:none. Caveat: this is a low-depth teaching witness, not a
+      challenge puzzle. 2026-07-04 human playtest accepted it as RA_CAND_0008,
+      aesthetic 2 / difficulty 1: simple push/pull anchor introduction.
+    expected_trace:
+      - input: right
+        events: [push_object]
+      - input: down
+      - input: right
+      - input: down
+      - input: down
+      - input: left
+      - input: right
+        events: [pull_object]
+      - input: right
+        events: [pull_object]
+
   - id: RA_CURR_2026_07_05_L03_FIXED_PL_HANDOFF_v1
     title: Fixed P/L handoff v1
     role: mechanic_witness
-    status: candidate
+    status: rejected
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -95,7 +142,9 @@ levels:
       independent puzzle critic returned proposal_ready_with_caveats /
       required_action:none. Caveat: intentionally short early application witness,
       not a challenge-depth puzzle; wall-pocketed P/L is functional rather than
-      aesthetic centerpiece.
+      aesthetic centerpiece. 2026-07-04 human playtest found two effective moves
+      too small and asked for a slightly larger same-crate push/pull familiarization
+      exercise. Superseded by v2.
     expected_trace:
       - input: right
         events: [push_object]
@@ -103,6 +152,1162 @@ levels:
       - input: right
       - input: down
         events: [pull_object]
+
+  - id: RA_CURR_2026_07_05_L03_FIXED_PL_HANDOFF_v2
+    title: Fixed P/L handoff v2
+    role: mechanic_witness
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      #########
+      #@C..#P##
+      #....#L##
+      #.##G####
+      #....####
+      #########
+    design_notes: >
+      Human-feedback revision of L03 v1. The same crate is pushed right twice on
+      the push side, then pulled down twice on the pull side to cover the target.
+      A wall left of the target blocks the earlier one-pull-then-return-to-push
+      bypass found by the count probe. Complete graph analysis is 130 states; the
+      returned solution is 6 steps with two push_object and two pull_object events.
+      Push/pull required probe, push-count probe, and pull-count probe are all
+      complete with no missing-event or below-count winning bypass. Reachable scan
+      reports no P/L shift or material events. Independent review_2 evidence
+      reviewer and puzzle critic both returned proposal_ready_with_caveats /
+      required_action:none before the micro wall tweak. Post-tweak review_3 evidence
+      reviewer returned supports_with_caveats / required_action:none; puzzle critic
+      returned supports_design_claim / required_action:none. Caveat: this remains
+      early operation familiarization,
+      not a challenge-depth puzzle. 2026-07-04 human playtest first accepted it as
+      RA_CAND_0009, aesthetic 2 / difficulty 2: simple push/pull application; a
+      follow-up human note flagged the opening down-right-down lower-left dead end
+      as too long for slot 3, so one lower-left cell was walled off without changing
+      the 6-step push/pull handoff solution.
+    expected_trace:
+      - input: right
+        events: [push_object]
+      - input: right
+        events: [push_object]
+      - input: down
+      - input: right
+      - input: down
+        events: [pull_object]
+      - input: down
+        events: [pull_object]
+
+  - id: RA_CURR_2026_07_05_L04_MOVABLE_PL_TIMING_v1
+    title: Movable P/L timing v1
+    role: challenge
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      #..PL...#
+      #.G..@C.#
+      #########
+    design_notes: >
+      Curriculum slot 4 movable P/L timing candidate. The shortest witness first
+      pulls the only crate left, then pushes the movable P/L anchor three cells to
+      shift the push/pull boundary, then pushes the same crate onto the target.
+      Complete graph analysis reports a 10-step shortest solution over 124 states.
+      An order scan reports no winning path with anchor shift before any crate
+      event, so the anchor movement is not an opening move. Instance-level event
+      probes prove all wins require pull_object:crate#1, push_object:crate#1, and
+      anchor_boundary_shift:push_pull. Reachable scan reports no material events.
+      Independent evidence review_2 returned supports_with_caveats /
+      required_action:none; independent puzzle critic returned
+      proposal_ready_with_caveats / required_action:none. Caveat: the evidence
+      proves required event existence, not a unique route or exact event counts;
+      the anchor movement is a repeated three-step boundary sweep. 2026-07-04
+      human playtest accepted it as RA_CAND_0010, aesthetic 3 / difficulty 2:
+      simple structure with clear logic.
+    expected_trace:
+      - input: left
+        events: [pull_object]
+      - input: left
+        events: [pull_object]
+      - input: left
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: left
+        events: [push_object]
+      - input: left
+        events: [push_object]
+
+  - id: RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v1
+    title: Long-edge P/L relay v1
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #PL@G#####
+      #........#
+      #.CG#.CG.#
+      ##########
+    design_notes: >
+      Curriculum slot 5 P/L long-edge relay candidate. The shortest witness first
+      pulls the horizontal P/L anchor right from its L side, then loops to its P
+      side and pushes the same anchor right again so the anchor covers the upper
+      target. The lower row then requires ordinary crate push on the left target
+      and ordinary crate pull on the right target. Complete analysis reports a
+      19-step shortest solution over 243 reachable states. Instance-level event
+      probe proves every win requires pull_object:push_pull_anchor,
+      push_object:push_pull_anchor, push_object:crate#1, and pull_object:crate#2.
+      Direction-aware probe further proves every win requires the anchor pull and
+      anchor push to move the P/L anchor horizontally right, i.e. along the long
+      edge in the same direction. Goal-prune counterfactuals keep all three
+      targets: deleting the top target bypasses the P/L pull/push, deleting the
+      left lower target bypasses crate push, and deleting the right lower target
+      bypasses crate pull. Independent evidence reviewer returned
+      supports_with_caveats / required_action:none; independent puzzle critic
+      returned proposal_ready_with_caveats / required_action:none. Caveat:
+      vertical P/L movement is reachable in non-winning exploration, so this
+      candidate should be described as requiring horizontal same-direction
+      long-edge P/L pull and push in winning paths, not as fully forbidding
+      vertical P/L interactions. 2026-07-04 human playtest rejected this version
+      for weak causal coupling: the top P/L task, left push, and right pull read
+      as a stitched checklist, especially the right pull. Superseded by v2.
+    expected_trace:
+      - input: right
+        events: [pull_object, anchor_boundary_shift]
+      - input: down
+      - input: left
+      - input: left
+      - input: left
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object]
+      - input: up
+      - input: right
+      - input: right
+      - input: right
+      - input: right
+      - input: right
+      - input: down
+      - input: right
+        events: [pull_object]
+
+  - id: RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v2
+    title: Long-edge P/L relay v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      #PL@G######
+      #.##.....##
+      #.#CG....##
+      #.CG#....##
+      #........##
+      ###########
+    design_notes: >
+      Human-feedback revision of L05 v1. The ordinary crate pull is no longer a
+      right-side add-on target: the middle crate must be pulled right to open the
+      lower loop that reaches the left side. The player then pushes the lower
+      crate onto its target and returns to the P side to push the same horizontal
+      P/L anchor right onto the top target. Complete graph analysis reports a
+      17-step witness over 4331 reachable states. Direction-aware event probe is
+      complete with no winning bypass missing anchor_pull_right, anchor_push_right,
+      crate_pull, or crate_push. Anchor shift count probe is complete with no win
+      below two P/L shifts. Goal-prune counterfactuals retain all three targets:
+      deleting the top target bypasses anchor_push_right, deleting the middle
+      target bypasses ordinary crate push/pull responsibilities, and deleting the
+      lower target bypasses crate_push. This version intentionally keeps the
+      middle target to prevent the pulled gate crate from replacing the lower
+      push crate. 2026-07-04 human playtest rejected the opening fixed P/L pull:
+      the P/L timing should be an active middle-step inference, not first-step
+      execution or final-only tag. Superseded by v3.
+    expected_trace:
+      - input: right
+        events: [pull_object, anchor_boundary_shift]
+      - input: down
+      - input: down
+      - input: right
+        events: [pull_object]
+      - input: down
+      - input: down
+      - input: left
+      - input: left
+      - input: left
+      - input: left
+      - input: up
+      - input: right
+        events: [push_object]
+      - input: left
+      - input: up
+      - input: up
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+
+  - id: RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v3
+    title: Long-edge P/L relay v3
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      #PL.G######
+      #.##C....##
+      #.#..#...##
+      #...CG#..##
+      #....#.@.##
+      ###########
+    design_notes: >
+      Human-feedback revision of L05 v2. The P/L anchor is no longer touched on
+      the first move: the opening ordinary crate pull sequence creates a space
+      debt that lets the player reach the top P/L area. The P/L right pull occurs
+      in the middle of the route, the lower crate is then pulled into a temporary
+      position, and the P/L right push changes the boundary before the lower crate
+      is finally pushed onto its target. Complete graph analysis reports a 34-step
+      shortest solution over 1203 reachable states. Direction-aware event probe is
+      complete with no winning bypass missing anchor_pull_right, anchor_push_right,
+      crate_pull, or crate_push; anchor shift count probe is complete with no win
+      below two P/L shifts. Caveat: this version deliberately fixes the P/L timing
+      issue but is longer and more crate-pull heavy, so critic should attack route
+      length and whether the early crate manipulation reads as setup rather than
+      padding. Independent review_3 evidence reviewer returned
+      supports_with_caveats / required_action:none, but puzzle critic returned
+      revise_required / structural_revision: the 34-step route and five early
+      crate#1 pulls read too much like route tax before the P/L insight. Removed
+      from playable pending a deeper v4 redesign.
+    expected_trace:
+      - input: up
+      - input: up
+      - input: up
+      - input: left
+      - input: left
+      - input: right
+        events: [pull_object]
+      - input: right
+        events: [pull_object]
+      - input: right
+        events: [pull_object]
+      - input: down
+      - input: left
+      - input: left
+      - input: up
+      - input: left
+        events: [pull_object]
+      - input: left
+        events: [pull_object]
+      - input: up
+      - input: left
+      - input: right
+        events: [pull_object, anchor_boundary_shift]
+      - input: down
+      - input: down
+      - input: left
+      - input: down
+      - input: left
+        events: [pull_object]
+      - input: left
+      - input: up
+      - input: up
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: down
+      - input: down
+      - input: down
+      - input: right
+      - input: right
+        events: [push_object]
+      - input: right
+        events: [push_object]
+
+  - id: RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v4
+    title: Long-edge P/L relay v4
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      #PL..G###
+      #.#..####
+      #.##C@G##
+      #......##
+      #########
+    design_notes: >
+      Human-feedback and critic-driven revision of L05 v3. The opening ordinary
+      crate pull is compressed to one high-responsibility move: it opens the
+      route into the upper P/L corridor and prepositions the same crate beside
+      the lower target. The P/L anchor is then handled in the middle of the
+      route, first by a right pull from the L side and then by two right pushes
+      from the P side. This three-step boundary shift makes the previously
+      prepositioned crate finishable from the left, so the final ordinary-crate
+      push recovers the opening move instead of acting as a stitched add-on.
+      Complete graph analysis reports a 24-step shortest solution over 85
+      reachable states. Direction-aware event probe is complete with no winning
+      bypass missing anchor_pull_right, anchor_push_right, crate_pull, or
+      crate_push; anchor shift count probe is complete with no win below three
+      P/L boundary shifts. Independent evidence review returned pass, and
+      independent puzzle critic returned accept. Caveat: the level is strongly
+      guided and the second consecutive P/L right push is more reinforcement
+      than a new insight, but that is acceptable for the fifth curriculum slot.
+      Pending human playtest; not archived yet.
+    expected_trace:
+      - input: right
+        events: [pull_object]
+      - input: down
+      - input: left
+      - input: left
+      - input: up
+      - input: up
+      - input: up
+      - input: left
+      - input: right
+        events: [pull_object, anchor_boundary_shift]
+      - input: down
+      - input: down
+      - input: down
+      - input: left
+      - input: left
+      - input: left
+      - input: up
+      - input: up
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+      - input: right
+      - input: down
+      - input: right
+        events: [push_object]
+
+  - id: RA_CURR_2026_07_05_L06_MULTI_AXIS_PL_v1
+    title: Multi-axis P/L relay v1
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #PL@.#####
+      #..GG#...#
+      #.CG#.CG.#
+      #........#
+      ##########
+    design_notes: >
+      Curriculum slot 6 multi-axis P/L application candidate. The shortest witness
+      uses three required P/L direction-action groups: vertical down pull,
+      horizontal right pull, and horizontal right push. It also requires ordinary
+      left-crate push and right-crate pull. Complete analysis reports a 31-step
+      shortest solution over 9028 reachable states. Instance-level event probe
+      proves all wins require anchor pull, anchor push, push_object:crate#1, and
+      pull_object:crate#2. Direction-aware probe proves all wins require
+      anchor_pull_down, anchor_pull_right, anchor_push_right, left_crate_push, and
+      right_crate_pull. Goal-prune counterfactuals keep all four targets: deleting
+      either upper target releases a missing-anchor_push_right win, while deleting
+      either lower target lowers cost and releases a missing right_crate_pull win.
+      Independent evidence reviewer returned supports_with_caveats /
+      required_action:none; independent puzzle critic returned
+      proposal_ready_with_caveats / required_action:none. Caveats: the left crate
+      is pushed onto its target, pulled back to reopen access, and pushed back
+      later, which may feel like functional rework; the visual skeleton is close
+      to L05, though this candidate adds vertical P/L routing and upper double
+      target pressure. Do not claim unique ordering or that only the three
+      required P/L shift directions are reachable. 2026-07-04 human playtest
+      praised the left-side push/pull-back/re-push contradiction but rejected the
+      right side as stitched-on extra space. Superseded by v2.
+    expected_trace:
+      - input: down
+      - input: left
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object]
+      - input: up
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: left
+        events: [pull_object]
+      - input: down
+      - input: right
+      - input: right
+      - input: up
+      - input: up
+      - input: right
+        events: [pull_object, anchor_boundary_shift]
+      - input: up
+      - input: left
+      - input: left
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object]
+      - input: down
+      - input: right
+      - input: right
+      - input: right
+      - input: right
+      - input: right
+      - input: up
+      - input: right
+        events: [pull_object]
+
+  - id: RA_CURR_2026_07_05_L06_MULTI_AXIS_PL_v2
+    title: Multi-axis P/L relay v2
+    role: challenge
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ######
+      #PL@.#
+      #..GG#
+      #.CG##
+      #....#
+      ######
+    design_notes: >
+      Human-feedback revision of L06 v1. The right-side crate and room are removed,
+      preserving the left-side contradiction the human liked: the only crate is
+      first pushed onto the lower target, then pulled back out to reopen routing,
+      and finally pushed back onto the target after the P/L anchor has been moved.
+      The compact layout still requires three P/L direction-action groups
+      (anchor_pull_down, anchor_pull_right, anchor_push_right) plus ordinary
+      crate_pull and crate_push. Complete graph analysis reports a 23-step
+      shortest solution over 945 reachable states. Direction-aware event probe is
+      complete with no winning bypass missing anchor_pull_down, anchor_pull_right,
+      anchor_push_right, crate_pull, or crate_push. The P/L movements occur in the
+      middle of the route rather than as a final-only tag, and the last win action
+      returns to the ordinary crate push. Independent review_2 evidence reviewer
+      returned supports_with_caveats / required_action:none; puzzle critic returned
+      supports_design_claim / required_action:none. Human playtest later accepted
+      it as a compact strong-logic level, aesthetic 4 / difficulty 4; archived
+      as RA_CAND_0011.
+    expected_trace:
+      - input: down
+      - input: left
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object]
+      - input: up
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: left
+        events: [pull_object]
+      - input: down
+      - input: right
+      - input: right
+      - input: up
+      - input: up
+      - input: right
+        events: [pull_object, anchor_boundary_shift]
+      - input: up
+      - input: left
+      - input: left
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object]
+
+  - id: RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v1
+    title: Fixed B/S sticky rigid v1
+    role: mechanic_witness
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      #B#####
+      #S#####
+      #@M...#
+      ##M.G.#
+      #######
+    design_notes: >
+      Curriculum slot 7 fixed B/S sticky rigid intro witness. There is no P/L
+      anchor; B/S is fixed in a wall pocket and only defines the sticky side. The
+      player pushes the upper cell of a vertical sticky pair twice; the lower cell
+      moves as part of the same rigid body and covers the only target. Complete
+      analysis reports a 2-step shortest solution over 16 reachable states. Core
+      event probe proves all wins require push_object:sticky#1 and
+      move_sticky_rigid. Reachable scan reports no P/L shift, no B/S shift, and no
+      material conversion, split, or merge. A concrete ordinary-box analog is
+      complete unsolved, so in this layout the target cannot be covered without
+      sticky rigid movement. Goal-prune is skipped because this is a single-target
+      level. Independent evidence reviewer returned supports_with_caveats /
+      required_action:none; independent puzzle critic returned
+      proposal_ready_with_caveats / required_action:none. Caveat: this is a
+      right-right tiny mechanism witness rather than a puzzle; the box analog
+      evidence applies to the listed analog, not every possible box-only redesign.
+      2026-07-04 human playtest rejected this version because the two sticky
+      cells start already joined, so it does not witness sticky joining. Superseded
+      by v2.
+    expected_trace:
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2
+    title: Fixed B/S sticky join witness v2
+    role: mechanic_witness
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: high
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      #B#####
+      #S#####
+      #@M...#
+      ###MG.#
+      #######
+    design_notes: >
+      Human-feedback revision of L07 v1. The lower sticky cell is moved one cell
+      right and its old position is walled off, so the two sticky cells start
+      separate. The first push moves the upper sticky cell beside the lower one
+      and forces sticky_merge; the second push moves the merged rigid pair so the
+      lower cell covers the target. Complete graph analysis reports a 2-step
+      shortest solution over 13 reachable states. Core event probe proves every
+      win requires sticky_merge and move_sticky_rigid. Reachable scan reports no
+      P/L shift, no B/S shift, and no box/sticky material conversion. Caveat:
+      this is still a tiny forced witness, suitable for slot 7 introduction rather
+      than puzzle depth. Independent review_2 evidence reviewer returned
+      supports_claim / required_action:none; puzzle critic returned
+      supports_with_noncore_caveats / required_action:none. Human playtest
+      accepted it as a compact sticky-mechanic witness, aesthetic 2 /
+      difficulty 1; archived as RA_CAND_0012.
+    expected_trace:
+      - input: right
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L08_FIXED_BS_JOIN_v1
+    title: Fixed B/S join v1
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #..@...#
+      #B.C#..#
+      #S.....#
+      ###M.G.#
+      ########
+    design_notes: >
+      Curriculum slot 8 fixed B/S joining candidate. There is no P/L anchor; B/S
+      is fixed and defines a horizontal box/sticky split. The first move pushes a
+      crate from box side into sticky side, converting it with box_to_sticky and
+      immediately joining it to the lower sticky cell. The new upper sticky cell
+      then becomes the only usable handle for pushing the merged rigid body right
+      until the lower cell covers the target. Complete analysis reports a 5-step
+      shortest solution over 186 reachable states. Complete event probe proves all
+      wins require box_to_sticky, sticky_merge, and move_sticky_rigid; reachable
+      scan reports no P/L shift, no B/S shift, no sticky_to_box, and no split.
+      Goal-prune is skipped because this is a single-target level. Independent
+      evidence reviewer returned supports_claim / required_action:none;
+      independent puzzle critic returned proposal_ready_with_caveats /
+      required_action:none. Caveat: this is a short mechanism witness whose
+      conversion and join happen on the first move; it should be treated as a
+      fixed-B/S joining demonstration, not a high-density puzzle.
+      2026-07-04 human playtest rejected the start placement because the opening
+      down move directly enters the correct conversion. Superseded by v2.
+    expected_trace:
+      - input: down
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L08_FIXED_BS_JOIN_v2
+    title: Fixed B/S join v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #......#
+      #B.C#..#
+      #S...@.#
+      ###M.G.#
+      ########
+    design_notes: >
+      Human-feedback revision of L08 v1. The mechanism skeleton is unchanged, but
+      the player starts in the right-middle area instead of directly above the
+      crate, so the opening is no longer a one-step straight push into conversion.
+      The shortest solution walks back to the conversion entrance, pushes the crate
+      from box side into sticky side to trigger box_to_sticky and sticky_merge,
+      then uses the new sticky handle to push the merged rigid body onto the
+      target. Complete graph analysis reports a 9-step shortest solution over 186
+      reachable states. Fixed-anchor strong-material probe proves every win
+      requires box_to_sticky, sticky_merge, and move_sticky_rigid; reachable scan
+      reports no P/L shift, no B/S shift, no sticky_to_box, and no split. Caveat:
+      this is still a compact fixed-B/S join demonstration, not a high-density
+      challenge. Independent review_2 evidence reviewer returned supports_claim /
+      required_action:none; puzzle critic returned supports_with_noncore_caveats /
+      required_action:none. 2026-07-04 human playtest asked to remove the unused
+      far-right empty column; superseded by v3.
+    expected_trace:
+      - input: up
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L08_FIXED_BS_JOIN_v3
+    title: Fixed B/S join v3
+    role: challenge
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      #.....#
+      #B.C#.#
+      #S...@#
+      ###M.G#
+      #######
+    design_notes: >
+      Human-feedback micro revision of L08 v2. The unused far-right empty column
+      is removed while preserving the fixed B/S joining skeleton and right-middle
+      start. The shortest solution remains 9 steps: the player walks back to the
+      conversion entrance, pushes the crate from box side into sticky side to
+      trigger box_to_sticky and sticky_merge, then uses the new sticky handle to
+      push the merged rigid body onto the target. Complete graph analysis reports
+      116 reachable states and 274 legal transitions. Fixed-anchor
+      strong-material probe proves every win requires the relevant fixed B/S
+      material effect, box_to_sticky, sticky_merge, and sticky_rigid_move; the
+      reachable scan reports no B/S shift, no P/L shift, no sticky_to_box, and no
+      split. Caveat: this remains a compact fixed-B/S join demonstration rather
+      than a high-density puzzle. Human playtest later accepted it as a sticky
+      joining teaching level, aesthetic 2 / difficulty 1; archived as
+      RA_CAND_0014.
+    expected_trace:
+      - input: up
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L09_FIXED_BS_CUT_v1
+    title: Fixed B/S cut v1
+    role: challenge
+    status: accepted
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      ########
+      ##B..G##
+      ##S..###
+      ###.M###
+      ####M###
+      ####@###
+      ########
+    design_notes: >
+      第九关槽位候选：固定 B/S，无 P/L，核心是把竖向黏块整体上推到
+      B/S 边界，触发上半格 sticky_to_box；切出的箱子随后被单独推动到
+      目标，下半格仍作为黏块留在原处。完整分析给出 6 步最短解与 41
+      个 reachable states 的 complete graph。core event probe complete/no
+      bypass，证明所有胜路都需要 sticky_to_box、move_sticky_rigid 和
+      push_object:crate#1；reachable scan 证明无 P/L、无 B/S shift、无
+      box_to_sticky、无 sticky_merge。单目标，因此无效 goal prune skipped。
+      独立 evidence reviewer 返回 supports_claim / required_action:none；
+      独立 puzzle critic 返回 supports_with_noncore_caveats /
+      required_action:none。caveat 是关卡很短、强制性强，更适合作为固定
+      B/S 切割 witness，而非高难谜题。Human playtest later accepted it as a
+      simple sticky cut teaching witness, aesthetic 2 / difficulty 1; archived
+      as RA_CAND_0013.
+    expected_trace:
+      - input: up
+        events: [push_object, move_sticky_rigid]
+      - input: up
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: left
+      - input: up
+      - input: up
+      - input: right
+        events: [push_object]
+
+  - id: RA_CURR_2026_07_05_L10_MOVABLE_BS_CUTBACK_v1
+    title: Movable B/S cutback v1
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      #@BS.#..#
+      #..C..G.#
+      #..M#####
+      #########
+    design_notes: >
+      第十关槽位候选：无 P/L，可推动 B/S。初始归一化后，上方 C
+      与下方 M 都在 S 侧，形成被下方墙锁住的竖向黏块。玩家必须先
+      右推 B/S 一格，移动材料边界并触发 sticky_to_box，将竖向黏块
+      切成两个普通箱子；随后把上方箱子推回 S 侧，触发 box_to_sticky，
+      再推动回黏后的黏块覆盖目标。完整分析给出 5 步最短解和 47 个
+      reachable states 的 complete graph。core event probe complete/no
+      bypass，证明所有胜路都需要 anchor_boundary_shift:box_sticky、
+      sticky_to_box、box_to_sticky、move_sticky_rigid 和
+      push_object:crate#1；reachable scan 证明无 P/L 命中。单目标，
+      因此无效 goal prune skipped。独立 evidence reviewer 返回
+      supports_claim / required_action:none；独立 puzzle critic 返回
+      supports_with_noncore_caveats / required_action:none。caveat 是
+      第一步即推 B/S、关卡短且脚本化；它是可动 B/S 切割回黏 witness，
+      不应包装成充分体现时机选择的复杂应用题。
+      2026-07-05 human feedback rejected it for the L10 slot: the player has no
+      meaningful pre-anchor work, pushes B/S immediately as the only obvious
+      action, and the anchor is not used again after the opening cut. Removed
+      from playable and superseded by a timed join/cut revision.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: right
+        events: [push_object, box_to_sticky]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L10_MOVABLE_BS_TIMED_JOIN_CUT_v2
+    title: Movable B/S timed join-cut v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      #.....#.#
+      #..BS#G.#
+      ##.M.MM.#
+      #M@#....#
+      #########
+    design_notes: >
+      Human-feedback revision of L10 v1. This candidate keeps the slot constraints:
+      no P/L, movable B/S, and real box/sticky conversion. Unlike v1, the player
+      cannot win by opening with B/S movement: an order probe is complete with no
+      win where B/S shifts before any sticky_merge. The returned 13-step witness
+      first pushes a crate into S side to trigger box_to_sticky and sticky_merge,
+      then uses B/S twice: once to move into the upper channel and once to trigger
+      sticky_to_box, cutting a sticky cell back into a crate. The cut crate is then
+      pushed down, and the remaining sticky pair is moved onto the target. Complete
+      analysis reports 221 reachable states; the core event probe proves all wins
+      require B/S shift, box_to_sticky, sticky_merge, sticky_to_box, sticky rigid
+      movement, and crate push. A count probe proves all wins require at least two
+      B/S shifts; reachable scan reports no P/L hit. Single target, so invalid
+      goal prune is skipped. Independent evidence reviewer returned supports_claim
+      / required_action:none; independent puzzle critic returned
+      supports_with_noncore_caveats / required_action:none. Caveat: the win chain
+      remains strongly forced and close to the L11 boundary, but it directly fixes
+      the rejected v1 issue that B/S was only an opening button. 2026-07-04 human
+      playtest rejected this version for large redundant space, a redundant left
+      crate, and redundant upper-right space. Superseded by v3.
+    expected_trace:
+      - input: up
+      - input: right
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: right
+      - input: down
+        events: [push_object]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: down
+      - input: right
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L10_MOVABLE_BS_TIMED_JOIN_CUT_v3
+    title: Movable B/S timed join-cut v3
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ##....###
+      ##.BS#G.#
+      ##.M.MM.#
+      ##@#...##
+      #########
+    design_notes: >
+      Human-feedback revision of L10 v2. The redundant left crate is replaced by
+      wall, the left-side activity column is compressed, and the unused
+      upper-right space is walled off while preserving the same 13-step core
+      witness. The player first pushes a crate into S side to trigger
+      box_to_sticky and sticky_merge, then moves B/S twice: once into the upper
+      channel and once to trigger sticky_to_box. The cut crate is pushed down, and
+      the remaining sticky pair is moved onto the target. Complete graph analysis
+      reports 178 reachable states and 423 legal transitions, down from v2's 221
+      / 546, with the same shortest input sequence. Core event probe proves all
+      wins require B/S shift, box_to_sticky, sticky_merge, sticky_to_box, sticky
+      rigid movement, and crate push. Order probe proves no winning path shifts
+      B/S before sticky_merge; count probe proves all wins require at least two
+      B/S shifts; reachable scan reports no P/L hit. Independent review_2
+      evidence reviewer returned supports_claim / required_action:none; puzzle
+      critic returned supports_with_noncore_caveats / required_action:none.
+      Caveat: the chain is still strongly forced and should be playtested as a
+      compact L10 timing application, not as an open scheduling puzzle.
+    expected_trace:
+      - input: up
+      - input: right
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: right
+      - input: down
+        events: [push_object]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: down
+      - input: right
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L11_MOVABLE_BS_RELAY_CUT_v1
+    title: Movable B/S relay-cut v1
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      #G.M.#..#
+      ##@BS..M#
+      #.G.M..M#
+      #########
+    design_notes: >
+      第十一关槽位候选：无 P/L，可推动 B/S，比 L10 v2 更偏 relay-cut
+      的双区域结构。运行时初始归一化后，上方 M 显示为 C。返回 10 步
+      witness 先推动下方黏块并触发 sticky_merge，再移动 B/S 左移触发
+      box_to_sticky，随后推动上方黏块触发 sticky_to_box，最后第二次移动
+      B/S 覆盖下方目标。完整分析给出 429 reachable states 的 complete
+      graph。core_no_crate probe 证明所有胜路都需要 B/S shift、
+      box_to_sticky、sticky_merge、sticky_to_box 和 move_sticky_rigid；
+      order probe 证明不存在 B/S 在 sticky_merge 前移动的胜路；count
+      probe 证明所有胜路至少两次 B/S shift；reachable scan 证明无 P/L
+      命中。goal-prune 反事实保留两个目标：删上目标会释放缺
+      sticky_merge / sticky_to_box 的胜路，删下目标会释放缺
+      box_to_sticky / sticky_merge / move_sticky_rigid 的短路。独立
+      evidence reviewer 返回 supports_claim / required_action:none；独立
+      puzzle critic 返回 supports_with_noncore_caveats / required_action:none。
+      Caveat：ordinary crate push 不是全胜路必要，不应声称切出的普通箱
+      必须被推动；核心主张是拼接、切割、B/S 双位移和黏块移动不可省。
+      2026-07-05 human feedback rejected it: the sticky merge / material
+      conversion chain is only an event witness. The crate that becomes sticky is
+      left in the corner and never later consumed as a meaningful changed object,
+      so the player-facing solution is just pushing a box and sticky material
+      onto two targets. This does not satisfy the required standard that
+      conversions must produce later-used reachability, structural separation, or
+      object-role change.
+    expected_trace:
+      - input: down
+      - input: right
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: up
+      - input: left
+        events: [push_object, anchor_boundary_shift, box_to_sticky]
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [push_object]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+
+  - id: RA_CURR_2026_07_05_L11_MOVABLE_BS_APPLIED_CUT_v1
+    title: Movable B/S applied cut v1
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ##....###
+      ##.BS#G.#
+      ##.M.MM.#
+      #.@#...##
+      ####G####
+      #########
+    design_notes: >
+      第十一关槽位候选：无 P/L，可推动 B/S，并把拼接与切割放进同一条
+      后续被消费的因果链。运行时初始归一化后，左侧 M 显示为 C。返回
+      15 步 witness 先将 C 推入 S 侧，触发 box_to_sticky 与 sticky_merge
+      形成三连；之后才两次推动 B/S，其中第二次触发 sticky_to_box，将左端
+      切回普通箱。切出的普通箱随后继续下推两次覆盖下目标，剩余二连黏块
+      再作为刚体移动覆盖上目标。Complete graph 为 284 states / 680
+      transitions，最短 15。核心 probe complete/no bypass；count probes
+      证明所有胜路至少两次 B/S 位移、至少三次 crate#1 推动、至少两次
+      sticky rigid movement；order probe 证明不存在 B/S 位移早于 sticky_merge
+      的胜路。Goal-prune 反事实保留两个目标：删上目标会释放缺
+      sticky_rigid 的胜路，删下目标会释放少于三次 crate#1 推动的胜路。
+      有效 repo-local skill review：evidence reviewer 返回
+      supports_with_caveats / required_action:none；puzzle critic 返回
+      supports_with_noncore_caveats / required_action:none。Caveat：不声明唯一解、
+      实例级全路径对象身份、全路径精确事件顺序，也不声明新黏块作为三连刚体
+      被后续消费；本关定位为 L11 常规应用关，而非高难亮点关。
+      2026-07-05 human feedback rejected it: this version violates the
+      fresh_required lineage policy by functioning as a copied/variant structure of
+      an existing level, and the player-facing sticky/box changes still do not
+      produce a satisfying independent structural insight. Removed from playable
+      and to be redesigned from a fresh causal family.
+    expected_trace:
+      - input: up
+      - input: right
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: up
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: right
+      - input: down
+        events: [push_object]
+      - input: down
+        events: [push_object]
+      - input: up
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: down
+      - input: right
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L12_FIXED_PARALLEL_DUAL_JOIN_v1
+    title: Fixed parallel dual join v1
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      ##..@..####
+      #P#.C..#B##
+      #L#...G.S##
+      ##..M.G.###
+      ###########
+    design_notes: >
+      第十二关槽位候选：两个竖向、互相平行、墙隔离的固定锚点。B/S
+      提供材料边界，P/L 提供 pull 区。返回 5 步 witness 先下推 C，
+      触发 box_to_sticky 与 sticky_merge，制造竖向二连黏块；随后在
+      P/L pull 区连续右拉这个二连结构，使两个目标同时被同一结构覆盖。
+      Complete graph 为 887 states / 2256 transitions，最短 5。Core probe
+      证明所有胜路都需要 pull_object、box_to_sticky、sticky_merge 与
+      move_sticky_rigid。Fixed P/L probe 证明 fixed_push_pull_effect
+      complete/no bypass，且 reachable scan 无 anchor_boundary_shift:push_pull；
+      fixed B/S probe 证明 fixed_box_sticky_effect、box_to_sticky、sticky_merge
+      与 sticky_rigid_move complete/no bypass，且 reachable scan 无
+      anchor_boundary_shift:box_sticky。Goal-prune 反事实保留两个目标：删上目标
+      释放缺 box_to_sticky / sticky_merge 的胜路，删下目标释放缺 pull /
+      sticky_merge / sticky_rigid 的胜路。有效 repo-local skill review：
+      evidence reviewer 返回 supports_claim / required_action:none；puzzle critic
+      返回 supports_with_noncore_caveats / required_action:none。Caveat：这是
+      固定平行双锚点过渡应用关，5 步较短，不应包装成高密度双锚挑战。
+      2026-07-05 human feedback rejected it: the level is too simple and has no
+      meaningful world-interleaving insight. Sticky material is effectively used as
+      a step-saving handle rather than for unique reachability or separation, and
+      the P/L anchor does not create a meaningful player-side constraint. Removed
+      from playable and to be redesigned.
+    expected_trace:
+      - input: down
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: right
+      - input: down
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+
+  - id: RA_CURR_2026_07_05_L13_FIXED_ORTHOGONAL_PULL_CONVERT_v2
+    title: Fixed orthogonal pull-convert v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: medium
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      ####BS#####
+      #P#......##
+      #L#.C.G..##
+      ###..MG..##
+      ###...@..##
+      ###########
+    design_notes: >
+      第十三关槽位候选：P/L 是竖向固定锚点，B/S 是横向固定锚点，
+      两者正交且都墙隔离。返回 5 步 witness 中，玩家绕到 C 右侧，
+      第一次向右移动在 P/L pull 区拉 C，同时让 C 跨过 B/S 材料边界，
+      触发 box_to_sticky 与 sticky_merge，生成竖向二连黏块；第二次
+      向右 pull 消费该二连结构并覆盖两个目标。Complete graph 为
+      1239 states / 3506 transitions，最短 5。Fixed B/S probe 证明
+      fixed_box_sticky_effect、pull_event、box_to_sticky、sticky_merge 与
+      sticky_rigid_move 均 complete/no bypass，且 reachable scan 无
+      anchor_boundary_shift:box_sticky。Fixed P/L probe 证明 fixed_push_pull_effect
+      与 material_normalization complete/no bypass，且 reachable scan 无
+      anchor_boundary_shift:push_pull。Goal-prune 反事实保留两个目标：删上目标
+      释放 2 步、缺 fixed_box_sticky_effect / box_to_sticky / sticky_merge
+      的胜路；删下目标也释放缺这些组的胜路。有效 repo-local skill review：
+      evidence reviewer 返回 supports_claim / required_action:none；puzzle critic
+      返回 supports_with_noncore_caveats / required_action:none。Caveat：这是
+      固定正交双锚点微应用，5 步较短；与 L12 都使用二连黏块覆盖双目标，
+      差异在于本关的第一次 P/L pull 同时触发 B/S 转化/合并。
+      2026-07-05 human feedback rejected it: the level is too simple and too close
+      to L12, with no real insight into the interleaved worlds. Triggering pull and
+      material conversion in analysis is not enough; the player can read it as a
+      trivial pull sequence rather than a meaningful dual-anchor structure. Removed
+      from playable and to be redesigned.
+    expected_trace:
+      - input: up
+      - input: up
+      - input: left
+      - input: right
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
 
   - id: RA_SMOKE_01_PUSH_CHAIN
     title: Push-side chain push
@@ -1093,7 +2298,7 @@ levels:
   - id: RA_EXP_2026_07_05_SOFT_HANDOFF_NO_MERGE_LOCK_v1
     title: Soft handoff no-merge lock v1
     role: challenge
-    status: candidate
+    status: rejected
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -1117,6 +2322,10 @@ levels:
       search can insert a two-step sticky_merge detour after step 17, but that loop
       immediately returns to the same board state and then follows the same route;
       it is treated as the same solution skeleton rather than an independent bypass.
+      2026-07-04 human playtest archived it as RA_CAND_0006 negative example,
+      aesthetic 2 / difficulty 5: a small goal-position change weakens mechanism
+      beauty while inflating route complexity, so it should not be used as a
+      positive reference or active curriculum candidate.
     expected_trace:
       - input: down
       - input: up
@@ -1152,7 +2361,6 @@ levels:
       - input: right
       - input: up
       - input: left
-        events: [pull_object, anchor_boundary_shift]
       - input: right
       - input: down
       - input: left

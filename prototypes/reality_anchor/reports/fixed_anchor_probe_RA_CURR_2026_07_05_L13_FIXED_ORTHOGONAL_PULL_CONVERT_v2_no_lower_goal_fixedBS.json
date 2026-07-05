@@ -1,0 +1,233 @@
+{
+  "id": "RA_CURR_2026_07_05_L13_FIXED_ORTHOGONAL_PULL_CONVERT_v2_no_lower_goal_fixedBS",
+  "fixedKind": "box_sticky",
+  "profile": "strong_material",
+  "layout": "###########\n####BS#####\n#P#......##\n#L#.C.G..##\n###..M...##\n###...@..##\n###########",
+  "groups": [
+    {
+      "name": "movable_push_pull_shift",
+      "patterns": [
+        "anchor_boundary_shift:push_pull"
+      ]
+    },
+    {
+      "name": "fixed_box_sticky_effect",
+      "patterns": [
+        "box_to_sticky",
+        "sticky_to_box"
+      ]
+    },
+    {
+      "name": "pull_event",
+      "patterns": [
+        "pull_object"
+      ]
+    },
+    {
+      "name": "box_to_sticky",
+      "patterns": [
+        "box_to_sticky"
+      ]
+    },
+    {
+      "name": "sticky_merge",
+      "patterns": [
+        "sticky_merge"
+      ]
+    },
+    {
+      "name": "sticky_rigid_move",
+      "patterns": [
+        "move_sticky_rigid"
+      ]
+    }
+  ],
+  "forbiddenReachable": [
+    "anchor_boundary_shift:box_sticky"
+  ],
+  "budget": {
+    "maxStates": 300000,
+    "maxDepth": 80
+  },
+  "allGroupProbe": {
+    "found": true,
+    "status": "found",
+    "exploredStates": 66,
+    "depth": 5,
+    "inputs": [
+      "up",
+      "up",
+      "left",
+      "right",
+      "right"
+    ],
+    "events": [
+      "walk",
+      "walk",
+      "walk",
+      "pull_object:crate#1",
+      "box_to_sticky:n1",
+      "sticky_merge:n1",
+      "pull_object:sticky#1",
+      "move_sticky_rigid"
+    ],
+    "missingGroups": [
+      "movable_push_pull_shift"
+    ]
+  },
+  "individualProbes": [
+    {
+      "group": "movable_push_pull_shift",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 64,
+        "depth": 5,
+        "inputs": [
+          "up",
+          "up",
+          "left",
+          "right",
+          "right"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "walk",
+          "pull_object:crate#1",
+          "box_to_sticky:n1",
+          "sticky_merge:n1",
+          "pull_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "missingGroups": [
+          "movable_push_pull_shift"
+        ]
+      }
+    },
+    {
+      "group": "fixed_box_sticky_effect",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 67,
+        "depth": 5,
+        "inputs": [
+          "up",
+          "right",
+          "up",
+          "left",
+          "up"
+        ],
+        "events": [
+          "walk",
+          "pull_object:sticky#1",
+          "move_sticky_rigid",
+          "walk",
+          "walk",
+          "pull_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "missingGroups": [
+          "fixed_box_sticky_effect"
+        ]
+      }
+    },
+    {
+      "group": "pull_event",
+      "result": {
+        "found": false,
+        "status": "complete",
+        "exploredStates": 1283,
+        "reason": "no winning bypass found"
+      }
+    },
+    {
+      "group": "box_to_sticky",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 67,
+        "depth": 5,
+        "inputs": [
+          "up",
+          "right",
+          "up",
+          "left",
+          "up"
+        ],
+        "events": [
+          "walk",
+          "pull_object:sticky#1",
+          "move_sticky_rigid",
+          "walk",
+          "walk",
+          "pull_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "missingGroups": [
+          "box_to_sticky"
+        ]
+      }
+    },
+    {
+      "group": "sticky_merge",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 67,
+        "depth": 5,
+        "inputs": [
+          "up",
+          "right",
+          "up",
+          "left",
+          "up"
+        ],
+        "events": [
+          "walk",
+          "pull_object:sticky#1",
+          "move_sticky_rigid",
+          "walk",
+          "walk",
+          "pull_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "missingGroups": [
+          "sticky_merge"
+        ]
+      }
+    },
+    {
+      "group": "sticky_rigid_move",
+      "result": {
+        "found": false,
+        "status": "complete",
+        "exploredStates": 1305,
+        "reason": "no winning bypass found"
+      }
+    }
+  ],
+  "reachableScan": {
+    "status": "complete",
+    "reachableStates": 1239,
+    "legalTransitions": 3506,
+    "eventCounts": {
+      "walk": 3214,
+      "pull_object:sticky#1": 155,
+      "move_sticky_rigid": 230,
+      "pull_object:crate#1": 48,
+      "box_to_sticky:n1": 26,
+      "sticky_merge:n1": 33,
+      "sticky_to_box:n1": 22,
+      "push_object:sticky#1": 24,
+      "push_object:crate#1": 11,
+      "pull_object:sticky#2": 46,
+      "force_chain:n2": 1,
+      "sticky_to_box:n2": 4,
+      "pull_object:crate#2": 3,
+      "push_object:sticky#2": 5
+    },
+    "forbiddenHits": []
+  }
+}

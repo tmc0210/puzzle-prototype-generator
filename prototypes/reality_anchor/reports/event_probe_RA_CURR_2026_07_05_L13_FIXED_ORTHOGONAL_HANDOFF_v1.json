@@ -1,0 +1,191 @@
+{
+  "id": "RA_CURR_2026_07_05_L13_FIXED_ORTHOGONAL_HANDOFF_v1",
+  "layout": "###########\n####BS#####\n#P#.C.G..##\n#L#..MG..##\n###.@....##\n###########",
+  "groups": [
+    {
+      "name": "push_pull_anchor_shift",
+      "patterns": [
+        "anchor_boundary_shift:push_pull"
+      ]
+    },
+    {
+      "name": "box_sticky_anchor_shift",
+      "patterns": [
+        "anchor_boundary_shift:box_sticky"
+      ]
+    },
+    {
+      "name": "pull_event",
+      "patterns": [
+        "pull_object"
+      ]
+    },
+    {
+      "name": "material_normalization",
+      "patterns": [
+        "box_to_sticky",
+        "sticky_to_box"
+      ]
+    },
+    {
+      "name": "sticky_merge",
+      "patterns": [
+        "sticky_merge"
+      ]
+    },
+    {
+      "name": "sticky_rigid_move",
+      "patterns": [
+        "move_sticky_rigid"
+      ]
+    }
+  ],
+  "budget": {
+    "maxStates": 300000,
+    "maxDepth": 80
+  },
+  "allGroupProbe": {
+    "found": true,
+    "status": "found",
+    "exploredStates": 56,
+    "depth": 5,
+    "inputs": [
+      "left",
+      "up",
+      "up",
+      "right",
+      "right"
+    ],
+    "events": [
+      "walk",
+      "walk",
+      "walk",
+      "push_object:crate#1",
+      "box_to_sticky:n1",
+      "sticky_merge:n1",
+      "push_object:sticky#1",
+      "move_sticky_rigid"
+    ],
+    "missingGroups": [
+      "push_pull_anchor_shift",
+      "box_sticky_anchor_shift",
+      "pull_event"
+    ]
+  },
+  "individualProbes": [
+    {
+      "group": "push_pull_anchor_shift",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 55,
+        "depth": 5,
+        "inputs": [
+          "left",
+          "up",
+          "up",
+          "right",
+          "right"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "walk",
+          "push_object:crate#1",
+          "box_to_sticky:n1",
+          "sticky_merge:n1",
+          "push_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "missingGroups": [
+          "push_pull_anchor_shift"
+        ]
+      }
+    },
+    {
+      "group": "box_sticky_anchor_shift",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 55,
+        "depth": 5,
+        "inputs": [
+          "left",
+          "up",
+          "up",
+          "right",
+          "right"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "walk",
+          "push_object:crate#1",
+          "box_to_sticky:n1",
+          "sticky_merge:n1",
+          "push_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "missingGroups": [
+          "box_sticky_anchor_shift"
+        ]
+      }
+    },
+    {
+      "group": "pull_event",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 55,
+        "depth": 5,
+        "inputs": [
+          "left",
+          "up",
+          "up",
+          "right",
+          "right"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "walk",
+          "push_object:crate#1",
+          "box_to_sticky:n1",
+          "sticky_merge:n1",
+          "push_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "missingGroups": [
+          "pull_event"
+        ]
+      }
+    },
+    {
+      "group": "material_normalization",
+      "result": {
+        "found": false,
+        "status": "complete",
+        "exploredStates": 2142,
+        "reason": "no winning bypass found"
+      }
+    },
+    {
+      "group": "sticky_merge",
+      "result": {
+        "found": false,
+        "status": "complete",
+        "exploredStates": 3014,
+        "reason": "no winning bypass found"
+      }
+    },
+    {
+      "group": "sticky_rigid_move",
+      "result": {
+        "found": false,
+        "status": "complete",
+        "exploredStates": 1725,
+        "reason": "no winning bypass found"
+      }
+    }
+  ]
+}

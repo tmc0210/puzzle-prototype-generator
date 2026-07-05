@@ -411,309 +411,9 @@
     "mechanic": "reality_anchor",
     "levels": [
       {
-        "id": "RA_EXP_2026_07_05_SOFT_HANDOFF_NO_MERGE_LOCK_v1",
-        "title": "Soft handoff no-merge lock v1",
+        "id": "RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v4",
+        "title": "Long-edge P/L relay v4",
         "role": "challenge",
-        "status": "candidate",
-        "targets": [
-          "K_runtime_smoke"
-        ],
-        "known_before": [
-          "K_runtime_smoke"
-        ],
-        "target_learning": [
-          "K_runtime_smoke"
-        ],
-        "support_level": "none",
-        "expected_solver_evidence": [
-          "solvable",
-          "player_win_standard",
-          "expected_trace_replays",
-          "full_graph_complete"
-        ],
-        "expected_llm_player_evidence": [],
-        "layout": "#########\n####C@.G#\n###G....#\n####PL.M#\n####..BS#\n#########",
-        "design_notes": "2026-07-05 human-requested inspection variant derived from RA_EXP_2026_07_04_SOFT_HANDOFF_v3 / RA_CAND_0002. The archived version is unchanged. This variant removes the middle target and adds an upper-right target to make the previously discovered 40-step no-sticky-merge route the shortest verified solution. Complete probes still require both anchor shifts, pull, material normalization, and sticky rigid movement. A raw event-history search can insert a two-step sticky_merge detour after step 17, but that loop immediately returns to the same board state and then follows the same route; it is treated as the same solution skeleton rather than an independent bypass.\n",
-        "expected_trace": [
-          {
-            "input": "down"
-          },
-          {
-            "input": "up",
-            "events": [
-              "pull_object",
-              "anchor_boundary_shift"
-            ]
-          },
-          {
-            "input": "right",
-            "events": [
-              "pull_object"
-            ]
-          },
-          {
-            "input": "right",
-            "events": [
-              "pull_object"
-            ]
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "down",
-            "events": [
-              "pull_object"
-            ]
-          },
-          {
-            "input": "left",
-            "events": [
-              "pull_object",
-              "move_sticky_rigid",
-              "sticky_to_box"
-            ]
-          },
-          {
-            "input": "left",
-            "events": [
-              "pull_object"
-            ]
-          },
-          {
-            "input": "up",
-            "events": [
-              "push_object",
-              "anchor_boundary_shift"
-            ]
-          },
-          {
-            "input": "right"
-          },
-          {
-            "input": "left",
-            "events": [
-              "pull_object"
-            ]
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "right",
-            "events": [
-              "push_object"
-            ]
-          },
-          {
-            "input": "down",
-            "events": [
-              "pull_object"
-            ]
-          },
-          {
-            "input": "left",
-            "events": [
-              "pull_object",
-              "anchor_boundary_shift",
-              "box_to_sticky"
-            ]
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "right"
-          },
-          {
-            "input": "right"
-          },
-          {
-            "input": "right"
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "left",
-            "events": [
-              "pull_object",
-              "anchor_boundary_shift"
-            ]
-          },
-          {
-            "input": "right"
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "right",
-            "events": [
-              "push_object",
-              "anchor_boundary_shift"
-            ]
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "right",
-            "events": [
-              "push_object",
-              "anchor_boundary_shift",
-              "sticky_to_box"
-            ]
-          },
-          {
-            "input": "up",
-            "events": [
-              "push_object"
-            ]
-          },
-          {
-            "input": "right",
-            "events": [
-              "push_object",
-              "box_to_sticky"
-            ]
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "left",
-            "events": [
-              "push_object"
-            ]
-          },
-          {
-            "input": "left",
-            "events": [
-              "push_object"
-            ]
-          }
-        ]
-      },
-      {
-        "id": "RA_CURR_2026_07_05_L01_INTRO_PUSH_v1",
-        "title": "Intro push v1",
-        "role": "mechanic_witness",
-        "status": "candidate",
-        "targets": [
-          "K_runtime_smoke"
-        ],
-        "known_before": [],
-        "target_learning": [
-          "K_runtime_smoke"
-        ],
-        "support_level": "high",
-        "expected_solver_evidence": [
-          "solvable",
-          "player_win_standard",
-          "expected_trace_replays",
-          "full_graph_complete"
-        ],
-        "expected_llm_player_evidence": [],
-        "layout": "######\n#@.CG#\n######",
-        "design_notes": "Curriculum slot 1 intro witness. No anchors and no material mechanics: the player walks once, then pushes one crate onto one target. Solver evidence gives a 2-step shortest solution and complete graph; event probe proves every win path requires push_object. Independent evidence reviewer returned supports_claim / required_action:none; independent puzzle critic returned proposal_ready_with_caveats / required_action:none for first-slot role fit. Caveat: this is only an intro witness, not a depth-bearing puzzle.\n",
-        "expected_trace": [
-          {
-            "input": "right",
-            "events": [
-              "walk"
-            ]
-          },
-          {
-            "input": "right",
-            "events": [
-              "push_object"
-            ]
-          }
-        ]
-      },
-      {
-        "id": "RA_CURR_2026_07_05_L02_FIXED_PL_PUSH_PULL_v1",
-        "title": "Fixed P/L push-pull v1",
-        "role": "mechanic_witness",
-        "status": "candidate",
-        "targets": [
-          "K_runtime_smoke"
-        ],
-        "known_before": [
-          "K_runtime_smoke"
-        ],
-        "target_learning": [
-          "K_runtime_smoke"
-        ],
-        "support_level": "high",
-        "expected_solver_evidence": [
-          "solvable",
-          "player_win_standard",
-          "expected_trace_replays",
-          "full_graph_complete"
-        ],
-        "expected_llm_player_evidence": [],
-        "layout": "########\n#@CG####\n#...#P##\n#...#L##\n#.CG.###\n########",
-        "design_notes": "Curriculum slot 2 fixed P/L teaching witness. P/L is sealed in a wall pocket: complete reachable event scan reports no anchor shift or material events. The top mini-task requires push_object; the bottom mini-task requires pull_object after the player stands on the lower goal. Complete event probes prove every win path requires both push and pull. Goal-deletion counterfactuals show the upper target is the push witness and the lower target is the pull witness. Independent evidence reviewer returned supports_claim / required_action:none; independent puzzle critic returned proposal_ready_with_caveats / required_action:none. Caveat: this is a two-witness teaching level, not a depth-bearing puzzle; the lower crate has non-winning push affordances, but every win still requires pull.\n",
-        "expected_trace": [
-          {
-            "input": "right",
-            "events": [
-              "push_object"
-            ]
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "right"
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "right",
-            "events": [
-              "pull_object"
-            ]
-          }
-        ]
-      },
-      {
-        "id": "RA_CURR_2026_07_05_L03_FIXED_PL_HANDOFF_v1",
-        "title": "Fixed P/L handoff v1",
-        "role": "mechanic_witness",
         "status": "candidate",
         "targets": [
           "K_runtime_smoke"
@@ -732,13 +432,156 @@
           "full_graph_complete"
         ],
         "expected_llm_player_evidence": [],
-        "layout": "########\n########\n#@C.#P##\n#..G#L##\n#.....##\n########",
-        "design_notes": "Curriculum slot 3 fixed P/L application. A single crate and single target form a push-to-pull handoff: the crate must first be pushed into alignment above the goal, then pulled from the pull side to cover it. Complete event probes prove every win path requires both push_object and pull_object; because the layout has exactly one crate, the returned push/pull events are the same crate. Complete reachable scan reports no anchor shift or material events. Independent evidence reviewer returned supports_claim / required_action:none; independent puzzle critic returned proposal_ready_with_caveats / required_action:none. Caveat: intentionally short early application witness, not a challenge-depth puzzle; wall-pocketed P/L is functional rather than aesthetic centerpiece.\n",
+        "layout": "#########\n#PL..G###\n#.#..####\n#.##C@G##\n#......##\n#########",
+        "design_notes": "Human-feedback and critic-driven revision of L05 v3. The opening ordinary crate pull is compressed to one high-responsibility move: it opens the route into the upper P/L corridor and prepositions the same crate beside the lower target. The P/L anchor is then handled in the middle of the route, first by a right pull from the L side and then by two right pushes from the P side. This three-step boundary shift makes the previously prepositioned crate finishable from the left, so the final ordinary-crate push recovers the opening move instead of acting as a stitched add-on. Complete graph analysis reports a 24-step shortest solution over 85 reachable states. Direction-aware event probe is complete with no winning bypass missing anchor_pull_right, anchor_push_right, crate_pull, or crate_push; anchor shift count probe is complete with no win below three P/L boundary shifts. Independent evidence review returned pass, and independent puzzle critic returned accept. Caveat: the level is strongly guided and the second consecutive P/L right push is more reinforcement than a new insight, but that is acceptable for the fifth curriculum slot. Pending human playtest; not archived yet.\n",
         "expected_trace": [
           {
             "input": "right",
             "events": [
+              "pull_object"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right",
+            "events": [
               "push_object"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_CURR_2026_07_05_L10_MOVABLE_BS_TIMED_JOIN_CUT_v3",
+        "title": "Movable B/S timed join-cut v3",
+        "role": "challenge",
+        "status": "rejected",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "medium",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "#########\n##....###\n##.BS#G.#\n##.M.MM.#\n##@#...##\n#########",
+        "design_notes": "Human-feedback revision of L10 v2. The redundant left crate is replaced by wall, the left-side activity column is compressed, and the unused upper-right space is walled off while preserving the same 13-step core witness. The player first pushes a crate into S side to trigger box_to_sticky and sticky_merge, then moves B/S twice: once into the upper channel and once to trigger sticky_to_box. The cut crate is pushed down, and the remaining sticky pair is moved onto the target. Complete graph analysis reports 178 reachable states and 423 legal transitions, down from v2's 221 / 546, with the same shortest input sequence. Core event probe proves all wins require B/S shift, box_to_sticky, sticky_merge, sticky_to_box, sticky rigid movement, and crate push. Order probe proves no winning path shifts B/S before sticky_merge; count probe proves all wins require at least two B/S shifts; reachable scan reports no P/L hit. Independent review_2 evidence reviewer returned supports_claim / required_action:none; puzzle critic returned supports_with_noncore_caveats / required_action:none. Caveat: the chain is still strongly forced and should be playtested as a compact L10 timing application, not as an open scheduling puzzle.\n",
+        "expected_trace": [
+          {
+            "input": "up"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
             ]
           },
           {
@@ -750,7 +593,27 @@
           {
             "input": "down",
             "events": [
-              "pull_object"
+              "push_object"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "down"
+          },
+          {
+            "input": "right"
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
             ]
           }
         ]

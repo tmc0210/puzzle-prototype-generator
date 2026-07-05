@@ -1,0 +1,109 @@
+{
+  "id": "RA_CURR_L12_SCRATCHA",
+  "layout": "###########\n#P#....@###\n#L##G#..###\n####.##B###\n####m##S###\n####M######\n###########",
+  "groups": [
+    {
+      "name": "pull_event",
+      "patterns": [
+        "pull_object"
+      ]
+    },
+    {
+      "name": "material_norm",
+      "patterns": [
+        "sticky_to_box,box_to_sticky"
+      ]
+    },
+    {
+      "name": "sticky_rigid",
+      "patterns": [
+        "move_sticky_rigid"
+      ]
+    }
+  ],
+  "budget": {
+    "maxStates": 300000,
+    "maxDepth": 80
+  },
+  "allGroupProbe": {
+    "found": true,
+    "status": "found",
+    "exploredStates": 28,
+    "depth": 7,
+    "inputs": [
+      "left",
+      "left",
+      "left",
+      "down",
+      "down",
+      "up",
+      "up"
+    ],
+    "events": [
+      "walk",
+      "walk",
+      "walk",
+      "walk",
+      "walk",
+      "pull_object:sticky#1",
+      "move_sticky_rigid",
+      "sticky_to_box:n1",
+      "pull_object:crate#1"
+    ],
+    "missingGroups": [
+      "material_norm"
+    ]
+  },
+  "individualProbes": [
+    {
+      "group": "pull_event",
+      "result": {
+        "found": false,
+        "status": "complete",
+        "exploredStates": 54,
+        "reason": "no winning bypass found"
+      }
+    },
+    {
+      "group": "material_norm",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 20,
+        "depth": 7,
+        "inputs": [
+          "left",
+          "left",
+          "left",
+          "down",
+          "down",
+          "up",
+          "up"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "walk",
+          "pull_object:sticky#1",
+          "move_sticky_rigid",
+          "sticky_to_box:n1",
+          "pull_object:crate#1"
+        ],
+        "missingGroups": [
+          "material_norm"
+        ]
+      }
+    },
+    {
+      "group": "sticky_rigid",
+      "result": {
+        "found": false,
+        "status": "complete",
+        "exploredStates": 45,
+        "reason": "no winning bypass found"
+      }
+    }
+  ]
+}

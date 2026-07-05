@@ -1,0 +1,55 @@
+review_iteration: "review_3"
+candidate_version_reviewed: "RA_CURR_2026_07_05_L08_FIXED_BS_JOIN_v3"
+review_input_type: "candidate_version"
+verdict: "supports_with_noncore_caveats"
+review_loop_state: "proposal_ready_with_caveats"
+required_action: "none"
+strongest_merits:
+  - "删掉最右空列后，候选仍完整符合第八关槽位：无 P/L，固定 B/S，胜路必须通过 box_to_sticky、sticky_merge 与 move_sticky_rigid。"
+  - "材料转化服务于拼接本身：crate 下推跨过 B/S 后变成上方 sticky，并立即与下方 M 合并；后续玩家推动这个拼接刚体，才让下方黏块覆盖目标。"
+  - "v3 的空间变化是去噪而非伪造难度：最短解仍为 9 步、核心输入序列不变，状态空间从 v2 的 186 states / 488 transitions 收缩到 116 states / 274 transitions，主要删除未消费的右侧空地。"
+  - "右侧终局不再留下额外空列，减少了 v2 的尾部松散感；这改善焦点，但没有把 raw graph 收缩包装成新的谜题深度。"
+archive_taste_context_used:
+  - "RA_CAND_0003: 人评为箱黏锚点分离黏块的简单可用教学关；用于校准 fixed B/S 教学应用可以短，但材料变化必须有功能。"
+  - "RA_CAND_0010: 人评为结构简单、逻辑清晰；用于校准当前早期课程重视清晰结构。"
+  - "RA_CAND_0006: 人评指出小目标位置变化会弱化机制美感并抬高路线复杂度；用于警惕只靠走位、目标位置或多余空间制造难度。"
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: "human_anchors_present_but_numeric_score_not_claimed"
+  archive_attack_calibration: "positive_and_lower_bound_human_anchors_present"
+  positive_anchors:
+    - "RA_CAND_0003"
+    - "RA_CAND_0010"
+  lower_bound_or_negative_anchors:
+    - "RA_CAND_0006"
+  missing_anchor_effect: "none"
+aesthetic_target_fit: "支持：第八关要求的审美核心是固定 B/S 下的材料身份变化用于拼接。v3 中 crate 不是转化后闲置，也不是只触发日志；它变成可推动的上方黏块把手，并与下方 M 形成完成目标所需的刚体。删列后结构更紧凑，核心读法比 v2 更少受到右侧空地干扰。"
+difficulty_target_fit: "支持但有限：候选仍是短小 fixed B/S joining witness，难度主要来自识别“箱转黏后成为拼接把手”，而不是路线搜索或高密度终局。v3 没有增加步数、绕行或目标硬化，因此没有落入 RA_CAND_0006 式的复杂度伪造；但也不应声明高难、唯一解或高控制密度。"
+core_attacks: []
+scc_graph_interpretations:
+  - graph_fact: "shortest_solution cost=9; inputs=up up left left down left down right right; events include push_object:crate#1 + box_to_sticky:n1 + sticky_merge:n1, then two push_object:sticky#1 + move_sticky_rigid"
+    neutral_meaning: "最短见证先完成箱转黏和拼接，再推动拼接后的 sticky 刚体到目标。"
+    player_facing_interpretation: "玩家侧核心不是普通推箱收尾，而是利用转化生成的黏块把手带动下方 M；材料变化被后续动作消费。"
+    verdict_effect: "merit"
+  - graph_fact: "fixed_anchor_probe individual probes: fixed_box_sticky_effect, box_to_sticky, sticky_merge, sticky_rigid_move all complete with no winning bypass"
+    neutral_meaning: "完整搜索范围内，没有发现省略固定 B/S 效果、箱转黏、黏块拼接或合并刚体移动的胜路。"
+    player_facing_interpretation: "这直接支持第八关 role fit：胜利必须使用固定 B/S joining，而不是绕开机制或只刷事件日志。"
+    verdict_effect: "merit"
+  - graph_fact: "reachable_scan forbidden hits: none; event_counts include box_to_sticky=1, sticky_merge=1, move_sticky_rigid=5, walk=262"
+    neutral_meaning: "可达图内没有 B/S 锚点位移；相关材料事件存在且机制边界干净。"
+    player_facing_interpretation: "玩家不会被可动 B/S、P/L 或反向切割误导；本关机制窗口保持在第八关所需的固定 B/S 拼接应用。"
+    verdict_effect: "merit"
+  - graph_fact: "v3 graph reachable_states=116, legal_transitions=274, winning_states=13; v2 was 186, 488, 17 with the same shortest input sequence"
+    neutral_meaning: "删掉最右空列后，可探索空间和胜态数量下降，但解法长度与核心事件链不变。"
+    player_facing_interpretation: "这是有效去噪：玩家少探索一列无功能空地，核心拼接逻辑没有被削弱，也没有用新增路线制造假难度。"
+    verdict_effect: "merit"
+  - graph_fact: "agency facts: solution commitments=3; forced viable prefix=2/3; forced optimal prefix=3/3; opening has one viable progress and one dead commitment"
+    neutral_meaning: "胜利推进较线性，早期有表面分支但只有一条可行进展路线。"
+    player_facing_interpretation: "这说明候选仍是清晰短应用，不是高分支谜题；线性本身可接受，但不应被解释成深度。"
+    verdict_effect: "caveat"
+noncore_caveats:
+  - "拼接仍发生在一次下推中，box_to_sticky 与 sticky_merge 同步出现；玩家没有在多个拼接候选之间做选择。因此它更像清晰应用 witness，而不是厚重谜题。"
+  - "cost、state 数下降、winning states 下降都不能作为难度优点；v3 的收益只是删除未使用空间并强化视觉焦点。"
+  - "combined probe 报告 missing movable_push_pull_shift 是预期现象，因为第八关明确无 P/L；相关判断应看 fixed B/S material individual probes 与 forbidden B/S shift scan。"
+  - "若后续想提高第八关应用感，应增加有功能的拼接位置判断或把手预判，而不是恢复空列、延长走位或移动目标。当前版本不需要因此再改。"
+questions_for_designer: []

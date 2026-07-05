@@ -1770,7 +1770,7 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mr6nf9uv" : String(Date.now());
+var buildId = true ? "mr6v4cx5" : String(Date.now());
 var data = await fetchJson(`./data.json?v=${encodeURIComponent(buildId)}`);
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);

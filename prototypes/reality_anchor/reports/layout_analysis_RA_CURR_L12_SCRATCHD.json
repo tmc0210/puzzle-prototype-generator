@@ -1,0 +1,524 @@
+{
+  "prototype": "reality_anchor",
+  "level": {
+    "id": "RA_CURR_L12_SCRATCHD",
+    "title": "scratchD",
+    "role": "challenge",
+    "status": "candidate",
+    "targets": [
+      "K_runtime_smoke"
+    ],
+    "supportLevel": "medium",
+    "winCondition": {
+      "type": "all_targets_covered_by_objects",
+      "target": "goal",
+      "description": "After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.\n"
+    }
+  },
+  "initialState": "###########\n#...@..####\n#P#.C..#B##\n#L#...G.S##\n#...M.G.###\n###########",
+  "solution": {
+    "found": true,
+    "cost": 5,
+    "depth": 5,
+    "exploredStates": 45,
+    "searchStatus": "found",
+    "inputs": [
+      "down",
+      "right",
+      "down",
+      "right",
+      "right"
+    ],
+    "events": [
+      "push_object:crate#1",
+      "box_to_sticky:n1",
+      "sticky_merge:n1",
+      "walk",
+      "walk",
+      "pull_object:sticky#1",
+      "move_sticky_rigid",
+      "pull_object:sticky#1",
+      "move_sticky_rigid"
+    ],
+    "eventCounts": {
+      "push_object:crate#1": 1,
+      "box_to_sticky:n1": 1,
+      "sticky_merge:n1": 1,
+      "walk": 2,
+      "pull_object:sticky#1": 2,
+      "move_sticky_rigid": 2
+    },
+    "objectParticipation": []
+  },
+  "keySnapshots": [
+    {
+      "step": 1,
+      "input": "down",
+      "legal": true,
+      "events": [
+        "push_object:crate#1",
+        "box_to_sticky:n1",
+        "sticky_merge:n1"
+      ],
+      "before": "###########\n#...@..####\n#P#.C..#B##\n#L#...G.S##\n#...M.G.###\n###########",
+      "after": "###########\n#......####\n#P#.@..#B##\n#L#.M.G.S##\n#...M.G.###\n###########"
+    },
+    {
+      "step": 4,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "pull_object:sticky#1",
+        "move_sticky_rigid"
+      ],
+      "before": "###########\n#......####\n#P#....#B##\n#L#.M@G.S##\n#...M.G.###\n###########",
+      "after": "###########\n#......####\n#P#....#B##\n#L#..M+.S##\n#....MG.###\n###########"
+    },
+    {
+      "step": 5,
+      "input": "right",
+      "legal": true,
+      "events": [
+        "pull_object:sticky#1",
+        "move_sticky_rigid"
+      ],
+      "before": "###########\n#......####\n#P#....#B##\n#L#..M+.S##\n#....MG.###\n###########",
+      "after": "###########\n#......####\n#P#....#B##\n#L#...m@S##\n#.....m.###\n###########"
+    }
+  ],
+  "graph": {
+    "status": "complete",
+    "reachableStateCount": 3439,
+    "legalTransitionCount": 8962,
+    "eventOnlyTransitionCount": 0,
+    "winStateCount": 40,
+    "budget": {
+      "maxStates": 300000
+    }
+  },
+  "agency": {
+    "status": "complete",
+    "compressionRule": "bidirectional_edges",
+    "reachableStateCount": 3439,
+    "legalTransitionCount": 8962,
+    "compressedRegionCount": 332,
+    "bidirectionalTransitionCount": 8010,
+    "commitmentTransitionCount": 802,
+    "winningRegionCount": 5,
+    "initialRegion": {
+      "regionId": 0,
+      "stateCount": 18,
+      "internalBidirectionalTransitionCount": 40,
+      "distanceToWin": 3,
+      "commitmentCount": 6,
+      "viableCommitmentCount": 5,
+      "deadCommitmentCount": 1,
+      "progressCommitmentCount": 1,
+      "optimalCommitmentCount": 1,
+      "isWinning": false,
+      "canReachWin": true
+    },
+    "solutionRegionPath": [
+      {
+        "regionId": 0,
+        "enteredAtStep": 0
+      },
+      {
+        "regionId": 1,
+        "enteredAtStep": 1
+      },
+      {
+        "regionId": 4,
+        "enteredAtStep": 4
+      },
+      {
+        "regionId": 8,
+        "enteredAtStep": 5
+      }
+    ],
+    "forcedCommitmentPrefixLength": 0,
+    "forcedViablePrefixLength": 0,
+    "forcedOptimalPrefixLength": 3,
+    "branchCountsOnSolutionPath": [
+      {
+        "regionId": 0,
+        "stateCount": 18,
+        "internalBidirectionalTransitionCount": 40,
+        "distanceToWin": 3,
+        "commitmentCount": 6,
+        "viableCommitmentCount": 5,
+        "deadCommitmentCount": 1,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "isWinning": false,
+        "canReachWin": true,
+        "solutionNextRegion": 1,
+        "forcedCommitment": false,
+        "forcedViableProgress": false,
+        "forcedOptimalProgress": true
+      },
+      {
+        "regionId": 1,
+        "stateCount": 18,
+        "internalBidirectionalTransitionCount": 40,
+        "distanceToWin": 2,
+        "commitmentCount": 3,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 1,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "isWinning": false,
+        "canReachWin": true,
+        "solutionNextRegion": 4,
+        "forcedCommitment": false,
+        "forcedViableProgress": false,
+        "forcedOptimalProgress": true
+      },
+      {
+        "regionId": 4,
+        "stateCount": 18,
+        "internalBidirectionalTransitionCount": 40,
+        "distanceToWin": 1,
+        "commitmentCount": 3,
+        "viableCommitmentCount": 3,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "isWinning": false,
+        "canReachWin": true,
+        "solutionNextRegion": 8,
+        "forcedCommitment": false,
+        "forcedViableProgress": false,
+        "forcedOptimalProgress": true
+      },
+      {
+        "regionId": 8,
+        "stateCount": 2,
+        "internalBidirectionalTransitionCount": 2,
+        "distanceToWin": 0,
+        "commitmentCount": 0,
+        "viableCommitmentCount": 0,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "isWinning": true,
+        "canReachWin": true,
+        "solutionNextRegion": null,
+        "forcedCommitment": false,
+        "forcedViableProgress": false,
+        "forcedOptimalProgress": false
+      }
+    ],
+    "decisionSteps": [
+      {
+        "step": 0,
+        "input": null,
+        "events": [],
+        "regionId": 0,
+        "previousRegionId": null,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": true,
+        "distanceToWin": 3,
+        "commitmentCount": 6,
+        "viableCommitmentCount": 5,
+        "deadCommitmentCount": 1,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": true,
+        "nextSolutionIsProgress": true,
+        "nextSolutionIsOptimal": true,
+        "forcedViableChoice": false,
+        "forcedOptimalChoice": true
+      },
+      {
+        "step": 1,
+        "input": "down",
+        "events": [
+          "push_object:crate#1",
+          "box_to_sticky:n1",
+          "sticky_merge:n1"
+        ],
+        "regionId": 1,
+        "previousRegionId": 0,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": true,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 2,
+        "commitmentCount": 3,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 1,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 2,
+        "input": "right",
+        "events": [
+          "walk"
+        ],
+        "regionId": 1,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 1,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 2,
+        "commitmentCount": 3,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 1,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      },
+      {
+        "step": 3,
+        "input": "down",
+        "events": [
+          "walk"
+        ],
+        "regionId": 1,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 4,
+        "enteredNewRegion": false,
+        "solutionTakesCommitmentNext": true,
+        "distanceToWin": 2,
+        "commitmentCount": 3,
+        "viableCommitmentCount": 2,
+        "deadCommitmentCount": 1,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": true,
+        "nextSolutionIsProgress": true,
+        "nextSolutionIsOptimal": true,
+        "forcedViableChoice": false,
+        "forcedOptimalChoice": true
+      },
+      {
+        "step": 4,
+        "input": "right",
+        "events": [
+          "pull_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "regionId": 4,
+        "previousRegionId": 1,
+        "nextSolutionRegionId": 8,
+        "enteredNewRegion": true,
+        "solutionTakesCommitmentNext": true,
+        "distanceToWin": 1,
+        "commitmentCount": 3,
+        "viableCommitmentCount": 3,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 1,
+        "optimalCommitmentCount": 1,
+        "nextSolutionIsViable": true,
+        "nextSolutionIsProgress": true,
+        "nextSolutionIsOptimal": true,
+        "forcedViableChoice": false,
+        "forcedOptimalChoice": true
+      },
+      {
+        "step": 5,
+        "input": "right",
+        "events": [
+          "pull_object:sticky#1",
+          "move_sticky_rigid"
+        ],
+        "regionId": 8,
+        "previousRegionId": 4,
+        "nextSolutionRegionId": null,
+        "enteredNewRegion": true,
+        "solutionTakesCommitmentNext": false,
+        "distanceToWin": 0,
+        "commitmentCount": 0,
+        "viableCommitmentCount": 0,
+        "deadCommitmentCount": 0,
+        "progressCommitmentCount": 0,
+        "optimalCommitmentCount": 0,
+        "nextSolutionIsViable": null,
+        "nextSolutionIsProgress": null,
+        "nextSolutionIsOptimal": null,
+        "forcedViableChoice": null,
+        "forcedOptimalChoice": null
+      }
+    ],
+    "scc": {
+      "condensationRule": "strongly_connected_components",
+      "sccCount": 233,
+      "sccEdgeCount": 406,
+      "initialSccId": 0,
+      "winningSccCount": 4,
+      "winReachableSccCount": 51,
+      "winContinuationBranchingSccCount": 26,
+      "winContinuationMergingSccCount": 32,
+      "winSubgraphShape": "branching_win_dag",
+      "solutionSccPath": [
+        {
+          "sccId": 0,
+          "enteredAtStep": 0
+        },
+        {
+          "sccId": 225,
+          "enteredAtStep": 1
+        },
+        {
+          "sccId": 226,
+          "enteredAtStep": 5
+        }
+      ],
+      "solutionIrreversibleStepCount": 2,
+      "forcedWinContinuationPrefixLength": 0,
+      "initialScc": {
+        "sccId": 0,
+        "stateCount": 232,
+        "representativeStateKey": "Ply:4,1|C:4,2|M:4,4|PL:P:1,2;L:1,3|BS:B:8,2;S:8,3",
+        "isInitial": true,
+        "isWinning": false,
+        "canReachWin": true,
+        "distanceToWin": 2,
+        "incomingCount": 0,
+        "outgoingCount": 18,
+        "winReachableIncomingCount": 0,
+        "winReachableOutgoingCount": 13,
+        "deadOutgoingCount": 5,
+        "onSolutionPath": true,
+        "enteredAtStep": 0
+      },
+      "solutionPathBranches": [
+        {
+          "sccId": 0,
+          "stateCount": 232,
+          "representativeStateKey": "Ply:4,1|C:4,2|M:4,4|PL:P:1,2;L:1,3|BS:B:8,2;S:8,3",
+          "isInitial": true,
+          "isWinning": false,
+          "canReachWin": true,
+          "distanceToWin": 2,
+          "incomingCount": 0,
+          "outgoingCount": 18,
+          "winReachableIncomingCount": 0,
+          "winReachableOutgoingCount": 13,
+          "deadOutgoingCount": 5,
+          "onSolutionPath": true,
+          "enteredAtStep": 0,
+          "solutionNextSccId": 225,
+          "forcedWinContinuation": false
+        },
+        {
+          "sccId": 225,
+          "stateCount": 36,
+          "representativeStateKey": "Ply:4,2|C:|M:4,3;4,4|PL:P:1,2;L:1,3|BS:B:8,2;S:8,3",
+          "isInitial": false,
+          "isWinning": false,
+          "canReachWin": true,
+          "distanceToWin": 1,
+          "incomingCount": 9,
+          "outgoingCount": 3,
+          "winReachableIncomingCount": 9,
+          "winReachableOutgoingCount": 2,
+          "deadOutgoingCount": 1,
+          "onSolutionPath": true,
+          "enteredAtStep": 1,
+          "solutionNextSccId": 226,
+          "forcedWinContinuation": false
+        },
+        {
+          "sccId": 226,
+          "stateCount": 2,
+          "representativeStateKey": "Ply:7,3|C:|M:6,3;6,4|PL:P:1,2;L:1,3|BS:B:8,2;S:8,3",
+          "isInitial": false,
+          "isWinning": true,
+          "canReachWin": true,
+          "distanceToWin": 0,
+          "incomingCount": 3,
+          "outgoingCount": 0,
+          "winReachableIncomingCount": 3,
+          "winReachableOutgoingCount": 0,
+          "deadOutgoingCount": 0,
+          "onSolutionPath": true,
+          "enteredAtStep": 5,
+          "solutionNextSccId": null,
+          "forcedWinContinuation": false
+        }
+      ],
+      "handoffProfile": {
+        "scope": "returned_solution",
+        "handoffCount": 2,
+        "scriptedHandoffCount": 1,
+        "trivialSourceSccCount": 0,
+        "sameEntryExitStateCount": 1,
+        "forcedScriptedHandoffCount": 0,
+        "maxConsecutiveScriptedHandoffs": 1,
+        "handoffs": [
+          {
+            "fromSccId": 0,
+            "toSccId": 225,
+            "sourceEnteredAtStep": 0,
+            "exitActionStep": 1,
+            "input": "down",
+            "events": [
+              "push_object:crate#1",
+              "box_to_sticky:n1",
+              "sticky_merge:n1"
+            ],
+            "sourceStateCount": 232,
+            "sourceEntryStateKey": "Ply:4,1|C:4,2|M:4,4|PL:P:1,2;L:1,3|BS:B:8,2;S:8,3",
+            "exitSourceStateKey": "Ply:4,1|C:4,2|M:4,4|PL:P:1,2;L:1,3|BS:B:8,2;S:8,3",
+            "entryEqualsExitSource": true,
+            "trivialSourceScc": false,
+            "forcedWinContinuation": false,
+            "reading": "scripted_same_state_handoff"
+          },
+          {
+            "fromSccId": 225,
+            "toSccId": 226,
+            "sourceEnteredAtStep": 1,
+            "exitActionStep": 5,
+            "input": "right",
+            "events": [
+              "pull_object:sticky#1",
+              "move_sticky_rigid"
+            ],
+            "sourceStateCount": 36,
+            "sourceEntryStateKey": "Ply:4,2|C:|M:4,3;4,4|PL:P:1,2;L:1,3|BS:B:8,2;S:8,3",
+            "exitSourceStateKey": "Ply:6,3|C:|M:5,3;5,4|PL:P:1,2;L:1,3|BS:B:8,2;S:8,3",
+            "entryEqualsExitSource": false,
+            "trivialSourceScc": false,
+            "forcedWinContinuation": false,
+            "reading": "has_reposition_room"
+          }
+        ]
+      }
+    },
+    "budget": {
+      "maxStates": 300000
+    }
+  },
+  "counterfactuals": [],
+  "targets": [
+    {
+      "targetId": "K_runtime_smoke",
+      "statement": "Reality Anchor v0 runtime smoke behavior is executable through the registered adapter.",
+      "requiredEvents": [],
+      "forbiddenEvents": [],
+      "detectorConfigured": false,
+      "returnedSolutionCovers": true,
+      "shortestBypass": {
+        "checked": false,
+        "reason": "No event detector is configured for this target."
+      },
+      "winningBypass": {
+        "checked": false,
+        "reason": "No event detector is configured for this target."
+      }
+    }
+  ]
+}
