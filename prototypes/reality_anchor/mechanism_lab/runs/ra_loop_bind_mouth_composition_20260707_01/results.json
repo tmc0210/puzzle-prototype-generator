@@ -1,14 +1,16 @@
 {
   "runId": "ra_loop_bind_mouth_composition_20260707_01",
   "prototype": "reality_anchor",
-  "generatedAt": "2026-07-07T06:22:20.461Z",
+  "generatedAt": "2026-07-07T06:22:43.576Z",
   "families": [],
   "cases": [
     {
       "id": "smoke_schema_probe",
       "title": "Smoke schema probe",
       "layout": "#####\n#@CG#\n#####",
-      "actions": [],
+      "actions": [
+        "right"
+      ],
       "stoppedAtIllegalAction": false,
       "winCondition": {
         "type": "all_targets_covered_by_objects",
@@ -31,11 +33,31 @@
         "isWin": false
       },
       "final": {
-        "key": "Ply:1,1|C:2,1|M:|PL:none|BS:none",
-        "render": "#####\n#@CG#\n#####",
-        "isWin": false
+        "key": "Ply:2,1|C:3,1|M:|PL:none|BS:none",
+        "render": "#####\n#.@*#\n#####",
+        "isWin": true
       },
-      "steps": [],
+      "steps": [
+        {
+          "step": 1,
+          "action": "right",
+          "legal": true,
+          "events": [
+            "push_object:crate#1"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:1,1|C:2,1|M:|PL:none|BS:none",
+            "render": "#####\n#@CG#\n#####",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:2,1|C:3,1|M:|PL:none|BS:none",
+            "render": "#####\n#.@*#\n#####",
+            "isWin": true
+          }
+        }
+      ],
       "finalActionTable": [
         {
           "action": "up",
@@ -53,29 +75,29 @@
         },
         {
           "action": "left",
-          "legal": false,
-          "reason": "destination_blocked",
-          "events": [],
-          "eventWin": false
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "nextKey": "Ply:1,1|C:3,1|M:|PL:none|BS:none",
+          "nextRender": "#####\n#@.*#\n#####"
         },
         {
           "action": "right",
-          "legal": true,
-          "events": [
-            "push_object:crate#1"
-          ],
-          "eventWin": false,
-          "nextKey": "Ply:2,1|C:3,1|M:|PL:none|BS:none",
-          "nextRender": "#####\n#.@*#\n#####"
+          "legal": false,
+          "reason": "force_blocked",
+          "events": [],
+          "eventWin": false
         }
       ],
       "returnToInitial": {
-        "found": true,
-        "status": "found",
+        "found": false,
+        "status": "complete",
         "path": [],
-        "depth": 0,
-        "exploredStates": 1,
-        "maxDepth": 24
+        "exploredStates": 2,
+        "maxDepth": 24,
+        "reason": "search complete"
       },
       "reachableFromInitial": {
         "status": "complete",
@@ -90,7 +112,26 @@
           "push_object:crate#1": 1
         }
       },
-      "changedCells": []
+      "changedCells": [
+        {
+          "x": 1,
+          "y": 1,
+          "before": "@",
+          "after": "."
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "before": "C",
+          "after": "@"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "before": "G",
+          "after": "*"
+        }
+      ]
     }
   ]
 }
