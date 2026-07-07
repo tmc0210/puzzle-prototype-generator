@@ -1,0 +1,88 @@
+{
+  "runId": "ra_struct_fixed_boundary_split_pocket_01",
+  "title": "固定 B/S 边界切开刚体后被单格目标袋消费",
+  "notes": "Reality Anchor 的 explorer run。本轮范围只看横向 sticky 二连块跨过固定 B/S 边界后，是否被切成 C+M，并由单格目标袋消费；不进入关卡设计，不读取历史设计归档、候选包、报告、采样配置或旧实验 run 材料。",
+  "defaults": {
+    "maxExploreDepth": 12,
+    "maxReturnDepth": 18,
+    "maxStates": 20000,
+    "maxTransitions": 80000
+  },
+  "cases": [
+    {
+      "id": "split_tail_single_pocket_pass",
+      "family": "fixed_boundary_split_pocket_consumption",
+      "variant": "sticky_pair_crosses_boundary_into_single_pocket",
+      "changedVariable": "B/S 边界位于推后左格与右格之间；横向 sticky 二连块先被切成 C+M，再尝试只把左格推入目标袋",
+      "contrastWith": [
+        "all_sticky_single_pocket_block",
+        "all_sticky_two_cell_pocket_pass",
+        "all_box_single_pocket_pass"
+      ],
+      "question": "同一串动作中，固定边界切出的 C+M 是否允许左格 crate 单独上推进目标袋？",
+      "layout": "########\n#..G#..#\n#...MM@#\n#......#\n#..BS..#\n########",
+      "actions": [
+        "left",
+        "down",
+        "left",
+        "left",
+        "up"
+      ]
+    },
+    {
+      "id": "all_sticky_single_pocket_block",
+      "family": "fixed_boundary_split_pocket_consumption",
+      "variant": "sticky_pair_stays_rigid_with_single_pocket",
+      "changedVariable": "B/S 边界更靠左；推后两格仍在 sticky side，保持横向刚体，袋口右上格是墙",
+      "contrastWith": [
+        "split_tail_single_pocket_pass"
+      ],
+      "question": "如果二连块没有被边界切开，同一单格目标袋是否会因为刚体右格撞墙而拒绝上推？",
+      "layout": "########\n#..G#..#\n#...MM@#\n#......#\n#.BS...#\n########",
+      "actions": [
+        "left",
+        "down",
+        "left",
+        "left",
+        "up"
+      ]
+    },
+    {
+      "id": "all_sticky_two_cell_pocket_pass",
+      "family": "fixed_boundary_split_pocket_consumption",
+      "variant": "sticky_pair_stays_rigid_with_two_cell_pocket",
+      "changedVariable": "保留未切开的横向 sticky 刚体，但打开右上格，形成双格目标袋",
+      "contrastWith": [
+        "all_sticky_single_pocket_block"
+      ],
+      "question": "如果袋口同时容纳刚体两格，未切开的横向 sticky 二连块是否可以整体上推？",
+      "layout": "########\n#..G...#\n#...MM@#\n#......#\n#.BS...#\n########",
+      "actions": [
+        "left",
+        "down",
+        "left",
+        "left",
+        "up"
+      ]
+    },
+    {
+      "id": "all_box_single_pocket_pass",
+      "family": "fixed_boundary_split_pocket_consumption",
+      "variant": "crate_pair_single_pocket",
+      "changedVariable": "同形横向二连资源保持为两个 crate；单格目标袋只消费左格",
+      "contrastWith": [
+        "split_tail_single_pocket_pass",
+        "all_sticky_single_pocket_block"
+      ],
+      "question": "如果二连资源本来就是可分离 crate，单格目标袋是否也能只消费左格？",
+      "layout": "########\n#..G#..#\n#...CC@#\n#......#\n#....BS#\n########",
+      "actions": [
+        "left",
+        "down",
+        "left",
+        "left",
+        "up"
+      ]
+    }
+  ]
+}

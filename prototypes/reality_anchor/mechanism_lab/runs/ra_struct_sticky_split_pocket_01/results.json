@@ -1,0 +1,1082 @@
+{
+  "runId": "ra_struct_sticky_split_pocket_01",
+  "title": "C 形 sticky 被固定 B/S 边界切断后由上端点目标袋消费",
+  "notes": "Reality Anchor 的 explorer run。本轮范围只看 C 形 sticky 刚体跨过固定 B/S 边界后是否被切成独立端点，并由上方单格目标袋消费；不进入关卡设计，不读取历史设计归档、候选包、报告、采样配置或旧实验 run 材料。",
+  "prototype": "reality_anchor",
+  "generatedAt": "2026-07-07T05:34:05.455Z",
+  "families": [
+    {
+      "family": "sticky_split_endpoint_pocket_consumption",
+      "cases": [
+        {
+          "id": "split_cshape_upper_pocket_pass",
+          "variant": "boundary_cuts_cshape_into_two_endpoints",
+          "changedVariable": "固定 B/S 边界切过 C 形刚体的左柱，推后左柱变 crate，右侧上下端点分裂为两个 sticky 组件",
+          "contrastWith": [
+            "unsplit_cshape_upper_pocket_block",
+            "split_cshape_no_stand_block",
+            "pre_split_endpoints_upper_pocket_pass"
+          ],
+          "returnToInitial": "unknown exhausted: depth budget exceeded",
+          "finalLegalActions": [
+            "down",
+            "right"
+          ],
+          "finalIllegalActions": [
+            "up:force_blocked",
+            "left:force_blocked"
+          ],
+          "reachableStatus": "complete",
+          "reachableStates": 427,
+          "graphComplete": true
+        },
+        {
+          "id": "unsplit_cshape_upper_pocket_block",
+          "variant": "cshape_stays_rigid",
+          "changedVariable": "B/S 边界更靠左，推后 C 形仍整体在 sticky side，保持一个刚体 footprint",
+          "contrastWith": [
+            "split_cshape_upper_pocket_pass"
+          ],
+          "returnToInitial": "not applicable: replay stopped at illegal action; return search skipped",
+          "finalLegalActions": [
+            "right"
+          ],
+          "finalIllegalActions": [
+            "up:force_blocked_by_player",
+            "down:force_blocked_by_player",
+            "left:force_blocked"
+          ],
+          "reachableStatus": "complete",
+          "reachableStates": 134,
+          "graphComplete": true
+        },
+        {
+          "id": "split_cshape_no_stand_block",
+          "variant": "split_endpoint_but_stand_cell_closed",
+          "changedVariable": "保留边界切断输出，但把绕到上端点下方的通路封成墙",
+          "contrastWith": [
+            "split_cshape_upper_pocket_pass"
+          ],
+          "returnToInitial": "not applicable: replay stopped at illegal action; return search skipped",
+          "finalLegalActions": [
+            "up",
+            "right"
+          ],
+          "finalIllegalActions": [
+            "down:destination_blocked",
+            "left:force_blocked"
+          ],
+          "reachableStatus": "complete",
+          "reachableStates": 188,
+          "graphComplete": true
+        },
+        {
+          "id": "pre_split_endpoints_upper_pocket_pass",
+          "variant": "already_separate_endpoints",
+          "changedVariable": "右侧上下端点一开始就不正交相邻，边界不需要切断桥格",
+          "contrastWith": [
+            "split_cshape_upper_pocket_pass",
+            "unsplit_cshape_upper_pocket_block"
+          ],
+          "returnToInitial": "unknown exhausted: depth budget exceeded",
+          "finalLegalActions": [
+            "down",
+            "right"
+          ],
+          "finalIllegalActions": [
+            "up:force_blocked",
+            "left:force_blocked"
+          ],
+          "reachableStatus": "complete",
+          "reachableStates": 841,
+          "graphComplete": true
+        }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "split_cshape_upper_pocket_pass",
+      "family": "sticky_split_endpoint_pocket_consumption",
+      "variant": "boundary_cuts_cshape_into_two_endpoints",
+      "changedVariable": "固定 B/S 边界切过 C 形刚体的左柱，推后左柱变 crate，右侧上下端点分裂为两个 sticky 组件",
+      "contrastWith": [
+        "unsplit_cshape_upper_pocket_block",
+        "split_cshape_no_stand_block",
+        "pre_split_endpoints_upper_pocket_pass"
+      ],
+      "question": "C 形刚体被切成独立上端点后，玩家是否能只把上端点推入上方目标袋？",
+      "layout": "########\n###.G..#\n###.MM@#\n#...M..#\n#...MM.#\n#..BS..#\n########",
+      "actions": [
+        "left",
+        "down",
+        "left",
+        "up"
+      ],
+      "stoppedAtIllegalAction": false,
+      "winCondition": {
+        "type": "all_targets_covered_by_objects",
+        "target": "goal",
+        "description": "After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.\n"
+      },
+      "counterfactual": {
+        "disabledRules": [],
+        "disabledBranches": []
+      },
+      "budgets": {
+        "maxExploreDepth": 10,
+        "maxReturnDepth": 16,
+        "maxStates": 20000,
+        "maxTransitions": 80000
+      },
+      "initial": {
+        "key": "Ply:6,2|C:|M:4,2;5,2;4,3;4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+        "render": "########\n###.G..#\n###.MM@#\n#...M..#\n#...MM.#\n#..BS..#\n########",
+        "isWin": false
+      },
+      "final": {
+        "key": "Ply:4,2|C:3,2;3,3;3,4|M:4,1|4,4|PL:none|BS:B:3,5;S:4,5",
+        "render": "########\n###.m..#\n###C@..#\n#..C...#\n#..CM..#\n#..BS..#\n########",
+        "isWin": true
+      },
+      "steps": [
+        {
+          "step": 1,
+          "action": "left",
+          "legal": true,
+          "events": [
+            "push_object:sticky#1",
+            "move_sticky_rigid",
+            "sticky_to_box:n3",
+            "sticky_split:n1"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:6,2|C:|M:4,2;5,2;4,3;4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###.MM@#\n#...M..#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:5,2|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM@.#\n#..C...#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 2,
+          "action": "down",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:5,2|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM@.#\n#..C...#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:5,3|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM..#\n#..C.@.#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 3,
+          "action": "left",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:5,3|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM..#\n#..C.@.#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:4,3|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM..#\n#..C@..#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 4,
+          "action": "up",
+          "legal": true,
+          "events": [
+            "push_object:sticky#1",
+            "move_sticky_rigid"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:4,3|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM..#\n#..C@..#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:4,2|C:3,2;3,3;3,4|M:4,1|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.m..#\n###C@..#\n#..C...#\n#..CM..#\n#..BS..#\n########",
+            "isWin": true
+          }
+        }
+      ],
+      "finalActionTable": [
+        {
+          "action": "up",
+          "legal": false,
+          "reason": "force_blocked",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "down",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "nextKey": "Ply:4,3|C:3,2;3,3;3,4|M:4,1|4,4|PL:none|BS:B:3,5;S:4,5",
+          "nextRender": "########\n###.m..#\n###C...#\n#..C@..#\n#..CM..#\n#..BS..#\n########"
+        },
+        {
+          "action": "left",
+          "legal": false,
+          "reason": "force_blocked",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "right",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "nextKey": "Ply:5,2|C:3,2;3,3;3,4|M:4,1|4,4|PL:none|BS:B:3,5;S:4,5",
+          "nextRender": "########\n###.m..#\n###C.@.#\n#..C...#\n#..CM..#\n#..BS..#\n########"
+        }
+      ],
+      "returnToInitial": {
+        "found": false,
+        "status": "exhausted",
+        "path": [],
+        "exploredStates": 4863,
+        "maxDepth": 16,
+        "reason": "depth budget exceeded"
+      },
+      "reachableFromInitial": {
+        "status": "complete",
+        "reachableStates": 427,
+        "legalTransitions": 762,
+        "winStates": 24,
+        "maxObservedDepth": 10,
+        "eventTypes": [
+          "anchor_boundary_shift:box_sticky",
+          "box_to_sticky:n1",
+          "box_to_sticky:n2",
+          "box_to_sticky:n3",
+          "force_chain:n2",
+          "force_chain:n3",
+          "move_sticky_rigid",
+          "push_object:box_sticky_anchor",
+          "push_object:crate#1",
+          "push_object:crate#2",
+          "push_object:crate#3",
+          "push_object:crate#4",
+          "push_object:crate#5",
+          "push_object:sticky#1",
+          "push_object:sticky#2",
+          "sticky_merge:n1",
+          "sticky_merge:n2",
+          "sticky_split:n1",
+          "sticky_to_box:n1",
+          "sticky_to_box:n2",
+          "sticky_to_box:n3",
+          "walk"
+        ],
+        "eventCounts": {
+          "walk": 643,
+          "push_object:sticky#1": 52,
+          "move_sticky_rigid": 69,
+          "sticky_to_box:n3": 4,
+          "sticky_split:n1": 4,
+          "push_object:sticky#2": 15,
+          "force_chain:n2": 15,
+          "sticky_to_box:n1": 7,
+          "push_object:crate#2": 10,
+          "sticky_merge:n1": 11,
+          "push_object:box_sticky_anchor": 17,
+          "anchor_boundary_shift:box_sticky": 17,
+          "box_to_sticky:n3": 3,
+          "push_object:crate#4": 6,
+          "push_object:crate#1": 7,
+          "push_object:crate#3": 9,
+          "box_to_sticky:n1": 7,
+          "force_chain:n3": 2,
+          "sticky_to_box:n2": 5,
+          "box_to_sticky:n2": 2,
+          "sticky_merge:n2": 1,
+          "push_object:crate#5": 3
+        }
+      },
+      "changedCells": [
+        {
+          "x": 4,
+          "y": 1,
+          "before": "G",
+          "after": "m"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "before": ".",
+          "after": "C"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "before": "M",
+          "after": "@"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "before": "M",
+          "after": "."
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "before": "@",
+          "after": "."
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "before": ".",
+          "after": "C"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "before": "M",
+          "after": "."
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "before": ".",
+          "after": "C"
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "before": "M",
+          "after": "."
+        }
+      ]
+    },
+    {
+      "id": "unsplit_cshape_upper_pocket_block",
+      "family": "sticky_split_endpoint_pocket_consumption",
+      "variant": "cshape_stays_rigid",
+      "changedVariable": "B/S 边界更靠左，推后 C 形仍整体在 sticky side，保持一个刚体 footprint",
+      "contrastWith": [
+        "split_cshape_upper_pocket_pass"
+      ],
+      "question": "如果 C 形没有被切断，同一上方目标袋是否会被整体 footprint 的其它格子阻断？",
+      "layout": "########\n###.G..#\n###.MM@#\n#...M..#\n#...MM.#\n#.BS...#\n########",
+      "actions": [
+        "left",
+        "down",
+        "left",
+        "up"
+      ],
+      "stoppedAtIllegalAction": true,
+      "winCondition": {
+        "type": "all_targets_covered_by_objects",
+        "target": "goal",
+        "description": "After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.\n"
+      },
+      "counterfactual": {
+        "disabledRules": [],
+        "disabledBranches": []
+      },
+      "budgets": {
+        "maxExploreDepth": 10,
+        "maxReturnDepth": 16,
+        "maxStates": 20000,
+        "maxTransitions": 80000
+      },
+      "initial": {
+        "key": "Ply:6,2|C:|M:4,2;5,2;4,3;4,4;5,4|PL:none|BS:B:2,5;S:3,5",
+        "render": "########\n###.G..#\n###.MM@#\n#...M..#\n#...MM.#\n#.BS...#\n########",
+        "isWin": false
+      },
+      "final": {
+        "key": "Ply:4,3|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+        "render": "########\n###.G..#\n###MM..#\n#..M@..#\n#..MM..#\n#.BS...#\n########",
+        "isWin": false
+      },
+      "steps": [
+        {
+          "step": 1,
+          "action": "left",
+          "legal": true,
+          "events": [
+            "push_object:sticky#1",
+            "move_sticky_rigid"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:6,2|C:|M:4,2;5,2;4,3;4,4;5,4|PL:none|BS:B:2,5;S:3,5",
+            "render": "########\n###.G..#\n###.MM@#\n#...M..#\n#...MM.#\n#.BS...#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:5,2|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+            "render": "########\n###.G..#\n###MM@.#\n#..M...#\n#..MM..#\n#.BS...#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 2,
+          "action": "down",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:5,2|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+            "render": "########\n###.G..#\n###MM@.#\n#..M...#\n#..MM..#\n#.BS...#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:5,3|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+            "render": "########\n###.G..#\n###MM..#\n#..M.@.#\n#..MM..#\n#.BS...#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 3,
+          "action": "left",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:5,3|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+            "render": "########\n###.G..#\n###MM..#\n#..M.@.#\n#..MM..#\n#.BS...#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:4,3|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+            "render": "########\n###.G..#\n###MM..#\n#..M@..#\n#..MM..#\n#.BS...#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 4,
+          "action": "up",
+          "legal": false,
+          "reason": "force_blocked_by_player",
+          "events": [],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:4,3|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+            "render": "########\n###.G..#\n###MM..#\n#..M@..#\n#..MM..#\n#.BS...#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:4,3|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+            "render": "########\n###.G..#\n###MM..#\n#..M@..#\n#..MM..#\n#.BS...#\n########",
+            "isWin": false
+          }
+        }
+      ],
+      "finalActionTable": [
+        {
+          "action": "up",
+          "legal": false,
+          "reason": "force_blocked_by_player",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "down",
+          "legal": false,
+          "reason": "force_blocked_by_player",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "left",
+          "legal": false,
+          "reason": "force_blocked",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "right",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "nextKey": "Ply:5,3|C:|M:3,2;4,2;3,3;3,4;4,4|PL:none|BS:B:2,5;S:3,5",
+          "nextRender": "########\n###.G..#\n###MM..#\n#..M.@.#\n#..MM..#\n#.BS...#\n########"
+        }
+      ],
+      "returnToInitial": {
+        "found": false,
+        "status": "not_applicable",
+        "path": [],
+        "exploredStates": 0,
+        "maxDepth": 16,
+        "reason": "replay stopped at illegal action; return search skipped"
+      },
+      "reachableFromInitial": {
+        "status": "complete",
+        "reachableStates": 134,
+        "legalTransitions": 295,
+        "winStates": 7,
+        "maxObservedDepth": 10,
+        "eventTypes": [
+          "anchor_boundary_shift:box_sticky",
+          "force_chain:n2",
+          "move_sticky_rigid",
+          "push_object:box_sticky_anchor",
+          "push_object:sticky#1",
+          "walk"
+        ],
+        "eventCounts": {
+          "walk": 266,
+          "push_object:sticky#1": 25,
+          "move_sticky_rigid": 25,
+          "force_chain:n2": 3,
+          "anchor_boundary_shift:box_sticky": 7,
+          "push_object:box_sticky_anchor": 4
+        }
+      },
+      "changedCells": [
+        {
+          "x": 3,
+          "y": 2,
+          "before": ".",
+          "after": "M"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "before": "M",
+          "after": "."
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "before": "@",
+          "after": "."
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "before": ".",
+          "after": "M"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "before": "M",
+          "after": "@"
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "before": ".",
+          "after": "M"
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "before": "M",
+          "after": "."
+        }
+      ]
+    },
+    {
+      "id": "split_cshape_no_stand_block",
+      "family": "sticky_split_endpoint_pocket_consumption",
+      "variant": "split_endpoint_but_stand_cell_closed",
+      "changedVariable": "保留边界切断输出，但把绕到上端点下方的通路封成墙",
+      "contrastWith": [
+        "split_cshape_upper_pocket_pass"
+      ],
+      "question": "即使切出了独立上端点，如果缺少下方施力站位，目标袋消费是否仍然失败？",
+      "layout": "########\n###.G..#\n###.MM@#\n#...M#.#\n#...MM.#\n#..BS..#\n########",
+      "actions": [
+        "left",
+        "down",
+        "left",
+        "up"
+      ],
+      "stoppedAtIllegalAction": true,
+      "winCondition": {
+        "type": "all_targets_covered_by_objects",
+        "target": "goal",
+        "description": "After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.\n"
+      },
+      "counterfactual": {
+        "disabledRules": [],
+        "disabledBranches": []
+      },
+      "budgets": {
+        "maxExploreDepth": 10,
+        "maxReturnDepth": 16,
+        "maxStates": 20000,
+        "maxTransitions": 80000
+      },
+      "initial": {
+        "key": "Ply:6,2|C:|M:4,2;5,2;4,3;4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+        "render": "########\n###.G..#\n###.MM@#\n#...M#.#\n#...MM.#\n#..BS..#\n########",
+        "isWin": false
+      },
+      "final": {
+        "key": "Ply:5,2|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+        "render": "########\n###.G..#\n###CM@.#\n#..C.#.#\n#..CM..#\n#..BS..#\n########",
+        "isWin": false
+      },
+      "steps": [
+        {
+          "step": 1,
+          "action": "left",
+          "legal": true,
+          "events": [
+            "push_object:sticky#1",
+            "move_sticky_rigid",
+            "sticky_to_box:n3",
+            "sticky_split:n1"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:6,2|C:|M:4,2;5,2;4,3;4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###.MM@#\n#...M#.#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:5,2|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM@.#\n#..C.#.#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 2,
+          "action": "down",
+          "legal": false,
+          "reason": "destination_blocked",
+          "events": [],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:5,2|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM@.#\n#..C.#.#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:5,2|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM@.#\n#..C.#.#\n#..CM..#\n#..BS..#\n########",
+            "isWin": false
+          }
+        }
+      ],
+      "finalActionTable": [
+        {
+          "action": "up",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "nextKey": "Ply:5,1|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+          "nextRender": "########\n###.G@.#\n###CM..#\n#..C.#.#\n#..CM..#\n#..BS..#\n########"
+        },
+        {
+          "action": "down",
+          "legal": false,
+          "reason": "destination_blocked",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "left",
+          "legal": false,
+          "reason": "force_blocked",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "right",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "nextKey": "Ply:6,2|C:3,2;3,3;3,4|M:4,2|4,4|PL:none|BS:B:3,5;S:4,5",
+          "nextRender": "########\n###.G..#\n###CM.@#\n#..C.#.#\n#..CM..#\n#..BS..#\n########"
+        }
+      ],
+      "returnToInitial": {
+        "found": false,
+        "status": "not_applicable",
+        "path": [],
+        "exploredStates": 0,
+        "maxDepth": 16,
+        "reason": "replay stopped at illegal action; return search skipped"
+      },
+      "reachableFromInitial": {
+        "status": "complete",
+        "reachableStates": 188,
+        "legalTransitions": 326,
+        "winStates": 12,
+        "maxObservedDepth": 10,
+        "eventTypes": [
+          "anchor_boundary_shift:box_sticky",
+          "box_to_sticky:n1",
+          "box_to_sticky:n2",
+          "box_to_sticky:n3",
+          "force_chain:n2",
+          "force_chain:n3",
+          "move_sticky_rigid",
+          "push_object:box_sticky_anchor",
+          "push_object:crate#1",
+          "push_object:crate#2",
+          "push_object:crate#3",
+          "push_object:crate#4",
+          "push_object:sticky#1",
+          "push_object:sticky#2",
+          "sticky_merge:n1",
+          "sticky_split:n1",
+          "sticky_to_box:n1",
+          "sticky_to_box:n2",
+          "sticky_to_box:n3",
+          "walk"
+        ],
+        "eventCounts": {
+          "walk": 276,
+          "push_object:sticky#1": 21,
+          "move_sticky_rigid": 23,
+          "sticky_to_box:n3": 3,
+          "sticky_split:n1": 3,
+          "push_object:sticky#2": 2,
+          "force_chain:n2": 4,
+          "sticky_to_box:n1": 1,
+          "sticky_merge:n1": 5,
+          "push_object:box_sticky_anchor": 9,
+          "anchor_boundary_shift:box_sticky": 9,
+          "box_to_sticky:n3": 2,
+          "push_object:crate#4": 4,
+          "push_object:crate#2": 6,
+          "push_object:crate#1": 3,
+          "push_object:crate#3": 5,
+          "box_to_sticky:n1": 3,
+          "box_to_sticky:n2": 1,
+          "force_chain:n3": 1,
+          "sticky_to_box:n2": 1
+        }
+      },
+      "changedCells": [
+        {
+          "x": 3,
+          "y": 2,
+          "before": ".",
+          "after": "C"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "before": "M",
+          "after": "@"
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "before": "@",
+          "after": "."
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "before": ".",
+          "after": "C"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "before": "M",
+          "after": "."
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "before": ".",
+          "after": "C"
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "before": "M",
+          "after": "."
+        }
+      ]
+    },
+    {
+      "id": "pre_split_endpoints_upper_pocket_pass",
+      "family": "sticky_split_endpoint_pocket_consumption",
+      "variant": "already_separate_endpoints",
+      "changedVariable": "右侧上下端点一开始就不正交相邻，边界不需要切断桥格",
+      "contrastWith": [
+        "split_cshape_upper_pocket_pass",
+        "unsplit_cshape_upper_pocket_block"
+      ],
+      "question": "如果上端点本来就是独立 sticky，单格目标袋是否表现得和切断输出一样？",
+      "layout": "########\n###.G..#\n###.MM@#\n#......#\n#...MM.#\n#..BS..#\n########",
+      "actions": [
+        "left",
+        "down",
+        "left",
+        "up"
+      ],
+      "stoppedAtIllegalAction": false,
+      "winCondition": {
+        "type": "all_targets_covered_by_objects",
+        "target": "goal",
+        "description": "After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.\n"
+      },
+      "counterfactual": {
+        "disabledRules": [],
+        "disabledBranches": []
+      },
+      "budgets": {
+        "maxExploreDepth": 10,
+        "maxReturnDepth": 16,
+        "maxStates": 20000,
+        "maxTransitions": 80000
+      },
+      "initial": {
+        "key": "Ply:6,2|C:|M:4,2;5,2|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+        "render": "########\n###.G..#\n###.MM@#\n#......#\n#...MM.#\n#..BS..#\n########",
+        "isWin": false
+      },
+      "final": {
+        "key": "Ply:4,2|C:3,2|M:4,1|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+        "render": "########\n###.m..#\n###C@..#\n#......#\n#...MM.#\n#..BS..#\n########",
+        "isWin": true
+      },
+      "steps": [
+        {
+          "step": 1,
+          "action": "left",
+          "legal": true,
+          "events": [
+            "push_object:sticky#1",
+            "move_sticky_rigid",
+            "sticky_to_box:n1"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:6,2|C:|M:4,2;5,2|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###.MM@#\n#......#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:5,2|C:3,2|M:4,2|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM@.#\n#......#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 2,
+          "action": "down",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:5,2|C:3,2|M:4,2|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM@.#\n#......#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:5,3|C:3,2|M:4,2|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM..#\n#....@.#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 3,
+          "action": "left",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:5,3|C:3,2|M:4,2|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM..#\n#....@.#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:4,3|C:3,2|M:4,2|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM..#\n#...@..#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          }
+        },
+        {
+          "step": 4,
+          "action": "up",
+          "legal": true,
+          "events": [
+            "push_object:sticky#1",
+            "move_sticky_rigid"
+          ],
+          "eventWin": false,
+          "before": {
+            "key": "Ply:4,3|C:3,2|M:4,2|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.G..#\n###CM..#\n#...@..#\n#...MM.#\n#..BS..#\n########",
+            "isWin": false
+          },
+          "after": {
+            "key": "Ply:4,2|C:3,2|M:4,1|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+            "render": "########\n###.m..#\n###C@..#\n#......#\n#...MM.#\n#..BS..#\n########",
+            "isWin": true
+          }
+        }
+      ],
+      "finalActionTable": [
+        {
+          "action": "up",
+          "legal": false,
+          "reason": "force_blocked",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "down",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "nextKey": "Ply:4,3|C:3,2|M:4,1|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+          "nextRender": "########\n###.m..#\n###C...#\n#...@..#\n#...MM.#\n#..BS..#\n########"
+        },
+        {
+          "action": "left",
+          "legal": false,
+          "reason": "force_blocked",
+          "events": [],
+          "eventWin": false
+        },
+        {
+          "action": "right",
+          "legal": true,
+          "events": [
+            "walk"
+          ],
+          "eventWin": false,
+          "nextKey": "Ply:5,2|C:3,2|M:4,1|4,4;5,4|PL:none|BS:B:3,5;S:4,5",
+          "nextRender": "########\n###.m..#\n###C.@.#\n#......#\n#...MM.#\n#..BS..#\n########"
+        }
+      ],
+      "returnToInitial": {
+        "found": false,
+        "status": "exhausted",
+        "path": [],
+        "exploredStates": 2983,
+        "maxDepth": 16,
+        "reason": "depth budget exceeded"
+      },
+      "reachableFromInitial": {
+        "status": "complete",
+        "reachableStates": 841,
+        "legalTransitions": 1512,
+        "winStates": 42,
+        "maxObservedDepth": 10,
+        "eventTypes": [
+          "anchor_boundary_shift:box_sticky",
+          "box_to_sticky:n1",
+          "box_to_sticky:n2",
+          "force_chain:n2",
+          "force_chain:n3",
+          "move_sticky_rigid",
+          "push_object:box_sticky_anchor",
+          "push_object:crate#1",
+          "push_object:crate#2",
+          "push_object:crate#3",
+          "push_object:crate#4",
+          "push_object:sticky#1",
+          "push_object:sticky#2",
+          "sticky_merge:n1",
+          "sticky_merge:n2",
+          "sticky_to_box:n1",
+          "sticky_to_box:n2",
+          "walk"
+        ],
+        "eventCounts": {
+          "walk": 1292,
+          "push_object:sticky#1": 102,
+          "move_sticky_rigid": 153,
+          "sticky_to_box:n1": 18,
+          "sticky_merge:n1": 38,
+          "push_object:sticky#2": 47,
+          "force_chain:n2": 13,
+          "push_object:box_sticky_anchor": 35,
+          "anchor_boundary_shift:box_sticky": 35,
+          "box_to_sticky:n1": 13,
+          "push_object:crate#2": 8,
+          "push_object:crate#1": 22,
+          "sticky_to_box:n2": 16,
+          "force_chain:n3": 2,
+          "box_to_sticky:n2": 3,
+          "sticky_merge:n2": 1,
+          "push_object:crate#3": 5,
+          "push_object:crate#4": 1
+        }
+      },
+      "changedCells": [
+        {
+          "x": 4,
+          "y": 1,
+          "before": "G",
+          "after": "m"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "before": ".",
+          "after": "C"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "before": "M",
+          "after": "@"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "before": "M",
+          "after": "."
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "before": "@",
+          "after": "."
+        }
+      ]
+    }
+  ]
+}

@@ -404,6 +404,59 @@ function legalActions(mechanic) {
   const actions = Object.entries(mechanic.inputs).filter(([, input]) => input.intent === "move" && input.dir).map(([, input]) => input.dir);
   return actions.length > 0 ? actions : defaultActions;
 }
+var layers = [
+  editorToolGroup("terrain", "Terrain", [
+    tool("terrain", "floor", "\u5730\u9762", "floor", "."),
+    tool("terrain", "wall", "\u5899", "wall", "#")
+  ]),
+  editorToolGroup("target", "Target", [
+    tool("target", "goal", "\u76EE\u6807", "goal", "G"),
+    tool("target", "clear", "\u6E05\u76EE\u6807", void 0, ".")
+  ], false),
+  editorToolGroup("actor", "Actor", [
+    tool("actor", "player", "\u73A9\u5BB6", "player", "@"),
+    tool("actor", "clear", "\u6E05\u89D2\u8272", void 0, ".")
+  ]),
+  editorToolGroup("object", "Object", [
+    tool("object", "ice", "\u51B0\u5757", "ice", "I"),
+    tool("object", "clear", "\u6E05\u7269\u4F53", void 0, ".")
+  ])
+];
+function tool(layerId, id, label, value, glyph) {
+  return editorTool(layerId, id, label, value, editorVisualForGlyph(glyph));
+}
+function defaultTarget(knowledge) {
+  return knowledge.knowledge[0]?.id ?? "solvable";
+}
+function defaultLevel(_mechanic, knowledge) {
+  const target = defaultTarget(knowledge);
+  return {
+    id: "STUDIO_DRAFT",
+    title: "Studio Draft",
+    role: "review",
+    status: "draft",
+    targets: [target],
+    known_before: [],
+    target_learning: [target],
+    support_level: "none",
+    expected_solver_evidence: ["solvable"],
+    expected_llm_player_evidence: [],
+    layout: normalizeAsciiLayout(
+      `
+@..G
+.I..
+....
+....
+`,
+      { rectangular: true, fill: "." }
+    ),
+    win: {
+      type: "ice_slide_escape_explicit_goal",
+      player_start: [0, 0],
+      player_goal: [3, 0]
+    }
+  };
+}
 var iceSlideAdapter = {
   id: "ice_slide_escape",
   createRuntime: createIceSlideRuntime,
@@ -412,8 +465,63 @@ var iceSlideAdapter = {
   step,
   replay,
   isWin,
-  isEventWin
+  isEventWin,
+  editor: {
+    layers,
+    defaultGlyph: ".",
+    defaultSize: { width: 9, height: 7 },
+    defaultLevel,
+    normalizeAscii: (layout) => normalizeAsciiLayout(layout, { rectangular: true, fill: "." }),
+    parseAsciiToBoard: parseEditorBoard,
+    serializeBoard: serializeEditorBoardLayout,
+    renderCell: renderEditorCell,
+    validateLevel: (level) => validateLevelByParsing(level, parseLevel)
+  }
 };
+function parseEditorBoard(layout) {
+  return editorBoardFromAscii(layout, {
+    defaultTerrain: "floor",
+    parseGlyph: parseEditorGlyph,
+    rectangular: true,
+    fill: "."
+  });
+}
+function parseEditorGlyph(glyph) {
+  switch (glyph) {
+    case "#":
+      return { terrain: "wall" };
+    case "G":
+      return { target: "goal" };
+    case "+":
+      return { target: "goal", actor: "player" };
+    case "*":
+      return { target: "goal", object: "ice" };
+    case "@":
+      return { actor: "player" };
+    case "I":
+      return { object: "ice" };
+    default:
+      return {};
+  }
+}
+function serializeEditorBoardLayout(board) {
+  return serializeEditorBoard(board, serializeEditorCell);
+}
+function serializeEditorCell(cell) {
+  if (cell.terrain === "wall") {
+    return "#";
+  }
+  if (cell.actor === "player") {
+    return cell.target === "goal" ? "+" : "@";
+  }
+  if (cell.object === "ice") {
+    return cell.target === "goal" ? "*" : "I";
+  }
+  return cell.target === "goal" ? "G" : ".";
+}
+function renderEditorCell(cell) {
+  return editorVisualForGlyph(serializeEditorCell(cell));
+}
 
 // src/prototypes/pull_portal_fallback/mechanics.ts
 var vectors2 = {
@@ -766,6 +874,60 @@ function legalInputs(mechanic) {
   const inputs = Object.entries(mechanic.inputs).filter(([, input]) => input.intent === "move" && input.dir).map(([, input]) => input.dir);
   return inputs.length > 0 ? inputs : defaultInputs;
 }
+var layers2 = [
+  editorToolGroup("terrain", "Terrain", [
+    tool2("terrain", "floor", "\u5730\u9762", "floor", " "),
+    tool2("terrain", "wall", "\u5899", "wall", "#")
+  ]),
+  editorToolGroup("target", "Target", [
+    tool2("target", "goal", "\u76EE\u6807", "goal", "G"),
+    tool2("target", "clear", "\u6E05\u76EE\u6807", void 0, " ")
+  ], false),
+  editorToolGroup("actor", "Actor", [
+    tool2("actor", "player", "\u73A9\u5BB6", "player", "@"),
+    tool2("actor", "clear", "\u6E05\u89D2\u8272", void 0, " ")
+  ]),
+  editorToolGroup("object", "Object", [
+    tool2("object", "crate", "\u7BB1\u5B50", "crate", "C"),
+    tool2("object", "clear", "\u6E05\u7269\u4F53", void 0, " ")
+  ]),
+  editorToolGroup("mechanism", "Mechanism", [
+    tool2("mechanism", "portal_a", "\u4F20\u9001\u95E8 A", "portal_a", "A"),
+    tool2("mechanism", "portal_b", "\u4F20\u9001\u95E8 B", "portal_b", "B"),
+    tool2("mechanism", "portal_d", "\u4F20\u9001\u95E8 D", "portal_d", "D"),
+    tool2("mechanism", "portal_e", "\u4F20\u9001\u95E8 E", "portal_e", "E"),
+    tool2("mechanism", "portal_h", "\u4F20\u9001\u95E8 H", "portal_h", "H"),
+    tool2("mechanism", "portal_i", "\u4F20\u9001\u95E8 I", "portal_i", "I"),
+    tool2("mechanism", "clear", "\u6E05\u673A\u5236", void 0, " ")
+  ])
+];
+function tool2(layerId, id, label, value, glyph) {
+  return editorTool(layerId, id, label, value, editorVisualForGlyph(glyph));
+}
+function defaultTarget2(knowledge) {
+  return knowledge.knowledge[0]?.id ?? "solvable";
+}
+function defaultLevel2(_mechanic, knowledge) {
+  const target = defaultTarget2(knowledge);
+  return {
+    id: "STUDIO_DRAFT",
+    title: "Studio Draft",
+    role: "review",
+    status: "draft",
+    targets: [target],
+    known_before: [],
+    target_learning: [target],
+    support_level: "none",
+    expected_solver_evidence: ["solvable"],
+    expected_llm_player_evidence: [],
+    layout: normalizeAsciiLayout(`
+#######
+#@ C G#
+#     #
+#######
+`)
+  };
+}
 var pullPortalAdapter = {
   id: "pull_portal_fallback",
   createRuntime: createPullPortalRuntime,
@@ -774,8 +936,83 @@ var pullPortalAdapter = {
   step: step2,
   replay: replay2,
   isWin: isWin2,
-  isEventWin: isEventWin2
+  isEventWin: isEventWin2,
+  editor: {
+    layers: layers2,
+    defaultGlyph: " ",
+    defaultSize: { width: 8, height: 6 },
+    defaultLevel: defaultLevel2,
+    normalizeAscii: (layout) => normalizeAsciiLayout(layout),
+    parseAsciiToBoard: parseEditorBoard2,
+    serializeBoard: serializeEditorBoardLayout2,
+    renderCell: renderEditorCell2,
+    validateLevel: (level) => validateLevelByParsing(level, parseLevel2)
+  }
 };
+function parseEditorBoard2(layout) {
+  return editorBoardFromAscii(layout, {
+    defaultTerrain: "floor",
+    parseGlyph: parseEditorGlyph2
+  });
+}
+function parseEditorGlyph2(glyph) {
+  switch (glyph) {
+    case "#":
+      return { terrain: "wall" };
+    case "G":
+      return { target: "goal" };
+    case "@":
+      return { actor: "player" };
+    case "C":
+      return { object: "crate" };
+    case "A":
+      return { mechanism: "portal_a" };
+    case "B":
+      return { mechanism: "portal_b" };
+    case "D":
+      return { mechanism: "portal_d" };
+    case "E":
+      return { mechanism: "portal_e" };
+    case "H":
+      return { mechanism: "portal_h" };
+    case "I":
+      return { mechanism: "portal_i" };
+    default:
+      return {};
+  }
+}
+function serializeEditorBoardLayout2(board) {
+  return serializeEditorBoard(board, serializeEditorCell2);
+}
+function serializeEditorCell2(cell) {
+  if (cell.terrain === "wall") {
+    return "#";
+  }
+  switch (cell.mechanism) {
+    case "portal_a":
+      return "A";
+    case "portal_b":
+      return "B";
+    case "portal_d":
+      return "D";
+    case "portal_e":
+      return "E";
+    case "portal_h":
+      return "H";
+    case "portal_i":
+      return "I";
+  }
+  if (cell.actor === "player") {
+    return "@";
+  }
+  if (cell.object === "crate") {
+    return "C";
+  }
+  return cell.target === "goal" ? "G" : " ";
+}
+function renderEditorCell2(cell) {
+  return editorVisualForGlyph(serializeEditorCell2(cell));
+}
 
 // src/prototypes/reality_anchor/mechanics.ts
 var vectors3 = {
@@ -1128,8 +1365,8 @@ function renderVisualState(state) {
 function visualLayer(visualKey, fallbackGlyph, label, tags = []) {
   return { visualKey, fallbackGlyph, label, tags };
 }
-function pushLayer(tile, slot, layer2) {
-  tile[slot] = [...tile[slot] ?? [], layer2];
+function pushLayer(tile, slot, layer) {
+  tile[slot] = [...tile[slot] ?? [], layer];
 }
 function joinDirection(from, to) {
   if (to.x < from.x) {
@@ -1600,6 +1837,56 @@ function legalInputs2(mechanic) {
   const inputs = Object.entries(mechanic.inputs).filter(([, input]) => input.intent === "move" && input.dir).map(([, input]) => input.dir);
   return inputs.length > 0 ? inputs : defaultInputs2;
 }
+var layers3 = [
+  editorToolGroup("terrain", "Terrain", [
+    editorTool("terrain", "floor", "\u5730\u9762", "floor", renderEditorCell3({ terrain: "floor" })),
+    editorTool("terrain", "wall", "\u5899", "wall", renderEditorCell3({ terrain: "wall" }))
+  ]),
+  editorToolGroup("target", "Target", [
+    editorTool("target", "goal", "\u76EE\u6807", "goal", renderEditorCell3({ terrain: "floor", target: "goal" })),
+    editorTool("target", "clear", "\u6E05\u76EE\u6807", void 0, renderEditorCell3({ terrain: "floor" }))
+  ], false),
+  editorToolGroup("actor", "Actor", [
+    editorTool("actor", "player", "\u73A9\u5BB6", "player", renderEditorCell3({ terrain: "floor", actor: "player" })),
+    editorTool("actor", "clear", "\u6E05\u89D2\u8272", void 0, renderEditorCell3({ terrain: "floor" }))
+  ]),
+  editorToolGroup("object", "Object", [
+    editorTool("object", "crate", "\u7BB1\u5B50", "crate", renderEditorCell3({ terrain: "floor", object: "crate" })),
+    editorTool("object", "sticky", "\u9ECF\u5757", "sticky", renderEditorCell3({ terrain: "floor", object: "sticky" })),
+    editorTool("object", "clear", "\u6E05\u7269\u4F53", void 0, renderEditorCell3({ terrain: "floor" }))
+  ]),
+  editorToolGroup("mechanism", "Mechanism", [
+    editorTool("mechanism", "push_anchor", "Push \u951A", "push_anchor", renderEditorCell3({ terrain: "floor", mechanism: "push_anchor" })),
+    editorTool("mechanism", "pull_anchor", "Pull \u951A", "pull_anchor", renderEditorCell3({ terrain: "floor", mechanism: "pull_anchor" })),
+    editorTool("mechanism", "box_anchor", "Box \u951A", "box_anchor", renderEditorCell3({ terrain: "floor", mechanism: "box_anchor" })),
+    editorTool("mechanism", "sticky_anchor", "Sticky \u951A", "sticky_anchor", renderEditorCell3({ terrain: "floor", mechanism: "sticky_anchor" })),
+    editorTool("mechanism", "clear", "\u6E05\u673A\u5236", void 0, renderEditorCell3({ terrain: "floor" }))
+  ])
+];
+function defaultTarget3(knowledge) {
+  return knowledge.knowledge[0]?.id ?? "solvable";
+}
+function defaultLevel3(_mechanic, knowledge) {
+  const target = defaultTarget3(knowledge);
+  return {
+    id: "STUDIO_DRAFT",
+    title: "Studio Draft",
+    role: "review",
+    status: "draft",
+    targets: [target],
+    known_before: [],
+    target_learning: [target],
+    support_level: "none",
+    expected_solver_evidence: ["solvable"],
+    expected_llm_player_evidence: [],
+    layout: normalizeAsciiLayout(`
+#######
+#@ C G#
+#     #
+#######
+`)
+  };
+}
 var realityAnchorAdapter = {
   id: "reality_anchor",
   createRuntime: createRealityAnchorRuntime,
@@ -1609,8 +1896,113 @@ var realityAnchorAdapter = {
   step: step3,
   replay: replay3,
   isWin: isWin3,
-  isEventWin: isEventWin3
+  isEventWin: isEventWin3,
+  editor: {
+    layers: layers3,
+    defaultGlyph: " ",
+    defaultSize: { width: 8, height: 6 },
+    defaultLevel: defaultLevel3,
+    normalizeAscii: (layout) => normalizeAsciiLayout(layout),
+    parseAsciiToBoard: parseEditorBoard3,
+    serializeBoard: serializeEditorBoardLayout3,
+    renderCell: renderEditorCell3,
+    validateLevel: (level) => validateLevelByParsing(level, parseLevel3)
+  }
 };
+function parseEditorBoard3(layout) {
+  return editorBoardFromAscii(layout, {
+    defaultTerrain: "floor",
+    parseGlyph: parseEditorGlyph3
+  });
+}
+function parseEditorGlyph3(glyph) {
+  switch (glyph) {
+    case "#":
+      return { terrain: "wall" };
+    case "G":
+      return { target: "goal" };
+    case "+":
+      return { target: "goal", actor: "player" };
+    case "*":
+      return { target: "goal", object: "crate" };
+    case "m":
+      return { target: "goal", object: "sticky" };
+    case "@":
+      return { actor: "player" };
+    case "C":
+      return { object: "crate" };
+    case "M":
+      return { object: "sticky" };
+    case "P":
+      return { mechanism: "push_anchor" };
+    case "L":
+      return { mechanism: "pull_anchor" };
+    case "B":
+      return { mechanism: "box_anchor" };
+    case "S":
+      return { mechanism: "sticky_anchor" };
+    default:
+      return {};
+  }
+}
+function serializeEditorBoardLayout3(board) {
+  return serializeEditorBoard(board, serializeEditorCell3);
+}
+function serializeEditorCell3(cell) {
+  if (cell.terrain === "wall") {
+    return "#";
+  }
+  switch (cell.mechanism) {
+    case "push_anchor":
+      return "P";
+    case "pull_anchor":
+      return "L";
+    case "box_anchor":
+      return "B";
+    case "sticky_anchor":
+      return "S";
+  }
+  if (cell.actor === "player") {
+    return cell.target === "goal" ? "+" : "@";
+  }
+  if (cell.object === "crate") {
+    return cell.target === "goal" ? "*" : "C";
+  }
+  if (cell.object === "sticky") {
+    return cell.target === "goal" ? "m" : "M";
+  }
+  return cell.target === "goal" ? "G" : " ";
+}
+function renderEditorCell3(cell) {
+  const tile = {
+    terrain: cell.terrain === "wall" ? visualLayer2("ra.terrain.wall.box_side", "#", "wall") : visualLayer2("ra.terrain.floor.box_side", " ", "floor")
+  };
+  if (cell.target === "goal" && cell.terrain !== "wall") {
+    tile.target = visualLayer2("target.goal", "G", "goal");
+  }
+  if (cell.object === "crate") {
+    tile.objects = [...tile.objects ?? [], visualLayer2("ra.crate.box_side", "C", "crate")];
+  }
+  if (cell.object === "sticky") {
+    tile.objects = [...tile.objects ?? [], visualLayer2("ra.sticky.sticky_side", "M", "sticky block")];
+  }
+  if (cell.mechanism === "push_anchor") {
+    tile.objects = [visualLayer2("ra.anchor.push_end", "P", "push anchor")];
+  }
+  if (cell.mechanism === "pull_anchor") {
+    tile.objects = [visualLayer2("ra.anchor.pull_end", "L", "pull anchor")];
+  }
+  if (cell.mechanism === "box_anchor") {
+    tile.objects = [visualLayer2("ra.anchor.box_end", "B", "box anchor")];
+  }
+  if (cell.mechanism === "sticky_anchor") {
+    tile.objects = [visualLayer2("ra.anchor.sticky_end", "S", "sticky anchor")];
+  }
+  if (cell.actor === "player") {
+    tile.actors = [visualLayer2("ra.player.push_side", "@", "player")];
+  }
+  return tile;
+}
 
 // src/prototypes/runtimeAdapter.ts
 function renderVisualStateWithFallback(adapter2, mechanic, state) {
@@ -1631,46 +2023,125 @@ function glyphTile(glyph, x, y) {
   const tile = {
     x,
     y,
-    terrain: layer("terrain.floor", " ", "floor")
+    terrain: visualLayer2("terrain.floor", " ", "floor")
   };
   switch (glyph) {
     case " ":
     case ".":
       return tile;
     case "#":
-      tile.terrain = layer("terrain.wall", "#", "wall");
+      tile.terrain = visualLayer2("terrain.wall", "#", "wall");
       return tile;
     case "G":
-      tile.target = layer("target.goal", "G", "goal");
+      tile.target = visualLayer2("target.goal", "G", "goal");
       return tile;
     case "+":
-      tile.target = layer("target.goal", "G", "goal");
-      tile.actors = [layer("actor.player", "@", "player")];
+      tile.target = visualLayer2("target.goal", "G", "goal");
+      tile.actors = [visualLayer2("actor.player", "@", "player")];
       return tile;
     case "@":
-      tile.actors = [layer("actor.player", "@", "player")];
+      tile.actors = [visualLayer2("actor.player", "@", "player")];
       return tile;
     case "*":
-      tile.target = layer("target.goal", "G", "goal");
-      tile.objects = [layer("object.crate", "C", "crate")];
+      tile.target = visualLayer2("target.goal", "G", "goal");
+      tile.objects = [visualLayer2("object.crate", "C", "crate")];
       return tile;
     case "C":
-      tile.objects = [layer("object.crate", "C", "crate")];
+      tile.objects = [visualLayer2("object.crate", "C", "crate")];
       return tile;
     case "m":
-      tile.target = layer("target.goal", "G", "goal");
-      tile.objects = [layer("object.sticky", "M", "sticky")];
+      tile.target = visualLayer2("target.goal", "G", "goal");
+      tile.objects = [visualLayer2("object.sticky", "M", "sticky")];
       return tile;
     case "M":
-      tile.objects = [layer("object.sticky", "M", "sticky")];
+      tile.objects = [visualLayer2("object.sticky", "M", "sticky")];
       return tile;
     default:
-      tile.objects = [layer(`glyph.${glyph}`, glyph, glyph, ["glyph-fallback"])];
+      tile.objects = [visualLayer2(`glyph.${glyph}`, glyph, glyph, ["glyph-fallback"])];
       return tile;
   }
 }
-function layer(visualKey, fallbackGlyph, label, tags = []) {
+function visualLayer2(visualKey, fallbackGlyph, label, tags = []) {
   return { visualKey, fallbackGlyph, label, tags };
+}
+function editorVisualForGlyph(glyph) {
+  const { x: _x, y: _y, ...visual } = glyphTile(glyph, 0, 0);
+  return visual;
+}
+function editorTool(layerId, id, label, value, visual) {
+  return { id, layer: layerId, label, value, visual };
+}
+function editorToolGroup(id, label, items, exclusive = true) {
+  return { id, label, exclusive, items };
+}
+function editorBoardFromAscii(layout, options) {
+  const normalized = normalizeAsciiLayout(layout, {
+    rectangular: options.rectangular,
+    fill: options.fill
+  });
+  const rows = normalized.length > 0 ? normalized.split("\n") : [""];
+  const width = Math.max(1, ...rows.map((row) => row.length));
+  const height = Math.max(1, rows.length);
+  const cells = [];
+  for (let y = 0; y < height; y += 1) {
+    const row = rows[y] ?? "";
+    for (let x = 0; x < width; x += 1) {
+      cells.push({
+        terrain: options.defaultTerrain,
+        ...options.parseGlyph(row[x] ?? options.fill ?? " ")
+      });
+    }
+  }
+  return { width, height, cells };
+}
+function serializeEditorBoard(board, serializeCell) {
+  const rows = Array.from(
+    { length: board.height },
+    () => Array.from({ length: board.width }, () => " ")
+  );
+  for (let y = 0; y < board.height; y += 1) {
+    for (let x = 0; x < board.width; x += 1) {
+      const cell = board.cells[y * board.width + x];
+      rows[y][x] = cell ? serializeCell(cell) : " ";
+    }
+  }
+  return rows.map((row) => row.join("").trimEnd()).join("\n");
+}
+function normalizeAsciiLayout(layout, options = {}) {
+  const fill = options.fill ?? " ";
+  const rows = layout.replace(/\r/g, "").split("\n").map((row) => row.replace(/\t/g, "  "));
+  while (rows.length > 0 && rows[0] === "") {
+    rows.shift();
+  }
+  while (rows.length > 0 && rows.at(-1) === "") {
+    rows.pop();
+  }
+  if (rows.length === 0) {
+    return "";
+  }
+  if (!options.rectangular) {
+    return rows.map((row) => row.trimEnd()).join("\n");
+  }
+  const width = Math.max(...rows.map((row) => row.length));
+  return rows.map((row) => row.padEnd(width, fill)).join("\n");
+}
+function validateLevelByParsing(level, parseLevel4) {
+  const errors = [];
+  if (!level.id.trim()) {
+    errors.push("\u7F3A\u5C11\u5173\u5361 id");
+  }
+  if (!level.title.trim()) {
+    errors.push("\u7F3A\u5C11\u6807\u9898");
+  }
+  if (!level.layout.trim()) {
+    errors.push("\u7F3A\u5C11\u5E03\u5C40");
+  }
+  try {
+    parseLevel4(level);
+  } catch (error) {
+    errors.push(error instanceof Error ? error.message : String(error));
+  }
+  return { ok: errors.length === 0, errors };
 }
 function getRuntimeAdapter(mechanic) {
   if (mechanic.id === pullPortalAdapter.id) {
@@ -1770,7 +2241,7 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mr6hmmqz" : String(Date.now());
+var buildId = true ? "mra1k9ik" : String(Date.now());
 var data = await fetchJson(`./data.json?v=${encodeURIComponent(buildId)}`);
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);
@@ -1842,6 +2313,7 @@ function renderHeader() {
         <h1>${escapeHtml(data.mechanic.title)}</h1>
       </div>
       <div class="header-metrics" aria-label="\u5019\u9009\u6982\u51B5">
+        <a class="secondary-link" href="./editor">\u5173\u5361\u7F16\u8F91\u5668</a>
         <span class="metric"><strong>${archiveCount}</strong> \u5F52\u6863\u5019\u9009</span>
         <span class="metric"><strong>${temporaryCount}</strong> \u4E34\u65F6\u6E38\u73A9</span>
         <span class="badge ${reviewData.writable ? "ok" : "muted"}">${writableLabel}</span>
@@ -1915,6 +2387,13 @@ function renderPlayArea(entry, level) {
                     >
                       \u590D\u5236 ASCII
                     </button>
+                    <a
+                      class="tool-menu-item"
+                      href="${escapeAttribute(editorUrlForEntry(entry))}"
+                      role="menuitem"
+                    >
+                      \u7F16\u8F91\u6B64\u5173
+                    </a>
                   </div>` : ""}
           </div>
         </div>
@@ -2138,23 +2617,23 @@ function renderBoard(runtimeAdapter, state) {
   `;
 }
 function renderTile(tile) {
-  const layers = [
+  const layers4 = [
     tile.terrain ? renderLayer(tile.terrain, "terrain") : "",
     tile.target ? renderLayer(tile.target, "target") : "",
-    ...(tile.objects ?? []).map((layer2) => renderLayer(layer2, "object")),
-    ...(tile.actors ?? []).map((layer2) => renderLayer(layer2, "actor"))
+    ...(tile.objects ?? []).map((layer) => renderLayer(layer, "object")),
+    ...(tile.actors ?? []).map((layer) => renderLayer(layer, "actor"))
   ].join("");
-  return `<div class="tile" title="${escapeAttribute(tileLabel(tile))}">${layers}</div>`;
+  return `<div class="tile" title="${escapeAttribute(tileLabel(tile))}">${layers4}</div>`;
 }
-function renderLayer(layer2, layerType) {
-  const sprite2 = puzzleScript16Sprites[layer2.visualKey];
-  const label = layer2.label ?? sprite2?.label ?? layer2.visualKey;
-  const body = sprite2 ? renderSpriteImage(sprite2, label) : renderFallbackGlyph(layer2);
+function renderLayer(layer, layerType) {
+  const sprite2 = puzzleScript16Sprites[layer.visualKey];
+  const label = layer.label ?? sprite2?.label ?? layer.visualKey;
+  const body = sprite2 ? renderSpriteImage(sprite2, label) : renderFallbackGlyph(layer);
   return `
     <span
       class="visual-layer"
       data-layer="${escapeAttribute(layerType)}"
-      data-visual-key="${escapeAttribute(layer2.visualKey)}"
+      data-visual-key="${escapeAttribute(layer.visualKey)}"
       data-sprite-state="${sprite2 ? "sprite" : "fallback"}"
       aria-label="${escapeAttribute(label)}"
     >
@@ -2176,8 +2655,8 @@ function renderSpriteImage(sprite2, label) {
     >
   `;
 }
-function renderFallbackGlyph(layer2) {
-  return `<span class="fallback-glyph">${escapeHtml(layer2.fallbackGlyph)}</span>`;
+function renderFallbackGlyph(layer) {
+  return `<span class="fallback-glyph">${escapeHtml(layer.fallbackGlyph)}</span>`;
 }
 function bindUiEvents() {
   app.querySelectorAll("[data-tab]").forEach((button) => {
@@ -2461,6 +2940,16 @@ function firstEntryKeyForActiveView() {
 function entryKey(entry) {
   return entry.kind === "archive" ? `archive:${entry.candidateId ?? entry.levelId ?? "unknown"}` : `temporary:${entry.levelId}`;
 }
+function editorUrlForEntry(entry) {
+  if (!entry) {
+    return "./editor";
+  }
+  if (entry.kind === "archive" && entry.candidateId) {
+    return `./editor?source=${encodeURIComponent(`archive:${entry.candidateId}`)}`;
+  }
+  const levelId = entry.kind === "temporary" ? entry.levelId : entry.levelId ?? entry.level?.id;
+  return levelId ? `./editor?levelId=${encodeURIComponent(levelId)}` : "./editor";
+}
 function entryLevel(entry) {
   return entry?.kind === "archive" ? entry.level : entry?.level;
 }
@@ -2506,8 +2995,8 @@ function tileLabel(tile) {
   const labels = [
     tile.terrain?.label,
     tile.target?.label,
-    ...(tile.objects ?? []).map((layer2) => layer2.label),
-    ...(tile.actors ?? []).map((layer2) => layer2.label)
+    ...(tile.objects ?? []).map((layer) => layer.label),
+    ...(tile.actors ?? []).map((layer) => layer.label)
   ].filter((label) => Boolean(label));
   return labels.join(", ");
 }

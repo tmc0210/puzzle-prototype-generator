@@ -1,0 +1,157 @@
+{
+  "runId": "ra_probe_pl_wall_anchor_03",
+  "title": "P/L 推拉锚点与墙结构局部实验",
+  "notes": "Exploration brief: prototype=reality_anchor; scope=P/L push-pull anchor plus wall geometry only; exclusions=不读取黏块形状谱系、不使用 B/S 或 sticky；source_boundary=runtime、 mechanic 定义、mechanism-lab 本轮产物；run_intent=explore_then_curate.\n",
+  "defaults": {
+    "maxExploreDepth": 24,
+    "maxReturnDepth": 48,
+    "maxStates": 50000,
+    "maxTransitions": 200000
+  },
+  "cases": [
+    {
+      "id": "long_axis_no_front_cell",
+      "family": "pl_long_axis_wall_ratchet",
+      "variant": "no_front_cell",
+      "changedVariable": "L 端前方没有空格",
+      "contrastWith": [
+        "long_axis_one_front_cell"
+      ],
+      "question": "沿 P->L 长轴推动时，L 端前方空格数量是否直接决定棘轮容量",
+      "layout": "#######\n#G#@PL#\n#######",
+      "actions": [
+        "right"
+      ]
+    },
+    {
+      "id": "long_axis_one_front_cell",
+      "family": "pl_long_axis_wall_ratchet",
+      "variant": "one_front_cell",
+      "changedVariable": "L 端前方从 0 格改为 1 格",
+      "contrastWith": [
+        "long_axis_no_front_cell",
+        "long_axis_two_front_cells"
+      ],
+      "question": "一格余量是否允许一次长轴位移但在墙前停止",
+      "layout": "########\n#G#@PL.#\n########",
+      "actions": [
+        "right"
+      ]
+    },
+    {
+      "id": "long_axis_two_front_cells",
+      "family": "pl_long_axis_wall_ratchet",
+      "variant": "two_front_cells",
+      "changedVariable": "L 端前方从 1 格改为 2 格",
+      "contrastWith": [
+        "long_axis_one_front_cell",
+        "long_axis_side_bypass_still_one_way"
+      ],
+      "question": "第二个前方空格是否保留下一次继续沿长轴推进的动作",
+      "layout": "#########\n#G#@PL..#\n#########",
+      "actions": [
+        "right"
+      ]
+    },
+    {
+      "id": "long_axis_side_bypass_still_one_way",
+      "family": "pl_long_axis_wall_ratchet",
+      "variant": "side_bypass",
+      "changedVariable": "在同样两格前方余量下加入可绕行侧廊",
+      "contrastWith": [
+        "long_axis_two_front_cells"
+      ],
+      "question": "玩家能绕到 L 侧是否足以恢复反向长轴位移",
+      "layout": "#########\n#G#@PL..#\n#.......#\n#########",
+      "actions": [
+        "right"
+      ]
+    },
+    {
+      "id": "p_side_push_down_open_loop",
+      "family": "pl_perpendicular_handle_wall_gates",
+      "variant": "p_side_push_open_return",
+      "changedVariable": "P 侧接触格、P/L 下方目标格与回返绕行格均开放",
+      "contrastWith": [
+        "p_side_push_down_other_half_wall",
+        "p_side_push_down_l_front_wall_after_shift"
+      ],
+      "question": "P 侧把手是否能把横向 P/L 垂直推入下方开放房间并回返",
+      "layout": "#######\n#.....#\n#.@...#\n#.PLG.#\n#.....#\n#.....#\n#######",
+      "actions": [
+        "down"
+      ]
+    },
+    {
+      "id": "p_side_push_down_other_half_wall",
+      "family": "pl_perpendicular_handle_wall_gates",
+      "variant": "p_side_push_l_target_blocked",
+      "changedVariable": "只堵住 L 半格的下落目标格",
+      "contrastWith": [
+        "p_side_push_down_open_loop"
+      ],
+      "question": "P 侧推入时，非接触的 L 半格被墙挡住是否会阻断整条 P/L 锚",
+      "layout": "#######\n#.....#\n#.@...#\n#.PLG.#\n#..#..#\n#.....#\n#######",
+      "actions": [
+        "down"
+      ]
+    },
+    {
+      "id": "p_side_push_down_l_front_wall_after_shift",
+      "family": "pl_perpendicular_handle_wall_gates",
+      "variant": "p_side_push_l_front_wall",
+      "changedVariable": "推动合法，但推动后 L 侧上方前格被墙堵住",
+      "contrastWith": [
+        "p_side_push_down_open_loop"
+      ],
+      "question": "推动后的 L 侧前格墙是否切断用 pull 把锚拉回上方的回返路径",
+      "layout": "#######\n#.....#\n#.@#..#\n#.PLG.#\n#.....#\n#######",
+      "actions": [
+        "down"
+      ]
+    },
+    {
+      "id": "l_side_pull_up_open_loop",
+      "family": "pl_perpendicular_handle_wall_gates",
+      "variant": "l_side_pull_open_return",
+      "changedVariable": "L 侧玩家前格与 P/L 上移目标格均开放",
+      "contrastWith": [
+        "l_side_pull_up_front_wall",
+        "l_side_pull_up_p_target_wall"
+      ],
+      "question": "L 侧把手是否能通过拉动把横向 P/L 上移并回返",
+      "layout": "#######\n#.....#\n#..@..#\n#.PLG.#\n#.....#\n#.....#\n#######",
+      "actions": [
+        "up"
+      ]
+    },
+    {
+      "id": "l_side_pull_up_front_wall",
+      "family": "pl_perpendicular_handle_wall_gates",
+      "variant": "l_side_pull_front_wall",
+      "changedVariable": "只堵住玩家 pull 前进格",
+      "contrastWith": [
+        "l_side_pull_up_open_loop"
+      ],
+      "question": "L 侧拉动时，玩家前进格被墙挡住是否比锚本体空间更早阻断动作",
+      "layout": "#######\n#..#..#\n#..@..#\n#.PLG.#\n#.....#\n#.....#\n#######",
+      "actions": [
+        "up"
+      ]
+    },
+    {
+      "id": "l_side_pull_up_p_target_wall",
+      "family": "pl_perpendicular_handle_wall_gates",
+      "variant": "l_side_pull_p_target_wall",
+      "changedVariable": "玩家前格开放，但 P 半格上移目标格被墙堵住",
+      "contrastWith": [
+        "l_side_pull_up_open_loop"
+      ],
+      "question": "L 侧拉动时，非接触的 P 半格目标墙是否阻断整条 P/L 锚",
+      "layout": "#######\n#.....#\n#.#@..#\n#.PLG.#\n#.....#\n#.....#\n#######",
+      "actions": [
+        "up"
+      ]
+    }
+  ]
+}

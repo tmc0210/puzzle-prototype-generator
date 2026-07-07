@@ -1,0 +1,171 @@
+{
+  "runId": "ra_struct_binding_unbinding_01",
+  "title": "绑定债与解绑定债的局部结构谱",
+  "notes": "本轮把 Reality Anchor 的 B/S 归一化当作已知规则，目标不是验证事件是否触发， 而是为 designer 提供两组可复用局部材料：独立 crate 被压成 sticky 刚体后的动作负债， 以及 sticky 刚体被切回 crate 部件后的资源释放方式。\n",
+  "defaults": {
+    "maxExploreDepth": 14,
+    "maxReturnDepth": 24,
+    "maxStates": 60000,
+    "maxTransitions": 160000
+  },
+  "cases": [
+    {
+      "id": "bind_bar_open",
+      "family": "binding_debt_sticky_topology",
+      "variant": "二连箱压成横条工具",
+      "changedVariable": "基准：两个相邻 crate 沿施力轴跨入 sticky 侧",
+      "contrastWith": [
+        "bind_l_corner",
+        "bind_gap_keeps_parts",
+        "bind_bar_choke"
+      ],
+      "question": "二连箱被压成 2 格横条后，designer 得到的是可沿轴继续递送的刚体工具，而不是两个可分配资源。",
+      "notes": "开放房间保留绕到刚体另一侧的可能性，用作绑定债的低约束基准。",
+      "layout": "#########\n#...BS..#\n#.......#\n#.@CC...#\n#.....G.#\n#########",
+      "actions": [
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bind_l_corner",
+      "family": "binding_debt_sticky_topology",
+      "variant": "三箱压成 L 形占角件",
+      "changedVariable": "在横条基准上加入一个可晚推入的上方 crate，改变 sticky 邻接图为 L 形",
+      "contrastWith": [
+        "bind_bar_open",
+        "bind_gap_keeps_parts"
+      ],
+      "question": "晚加入的第三个 crate 把横条工具改成占角件，后续用途从线性递送偏向封角/卡门。",
+      "notes": "动作序列先制造横条，再把上方 crate 接入同一 sticky 组件。",
+      "layout": "#########\n#...BS..#\n#...C...#\n#.@CC...#\n#.....G.#\n#########",
+      "actions": [
+        "right",
+        "right",
+        "left",
+        "up",
+        "right"
+      ]
+    },
+    {
+      "id": "bind_gap_keeps_parts",
+      "family": "binding_debt_sticky_topology",
+      "variant": "隔行压入保留两个部件",
+      "changedVariable": "把正交邻接改成隔一行的并列入场，保留两个独立 sticky 部件",
+      "contrastWith": [
+        "bind_bar_open",
+        "bind_l_corner"
+      ],
+      "question": "同样把 crate 送入 sticky 侧，但缺少正交接触时，designer 得到的是两个可分别处理的部件而不是一笔刚体债。",
+      "notes": "这是绑定债的误用边界：材质转换本身不等于资源绑定。",
+      "layout": "#########\n#...BS..#\n#...C...#\n#.@.....#\n#...C.G.#\n#########",
+      "actions": [
+        "up",
+        "right",
+        "right",
+        "left",
+        "down",
+        "down",
+        "right"
+      ]
+    },
+    {
+      "id": "bind_bar_choke",
+      "family": "binding_debt_sticky_topology",
+      "variant": "走廊内横条成为宽塞",
+      "changedVariable": "把开放房间收窄成单行走廊，限制绕行与侧向把手",
+      "contrastWith": [
+        "bind_bar_open"
+      ],
+      "question": "同一个 2 格横条在走廊里从可递送工具变成宽塞，后续动作集合被压到轴向处理。",
+      "notes": "该变体展示地形不是附属装饰，而是决定绑定债是否成为阻塞债的旋钮。",
+      "layout": "#########\n#...BS..#\n#########\n#.@CC..G#\n#########",
+      "actions": [
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "unbind_head_slice_once",
+      "family": "unbinding_debt_resource_release",
+      "variant": "横条切头释放一个 crate",
+      "changedVariable": "基准：2 格 sticky 横条垂直穿过 B/S 边界一步，留下 crate + sticky 尾",
+      "contrastWith": [
+        "unbind_full_bar_twice",
+        "unbind_l_neck",
+        "unbind_parallel_carry"
+      ],
+      "question": "一次切头把刚体债改写为一个可独立使用的 crate 加一个仍受 sticky 约束的尾部。",
+      "notes": "价值在于部分释放：designer 可以先拿到一个部件，同时保留尾部作为后续债。",
+      "layout": "##########\n#...BS...#\n#........#\n#....MM@.#\n#......G.#\n##########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "unbind_full_bar_twice",
+      "family": "unbinding_debt_resource_release",
+      "variant": "横条二次切割完全拆箱",
+      "changedVariable": "在切头基准上继续沿同一方向推进一次，把剩余 sticky 尾也切回 box 侧",
+      "contrastWith": [
+        "unbind_head_slice_once",
+        "unbind_parallel_carry"
+      ],
+      "question": "连续切割把一个刚体工具拆回两个独立 crate，designer 从单个笨重工具回收为两个可分配资源。",
+      "notes": "该变体给出解绑定债的完整释放端点。",
+      "layout": "##########\n#...BS...#\n#........#\n#....MM@.#\n#......G.#\n##########",
+      "actions": [
+        "left",
+        "left"
+      ]
+    },
+    {
+      "id": "unbind_l_neck",
+      "family": "unbinding_debt_resource_release",
+      "variant": "L 形切颈释放竖向双 crate 加尾",
+      "changedVariable": "把 2 格横条改成 L 形，让一次切割同时释放两个相邻 crate 并保留一个 sticky 尾",
+      "contrastWith": [
+        "unbind_head_slice_once",
+        "unbind_vertical_full_release"
+      ],
+      "question": "切在 L 形的颈部时，designer 得到的是一列可链推的 crate 资源和一个仍可当尾巴的 sticky 残件。",
+      "notes": "该变体展示解绑定债不是只按数量变化，切割线相对形状的位置会改变释放出的资源形态。",
+      "layout": "##########\n#...BS...#\n#....M...#\n#....MM@.#\n#......G.#\n##########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "unbind_vertical_full_release",
+      "family": "unbinding_debt_resource_release",
+      "variant": "竖条整列一次释放",
+      "changedVariable": "把横条改成与边界平行的竖条，但从侧面整体推过边界",
+      "contrastWith": [
+        "unbind_l_neck",
+        "unbind_parallel_carry"
+      ],
+      "question": "整列跨界时，刚体不会留下 sticky 尾，而是直接变成一列可链推 crate，适合作为完整资源释放结构。",
+      "notes": "这是切割线覆盖整个 footprint 的释放端点。",
+      "layout": "##########\n#...BS...#\n#....M...#\n#....M@..#\n#......G.#\n##########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "unbind_parallel_carry",
+      "family": "unbinding_debt_resource_release",
+      "variant": "沿边界平移保留刚体债",
+      "changedVariable": "把垂直切割改成沿边界方向推送，移动位置但不释放资源",
+      "contrastWith": [
+        "unbind_head_slice_once",
+        "unbind_vertical_full_release"
+      ],
+      "question": "沿边界搬运保留 sticky 刚体身份，designer 可用它调整工具位置而不提前解债。",
+      "notes": "这是解绑定债的保守边界：同一个刚体仍可搬运，但不会变成可分配 crate。",
+      "layout": "##########\n#...BS...#\n#....@...#\n#....M...#\n#....M.G.#\n#........#\n#........#\n##########",
+      "actions": [
+        "down"
+      ]
+    }
+  ]
+}

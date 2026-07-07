@@ -459,7 +459,7 @@ levels:
   - id: RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v4
     title: Long-edge P/L relay v4
     role: challenge
-    status: candidate
+    status: accepted
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -490,7 +490,9 @@ levels:
       independent puzzle critic returned accept. Caveat: the level is strongly
       guided and the second consecutive P/L right push is more reinforcement
       than a new insight, but that is acceptable for the fifth curriculum slot.
-      Pending human playtest; not archived yet.
+      2026-07-06 human playtest accepted it as RA_CAND_0015, aesthetic 4 /
+      difficulty 3: a compact early comprehensive P/L application with clear
+      causal chain and strong mechanism coverage.
     expected_trace:
       - input: right
         events: [pull_object]
@@ -600,6 +602,244 @@ levels:
       - input: up
       - input: right
         events: [pull_object]
+
+  - id: RA_LEX_2026_07_06_VACATE_BIND_RETURN_v1
+    title: Vacate bind return v1
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ##MG.M@.#
+      #.M.M..M#
+      #BSLP#.##
+      #.G..#..#
+      #########
+    lineage:
+      source: report_candidate
+      source_candidate_id: RA_LEX_2026_07_06_VACATE_BIND_RETURN_v1
+      source_file: prototypes/reality_anchor/reports/submission_RA_LEX_2026_07_06_VACATE_BIND_RETURN_v1.zh.md
+      created_by: codex
+      created_at: "2026-07-06"
+    design_notes: >
+      review_1 提交待玩候选。该关使用 mechanism_lab/lexicon.md 的 P/L 横向把手墙格门、
+      B/S 绑定债、B/S 解绑定债和刚体黏块回返谱系组合成状态责任反转：top_goal
+      [3,1] 必须先覆盖、再腾空、最终回填。完整 core7 probe 证明所有胜路都包含
+      P/L shift、B/S shift、pull、box_to_sticky、sticky_to_box、sticky rigid movement
+      与 sticky_merge；target-vacate probe 证明所有胜路都必须让 [3,1] 经历
+      covered -> uncovered -> covered。Evidence reviewer 与 puzzle critic 均为
+      proposal_ready_with_caveats / required_action none。只声明 state-level responsibility
+      reversal，不声明唯一输入序列或对象身份级必要性。2026-07-06 human playtest
+      要求确认右上黏块和上方空格的作用；反事实显示最右活动列可裁掉且保持核心证据，
+      因此 v1 被 v2 取代。直接删除顶行把手并左移起点、或把把手随起点左移的局部版本均完整无解。
+    expected_trace:
+      - input: down
+      - input: left
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: right
+        events: [pull_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+      - input: up
+      - input: left
+      - input: right
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: down
+      - input: right
+      - input: right
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: left
+        events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]
+      - input: down
+      - input: down
+      - input: left
+        events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: up
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid]
+      - input: down
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_LEX_2026_07_06_VACATE_BIND_RETURN_v2
+    title: Vacate bind return v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      ##MG.M@#
+      #.M.M..#
+      #BSLP#.#
+      #.G..#.#
+      ########
+    lineage:
+      source: human_feedback_revision
+      source_candidate_id: RA_LEX_2026_07_06_VACATE_BIND_RETURN_v1
+      source_file: prototypes/reality_anchor/reports/RA_LEX_2026_07_06_VACATE_BIND_RETURN_v2_trimcol_layout.txt
+      created_by: codex
+      created_at: "2026-07-07"
+    design_notes: >
+      Human-feedback revision of RA_LEX_2026_07_06_VACATE_BIND_RETURN_v1. The
+      far-right activity column, containing the right-upper sticky and the space
+      above it, is removed. Complete analysis keeps the same 27-step witness while
+      reducing the graph from 691 reachable states / 1517 legal transitions to
+      449 / 975. Complete core7 probe still proves all wins require P/L shift,
+      B/S shift, pull, box_to_sticky, sticky_to_box, sticky rigid movement, and
+      sticky_merge. Target-vacate probe still proves top_goal [3,1] must go
+      covered -> uncovered -> covered before win. Local variants that also moved
+      the start left by deleting or shifting the top-row sticky handle were
+      complete no-win graphs, so this v2 performs the safe structural deletion
+      without overclaiming that the start can be locally left-shifted. Superseded
+      by v3, which keeps this trimmed structure but moves the start within the
+      same initial SCC to remove the first-step object-push affordance.
+    expected_trace:
+      - input: down
+      - input: left
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: right
+        events: [pull_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+      - input: up
+      - input: left
+      - input: right
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: down
+      - input: right
+      - input: right
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: left
+        events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]
+      - input: down
+      - input: down
+      - input: left
+        events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: up
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid]
+      - input: down
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_opening_comfort
+    title: Vacate bind return v3 opening comfort
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      ##MG.M.#
+      #.M.M..#
+      #BSLP#@#
+      #.G..#.#
+      ########
+    lineage:
+      source: opening_comfort_revision
+      source_candidate_id: RA_LEX_2026_07_06_VACATE_BIND_RETURN_v2
+      source_file: prototypes/reality_anchor/reports/RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_opening_comfort_layout.txt
+      created_by: codex
+      created_at: "2026-07-07"
+    design_notes: >
+      Opening comfort revision of v2. Start enumeration over the trimmed v2 layout
+      found that the human-suggested left-shift starts either produced complete
+      no-win graphs or made the first commitment immediate. This v3 keeps the
+      same trimmed structure and moves the player from [6,1] to [6,3], a position
+      in the same 5-state initial SCC. Complete explain-layout still reports
+      449 reachable states / 975 legal transitions, a 27-step shortest solution,
+      initial SCC states=5, out=2, winOut=1, deadOut=1, and opening commitments
+      2 / viable 1 / dead 1. The returned solution's first irreversible
+      commitment remains after two reversible walk steps, but the first-step
+      legal actions are now only walks, avoiding the v2 start's immediate
+      object-push affordance. Complete core7 probe still proves all wins require
+      P/L shift, B/S shift, pull, box_to_sticky, sticky_to_box, sticky rigid
+      movement, and sticky_merge. Target-vacate probe still proves top_goal
+      [3,1] must go covered -> uncovered -> covered before win.
+    expected_trace:
+      - input: up
+      - input: left
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: right
+        events: [pull_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+      - input: up
+      - input: left
+      - input: right
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: down
+      - input: right
+      - input: right
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: left
+        events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]
+      - input: down
+      - input: down
+      - input: left
+        events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: up
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid]
+      - input: down
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: up
+        events: [push_object, move_sticky_rigid]
 
   - id: RA_CURR_2026_07_05_L06_MULTI_AXIS_PL_v2
     title: Multi-axis P/L relay v2
@@ -1035,7 +1275,7 @@ levels:
   - id: RA_CURR_2026_07_05_L10_MOVABLE_BS_TIMED_JOIN_CUT_v3
     title: Movable B/S timed join-cut v3
     role: challenge
-    status: rejected
+    status: accepted
     targets: [K_runtime_smoke]
     known_before: [K_runtime_smoke]
     target_learning: [K_runtime_smoke]
@@ -1066,7 +1306,9 @@ levels:
       evidence reviewer returned supports_claim / required_action:none; puzzle
       critic returned supports_with_noncore_caveats / required_action:none.
       Caveat: the chain is still strongly forced and should be playtested as a
-      compact L10 timing application, not as an open scheduling puzzle.
+      compact L10 timing application, not as an open scheduling puzzle. 2026-07-04
+      human playtest accepted it as RA_CAND_0016, aesthetic 3 / difficulty 2:
+      strongly guided sticky merge-then-cut teaching level.
     expected_trace:
       - input: up
       - input: right

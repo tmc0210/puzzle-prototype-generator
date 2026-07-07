@@ -1,0 +1,178 @@
+{
+  "runId": "ra_struct_consumption_01",
+  "title": "pull 驱动边界刷子与刷产物门口消费谱",
+  "notes": "本轮接续 lexicon 中的 B/S 移动边界刷子与 P/L pull 抽取把手。 目标不是再验证边界移动或 pull 规则，而是观察二者组合后能否成为新的局部装置： 用 pull 驱动 B/S 边界刷过远处对象，以及把边界刷产物推入同一门口消费位。\n",
+  "defaults": {
+    "maxExploreDepth": 14,
+    "maxReturnDepth": 24,
+    "maxStates": 90000,
+    "maxTransitions": 220000
+  },
+  "cases": [
+    {
+      "id": "pull_brush_vertical_bind",
+      "family": "pl_driven_bs_boundary_brush",
+      "variant": "pull 左移边界：竖列绑定",
+      "changedVariable": "基准：pull 抽出横向 B/S anchor，使垂直 crate 列跨入 sticky 侧",
+      "contrastWith": [
+        "pull_brush_gap_preserves_parts",
+        "pull_parallel_preserves_remote"
+      ],
+      "question": "一个 pull 把手同时移动 B/S 边界，把远处竖列 crate 改写成一个竖向 sticky 工具。",
+      "layout": "##########\n#PL.....G#\n#...@BS..#\n#....C...#\n#....C...#\n#........#\n##########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "pull_brush_horizontal_bridge",
+      "family": "pl_driven_bs_boundary_brush",
+      "variant": "pull 左移边界：横向桥接",
+      "changedVariable": "把远处竖列改成横向相邻资源，左列跨线后与右列 sticky 接成横条",
+      "contrastWith": [
+        "pull_brush_vertical_bind",
+        "pull_brush_front_wall_closed"
+      ],
+      "question": "同一个 pull 抽边界动作，可以把远处 C+M 桥接为横向 sticky 工具。",
+      "layout": "##########\n#PL.....G#\n#...@BS..#\n#....CC..#\n#........#\n#........#\n##########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "pull_brush_gap_preserves_parts",
+      "family": "pl_driven_bs_boundary_brush",
+      "variant": "pull 左移边界：隔行保留部件",
+      "changedVariable": "保持同一边界移动，但把远处 crate 分成隔行两点",
+      "contrastWith": [
+        "pull_brush_vertical_bind"
+      ],
+      "question": "pull 驱动边界刷过两个不邻接资源时，产物是两个独立 sticky 部件，不是一件工具。",
+      "layout": "##########\n#PL.....G#\n#...@BS..#\n#....C...#\n#........#\n#....C...#\n##########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "pull_parallel_preserves_remote",
+      "family": "pl_driven_bs_boundary_brush",
+      "variant": "pull 平移边界：远处资源不改写",
+      "changedVariable": "把 pull 方向改为沿 B/S 边界平移，边界 x 位置不跨过远处对象",
+      "contrastWith": [
+        "pull_brush_vertical_bind"
+      ],
+      "question": "pull 可以移动 B/S anchor 但不一定刷资源；沿边界平移只调位，保留远处对象身份。",
+      "layout": "##########\n#PL..C..G#\n#.....BS.#\n#.....@..#\n#........#\n#........#\n##########",
+      "actions": [
+        "down"
+      ]
+    },
+    {
+      "id": "pull_brush_front_wall_closed",
+      "family": "pl_driven_bs_boundary_brush",
+      "variant": "玩家前格墙：刷子把手关闭",
+      "changedVariable": "保留身后 B/S anchor 与远处资源，但用墙封住玩家 pull 前格",
+      "contrastWith": [
+        "pull_brush_vertical_bind",
+        "pull_brush_horizontal_bridge"
+      ],
+      "question": "pull 驱动刷子的关闭点可以是玩家前格，而不是 B/S anchor 或远处资源本身。",
+      "layout": "##########\n#PL.....G#\n#..#@BS..#\n#....C...#\n#....C...#\n#........#\n##########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "door_cc_chain_push",
+      "family": "brush_product_door_consumption",
+      "variant": "刷出 CC：双箱链式进门",
+      "changedVariable": "基准：边界下刷把横条回收为 CC，再从左侧推入同一门口",
+      "contrastWith": [
+        "door_cm_tail_push",
+        "door_cmm_tail_push"
+      ],
+      "question": "刷出两个 crate 后，门口消费是普通箱链，资源可继续被拆分或链推。",
+      "layout": "##########\n#.@.....G#\n#.B......#\n#.S..MM..#\n#........#\n#........#\n##########",
+      "actions": [
+        "down",
+        "right",
+        "right",
+        "down",
+        "right"
+      ]
+    },
+    {
+      "id": "door_cm_tail_push",
+      "family": "brush_product_door_consumption",
+      "variant": "刷出 C+M：单箱进门但留尾债",
+      "changedVariable": "把横条产物改成竖条切头，得到 C+M 后再推 C 进入同一门口",
+      "contrastWith": [
+        "door_cc_chain_push",
+        "door_cmm_tail_push"
+      ],
+      "question": "同样能推一个 crate 进门，但 sticky 尾留在侧后方，形成后续处理债。",
+      "layout": "##########\n#.@.....G#\n#.B......#\n#.S..M...#\n#....M...#\n#........#\n##########",
+      "actions": [
+        "down",
+        "right",
+        "right",
+        "down",
+        "right"
+      ]
+    },
+    {
+      "id": "door_cmm_tail_push",
+      "family": "brush_product_door_consumption",
+      "variant": "刷出 C+MM：单箱进门且留下宽尾",
+      "changedVariable": "把竖条尾债扩成 L 形横尾，观察同一门口动作后的占位差异",
+      "contrastWith": [
+        "door_cm_tail_push",
+        "door_square_blocked_by_low_wall"
+      ],
+      "question": "C+MM 产物让门口得到一个 crate，同时在下侧留下更宽的 sticky 尾，适合做宽尾阻塞语料。",
+      "layout": "##########\n#.@.....G#\n#.B......#\n#.S..M...#\n#....MM..#\n#........#\n##########",
+      "actions": [
+        "down",
+        "right",
+        "right",
+        "down",
+        "right"
+      ]
+    },
+    {
+      "id": "door_square_blocked_by_low_wall",
+      "family": "brush_product_door_consumption",
+      "variant": "刷成 2x2：下沿墙封死门口",
+      "changedVariable": "改为上刷绑定成 2x2，并在右侧下半格放墙，制造 footprint 门",
+      "contrastWith": [
+        "door_split_columns_one_column_passes",
+        "door_cmm_tail_push"
+      ],
+      "question": "2x2 工具不是更强的 crate 链；一格下沿墙即可让它无法进入同一门口。",
+      "layout": "##########\n#.......G#\n#........#\n#.B..CC..#\n#.S..MM#.#\n#.@......#\n##########",
+      "actions": [
+        "up",
+        "right",
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "door_split_columns_one_column_passes",
+      "family": "brush_product_door_consumption",
+      "variant": "刷成双柱：单柱先通过",
+      "changedVariable": "在上刷绑定结构中加入列间隙，两个柱状工具分离，左柱可先被推入门口",
+      "contrastWith": [
+        "door_square_blocked_by_low_wall"
+      ],
+      "question": "列间隙让大块门口失败改写为可逐柱消费，适合设计分批工具。",
+      "layout": "###########\n#........G#\n#.........#\n#.B..C..C.#\n#.S..M..M.#\n#.@.......#\n###########",
+      "actions": [
+        "up",
+        "right",
+        "right",
+        "right"
+      ]
+    }
+  ]
+}

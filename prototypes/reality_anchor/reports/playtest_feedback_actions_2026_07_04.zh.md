@@ -389,3 +389,42 @@ clean archive 条目由 `design_archive/index.yml` 管理；打回、被取代�
 
 - `RA_CURR_2026_07_05_L10_MOVABLE_BS_TIMED_JOIN_CUT_v3`
 - `RA_CURR_2026_07_05_L11_MOVABLE_BS_APPLIED_CUT_v1`（其它线程新增，暂无本批反馈，保留）
+
+## 第九批反馈处理：L05/L10 归档与 RA_LEX 去噪
+
+范围：处理当前待玩列表中已有明确反馈的 `L05 v4`、`L10 v3`、`RA_LEX_2026_07_06_VACATE_BIND_RETURN_v1`。
+
+### RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v4
+
+- 人测状态：`ready_for_archive`
+- 人类评分：审美 4 / 难度 3
+- 人类评语：同时要求对锚点和箱子的推拉应用，在简洁结构中实现充分机制覆盖和清晰逻辑链；评分基于它是前期推拉综合应用关。
+- 处理：归档为 `RA_CAND_0015`
+- levels 状态：`accepted`
+- 队列动作：移出临时待玩列表。
+
+### RA_CURR_2026_07_05_L10_MOVABLE_BS_TIMED_JOIN_CUT_v3
+
+- 人测状态：`ready_for_archive`
+- 人类评分：审美 3 / 难度 2
+- 人类评语：强引导的黏块合并再切割教学。
+- 处理：归档为 `RA_CAND_0016`
+- levels 状态：`accepted`
+- 队列动作：移出临时待玩列表。
+
+### RA_LEX_2026_07_06_VACATE_BIND_RETURN_v1
+
+- 人测状态：`needs_revision`
+- 人类反馈：确认右上黏块和上方空格的作用，如无作用就删；若右上可删，起点也能左移，然后整体布局删最右。
+- 处理：标记为 `rejected`，由 `RA_LEX_2026_07_06_VACATE_BIND_RETURN_v2` 取代。
+- 修改：删除最右活动列，移除右上远端黏块和其上方空格；保留顶行把手和起点位置。
+- 工具结果：
+  - v2：完整图通过，27 步可解，449 reachable states / 975 transitions，低于 v1 的 691 / 1517。
+  - core7 probe：完整，无缺少 P/L shift、B/S shift、pull、box_to_sticky、sticky_to_box、sticky rigid movement 或 sticky_merge 的胜路。
+  - target-vacate probe：完整，无绕过 top_goal `[3,1]` covered -> uncovered -> covered 的胜路。
+  - 三个局部起点左移版本均完整无解，因此本轮不采用起点左移；若坚持左移需要更大结构重做。
+- 队列动作：`RA_LEX_2026_07_06_VACATE_BIND_RETURN_v2` 加入临时待玩列表。
+
+## 第九批处理后的临时队列
+
+- `RA_LEX_2026_07_06_VACATE_BIND_RETURN_v2`

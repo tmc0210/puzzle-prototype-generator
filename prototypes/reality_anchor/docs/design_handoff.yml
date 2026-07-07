@@ -3,6 +3,8 @@ mechanic: reality_anchor
 required_docs:
   - prototypes/reality_anchor/docs/miner_probe_prior_v1.md
   - prototypes/reality_anchor/docs/goal_prune_check.md
+  - prototypes/reality_anchor/docs/opening_comfort_check.md
+  - prototypes/reality_anchor/docs/redundant_element_prune.md
 
 tool_commands:
   tool_maturity: "npx tsx src/cli.ts tool-maturity prototypes/reality_anchor"
@@ -40,3 +42,71 @@ prototype_specific_workflows:
       - "Do not write this workflow into generic skills or cross-prototype docs."
       - "Do not delete the only target in a level."
       - "Do not delete a target when cost drops, the expected trace stops winning, graph search is incomplete, or core event necessity fails."
+  - id: opening_comfort_check
+    kind: diagnostic
+    default_status: run_when_opening_is_flagged_or_start_changes
+    trigger:
+      - "起点影响 opening commitment、可读性、核心机制覆盖或 bypass。"
+      - "候选声称是 application / challenge / capstone。"
+      - "brief 或原型文档要求显式起点比较。"
+      - "修改起点会改变 solve instance。"
+    authority_docs:
+      - prototypes/reality_anchor/docs/opening_comfort_check.md
+    packet_extension:
+      - candidate_start_position
+      - shortest_solution_delta
+      - initial_scc_size
+      - initial_exit_source_distances
+      - initial_win_exit_source_distances
+      - dead_exits_before_first_win_exit
+      - first_step_legal_events
+      - whether_core_chain_preserved
+    reviewer_focus:
+      - "查看 initial SCC，而不是只看初始状态。"
+      - "存在距离 0 的不可逆出口不一定坏。"
+      - "真实起点没有任何可逆观察空间，或最自然第一步就是关键不可逆动作，往往会让开局显得贴脸、粗糙或误触惩罚过强。"
+      - "精修后必须重跑 solver / SCC，确认可解性、目标事件必要性和核心链条没有被破坏。"
+    critic_focus:
+      - "玩家开局不应第一步就被迫或被自然诱导进入关键不可逆承诺。"
+      - "好的 application / challenge 通常应允许玩家在核心区域外一两步观察、站位和读图。"
+      - "Discovery / witness 可以故意贴脸触发机制。"
+      - "Application / challenge 更常需要 nearest irreversible exit >= 1 或至少有非平凡 initial SCC。"
+    forbidden_unless:
+      - "若推荐起点不同于已验证实例，必须重跑相关证据。"
+      - "起点诊断不是独立通过条件。"
+  - id: redundant_element_prune
+    kind: archive_candidate_cleanup
+    default_status: run_before_clean_archive_or_when_feedback_flags_redundancy
+    trigger:
+      - "人类反馈指出冗余空地、无用墙体、无用箱子、无用黏块、无用锚点或外框过厚。"
+      - "候选准备进入 clean archive，且布局中存在明显 leaf / pocket / thick border / isolated object。"
+      - "目标剔除、起点调整或其它 cleanup 后产生新的空地、对象或墙体冗余。"
+    authority_docs:
+      - prototypes/reality_anchor/docs/redundant_element_prune.md
+      - prototypes/reality_anchor/docs/goal_prune_check.md
+      - prototypes/reality_anchor/docs/opening_comfort_check.md
+    packet_extension:
+      - redundant_element_prune.status
+      - redundant_element_prune.sequence
+      - redundant_element_prune.candidates_checked
+      - redundant_element_prune.removed_elements
+      - redundant_element_prune.wallified_objects
+      - redundant_element_prune.trimmed_outline
+      - redundant_element_prune.retained_elements
+      - redundant_element_prune.evidence_refs
+    reviewer_focus:
+      - "按固定顺序执行：goal_prune -> object_remove_prune -> object_wallify_prune -> space_prune -> wall_outline_prune。"
+      - "不要把未出现在 returned trace 中直接等同于冗余；必须用反事实证据和核心事件 probe 判断。"
+      - "对象若只作为静态 blocker，应测试 wallify，而不应默认为保留箱子或黏块。"
+      - "空地判断使用全图读图命题，不使用局部视野式描述。"
+      - "墙体优先裁剪外框和厚边界，不把墙格随意改成地面。"
+    critic_focus:
+      - "保留的要素必须承担结构责任、读图责任、机制责任或合适的 opening comfort。"
+      - "静态 blocker 伪装成可操作材料会制造假 affordance；若 wallify 等价，应倾向 wallify。"
+      - "无责任 leaf / pocket / deadend 即使增加 initial SCC，也不自动有审美价值。"
+      - "凸包式轮廓扩大通常不主动删；只有形成无责任枝杈或 pocket 时才攻击。"
+    forbidden_unless:
+      - "不要把该流程提升为通用 Sokoban 要求。"
+      - "不要跳过 goal_prune 直接处理初始压在目标上的对象。"
+      - "不要在完整图或核心事件 probe 不完整时 clean prune。"
+      - "不要因 solver success alone 删除、墙化或裁剪要素。"

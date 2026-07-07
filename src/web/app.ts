@@ -230,6 +230,7 @@ function renderHeader(): string {
         <h1>${escapeHtml(data.mechanic.title)}</h1>
       </div>
       <div class="header-metrics" aria-label="候选概况">
+        <a class="secondary-link" href="./editor">关卡编辑器</a>
         <span class="metric"><strong>${archiveCount}</strong> 归档候选</span>
         <span class="metric"><strong>${temporaryCount}</strong> 临时游玩</span>
         <span class="badge ${reviewData.writable ? "ok" : "muted"}">${writableLabel}</span>
@@ -311,6 +312,13 @@ function renderPlayArea(entry: CandidateEntry | undefined, level: LevelDoc | und
                     >
                       复制 ASCII
                     </button>
+                    <a
+                      class="tool-menu-item"
+                      href="${escapeAttribute(editorUrlForEntry(entry))}"
+                      role="menuitem"
+                    >
+                      编辑此关
+                    </a>
                   </div>`
                 : ""
             }
@@ -958,6 +966,17 @@ function entryKey(entry: CandidateEntry): string {
   return entry.kind === "archive"
     ? `archive:${entry.candidateId ?? entry.levelId ?? "unknown"}`
     : `temporary:${entry.levelId}`;
+}
+
+function editorUrlForEntry(entry: CandidateEntry | undefined): string {
+  if (!entry) {
+    return "./editor";
+  }
+  if (entry.kind === "archive" && entry.candidateId) {
+    return `./editor?source=${encodeURIComponent(`archive:${entry.candidateId}`)}`;
+  }
+  const levelId = entry.kind === "temporary" ? entry.levelId : entry.levelId ?? entry.level?.id;
+  return levelId ? `./editor?levelId=${encodeURIComponent(levelId)}` : "./editor";
 }
 
 function entryLevel(entry: CandidateEntry | undefined): LevelDoc | undefined {

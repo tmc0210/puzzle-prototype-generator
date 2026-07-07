@@ -41,6 +41,11 @@ import {
   checkToolConformance,
   formatToolConformanceMarkdown,
 } from "./workflows/toolConformance.js";
+import {
+  formatLocalExperimentMarkdown,
+  parseLocalExperimentCasesDoc,
+  runLocalExperimentCases,
+} from "./workflows/localExperimentRunner.js";
 import type { LevelDoc, LevelRole, WinCondition } from "./core/types.js";
 import { randomInt } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -72,6 +77,7 @@ async function main(): Promise<void> {
       "curriculum-v2",
       "level-specs-v2",
       "mine",
+      "mechanism-lab-run",
       "tool-maturity",
       "tool-conformance",
     ].includes(command)
@@ -259,6 +265,37 @@ async function main(): Promise<void> {
       await writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
       console.log(`\nWrote ${markdownPath}`);
       console.log(`Wrote ${jsonPath}`);
+    }
+    return;
+  }
+
+  if (command === "mechanism-lab-run") {
+    const casesPath = maybeLevelId;
+    if (!casesPath || casesPath.startsWith("--")) {
+      throw new Error("mechanism-lab-run requires a cases file path, or '-' for stdin");
+    }
+    const optionArgs = args.slice(3);
+    assertAllowedOptions(optionArgs, new Set(["--run-id", "--out-dir", "--write"]));
+    const rawCases = casesPath === "-" ? await readStdin() : await readFile(path.resolve(casesPath), "utf8");
+    const parsedCases = parseLocalExperimentCasesDoc(
+      casesPath.toLowerCase().endsWith(".json") ? JSON.parse(rawCases) : YAML.parse(rawCases),
+      casesPath,
+    );
+    const runId = sanitizeRunId(getOption(optionArgs, "--run-id") ?? parsedCases.runId ?? defaultMechanismLabRunId());
+    const report = runLocalExperimentCases(pkg, { ...parsedCases, runId });
+    const markdown = formatLocalExperimentMarkdown(report);
+    console.log(markdown.trimEnd());
+
+    if (writeReports) {
+      const outDirOption = getOption(optionArgs, "--out-dir");
+      const outputDir = outDirOption
+        ? path.resolve(outDirOption)
+        : path.join(pkg.root, "mechanism_lab", "runs", report.runId);
+      await mkdir(outputDir, { recursive: true });
+      await writeFile(path.join(outputDir, "cases.json"), `${JSON.stringify({ ...parsedCases, runId }, null, 2)}\n`, "utf8");
+      await writeFile(path.join(outputDir, "results.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
+      await writeFile(path.join(outputDir, "report.md"), markdown, "utf8");
+      console.log(`\nWrote ${outputDir}`);
     }
     return;
   }
@@ -526,12 +563,25 @@ function printUsage(): void {
   console.log("  tsx src/cli.ts candidate-gallery-v2 <prototype-path> [--write]");
   console.log("  tsx src/cli.ts calibration-report <prototype-path> [--write]");
   console.log("  tsx src/cli.ts mine <prototype-path> [--preset quick|deep] [--seed n] [--iterations n] [--max-findings n] [--max-instances n] [--time-budget-ms n] [--objective objective.yml] [--weight tag=number] [--write]");
+  console.log("  tsx src/cli.ts mechanism-lab-run <prototype-path> <cases.yml|json|-> [--run-id id] [--out-dir dir] [--write]");
   console.log("  tsx src/cli.ts tool-maturity <prototype-path>");
   console.log("  tsx src/cli.ts tool-conformance <prototype-path> [--write]");
 }
 
 function randomMineSeed(): number {
   return randomInt(1, 0x7fffffff);
+}
+
+function defaultMechanismLabRunId(): string {
+  return `run_${new Date().toISOString().replace(/[:.]/g, "-")}`;
+}
+
+function sanitizeRunId(raw: string): string {
+  const sanitized = raw.trim().replace(/[^a-zA-Z0-9_-]+/g, "_");
+  if (!sanitized) {
+    throw new Error("run id must contain at least one letter, number, '_' or '-'.");
+  }
+  return sanitized;
 }
 
 function assertAllowedOptions(args: string[], allowed: Set<string>): void {

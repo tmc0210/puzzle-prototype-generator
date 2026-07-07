@@ -1,0 +1,76 @@
+{
+  "runId": "ra_struct_bridge_merge_mouth_01",
+  "title": "B/S 桥格合并后由目标口宽消费",
+  "notes": "Reality Anchor 的 explorer run。本轮范围只看 crate 跨入 sticky side 后作为桥格合并两个 sticky 端点，并由目标口宽消费；不进入关卡设计，不读取历史设计归档、候选包、报告、采样配置或旧实验 run 材料。",
+  "defaults": {
+    "maxExploreDepth": 10,
+    "maxReturnDepth": 16,
+    "maxStates": 20000,
+    "maxTransitions": 80000
+  },
+  "cases": [
+    {
+      "id": "bridge_merge_single_mouth_block",
+      "family": "bridge_merge_mouth_consumption",
+      "variant": "bridge_between_two_endpoints_single_mouth",
+      "changedVariable": "crate 从 box side 跨入 sticky gap，变成桥格并连接上下两个 sticky 端点；右侧只有中格目标口",
+      "contrastWith": [
+        "no_endpoints_single_mouth_pass",
+        "bridge_merge_triple_mouth_pass",
+        "bridge_merge_upper_only_single_mouth_block"
+      ],
+      "question": "桥格把上下端点合并成三格刚体后，单格目标口是否会拒绝整体推进？",
+      "layout": "########\n#...M#.#\n#.@C G.#\n#...M#.#\n#..BS..#\n########",
+      "actions": [
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "no_endpoints_single_mouth_pass",
+      "family": "bridge_merge_mouth_consumption",
+      "variant": "single_bridge_no_endpoints_single_mouth",
+      "changedVariable": "移除上下 sticky 端点，跨线 crate 只变成单格 sticky",
+      "contrastWith": [
+        "bridge_merge_single_mouth_block"
+      ],
+      "question": "如果没有端点被桥接，单格 sticky 是否能进入同一目标口？",
+      "layout": "########\n#....#.#\n#.@C G.#\n#....#.#\n#..BS..#\n########",
+      "actions": [
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bridge_merge_triple_mouth_pass",
+      "family": "bridge_merge_mouth_consumption",
+      "variant": "bridge_between_two_endpoints_triple_mouth",
+      "changedVariable": "保留上下端点和桥格合并，但把右侧口宽打开为三格",
+      "contrastWith": [
+        "bridge_merge_single_mouth_block"
+      ],
+      "question": "如果口宽匹配三格刚体，桥接合并后的整体是否可以推进并覆盖目标？",
+      "layout": "########\n#...M..#\n#.@C G.#\n#...M..#\n#..BS..#\n########",
+      "actions": [
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bridge_merge_upper_only_single_mouth_block",
+      "family": "bridge_merge_mouth_consumption",
+      "variant": "bridge_to_one_endpoint_single_mouth",
+      "changedVariable": "只保留上方 sticky 端点；桥格合并成二格刚体，右上仍是墙",
+      "contrastWith": [
+        "bridge_merge_single_mouth_block",
+        "no_endpoints_single_mouth_pass"
+      ],
+      "question": "只合并一个端点时，单格目标口是否仍会因为连接 footprint 超出中格而失败？",
+      "layout": "########\n#...M#.#\n#.@C G.#\n#....#.#\n#..BS..#\n########",
+      "actions": [
+        "right",
+        "right"
+      ]
+    }
+  ]
+}

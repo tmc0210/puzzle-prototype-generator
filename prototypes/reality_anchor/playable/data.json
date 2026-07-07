@@ -411,8 +411,8 @@
     "mechanic": "reality_anchor",
     "levels": [
       {
-        "id": "RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v4",
-        "title": "Long-edge P/L relay v4",
+        "id": "RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_opening_comfort",
+        "title": "Vacate bind return v3 opening comfort",
         "role": "challenge",
         "status": "candidate",
         "targets": [
@@ -424,7 +424,7 @@
         "target_learning": [
           "K_runtime_smoke"
         ],
-        "support_level": "medium",
+        "support_level": "none",
         "expected_solver_evidence": [
           "solvable",
           "player_win_standard",
@@ -432,26 +432,47 @@
           "full_graph_complete"
         ],
         "expected_llm_player_evidence": [],
-        "layout": "#########\n#PL..G###\n#.#..####\n#.##C@G##\n#......##\n#########",
-        "design_notes": "Human-feedback and critic-driven revision of L05 v3. The opening ordinary crate pull is compressed to one high-responsibility move: it opens the route into the upper P/L corridor and prepositions the same crate beside the lower target. The P/L anchor is then handled in the middle of the route, first by a right pull from the L side and then by two right pushes from the P side. This three-step boundary shift makes the previously prepositioned crate finishable from the left, so the final ordinary-crate push recovers the opening move instead of acting as a stitched add-on. Complete graph analysis reports a 24-step shortest solution over 85 reachable states. Direction-aware event probe is complete with no winning bypass missing anchor_pull_right, anchor_push_right, crate_pull, or crate_push; anchor shift count probe is complete with no win below three P/L boundary shifts. Independent evidence review returned pass, and independent puzzle critic returned accept. Caveat: the level is strongly guided and the second consecutive P/L right push is more reinforcement than a new insight, but that is acceptable for the fifth curriculum slot. Pending human playtest; not archived yet.\n",
+        "layout": "########\n##MG.M.#\n#.M.M..#\n#BSLP#@#\n#.G..#.#\n########",
+        "lineage": {
+          "source": "opening_comfort_revision",
+          "source_candidate_id": "RA_LEX_2026_07_06_VACATE_BIND_RETURN_v2",
+          "source_file": "prototypes/reality_anchor/reports/RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_opening_comfort_layout.txt",
+          "created_by": "codex",
+          "created_at": "2026-07-07"
+        },
+        "design_notes": "Opening comfort revision of v2. Start enumeration over the trimmed v2 layout found that the human-suggested left-shift starts either produced complete no-win graphs or made the first commitment immediate. This v3 keeps the same trimmed structure and moves the player from [6,1] to [6,3], a position in the same 5-state initial SCC. Complete explain-layout still reports 449 reachable states / 975 legal transitions, a 27-step shortest solution, initial SCC states=5, out=2, winOut=1, deadOut=1, and opening commitments 2 / viable 1 / dead 1. The returned solution's first irreversible commitment remains after two reversible walk steps, but the first-step legal actions are now only walks, avoiding the v2 start's immediate object-push affordance. Complete core7 probe still proves all wins require P/L shift, B/S shift, pull, box_to_sticky, sticky_to_box, sticky rigid movement, and sticky_merge. Target-vacate probe still proves top_goal [3,1] must go covered -> uncovered -> covered before win.\n",
         "expected_trace": [
           {
-            "input": "right",
+            "input": "up"
+          },
+          {
+            "input": "left"
+          },
+          {
+            "input": "left",
             "events": [
-              "pull_object"
+              "push_object",
+              "move_sticky_rigid",
+              "sticky_merge"
             ]
           },
           {
-            "input": "down"
+            "input": "down",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
           },
           {
             "input": "left"
           },
           {
-            "input": "left"
-          },
-          {
-            "input": "up"
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
           },
           {
             "input": "up"
@@ -466,48 +487,8 @@
             "input": "right",
             "events": [
               "pull_object",
-              "anchor_boundary_shift"
-            ]
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "down"
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "right",
-            "events": [
-              "push_object",
-              "anchor_boundary_shift"
-            ]
-          },
-          {
-            "input": "right",
-            "events": [
-              "push_object",
-              "anchor_boundary_shift"
+              "box_to_sticky",
+              "sticky_merge"
             ]
           },
           {
@@ -517,70 +498,25 @@
             "input": "right"
           },
           {
-            "input": "down"
+            "input": "right"
           },
-          {
-            "input": "right",
-            "events": [
-              "push_object"
-            ]
-          }
-        ]
-      },
-      {
-        "id": "RA_CURR_2026_07_05_L10_MOVABLE_BS_TIMED_JOIN_CUT_v3",
-        "title": "Movable B/S timed join-cut v3",
-        "role": "challenge",
-        "status": "rejected",
-        "targets": [
-          "K_runtime_smoke"
-        ],
-        "known_before": [
-          "K_runtime_smoke"
-        ],
-        "target_learning": [
-          "K_runtime_smoke"
-        ],
-        "support_level": "medium",
-        "expected_solver_evidence": [
-          "solvable",
-          "player_win_standard",
-          "expected_trace_replays",
-          "full_graph_complete"
-        ],
-        "expected_llm_player_evidence": [],
-        "layout": "#########\n##....###\n##.BS#G.#\n##.M.MM.#\n##@#...##\n#########",
-        "design_notes": "Human-feedback revision of L10 v2. The redundant left crate is replaced by wall, the left-side activity column is compressed, and the unused upper-right space is walled off while preserving the same 13-step core witness. The player first pushes a crate into S side to trigger box_to_sticky and sticky_merge, then moves B/S twice: once into the upper channel and once to trigger sticky_to_box. The cut crate is pushed down, and the remaining sticky pair is moved onto the target. Complete graph analysis reports 178 reachable states and 423 legal transitions, down from v2's 221 / 546, with the same shortest input sequence. Core event probe proves all wins require B/S shift, box_to_sticky, sticky_merge, sticky_to_box, sticky rigid movement, and crate push. Order probe proves no winning path shifts B/S before sticky_merge; count probe proves all wins require at least two B/S shifts; reachable scan reports no P/L hit. Independent review_2 evidence reviewer returned supports_claim / required_action:none; puzzle critic returned supports_with_noncore_caveats / required_action:none. Caveat: the chain is still strongly forced and should be playtested as a compact L10 timing application, not as an open scheduling puzzle.\n",
-        "expected_trace": [
           {
             "input": "up"
           },
           {
-            "input": "right",
+            "input": "left",
             "events": [
               "push_object",
-              "box_to_sticky",
+              "move_sticky_rigid",
               "sticky_merge"
             ]
           },
           {
-            "input": "up",
+            "input": "left",
             "events": [
               "push_object",
-              "anchor_boundary_shift"
-            ]
-          },
-          {
-            "input": "left"
-          },
-          {
-            "input": "up"
-          },
-          {
-            "input": "right",
-            "events": [
-              "push_object",
-              "anchor_boundary_shift",
+              "force_chain",
+              "move_sticky_rigid",
               "sticky_to_box"
             ]
           },
@@ -588,26 +524,63 @@
             "input": "down"
           },
           {
-            "input": "right"
+            "input": "down"
           },
           {
-            "input": "down",
+            "input": "left",
             "events": [
-              "push_object"
+              "push_object",
+              "anchor_boundary_shift",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
             ]
           },
           {
             "input": "right",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "up"
+          },
+          {
+            "input": "left",
             "events": [
               "push_object",
               "move_sticky_rigid"
             ]
           },
           {
-            "input": "down"
+            "input": "down",
+            "events": [
+              "pull_object",
+              "force_chain",
+              "anchor_boundary_shift",
+              "move_sticky_rigid"
+            ]
           },
           {
-            "input": "right"
+            "input": "right",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
           },
           {
             "input": "up",

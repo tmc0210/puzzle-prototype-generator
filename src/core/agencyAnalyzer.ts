@@ -1,5 +1,6 @@
 import type { Solution, WinCondition } from "./types.js";
 import type { PuzzleRuntime, RuntimeSearchOptions } from "./puzzleRuntime.js";
+import { enumerateRuntimeGraph, type RuntimeGraphEdge } from "./runtimeGraph.js";
 
 export type AgencyAnalysisOptions = RuntimeSearchOptions & {
   maxTransitions?: number;
@@ -155,18 +156,7 @@ export type AgencyAnalysis = {
   };
 };
 
-type Edge<Action extends string> = {
-  from: number;
-  to: number;
-  action: Action;
-  events: string[];
-};
-
-type QueueItem<State> = {
-  index: number;
-  state: State;
-  depth: number;
-};
+type Edge<Action extends string> = RuntimeGraphEdge<Action>;
 
 type ReplayedSolutionStep<Action extends string> = {
   step: number;
@@ -189,7 +179,7 @@ export function analyzeAgencyWithRuntime<
   const maxTransitions = options.maxTransitions;
   const maxDepth = options.maxDepth;
   const winCondition = options.winCondition ?? runtime.defaultWin;
-  const graph = enumerateGraph(runtime, initialState, winCondition, options, {
+  const graph = enumerateRuntimeGraph(runtime, initialState, winCondition, options, {
     maxStates,
     maxTransitions,
     maxDepth,
@@ -275,81 +265,6 @@ export function analyzeAgencyWithRuntime<
     scc,
     budget: { maxStates, maxTransitions, maxDepth },
   };
-}
-
-function enumerateGraph<State, Action extends string, Options extends RuntimeSearchOptions>(
-  runtime: PuzzleRuntime<State, Action, Options>,
-  initialState: State,
-  winCondition: WinCondition,
-  options: Options,
-  budget: { maxStates: number; maxTransitions?: number; maxDepth?: number },
-): {
-  status: "complete" | "exhausted";
-  reason?: string;
-  keys: string[];
-  indexByKey: Map<string, number>;
-  edges: Array<Edge<Action>>;
-  winStateIndexes: Set<number>;
-} {
-  const initialKey = runtime.key(initialState);
-  const keys = [initialKey];
-  const indexByKey = new Map<string, number>([[initialKey, 0]]);
-  const edges: Array<Edge<Action>> = [];
-  const winStateIndexes = new Set<number>();
-  if (runtime.isWin(initialState, winCondition)) {
-    winStateIndexes.add(0);
-  }
-
-  const queue: Array<QueueItem<State>> = [{ index: 0, state: initialState, depth: 0 }];
-  let cursor = 0;
-
-  while (cursor < queue.length) {
-    const current = queue[cursor]!;
-    cursor += 1;
-
-    if (budget.maxDepth !== undefined && current.depth >= budget.maxDepth) {
-      continue;
-    }
-
-    for (const action of runtime.actions(current.state, options)) {
-      if (budget.maxTransitions !== undefined && edges.length >= budget.maxTransitions) {
-        return result("exhausted", "transition budget exceeded");
-      }
-
-      const transition = runtime.step(current.state, action, options);
-      if (!transition.legal) {
-        continue;
-      }
-
-      const nextKey = runtime.key(transition.state);
-      let toIndex = indexByKey.get(nextKey);
-      if (toIndex === undefined) {
-        toIndex = keys.length;
-        keys.push(nextKey);
-        indexByKey.set(nextKey, toIndex);
-        if (runtime.isWin(transition.state, winCondition)) {
-          winStateIndexes.add(toIndex);
-        }
-        if (keys.length > budget.maxStates) {
-          return result("exhausted", "state budget exceeded");
-        }
-        queue.push({ index: toIndex, state: transition.state, depth: current.depth + 1 });
-      }
-
-      edges.push({
-        from: current.index,
-        to: toIndex,
-        action,
-        events: transition.events,
-      });
-    }
-  }
-
-  return result("complete");
-
-  function result(status: "complete" | "exhausted", reason?: string) {
-    return { status, reason, keys, indexByKey, edges, winStateIndexes };
-  }
 }
 
 function buildBidirectionalRegions<Action extends string>(

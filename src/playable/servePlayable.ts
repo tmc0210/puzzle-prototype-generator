@@ -5,6 +5,13 @@ import path from "node:path";
 import YAML from "yaml";
 import { loadPrototypePackage } from "../core/io.js";
 import type { LevelDoc, PrototypePackage } from "../core/types.js";
+import { diagnoseEditorLevel } from "./editorDiagnostics.js";
+import {
+  buildEditableLevelCatalog,
+  promoteStudioLevel,
+  readReviewQueueLevels,
+  saveEditorLevel,
+} from "./levelCatalog.js";
 
 type ArchiveIndexCandidate = {
   candidate_id?: string;
@@ -114,6 +121,47 @@ async function handleRequest(request: IncomingMessage, response: ServerResponse)
     sendJson(response, 200, await buildReviewData(pkg));
     return;
   }
+  if (url.pathname === "/api/editor-data" && request.method === "GET") {
+    sendJson(response, 200, await buildEditableLevelCatalog(pkg));
+    return;
+  }
+  if (url.pathname === "/api/editor/diagnose" && request.method === "POST") {
+    const body = await readJsonBody<{
+      level?: LevelDoc;
+      solverMaxStates?: number;
+      solverMaxDepth?: number;
+      graphMaxStates?: number;
+      graphMaxTransitions?: number;
+    }>(request);
+    if (!body.level) {
+      sendJson(response, 400, { error: "level is required" });
+      return;
+    }
+    sendJson(response, 200, diagnoseEditorLevel(pkg, body as { level: LevelDoc }));
+    return;
+  }
+  if (url.pathname === "/api/editor/save-level" && request.method === "POST") {
+    const body = await readJsonBody<{ sourceKey?: string; level?: LevelDoc }>(request);
+    if (!body.level) {
+      sendJson(response, 400, { error: "level is required" });
+      return;
+    }
+    sendJson(response, 200, await saveEditorLevel(pkg, { sourceKey: body.sourceKey, level: body.level }));
+    return;
+  }
+  if (url.pathname === "/api/editor/promote-level" && request.method === "POST") {
+    const body = await readJsonBody<{ levelId?: string }>(request);
+    if (!body.levelId) {
+      sendJson(response, 400, { error: "levelId is required" });
+      return;
+    }
+    const result = await promoteStudioLevel(pkg, body.levelId);
+    sendJson(response, 200, {
+      ...result,
+      catalog: await buildEditableLevelCatalog(pkg),
+    });
+    return;
+  }
   if (url.pathname === "/api/archive-review" && request.method === "POST") {
     const body = await readJsonBody<{ candidateId?: string; review?: ReviewPayload }>(request);
     if (!body.candidateId || !body.review) {
@@ -176,7 +224,7 @@ async function buildReviewData(prototype: PrototypePackage): Promise<Record<stri
   );
 
   const archivedSourceLevelIds = archivedCanonicalSourceLevelIds(archiveEntries);
-  const temporaryEntries = (await readTemporaryQueue(prototype.root, prototype.levels.levels))
+  const temporaryEntries = (await readReviewQueueLevels(prototype))
     .filter((level) => !archivedSourceLevelIds.has(level.id))
     .map((level) => ({
       kind: "temporary",
@@ -323,7 +371,10 @@ async function savePlaytestReview(
   levelId: string,
   review: ReviewPayload,
 ): Promise<void> {
-  const levelIds = new Set(prototype.levels.levels.map((level) => level.id));
+  const levelIds = new Set([
+    ...prototype.levels.levels.map((level) => level.id),
+    ...(await readReviewQueueLevels(prototype)).map((level) => level.id),
+  ]);
   if (!levelIds.has(levelId)) {
     throw new Error(`Unknown level id '${levelId}'`);
   }
@@ -431,13 +482,13 @@ function parseCandidateRecord(raw: string): CandidateRecord {
 }
 
 function parseFirstYamlFence(raw: string): Record<string, unknown> {
-  const match = raw.match(/```yaml\s*\n([\s\S]*?)\n```/);
+  const match = raw.match(/```yaml[ \t]*\r?\n([\s\S]*?)\r?\n```/);
   return match ? (YAML.parse(match[1] ?? "") as Record<string, unknown>) : {};
 }
 
 function parseSectionYaml(raw: string, heading: string): Record<string, unknown> {
   const section = sectionText(raw, heading);
-  const match = section?.match(/```yaml\s*\n([\s\S]*?)\n```/);
+  const match = section?.match(/```yaml[ \t]*\r?\n([\s\S]*?)\r?\n```/);
   return match ? (YAML.parse(match[1] ?? "") as Record<string, unknown>) : {};
 }
 
@@ -446,7 +497,7 @@ function parseEvidenceRefs(raw: string): string[] {
   if (!section) {
     return [];
   }
-  const match = section.match(/```(?:text)?\s*\n([\s\S]*?)\n```/);
+  const match = section.match(/```text[ \t]*\r?\n([\s\S]*?)\r?\n```/);
   const body = match?.[1] ?? section;
   return body
     .split("\n")
@@ -479,7 +530,11 @@ function replaceSectionYamlFence(raw: string, heading: string, value: unknown): 
 }
 
 async function serveStatic(response: ServerResponse, pathname: string): Promise<void> {
-  const relative = pathname === "/" ? "index.html" : decodeURIComponent(pathname.slice(1));
+  const relative = pathname === "/"
+    ? "index.html"
+    : pathname === "/editor"
+      ? "editor.html"
+      : decodeURIComponent(pathname.slice(1));
   const target = path.resolve(playableRoot, relative);
   assertInsidePath(playableRoot, target, "static file");
   if (!(await fileExists(target))) {

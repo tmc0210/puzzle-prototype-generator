@@ -3,6 +3,7 @@ import type { PuzzleRuntime, RuntimeSearchOptions } from "./puzzleRuntime.js";
 
 export type GraphAnalysisOptions = RuntimeSearchOptions & {
   maxTransitions?: number;
+  terminalizeWins?: boolean;
 };
 
 type QueueItem<State> = {
@@ -22,6 +23,7 @@ export function analyzeGraphWithRuntime<
   const maxStates = options.maxStates ?? 100_000;
   const maxTransitions = options.maxTransitions;
   const maxDepth = options.maxDepth;
+  const terminalizeWins = options.terminalizeWins ?? true;
   const winCondition = options.winCondition ?? runtime.defaultWin;
   const initialKey = runtime.key(initialState);
   const queue: Array<QueueItem<State>> = [{ state: initialState, depth: 0 }];
@@ -34,6 +36,10 @@ export function analyzeGraphWithRuntime<
   while (cursor < queue.length) {
     const current = queue[cursor]!;
     cursor += 1;
+
+    if (terminalizeWins && runtime.isWin(current.state, winCondition)) {
+      continue;
+    }
 
     if (maxDepth !== undefined && current.depth >= maxDepth) {
       continue;
@@ -83,6 +89,7 @@ export function analyzeGraphWithRuntime<
         maxStates,
         maxTransitions,
         maxDepth,
+        terminalizeWins,
       },
       reason,
     };

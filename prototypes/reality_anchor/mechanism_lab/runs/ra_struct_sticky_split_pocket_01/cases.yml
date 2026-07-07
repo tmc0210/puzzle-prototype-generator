@@ -1,0 +1,77 @@
+runId: ra_struct_sticky_split_pocket_01
+title: "C 形 sticky 被固定 B/S 边界切断后由上端点目标袋消费"
+notes: "Reality Anchor 的 explorer run。本轮范围只看 C 形 sticky 刚体跨过固定 B/S 边界后是否被切成独立端点，并由上方单格目标袋消费；不进入关卡设计，不读取历史设计归档、候选包、报告、采样配置或旧实验 run 材料。"
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: split_cshape_upper_pocket_pass
+    family: sticky_split_endpoint_pocket_consumption
+    variant: "boundary_cuts_cshape_into_two_endpoints"
+    changed_variable: "固定 B/S 边界切过 C 形刚体的左柱，推后左柱变 crate，右侧上下端点分裂为两个 sticky 组件"
+    contrast_with:
+      - unsplit_cshape_upper_pocket_block
+      - split_cshape_no_stand_block
+      - pre_split_endpoints_upper_pocket_pass
+    question: "C 形刚体被切成独立上端点后，玩家是否能只把上端点推入上方目标袋？"
+    layout: |
+      ########
+      ###.G..#
+      ###.MM@#
+      #...M..#
+      #...MM.#
+      #..BS..#
+      ########
+    actions: ["left", "down", "left", "up"]
+
+  - id: unsplit_cshape_upper_pocket_block
+    family: sticky_split_endpoint_pocket_consumption
+    variant: "cshape_stays_rigid"
+    changed_variable: "B/S 边界更靠左，推后 C 形仍整体在 sticky side，保持一个刚体 footprint"
+    contrast_with: split_cshape_upper_pocket_pass
+    question: "如果 C 形没有被切断，同一上方目标袋是否会被整体 footprint 的其它格子阻断？"
+    layout: |
+      ########
+      ###.G..#
+      ###.MM@#
+      #...M..#
+      #...MM.#
+      #.BS...#
+      ########
+    actions: ["left", "down", "left", "up"]
+
+  - id: split_cshape_no_stand_block
+    family: sticky_split_endpoint_pocket_consumption
+    variant: "split_endpoint_but_stand_cell_closed"
+    changed_variable: "保留边界切断输出，但把绕到上端点下方的通路封成墙"
+    contrast_with: split_cshape_upper_pocket_pass
+    question: "即使切出了独立上端点，如果缺少下方施力站位，目标袋消费是否仍然失败？"
+    layout: |
+      ########
+      ###.G..#
+      ###.MM@#
+      #...M#.#
+      #...MM.#
+      #..BS..#
+      ########
+    actions: ["left", "down", "left", "up"]
+
+  - id: pre_split_endpoints_upper_pocket_pass
+    family: sticky_split_endpoint_pocket_consumption
+    variant: "already_separate_endpoints"
+    changed_variable: "右侧上下端点一开始就不正交相邻，边界不需要切断桥格"
+    contrast_with:
+      - split_cshape_upper_pocket_pass
+      - unsplit_cshape_upper_pocket_block
+    question: "如果上端点本来就是独立 sticky，单格目标袋是否表现得和切断输出一样？"
+    layout: |
+      ########
+      ###.G..#
+      ###.MM@#
+      #......#
+      #...MM.#
+      #..BS..#
+      ########
+    actions: ["left", "down", "left", "up"]

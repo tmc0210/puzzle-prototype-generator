@@ -83,6 +83,15 @@ export type LevelsDoc = {
   levels: LevelDoc[];
 };
 
+export type LevelLineage = {
+  source: string;
+  source_level_id?: string;
+  source_candidate_id?: string;
+  source_file?: string;
+  created_by?: string;
+  created_at?: string;
+};
+
 export type PlayerModelDoc = {
   mechanic: string;
   derivation: {
@@ -404,6 +413,7 @@ export type LevelDoc = {
     events?: string[];
     notes?: string;
   }>;
+  lineage?: LevelLineage;
   design_notes?: string;
 };
 
@@ -526,6 +536,7 @@ export type GraphAnalysis = {
     maxStates: number;
     maxTransitions?: number;
     maxDepth?: number;
+    terminalizeWins?: boolean;
   };
   reason?: string;
 };

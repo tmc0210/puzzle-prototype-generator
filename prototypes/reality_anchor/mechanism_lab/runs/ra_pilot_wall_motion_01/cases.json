@@ -1,0 +1,49 @@
+{
+  "runId": "ra_pilot_wall_motion_01",
+  "title": "墙结构对黏块局部回返性的影响",
+  "notes": "第一轮工具 pilot：只比较局部墙形、条块长度和同一动作后的回返 / 动作集合差异。",
+  "defaults": {
+    "maxExploreDepth": 10,
+    "maxReturnDepth": 12,
+    "maxStates": 10000,
+    "maxTransitions": 40000
+  },
+  "cases": [
+    {
+      "id": "sticky2_single_lane_push",
+      "title": "2 格横条在单排走廊中右推",
+      "question": "同样的 2 格横条右推一步，单排走廊是否因为无法绕到右侧而不可回返？",
+      "layout": "########\n#BS#..G#\n########\n#@MM...#\n########",
+      "actions": [
+        "right"
+      ]
+    },
+    {
+      "id": "sticky2_loop_room_push",
+      "title": "2 格横条在可绕行房间中右推",
+      "question": "把单排走廊改成下方可绕行房间后，同一右推动作是否恢复回返路径？",
+      "layout": "########\n#BS#..G#\n########\n#@MM...#\n#......#\n########",
+      "actions": [
+        "right"
+      ]
+    },
+    {
+      "id": "sticky2_mouth_keeps_turnaround_cell",
+      "title": "2 格横条在墙口后仍留下右侧站位格",
+      "question": "固定墙口宽度时，2 格横条右推后是否还能让玩家绕到右侧并推回？",
+      "layout": "#######\n#BS#G.#\n#######\n#@MM..#\n#.....#\n#######",
+      "actions": [
+        "right"
+      ]
+    },
+    {
+      "id": "sticky3_mouth_consumes_turnaround_cell",
+      "title": "3 格横条在同一墙口后吃掉右侧站位格",
+      "question": "只把 2 格横条换成 3 格横条后，右推一步是否占掉唯一的右侧站位格，从而不可回返？",
+      "layout": "#######\n#BS#G.#\n#######\n#@MMM.#\n#.....#\n#######",
+      "actions": [
+        "right"
+      ]
+    }
+  ]
+}

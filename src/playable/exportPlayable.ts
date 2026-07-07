@@ -1,15 +1,14 @@
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { build } from "esbuild";
-import YAML from "yaml";
 import { loadPrototypePackage } from "../core/io.js";
-import type { LevelsDoc } from "../core/types.js";
+import { readPlayableLevelsForExport } from "./levelCatalog.js";
 
 const packagePath = process.argv[2] ?? "prototypes/pull_portal_fallback";
 const pkg = await loadPrototypePackage(packagePath);
 const outDir = path.join(pkg.root, "playable");
 const evaluation = await readEvaluation(pkg.root);
-const playableLevels = await readPlayableLevels(pkg.root, pkg.levels);
+const playableLevels = await readPlayableLevelsForExport(pkg);
 const assetVersion = Date.now().toString(36);
 
 await mkdir(outDir, { recursive: true });
@@ -41,6 +40,18 @@ await build({
   },
 });
 
+await build({
+  entryPoints: [path.resolve("src/web/editor.ts")],
+  bundle: true,
+  outfile: path.join(outDir, "editor.js"),
+  format: "esm",
+  target: "es2022",
+  sourcemap: true,
+  define: {
+    __BUILD_ID__: JSON.stringify(assetVersion),
+  },
+});
+
 await writeFile(
   path.join(outDir, "index.html"),
   `<!doctype html>
@@ -54,6 +65,25 @@ await writeFile(
   <body>
     <main id="app"></main>
     <script type="module" src="./app.js?v=${assetVersion}"></script>
+  </body>
+</html>
+`,
+  "utf8",
+);
+
+await writeFile(
+  path.join(outDir, "editor.html"),
+  `<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${pkg.mechanic.title} Editor</title>
+    <link rel="stylesheet" href="./style.css?v=${assetVersion}">
+  </head>
+  <body>
+    <main id="app"></main>
+    <script type="module" src="./editor.js?v=${assetVersion}"></script>
   </body>
 </html>
 `,
@@ -79,72 +109,6 @@ async function copySpriteAssets(outputRoot: string): Promise<void> {
   await rm(target, { recursive: true, force: true });
   await mkdir(path.dirname(target), { recursive: true });
   await cp(source, target, { recursive: true });
-}
-
-type PlayableLevelsConfig = {
-  levels?: string[];
-};
-
-async function readPlayableLevels(root: string, levels: LevelsDoc): Promise<LevelsDoc> {
-  const archivedSourceLevelIds = await readArchivedCanonicalSourceLevelIds(root);
-  let raw: string;
-  try {
-    raw = await readFile(path.join(root, "playable_levels.yml"), "utf8");
-  } catch {
-    return {
-      ...levels,
-      levels: levels.levels.filter((level) => !archivedSourceLevelIds.has(level.id)),
-    };
-  }
-
-  const config = YAML.parse(raw) as PlayableLevelsConfig | undefined;
-  const ids = config?.levels ?? [];
-  if (ids.length === 0) {
-    return {
-      ...levels,
-      levels: levels.levels.filter((level) => !archivedSourceLevelIds.has(level.id)),
-    };
-  }
-
-  const byId = new Map(levels.levels.map((level) => [level.id, level] as const));
-  const missing = ids.filter((id) => !byId.has(id));
-  if (missing.length > 0) {
-    throw new Error(`playable_levels.yml references unknown level id(s): ${missing.join(", ")}`);
-  }
-
-  return {
-    ...levels,
-    levels: ids
-      .map((id) => byId.get(id)!)
-      .filter((level) => !archivedSourceLevelIds.has(level.id)),
-  };
-}
-
-async function readArchivedCanonicalSourceLevelIds(root: string): Promise<Set<string>> {
-  try {
-    const raw = await readFile(path.join(root, "design_archive", "index.yml"), "utf8");
-    const index = YAML.parse(raw) as { candidates?: Array<Record<string, unknown>> } | null;
-    const ids = new Set<string>();
-    for (const candidate of index?.candidates ?? []) {
-      const source = stringValue(candidate.source_candidate_version);
-      if (source && isCanonicalArchiveCandidate(candidate)) {
-        ids.add(source);
-      }
-    }
-    return ids;
-  } catch {
-    return new Set();
-  }
-}
-
-function isCanonicalArchiveCandidate(candidate: Record<string, unknown>): boolean {
-  return stringValue(candidate.archive_eligibility) === "clean_archive" ||
-    stringValue(candidate.human_final_status) === "accepted" ||
-    stringValue(candidate.status) === "accepted";
-}
-
-function stringValue(value: unknown): string | undefined {
-  return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
 function playableCss(): string {
@@ -310,6 +274,12 @@ textarea:disabled {
   max-width: 360px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.save-status[data-dirty="true"] {
+  border-color: #e4bf83;
+  background: var(--warning-soft);
+  color: var(--warning);
 }
 
 .candidate-rail,
@@ -547,11 +517,14 @@ textarea:disabled {
 .tool-menu-item {
   min-height: 36px;
   width: 100%;
+  display: flex;
+  align-items: center;
   padding: 0 10px;
   border: 0;
   border-radius: 6px;
   background: transparent;
   color: var(--ink);
+  text-decoration: none;
   text-align: left;
 }
 
@@ -853,12 +826,543 @@ textarea:disabled {
   line-height: 1.45;
 }
 
+.editor-shell {
+  height: 100vh;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(250px, 310px) minmax(430px, 1fr) minmax(320px, 380px);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 1px;
+  background: var(--line);
+}
+
+.editor-header {
+  grid-column: 1 / -1;
+}
+
+.secondary-link {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.source-rail,
+.editor-workspace,
+.inspector {
+  min-width: 0;
+  min-height: 0;
+  background: var(--panel);
+}
+
+.source-rail,
+.inspector {
+  overflow: auto;
+  padding: 14px;
+}
+
+.source-rail {
+  display: grid;
+  grid-template-rows: auto;
+  align-content: start;
+  gap: 14px;
+}
+
+.source-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.source-nav-actions {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.source-filter-panel {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.source-filter-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.source-search {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.source-search span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.source-search-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+}
+
+.source-search input {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.source-search-row .secondary-button {
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+.source-filter-list {
+  display: grid;
+  gap: 6px;
+}
+
+.source-filter-option {
+  min-width: 0;
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.source-filter-option input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.source-filter-option span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source-filter-option small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.source-filter-option:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.hidden-selection-note {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #e4bf83;
+  border-radius: 8px;
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.source-group {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.source-group h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.source-group h2 span {
+  color: var(--line-strong);
+}
+
+.source-list {
+  display: grid;
+  gap: 7px;
+}
+
+.source-button {
+  width: 100%;
+  min-height: 62px;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+}
+
+.source-button[aria-current="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.editor-workspace {
+  overflow: auto;
+  padding: 16px;
+}
+
+.editor-card {
+  min-width: 0;
+  min-height: min(760px, calc(100vh - 96px));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  gap: 12px;
+}
+
+.editor-toolbar,
+.board-actions,
+.button-row,
+.grid-tools {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.active-tool-chip {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  max-width: 220px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-toolbar {
+  justify-content: space-between;
+}
+
+.segmented {
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.segmented .tab-button {
+  min-height: 34px;
+  border-radius: 5px;
+  border-color: transparent;
+}
+
+.palette {
+  min-width: 0;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.layer-palette {
+  align-items: stretch;
+}
+
+.tool-group {
+  flex: 0 0 auto;
+  min-width: 150px;
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.tool-group h3 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.tool-group-items {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.palette-button {
+  flex: 0 0 auto;
+  width: 78px;
+  min-height: 78px;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 5px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.palette-button span:last-child {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.palette-swatch {
+  width: 34px;
+  aspect-ratio: 1;
+  position: relative;
+  display: block;
+  background: #edf2f4;
+}
+
+.editor-board-wrap {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #edf2f4;
+}
+
+.editor-board {
+  --tile-size: clamp(30px, 5.6vmin, 58px);
+}
+
+.editor-tile-button {
+  width: var(--tile-size);
+  aspect-ratio: 1;
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+}
+
+.editor-tile-button:hover {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 5;
+}
+
+.ascii-pane {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.ascii-pane textarea {
+  width: 100%;
+  min-height: 160px;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: 13px/1.35 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.small-textarea {
+  min-height: 84px;
+  font: 12px/1.4 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}
+
+.danger-button {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-weight: 850;
+}
+
+.draft-validation {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.draft-validation.ok {
+  border-color: #9ac7ad;
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+.draft-validation.warn {
+  border-color: #e4bf83;
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.diagnostic-card {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.diagnostic-card strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.diagnostic-card[data-status="core_unique"] {
+  border-color: #9ac7ad;
+  background: var(--ok-soft);
+}
+
+.diagnostic-card[data-status="branching"],
+.diagnostic-card[data-status="unknown"] {
+  border-color: #e4bf83;
+  background: var(--warning-soft);
+}
+
+.diagnostic-card[data-status="invalid"],
+.diagnostic-card[data-status="unsolved"] {
+  border-color: #e0a39d;
+  background: var(--danger-soft);
+}
+
+.snapshot-list {
+  display: grid;
+  gap: 10px;
+}
+
+.snapshot-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(120px, 150px) minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.snapshot-board {
+  --tile-size: 18px;
+  align-self: start;
+}
+
+.snapshot-meta {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.snapshot-meta strong {
+  color: var(--ink);
+}
+
+.compact {
+  min-height: 48px;
+  padding: 8px;
+}
+
 @media (max-width: 1080px) {
   body {
     overflow: auto;
   }
 
-  .review-shell {
+  .review-shell,
+  .editor-shell {
     height: auto;
     min-height: 100vh;
     grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
@@ -872,15 +1376,21 @@ textarea:disabled {
   .review-panel {
     grid-column: 1 / -1;
   }
+
+  .inspector {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 760px) {
-  .review-shell {
+  .review-shell,
+  .editor-shell {
     grid-template-columns: 1fr;
   }
 
   .app-header,
   .play-toolbar,
+  .editor-toolbar,
   .section-title {
     align-items: stretch;
     flex-direction: column;
@@ -888,7 +1398,10 @@ textarea:disabled {
 
   .candidate-rail,
   .play-area,
-  .review-panel {
+  .review-panel,
+  .source-rail,
+  .editor-workspace,
+  .inspector {
     grid-column: 1;
   }
 
@@ -906,6 +1419,11 @@ textarea:disabled {
 
   .tile {
     width: 40px;
+  }
+
+  .field-grid,
+  .snapshot-card {
+    grid-template-columns: 1fr;
   }
 }
 `;

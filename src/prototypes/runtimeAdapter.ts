@@ -1,4 +1,4 @@
-import type { LevelDoc, MechanicDoc, WinCondition } from "../core/types.js";
+import type { KnowledgeDoc, LevelDoc, MechanicDoc, WinCondition } from "../core/types.js";
 import type { PuzzleRuntime, RuntimeSearchOptions } from "../core/puzzleRuntime.js";
 import { iceSlideAdapter } from "./ice_slide_escape/runtime.js";
 import { pullPortalAdapter } from "./pull_portal_fallback/runtime.js";
@@ -40,6 +40,59 @@ export type VisualBoard = {
   tiles: VisualTile[];
 };
 
+export type EditorLayerId = "terrain" | "target" | "actor" | "object" | "mechanism";
+
+export type EditorCell = {
+  terrain: string;
+  target?: string;
+  actor?: string;
+  object?: string;
+  mechanism?: string;
+};
+
+export type EditorBoard = {
+  width: number;
+  height: number;
+  cells: EditorCell[];
+};
+
+export type EditorToolItem = {
+  id: string;
+  layer: EditorLayerId;
+  label: string;
+  value?: string;
+  shortcut?: string;
+  visual?: Omit<VisualTile, "x" | "y">;
+};
+
+export type EditorToolGroup = {
+  id: EditorLayerId;
+  label: string;
+  exclusive: boolean;
+  items: EditorToolItem[];
+};
+
+export type EditorValidationResult = {
+  ok: boolean;
+  errors: string[];
+};
+
+export type RuntimeEditorAdapter = {
+  layers: EditorToolGroup[];
+  defaultGlyph: string;
+  defaultSize: {
+    width: number;
+    height: number;
+  };
+  defaultLevel(mechanic: MechanicDoc, knowledge: KnowledgeDoc): LevelDoc;
+  normalizeAscii(layout: string): string;
+  parseAsciiToBoard(layout: string): EditorBoard;
+  serializeBoard(board: EditorBoard): string;
+  renderCell(cell: EditorCell): Omit<VisualTile, "x" | "y">;
+  serializeAscii?(level: LevelDoc): string;
+  validateLevel(level: LevelDoc, mechanic: MechanicDoc): EditorValidationResult;
+};
+
 export type RuntimeAdapter<
   State,
   Action extends string,
@@ -64,6 +117,7 @@ export type RuntimeAdapter<
   isWin(state: State, winCondition: WinCondition): boolean;
   isEventWin(events: string[], winCondition?: WinCondition): boolean;
   renderVisualState?(state: State, mechanic: MechanicDoc): VisualBoard;
+  editor?: RuntimeEditorAdapter;
 };
 
 export type CurrentRuntimeAdapter = RuntimeAdapter<any, any, any>;
@@ -99,7 +153,7 @@ function glyphTile(glyph: string, x: number, y: number): VisualTile {
   const tile: VisualTile = {
     x,
     y,
-    terrain: layer("terrain.floor", " ", "floor"),
+    terrain: visualLayer("terrain.floor", " ", "floor"),
   };
 
   switch (glyph) {
@@ -107,45 +161,190 @@ function glyphTile(glyph: string, x: number, y: number): VisualTile {
     case ".":
       return tile;
     case "#":
-      tile.terrain = layer("terrain.wall", "#", "wall");
+      tile.terrain = visualLayer("terrain.wall", "#", "wall");
       return tile;
     case "G":
-      tile.target = layer("target.goal", "G", "goal");
+      tile.target = visualLayer("target.goal", "G", "goal");
       return tile;
     case "+":
-      tile.target = layer("target.goal", "G", "goal");
-      tile.actors = [layer("actor.player", "@", "player")];
+      tile.target = visualLayer("target.goal", "G", "goal");
+      tile.actors = [visualLayer("actor.player", "@", "player")];
       return tile;
     case "@":
-      tile.actors = [layer("actor.player", "@", "player")];
+      tile.actors = [visualLayer("actor.player", "@", "player")];
       return tile;
     case "*":
-      tile.target = layer("target.goal", "G", "goal");
-      tile.objects = [layer("object.crate", "C", "crate")];
+      tile.target = visualLayer("target.goal", "G", "goal");
+      tile.objects = [visualLayer("object.crate", "C", "crate")];
       return tile;
     case "C":
-      tile.objects = [layer("object.crate", "C", "crate")];
+      tile.objects = [visualLayer("object.crate", "C", "crate")];
       return tile;
     case "m":
-      tile.target = layer("target.goal", "G", "goal");
-      tile.objects = [layer("object.sticky", "M", "sticky")];
+      tile.target = visualLayer("target.goal", "G", "goal");
+      tile.objects = [visualLayer("object.sticky", "M", "sticky")];
       return tile;
     case "M":
-      tile.objects = [layer("object.sticky", "M", "sticky")];
+      tile.objects = [visualLayer("object.sticky", "M", "sticky")];
       return tile;
     default:
-      tile.objects = [layer(`glyph.${glyph}`, glyph, glyph, ["glyph-fallback"])];
+      tile.objects = [visualLayer(`glyph.${glyph}`, glyph, glyph, ["glyph-fallback"])];
       return tile;
   }
 }
 
-function layer(
+export function visualLayer(
   visualKey: string,
   fallbackGlyph: string,
   label: string,
   tags: string[] = [],
 ): VisualLayer {
   return { visualKey, fallbackGlyph, label, tags };
+}
+
+export function visualTileForGlyph(glyph: string, x = 0, y = 0): VisualTile {
+  return glyphTile(glyph, x, y);
+}
+
+export function editorVisualForGlyph(glyph: string): Omit<VisualTile, "x" | "y"> {
+  const { x: _x, y: _y, ...visual } = glyphTile(glyph, 0, 0);
+  return visual;
+}
+
+export function editorTool(
+  layerId: EditorLayerId,
+  id: string,
+  label: string,
+  value: string | undefined,
+  visual: Omit<VisualTile, "x" | "y">,
+): EditorToolItem {
+  return { id, layer: layerId, label, value, visual };
+}
+
+export function editorToolGroup(
+  id: EditorLayerId,
+  label: string,
+  items: EditorToolItem[],
+  exclusive = true,
+): EditorToolGroup {
+  return { id, label, exclusive, items };
+}
+
+export function editorBoardFromAscii(
+  layout: string,
+  options: {
+    defaultTerrain: string;
+    parseGlyph: (glyph: string) => Partial<EditorCell>;
+    rectangular?: boolean;
+    fill?: string;
+  },
+): EditorBoard {
+  const normalized = normalizeAsciiLayout(layout, {
+    rectangular: options.rectangular,
+    fill: options.fill,
+  });
+  const rows = normalized.length > 0 ? normalized.split("\n") : [""];
+  const width = Math.max(1, ...rows.map((row) => row.length));
+  const height = Math.max(1, rows.length);
+  const cells: EditorCell[] = [];
+  for (let y = 0; y < height; y += 1) {
+    const row = rows[y] ?? "";
+    for (let x = 0; x < width; x += 1) {
+      cells.push({
+        terrain: options.defaultTerrain,
+        ...options.parseGlyph(row[x] ?? options.fill ?? " "),
+      });
+    }
+  }
+  return { width, height, cells };
+}
+
+export function serializeEditorBoard(
+  board: EditorBoard,
+  serializeCell: (cell: EditorCell) => string,
+): string {
+  const rows: string[][] = Array.from({ length: board.height }, () =>
+    Array.from({ length: board.width }, () => " "),
+  );
+  for (let y = 0; y < board.height; y += 1) {
+    for (let x = 0; x < board.width; x += 1) {
+      const cell = board.cells[y * board.width + x];
+      rows[y]![x] = cell ? serializeCell(cell) : " ";
+    }
+  }
+  return rows.map((row) => row.join("").trimEnd()).join("\n");
+}
+
+export function editorBoardToVisualBoard(
+  board: EditorBoard,
+  renderCell: (cell: EditorCell) => Omit<VisualTile, "x" | "y">,
+): VisualBoard {
+  const tiles: VisualTile[] = [];
+  for (let y = 0; y < board.height; y += 1) {
+    for (let x = 0; x < board.width; x += 1) {
+      const visual = renderCell(board.cells[y * board.width + x] ?? { terrain: "floor" });
+      tiles.push({
+        x,
+        y,
+        terrain: cloneVisualLayer(visual.terrain),
+        target: cloneVisualLayer(visual.target),
+        actors: visual.actors?.map((layer) => ({ ...layer })),
+        objects: visual.objects?.map((layer) => ({ ...layer })),
+      });
+    }
+  }
+  return { width: board.width, height: board.height, tiles };
+}
+
+function cloneVisualLayer(layer: VisualLayer | undefined): VisualLayer | undefined {
+  return layer ? { ...layer } : undefined;
+}
+
+export function normalizeAsciiLayout(
+  layout: string,
+  options: { rectangular?: boolean; fill?: string } = {},
+): string {
+  const fill = options.fill ?? " ";
+  const rows = layout
+    .replace(/\r/g, "")
+    .split("\n")
+    .map((row) => row.replace(/\t/g, "  "));
+  while (rows.length > 0 && rows[0] === "") {
+    rows.shift();
+  }
+  while (rows.length > 0 && rows.at(-1) === "") {
+    rows.pop();
+  }
+  if (rows.length === 0) {
+    return "";
+  }
+  if (!options.rectangular) {
+    return rows.map((row) => row.trimEnd()).join("\n");
+  }
+  const width = Math.max(...rows.map((row) => row.length));
+  return rows.map((row) => row.padEnd(width, fill)).join("\n");
+}
+
+export function validateLevelByParsing<State>(
+  level: LevelDoc,
+  parseLevel: (level: LevelDoc) => State,
+): EditorValidationResult {
+  const errors: string[] = [];
+  if (!level.id.trim()) {
+    errors.push("缺少关卡 id");
+  }
+  if (!level.title.trim()) {
+    errors.push("缺少标题");
+  }
+  if (!level.layout.trim()) {
+    errors.push("缺少布局");
+  }
+  try {
+    parseLevel(level);
+  } catch (error) {
+    errors.push(error instanceof Error ? error.message : String(error));
+  }
+  return { ok: errors.length === 0, errors };
 }
 
 export function getRuntimeAdapter(mechanic: MechanicDoc): CurrentRuntimeAdapter {

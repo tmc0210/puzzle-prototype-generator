@@ -161,10 +161,24 @@
           "uniqueItems": true
         },
         "design_notes": { "type": "string" },
+        "lineage": { "$ref": "#/$defs/levelLineage" },
         "analysis": {
           "type": "object",
           "additionalProperties": true
         }
+      }
+    },
+    "levelLineage": {
+      "type": "object",
+      "required": ["source"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "source_level_id": { "type": "string", "minLength": 1 },
+        "source_candidate_id": { "type": "string", "minLength": 1 },
+        "source_file": { "type": "string", "minLength": 1 },
+        "created_by": { "type": "string", "minLength": 1 },
+        "created_at": { "type": "string", "minLength": 1 }
       }
     },
     "expectedStep": {
