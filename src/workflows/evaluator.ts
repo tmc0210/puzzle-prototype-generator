@@ -13,6 +13,7 @@ import type {
   WinCondition,
 } from "../core/types.js";
 import { analyzeGraphWithRuntime } from "../core/graphAnalyzer.js";
+import { isTerminalWinCondition } from "../core/puzzleRuntime.js";
 import {
   counterfactualOptions,
   findUncoveredGoalPathWithRuntime,
@@ -211,7 +212,14 @@ function replayExpectedTrace(
   let state = initial;
   const events: string[] = [];
   const mismatches: string[] = [];
+  const terminalWin = isTerminalWinCondition(winCondition);
+  let reachedTerminalWin = terminalWin && adapter.isWin(state, winCondition);
   for (const [index, expectedStep] of level.expected_trace.entries()) {
+    if (reachedTerminalWin) {
+      mismatches.push(`step ${index + 1} occurs after a terminal win condition was reached`);
+      break;
+    }
+
     const input = expectedStep.input as InputId;
     const result = adapter.step(mechanic, state, input, { winCondition });
     events.push(...result.events);
@@ -230,6 +238,9 @@ function replayExpectedTrace(
     if (result.legal) {
       state = result.state;
     }
+
+    reachedTerminalWin =
+      terminalWin && (adapter.isWin(state, winCondition) || adapter.isEventWin(result.events, winCondition));
   }
 
   return {

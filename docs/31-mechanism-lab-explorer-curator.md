@@ -1,57 +1,117 @@
 # Mechanism Lab Explorer / Curator 流程
 
-本文档定义可泛化的机制探索与设计语料整理流程。当前阶段只覆盖 explorer 和 curator，不进入关卡设计、候选包、critic、evidence review 或 archive 审美判断。
+本文档定义 runtime-backed 的机制语料生产流程。当前阶段只覆盖局部结构探索与语料整理，不进入完整关卡设计、candidate packet、critic、evidence review 或 archive 审美判断。
 
 ## 目标
 
-机制实验的输入是原型 runtime 和极小局部 layout patch。输出分为两层：
+Mechanism lab 的最终产物是 designer 可使用的可组合局部结构语料，而不是实验流水或规则问答。合格语料必须让 designer 能自然做这种拼接：
 
-- `mechanism_lab/runs/<run_id>/`：探索历史和证据库，给后续 explorer / curator 按需读取，保留局部实验问题、patch、动作结果、可达图摘要、回返搜索和人工解释。
-- `mechanism_lab/lexicon.md`：整理后的机制语料，给后续使用者摘取结构，不要求包含完整实验流水。
-- `mechanism_lab/lexicon_index.md`：当前正式结构族的短索引，给 explorer 和 controller 避免重复读取完整 lexicon。
-- `mechanism_lab/backlog.md`：当前仍值得探索的缺口，给 controller 生成下一轮 explorer brief。
+```text
+前置结构产出 A -> 后续结构需要 A -> 加几何限制和节奏后形成关卡骨架
+```
 
-这些产物都按原型分目录放在 `prototypes/<mechanic_id>/` 下，不跨原型混放。
+每个正式条目至少说明：
 
-历史 refresh / decision 文件只是一次 curator 快照或更新摘要，不是当前状态入口。后续探索默认不读取旧 refresh；只有追溯旧裁决、核对 provenance 或做版本审计时才读。
+- 输入接口：需要什么对象、占格形状、站位、边界状态或前置产物。
+- 输出接口：产出什么材料、债务、把手、阻塞、可达性或回返状态。
+- 最小 consumer：哪个极小墙口、目标袋、通道、把手格、站位门或后续结构已经消费这个输出。
+- 对照关系：错一格、宽一格、换对象、换顺序或预分离后为什么失败或退化。
+
+## 当前入口
+
+每个原型的机制语料放在：
+
+```text
+prototypes/<mechanic_id>/mechanism_lab/
+  lexicon.md
+  lexicon_index.md
+  backlog.md
+  runs/
+```
+
+- `lexicon.md`：当前正式语料正文。
+- `lexicon_index.md`：当前结构族短索引，给 explorer 快速避重和查接口。
+- `backlog.md`：当前值得探索的新设计空间或组合空间。
+- `runs/`：实验历史和证据库，只在核对来源、追溯裁决或审计时读取。
+
+旧 refresh / decision 文件和旧 runs 保留为 provenance，但不是默认上下文入口。
 
 ## 标准意图
 
-机制探索请求先归一成标准意图，而不是根据用户 prompt 长短或信息量分支。
-
-默认连续循环意图：
+默认连续循环：
 
 ```text
 mechanism_loop(prototype, optional_scope, optional_round_budget)
 ```
 
-用户只需要提供 `prototype`；`scope` 与 `round_budget` 可选。默认 `round_budget=1`，每轮必须完成 curator 收口后停止报告。
+用户明确点名某个机制、结构方向或局部设计空间时，进入指定范围模式。用户 scope 是硬范围；不要先做“是否有空间”的存在性验证。应在该范围内拆出对象、占格形状、边界关系、时序、站位、产物、需求端、消费端、已有语料和退化风险。
 
-单独任务可归一为：
+单独任务：
 
-- `mechanism_explore(prototype, scope)`：只跑 explorer，不更新正式 lexicon。
-- `mechanism_curate(prototype, run_ids)`：只做 curator 裁决和语料整理。
+- `mechanism_explore(prototype, scope)`：只跑探索，不更新正式 lexicon。
+- `mechanism_curate(prototype, run_ids)`：只做语料整理和裁决。
 
-## 语料层级
+## 默认线性循环
 
-机制语料按“能否被设计流程消费”分层：
+默认使用单 agent 线性流程。Subagent 只在用户明确要求并行时使用。
 
-- `event_witness`：只证明某事件或规则结果出现，不足以进入 lexicon。
-- `structure_difference`：证明一组近邻结构在动作集合、可达性、回返性、状态类别或资源形态上有差异，可以进入 `proposed_families.md`。
-- `consumption_probe`：证明结构输出能被一个极小后续约束消费，例如墙口、目标、站位、把手或通道约束；这是新 lexicon 条目的最低证据门槛。
-- `composition_probe`：证明两个或多个 lexicon 结构能通过输入 / 输出接口串起来，形成 recipe 候选。
+每轮只处理一个设计空间：
 
-Lexicon 条目的定位是“可组合的局部结构接口”：它说明结构需要什么输入、产生什么输出、自然能接到什么后续结构。Recipe 的定位是“原理上可行的关卡骨架”：它说明玩家为什么需要主动构造某个 lexicon 结构，以满足另一个 lexicon 的输入要求。Recipe 不是完整关卡，不处理完整节奏、审美、唯一性或候选包。
+1. 选一个设计空间：静态说清“输入 -> 产物 -> 最小 consumer”。
+2. 写结构谱草案：3-6 个近邻变体，包含正例、错例、宽一格 / 少一格 / 换对象 / 换顺序 / 预分离等对照。
+3. 跑最小对照实验：runtime 只确认结构谱和对照关系，不负责发现 topic。
+4. 语料化收口：新条目、并入旧条目、补充旧条目、暂存或丢弃。
+
+选题阶段不提前跑 runtime。以下题材不合格：
+
+- “验证某规则是否触发”。
+- “某动作是否 legal / 是否可解 / 是否产生事件”。
+- “看看会发生什么”。
+- “工具能不能跑通”。
+- “给已有条目补一个普通未覆盖变体”。
+
+## Brief 与输出
+
+单轮默认目录：
+
+```text
+prototypes/<mechanic_id>/mechanism_lab/runs/<run_id>/
+  brief.md
+  cases.yml
+  cases.json
+  results.json
+  report.md
+  explorer_notes.md
+  proposed_families.md
+  curator_decision.md
+```
+
+`brief.md` 至少包含：
+
+```markdown
+# Mechanism Lab Brief: <run_id>
+
+- prototype:
+- design_space: 输入 -> 产物 -> 最小 consumer
+- seed_source:
+- source_boundary:
+- structure_spectrum:
+- do_not_repeat:
+- success_criterion:
+- output_contract:
+```
+
+只有用户明确要求并行，或本轮确实需要多个互不干扰的设计空间，才使用 round + topic 子目录。即使使用多 topic，每个 topic 也必须是设计空间切片，而不是抽象问题。
 
 ## 工具边界
 
-所有通用机制实验工具只依赖 `RuntimeAdapter` 和 `PuzzleRuntime`：
+通用机制实验工具只依赖 `RuntimeAdapter` 和 `PuzzleRuntime`：
 
-- `src/core/runtimeGraph.ts`：从初始状态枚举有限状态图，返回状态 key、边、事件、胜利状态索引和发现深度。
-- `src/workflows/localExperimentRunner.ts`：读取手写局部 patch，回放指定动作，列出最终动作表，做有限深度可达枚举，并搜索最终状态能否回到初始状态。
+- `src/core/runtimeGraph.ts`：枚举有限状态图。
+- `src/workflows/localExperimentRunner.ts`：读取手写局部 patch，回放动作，列最终动作表，做有限深度可达枚举，并搜索最终状态能否回到初始状态。
 - `src/cli.ts mechanism-lab-run`：命令行入口。
 
-工具不得读取或复用历史候选、历史关卡、design archive、人类评价、sampler profile 或 hardcoded layout template。Explorer 可以手写 patch，也可以用 miner 结果启发问题，但 miner 产物不能直接进入 lexicon。
+工具不得读取或复用历史候选、历史关卡、design archive、人类评价、sampler profile 或 hardcoded layout template。Miner 可以启发题材，但 miner 产物不能直接进入 lexicon。
 
 ## CLI 用法
 
@@ -59,22 +119,12 @@ Lexicon 条目的定位是“可组合的局部结构接口”：它说明结构
 tsx src/cli.ts mechanism-lab-run prototypes/<mechanic_id> cases.yml --run-id local_probe_01 --write
 ```
 
-`--write` 默认写入：
-
-```text
-prototypes/<mechanic_id>/mechanism_lab/runs/<run_id>/
-  cases.json
-  results.json
-  report.md
-  explorer_notes.md
-  proposed_families.md
-```
-
 输入文件最小格式：
 
 ```yaml
 runId: local_probe_01
-title: "局部可动性比较"
+title: "局部结构对照"
+notes: "输入接口 / 输出接口 / 最小 consumer 的简短说明"
 defaults:
   maxExploreDepth: 14
   maxReturnDepth: 24
@@ -84,9 +134,9 @@ cases:
   - id: "case_a"
     family: "local_structure_family"
     variant: "variant_a"
-    changed_variable: "相对 variant_b 改了什么"
+    changed_variable: "相对对照变体改动的结构旋钮"
     contrast_with: "case_b"
-    question: "结构 A 和结构 B 的后续动作集合是否不同"
+    notes: "本 case 在结构谱中的角色"
     layout: |
       #####
       #@..#
@@ -94,148 +144,104 @@ cases:
     actions: ["right"]
 ```
 
-可选字段：
+`question` 字段仅为旧 run 兼容保留；新材料默认不要用它组织 topic。
 
-- `disabledRules` / `disabledBranches`：用于 runtime 支持的反事实实验。
-- `win`：覆盖默认胜利条件。
-- `maxExploreDepth` / `maxReturnDepth` / `maxStates` / `maxTransitions`：单 case 预算覆盖。
-- `family` / `variant` / `changed_variable` / `contrast_with`：结构族分组。runner 会在报告中按 `family` 汇总回返、动作表和图完整性。
-
-在 `mechanism_loop` 中，run 目录还应包含由 agent 管理的流程文件：
+`mechanism-lab-run --write` 默认写入：
 
 ```text
-prototypes/<mechanic_id>/mechanism_lab/runs/<run_id>/
-  brief.md
-  curator_decision.md
+cases.json
+results.json
+report.md
 ```
 
-`brief.md` 是 controller / curator 在 explorer 执行前写的标准任务包；`curator_decision.md` 是 curator 在 explorer 完成后写的收口记录。它们不是 `mechanism-lab-run --write` 自动生成的文件。
+`brief.md`、`explorer_notes.md`、`proposed_families.md` 和 `curator_decision.md` 由 agent 补齐，不是 runner 自动输出。
 
-## Explorer 工作流
+## Explorer 要求
 
-Explorer 的任务是提出和执行比较性局部问题，不是证明规则存在，也不是设计关卡。
+Explorer 先写结构谱，再跑实验。结构谱必须包含：
 
-每轮先把请求归一成 exploration brief：
+- 正例：产出可用材料。
+- 错例：相近结构不产出同样接口。
+- 边界修正：排除普通占位、普通阻挡、普通容量、普通 shortcut、普通目标消费或已有结构补谱。
+- 最小 consumer：输出被哪里消费。
 
-- `prototype`
-- `scope`
-- `exclusions`
-- `source_boundary`
-- `run_intent`
+`proposed_families.md` 必须先写 designer-facing 语料：
 
-信息不足时补全一个保守的小范围；约束较多时压缩到这些字段。归一化后始终执行同一启动流程。
+- 接口卡片：输入接口、输出接口、最小 consumer。
+- 局部结构谱：正例、错例、边界修正。
+- 对照关系：每个变体改了什么，为什么改变产物或 consumer。
+- 可接入的结构：这个输出自然能接哪些已有 consumer。
+- 误用边界：哪些相近结构不会产生同样结果。
+- 证据来源：run id、case id、关键观察。
 
-一轮探索应包含：
+随后写 curator 检查信息：
 
-1. 按 source boundary 读取必要规则 / runtime / adapter。
-2. 提取本轮 primitive refs；它们只是引用索引，不是成果。
-3. 写出 6-10 个候选结构族。结构族的目标不是单条结论，而是局部结构谱系：一组近邻变体、一个或多个旋钮、同一局部目标、不同状态空间结果。
-4. 过滤候选：直接由规则可读出的差异不跑；只换 driver 的结构不升为新 family；没有明确输出或自然消费方向的结构先标为上游材料。
-5. 选择 1-2 个结构族执行局部 patch 实验。每个被执行族应尽量包含正例、反例和至少一个修正原解释的边界 case；若目标是进入 lexicon，还应包含最小 consumption probe。
-6. 用 `mechanism-lab-run` 生成硬事实记录。
-7. 在 run 目录补充 `explorer_notes.md`：本轮假设、有效比较、被修正的解释、哪些只是规则复述或无效差异。
-8. 在 run 目录补充 `proposed_families.md`：给 curator 的结构族草案，而不是正式 lexicon。
+- 机制角色：`active_rule`、`material_source`、`consumer`、`incidental`。
+- 关键观察点。
+- 退化解释。
+- 建议裁决：`promote`、`merge`、`supplement`、`relabel`、`defer` 或 `reject`。
 
-Explorer 输出应偏向具体结构语言，例如“2 格竖条贴单侧墙时只能沿墙平移，3 格 L 形在同样墙口会多出一次转角重排机会”，而不是“机制可以改变可达性”。
+## Curator 要求
 
-## 连续探索循环
+Curator 更新 lexicon 前必须先裁决：
 
-连续探索不建议让一个 explorer 无限探索并自我入库。推荐分层：
+- `promote`：新顶层结构族，要求接口卡片和最小 consumer。
+- `merge`：并入已有结构族。
+- `supplement`：作为已有结构族的输入侧、输出侧、错例或组合补充。
+- `relabel`：材料有价值但归属写错。
+- `defer`：只有结构差异，缺最小 consumer。
+- `reject`：事实不稳、缺对照、只是规则复述或没有 designer 可用接口。
 
-- Controller / curator 维护长期记忆：`lexicon.md`、`lexicon_index.md`、`backlog.md` 和必要的 run provenance。
-- Explorer 只做短周期局部实验：按 brief 提出候选结构族，实跑 1-2 个，输出 run 与 proposed families。
-- Curator 决定收录：`promote`、`merge`、`supplement` 或 `defer`。
+收口前必须校准结论范围：
 
-每轮循环：
+- 已支撑：哪些变体和 consumer 能支撑当前语料。
+- 结论收窄：哪些未跑、等价、不适用或 patch 隔离不了。
+- 不应入库：哪些只有 event witness、孤例、预算不足或没有接口。
+- 是否打开新设计空间：只有出现新的产物、需求端、消费端或组合关系时，才进入 backlog。
 
-1. Curator 从 `lexicon_index.md` 与 `backlog.md` 选择缺口。默认选择第一个 `open` gap；若用户提供 scope，选择最贴近 scope 的 open gap。
-2. Curator 创建本轮 run 目录并写 `brief.md`：目标原型、source boundary、scope、相关索引项、允许读的少量完整条目、不要重复、预算、成功标准。
-3. 若当前上下文有 subagent 能力，controller 用 subagent 执行 `brief.md`；若没有，才在同一对话内按短周期 explorer 执行。Subagent prompt 只需指向 `brief.md`，不复述流程。
-4. Explorer 在 brief 内自行选择具体结构族和 patch。
-5. Explorer 写 run、`explorer_notes.md`、`proposed_families.md`。
-6. Curator 读取本轮结果，写 `curator_decision.md`，并更新 `lexicon.md`、`lexicon_index.md` 和 `backlog.md`。
-7. 每 3-5 轮做一次轻量 audit，检查 index 覆盖、证据门槛、重复命名和 backlog 是否还有效。
+## Lexicon 格式要求
 
-候选选择分层：curator 选择“缺口和标准”，explorer 选择“具体局部结构族”，curator 再选择“是否收录”。
+`lexicon.md` 前部应包含组合矩阵：
 
-## Curator 工作流
+```markdown
+## 组合矩阵
 
-Curator 读取一个或多个 run，整理出可复用语料。Curator 不是 explorer 的同义词，也不需要重新跑所有实验；它负责压缩、合并、去重和标注证据强度。
-
-Curator 收录的基本单位是结构族，不是单条规则结论。结构族应把相邻变体摆在一起，让后续使用者看到可调旋钮。
-
-Curator 在改 lexicon 前必须先做收录决策：
-
-- `promote`：作为新的顶层结构族进入 lexicon，要求至少有 `consumption_probe`。
-- `merge`：并入已有结构族，适用于输出和消费方式与旧条目相同、只是扩展变体的情况。
-- `supplement`：作为已有结构族的 driver、输入侧、shortcut 或 probe 补充，不单列顶层条目。
-- `defer`：只保留在 run 中，适用于目前只有 `event_witness` 或 `structure_difference`、尚未证明起作用可能性的结构。
-
-结构族命名应落在设计差异真正发生的层级，而不是按机制动作命名。`driver` 是触发方式，例如推、拉、力链搬运；`producer` 产出资源、债务、阻塞、把手或形状；`consumer` 消费这些输出并改变动作集合、可达性、回返性或目标关系。只有 driver 本身制造新的站位门、shortcut 或消费关系时，才考虑升为新结构族。
-
-Curator 合格输出应进入：
-
-```text
-prototypes/<mechanic_id>/mechanism_lab/lexicon.md
-prototypes/<mechanic_id>/mechanism_lab/lexicon_index.md
-prototypes/<mechanic_id>/mechanism_lab/backlog.md
+| 输出 | 可自然接入 |
+| --- | --- |
+| sticky 横条 | 固定 B/S 切割；墙口回返；目标口宽 |
 ```
 
-`lexicon.md` 是默认形态。Curator 只有在语料变长、单文件已经影响阅读或检索时，才应拆成：
+组合矩阵只做快速检索，不加证据状态或风险列。证据、shortcut 和风险留在条目正文。
 
-```text
-prototypes/<mechanic_id>/mechanism_lab/lexicon/
-  README.md
-  <topic>.md
+每个正式条目顶部必须有接口卡片：
+
+```markdown
+接口卡片：
+- 输入接口：
+- 输出接口：
+- 最小 consumer：
 ```
 
-拆分依据由 curator 从已有语料中归纳，例如后续使用者实际会怎样查找结构；不要预先按机制名或假想分类拆。拆分后必须保留 `README.md` 索引，列出每个结构族的一句话用途、链接和拆分依据。
+正式条目保留局部结构图、对照关系、共同解释、误用边界和证据来源。内部判断术语后置；正文优先使用 designer 能直接理解的结构语言。旧式内部占格术语在 designer-facing 文本中优先改写为“占格形状 / 连体块形状 / 二格横条 / L 形块”等具体表达。
 
-单个结构族应包含：
+## Backlog 规则
 
-- 局部结构谱：用多张小图或精确口述展示相邻变体。
-- 旋钮：哪些变量被调节，例如长度、墙口余量、施力侧、前格空位、边界位置、把手可达性。
-- 可观测事实：每个变体的动作集合、可达状态、回返性、事件集合或状态类别如何变化。
-- 组合接口：输入条件、输出状态、自然消费方式、常见 shortcut、审美风险、推荐 probe 和组合例句。
-- 设计价值：它能成为什么局部装置或局部逻辑链片段，不写完整关卡。
-- 误用边界：什么相似结构不会产生同样效果。
-- 来源：run id、case id、证据标签。
+`backlog.md` 只记录真实新设计空间或组合空间。普通补证、补归因、补变体、补格式，不是默认 explorer topic。
 
-收录门槛：
+每条 backlog 项应写：
 
-- 至少 4 个近邻变体，除非原型本身局部状态空间极小。
-- 至少 1 个正例和 1 个反例。
-- 至少 1 个修正原解释的边界 case。
-- 能明确说出旋钮，而不是只写“某规则会发生”。
-- 能说明输入 / 输出接口，并至少有一个最小 consumption probe 证明输出存在起作用的可能性。
-- 不把 `returnToInitial.status=exhausted` 当作不可回返证明。
+```markdown
+## gap_id
 
-证据标签建议：
+- 状态：open | in_progress | closed | deferred
+- 来源：
+- 设计空间：
+- 输入接口：
+- 预期产物：
+- 最小 consumer：
+- 建议对照：
+- 不要重复：
+- 语料化收口规则：
+```
 
-- `runtime_observed`：动作回放或动作表观察到。
-- `bounded_return`：有限深度回返搜索支持。
-- `bounded_graph`：有限深度状态图支持。
-- `graph_complete`：预算内完整枚举完成。
-- `counterfactual_observed`：禁用规则 / 分支后差异被观察到。
-- `consumption_probe`：输出接入极小后续约束后，动作集合、可达性、回返性、资源分配或 shortcut 边界发生差异。
-- `composition_probe`：两个或多个结构族通过输入 / 输出接口串接成功。
-
-## Miner 的位置
-
-Miner 可以在此流程中做三件事：
-
-- 启发 explorer：发现某类事件或局部结构经常出现，再由 explorer 手写最小 patch 验证。
-- 扩展变体：对已知局部结构做尺寸、墙形、距离、对象数量变化。
-- 找反例：证明 curator 草案的条件太宽。
-
-Miner 不能直接产出 lexicon 条目。进入 lexicon 的语料必须经过局部 patch 和 runtime-backed 记录。
-
-## 不进入本阶段的内容
-
-以下内容属于后续流程，不在本阶段处理：
-
-- 根据 lexicon 设计完整关卡。
-- 组装 candidate packet。
-- 调用 puzzle critic 或 evidence reviewer。
-- 读取 archive、人类评分、人类评价或历史候选作为设计校准。
-- 判断某条语料是否“有趣”或“够高分”。
+Closed 历史项不需要长期留在 backlog；其 provenance 已由 run 和 lexicon 证据段保存。

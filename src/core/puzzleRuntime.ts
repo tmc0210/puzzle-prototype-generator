@@ -32,3 +32,7 @@ export function isEventWinCondition(events: string[], winCondition?: WinConditio
   const event = winCondition?.event;
   return winCondition?.type === "event_occurs" && event !== undefined && eventsMatchPattern(events, event);
 }
+
+export function isTerminalWinCondition(winCondition?: WinCondition): boolean {
+  return winCondition?.terminal !== false;
+}

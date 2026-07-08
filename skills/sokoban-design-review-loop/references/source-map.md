@@ -7,6 +7,7 @@
 | Roles: lead designer、工具、evidence reviewer、puzzle critic、archive pass | `docs/21-current-workflow-standard.md` `## Roles` |
 | 嵌套 family loop 与 review-modify loop | `docs/21-current-workflow-standard.md` `## Core Loop` |
 | Pre-review design bootstrap：先写设计目标和 fresh design_claim，再用工具找结构 / 验证；归档校准以人类原文评语 / 评分为权威，工作摘要不能替代人类评语 | `docs/21-current-workflow-standard.md` `## Design Studio Loop`; `docs/22-ruleset-to-seeds-and-slots-draft.md` `## Step 3: Miner Use`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md`; prototype `design_handoff.yml` / `design_directives.md` when present; `new_glue_rule`: 人评归档全量定位阈值与回指要求 |
+| Design corpus / lexicon 可在 fresh design_claim 前作为 vocabulary / parts source；只读取 handoff / brief 明确列出的 allowed sources，不推断同目录其它文件或 excluded sources 可读 | `new_glue_rule`: 支持从原型机制语料摘取零件和组合灵感，同时保持 fresh design_claim 与旧 run / candidate 边界 |
 | Pre-tool design_claim ordering：运行 miner、脚本搜索或确定 layout 前，先写可攻击的 fresh design_claim 和工具问题；miner / script search 只能服务于该 claim | `docs/21-current-workflow-standard.md` `## Design Studio Loop`; `prototypes/ice_slide_escape/docs/meta_interfaces.md` meta redesign 先提出读法假设、再工具验证；`new_glue_rule`: 将该顺序显式扩展到 miner / script search 前 |
 | `designer_action_N` 不能关闭 review loop | `docs/21-current-workflow-standard.md` `## Core Loop`, `## Review Loop` |
 | Candidate packet 最小字段 | `docs/21-current-workflow-standard.md` `## Candidate Packet`; `docs/20-multi-agent-prompt-templates.md` `## Candidate Packet Template` |
@@ -27,7 +28,8 @@
 | 机制暴露 sequence 与 `allowed_exposure_through` 硬证据门 | `prototypes/ice_slide_escape/docs/mechanic_exposure_sequence.yml`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md`; `new_glue_rule`: 最高知识 / exposure claim 必须由 all-solution required gate 和完整 reachable scan 支持 |
 | design handoff 文件 | `new_glue_rule`: 将已存在的 prototype docs 以机器可读索引交给通用 skill |
 | interface pair policy 由原型 handoff / brief 声明，generic critic 只服从不发明 | `new_glue_rule`: 防止原型专属 pair 风险在通用 skill 中漂移 |
-| pre-human polish pass 只在候选提交给人类前运行，不能作为 review gate | `new_glue_rule`: 将原型专属自然语言 polish checklist 接入通用编排 |
+| `kind: pre_submission_check` 只在候选准备提交给人类查看或加入待玩队列前运行，不进入 reviewer / critic packet | `new_glue_rule`: 将原型专属自然语言 polish checklist / cleanup checklist 接入提交动作前检查 |
+| playable queue 当前实现 | `src/playable/repository.ts`; `prototypes/<mechanic_id>/playable_queue.yml` 是唯一待玩队列入口 |
 
 ## Drift sentinels
 
@@ -44,6 +46,7 @@
 - critic / designer 在没有 human archive anchors 时输出 `4`、`4+`、`4-`、`low 4`、`meets 4` 或其他分数化结论。
 - evidence reviewer 用 `supports_with_caveats` 保留不被证据支持的 central mechanism / knowledge / exposure claim。
 - prototype-specific workflow 在未声明时被默认执行。
+- design corpus 未经 handoff / brief 明确列出就被读取，或读取了 excluded sources。
 - designer 从 archive candidate 开始改题，但 brief 没有明确授权候选 id 和允许操作。
 - critic 把 handoff 声明为 ignored 的 pair 解读成 caveat、core attack 或审美风险。
-- pre-human polish checklist 被用于打回候选、改变 review_loop_state 或证明 failed_search。
+- 提交前 polish / cleanup checklist 被放入 reviewer / critic packet、用于改变 review_loop_state、证明 failed_search，或未完成时仍执行对应提交动作。

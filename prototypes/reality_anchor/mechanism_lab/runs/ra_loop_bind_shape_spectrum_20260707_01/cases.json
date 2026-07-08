@@ -1,0 +1,181 @@
+{
+  "runId": "ra_loop_bind_shape_spectrum_20260707_01",
+  "title": "B/S 绑定 footprint 形状谱接同一右推墙口",
+  "notes": "同一 B/S 绑定线和右侧墙口消费者下，比较单格、2/3 格竖条、L 形、分离部件与开口修正；重点解释为：过 B/S 线后粘成一整块，门口要看整块前面有没有路。",
+  "defaults": {
+    "maxExploreDepth": 14,
+    "maxReturnDepth": 24,
+    "maxStates": 20000,
+    "maxTransitions": 80000
+  },
+  "cases": [
+    {
+      "id": "bs_shape_single_cell_lower_lane_pass",
+      "family": "bs_bind_shape_spectrum_mouth",
+      "variant": "single_cell_lower_lane_pass",
+      "changedVariable": "只让一个 crate 跨过 B/S 线，输出 footprint 是单格",
+      "contrastWith": [
+        "bs_shape_two_bar_single_mouth_block",
+        "bs_shape_separated_lower_shortcut_pass"
+      ],
+      "title": "单格基线，下行一格口可通过",
+      "question": "同一右推墙口里，单格 sticky 是否能沿下行一格口覆盖目标，作为后续 connected footprint 的基线？",
+      "layout": "###########\n####BS#####\n#.........#\n#.....#...#\n#..@C.G...#\n#.........#\n###########",
+      "actions": [
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bs_shape_two_bar_single_mouth_block",
+      "family": "bs_bind_shape_spectrum_mouth",
+      "variant": "connected_two_cell_vertical_bar_single_mouth",
+      "changedVariable": "两个相邻 crate 先后跨线，粘成 2 格竖条；上格前方是墙，下格前方是目标口",
+      "contrastWith": [
+        "bs_shape_single_cell_lower_lane_pass",
+        "bs_shape_two_bar_two_mouth_pass",
+        "bs_shape_separated_lower_shortcut_pass"
+      ],
+      "title": "2 格竖条，一格下口被整块前沿拒绝",
+      "question": "2 格竖条向右推时，是否因为整块上格前方无路而不能只让下格进目标口？",
+      "layout": "###########\n####BS#####\n#.........#\n#..@C.#...#\n#...C.G...#\n#.........#\n###########",
+      "actions": [
+        "right",
+        "left",
+        "down",
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bs_shape_two_bar_two_mouth_pass",
+      "family": "bs_bind_shape_spectrum_mouth",
+      "variant": "connected_two_cell_vertical_bar_two_mouth",
+      "changedVariable": "保持 2 格竖条输出，只把上格前方墙改成第二个目标口",
+      "contrastWith": [
+        "bs_shape_two_bar_single_mouth_block",
+        "bs_shape_three_bar_two_mouth_block"
+      ],
+      "title": "2 格竖条，打开两格口后整体通过",
+      "question": "同一个 2 格 connected footprint 在前沿两格都有路时，是否能整体进入墙口？",
+      "layout": "###########\n####BS#####\n#.........#\n#..@C.G...#\n#...C.G...#\n#.........#\n###########",
+      "actions": [
+        "right",
+        "left",
+        "down",
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bs_shape_three_bar_two_mouth_block",
+      "family": "bs_bind_shape_spectrum_mouth",
+      "variant": "connected_three_cell_vertical_bar_two_mouth",
+      "changedVariable": "把 connected footprint 从 2 格竖条加高到 3 格竖条，但右侧口只给下两格",
+      "contrastWith": [
+        "bs_shape_two_bar_two_mouth_pass",
+        "bs_shape_three_bar_three_mouth_pass"
+      ],
+      "title": "3 格竖条，两格口仍不够",
+      "question": "3 格竖条面对只够 2 格的口时，是否被最上格前方的墙拒绝？",
+      "layout": "###########\n####BS#####\n#..@C.#...#\n#...C.G...#\n#...C.G...#\n#.........#\n###########",
+      "actions": [
+        "right",
+        "left",
+        "down",
+        "right",
+        "left",
+        "down",
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bs_shape_three_bar_three_mouth_pass",
+      "family": "bs_bind_shape_spectrum_mouth",
+      "variant": "connected_three_cell_vertical_bar_three_mouth",
+      "changedVariable": "保持 3 格竖条输出，把最上格前方也打开成目标口",
+      "contrastWith": [
+        "bs_shape_three_bar_two_mouth_block",
+        "bs_shape_two_bar_two_mouth_pass"
+      ],
+      "title": "3 格竖条，三格口修正后整体通过",
+      "question": "把口宽加到覆盖 3 格 footprint 前沿后，3 格竖条是否从同一消费者处变为可通过？",
+      "layout": "###########\n####BS#####\n#..@C.G...#\n#...C.G...#\n#...C.G...#\n#.........#\n###########",
+      "actions": [
+        "right",
+        "left",
+        "down",
+        "right",
+        "left",
+        "down",
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bs_shape_l_notch_block",
+      "family": "bs_bind_shape_spectrum_mouth",
+      "variant": "connected_l_shape_missing_front_notch",
+      "changedVariable": "用上排双箱链和下排单箱粘成 L 形；下排前方有口，上排前凸角前方是墙",
+      "contrastWith": [
+        "bs_shape_l_notch_pass",
+        "bs_shape_two_bar_single_mouth_block"
+      ],
+      "title": "L 形黏块，缺少前凸角口被拒绝",
+      "question": "L 形向右推时，是否要求上排前凸角和下排前沿同时有路，而不是只看被玩家推的下格？",
+      "layout": "###########\n####BS#####\n#.........#\n#.@CC..#..#\n#...C.G...#\n#.........#\n###########",
+      "actions": [
+        "right",
+        "right",
+        "left",
+        "down",
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bs_shape_l_notch_pass",
+      "family": "bs_bind_shape_spectrum_mouth",
+      "variant": "connected_l_shape_front_notch_open",
+      "changedVariable": "保持同一 L 形生成动作，只把上排前凸角前方墙改成目标口",
+      "contrastWith": [
+        "bs_shape_l_notch_block",
+        "bs_shape_three_bar_three_mouth_pass"
+      ],
+      "title": "L 形黏块，补上前凸角缺口后通过",
+      "question": "补上 L 形前凸角所需的那一格口后，同一 L 形是否能整体进入消费者？",
+      "layout": "###########\n####BS#####\n#.........#\n#.@CC..G..#\n#...C.G...#\n#.........#\n###########",
+      "actions": [
+        "right",
+        "right",
+        "left",
+        "down",
+        "right",
+        "right"
+      ]
+    },
+    {
+      "id": "bs_shape_separated_lower_shortcut_pass",
+      "family": "bs_bind_shape_spectrum_mouth",
+      "variant": "separated_parts_lower_lane_shortcut",
+      "changedVariable": "两个 crate 隔一行跨线，保持两个 sticky 部件；只推动下方部件进一格口",
+      "contrastWith": [
+        "bs_shape_two_bar_single_mouth_block",
+        "bs_shape_three_bar_two_mouth_block",
+        "bs_shape_single_cell_lower_lane_pass"
+      ],
+      "title": "分离部件不合并，下格绕过同一窄口",
+      "question": "如果上方 sticky 与下方 sticky 不正交相连，下方部件是否能作为单独 footprint 穿过同一窄口？",
+      "layout": "###########\n####BS#####\n#..@C.#...#\n#.....#...#\n#...C.G...#\n#.........#\n###########",
+      "actions": [
+        "right",
+        "left",
+        "down",
+        "down",
+        "right",
+        "right"
+      ]
+    }
+  ]
+}

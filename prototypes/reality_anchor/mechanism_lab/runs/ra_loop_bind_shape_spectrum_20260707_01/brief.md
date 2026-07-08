@@ -1,0 +1,44 @@
+# Explorer Brief: ra_loop_bind_shape_spectrum_20260707_01
+
+- prototype: `prototypes/reality_anchor`
+- gap_id: `ra_gap_bind_bar_lshape_reverse_force`
+- run_intent: `explore`
+- source_boundary:
+  - allowed: `prototypes/reality_anchor/mechanism_lab/lexicon_index.md`, `prototypes/reality_anchor/mechanism_lab/backlog.md`, the full lexicon entries named below, `prototypes/reality_anchor/mechanic.yml`, and `src/prototypes/reality_anchor/{mechanics.ts,runtime.ts,tools.ts}`.
+  - allowed command: `npx tsx src/cli.ts mechanism-lab-run prototypes/reality_anchor <cases.yml> --run-id ra_loop_bind_shape_spectrum_20260707_01 --write`
+  - do_not_read: design archive, playable levels, reports/candidate packets, old mechanism_lab runs except `ra_loop_bind_mouth_composition_20260707_01` if needed for non-duplication, human playtest notes, sampler profile, hardcoded layout templates, puzzle critic or evidence reviewer materials.
+- scope:
+  - This is a supplement run to avoid one-shape-at-a-time enumeration.
+  - Explore one close shape group in a single pass: B/S-crossing crates that become sticky footprints, then immediately meet the same mouth / corridor consumer.
+  - Cover representative shapes together: 1 cell baseline, 2-cell bar, 3-cell bar if feasible, L shape if feasible, separated non-merge shortcut, and mouth-width / handle-width counterexample.
+  - Use plain language in notes: "过 B/S 线后粘成一整块，门口要看整块前面有没有路。"
+- related_index_entries:
+  - `B/S 绑定债：箱资源生成刚体 footprint`
+  - `刚体黏块 + 墙口：反向施力格谱系`
+- full_lexicon_entries_allowed:
+  - `B/S 绑定债：箱资源生成刚体 footprint`
+  - `刚体黏块 + 墙口：反向施力格谱系`
+- runtime_files_allowed:
+  - `prototypes/reality_anchor/mechanic.yml`
+  - `src/prototypes/reality_anchor/mechanics.ts`
+  - `src/prototypes/reality_anchor/runtime.ts`
+  - `src/prototypes/reality_anchor/tools.ts`
+- do_not_repeat:
+  - Do not rerun only the previous vertical pair tooth-mouth set.
+  - Do not report "crate becomes sticky" or "`sticky_merge` happened" as the result.
+  - Do not split mirror / rotation / driver-only cases into separate families unless they create a new handle, return-cell, or shortcut difference.
+  - Do not update `lexicon.md`, `lexicon_index.md`, or `backlog.md`; this run is explorer-only.
+- budget:
+  - propose 6-10 candidate shape-table cases or subfamilies;
+  - execute one shape-spectrum family with 5-8 cases if feasible;
+  - each executed case must include `family`, `variant`, `changed_variable`, and `contrast_with`;
+  - prefer one shared local consumer over many unrelated consumers.
+- success_criterion:
+  - The run should tell curator whether 1/2/3-cell bars and L/separated variants are one close family under the same "whole footprint front must fit" explanation.
+  - Include at least one positive pass, one blocked connected footprint, one separated shortcut, and one mouth-width or handle-width fix.
+  - If 3-cell or L-shape cannot be made clean within budget, write why and include the failed sketch in `explorer_notes.md` rather than stretching conclusions.
+- output_contract:
+  - Write `cases.yml` in this run directory.
+  - Run the allowed `mechanism-lab-run --write` command so `cases.json`, `results.json`, and `report.md` are created here.
+  - Write `explorer_notes.md` with: 本轮假设、候选形状表、有效比较、被修正的解释、不建议提交 curator 的弱结论、下一轮建议.
+  - Write `proposed_families.md` with: family 名称、局部问题、结构旋钮、变体谱、共同解释、输入条件、输出状态、自然消费方式、常见 shortcut、推荐 probe、组合例句、建议 curator 决策、哪些 case 不应进入 lexicon.

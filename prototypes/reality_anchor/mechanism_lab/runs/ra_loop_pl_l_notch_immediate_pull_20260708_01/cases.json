@@ -1,0 +1,135 @@
+{
+  "runId": "ra_loop_pl_l_notch_immediate_pull_20260708_01",
+  "title": "P/L L形缺角活塞：一推即侧拉",
+  "notes": "玩家初始站在 L 形 2x2 缺角中，第一手横向 push 跨 P/L 边界后，第二手立即正交 pull。",
+  "defaults": {
+    "maxExploreDepth": 10,
+    "maxReturnDepth": 20,
+    "maxStates": 20000,
+    "maxTransitions": 80000
+  },
+  "cases": [
+    {
+      "id": "bl_notch_push_right_pull_down",
+      "family": "pl_l_notch_immediate_pull",
+      "variant": "bottom_left_notch_down_pull",
+      "changedVariable": "玩家在左下缺角；right 后立即 down pull",
+      "contrastWith": [
+        "bar_notch_absent_pull_degenerates_to_walk",
+        "bl_notch_down_front_wall_blocks_pull",
+        "bl_notch_down_target_wall_blocks_shape"
+      ],
+      "notes": "第一手 right 推出 L 形并跨到 L 侧；第二手 down 立刻拉动身后上方 L 形单元，整块下移。",
+      "layout": "##########\n#B########\n#S#PL...G#\n#........#\n#..MM....#\n#..@M....#\n#........#\n##########",
+      "actions": [
+        "right",
+        "down"
+      ]
+    },
+    {
+      "id": "tl_notch_push_right_pull_up",
+      "family": "pl_l_notch_immediate_pull",
+      "variant": "top_left_notch_up_pull",
+      "changedVariable": "玩家在左上缺角；right 后立即 up pull",
+      "contrastWith": [
+        "bl_notch_push_right_pull_down"
+      ],
+      "notes": "左侧另一个缺角朝向；第一手 right 后，第二手 up 立刻正交拉动。",
+      "layout": "##########\n#B########\n#S#PL...G#\n#........#\n#..@M....#\n#..MM....#\n#........#\n##########",
+      "actions": [
+        "right",
+        "up"
+      ]
+    },
+    {
+      "id": "br_notch_push_left_pull_down",
+      "family": "pl_l_notch_immediate_pull",
+      "variant": "bottom_right_notch_down_pull",
+      "changedVariable": "P/L 反向；玩家在右下缺角；left 后立即 down pull",
+      "contrastWith": [
+        "bl_notch_push_right_pull_down"
+      ],
+      "notes": "反向 P/L 镜像，验证右侧缺角也可一推即下拉。",
+      "layout": "##########\n#B########\n#S#LP...G#\n#........#\n#..MM....#\n#..M@....#\n#........#\n##########",
+      "actions": [
+        "left",
+        "down"
+      ]
+    },
+    {
+      "id": "tr_notch_push_left_pull_up",
+      "family": "pl_l_notch_immediate_pull",
+      "variant": "top_right_notch_up_pull",
+      "changedVariable": "P/L 反向；玩家在右上缺角；left 后立即 up pull",
+      "contrastWith": [
+        "tl_notch_push_right_pull_up"
+      ],
+      "notes": "反向 P/L 镜像，验证右侧上缺角可一推即上拉。",
+      "layout": "##########\n#B########\n#S#LP...G#\n#........#\n#..M@....#\n#..MM....#\n#........#\n##########",
+      "actions": [
+        "left",
+        "up"
+      ]
+    },
+    {
+      "id": "bar_notch_absent_pull_degenerates_to_walk",
+      "family": "pl_l_notch_immediate_pull",
+      "variant": "no_notch_bar_degenerate",
+      "changedVariable": "L 形换成横条；push 后正交动作没有身后对象",
+      "contrastWith": [
+        "bl_notch_push_right_pull_down"
+      ],
+      "notes": "横条没有缺角把手；right 后 down 不触发 pull，只是 walk。",
+      "layout": "##########\n#B########\n#S#PL...G#\n#........#\n#........#\n#..@MM...#\n#........#\n##########",
+      "actions": [
+        "right",
+        "down"
+      ]
+    },
+    {
+      "id": "bl_notch_down_front_wall_blocks_pull",
+      "family": "pl_l_notch_immediate_pull",
+      "variant": "front_wall_blocks_lateral_pull",
+      "changedVariable": "down pull 的玩家前格加墙",
+      "contrastWith": [
+        "bl_notch_push_right_pull_down"
+      ],
+      "notes": "第一手 right 成功；第二手 down 因玩家前格为墙而 destination_blocked。",
+      "layout": "##########\n#B########\n#S#PL...G#\n#........#\n#..MM....#\n#..@M....#\n#...#....#\n##########",
+      "actions": [
+        "right",
+        "down"
+      ]
+    },
+    {
+      "id": "bl_notch_down_target_wall_blocks_shape",
+      "family": "pl_l_notch_immediate_pull",
+      "variant": "target_wall_blocks_l_shape",
+      "changedVariable": "down pull 的 L 形外部目标格加墙",
+      "contrastWith": [
+        "bl_notch_down_front_wall_blocks_pull"
+      ],
+      "notes": "玩家前格开放，但 L 形右臂外部目标格为墙，第二手 down force_blocked。",
+      "layout": "##########\n#B########\n#S#PL...G#\n#........#\n#..MM....#\n#..@M....#\n#....#...#\n##########",
+      "actions": [
+        "right",
+        "down"
+      ]
+    },
+    {
+      "id": "bl_notch_down_sweeps_bs_anchor",
+      "family": "pl_l_notch_immediate_pull",
+      "variant": "target_object_swept",
+      "changedVariable": "down pull 的 L 形外部目标格放 B/S anchor",
+      "contrastWith": [
+        "bl_notch_down_target_wall_blocks_shape"
+      ],
+      "notes": "把目标墙换成可移动 B/S anchor；第二手 down 扫带 B/S anchor 下移并覆盖目标。",
+      "layout": "##########\n#........#\n#..PL....#\n#........#\n#..MM....#\n#..@M....#\n#....S...#\n#....B...#\n#....G...#\n##########",
+      "actions": [
+        "right",
+        "down"
+      ]
+    }
+  ]
+}

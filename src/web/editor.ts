@@ -169,7 +169,7 @@ if (!appRoot) {
 const app = appRoot;
 
 const buildId = typeof __BUILD_ID__ === "string" ? __BUILD_ID__ : String(Date.now());
-const data = await fetchJson<PlayableData>(`./data.json?v=${encodeURIComponent(buildId)}`);
+const data = await loadPlayableData();
 const adapter = getRuntimeAdapter(data.mechanic);
 const editorAdapter = requireEditorAdapter(adapter);
 
@@ -1645,6 +1645,14 @@ async function loadEditorCatalog(): Promise<EditorCatalog> {
         metadata: {},
       })),
     };
+  }
+}
+
+async function loadPlayableData(): Promise<PlayableData> {
+  try {
+    return await fetchJson<PlayableData>(`./api/playable-data?v=${encodeURIComponent(buildId)}`);
+  } catch {
+    return await fetchJson<PlayableData>(`./data.json?v=${encodeURIComponent(buildId)}`);
   }
 }
 

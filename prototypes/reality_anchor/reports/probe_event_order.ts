@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+﻿import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { eventMatchesPattern } from "../../../src/core/events.js";
 import { loadPrototypePackage } from "../../../src/core/io.js";
@@ -89,7 +89,8 @@ function findWinWithEarlyBeforeRequired(initialState: RuntimeState): ProbeResult
       };
     }
     const current = queue[cursor++]!;
-    if (current.depth > 0 && current.violatedOrder && runtime.isWin(current.state, pkg.mechanic.win)) {
+    const isWinningState = current.depth > 0 && runtime.isWin(current.state, pkg.mechanic.win);
+    if (isWinningState && current.violatedOrder) {
       return {
         found: true,
         status: "found",
@@ -98,6 +99,9 @@ function findWinWithEarlyBeforeRequired(initialState: RuntimeState): ProbeResult
         inputs: current.inputs,
         events: current.events,
       };
+    }
+    if (isWinningState) {
+      continue;
     }
     if (current.depth >= maxDepth) {
       depthHit = true;

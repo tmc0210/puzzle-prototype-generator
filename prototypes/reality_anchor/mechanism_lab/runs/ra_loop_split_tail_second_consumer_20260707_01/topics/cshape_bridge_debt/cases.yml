@@ -1,0 +1,133 @@
+runId: ra_loop_split_tail_second_consumer_20260707_01_cshape_bridge_debt
+title: C 形断桥后的左柱 crate 桥债接入单格墙口
+notes: >
+  只探索 cshape_bridge_debt topic。关键动作串为先把 C 形 sticky 推过固定 B/S
+  边界，再从右侧站到左柱中格右侧，尝试把左柱 crate 桥债推入单格墙口。
+defaults:
+  maxExploreDepth: 12
+  maxReturnDepth: 16
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: split_bridge_narrow_mouth_pass
+    family: cshape_bridge_single_cell_mouth
+    variant: split_bridge_narrow_mouth
+    changedVariable: B/S 边界切过 C 形左柱；二段口只开放左柱中格
+    contrastWith:
+      - unsplit_cshape_narrow_mouth_block
+      - pre_split_endpoint_no_bridge_walk
+      - unsplit_cshape_wide_mouth_shortcut
+      - split_bridge_stand_gate_event_only
+    title: 切断后左柱 crate 桥债可被单格墙口消费
+    question: 切断产生的左柱 crate 桥是否能在第二段被单格墙口单独接收？
+    notes: >
+      第一步产生左柱 crate 桥和两个 sticky 端点；随后从 (4,3) 向左推中格 crate，
+      上下墙齿只允许单格债务进入。
+    layout: |-
+      ########
+      ###.G..#
+      ###.MM@#
+      #...M..#
+      #.#.MM.#
+      #..BS..#
+      ########
+    actions:
+      - left
+      - down
+      - left
+      - left
+
+  - id: unsplit_cshape_narrow_mouth_block
+    family: cshape_bridge_single_cell_mouth
+    variant: unsplit_cshape_narrow_mouth
+    changedVariable: B/S 边界保持 C 形整体 sticky；二段口仍为单格
+    contrastWith:
+      - split_bridge_narrow_mouth_pass
+    title: 未切断 C 形在同一单格墙口被整体 footprint 阻断
+    question: 如果第一段没有断桥，同一二段动作是否会失败？
+    notes: >
+      第一推后 C 形仍为整体 sticky footprint；从右侧向左推中格时，上下端点同时撞到墙齿。
+    layout: |-
+      ########
+      ###.G..#
+      ###.MM@#
+      #...M..#
+      #.#.MM.#
+      #.BS...#
+      ########
+    actions:
+      - left
+      - down
+      - left
+      - left
+
+  - id: pre_split_endpoint_no_bridge_walk
+    family: cshape_bridge_single_cell_mouth
+    variant: pre_split_no_bridge
+    changedVariable: 端点预分离，缺少左柱 bridge debt
+    contrastWith:
+      - split_bridge_narrow_mouth_pass
+    title: 预分离端点没有左柱桥债，同动作退化为走路
+    question: 如果端点本来分离且没有左柱 crate 桥，同一动作能否证明桥债消费？
+    notes: >
+      这里没有中格桥债；最后一次 left 只是走入空格，因此只能说明端点独立，不证明 bridge consumer。
+    layout: |-
+      ########
+      ###.G..#
+      ###.MM@#
+      #......#
+      #.#.MM.#
+      #..BS..#
+      ########
+    actions:
+      - left
+      - down
+      - left
+      - left
+
+  - id: unsplit_cshape_wide_mouth_shortcut
+    family: cshape_bridge_single_cell_mouth
+    variant: wide_mouth_shortcut
+    changedVariable: 单格墙口放宽为三格口
+    contrastWith:
+      - unsplit_cshape_narrow_mouth_block
+      - split_bridge_narrow_mouth_pass
+    title: 过宽墙口让未切断 C 形也能整体进入
+    question: 如果二段 consumer 过宽，未切断反例是否失效？
+    notes: >
+      打开上下墙齿后，未切断 C 形可以整体向左进入宽口；该成功不再隔离左柱 crate 桥债。
+    layout: |-
+      ########
+      ###.G..#
+      #...MM@#
+      #...M..#
+      #...MM.#
+      #.BS...#
+      ########
+    actions:
+      - left
+      - down
+      - left
+      - left
+
+  - id: split_bridge_stand_gate_event_only
+    family: cshape_bridge_single_cell_mouth
+    variant: stand_gate_closed
+    changedVariable: 切断后通往左柱中格右侧的站位门关闭
+    contrastWith:
+      - split_bridge_narrow_mouth_pass
+    title: 站位门关闭时只剩断桥事件 witness
+    question: 如果玩家无法到达二段施力格，切断事件本身是否足够？
+    notes: >
+      第一步仍产生 sticky_to_box / sticky_split，但玩家无法下行到施力格；不能把事件名写成 family。
+    layout: |-
+      ########
+      ###.G..#
+      ###.MM@#
+      #...M#.#
+      #.#.MM.#
+      #..BS..#
+      ########
+    actions:
+      - left
+      - down

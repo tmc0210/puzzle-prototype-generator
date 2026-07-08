@@ -2278,8 +2278,8 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mra1k9ih" : String(Date.now());
-var data = await fetchJson(`./data.json?v=${encodeURIComponent(buildId)}`);
+var buildId = true ? "mrc0hg2l" : String(Date.now());
+var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);
 var catalog = await loadEditorCatalog();
@@ -3604,6 +3604,13 @@ async function loadEditorCatalog() {
         metadata: {}
       }))
     };
+  }
+}
+async function loadPlayableData() {
+  try {
+    return await fetchJson(`./api/playable-data?v=${encodeURIComponent(buildId)}`);
+  } catch {
+    return await fetchJson(`./data.json?v=${encodeURIComponent(buildId)}`);
   }
 }
 function sourceForKey(key) {

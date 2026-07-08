@@ -1,0 +1,169 @@
+{
+  "id": "RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_bs_fixed_scan",
+  "fixedKind": "box_sticky",
+  "profile": "default",
+  "layout": "########\n####G###\n###.MM@#\n##G.M..#\n###.MM##\n####G###\n###BS###\n########",
+  "groups": [
+    {
+      "name": "movable_push_pull_shift",
+      "patterns": [
+        "anchor_boundary_shift:push_pull"
+      ]
+    },
+    {
+      "name": "fixed_box_sticky_effect",
+      "patterns": [
+        "box_to_sticky",
+        "sticky_to_box"
+      ]
+    },
+    {
+      "name": "pull_event",
+      "patterns": [
+        "pull_object"
+      ]
+    }
+  ],
+  "forbiddenReachable": [
+    "anchor_boundary_shift:box_sticky"
+  ],
+  "budget": {
+    "maxStates": 300000,
+    "maxDepth": 80
+  },
+  "allGroupProbe": {
+    "found": true,
+    "status": "found",
+    "exploredStates": 51,
+    "depth": 8,
+    "inputs": [
+      "down",
+      "left",
+      "left",
+      "up",
+      "down",
+      "down",
+      "up",
+      "left"
+    ],
+    "events": [
+      "walk",
+      "walk",
+      "push_object:sticky#1",
+      "move_sticky_rigid",
+      "sticky_to_box:n3",
+      "sticky_split:n1",
+      "push_object:sticky#1",
+      "move_sticky_rigid",
+      "walk",
+      "push_object:sticky#2",
+      "move_sticky_rigid",
+      "walk",
+      "push_object:crate#2"
+    ],
+    "missingGroups": [
+      "movable_push_pull_shift",
+      "pull_event"
+    ]
+  },
+  "individualProbes": [
+    {
+      "group": "movable_push_pull_shift",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 51,
+        "depth": 8,
+        "inputs": [
+          "down",
+          "left",
+          "left",
+          "up",
+          "down",
+          "down",
+          "up",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "push_object:sticky#1",
+          "move_sticky_rigid",
+          "sticky_to_box:n3",
+          "sticky_split:n1",
+          "push_object:sticky#1",
+          "move_sticky_rigid",
+          "walk",
+          "push_object:sticky#2",
+          "move_sticky_rigid",
+          "walk",
+          "push_object:crate#2"
+        ],
+        "missingGroups": [
+          "movable_push_pull_shift"
+        ]
+      }
+    },
+    {
+      "group": "fixed_box_sticky_effect",
+      "result": {
+        "found": false,
+        "status": "complete",
+        "exploredStates": 63,
+        "reason": "no winning bypass found"
+      }
+    },
+    {
+      "group": "pull_event",
+      "result": {
+        "found": true,
+        "status": "found",
+        "exploredStates": 51,
+        "depth": 8,
+        "inputs": [
+          "down",
+          "left",
+          "left",
+          "up",
+          "down",
+          "down",
+          "up",
+          "left"
+        ],
+        "events": [
+          "walk",
+          "walk",
+          "push_object:sticky#1",
+          "move_sticky_rigid",
+          "sticky_to_box:n3",
+          "sticky_split:n1",
+          "push_object:sticky#1",
+          "move_sticky_rigid",
+          "walk",
+          "push_object:sticky#2",
+          "move_sticky_rigid",
+          "walk",
+          "push_object:crate#2"
+        ],
+        "missingGroups": [
+          "pull_event"
+        ]
+      }
+    }
+  ],
+  "reachableScan": {
+    "status": "complete",
+    "reachableStates": 63,
+    "legalTransitions": 154,
+    "eventCounts": {
+      "walk": 140,
+      "push_object:sticky#1": 6,
+      "move_sticky_rigid": 10,
+      "sticky_to_box:n3": 2,
+      "sticky_split:n1": 2,
+      "push_object:sticky#2": 4,
+      "push_object:crate#2": 4
+    },
+    "forbiddenHits": []
+  }
+}

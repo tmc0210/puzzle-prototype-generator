@@ -6,6 +6,7 @@ import type {
   MechanicDoc,
   WinCondition,
 } from "../core/types.js";
+import { isTerminalWinCondition } from "../core/puzzleRuntime.js";
 import {
   getRuntimeAdapter,
   renderVisualStateWithFallback,
@@ -110,6 +111,11 @@ type PlayState = {
   messages: string[];
 };
 
+type ReviewViewState = {
+  candidateRailScrollTop: number;
+  candidateListScrollTop: number;
+};
+
 const defaultAestheticLabels: Record<string, string> = {
   "1": "反例样本",
   "2": "功能库存",
@@ -148,7 +154,7 @@ if (!appRoot) {
 const app = appRoot;
 
 const buildId = typeof __BUILD_ID__ === "string" ? __BUILD_ID__ : String(Date.now());
-const data = await fetchJson<PlayableData>(`./data.json?v=${encodeURIComponent(buildId)}`);
+const data = await loadPlayableData();
 const adapter = getRuntimeAdapter(data.mechanic);
 let reviewData = await loadReviewData(data);
 
@@ -197,6 +203,7 @@ window.addEventListener("keydown", (event) => {
 });
 
 function render(): void {
+  const viewState = captureViewState();
   const entry = currentEntry();
   const level = entryLevel(entry);
   const draft = entry ? draftForEntry(entry) : emptyDraft();
@@ -217,6 +224,25 @@ function render(): void {
   `;
 
   bindUiEvents();
+  restoreViewState(viewState);
+}
+
+function captureViewState(): ReviewViewState {
+  return {
+    candidateRailScrollTop: app.querySelector<HTMLElement>(".candidate-rail")?.scrollTop ?? 0,
+    candidateListScrollTop: app.querySelector<HTMLElement>(".candidate-list")?.scrollTop ?? 0,
+  };
+}
+
+function restoreViewState(state: ReviewViewState): void {
+  const rail = app.querySelector<HTMLElement>(".candidate-rail");
+  if (rail) {
+    rail.scrollTop = state.candidateRailScrollTop;
+  }
+  const list = app.querySelector<HTMLElement>(".candidate-list");
+  if (list) {
+    list.scrollTop = state.candidateListScrollTop;
+  }
 }
 
 function renderHeader(): string {
@@ -773,6 +799,9 @@ async function replayExpected(): Promise<void> {
     if (selectedEntryKey !== key) {
       break;
     }
+    if (playState?.won && isTerminalWinCondition(levelWin(playState.level))) {
+      break;
+    }
     applyInput(input);
     render();
   }
@@ -785,6 +814,9 @@ function applyInput(input: InputId): void {
     return;
   }
   const winCondition = levelWin(playState.level);
+  if (playState.won && isTerminalWinCondition(winCondition)) {
+    return;
+  }
   const result = adapter.step(
     data.mechanic,
     playState.current,
@@ -1066,6 +1098,14 @@ function filterOption(value: CandidateFilter, label: string): string {
 
 function option(value: string, label: string, current: string): string {
   return `<option value="${escapeAttribute(value)}" ${value === current ? "selected" : ""}>${escapeHtml(label)}</option>`;
+}
+
+async function loadPlayableData(): Promise<PlayableData> {
+  try {
+    return await fetchJson<PlayableData>(`./api/playable-data?v=${encodeURIComponent(buildId)}`);
+  } catch {
+    return await fetchJson<PlayableData>(`./data.json?v=${encodeURIComponent(buildId)}`);
+  }
 }
 
 async function loadReviewData(playableData: PlayableData): Promise<ReviewData> {

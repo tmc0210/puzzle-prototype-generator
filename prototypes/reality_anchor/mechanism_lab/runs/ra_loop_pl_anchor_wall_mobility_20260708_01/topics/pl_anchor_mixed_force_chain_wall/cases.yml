@@ -1,0 +1,138 @@
+runId: ra_loop_pl_anchor_wall_mobility_20260708_01_pl_anchor_mixed_force_chain_wall
+title: "箱 + P/L anchor 混合力链的墙端容量与边界重写"
+notes: "本 topic 只看 crate 与 P/L anchor 同一 force chain；墙作为链端、玩家前格或后续边界 consumer。"
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 32
+  maxStates: 50000
+  maxTransitions: 120000
+cases:
+  - id: "p_push_crate_into_anchor_tail_wall_after_one"
+    family: "pl_mixed_chain_wall_capacity"
+    variant: "crate_before_anchor"
+    changed_variable: "链顺序为 crate -> P/L，L 端只有一格余量"
+    contrast_with: ["p_push_anchor_into_crate_tail_wall_after_one", "anchor_only_two_steps_capacity_control"]
+    question: "crate 顶住 P/L 后，墙是否在第二次推进时消费整条混合链尾端？"
+    actions: ["down", "down"]
+    layout: |
+      ########
+      #G.....#
+      #..@...#
+      #..C...#
+      #..P...#
+      #..L...#
+      #......#
+      ########
+
+  - id: "p_push_anchor_into_crate_tail_wall_after_one"
+    family: "pl_mixed_chain_wall_capacity"
+    variant: "anchor_before_crate"
+    changed_variable: "链顺序为 P/L -> crate，L 端 crate 只剩一格余量"
+    contrast_with: ["p_push_crate_into_anchor_tail_wall_after_one", "anchor_only_two_steps_capacity_control"]
+    question: "P/L 顶住 crate 时，墙是否同样在第二次推进时消费混合链尾端？"
+    actions: ["down", "down"]
+    layout: |
+      ########
+      #G.....#
+      #..@...#
+      #..P...#
+      #..L...#
+      #..C...#
+      #......#
+      ########
+
+  - id: "anchor_only_two_steps_capacity_control"
+    family: "pl_mixed_chain_wall_capacity"
+    variant: "anchor_only_control"
+    changed_variable: "移除 crate，保留同样墙廊余量"
+    contrast_with: ["p_push_crate_into_anchor_tail_wall_after_one", "p_push_anchor_into_crate_tail_wall_after_one"]
+    question: "没有 crate 进入同一 force chain 时，同样墙廊是否还能推进两步？"
+    actions: ["down", "down"]
+    layout: |
+      ########
+      #G.....#
+      #..@...#
+      #..P...#
+      #..L...#
+      #......#
+      #......#
+      ########
+
+  - id: "mixed_downshift_rewrites_side_crate_to_push"
+    family: "pl_mixed_chain_boundary_rewrite"
+    variant: "mixed_chain_shift_then_side_crate_push"
+    changed_variable: "先用 P/L -> crate 混合链把 P 边界下移一格"
+    contrast_with: ["no_shift_side_crate_pull_front_gate"]
+    question: "混合链移动 P/L 后，原本在 L 侧的侧边 crate 是否变成可从右侧 push 的对象？"
+    actions: ["down", "right", "right", "down", "left"]
+    layout: |
+      ########
+      #G.....#
+      #..@...#
+      #..P...#
+      #..LC..#
+      #..C...#
+      #......#
+      ########
+
+  - id: "no_shift_side_crate_pull_front_gate"
+    family: "pl_mixed_chain_boundary_rewrite"
+    variant: "no_shift_gate"
+    changed_variable: "不先移动 P/L；同一站位仍在 L 侧"
+    contrast_with: ["mixed_downshift_rewrites_side_crate_to_push"]
+    question: "没有边界下移时，从同一右侧站位碰侧边 crate 是否被 pull front gate 拒绝？"
+    actions: ["right", "right", "down", "down", "left"]
+    layout: |
+      ########
+      #G.....#
+      #..@...#
+      #..P...#
+      #..LC..#
+      #..C...#
+      #......#
+      ########
+
+  - id: "l_pull_anchor_carries_side_crate_open"
+    family: "pl_mixed_pull_wall_gate"
+    variant: "open_front_and_crate_target"
+    changed_variable: "L 侧 pull 横向 P/L，上方玩家前格和 crate 目标格都开放"
+    contrast_with: ["l_pull_anchor_front_wall_gate", "l_pull_anchor_crate_target_wall_gate"]
+    question: "L 侧 pull P/L 时，非接触半格目标上的 crate 是否与 anchor 同链上移？"
+    actions: ["up"]
+    layout: |
+      ########
+      #G.....#
+      #..C@..#
+      #..PL..#
+      #......#
+      ########
+
+  - id: "l_pull_anchor_front_wall_gate"
+    family: "pl_mixed_pull_wall_gate"
+    variant: "player_front_wall"
+    changed_variable: "只关闭玩家 pull 前格"
+    contrast_with: ["l_pull_anchor_carries_side_crate_open"]
+    question: "玩家前格墙是否在 force chain 规划前截断 pull？"
+    actions: ["up"]
+    layout: |
+      ########
+      #G..#..#
+      #..C@..#
+      #..PL..#
+      #......#
+      ########
+
+  - id: "l_pull_anchor_crate_target_wall_gate"
+    family: "pl_mixed_pull_wall_gate"
+    variant: "crate_target_wall"
+    changed_variable: "玩家前格开放，但被携带 crate 的目标格为墙"
+    contrast_with: ["l_pull_anchor_carries_side_crate_open"]
+    question: "非接触半格上的 crate 撞墙时，是否以 force_blocked 截断整条 pull 混合链？"
+    actions: ["up"]
+    layout: |
+      ########
+      #G.#...#
+      #..C@..#
+      #..PL..#
+      #......#
+      ########

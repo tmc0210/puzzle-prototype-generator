@@ -18,7 +18,7 @@ export type EditableLevelSource = {
   metadata: Record<string, unknown>;
 };
 
-export type StudioQueueEntry = {
+export type PlayableQueueEntry = {
   source: EditableLevelSourceKind;
   level_id?: string;
   candidate_id?: string;
@@ -26,16 +26,16 @@ export type StudioQueueEntry = {
   added_at?: string;
 };
 
-export type StudioQueueDoc = {
+export type PlayableQueueDoc = {
   schema_version: number;
   mechanic: string;
-  entries: StudioQueueEntry[];
+  entries: PlayableQueueEntry[];
 };
 
 export type EditableLevelCatalog = {
   mechanic: string;
   sources: EditableLevelSource[];
-  queue: StudioQueueDoc;
+  queue: PlayableQueueDoc;
   writable: boolean;
 };
 
@@ -71,15 +71,8 @@ export async function buildEditableLevelCatalog(
   prototype: PrototypePackage,
 ): Promise<EditableLevelCatalog> {
   const studioLevels = await readStudioLevels(prototype.root, prototype.mechanic.id);
-  const studioQueue = await readStudioQueue(prototype.root, prototype.mechanic.id);
-  const legacyQueue = await readLegacyQueueEntries(prototype.root);
-  const queueEntries = [...studioQueue.entries, ...legacyQueue];
-  const queuedKeys = new Set(queueEntries.map(queueEntryKey).filter((key): key is string => Boolean(key)));
-  const legacyPackageIds = new Set(
-    legacyQueue
-      .filter((entry) => entry.source === "package" && entry.level_id)
-      .map((entry) => entry.level_id!),
-  );
+  const playableQueue = await readPlayableQueue(prototype.root, prototype.mechanic.id);
+  const queuedKeys = new Set(playableQueue.entries.map(queueEntryKey).filter((key): key is string => Boolean(key)));
 
   const sources: EditableLevelSource[] = [];
   for (const level of studioLevels.levels) {
@@ -90,7 +83,7 @@ export async function buildEditableLevelCatalog(
       title: level.title,
       level,
       readonly: false,
-      queued: queuedKeys.has(sourceKey("studio", level.id)) || legacyPackageIds.has(level.id),
+      queued: queuedKeys.has(sourceKey("studio", level.id)),
       metadata: {},
     });
   }
@@ -103,7 +96,7 @@ export async function buildEditableLevelCatalog(
       title: level.title,
       level,
       readonly: true,
-      queued: queuedKeys.has(sourceKey("package", level.id)) || legacyPackageIds.has(level.id),
+      queued: queuedKeys.has(sourceKey("package", level.id)),
       metadata: {},
     });
   }
@@ -119,8 +112,7 @@ export async function buildEditableLevelCatalog(
     mechanic: prototype.mechanic.id,
     sources,
     queue: {
-      ...studioQueue,
-      entries: queueEntries,
+      ...playableQueue,
     },
     writable: true,
   };
@@ -129,9 +121,8 @@ export async function buildEditableLevelCatalog(
 export async function readPlayableLevelsForExport(
   prototype: PrototypePackage,
 ): Promise<LevelsDoc> {
-  const studioQueue = await readStudioQueue(prototype.root, prototype.mechanic.id);
-  const legacyQueue = await readLegacyQueueEntries(prototype.root);
-  const hasExplicitQueue = studioQueue.entries.length > 0 || legacyQueue.length > 0;
+  const playableQueue = await readPlayableQueue(prototype.root, prototype.mechanic.id);
+  const hasExplicitQueue = playableQueue.entries.length > 0;
 
   if (!hasExplicitQueue) {
     const archivedSourceLevelIds = await readArchivedCanonicalSourceLevelIds(prototype.root);
@@ -146,7 +137,7 @@ export async function readPlayableLevelsForExport(
   const levels: LevelDoc[] = [];
   const seen = new Set<string>();
 
-  for (const entry of [...studioQueue.entries, ...legacyQueue]) {
+  for (const entry of playableQueue.entries) {
     const key = queueEntryKey(entry);
     const source = key ? byKey.get(key) : undefined;
     if (!source || seen.has(source.level.id)) {
@@ -198,7 +189,7 @@ export async function saveEditorLevel(
   }
 
   await writeStudioLevels(prototype.root, studioDoc);
-  await ensureStudioQueueEntry(
+  await ensurePlayableQueueEntry(
     prototype.root,
     prototype.mechanic.id,
     {
@@ -266,15 +257,15 @@ export async function readStudioLevels(root: string, mechanicId: string): Promis
   };
 }
 
-export async function readStudioQueue(root: string, mechanicId: string): Promise<StudioQueueDoc> {
-  const queuePath = studioQueuePath(root);
+export async function readPlayableQueue(root: string, mechanicId: string): Promise<PlayableQueueDoc> {
+  const queuePath = playableQueuePath(root);
   const raw = await readOptional(queuePath);
   if (!raw) {
     return { schema_version: 1, mechanic: mechanicId, entries: [] };
   }
-  const parsed = YAML.parse(raw) as Partial<StudioQueueDoc> | null;
+  const parsed = YAML.parse(raw) as Partial<PlayableQueueDoc> | null;
   const entries = Array.isArray(parsed?.entries)
-    ? parsed.entries.filter(isStudioQueueEntry)
+    ? parsed.entries.filter(isPlayableQueueEntry)
     : [];
   return {
     schema_version: parsed?.schema_version ?? 1,
@@ -362,13 +353,13 @@ async function writeStudioLevels(root: string, doc: LevelsDoc): Promise<void> {
   await writeFile(levelsPath, YAML.stringify(doc, { lineWidth: 0 }), "utf8");
 }
 
-async function ensureStudioQueueEntry(
+async function ensurePlayableQueueEntry(
   root: string,
   mechanicId: string,
-  entry: StudioQueueEntry,
+  entry: PlayableQueueEntry,
   replaceKey?: string,
 ): Promise<void> {
-  const queue = await readStudioQueue(root, mechanicId);
+  const queue = await readPlayableQueue(root, mechanicId);
   const key = queueEntryKey(entry);
   if (!key) {
     return;
@@ -386,8 +377,8 @@ async function ensureStudioQueueEntry(
     queue.entries.push(entry);
   }
 
-  const queuePath = studioQueuePath(root);
-  assertInsidePath(root, queuePath, "studio queue");
+  const queuePath = playableQueuePath(root);
+  assertInsidePath(root, queuePath, "playable queue");
   await mkdir(path.dirname(queuePath), { recursive: true });
   await writeFile(queuePath, YAML.stringify(queue, { lineWidth: 0 }), "utf8");
 }
@@ -506,39 +497,7 @@ async function readArchiveIndex(root: string): Promise<ArchiveIndex> {
   return YAML.parse(raw) as ArchiveIndex ?? { candidates: [] };
 }
 
-async function readLegacyQueueEntries(root: string): Promise<StudioQueueEntry[]> {
-  const entries: StudioQueueEntry[] = [];
-  for (const fileName of ["playtest_queue.yml", "playable_levels.yml"]) {
-    const raw = await readOptional(path.join(root, fileName));
-    if (!raw) {
-      continue;
-    }
-    const parsed = YAML.parse(raw) as { levels?: Array<string | { id?: string; level_id?: string }> } | null;
-    for (const item of parsed?.levels ?? []) {
-      const levelId = typeof item === "string" ? item : item.level_id ?? item.id;
-      if (levelId) {
-        entries.push({ source: "package", level_id: levelId });
-      }
-    }
-  }
-  return dedupeQueueEntries(entries);
-}
-
-function dedupeQueueEntries(entries: StudioQueueEntry[]): StudioQueueEntry[] {
-  const seen = new Set<string>();
-  const deduped: StudioQueueEntry[] = [];
-  for (const entry of entries) {
-    const key = queueEntryKey(entry);
-    if (!key || seen.has(key)) {
-      continue;
-    }
-    seen.add(key);
-    deduped.push(entry);
-  }
-  return deduped;
-}
-
-function queueEntryKey(entry: StudioQueueEntry): string | undefined {
+function queueEntryKey(entry: PlayableQueueEntry): string | undefined {
   if (entry.source === "archive" && entry.candidate_id) {
     return sourceKey("archive", entry.candidate_id);
   }
@@ -590,11 +549,11 @@ function sectionText(raw: string, heading: string): string | undefined {
   return raw.match(pattern)?.[1];
 }
 
-function isStudioQueueEntry(value: unknown): value is StudioQueueEntry {
+function isPlayableQueueEntry(value: unknown): value is PlayableQueueEntry {
   if (!value || typeof value !== "object") {
     return false;
   }
-  const entry = value as Partial<StudioQueueEntry>;
+  const entry = value as Partial<PlayableQueueEntry>;
   return entry.source === "studio" || entry.source === "package" || entry.source === "archive";
 }
 
@@ -677,8 +636,8 @@ function studioLevelsPath(root: string): string {
   return path.join(root, "studio", "levels.yml");
 }
 
-function studioQueuePath(root: string): string {
-  return path.join(root, "studio", "queue.yml");
+function playableQueuePath(root: string): string {
+  return path.join(root, "playable_queue.yml");
 }
 
 function dateStamp(): string {

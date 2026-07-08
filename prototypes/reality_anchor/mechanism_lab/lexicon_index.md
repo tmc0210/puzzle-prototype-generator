@@ -1,75 +1,99 @@
 # Reality Anchor 机制语料当前索引
 
-本文件是当前状态入口，给 controller / curator 和短周期 explorer 快速避重、选缺口和生成 brief。正式语料正文仍以 `lexicon.md` 为准；历史 refresh / decision 文件只是当时快照，默认不读。
+本文件是当前状态入口，给 explorer 快速避重、查接口和生成 brief。正式语料正文以 `lexicon.md` 为准；历史 refresh / decision 文件和旧 runs 只在核对 provenance 或审计时读取。
 
-## B/S 绑定债：箱资源生成刚体 footprint
+## B/S 绑定债：箱资源生成黏块形状
 
-- 一句话用途：把多个可分配箱子压成横条、L 形、分离部件或宽塞等 sticky footprint 材料。
-- 输入接口：至少两个 crate 能跨入 sticky 侧，入场邻接图和节奏可控，并有后续墙口、门口或通道消费 footprint。
-- 输出接口：2 格横条、L 形占角件、分离 sticky 部件、宽塞，或桥接既有端点形成更大 connected footprint。
-- 主要消费方式：单行走廊、目标口宽、刚体墙口回返谱系、后续固定边界切割。
-- 证据强度：`consumption_probe`，含 `runtime_observed`、`bounded_graph`、部分 `graph_complete`。
-- 仍缺：更多绑定形状进入同一 consumer 的 composition probe，尤其 L 形、横向桥接和桥接后切割。
+- 一句话用途：把多个可分配箱子压成横条、L 形、分离部件、宽塞或桥接端点的黏块材料。
+- 输入接口：两个以上 crate 可控地跨入 sticky 侧，入场邻接图和节奏可控。
+- 输出接口：2 格横条、L 形占角件、分离 sticky 部件、宽塞，或桥接既有端点形成更大连体块。
+- 主要接法：单行走廊、目标口宽、刚体黏块 + 墙口、固定 B/S 切割。
+- 后续候选 / 维护备注：只有当跨线顺序、边界位置或可移动边界仍在关键观察点造成差异时，才继续作为 B/S producer / selector 题材。
 
 ## 固定 B/S 切割：C+M 尾巴与单格目标袋
 
 - 一句话用途：把横向二连 sticky 切成可单独上推的 crate 左格和保留在旁边的 sticky 尾债。
-- 输入接口：横向二连资源、固定 B/S 边界切在两格之间、玩家能绕到左格下方、上方目标袋只容纳单格。
-- 输出接口：`C+M` 的可分离左格、sticky 尾债；对照是未切开的 `MM` 和本来可分离的 `CC`。
-- 主要消费方式：单格目标袋消费可分离左格，双格袋口作为 shortcut 反例。
-- 证据强度：`consumption_probe`，含 `runtime_observed`、`bounded_graph`、`graph_complete`。
-- 仍缺：把 sticky 尾债接入第二段 consumer，比较 `C+MM`、`CC+M`、`MMM` 的尾债谱。
+- 输入接口：横向二连 sticky 资源、固定 B/S 边界切在两格之间、玩家能绕到左格下方、上方目标袋只容纳单格。
+- 输出接口：`C+M`：左格 crate 可分离，右格 sticky tail 留债；对照是未切开的 `MM` 和本来可分离的 `CC`。
+- 主要接法：单格目标袋消费可分离左格，双格袋口作为 shortcut 反例。
+- 后续候选 / 维护备注：尾债二段消费是组合空间；普通补变体不自动成为 explorer topic。
 
 ## 固定 B/S 断桥：sticky split 端点目标袋
 
 - 一句话用途：把 C 形 connected sticky 切断成可单独消费的端点和 crate 桥债。
-- 输入接口：C 形 sticky footprint、固定 B/S 边界切过连接桥、玩家能绕到端点下方、单格端点目标袋。
-- 输出接口：上端点/下端点独立性、左柱 crate 桥债、未切断 C 形作为错误 footprint。
-- 主要消费方式：上端点单格目标袋消费端点独立性；站位关闭和预分离端点作为边界 case。
-- 证据强度：`consumption_probe`，含 `runtime_observed`、`bounded_graph`、`graph_complete`。
-- 仍缺：上下端点双分配、crate 桥债的第二段消费、禁用 normalize 的 counterfactual。
+- 输入接口：C 形 sticky 连体块、固定 B/S 边界切过连接桥、玩家能绕到端点下方、单格端点目标袋。
+- 输出接口：上端点 / 下端点独立性、左柱 crate 桥债、未切断 C 形作为错误连体块。
+- 主要接法：上端点单格目标袋；站位关闭和预分离端点作为边界 case。
+- 后续候选 / 维护备注：上下端点双分配或 crate 桥债二段消费可作为新组合空间。
 
 ## 刚体黏块 + 墙口：反向施力格谱系
 
-- 一句话用途：用墙口、口宽和把手消费 sticky footprint，决定推进后是否保留反向施力格。
-- 输入接口：2 格条、3 格条、4 格条、2x2 或 L 形 sticky footprint 被送入窄口、单列通道或把手附近。
-- 输出接口：可回返 / 不可回返的局部状态、端点余量需求、L 形侧向把手需求、前沿目标格需求。
-- 主要消费方式：墙口余量、端点外侧站位、2x2 整面空间、L 形凸出格把手、前沿墙齿。
-- 证据强度：`consumption_probe`，含 `runtime_observed`、`bounded_return`、`bounded_graph`、`graph_complete`。
-- 仍缺：把绑定债产出的多种 footprint 系统接入同一墙口，形成 producer -> consumer 的 composition probe。
+- 一句话用途：用墙口、口宽、前沿墙齿和把手消费 sticky 连体块形状，决定推进后是否可通过或可回返。
+- 输入接口：2 格条、3 格条、4 格条、2x2 或 L 形 sticky 连体块被送入窄口、单列通道、目标口或把手附近。
+- 输出接口：可回返 / 不可回返局部状态、前沿目标格需求、侧廊 / 凸角 / 右侧施力位回位门。
+- 主要接法：墙口余量、目标口宽、端点外侧站位、2x2 单侧施力位、L 形侧向把手。
+- 后续候选 / 维护备注：后续继续应围绕新的把手占用资源或组合接口，不补普通形状谱债。
+
+## Pull 侧对象可动性：单箱基线与刚体墙口
+
+- 一句话用途：比较 pull side 中单箱、单格 sticky 和多格 sticky 被拉动时，前格门、目标格墙、把手通路和资源占用物如何决定可动性 / 回返性。
+- 输入接口：玩家处于 pull side，前格可控，身后一格可放 crate、单格 sticky、2/3 格条、2x2 或 L 形 sticky。
+- 输出接口：单箱被拉入玩家旧格；sticky 整体平移或被目标格墙拒绝；拉过口后留下可回返、不可回返或资源化把手状态。
+- 主要接法：单格墙口袋、sticky 目标口、L 形远端目标墙、沿轴前格门、box-side crate blocker 资源移交、sticky blocker merge lock。
+- 后续候选 / 维护备注：本条不挂普通 backlog；若继续，应是目标口袋或关卡 recipe 组合。
 
 ## B/S 移动边界刷产物：远程生成与门口消费
 
 - 一句话用途：移动 B/S 边界选择远处产物，再让同一门口消费 `CC`、`C+M`、`C+MM`、2x2 或双柱。
-- 输入接口：可移动 B/S anchor、远处 footprint、边界能跨线，driver 可是 push / pull / 力链搬运。
-- 输出接口：释放箱链、单箱加尾债、大 footprint gate、分柱 sticky 工具。
-- 主要消费方式：门口、低墙、列间隙、目标回填或刚体墙口消费刷产物。
-- 证据强度：`consumption_probe`，含 `runtime_observed`、`bounded_return`、`graph_complete`。
-- 仍缺：目标回填版本，证明不同刷产物覆盖目标后留下不同尾债和 shortcut。
+- 输入接口：可移动 B/S anchor、远处资源形状、边界能跨线，driver 可是 push / pull / 力链搬运。
+- 输出接口：释放箱链、单箱加尾债、大块 gate、分柱 sticky 工具。
+- 主要接法：门口、低墙、列间隙、目标回填或刚体墙口消费刷产物。
+- 后续候选 / 维护备注：目标回填版本是组合空间，重点是不同刷产物覆盖目标后留下不同尾债或 shortcut。
 
 ## P/L 长轴墙廊：L 端余量棘轮
 
-- 一句话用途：把水平 P/L 在一格高墙廊中变成消耗 L 端余量的单向位移资源。
-- 输入接口：水平 P/L 位于长轴墙廊，玩家从 P 侧 push，L 端前方余量为 0 / 1 / 2，可选侧廊。
-- 输出接口：首步 illegal、一次性停位、多次推进能力，或侧廊开放但仍不能反向恢复。
-- 主要消费方式：停位容量、一次性开关、门闩、移动 B/S 边界刷子的 driver。
-- 证据强度：`consumption_probe`，含 `runtime_observed`、`bounded_return`、`graph_complete`。
-- 仍缺：接到移动边界刷子的 recipe probe，确认棘轮位移不只是 driver 说明。
+- 一句话用途：把水平 P/L 在一格高墙廊中变成消耗端点余量的单向位移资源。
+- 输入接口：水平 P/L 位于长轴墙廊，玩家从 P 侧 push 或 L 侧 pull，端点余量为 0 / 1 / 2。
+- 输出接口：首步 illegal、一次性停位、多次推进能力、pull 后回返门开闭、mixed chain 缩短锚点可动余量。
+- 主要接法：停位容量、一次性开关、门闩、pull 后出口。
+- 后续候选 / 维护备注：接到移动边界刷子是 composition 方向；不缺普通 push/pull 余量谱。
 
-## P/L 横向把手：玩家前格门与锚点 footprint 门
+## P/L 横向把手：玩家前格门与锚点占格门
 
-- 一句话用途：把横向 P/L 的垂直 push / pull 拆成玩家前格门、另一半 footprint 门和回返门。
-- 输入接口：横向 P/L、P 侧 push 或 L 侧 pull 站位、上下目标格和玩家 pull 前格可分别被墙控制。
-- 输出接口：首步合法、`destination_blocked`、`force_blocked`、首步后回返门关闭。
-- 主要消费方式：墙格分类器、移动边界刷子的把手前置条件、轻量承诺点。
-- 证据强度：`consumption_probe`，含 `runtime_observed`、`bounded_return`、`graph_complete`。
-- 仍缺：与移动边界刷子串接，比较 push driver 与 pull driver 是否制造不同 shortcut。
+- 一句话用途：把横向 / 竖向 P/L 的推拉把手拆成玩家前格门、P 半格目标门、L 半格目标门、移动后回返门，以及 carried crate 的目标门。
+- 输入接口：横向或竖向 P/L、P 侧 push 或 L 侧 pull 站位、各半格目标格、玩家 pull 前格、回返前格和可选 side crate。
+- 输出接口：首步合法、`destination_blocked`、`force_blocked`、首步后回返门关闭、L 侧 pull P/L 时携带 crate 的 mixed chain。
+- 主要接法：墙格分类器、移动边界刷子的把手前置条件、轻量承诺点、mixed pull chain 的 carried-object gate。
+- 后续候选 / 维护备注：与移动边界刷子串接是 composition 方向；不缺基础墙门矩阵。
 
-## P/L pull 抽取把手：前格门、footprint 门与扫带
+## P/L 锚点边界重写：旧半格把手与侧边对象改侧
 
-- 一句话用途：把 pull 抽取拆成玩家前格、被拉对象 footprint 目标格和侧向 blocker 类型三层门。
-- 输入接口：玩家处于 pull 侧，身后有 crate、B/S anchor 或其他 footprint，前格和目标格可被墙 / crate / sticky 控制。
-- 输出接口：单格抽入玩家旧格、沿轴二格整体抽出、垂直二格因侧向目标位合法或非法、侧向 crate 扫带。
-- 主要消费方式：远程抽出 B/S anchor、口袋资源抽取、侧向扫带资源移交。
-- 证据强度：`consumption_probe`，含 `runtime_observed`、`bounded_return`、`graph_complete`。
-- 仍缺：把侧向 blocker 换成 sticky，验证扫带后是资源移交、刚体合并还是 footprint 关闭。
+- 一句话用途：移动 P/L anchor 后，旧 L 半格或旧 L 行对象被新边界重写成 push 侧资源，并被目标袋或侧边 crate relay 消费。
+- 输入接口：P/L anchor 至少移动到能释放旧半格或扫过目标行 / 列的位置；玩家能到达被释放 / 重标的把手。
+- 输出接口：旧 L 半格变成新 push 站位；mixed-chain 下移后侧边 crate 从 L 侧 `pull_world_front_blocked` 变成 P 侧 push chain。
+- 主要接法：单格目标袋、侧边 crate relay、二段式边界重写 recipe。
+- 后续候选 / 维护备注：若继续，应是 recipe / 目标门口组合，而不是证明锚点会移动。
+
+## P/L pull 抽取把手：前格门、占格目标门与扫带
+
+- 一句话用途：把 pull 抽取拆成玩家前格、被拉对象目标格和侧向 blocker 类型三层门。
+- 输入接口：玩家处于 pull 侧，身后有 crate、B/S anchor 或其他二格对象，前格和目标格可被墙 / crate / sticky 控制。
+- 输出接口：沿轴二格整体抽出、垂直二格因侧向目标位合法或非法、侧向 crate 扫带。
+- 主要接法：远程抽出 B/S anchor、口袋资源抽取、侧向扫带资源移交。
+- 后续候选 / 维护备注：侧向 blocker 换成 sticky 是新资源形态题材，不是普通前格墙补测。
+
+## P/L 边界交接：推入、跨侧与抽取分配
+
+- 一句话用途：玩家先在 P 侧把单箱、箱链或 sticky 连体块送到边界邻域，再跨到 L 侧用 pull 抽取、分配或分类门控同一局部状态。
+- 输入接口：对象在 P/L 边界相邻格或可被 P 侧 push 到边界；玩家必须能实际跨到 L 侧把手位。
+- 输出接口：单箱被拉入玩家旧格、箱链只抽近端并留下残余链、sticky group 成功抽出或因前格 / 目标格门失败、跨界 sticky handoff 可回返；活塞读法下可比较单箱回撤、单箱目标顺序锁、箱链残余债和 sticky 刚体形状门。
+- 主要接法：目标口袋覆盖、链端抽取打开单格口、前格门分类、L 形目标墙修正、单箱目标顺序锁、残余箱链债务、回返门、侧齿 / 前沿墙分类。
+- 后续候选 / 维护备注：`边界活塞本体谱` 和 `单箱目标活塞顺序锁` 已作为完整子谱收纳；后续只把残余箱链接第二段目标 / 回返门、sticky handoff 接实际目标口作为组合方向。
+
+## P/L L形缺角活塞：一推即侧拉
+
+- 一句话用途：玩家站在 sticky L 形缺角里，先推一格后立即正交拉动，把直线 push / pull 变成短行程转向活塞。
+- 输入接口：带缺角的 L 形 sticky 连体块、玩家缺角站位、P/L 场中的第一手 push、第二手侧向 pull 目标格集合。
+- 输出接口：基础 L 两步可回返；向前横臂和竖腿延长新增不同墙门；侧拉扫带可推动 B/S anchor 并覆盖目标；宽松变体中横向 stroke 可生成新的正交把手。
+- 主要接法：正交墙门、短回返活塞、侧向扫带邻物、B/S anchor 目标覆盖、stroke 后把手门。
+- 后续候选 / 维护备注：`缺角立即侧拉的门位分类` 与 `stroke 后正交把手` 已作为完整子谱收纳；左右 / 上下镜像不作为候选，后续只测新的非对称形状接口或侧拉扫带驱动对象。

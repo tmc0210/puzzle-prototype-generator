@@ -1,14 +1,12 @@
-import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { build } from "esbuild";
-import { loadPrototypePackage } from "../core/io.js";
-import { readPlayableLevelsForExport } from "./levelCatalog.js";
+import { createPlayableRepository } from "./repository.js";
 
-const packagePath = process.argv[2] ?? "prototypes/pull_portal_fallback";
-const pkg = await loadPrototypePackage(packagePath);
-const outDir = path.join(pkg.root, "playable");
-const evaluation = await readEvaluation(pkg.root);
-const playableLevels = await readPlayableLevelsForExport(pkg);
+const packagePath = process.argv[2] ?? "prototypes/reality_anchor";
+const repository = createPlayableRepository(packagePath);
+const data = await repository.loadPlayableData();
+const outDir = path.join(repository.root, "playable");
 const assetVersion = Date.now().toString(36);
 
 await mkdir(outDir, { recursive: true });
@@ -17,10 +15,10 @@ await writeFile(
   path.join(outDir, "data.json"),
   `${JSON.stringify(
     {
-      mechanic: pkg.mechanic,
-      knowledge: pkg.knowledge,
-      levels: playableLevels,
-      evaluation,
+      mechanic: data.mechanic,
+      knowledge: data.knowledge,
+      levels: data.levels,
+      evaluation: data.evaluation,
     },
     null,
     2,
@@ -59,7 +57,7 @@ await writeFile(
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${pkg.mechanic.title}</title>
+    <title>${data.mechanic.title}</title>
     <link rel="stylesheet" href="./style.css?v=${assetVersion}">
   </head>
   <body>
@@ -78,7 +76,7 @@ await writeFile(
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${pkg.mechanic.title} Editor</title>
+    <title>${data.mechanic.title} Editor</title>
     <link rel="stylesheet" href="./style.css?v=${assetVersion}">
   </head>
   <body>
@@ -94,14 +92,6 @@ await writeFile(path.join(outDir, "style.css"), playableCss(), "utf8");
 await copySpriteAssets(outDir);
 
 console.log(`Wrote playable prototype to ${outDir}`);
-
-async function readEvaluation(root: string): Promise<unknown> {
-  try {
-    return JSON.parse(await readFile(path.join(root, "reports", "evaluation.json"), "utf8"));
-  } catch {
-    return undefined;
-  }
-}
 
 async function copySpriteAssets(outputRoot: string): Promise<void> {
   const source = path.resolve("src/web/assets/puzzlescript16/png");

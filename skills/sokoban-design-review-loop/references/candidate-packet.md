@@ -64,7 +64,6 @@ diagnostic_routing:
   scc_graph:
   variant_family:
   start_position:
-  prototype_specific_work:
 
 prototype_specific_contracts:
   interface_pair_policy:

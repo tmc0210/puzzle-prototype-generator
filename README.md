@@ -92,9 +92,16 @@ npm run ps:check
 npm run validate
 ```
 
-本地 playable 构建输出：
+本地 playable 默认构建 Reality Anchor，也可显式传入 prototype 路径：
 
-[prototypes/pull_portal_fallback/playable/index.html](prototypes/pull_portal_fallback/playable/index.html)
+```text
+npm run playable:build
+npm run playable:build -- prototypes/pull_portal_fallback
+```
+
+默认构建输出：
+
+[prototypes/reality_anchor/playable/index.html](prototypes/reality_anchor/playable/index.html)
 
 启动后访问：
 

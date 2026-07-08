@@ -1,0 +1,144 @@
+{
+  "runId": "ra_topic_selection_preflight_20260707_01",
+  "title": "topic selection preflight: nontrivial structure gates",
+  "notes": "Controller-only preflight for selecting a mechanism_loop portfolio. These cases are not a full explorer run and must not be promoted directly. They test whether candidate topics have a non-obvious structural knob and a plausible consumer beyond rule smoke.\n",
+  "defaults": {
+    "maxExploreDepth": 10,
+    "maxReturnDepth": 18,
+    "maxStates": 40000,
+    "maxTransitions": 100000
+  },
+  "cases": [
+    {
+      "id": "anchor_goal_cover_brushes_remote_row",
+      "family": "anchor_goal_boundary_side_effect",
+      "variant": "B/S covers goal and sweeps a remote crate row",
+      "changedVariable": "remote crate sits on the row that changes side after the anchor covers the target",
+      "contrastWith": [
+        "anchor_goal_cover_remote_row_not_crossed"
+      ],
+      "question": "Can an anchor-as-target move also consume a remote material row, making target cover a boundary endpoint selector?",
+      "layout": "#########\n#..G....#\n#..B.C..#\n#..S....#\n#..@....#\n#########",
+      "actions": [
+        "up"
+      ]
+    },
+    {
+      "id": "anchor_goal_cover_remote_row_not_crossed",
+      "family": "anchor_goal_boundary_side_effect",
+      "variant": "B/S covers goal but remote crate stays on box side",
+      "changedVariable": "same target-cover move, but the remote crate is one row above the swept boundary",
+      "contrastWith": [
+        "anchor_goal_cover_brushes_remote_row"
+      ],
+      "question": "If target cover alone is the whole story, remote row placement should not change material output.",
+      "layout": "#########\n#..G.C..#\n#..B....#\n#..S....#\n#..@....#\n#########",
+      "actions": [
+        "up"
+      ]
+    },
+    {
+      "id": "pull_vertical_bs_sweeps_sticky_blocker",
+      "family": "pull_extract_side_blocker_material",
+      "variant": "vertical B/S pull sweeps a sticky blocker",
+      "changedVariable": "the lower half target cell contains a sticky block that is movable in the same sweep direction",
+      "contrastWith": [
+        "pull_vertical_bs_side_wall_blocks",
+        "pull_vertical_bs_side_empty"
+      ],
+      "question": "Does a sticky blocker become a movable side resource during pull extraction, rather than a simple wall-like blocker?",
+      "layout": "#########\n#PL....G#\n#.......#\n#..@B...#\n#..MS...#\n#.......#\n#########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "pull_vertical_bs_side_wall_blocks",
+      "family": "pull_extract_side_blocker_material",
+      "variant": "vertical B/S pull side target is a wall",
+      "changedVariable": "replace the sticky blocker with a wall in the same side target cell",
+      "contrastWith": [
+        "pull_vertical_bs_sweeps_sticky_blocker"
+      ],
+      "question": "Wall in the lower half target cell should close the footprint gate.",
+      "layout": "#########\n#PL....G#\n#.......#\n#..@B...#\n#..#S...#\n#.......#\n#########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "pull_vertical_bs_side_empty",
+      "family": "pull_extract_side_blocker_material",
+      "variant": "vertical B/S pull side target is empty",
+      "changedVariable": "remove the side blocker entirely",
+      "contrastWith": [
+        "pull_vertical_bs_sweeps_sticky_blocker"
+      ],
+      "question": "Empty side target isolates the blocker material effect from the base footprint movement.",
+      "layout": "#########\n#PL....G#\n#.......#\n#..@B...#\n#...S...#\n#.......#\n#########",
+      "actions": [
+        "left"
+      ]
+    },
+    {
+      "id": "reverse_handle_empty_consumed",
+      "family": "reverse_handle_occupied_spectrum",
+      "variant": "empty reverse handle cell",
+      "changedVariable": "baseline: the reverse-force handle cell is empty after the first sticky push",
+      "contrastWith": [
+        "reverse_handle_crate_can_be_cleared",
+        "reverse_handle_wall_closed"
+      ],
+      "question": "Empty handle cell gives the player a direct reverse push interface after the sticky footprint passes the mouth.",
+      "layout": "############\n#G##########\n###M...#####\n##@M...#####\n##.....#####\n####SB######\n############",
+      "actions": [
+        "right",
+        "down",
+        "right",
+        "right",
+        "up",
+        "left"
+      ]
+    },
+    {
+      "id": "reverse_handle_crate_can_be_cleared",
+      "family": "reverse_handle_occupied_spectrum",
+      "variant": "crate occupying reverse handle cell",
+      "changedVariable": "replace the empty handle cell with a crate and give it a one-cell clearing pocket",
+      "contrastWith": [
+        "reverse_handle_empty_consumed",
+        "reverse_handle_wall_closed"
+      ],
+      "question": "A crate in the handle cell turns the reverse interface into a clear-then-push resource handoff instead of simply closing the gate.",
+      "layout": "############\n#G##########\n###M...#####\n##@M.C.#####\n##.....#####\n####SB######\n############",
+      "actions": [
+        "right",
+        "down",
+        "right",
+        "right",
+        "up",
+        "left"
+      ]
+    },
+    {
+      "id": "reverse_handle_wall_closed",
+      "family": "reverse_handle_occupied_spectrum",
+      "variant": "wall occupying reverse handle cell",
+      "changedVariable": "replace the occupied handle cell with a wall while keeping the first sticky push legal",
+      "contrastWith": [
+        "reverse_handle_empty_consumed",
+        "reverse_handle_crate_can_be_cleared"
+      ],
+      "question": "A wall in the same handle cell closes the reverse interface and distinguishes movable occupancy from hard closure.",
+      "layout": "############\n#G##########\n###M...#####\n##@M.#.#####\n##.....#####\n####SB######\n############",
+      "actions": [
+        "right",
+        "down",
+        "right",
+        "right",
+        "up",
+        "left"
+      ]
+    }
+  ]
+}

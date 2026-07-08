@@ -9,6 +9,11 @@ function eventsMatchPattern(events, pattern) {
   return events.some((event) => eventMatchesPattern(event, pattern));
 }
 
+// src/core/puzzleRuntime.ts
+function isTerminalWinCondition(winCondition) {
+  return winCondition?.terminal !== false;
+}
+
 // src/prototypes/ice_slide_escape/mechanics.ts
 var vectors = {
   up: { x: 0, y: -1 },
@@ -2241,8 +2246,8 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mra1ka2w" : String(Date.now());
-var data = await fetchJson(`./data.json?v=${encodeURIComponent(buildId)}`);
+var buildId = true ? "mrbrx1el" : String(Date.now());
+var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);
 var activeTab = reviewData.archiveEntries.length > 0 ? "archive" : "temporary";
@@ -2283,6 +2288,7 @@ window.addEventListener("keydown", (event) => {
   }
 });
 function render() {
+  const viewState = captureViewState();
   const entry = currentEntry();
   const level = entryLevel(entry);
   const draft = entry ? draftForEntry(entry) : emptyDraft();
@@ -2301,6 +2307,23 @@ function render() {
     </div>
   `;
   bindUiEvents();
+  restoreViewState(viewState);
+}
+function captureViewState() {
+  return {
+    candidateRailScrollTop: app.querySelector(".candidate-rail")?.scrollTop ?? 0,
+    candidateListScrollTop: app.querySelector(".candidate-list")?.scrollTop ?? 0
+  };
+}
+function restoreViewState(state) {
+  const rail = app.querySelector(".candidate-rail");
+  if (rail) {
+    rail.scrollTop = state.candidateRailScrollTop;
+  }
+  const list = app.querySelector(".candidate-list");
+  if (list) {
+    list.scrollTop = state.candidateListScrollTop;
+  }
 }
 function renderHeader() {
   const archiveCount = reviewData.archiveEntries.length;
@@ -2788,6 +2811,9 @@ async function replayExpected() {
     if (selectedEntryKey !== key) {
       break;
     }
+    if (playState?.won && isTerminalWinCondition(levelWin(playState.level))) {
+      break;
+    }
     applyInput(input);
     render();
   }
@@ -2799,6 +2825,9 @@ function applyInput(input) {
     return;
   }
   const winCondition = levelWin(playState.level);
+  if (playState.won && isTerminalWinCondition(winCondition)) {
+    return;
+  }
   const result = adapter.step(
     data.mechanic,
     playState.current,
@@ -3018,6 +3047,13 @@ function filterOption(value, label) {
 }
 function option(value, label, current) {
   return `<option value="${escapeAttribute(value)}" ${value === current ? "selected" : ""}>${escapeHtml(label)}</option>`;
+}
+async function loadPlayableData() {
+  try {
+    return await fetchJson(`./api/playable-data?v=${encodeURIComponent(buildId)}`);
+  } catch {
+    return await fetchJson(`./data.json?v=${encodeURIComponent(buildId)}`);
+  }
 }
 async function loadReviewData(playableData) {
   try {

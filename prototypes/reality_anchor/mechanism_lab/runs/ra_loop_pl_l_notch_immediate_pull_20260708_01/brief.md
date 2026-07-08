@@ -1,0 +1,23 @@
+# Mechanism Lab Brief: ra_loop_pl_l_notch_immediate_pull_20260708_01
+
+- prototype: reality_anchor
+- design_space: 玩家初始站在 L 形 sticky 的 2x2 缺角中 -> P/L 横向 stroke 一格后立即处于 L 侧正交 pull 把手 -> 产出侧向位移、回返状态或扫带邻物
+- seed_source: 用户指出上一轮不够充分，原意是测试“玩家本来就在那个缺处，推一格后立刻可以侧向拉动”的结构，并要求比较更多 L 形形状。
+- source_boundary: 允许读取 Reality Anchor 当前规则、当前 mechanism_lab lexicon/index/backlog 和当前 run；禁止读取 design archive、人类评价、历史候选包、sampler profile、hardcoded layout template 和旧 runs，除非后续核对 provenance 时另行说明。
+- structure_spectrum:
+  - 左下缺角：玩家在 L 形左下缺角，`right` 后立即 `down pull`，侧向下拉整个 L 形。
+  - 左上缺角：玩家在 L 形左上缺角，`right` 后立即 `up pull`，侧向上拉整个 L 形。
+  - 右下缺角：反向 P/L，玩家在右下缺角，`left` 后立即 `down pull`。
+  - 右上缺角：反向 P/L，玩家在右上缺角，`left` 后立即 `up pull`。
+  - 横条退化：把 L 形换成横条，第二手正交动作没有身后对象，只退化成 walk。
+  - 前格墙：一推后正交 pull 的玩家前格加墙，得到 `destination_blocked`。
+  - 目标墙：一推后正交 pull 的 L 形外部目标格加墙，得到 `force_blocked`。
+  - 可移动邻物：把目标墙换成 B/S anchor，侧向 pull 扫带该 anchor 并覆盖目标。
+- do_not_repeat:
+  - 不重复证明 sticky L 形可被推 / 拉。
+  - 不把长绕路侧拉作为成果；本轮只收“一推后立即侧拉”的缺角结构。
+  - 不把横条的正交 walk 当成成功。
+  - 不把 B/S anchor 当成本轮主机制；它是侧向目标格 consumer。
+  - 不把 `returnToInitial.status=exhausted` 当作不可回返证据。
+- success_criterion: 证明“缺角站位 + P/L 跨侧 stroke”能生成立即可用的正交 pull 把手，并用 L 形朝向、横条错例、前格墙、目标墙和可移动邻物扫带排除普通 L 形可动性 / 普通墙阻挡解释。
+- output_contract: 生成 cases.yml、cases.json、results.json、report.md、explorer_notes.md、proposed_families.md、curator_decision.md；正式 lexicon/index/backlog 不直接修改，改动建议写入 curator_decision.md 等待用户确认。

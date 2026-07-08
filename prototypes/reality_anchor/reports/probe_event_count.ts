@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+﻿import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { eventMatchesPattern } from "../../../src/core/events.js";
 import { loadPrototypePackage } from "../../../src/core/io.js";
@@ -90,7 +90,8 @@ function findWinBelowCount(initialState: RuntimeState): ProbeResult {
     }
     const current = queue[cursor]!;
     cursor += 1;
-    if (current.depth > 0 && runtime.isWin(current.state, pkg.mechanic.win) && current.count < minCount) {
+    const isWinningState = current.depth > 0 && runtime.isWin(current.state, pkg.mechanic.win);
+    if (isWinningState && current.count < minCount) {
       return {
         found: true,
         status: "found",
@@ -100,6 +101,9 @@ function findWinBelowCount(initialState: RuntimeState): ProbeResult {
         events: current.events,
         count: current.count,
       };
+    }
+    if (isWinningState) {
+      continue;
     }
     if (current.depth >= maxDepth) {
       depthHit = true;

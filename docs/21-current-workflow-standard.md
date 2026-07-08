@@ -76,9 +76,28 @@ critic artifact，必须把 review_integrity 标为 `self_review_only`、`missin
   family_iteration_2:
     如有必要，开始不同的因果链 family
 
+pre_playable_queue:
+  运行被 routing 触发且声明为入待玩列表前执行的原型专属最小清理。
+  若清理改变 layout、起点、目标、对象或胜利实例，必须作为新的
+  candidate_version 重跑必要证据和 review。
+
+playable_queue / human_playtest:
+  人类游玩的是 exact candidate_version。反馈只绑定到这个版本。
+
+post_playtest_feedback_routing:
+  ready_for_archive -> archive pass
+  needs_revision -> 新 candidate_version，回到 design / review / pre_playable_queue
+  reject -> rejected_candidate 或移出待玩列表
+  hold -> held_proposal
+
 archive pass:
-  只记录循环达到的 terminal state；不得升级状态
+  只记录已经被人类游玩认可的 exact candidate_version；不得升级状态，
+  也不得做布局、起点、目标、对象或胜利实例变更
 ```
+
+所有会改变 solve instance 的最小清理必须发生在加入待玩列表前。人类游玩之后若
+发现仍需清理、压缩或修补，结果是新版候选，并重新进入待玩列表；不能在
+archive pass 中黑盒改动后直接归档。
 
 `designer_action_N` 永远不能关闭 review loop。核心攻击只能由后续
 `review_N+1`、更晚的独立 review，或人类 review 关闭。designer 若认为 critic
@@ -210,7 +229,7 @@ diagnostic_routing:
     status: triggered | not_applicable | unavailable | unknown
     reason:
   prototype_specific_work:
-    kind: diagnostic | redesign_stage | not_applicable | unknown
+    kind: diagnostic | redesign_stage | paired_design_mode | pre_playable_queue_cleanup | post_playtest_feedback_routing | not_applicable | unknown
     status: triggered | not_applicable | unavailable | unknown
     reason:
 ```
@@ -318,11 +337,16 @@ variant 诊断的目的不是打分，而是防止旋转、平移、加长、移
 
 ### Prototype-Specific Work
 
-原型专属工作分两类：
+原型专属工作按阶段声明，不进入通用流程的隐藏 checklist：
 
 ```text
 diagnostic:
   对候选做额外检查或证据读取。
+
+pre_playable_queue_cleanup:
+  已确定候选骨架后、加入待玩列表前执行的最小布局清理或一致性检查。
+  它可以改变 layout / start / targets / objects，但一旦改变 solve instance，
+  必须产出新的 candidate_version，并重跑必要证据和 review。
 
 redesign_stage:
   基于一个已经有价值的 base candidate 做二次设计、优化或变体提案。
@@ -330,6 +354,10 @@ redesign_stage:
 paired_design_mode:
   由原型文档或 experiment brief 显式启用，同时设计和审查一组互相关联的
   solve instances；它不是默认流程。
+
+post_playtest_feedback_routing:
+  人类游玩之后根据反馈决定归档、修订、删除或搁置。若处理反馈需要改变
+  solve instance，结果是新版候选，必须重新经过 review 和 pre_playable_queue。
 ```
 
 meta-interface、重访入口、跨关连通、大地图接口等都不是通用流程默认项。只有
@@ -475,13 +503,14 @@ hold、reject 或 change family 处理。
 ```text
 proposal_ready:
   最新 review iteration 对最新 candidate version 输出 required_action: none，
-  且没有未关闭核心攻击。可提交给人类设计师或进入 campaign-level comparison，
-  但不是 accepted。
+  且没有未关闭核心攻击。可进入待玩列表、提交给人类设计师或进入
+  campaign-level comparison，但不是 accepted，也不是 clean_archive。
 
 proposal_ready_with_caveats:
   最新 review iteration 对最新 candidate version 输出 required_action: none。
   核心 design_claim 成立，剩余 caveats 不破坏 player_insight、
-  why_not_execution、evidence support、role fit，也不是未授权变体问题。
+  why_not_execution、evidence support、role fit，也不是未授权变体问题。若进入
+  待玩列表，caveats 必须随 candidate packet 保留。
 
 revise_required:
   存在可修复的结构或证据问题。必须回到 design studio loop。
@@ -504,6 +533,32 @@ structural_redesign_needed:
 
 `accepted`、`mainline`、`positive_reference` 和 `reference` 不是 LLM designer
 自有状态。它们只能由人类设计师或显式授权的 campaign selection 过程授予。
+
+## Playtest Queue And Archive Routing
+
+待玩列表是人类 playtest queue。进入待玩列表前，必须完成当前原型声明为
+`pre_playable_queue_cleanup` 的最小清理；未触发或不适用的流程只记录 routing
+结论，不要求把原型专属细节写进每次通用 review 材料。
+
+人类反馈只作用于被游玩的 exact candidate_version：
+
+```text
+ready_for_archive:
+  归档同一版。archive pass 只记录流程、证据和人类评语，不再改变布局。
+
+needs_revision:
+  修改后生成新 candidate_version，回到 design / review / pre_playable_queue，
+  再重新加入待玩列表。
+
+reject:
+  从待玩列表移除，并记录为 rejected_candidate 或失败尝试。
+
+hold:
+  保留材料价值，但不进入 clean_archive。
+```
+
+如果 `ready_for_archive` 之后仍想删目标、裁冗余空间、改起点、改对象或调整胜利
+实例，这不是 archive pass，而是 `needs_revision`。
 
 ## Exploration Log
 

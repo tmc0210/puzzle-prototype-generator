@@ -1,0 +1,165 @@
+runId: ra_loop_split_tail_second_consumer_20260707_01_tail_length_spectrum
+title: tail_length_spectrum
+notes: >
+  Explorer run for the split-tail second-consumer gap. The common consumer is a
+  second single-cell vertical pocket immediately to the right of the first
+  pocket: after the leftmost cell is consumed, the player tries to push the next
+  cell up into x4 while x5 is closed by wall. This distinguishes length-1
+  sticky debt, length-2 sticky debt, mixed crate/sticky debt, and unsplit sticky
+  trios without treating the old C+M first-pocket result as new evidence.
+defaults:
+  maxExploreDepth: 14
+  maxReturnDepth: 24
+  maxStates: 50000
+  maxTransitions: 120000
+cases:
+  - id: cm_len1_single_second_pocket_pass
+    family: single_second_pocket_spectrum
+    variant: C+M
+    changedVariable: tail_length=1 material=sticky
+    contrastWith:
+      - cmm_len2_single_second_pocket_block
+      - ccm_front_crate_second_pocket_pass
+    title: C+M tail enters the second single-cell pocket
+    question: Does a length-1 sticky tail left by the first pocket fit the same second consumer?
+    notes: >
+      First left produces C+M at the fixed B/S boundary. The first up consumes
+      the crate in the old single-cell pocket; the second up tests the sticky
+      tail as the new observation point.
+    layout: |
+      #########
+      ###GG#..#
+      #...MM@.#
+      #.......#
+      #..BS...#
+      #########
+    actions: [left, down, left, left, up, down, right, up]
+
+  - id: cmm_len2_single_second_pocket_block
+    family: single_second_pocket_spectrum
+    variant: C+MM
+    changedVariable: tail_length=2 material=sticky-sticky
+    contrastWith:
+      - cm_len1_single_second_pocket_pass
+      - cmm_two_cell_second_mouth_shortcut_pass
+    title: C+MM sticky tail is rejected by the same second pocket
+    question: Does the same x4 pocket reject a rigid two-cell sticky tail because x5 is walled?
+    notes: >
+      The first pocket still succeeds on the crate. The distinguishing evidence
+      is the final up being force_blocked when the MM tail would need x5 open.
+    layout: |
+      #########
+      ###GG#..#
+      #...MMM@#
+      #.......#
+      #..BS...#
+      #########
+    actions: [left, down, left, left, left, up, down, right, up]
+
+  - id: ccm_front_crate_second_pocket_pass
+    family: single_second_pocket_spectrum
+    variant: CC+M
+    changedVariable: tail_length=2 front_material=crate rear_material=sticky
+    contrastWith:
+      - cmm_len2_single_second_pocket_block
+      - ccc_all_box_two_pockets_pass
+    title: CC+M passes because the second consumer sees a crate front
+    question: Can the same second pocket distinguish mixed material from a rigid MM tail?
+    notes: >
+      Two left pushes move the three-cell resource across the fixed boundary
+      until the output is CC+M. After the first crate is consumed, the second
+      pocket consumes the next crate while the sticky tail remains as debt.
+    layout: |
+      ##########
+      ###GG#...#
+      #....MMM@#
+      #........#
+      #...BS...#
+      ##########
+    actions: [left, left, down, left, left, left, up, down, right, up]
+
+  - id: mmm_unsplit_first_pocket_block
+    family: single_second_pocket_spectrum
+    variant: MMM
+    changedVariable: unsplit_tail_length=3 material=sticky-sticky-sticky
+    contrastWith:
+      - mmm_three_cell_first_mouth_shortcut_pass
+      - cmm_len2_single_second_pocket_block
+    title: Unsplit MMM is rejected before the second pocket
+    question: Does an uncut three-cell sticky trio fail the first single-cell pocket under the same mouth geometry?
+    notes: >
+      This is the negative end of the spectrum: the producer never creates a
+      separable first crate, so the first pocket itself rejects the full rigid
+      footprint.
+    layout: |
+      #########
+      ###GG#..#
+      #...MMM@#
+      #.......#
+      #.BS....#
+      #########
+    actions: [left, down, left, left, left, up]
+
+  - id: cmm_two_cell_second_mouth_shortcut_pass
+    family: mouth_width_shortcut
+    variant: C+MM wide second mouth
+    changedVariable: second_mouth_width=2 target_count=3
+    contrastWith:
+      - cmm_len2_single_second_pocket_block
+      - ccm_front_crate_second_pocket_pass
+    title: Widening the second pocket makes C+MM pass
+    question: Does opening x5 remove the length-2 sticky-tail distinction?
+    notes: >
+      This is the required shortcut: with two target cells in the second mouth,
+      the MM tail has enough forward space and behaves like an acceptable
+      footprint rather than a blocked debt.
+    layout: |
+      #########
+      ###GGG..#
+      #...MMM@#
+      #.......#
+      #..BS...#
+      #########
+    actions: [left, down, left, left, left, up, down, right, up]
+
+  - id: mmm_three_cell_first_mouth_shortcut_pass
+    family: mouth_width_shortcut
+    variant: MMM wide first mouth
+    changedVariable: first_mouth_width=3 target_count=3
+    contrastWith:
+      - mmm_unsplit_first_pocket_block
+    title: Widening the first mouth lets unsplit MMM through
+    question: Does a three-cell mouth erase the unsplit MMM failure?
+    notes: >
+      This bounds the interpretation: MMM is not impossible to push into goals;
+      the narrow mouth was the consumer that rejected the full footprint.
+    layout: |
+      #########
+      ###GGG..#
+      #...MMM@#
+      #.......#
+      #.BS....#
+      #########
+    actions: [left, down, left, left, left, up]
+
+  - id: ccc_all_box_two_pockets_pass
+    family: all_box_control
+    variant: CCC
+    changedVariable: material=crate-crate-crate no_BS_cut
+    contrastWith:
+      - ccm_front_crate_second_pocket_pass
+      - cmm_len2_single_second_pocket_block
+    title: All-box CCC passes the two single-cell pockets
+    question: Does the same mouth simply accept separable crates when no rigid sticky debt exists?
+    notes: >
+      Equivalent all-box control for the compare checklist. It is not proposed
+      as a B/S family; it only verifies that the second pocket consumes
+      separability, not the driver path.
+    layout: |
+      #########
+      ###GG#..#
+      #...CCC@#
+      #.......#
+      #.......#
+      #########
+    actions: [left, down, left, left, left, up, down, right, up]

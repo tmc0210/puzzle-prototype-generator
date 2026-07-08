@@ -573,6 +573,7 @@ levels:
       - input: up
       - input: down
         events: [pull_object, anchor_boundary_shift]
+
       - input: left
         events: [pull_object]
       - input: down
@@ -840,6 +841,538 @@ levels:
         events: [pull_object, move_sticky_rigid]
       - input: up
         events: [push_object, move_sticky_rigid]
+
+  - id: RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_wall_6_4
+    title: Vacate bind return v3 wall 6 4
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      ##MG.M.#
+      #.M.M..#
+      #BSLP#@#
+      #.G..###
+      ########
+    lineage:
+      source: wall_6_4_revision
+      source_candidate_id: RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_opening_comfort
+      source_file: prototypes/reality_anchor/reports/RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_wall_6_4_layout.txt
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Same-family tightening of RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_opening_comfort.
+      The lower-right slack cell is sealed, giving layout row "#.G..###" instead
+      of "#.G..#.#". Complete explain-layout reports 400 reachable states / 877
+      legal transitions / 1 winning state and preserves the 27-step shortest
+      solution spine. Complete core7 probe still proves all wins require P/L
+      shift, B/S shift, pull, box_to_sticky, sticky_to_box, sticky rigid movement,
+      and sticky_merge. Target-vacate probe still proves top_goal [3,1] must go
+      covered -> uncovered -> covered before win. 2026-07-08 human follow-up
+      clarified that archive candidate RA_CAND_0017 should point to this newer
+      revision rather than opening_comfort; the original playtest review id remains
+      attached to opening_comfort as the temporary played entry.
+    expected_trace:
+      - input: up
+      - input: left
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+      - input: right
+        events: [pull_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+      - input: up
+      - input: left
+      - input: right
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: down
+      - input: right
+      - input: right
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_merge]
+      - input: left
+        events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]
+      - input: down
+      - input: down
+      - input: left
+        events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: up
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid]
+      - input: down
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: up
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_LEX_2026_07_07_BIND_CUT_TAIL_v2_anchor_pockets_pruned
+    title: Bind cut tail v2 anchor pockets pruned
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #@.#G#...#
+      #.CC....G#
+      ####....##
+      ####BS####
+      ##########
+    lineage:
+      source: lexicon_composition_candidate_anchor_pockets_pruned
+      source_candidate_id: RA_LEX_2026_07_07_BIND_CUT_TAIL_v1
+      source_file: prototypes/reality_anchor/reports/redundant_element_prune_RA_LEX_2026_07_07_BIND_CUT_TAIL_v2_anchor_pockets_pruned.zh.md
+      created_by: codex
+      created_at: "2026-07-07"
+    design_notes: >
+      Held after corrected Reality Anchor redundant-element pruning.
+      The original v1 lexicon composition candidate combined B/S binding debt,
+      fixed-B/S C+M cutting, and sticky tail consumption. A first cleanup attempt
+      incorrectly wallified the right-top area; that was rejected because the
+      right-top region is not a single-entry dead corner and over-tightens player
+      routing. The corrected prune only removes the B/S side pockets.
+      The documented prune sequence retained both targets, found no object
+      remove/wallify candidates, removed the B/S side pockets, retained the
+      right-top routing space, and found no outline trim. The resulting v2 layout
+      remains solvable in 17 steps with complete graph evidence: 397 reachable
+      states, 982 legal transitions, 1 winning
+      state. Core probes are complete/no bypass for force_chain, box_to_sticky,
+      sticky_merge, sticky_to_box, and move_sticky_rigid; count/order probes prove
+      at least two box_to_sticky events and no winning cut before merge. Evidence
+      from the over-pruned right-top-cut version is not inherited as final quality
+      review. This corrected version is queued for human playtest by request, but
+      it still has substantial forced-prefix pressure and should not be treated as
+      a qualified challenge submission before redesign or fresh quality review.
+    expected_trace:
+      - input: down
+      - input: right
+        events: [push_object, force_chain]
+      - input: right
+        events: [push_object, force_chain, box_to_sticky]
+      - input: right
+        events: [push_object, force_chain, move_sticky_rigid, box_to_sticky, sticky_merge]
+      - input: down
+      - input: right
+      - input: right
+      - input: right
+      - input: up
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: down
+      - input: left
+      - input: left
+      - input: up
+        events: [push_object]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim
+    title: Pull brush return v4 wall trim
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ####P####
+      ####L####
+      #...MM.G#
+      #@S.M...#
+      ##B...G##
+      ####...##
+      #########
+    lineage:
+      source: fresh_design_review_loop
+      source_file: prototypes/reality_anchor/reports/candidate_packet_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_review1.zh.md
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Fresh challenge candidate from the allowed Reality Anchor lexicon, not an
+      archive variant. Design corpus used:
+      prototypes/reality_anchor/mechanism_lab/lexicon.md; excluded source:
+      prototypes/reality_anchor/mechanism_lab/runs/. Earlier same-turn attempts
+      RA_FRESH_2026_07_08_PULL_BRUSH_TAIL_v1,
+      RA_FRESH_2026_07_08_PULL_BRUSH_TAIL_v2, and
+      RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v3 were superseded before queue
+      submission. The core idea combines a B/S moving-boundary brush with a later
+      P/L anchor return. The lower target consumes the first brush-tail material
+      cut; the upper target prevents early finish and forces P/L anchor
+      migration. Full explain-layout with 300k graph budget is complete:
+      shortest cost 34, 104786 reachable states / 247141 legal transitions /
+      670 winning states. Core6 probe is complete/no bypass for pull_object,
+      anchor_boundary_shift:box_sticky, force_chain, move_sticky_rigid,
+      sticky_to_box, and anchor_boundary_shift:push_pull. Count probes prove at
+      least two B/S shifts and at least two P/L shifts are required; a negative
+      B/S>=4 probe found a 68-step win with only two B/S shifts, so no stronger
+      B/S count claim is made. Goal-prune checks retain both targets: deleting
+      the upper target drops the shortest cost to 9 and bypasses pl_shift;
+      deleting the lower target drops the shortest cost to 8 and bypasses
+      material_cut plus pl_shift. Opening comfort is tight but acceptable for a
+      challenge: first irreversible win-reaching exit distance is 2 and the
+      first legal input is only walk. Redundant-element prune trimmed v3's pure
+      outer wall columns into this v4 layout. Independent evidence reviewer and
+      puzzle critic both returned proposal_ready_with_caveats /
+      required_action:none for v4. Critic posture was aesthetic >=4 low pass,
+      difficulty >=3 pass, not a 5-point compact benchmark, but 2026-07-08
+      human playtest overrides that posture and archives the level as
+      RA_CAND_0024 negative example, aesthetic 1 / difficulty 3. The human
+      verdict is that three sticky cells and two movable anchors promise richer
+      cut/splice, long-chain pushing, or sticky-geometry use, while actual play
+      is mostly push/pull maneuvering without enough player insight. Do not
+      return this level to the playable queue as a positive candidate. Evidence:
+      prototypes/reality_anchor/reports/candidate_packet_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_review1.zh.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_review_2.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_review_2.md,
+      prototypes/reality_anchor/reports/goal_prune_check_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim.zh.md,
+      prototypes/reality_anchor/reports/opening_comfort_check_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim.zh.md,
+      prototypes/reality_anchor/reports/redundant_element_prune_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim.zh.md.
+    expected_trace:
+      - input: up
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: right
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: right
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: down
+        events: [pull_object, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: left
+        events: [pull_object, anchor_boundary_shift]
+      - input: left
+        events: [pull_object, anchor_boundary_shift]
+      - input: left
+        events: [pull_object, anchor_boundary_shift]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [walk]
+      - input: left
+        events: [pull_object, move_sticky_rigid]
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [pull_object, force_chain, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [pull_object]
+      - input: up
+        events: [walk]
+      - input: left
+        events: [pull_object]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+
+  - id: RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2
+    title: PL vacate recover v2
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      ##PL#..##
+      ###..G.##
+      #.@CCG..#
+      #########
+    lineage:
+      source: lexicon_composition
+      source_candidate_id: RA_LEX_2026_07_08_PL_CHAIN_END_PULL_DUAL_POCKET_v1
+      source_file: prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2_review2.zh.md
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Fresh lexicon-composition candidate built from P/L boundary handoff and P/L
+      pull-extraction vocabulary. v1 was rejected by puzzle critic as clean 2
+      because the two endpoint pulls were mostly independent. v2 adds a shared
+      state debt: the lower target is first covered by the chain push, then must be
+      vacated by pulling that crate upward onto the upper target, and finally
+      recovered by pulling the remaining crate into the lower target. Complete
+      graph analysis reports cost 10, 20 reachable states / 33 legal transitions /
+      1 winning state. Core event probe is complete/no bypass for push, force_chain,
+      and pull; pull-count probe is complete/no bypass below two pull events;
+      target-vacate probe is complete/no bypass for lower target [5,3] covered ->
+      uncovered -> covered; fixed P/L scan is complete with no
+      anchor_boundary_shift:push_pull reachable hits. Independent evidence review
+      returned proposal_ready / required_action:none. Independent puzzle critic
+      returned proposal_ready_with_caveats / required_action:none and allows
+      playable submission only as strong aesthetic 3 / low difficulty 3, not a 4
+      claim. Evidence:
+      prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2_review2.zh.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2_review_2.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2_review_2.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2.md,
+      prototypes/reality_anchor/reports/event_probe_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2_core.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2_pull_count_pull_object_min2.md,
+      prototypes/reality_anchor/reports/target_vacate_probe_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2_lower_target_vacate.md,
+      prototypes/reality_anchor/reports/fixed_anchor_probe_RA_LEX_2026_07_08_PL_VACATE_RECOVER_v2_pl_fixed_scan.md.
+    expected_trace:
+      - input: right
+        events: [push_object, force_chain]
+      - input: up
+      - input: right
+      - input: right
+      - input: up
+        events: [pull_object]
+      - input: right
+      - input: down
+      - input: down
+      - input: left
+      - input: right
+        events: [pull_object]
+
+  - id: RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1
+    title: Stroke select CMM pair v1
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      #.PLBS..###
+      #@.###...##
+      #...#MMmG.#
+      #....G###.#
+      #.........#
+      ###########
+    design_notes: >
+      review_1 提交候选。基于 lexicon 的 stroke-selection 组合：顶部 P/L 长轴棘轮
+      force-chain 推动 B/S，一刷把三格 sticky 输出成 C+MM；C 被下目标单格袋消费，
+      右侧 sticky pair 通过 sticky rigid movement 消费目标口。完整核心 event probe
+      证明 first-win 路径必含 P/L push、force_chain、P/L shift、B/S shift、
+      sticky_to_box、crate pull、sticky pull 和 sticky rigid movement。after-second-stroke
+      图 complete 且无胜路；second-shift-before-pair-pull probe complete 且无 winning
+      violation，说明早二刷是 overbrush 死分支。允许 sticky pair 被消费之后出现第二次
+      B/S shift，不主张唯一输入序列或全局 exactly-one shift。独立 evidence reviewer 与
+      puzzle critic 均为 supports_with_caveats / required_action none；critic 校准为审美强
+      3、难度 3，主要 caveat 是 17 步里 14 walk 的 route tax 和 covered target 可读性。
+      Evidence packet:
+      prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1_review1.zh.md
+      Review artifacts:
+      prototypes/reality_anchor/reports/evidence_review_RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1_review_1.md
+      and prototypes/reality_anchor/reports/puzzle_critic_RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1_review_1.md.
+    expected_trace:
+      - input: up
+      - input: right
+        events: [push_object, force_chain, anchor_boundary_shift, sticky_to_box]
+      - input: down
+      - input: down
+      - input: down
+      - input: right
+      - input: right
+      - input: right
+      - input: down
+        events: [pull_object]
+      - input: right
+      - input: right
+      - input: right
+      - input: right
+      - input: up
+      - input: up
+      - input: left
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+
+  - id: RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v1
+    title: Ratchet split tooth v1
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      ###G##...#
+      ##..MMLP@#
+      #...M....#
+      #...MM####
+      #.BS######
+      ##########
+    lineage:
+      source: fresh_lexicon_composition_candidate
+      source_candidate_id: fresh_lexicon_composition
+      source_file: prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v1_review1.zh.md
+      created_by: codex
+      created_at: "2026-07-07"
+    design_notes: >
+      review_1 提交候选。基于 lexicon 的 P/L 长轴墙廊 / L 端余量棘轮、
+      固定 B/S 断桥 sticky split 端点目标袋、以及刚体黏块 + 墙齿目标口
+      组合而成。玩家需要把 P/L 从直接盖目标的 anchor 重读为长轴推杆：
+      先下移和侧移 P/L，再连续 force-chain 左推 C 形 sticky；第二次左推
+      穿过固定 B/S，触发 sticky_to_box:n3 与 sticky_split:n1，切出独立上端点；
+      最后用 P/L 从下方 force-chain 把该端点推入上方 G## 墙齿目标。完整图
+      359 states / 919 transitions / 2 winning states；core5 probe complete 且无
+      缺失 P/L shift、force_chain、sticky_to_box、sticky_split、sticky rigid movement
+      的胜利旁路；count probes complete 且证明所有胜解至少需要 5 次
+      anchor_boundary_shift:push_pull 与 3 次 move_sticky_rigid。SCC 读法为初始
+      SCC 21 states、out=4、winOut=2、deadOut=2，forced commitment / viable /
+      optimal prefix 均为 0，中段有 2/4 handoff scriptiness。独立 evidence reviewer
+      为 supports_with_caveats / required_action none；puzzle critic 为
+      supports_with_noncore_caveats / required_action none，校准为审美强 3、难度
+      3+，但不支持稳定 4 档宣传。Evidence packet:
+      prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v1_review1.zh.md
+      Review artifacts:
+      prototypes/reality_anchor/reports/evidence_review_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v1_review_1.md
+      and prototypes/reality_anchor/reports/puzzle_critic_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v1_review_1.md.
+    expected_trace:
+      - input: up
+      - input: left
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+      - input: down
+      - input: left
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: left
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid, sticky_to_box, sticky_split]
+      - input: down
+      - input: left
+      - input: up
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+
+  - id: RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v2
+    title: Ratchet split tooth v2
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      ###G##LP.#
+      ##..MM..@#
+      #...M....#
+      #...MM####
+      #.BS######
+      ##########
+    lineage:
+      source: human_playtest_feedback_revision
+      source_candidate_id: RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v1
+      source_file: prototypes/reality_anchor/reports/designer_action_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v2_human_feedback.zh.md
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Human-feedback revision of v1. The P/L anchor is moved from the middle row
+      to the upper edge, while the player start stays on the right observation
+      side. This answers the playtest note that the middle P/L made the opening
+      action too obvious. Full explain-layout remains complete with the same
+      graph size as v1: 359 reachable states / 919 legal transitions / 2 winning
+      states. The shortest solution is now 17 steps and begins by approaching
+      and pulling the top-edge P/L down; after that the ratchet split-tooth
+      mainline remains the same: P/L is shifted into the C-shape sticky driver,
+      two left force-chain pushes move and cut the sticky body through fixed
+      B/S, and the split endpoint is finally pushed into the upper G## tooth.
+      Core6 probe is complete/no bypass for P/L pull, P/L shift, force_chain,
+      sticky_to_box, sticky_split, and sticky rigid movement. Count probes are
+      complete/no bypass below 6 P/L shifts and below 3 sticky rigid moves.
+      Because this is a clear human-requested geometry tweak with complete
+      no-bypass checks and unchanged core graph, it skips full independent
+      review and returns to the playable queue as a revised candidate.
+      Evidence:
+      prototypes/reality_anchor/reports/layout_analysis_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v2.md,
+      prototypes/reality_anchor/reports/event_probe_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v2_core6.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v2_pl_shift_min6_anchor_boundary_shift_push_pull_min6.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v2_rigid_min3_move_sticky_rigid_min3.md.
+    expected_trace:
+      - input: left
+      - input: left
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: right
+      - input: right
+      - input: up
+      - input: up
+      - input: left
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+      - input: down
+      - input: left
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: left
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid, sticky_to_box, sticky_split]
+      - input: down
+      - input: left
+      - input: up
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
 
   - id: RA_CURR_2026_07_05_L06_MULTI_AXIS_PL_v2
     title: Multi-axis P/L relay v2
@@ -1267,10 +1800,132 @@ levels:
         events: [push_object]
       - input: right
         events: [push_object, move_sticky_rigid]
+
+  - id: RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2
+    title: Pull cut anchor handoff v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ##########
+      #..G#...##
+      #...MM@P##
+      #.....#L##
+      ###BS#####
+      ##########
+    lineage:
+      source: fresh_lexicon_composition
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Fresh lexicon-composition candidate based on `mechanism_lab/lexicon.md`
+      only; `mechanism_lab/runs/` was not read. The candidate combines fixed
+      B/S cut, fixed P/L pull-region handoff, and final B/S force-chain. v1 had
+      an extra lower target, but Reality Anchor goal-prune evidence showed that
+      target was side-effect coverage, so v2 keeps only the upper target. Complete
+      graph and event probes show every win requires pull_object, B/S anchor shift,
+      sticky_to_box, sticky rigid movement, and force_chain; fixed-anchor scan
+      shows P/L anchor shift is not reachable. Review_1 evidence review required
+      downgrading object-role and exact-order overclaims; review_2 packet now
+      treats the cut-output handoff as returned-trace design reading, not
+      all-solution per-object proof. Independent evidence review_2 and puzzle
+      critic review_2 both returned required_action:none. Accepted score posture:
+      difficulty 3 and strong aesthetic 3 floor; do not pre-claim 4. Evidence:
+      prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_review2.zh.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_review_2.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_review_2.md,
+      prototypes/reality_anchor/reports/redundant_element_prune_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2.zh.md.
+      2026-07-08 human playtest flagged the rightmost exterior wall column as
+      redundant and explicitly approved direct archive after deleting it.
+      Superseded by v3_right_wall_trim.
+    expected_trace:
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [push_object, force_chain]
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+        events: [push_object]
+      - input: right
+        events: [push_object]
       - input: down
       - input: right
+        events: [pull_object]
+      - input: right
+        events: [pull_object]
       - input: up
-        events: [push_object, move_sticky_rigid]
+        events: [pull_object, force_chain, anchor_boundary_shift]
+
+  - id: RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v3_right_wall_trim
+    title: Pull cut anchor handoff v3 right wall trim
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #########
+      #..G#...#
+      #...MM@P#
+      #.....#L#
+      ###BS####
+      #########
+    lineage:
+      source: human_playtest_feedback_revision
+      source_candidate_id: RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2
+      source_file: prototypes/reality_anchor/reports/designer_action_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v3_right_wall_trim_human_feedback.zh.md
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Human-feedback revision of v2. The only layout change is deleting the
+      rightmost pure exterior wall column; internal terrain, target, object,
+      fixed P/L pocket, B/S pocket, and expected trace are unchanged. Full
+      explain-layout is complete and matches v2: shortest cost 12, 1081 reachable
+      states / 2597 legal transitions / 1 winning state, with the same returned
+      event counts. Core event probe is complete/no bypass for pull_object,
+      anchor_boundary_shift:box_sticky, sticky_to_box, move_sticky_rigid, and
+      force_chain. Fixed P/L scan remains complete with no reachable
+      anchor_boundary_shift:push_pull. Human playtest explicitly authorized
+      direct archive after this trim as aesthetic 5 / difficulty 4, praising the
+      counterintuitive dead-corner crate setup, reversed pull-anchor delivery,
+      high space utilization, and compact strong insight. Evidence:
+      prototypes/reality_anchor/reports/designer_action_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v3_right_wall_trim_human_feedback.zh.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v3_right_wall_trim.md,
+      prototypes/reality_anchor/reports/event_probe_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v3_right_wall_trim_core.md,
+      prototypes/reality_anchor/reports/fixed_anchor_probe_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v3_right_wall_trim_fixed_PL.md.
+    expected_trace:
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [push_object, force_chain]
+      - input: up
+      - input: left
+      - input: left
+      - input: down
+        events: [push_object]
+      - input: right
+        events: [push_object]
+      - input: down
+      - input: right
+        events: [pull_object]
+      - input: right
+        events: [pull_object]
+      - input: up
+        events: [pull_object, force_chain, anchor_boundary_shift]
 
   - id: RA_CURR_2026_07_05_L10_MOVABLE_BS_TIMED_JOIN_CUT_v3
     title: Movable B/S timed join-cut v3
@@ -2624,7 +3279,66 @@ levels:
       - input: up
       - input: left
         events: [push_object]
+
+  - id: RA_LEX_2026_07_08_OVERSHOOT_CUT_DUAL_POCKET_v2
+    title: Overshoot cut dual pocket v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #..GG###
+      #@CC...#
+      ###....#
+      ###BS###
+      ########
+    lineage:
+      source: fresh_lexicon_composition
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Fresh lexicon-composition candidate revised from the rejected v1 tail-target
+      draft. The player pushes two crates across the fixed B/S boundary, first
+      seeing C+M and then deliberately overshooting into a merged MM bar. Returning
+      the bar left across the fixed boundary cuts it into C+M; the two halves are
+      then allocated upward into adjacent top pockets. Complete event probes show
+      every win requires box_to_sticky, sticky_merge, sticky_to_box, sticky rigid
+      movement, and force_chain. Deleting either top target collapses the design
+      into ordinary-crate or one-target shortcuts, so the dual pocket structure
+      is not the thin route-tax tail rejected in v1. Independent evidence review
+      and puzzle critic both returned required_action:none. Accepted score posture:
+      difficulty 3+ and strong aesthetic 3 floor; critic did not support a 4 claim
+      because the opening overshoot remains readable and fairly顺手. Evidence:
+      prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_08_OVERSHOOT_CUT_DUAL_POCKET_v2_review2.zh.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_LEX_2026_07_08_OVERSHOOT_CUT_DUAL_POCKET_v2_review_2.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_LEX_2026_07_08_OVERSHOOT_CUT_DUAL_POCKET_v2_review_2.md.
+      2026-07-08 human playtest set this candidate to reject with no additional
+      comment text. Removed from playable and not entered as a clean archive
+      record.
+    expected_trace:
+      - input: right
+        events: [push_object, force_chain, box_to_sticky]
+      - input: right
+        events: [push_object, force_chain, move_sticky_rigid, box_to_sticky, sticky_merge]
+      - input: down
+      - input: right
+      - input: right
+      - input: right
+      - input: up
       - input: left
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: down
+      - input: left
+      - input: up
+        events: [push_object, move_sticky_rigid]
+      - input: down
+      - input: left
+      - input: up
         events: [push_object]
 
   - id: RA_EXP_2026_07_04_COMPACT_CHAIN_v1
@@ -2680,3 +3394,201 @@ levels:
       - input: up
       - input: down
         events: [pull_object, anchor_boundary_shift]
+
+  - id: RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1
+    title: Split bridge dual endpoint v1
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      ####G###
+      ###.MM@#
+      ##G.M..#
+      ###.MM##
+      ####G###
+      ###BS###
+      ########
+    lineage:
+      source: fresh_lexicon_composition
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Fresh lexicon-composition candidate. A connected C-shaped sticky body is
+      pushed left across a fixed B/S boundary, producing one split event with
+      three consumed player responsibilities: the upper sticky endpoint covers
+      the upper pocket, the lower sticky endpoint covers the lower pocket, and
+      the center crate bridge is pushed left into the center goal. The final
+      review packet, redundant-element prune, evidence review, and puzzle critic
+      all report required_action:none. The accepted score posture is conservative:
+      semantic-reading difficulty 3 and strong aesthetic 3 floor, not a high
+      difficulty or guaranteed 4+ claim. Evidence:
+      prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_review1.zh.md,
+      prototypes/reality_anchor/reports/redundant_element_prune_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1.zh.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_review_1.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_review_1.md.
+    expected_trace:
+      - input: down
+      - input: left
+      - input: left
+        events: [push_object, move_sticky_rigid, sticky_to_box, sticky_split]
+      - input: up
+        events: [push_object, move_sticky_rigid]
+      - input: down
+      - input: down
+        events: [push_object, move_sticky_rigid]
+      - input: up
+      - input: left
+        events: [push_object]
+
+  - id: RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v2
+    title: Brush triple output v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #############
+      ######.G#####
+      #####@C.MM###
+      #####.....G##
+      #####...G####
+      #####.BS..###
+      #############
+    lineage:
+      source: fresh_lexicon_composition
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Fresh lexicon-composition candidate based on `mechanism_lab/lexicon.md`
+      only; `mechanism_lab/runs/` was not read. The player binds one C into an
+      existing MM pair to make `MMM`, moves that footprint to a brush lane, then
+      pushes the movable B/S boundary twice to produce `CCM`. The three resulting
+      responsibilities are consumed as an upper C target, a lower C target, and a
+      right-side sticky-tail target. Complete graph and probes show every win
+      requires box_to_sticky, sticky_merge, sticky rigid movement, movable B/S
+      boundary shift, and sticky_to_box; count probes show all wins require at
+      least two B/S shifts, two sticky_to_box conversions, and two sticky rigid
+      moves. Goal-prune checks retain all three targets: the top target is an
+      all-win count gate rather than a shortest-cost gate, the lower target forces
+      the second C output, and the right target consumes the remaining sticky tail.
+      Independent evidence review and puzzle critic both returned
+      required_action:none. Accepted score posture: difficulty 3 and strong
+      aesthetic 3, not a 4+ claim. Evidence:
+      prototypes/reality_anchor/reports/candidate_packet_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v2_review1.zh.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v2_review_1.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v2_review_1.md.
+      2026-07-08 human playtest flagged excessive redundant outer walls.
+      Superseded by v3_outer_wall_trim, which crops only pure exterior wall
+      columns and preserves the complete graph, shortest trace, and core probes.
+    expected_trace:
+      - input: right
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: up
+      - input: right
+      - input: down
+        events: [push_object, move_sticky_rigid]
+      - input: left
+      - input: down
+      - input: down
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+      - input: up
+        events: [push_object]
+      - input: up
+        events: [push_object]
+      - input: right
+      - input: down
+        events: [push_object]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+
+  - id: RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim
+    title: Brush triple output v3 outer wall trim
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      ##.G####
+      #@C.MM##
+      #.....G#
+      #...G###
+      #.BS..##
+      ########
+    lineage:
+      source: human_playtest_feedback_revision
+      source_candidate_id: RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v2
+      source_file: prototypes/reality_anchor/reports/designer_action_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim_human_feedback.zh.md
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Human-feedback revision of v2. The playtest note flagged excessive
+      redundant outer walls, so v3 crops the layout to the one-wall border around
+      all non-wall cells: four pure exterior columns are removed on the left and
+      one pure exterior column on the right. Object, target, route, and anchor
+      relations are unchanged. Full explain-layout is complete and matches v2:
+      shortest cost 17, 5140 reachable states / 14372 legal transitions / 4
+      winning states, with the same returned event counts. Core5 probe is
+      complete/no bypass for box_to_sticky, sticky_merge, move_sticky_rigid,
+      anchor_boundary_shift:box_sticky, and sticky_to_box. Count probes are
+      complete/no bypass below two B/S shifts, below two sticky_to_box events, and
+      below two sticky rigid moves. Because the feedback was a clear outer-wall
+      trim and the hard metrics are preserved, v3 skipped full independent review
+      and returned to the playable queue for human replay; it was not marked
+      proposal_ready or clean archive in that revision step. 2026-07-08 human
+      replay accepted v3 as RA_CAND_0023, aesthetic 3 / difficulty 3: simple
+      core, slightly repetitive three-box handling, but compact geometry and the
+      down-push sticky-group confusion make it a useful simple application
+      sample. Evidence:
+      prototypes/reality_anchor/reports/designer_action_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim_human_feedback.zh.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim.md,
+      prototypes/reality_anchor/reports/event_probe_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim_core5.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim_bs_shift_min2_anchor_boundary_shift_box_sticky_min2.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim_sticky_to_box_min2_sticky_to_box_min2.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim_move_sticky_min2_move_sticky_rigid_min2.md.
+    expected_trace:
+      - input: right
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: up
+      - input: right
+      - input: down
+        events: [push_object, move_sticky_rigid]
+      - input: left
+      - input: down
+      - input: down
+      - input: left
+      - input: down
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box]
+      - input: up
+      - input: up
+        events: [push_object]
+      - input: up
+        events: [push_object]
+      - input: right
+      - input: down
+        events: [push_object]
+      - input: right
+        events: [push_object, move_sticky_rigid]

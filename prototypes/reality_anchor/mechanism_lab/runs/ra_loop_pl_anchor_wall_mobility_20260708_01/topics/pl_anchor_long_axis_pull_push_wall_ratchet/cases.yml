@@ -1,0 +1,99 @@
+runId: ra_loop_pl_anchor_wall_mobility_20260708_01_pl_anchor_long_axis_pull_push_wall_ratchet
+title: "P/L anchor long-axis push/pull wall ratchet"
+notes: "比较水平 P/L anchor 在长轴墙廊中由 P 侧 push 与 L 侧 pull 驱动时，端点余量、玩家前格门、侧廊假把手和拉后回返门如何消费本体位移。"
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 30
+  maxStates: 50000
+  maxTransitions: 120000
+cases:
+  - id: push_p_side_one_l_slack_baseline
+    family: pl_anchor_long_axis_pull_push_wall_ratchet
+    variant: p_side_push_one_l_slack
+    changed_variable: "driver=P-side push; L 端前方 1 格余量"
+    contrast_with: pull_l_side_one_front_stop
+    question: "P 侧 push 的一格 L 端余量是否仍表现为一次性长轴停位基线？"
+    layout: |
+      ########
+      #G#@PL.#
+      ########
+    actions: ["right"]
+
+  - id: pull_l_side_no_front_gate
+    family: pl_anchor_long_axis_pull_push_wall_ratchet
+    variant: l_side_pull_no_player_front_cell_gate
+    changed_variable: "L 侧 pull 的玩家前格余量从 1 改为 0"
+    contrast_with: pull_l_side_one_front_stop
+    question: "L 侧 pull 没有玩家前格时，首步是否作为 destination gate 被墙关闭？"
+    notes: "门控反例；不支撑可动性，只证明前格墙消费 pull 输入。"
+    layout: |
+      ########
+      #G.PL@##
+      ########
+    actions: ["right"]
+
+  - id: pull_l_side_one_front_stop
+    family: pl_anchor_long_axis_pull_push_wall_ratchet
+    variant: l_side_pull_one_player_front_cell
+    changed_variable: "L 侧 pull；玩家前方 1 格余量"
+    contrast_with:
+      - pull_l_side_no_front_gate
+      - pull_l_side_two_front_capacity
+    question: "L 侧 pull 的一格玩家前格是否给 P/L anchor 一次长轴位移并停在端墙前？"
+    layout: |
+      ########
+      #G.PL@.#
+      ########
+    actions: ["right"]
+
+  - id: pull_l_side_two_front_capacity
+    family: pl_anchor_long_axis_pull_push_wall_ratchet
+    variant: l_side_pull_two_player_front_cells
+    changed_variable: "L 侧 pull 的玩家前格余量从 1 改为 2"
+    contrast_with: pull_l_side_one_front_stop
+    question: "玩家前方 2 格余量是否允许连续两次 L 侧 pull，形成 pull 版容量资源？"
+    layout: |
+      #########
+      #G.PL@..#
+      #########
+    actions: ["right", "right"]
+
+  - id: pull_l_side_side_corridor_fake_handle
+    family: pl_anchor_long_axis_pull_push_wall_ratchet
+    variant: l_side_pull_side_corridor_open_but_no_reverse_force
+    changed_variable: "首拉后下方侧廊开放"
+    contrast_with: pull_l_side_one_front_stop
+    question: "侧廊开放是否只增加玩家位置集合，而不提供长轴反向恢复 P/L anchor 的真实把手？"
+    layout: |
+      ########
+      #G.PL@.#
+      #......#
+      ########
+    actions: ["right"]
+
+  - id: pull_l_side_return_gate_open
+    family: pl_anchor_long_axis_pull_push_wall_ratchet
+    variant: l_side_pull_after_shift_return_gate_open
+    changed_variable: "拉后玩家脚下回返门开放"
+    contrast_with: pull_l_side_return_gate_wall
+    question: "首拉合法后，回返门开放是否让玩家离开端点并消费已移动的 anchor 位置？"
+    layout: |
+      ########
+      #G.PL@.#
+      #......#
+      ########
+    actions: ["right", "down"]
+
+  - id: pull_l_side_return_gate_wall
+    family: pl_anchor_long_axis_pull_push_wall_ratchet
+    variant: l_side_pull_after_shift_return_gate_walled
+    changed_variable: "拉后玩家脚下回返门由地面改为墙"
+    contrast_with: pull_l_side_return_gate_open
+    question: "首拉合法但回返门被墙封住时，失败是否明确属于拉后回返门控反例？"
+    notes: "门控反例；首步移动 P/L anchor，第二步被墙消费为 destination gate。"
+    layout: |
+      ########
+      #G.PL@.#
+      #.....##
+      ########
+    actions: ["right", "down"]

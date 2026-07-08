@@ -1,0 +1,151 @@
+runId: ra_loop_pull_boundary_mobility_20260708_01_sticky_wall_pull_mobility
+title: "sticky wall pull mobility local probes"
+notes: >
+  Topic-local probes for sticky rigid footprint under pull_force. P/L only creates
+  the pull region; B/S only supplies sticky material. Wall mouths, footprint target
+  cells, and post-pull handle reachability are the consumers.
+defaults:
+  maxExploreDepth: 14
+  maxReturnDepth: 24
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: single_crate_pull_clear
+    family: pull_single_cell_material_control
+    variant: crate_clear
+    changed_variable: "material=crate; no B/S material source"
+    contrast_with: single_sticky_pull_clear
+    title: "单格 crate 在 pull 区域被向右拉动"
+    question: "单格 crate 的 clear pull 是否只需要玩家前格为空和身后一格有对象？"
+    notes: "active_rule=pull_force; material_source=crate; consumer=none beyond clear target cell."
+    layout: |
+      ##########
+      #PL#    G#
+      #  #     #
+      #  # C@  #
+      #  #     #
+      ##########
+    actions: ["right"]
+
+  - id: single_sticky_pull_clear
+    family: pull_single_cell_material_control
+    variant: sticky_clear
+    changed_variable: "material=single sticky supplied by sealed B/S"
+    contrast_with: single_crate_pull_clear
+    title: "单格 sticky 在 pull 区域被向右拉动"
+    question: "单格 sticky 是否与单格 crate 在 clear pull 下同构，只多出 move_sticky_rigid 事件？"
+    notes: "active_rule=pull_force; material_source=B/S creates single M; consumer=none beyond clear target cell."
+    layout: |
+      ##########
+      #PL#    G#
+      #BS#     #
+      #  # M@  #
+      #  #     #
+      ##########
+    actions: ["right"]
+
+  - id: bar_side_pull_target_wall_blocked
+    family: sticky_pull_footprint_wall_mouth
+    variant: vertical_bar_blocked
+    changed_variable: "lower footprint target cell is wall"
+    contrast_with: bar_side_pull_open_mouth
+    title: "2 格竖条向右拉时被下侧目标墙拒绝"
+    question: "玩家前格为空时，2 格 sticky 的非接触格目标墙是否仍会让 pull 整步失败？"
+    notes: "active_rule=sticky rigid footprint under pull_force; material_source=B/S; consumer=wall at lower target cell."
+    layout: |
+      ##########
+      #PL#    G#
+      #BS#     #
+      #  # M@  #
+      #  # M#  #
+      #  #     #
+      ##########
+    actions: ["right"]
+
+  - id: bar_side_pull_open_mouth
+    family: sticky_pull_footprint_wall_mouth
+    variant: vertical_bar_open
+    changed_variable: "lower footprint target cell opened"
+    contrast_with: bar_side_pull_target_wall_blocked
+    title: "2 格竖条向右拉时目标口打开"
+    question: "打开同一目标格后，2 格 sticky 是否可作为整体被 pull 通过？"
+    notes: "active_rule=sticky rigid footprint under pull_force; material_source=B/S; consumer=open two-cell mouth."
+    layout: |
+      ##########
+      #PL#    G#
+      #BS#     #
+      #  # M@  #
+      #  # M   #
+      #  #     #
+      ##########
+    actions: ["right"]
+
+  - id: l_corner_pull_tooth_blocked
+    family: sticky_pull_footprint_wall_mouth
+    variant: l_corner_tooth_blocked
+    changed_variable: "L lower-right target tooth is wall"
+    contrast_with: l_corner_pull_notch_open
+    title: "L 形 sticky 向右拉时被凸齿目标墙拒绝"
+    question: "L 形的远端脚目标格为墙时，接触格能进玩家旧位是否仍不足以合法 pull？"
+    notes: "active_rule=sticky rigid footprint under pull_force; material_source=B/S; consumer=convex wall tooth."
+    layout: |
+      ##########
+      #PL#    G#
+      #BS#     #
+      #  # M@  #
+      #  # MM# #
+      #  #     #
+      ##########
+    actions: ["right"]
+
+  - id: l_corner_pull_notch_open
+    family: sticky_pull_footprint_wall_mouth
+    variant: l_corner_notch_open
+    changed_variable: "L lower-right target tooth opened"
+    contrast_with: l_corner_pull_tooth_blocked
+    title: "L 形 sticky 向右拉时凸齿打开"
+    question: "只打开 L 形远端脚的目标格后，整块是否能通过同一 pull 动作？"
+    notes: "active_rule=sticky rigid footprint under pull_force; material_source=B/S; consumer=open convex notch."
+    layout: |
+      ##########
+      #PL#    G#
+      #BS#     #
+      #  # M@  #
+      #  # MM  #
+      #  #     #
+      ##########
+    actions: ["right"]
+
+  - id: bar_pull_after_handle_open
+    family: sticky_pull_post_mouth_handle
+    variant: handle_loop_open
+    changed_variable: "top side loop keeps reverse handle reachable after pull"
+    contrast_with: bar_pull_after_handle_closed
+    title: "2 格竖条拉过口后可绕回反向把手"
+    question: "拉过口后，若上侧环路开放，玩家是否能回到左侧把手格并把竖条拉回？"
+    notes: "active_rule=sticky rigid footprint under pull_force; material_source=B/S; consumer=post-pull handle reachability."
+    layout: |
+      ##########
+      #PL#    G#
+      #BS#     #
+      #  # M@  #
+      #  # M   #
+      ##########
+    actions: ["right"]
+
+  - id: bar_pull_after_handle_closed
+    family: sticky_pull_post_mouth_handle
+    variant: handle_loop_closed
+    changed_variable: "top side loop closed by wall band"
+    contrast_with: bar_pull_after_handle_open
+    title: "2 格竖条拉过口后反向把手不可达"
+    question: "同样能先拉过口，但若上侧环路关闭，最终状态是否失去回到初始的把手路径？"
+    notes: "active_rule=sticky rigid footprint under pull_force; material_source=B/S; consumer=post-pull handle wall band."
+    layout: |
+      ##########
+      #PL#    G#
+      #BS##### #
+      #  # M@  #
+      #  # M   #
+      ##########
+    actions: ["right"]

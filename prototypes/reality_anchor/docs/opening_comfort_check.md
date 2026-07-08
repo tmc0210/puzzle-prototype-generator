@@ -1,5 +1,7 @@
 # Opening Comfort / 开局缓冲
 
+状态：`reality_anchor` 原型专属的提交前检查 / feedback-routed revision 检查。它不是通用 Sokoban 规则；但一旦 Reality Anchor handoff 声明并触发它，必须在提交给人类查看或加入待玩列表前执行并记录结果；它不进入 reviewer / critic packet。
+
 设计 taste：
 
 ```text

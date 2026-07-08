@@ -1,0 +1,23 @@
+# Curator Decision: ra_loop_sticky_handle_return_20260707_01
+
+- gap_id: `ra_gap_sticky_shape_handle_return`
+- explorer_outputs: `cases.yml`, `cases.json`, `results.json`, `report.md`, `explorer_notes.md`, `proposed_families.md`
+- decision: `supplement`
+- rationale:
+  - 本轮应作为一个完整形状谱收口，而不是只跑竖向二连后再为 L 形单开下一轮。已在同一 run 内补入 3 格 L 形和 2x2。
+  - 机制归因清楚：`active_rule` 是 sticky 刚体移动后的反向施力站位检查与墙 / 侧廊 consumer；B/S 只让预置 `M` 合法存在，属于 `material_source`。
+  - 证据达到 supplement 门槛：竖向二连、3 格 L 四旋转、2x2 都有 open / blocked 近邻对照；关键 no case 的局部图为 complete；三类形状有显式反向 push consumption probe。
+  - L 形和 2x2 不新建顶层 family。它们改变施力格位置和 driver 回位需求，但输出和消费方式仍是“前沿可过后，后方实际施力格决定回返”。
+  - `wide_side_loop_shortcut` 与 `lshape_overwide_corner_shortcut` 是误用边界，不作为正例。
+- lexicon_changes:
+  - 将 `刚体黏块 + 墙口：反向施力格谱系` 中的补充改为“前沿通过后的形状把手回位门补充”，覆盖竖向二连、3 格 L 四旋转、2x2。
+  - 修正旧表述：2x2 在本轮证据里不需要“整面外侧余量”，更准确的是至少一个可达施力格加整块反推目标格开放。
+  - 在证据列表加入本轮 12 个 case，证据标签含 `consumption_probe`。
+- index_changes:
+  - 更新 `刚体黏块 + 墙口` 的输出接口和主要消费方式，加入侧廊 / 凸角 / 右侧施力位。
+  - 将“仍缺”改为把手格被 crate / sticky 尾债占用后的资源移交 probe，而不是 L 形或 2x2 形状枚举。
+- backlog_changes:
+  - `ra_gap_sticky_shape_handle_return` 标为 `closed`，记录同轮已覆盖竖向二连、3 格 L 四旋转和 2x2。
+  - 移除上一版不应新增的 `ra_gap_lshape_corner_handle_return` 后续 gap；L 形已在本轮完成。
+- next_round_suggestion:
+  - 若继续 sticky 墙口 family，应换变量：把反向施力格从墙换成 crate / sticky 尾债。否则回到 backlog 下一条 open gap `ra_gap_split_tail_second_consumer`。

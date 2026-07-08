@@ -1,6 +1,6 @@
 # Reality Anchor 冗余要素剔除流程
 
-状态：`reality_anchor` 原型专属的 archive cleanup / feedback cleanup 检查。它不是通用 Sokoban 规则，也不写入通用 design review skill。
+状态：`reality_anchor` 原型专属的提交前检查 / feedback-routed revision 检查。它不是通用 Sokoban 规则；但一旦 Reality Anchor handoff 声明并触发它，必须在提交给人类查看或加入待玩列表前执行并记录结果；它不进入 reviewer / critic packet。
 
 ## 目标
 
@@ -136,7 +136,7 @@ floor -> wall
 - static degree 通常 <= 1，或 pocket 整体只有单入口；
 - wall-prune 后 first irreversible commitment 不提前；
 - wall-prune 后核心链条和目标义务保持；
-- LLM / reviewer 找不到明确的读图命题。
+- lead designer / controller 找不到明确的读图命题。
 
 凸包式扩大通常不主动删除。若一个区域只是房间轮廓的平滑扩大，且不形成 leaf / pocket / 假支路，默认不作为候选。只有它形成单入口枝杈或无责任 pocket 时才进入 `space_prune`。
 
@@ -210,7 +210,6 @@ redundant_element_prune:
 若实际改动关卡，必须同步更新：
 
 - `prototypes/reality_anchor/levels.yml`
-- 对应 `design_archive/candidates/*.md`
-- `design_archive/index.yml` 的 retrieval summary / motifs
-- 相关 experiment 记录
-- playable export 或其它面向游玩的派生产物
+- 候选 packet / reports / 相关 experiment 记录
+- `prototypes/reality_anchor/playable_queue.yml` 与 playable export，若该候选已在待玩列表或即将加入待玩列表
+- design archive 记录仅在 exact human-reviewed version 被归档或显式替换时更新；人类游玩后发生的裁剪、删除、墙化或轮廓调整必须先作为新版候选重新进待玩列表

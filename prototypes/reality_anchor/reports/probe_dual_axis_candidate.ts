@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+﻿import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { eventMatchesPattern } from "../../../src/core/events.js";
 import { loadPrototypePackage } from "../../../src/core/io.js";
@@ -109,7 +109,8 @@ function findWinMissingGroups(
     const current = queue[cursor]!;
     cursor += 1;
 
-    if (current.depth > 0 && runtime.isWin(current.state, pkg.mechanic.win) && current.mask !== allMask) {
+    const isWinningState = current.depth > 0 && runtime.isWin(current.state, pkg.mechanic.win);
+    if (isWinningState && current.mask !== allMask) {
       return {
         found: true,
         status: "found",
@@ -121,6 +122,9 @@ function findWinMissingGroups(
           .filter((_, index) => (current.mask & (1 << index)) === 0)
           .map((group) => group.name),
       };
+    }
+    if (isWinningState) {
+      continue;
     }
 
     if (current.depth >= budget.maxDepth) {

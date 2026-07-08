@@ -47,13 +47,16 @@
   对象角色或布局骨架，且本轮没有明确授权变体工作，必须 reject / hold /
   change family，不能提交为 proposal_ready。
 - 保留能说明设计限制的失败尝试。
-- 对 application / challenge 候选，最终提交前执行 start-position refinement；
+- 对 application / challenge 候选，加入待玩列表前执行 start-position refinement；
   若不适用，明确说明原因。
 - 遵守 experiment 的 mechanism_scope。不要悄悄使用已确认但 out-of-scope 的机制
   作为解法辅助。
 - 如果原型文档要求 prototype-specific extension pass，必须按原型文档的审美与
   证据格式执行。不要假设每个游戏都有 meta-interface、重访、大地图接口或跨关
   入口。
+- 如果原型文档要求入待玩列表前的 prototype-specific cleanup，必须在加入待玩
+  列表前完成；candidate output 只记录结果摘要和证据引用，不把原型专属流程扩
+  写成每次通用评审材料。
 - 如果原型或 brief 提供 mechanic exposure sequence，candidate packet 必须显式
   写明 `allowed_exposure_through` 和 `claimed_core_events`。不要把抽象知识当成
   probe；证据检查只看已有事件。
@@ -71,7 +74,7 @@
   候选。
 - 如果 `forbidden_if_seen_anywhere` 出现在任意完整可达事件扫描中，必须拒绝或
   修改候选；扫描未完成时结论是 unknown，不能 clean pass。
-- 最终提交前，在 evidence summary 中包含 mechanism-scope check。
+- 加入待玩列表前，在 evidence summary 中包含 mechanism-scope check。
 ```
 
 ## Start-position Refinement Requirement
@@ -118,8 +121,8 @@ design_claim:
   - falsification
 claimed highlights
 known risks
-start-position refinement summary, for application / challenge candidates
-prototype-specific work summary, if required by the prototype
+start-position refinement summary, before playable queue, for application / challenge candidates
+prototype-specific pre-playable-queue work summary, if required by the prototype
 archive_taste_context for critic
 tool command(s) and evidence summary
 critic-facing packet

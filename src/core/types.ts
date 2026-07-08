@@ -422,6 +422,7 @@ export type WinCondition = {
   event?: string;
   object?: string;
   target?: string;
+  terminal?: boolean;
   description?: string;
   [key: string]: unknown;
 };

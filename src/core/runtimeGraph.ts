@@ -1,4 +1,4 @@
-import type { PuzzleRuntime, RuntimeSearchOptions } from "./puzzleRuntime.js";
+import { isTerminalWinCondition, type PuzzleRuntime, type RuntimeSearchOptions } from "./puzzleRuntime.js";
 import type { WinCondition } from "./types.js";
 
 export type RuntimeGraphEdge<Action extends string> = {
@@ -50,7 +50,7 @@ export function enumerateRuntimeGraph<
   const indexByKey = new Map<string, number>([[initialKey, 0]]);
   const edges: Array<RuntimeGraphEdge<Action>> = [];
   const winStateIndexes = new Set<number>();
-  const terminalizeWins = budget.terminalizeWins ?? true;
+  const terminalizeWins = budget.terminalizeWins ?? isTerminalWinCondition(winCondition);
   if (runtime.isWin(initialState, winCondition)) {
     winStateIndexes.add(0);
   }

@@ -1,14 +1,18 @@
 # Lexicon Format
 
-Lexicon 是整理后的机制语料集合，不是实验流水，也不是关卡设计文档。Lexicon 的基本单位是可组合的局部结构族，不是单条规则结论。
+Lexicon 是 designer 可消费的机制语料集合，不是实验流水，也不是关卡设计文档。基本单位是可组合的局部结构族：它有输入接口、输出接口、最小 consumer、近邻对照图和证据来源。
 
-结构族按设计差异真正发生的层级命名，不按机制动作命名：
+## 读者优先级
 
-- `driver`：触发方式，例如推、拉、力链搬运。driver 通常是输入接口。
-- `producer`：产出资源、债务、阻塞、把手、形状或状态类别。
-- `consumer`：消费这些输出，并改变动作集合、可达性、回返性、目标关系或 shortcut 边界。
+正文优先服务 designer：
 
-只有 driver 本身制造新的站位门、shortcut 或消费关系时，才把它升为新结构族；否则作为已有结构族的输入侧旋钮或补充。
+- 用当前原型的人话写结构，例如“二格横条黏块”“L 形黏块”“单格目标袋”“旧 L 半格把手”。
+- 避免在入口处堆叠内部术语。`active_rule`、`material_source`、`consumer`、`incidental` 可以保留，但应放在条目后部作为 curator 检查信息。
+- 旧式内部占格术语在 designer-facing 文本中优先改写为“占格形状”“连体块形状”“二格横条”“L 形块”“2x2 块”等具体说法。
+
+合格条目必须能让下一位 designer 看图复现多个相邻变体，并判断它能接到哪里。
+
+## 文件结构
 
 建议文件：
 
@@ -18,22 +22,54 @@ prototypes/<mechanic_id>/mechanism_lab/lexicon_index.md
 prototypes/<mechanic_id>/mechanism_lab/backlog.md
 ```
 
-`lexicon.md` 是当前正式语料正文；`lexicon_index.md` 是当前状态入口；`backlog.md` 是下一轮探索缺口入口。Explorer 默认先读 index 和 backlog，只在 brief 需要时读取 1-3 个完整 lexicon 条目。历史 refresh / decision 文件是当时快照，不是当前入口。
+`lexicon.md` 是当前正式语料正文；`lexicon_index.md` 是当前状态入口；`backlog.md` 只记录新设计空间或组合空间。历史 refresh / decision 文件和旧 runs 只在核对 provenance 或审计时读取。
 
-默认保持单文件。只有 curator 判断 `lexicon.md` 已经因为长度或检索路径变复杂而影响使用时，才可以拆成：
+`lexicon.md` 前部应包含：
 
-```text
-prototypes/<mechanic_id>/mechanism_lab/lexicon/
-  README.md
-  <topic>.md
+1. 简短说明。
+2. 组合矩阵。
+3. 证据来源。
+4. 正式条目正文。
+
+## 组合矩阵
+
+组合矩阵是快速检索和拼接导航，不承担证据审查。不要添加“证据状态 / 风险”列；证据、shortcut 和风险留在条目正文。
+
+格式固定：
+
+```markdown
+## 组合矩阵
+
+| 输出 | 可自然接入 |
+| --- | --- |
+| sticky 横条 | 固定 B/S 切割；墙口回返；目标口宽 |
+| C+M | 单格目标袋；墙口把手；尾债二段消费 |
 ```
 
-拆分依据必须来自已有语料和后续使用者的检索方式，不预定义分类。拆分后 `README.md` 必须保留总索引：每个结构族的一句话用途、所在文件链接、主要旋钮和拆分依据。
+只放当前正式语料已经支撑的自然连接。尚未被当前语料支撑、但值得尝试的连接写入条目正文的“推荐 probe / 后续候选”，不要混入主矩阵。
 
-单个结构族使用自然语言小节，不退化成大表格，但必须包含这些硬元素：
+## 正式条目格式
+
+每个顶层条目必须以接口卡片开头：
+
+```markdown
+## 结构族名
+
+接口卡片：
+- 输入接口：
+- 输出接口：
+- 最小 consumer：
+```
+
+推荐正文结构：
 
 ````markdown
 ## 结构族名
+
+接口卡片：
+- 输入接口：这个结构开始时需要什么对象、站位、墙格、目标或前置产物。
+- 输出接口：动作后产出什么可用材料、债务、把手、阻塞或状态。
+- 最小 consumer：本条证据中哪个极小后续结构已经消费了输出。
 
 局部结构谱：
 
@@ -43,26 +79,39 @@ prototypes/<mechanic_id>/mechanism_lab/lexicon/
 变体 C 小图
 ```
 
-旋钮：
-这组结构调节了哪些局部变量，例如长度、口宽、施力侧、前格空位、边界位置、把手可达性。
+共同解释：
+这组变体显示哪个设计变量，而不是只说某条规则会触发。
+
+输入条件：
+- ...
+
+输出状态：
+- ...
+
+结构旋钮：
+- ...
 
 变体谱：
-- variant_a：动作集合 / 可达性 / 可逆性结果
-- variant_b：动作集合 / 可达性 / 可逆性结果
-- variant_c：动作集合 / 可达性 / 可逆性结果
+- variant_a：动作集合 / 可达性 / 可逆性结果。
+- variant_b：错例或边界修正。
 
-共同解释：
-这组变体显示了哪个状态空间变量，而不是只说某条规则会触发。
+自然消费方式：
+- 这个输出通常能接到哪些后续结构。
 
-组合接口：
-- 输入条件：这个结构开始时需要什么对象、站位、墙格或目标关系。
-- 输出状态：动作后产生什么债务、资源、阻塞、把手或可达性变化。
-- 自然消费方式：这个输出通常能接到哪些后续结构。
-- 常见 shortcut：如果目标少一个、墙少一格、空间太宽或站位过自由，会怎样被绕过。
-- 审美风险：这个结构什么时候只是事件 witness，什么时候会变成玩家洞见。
-- consumption probe：本条证据中哪个最小后续约束已经消费了这个输出；如果还没有，不能正式收录，只能写推荐 probe。
-- 推荐 probe：如果证据不足，要证明它真的被消费，应该跑什么反事实或近邻对照。
-- 组合例句：例如 `绑定债 -> 解绑定债 -> 目标回填` 这种 recipe 级骨架，不写完整关卡。
+常见 shortcut：
+- 哪些墙格、目标、空间或站位缺口会让结构被绕过。
+
+审美风险：
+- 什么时候只是事件 witness，什么时候会变成玩家洞见。
+
+consumption probe：
+本条证据中哪个最小后续约束已经消费了输出。
+
+推荐 probe / 后续候选：
+若要继续扩展，应尝试哪些自然接法；不要把普通补变体写成探索债。
+
+组合例句：
+`前置结构 -> 本条输出 -> 后续 consumer`。
 
 可用装置：
 它可以作为哪类局部结构材料，不写完整关卡。
@@ -70,17 +119,25 @@ prototypes/<mechanic_id>/mechanism_lab/lexicon/
 误用边界：
 哪些看似相似的结构不会产生同样差异。
 
+机制角色与归属边界：
+- active_rule：
+- material_source：
+- consumer：
+- incidental：
+- 关键观察点：
+
+退化解释：
+为什么不是普通占位、阻挡、容量、shortcut、目标消费或已有结构参数补谱。
+
 证据：
 run=<run_id>, cases=<case_id...>, tags=<runtime_observed|bounded_return|bounded_graph|graph_complete|counterfactual_observed|consumption_probe|composition_probe>
 ````
 
-合格结构族必须能让下一位 agent 画出或复现多个相邻变体。只写“改变可达性”“形成门槛”“创造承诺点”不合格，除非同时给出具体几何、旋钮、反例边界和证据来源。
-
-Lexicon 不是完整关卡设计，但必须可组合。无法说明输入条件、输出状态和最小 consumption probe 的条目，应留在 run notes 或 proposed families 中继续探索。
+`supplement` 与 `promote` 使用同一读者规格。增补只是挂载位置不同，不能省略图、对照、设计用途、误用边界和证据引用。
 
 ## Lexicon Index
 
-`lexicon_index.md` 给 explorer 和 controller 快速定位当前结构族，避免每轮重读完整 lexicon。它不是正式语料正文，不能替代 `lexicon.md`。
+`lexicon_index.md` 给 explorer、curator 和后续使用者快速定位结构族。它不是正式语料正文，不能替代 `lexicon.md`。
 
 每个条目保持短小：
 
@@ -90,31 +147,33 @@ Lexicon 不是完整关卡设计，但必须可组合。无法说明输入条件
 - 一句话用途：
 - 输入接口：
 - 输出接口：
-- 主要消费方式：
-- 证据强度：
-- 仍缺：
+- 主要接法：
+- 后续候选 / 维护备注：
 ```
 
-Index 必须覆盖当前 `lexicon.md` 的所有顶层结构族。Curator 更新、拆分或重命名 lexicon 后，应同步更新 index。
+Index 必须覆盖当前 `lexicon.md` 的所有顶层结构族。Curator 更新、拆分或重命名 lexicon 后，应同步更新 index。不要把旧式缺口字段作为默认任务入口；普通补证、补归因、补变体是维护备注，不是 explorer topic。
 
 ## Backlog
 
-`backlog.md` 记录当前值得探索的缺口，不是任务流水，也不是历史 refresh。每条缺口写：
+`backlog.md` 记录当前值得探索的新设计空间或组合空间，不是任务流水，也不是历史 refresh，更不是 `mechanism_loop` 的唯一议程。
+
+默认进入 explorer topic 的 backlog 项必须能写成“输入 -> 产物 -> 最小 consumer”。Curator 不应把本 topic 内普通未覆盖变体写进 backlog；这类缺项只用于收窄本条语料结论。只有未覆盖项打开了新的结构用途、接口或边界问题时，才进入 backlog。
+
+每条缺口写：
 
 ```markdown
 ## gap_id
 
 - 状态：open | in_progress | closed | deferred
 - 来源：
-- 为什么现在值得跑：
-- 要比较的局部变量：
-- 成功标准：
+- 设计空间：
+- 输入接口：
+- 预期产物：
+- 最小 consumer：
+- 建议对照：
 - 不要重复：
-- 推荐 probe：
-- 收口规则：
+- 语料化收口规则：
 ```
-
-Backlog 的作用是让 controller 生成短 brief。Explorer 可以建议新增或关闭 gap，但 curator 负责最终维护。默认优先级就是文件中的顺序：`mechanism_loop` 在没有用户 scope 时选择第一个 `open` gap；有 scope 时选择最贴近 scope 的 `open` gap。
 
 ## 证据层级
 
@@ -129,7 +188,7 @@ Backlog 的作用是让 controller 生成短 brief。Explorer 可以建议新增
 
 Recipe 是原理上可行的关卡骨架，不是完整关卡。它应说明玩家为什么要主动构造某个 lexicon 结构，以满足另一个 lexicon 的输入要求。
 
-Recipe 小节可以放在相关结构族后，使用自然语言短段，但必须包含：
+Recipe 小节必须包含：
 
 - 需求端：哪个后续结构需要什么输入。
 - 构造端：哪个前置结构能主动制造这个输入。
@@ -137,11 +196,3 @@ Recipe 小节可以放在相关结构族后，使用自然语言短段，但必�
 - 消费端：后续结构如何消费它，并产生动作集合、回返性、目标关系或 shortcut 差异。
 - 错误构造：少一个对象、形状不对、墙格太宽或目标太少时如何失败或被绕过。
 - probe：要把 recipe 从骨架推到候选前，还应跑什么反事实。
-
-最低收录门槛：
-
-- 至少 4 个近邻变体，除非原型局部状态空间极小。
-- 至少 1 个正例和 1 个反例。
-- 至少 1 个修正原解释的边界 case。
-- 至少写清输入条件、输出状态和一个 consumption probe。
-- 不能把 `returnToInitial.status=exhausted` 写成不可回返。

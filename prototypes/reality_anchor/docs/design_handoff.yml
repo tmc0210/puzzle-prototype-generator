@@ -12,39 +12,33 @@ tool_commands:
   event_probe: "npx tsx prototypes/reality_anchor/reports/probe_dual_axis_candidate.ts <layout-file> <id> 300000 80"
   fixed_anchor_probe: "npx tsx prototypes/reality_anchor/reports/probe_fixed_anchor_candidate.ts <layout-file> <id> <box_sticky|push_pull> 300000 80 strong_material"
 
+design_corpus:
+  allowed_pre_claim_sources:
+    - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  excluded_sources:
+    - prototypes/reality_anchor/mechanism_lab/runs/
+  policy:
+    - "Allowed before fresh design_claim as vocabulary / parts source."
+    - "Do not read excluded sources unless the current brief explicitly authorizes them."
+
 prototype_specific_workflows:
   - id: invalid_goal_prune
-    kind: archive_candidate_cleanup
-    default_status: run_before_clean_archive_or_when_requested
+    kind: pre_submission_check
+    default_status: run_before_submission_or_when_requested
     trigger:
-      - "A Reality Anchor candidate is being prepared for clean archive."
-      - "A human asks to audit or clean already archived Reality Anchor levels."
+      - "A Reality Anchor candidate is being prepared for human review or the playable queue."
+      - "Human playtest feedback asks to audit or clean targets; any layout change creates a new candidate version that must re-enter the playable queue."
       - "A level has two or more targets and some targets may be only side-effect coverage."
     authority_docs:
       - prototypes/reality_anchor/docs/goal_prune_check.md
-    packet_extension:
-      - goal_prune_check.status
-      - goal_prune_check.targets_checked
-      - goal_prune_check.removed_targets
-      - goal_prune_check.retained_targets
-      - goal_prune_check.evidence_refs
-    reviewer_focus:
-      - "This is a Reality Anchor archive cleanup workflow, not a generic Sokoban rule."
-      - "A removed target must preserve the current intended trace as a win."
-      - "A removed target must not lower the shortest solution cost or create a missing-core-event winning bypass."
-      - "Complete graph and event-probe conclusions are required; exhausted searches are unknown, not pass."
-      - "If two neighboring targets are individually redundant, retest deletion combinations and keep the smallest set that still prevents bypass."
-    critic_focus:
-      - "Targets should encode required constraints, not merely reward objects that are already moving as handles or chains."
-      - "For current Reality Anchor archive difficulty, do not keep side-effect targets solely as guidance."
-      - "If a high-complexity future level intentionally keeps guidance targets, the packet must explicitly justify that as a teaching/readability choice."
     forbidden_unless:
       - "Do not write this workflow into generic skills or cross-prototype docs."
       - "Do not delete the only target in a level."
       - "Do not delete a target when cost drops, the expected trace stops winning, graph search is incomplete, or core event necessity fails."
+      - "Do not silently mutate a human-reviewed ready_for_archive version; if target cleanup changes layout, create a new candidate version and re-enter the playable queue."
   - id: opening_comfort_check
-    kind: diagnostic
-    default_status: run_when_opening_is_flagged_or_start_changes
+    kind: pre_submission_check
+    default_status: run_before_submission_when_opening_is_flagged_or_start_changes
     trigger:
       - "起点影响 opening commitment、可读性、核心机制覆盖或 bypass。"
       - "候选声称是 application / challenge / capstone。"
@@ -52,61 +46,23 @@ prototype_specific_workflows:
       - "修改起点会改变 solve instance。"
     authority_docs:
       - prototypes/reality_anchor/docs/opening_comfort_check.md
-    packet_extension:
-      - candidate_start_position
-      - shortest_solution_delta
-      - initial_scc_size
-      - initial_exit_source_distances
-      - initial_win_exit_source_distances
-      - dead_exits_before_first_win_exit
-      - first_step_legal_events
-      - whether_core_chain_preserved
-    reviewer_focus:
-      - "查看 initial SCC，而不是只看初始状态。"
-      - "存在距离 0 的不可逆出口不一定坏。"
-      - "真实起点没有任何可逆观察空间，或最自然第一步就是关键不可逆动作，往往会让开局显得贴脸、粗糙或误触惩罚过强。"
-      - "精修后必须重跑 solver / SCC，确认可解性、目标事件必要性和核心链条没有被破坏。"
-    critic_focus:
-      - "玩家开局不应第一步就被迫或被自然诱导进入关键不可逆承诺。"
-      - "好的 application / challenge 通常应允许玩家在核心区域外一两步观察、站位和读图。"
-      - "Discovery / witness 可以故意贴脸触发机制。"
-      - "Application / challenge 更常需要 nearest irreversible exit >= 1 或至少有非平凡 initial SCC。"
     forbidden_unless:
       - "若推荐起点不同于已验证实例，必须重跑相关证据。"
       - "起点诊断不是独立通过条件。"
   - id: redundant_element_prune
-    kind: archive_candidate_cleanup
-    default_status: run_before_clean_archive_or_when_feedback_flags_redundancy
+    kind: pre_submission_check
+    default_status: run_before_submission_or_when_feedback_flags_redundancy
     trigger:
       - "人类反馈指出冗余空地、无用墙体、无用箱子、无用黏块、无用锚点或外框过厚。"
-      - "候选准备进入 clean archive，且布局中存在明显 leaf / pocket / thick border / isolated object。"
+      - "候选准备提交给人类查看或进入待玩列表，且布局中存在明显 leaf / pocket / thick border / isolated object。"
       - "目标剔除、起点调整或其它 cleanup 后产生新的空地、对象或墙体冗余。"
     authority_docs:
       - prototypes/reality_anchor/docs/redundant_element_prune.md
       - prototypes/reality_anchor/docs/goal_prune_check.md
       - prototypes/reality_anchor/docs/opening_comfort_check.md
-    packet_extension:
-      - redundant_element_prune.status
-      - redundant_element_prune.sequence
-      - redundant_element_prune.candidates_checked
-      - redundant_element_prune.removed_elements
-      - redundant_element_prune.wallified_objects
-      - redundant_element_prune.trimmed_outline
-      - redundant_element_prune.retained_elements
-      - redundant_element_prune.evidence_refs
-    reviewer_focus:
-      - "按固定顺序执行：goal_prune -> object_remove_prune -> object_wallify_prune -> space_prune -> wall_outline_prune。"
-      - "不要把未出现在 returned trace 中直接等同于冗余；必须用反事实证据和核心事件 probe 判断。"
-      - "对象若只作为静态 blocker，应测试 wallify，而不应默认为保留箱子或黏块。"
-      - "空地判断使用全图读图命题，不使用局部视野式描述。"
-      - "墙体优先裁剪外框和厚边界，不把墙格随意改成地面。"
-    critic_focus:
-      - "保留的要素必须承担结构责任、读图责任、机制责任或合适的 opening comfort。"
-      - "静态 blocker 伪装成可操作材料会制造假 affordance；若 wallify 等价，应倾向 wallify。"
-      - "无责任 leaf / pocket / deadend 即使增加 initial SCC，也不自动有审美价值。"
-      - "凸包式轮廓扩大通常不主动删；只有形成无责任枝杈或 pocket 时才攻击。"
     forbidden_unless:
       - "不要把该流程提升为通用 Sokoban 要求。"
       - "不要跳过 goal_prune 直接处理初始压在目标上的对象。"
       - "不要在完整图或核心事件 probe 不完整时 clean prune。"
       - "不要因 solver success alone 删除、墙化或裁剪要素。"
+      - "不要在人类 ready_for_archive 后静默改布局；若反馈后裁剪改变布局，必须形成新版候选并重新进入待玩列表。"
