@@ -2246,12 +2246,14 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mrd5zlsh" : String(Date.now());
+var buildId = true ? "mrdg3n7w" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);
 var activeTab = reviewData.archiveEntries.length > 0 ? "archive" : "temporary";
 var activeFilter = "all";
+var activeAestheticScoreFilter = "2";
+var activeDifficultyScoreFilter = "any";
 var selectedEntryKey = "";
 var playState = null;
 var saveStatus = reviewData.writable ? "\u53EF\u5199\u8BC4\u5BA1\u670D\u52A1\u5DF2\u8FDE\u63A5" : "\u9759\u6001\u53EA\u8BFB\u8BD5\u73A9";
@@ -2347,20 +2349,44 @@ function renderHeader() {
 }
 function renderCandidateRail() {
   const entries = filteredEntries();
+  const totalEntries = activeTab === "archive" ? reviewData.archiveEntries.length : reviewData.temporaryEntries.length;
   return `
     <div class="tab-strip" role="tablist" aria-label="\u5019\u9009\u6765\u6E90">
       ${tabButton("archive", "\u5F52\u6863\u5019\u9009", reviewData.archiveEntries.length)}
       ${tabButton("temporary", "\u4E34\u65F6\u6E38\u73A9", reviewData.temporaryEntries.length)}
     </div>
-    <label class="filter-row">
-      <span>\u7B5B\u9009</span>
-      <select data-filter>
-        ${filterOption("all", "\u5168\u90E8")}
-        ${filterOption("unreviewed", "\u672A\u4EBA\u5DE5\u8BC4\u5BA1")}
-        ${filterOption("ready", "\u53EF\u5F52\u6863/\u5DF2\u63A5\u53D7")}
-        ${filterOption("attention", "\u5F85\u5904\u7406")}
-      </select>
-    </label>
+    <div class="candidate-filter-grid">
+      <label class="filter-row">
+        <span>\u72B6\u6001</span>
+        <select data-filter>
+          ${filterOption("all", "\u5168\u90E8")}
+          ${filterOption("unreviewed", "\u672A\u4EBA\u5DE5\u8BC4\u5BA1")}
+          ${filterOption("ready", "\u53EF\u5F52\u6863/\u5DF2\u63A5\u53D7")}
+          ${filterOption("attention", "\u5F85\u5904\u7406")}
+        </select>
+      </label>
+      <label class="filter-row">
+        <span>\u5BA1\u7F8E\u4E0B\u9650</span>
+        <select data-score-filter="aesthetic">
+          ${scoreFilterOption("any", "\u4E0D\u9650", activeAestheticScoreFilter)}
+          ${scoreFilterOption("2", "2+", activeAestheticScoreFilter)}
+          ${scoreFilterOption("3", "3+", activeAestheticScoreFilter)}
+          ${scoreFilterOption("4", "4+", activeAestheticScoreFilter)}
+          ${scoreFilterOption("5", "5", activeAestheticScoreFilter)}
+        </select>
+      </label>
+      <label class="filter-row">
+        <span>\u96BE\u5EA6\u4E0B\u9650</span>
+        <select data-score-filter="difficulty">
+          ${scoreFilterOption("any", "\u4E0D\u9650", activeDifficultyScoreFilter)}
+          ${scoreFilterOption("2", "2+", activeDifficultyScoreFilter)}
+          ${scoreFilterOption("3", "3+", activeDifficultyScoreFilter)}
+          ${scoreFilterOption("4", "4+", activeDifficultyScoreFilter)}
+          ${scoreFilterOption("5", "5", activeDifficultyScoreFilter)}
+        </select>
+      </label>
+    </div>
+    <div class="filter-summary">\u663E\u793A ${entries.length} / ${totalEntries}</div>
     <div class="candidate-list">
       ${entries.length > 0 ? entries.map(renderCandidateButton).join("") : `<div class="empty-state">\u5F53\u524D\u7B5B\u9009\u6CA1\u6709\u5019\u9009\u3002</div>`}
     </div>
@@ -2700,6 +2726,25 @@ function bindUiEvents() {
     resetPlayStateForSelection();
     render();
   });
+  app.querySelectorAll("[data-score-filter]").forEach((select) => {
+    select.addEventListener("change", (event) => {
+      const target = event.currentTarget;
+      const value = scoreFilterValue(target.value);
+      if (!value) {
+        return;
+      }
+      captureDraftFromDom();
+      if (target.dataset.scoreFilter === "aesthetic") {
+        activeAestheticScoreFilter = value;
+      } else {
+        activeDifficultyScoreFilter = value;
+      }
+      toolMenuOpen = false;
+      selectedEntryKey = firstEntryKeyForActiveView();
+      resetPlayStateForSelection();
+      render();
+    });
+  });
   app.querySelectorAll("[data-entry]").forEach((button) => {
     button.addEventListener("click", () => {
       const key = button.dataset.entry;
@@ -2942,7 +2987,7 @@ function currentEntry() {
 }
 function filteredEntries() {
   const entries = activeTab === "archive" ? reviewData.archiveEntries : reviewData.temporaryEntries;
-  return entries.filter(matchesFilter);
+  return entries.filter((entry) => matchesFilter(entry) && matchesScoreFilters(entry));
 }
 function matchesFilter(entry) {
   if (activeFilter === "all") {
@@ -2956,11 +3001,18 @@ function matchesFilter(entry) {
   }
   return entry.kind === "archive" ? stringValue(entry.metadata.archive_eligibility) !== "clean_archive" || !Boolean(entry.metadata.human_reviewed) : entry.review?.status === "needs_revision" || entry.review?.status === "reject" || entry.review?.status === "defer" || !entry.review;
 }
+function matchesScoreFilters(entry) {
+  return matchesScoreFilter(entryAestheticScore(entry), activeAestheticScoreFilter) && matchesScoreFilter(entryDifficultyScore(entry), activeDifficultyScoreFilter);
+}
+function matchesScoreFilter(score, filter) {
+  const threshold = scoreFilterThreshold(filter);
+  return threshold === null || score === null || score >= threshold;
+}
 function pickInitialEntryKey() {
-  const archivePlayable = reviewData.archiveEntries.find((entry) => entry.level);
-  const firstArchive = archivePlayable ?? reviewData.archiveEntries[0];
-  const firstTemporary = reviewData.temporaryEntries[0];
-  return firstArchive ? entryKey(firstArchive) : firstTemporary ? entryKey(firstTemporary) : "";
+  const entries = filteredEntries();
+  const playable = entries.find((entry) => entry.kind === "temporary" || entry.level);
+  const first = playable ?? entries[0];
+  return first ? entryKey(first) : "";
 }
 function firstEntryKeyForActiveView() {
   const first = filteredEntries()[0];
@@ -3002,9 +3054,15 @@ function entryStatus(entry) {
   return entry.review?.status ?? "pending_playtest";
 }
 function entryScoreSummary(entry) {
-  const aesthetic = entry.kind === "archive" ? scoreValue(entry.metadata.aesthetic_score) : scoreValue(entry.review?.aesthetic_score);
-  const difficulty = entry.kind === "archive" ? scoreValue(entry.metadata.difficulty_score) : scoreValue(entry.review?.difficulty_score);
+  const aesthetic = entryAestheticScore(entry);
+  const difficulty = entryDifficultyScore(entry);
   return `\u5BA1\u7F8E ${aesthetic ?? "-"} / \u96BE\u5EA6 ${difficulty ?? "-"}`;
+}
+function entryAestheticScore(entry) {
+  return entry.kind === "archive" ? scoreValue(entry.metadata.aesthetic_score ?? entry.humanCalibration.aesthetic_score) : scoreValue(entry.review?.aesthetic_score);
+}
+function entryDifficultyScore(entry) {
+  return entry.kind === "archive" ? scoreValue(entry.metadata.difficulty_score ?? entry.humanCalibration.difficulty_score) : scoreValue(entry.review?.difficulty_score);
 }
 function entryComments(entry) {
   return entry.kind === "archive" ? entry.humanComments : entry.review?.comments ?? [];
@@ -3044,6 +3102,9 @@ function tabButton(tab, label, count) {
 }
 function filterOption(value, label) {
   return option(value, label, activeFilter);
+}
+function scoreFilterOption(value, label, current) {
+  return option(value, label, current);
 }
 function option(value, label, current) {
   return `<option value="${escapeAttribute(value)}" ${value === current ? "selected" : ""}>${escapeHtml(label)}</option>`;
@@ -3122,6 +3183,12 @@ function scoreField(formData, name) {
 }
 function scoreValue(value) {
   return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 5 ? value : null;
+}
+function scoreFilterValue(value) {
+  return value === "any" || value === "2" || value === "3" || value === "4" || value === "5" ? value : void 0;
+}
+function scoreFilterThreshold(value) {
+  return value === "any" ? null : Number(value);
 }
 function stringValue(value) {
   return typeof value === "string" && value.length > 0 ? value : void 0;

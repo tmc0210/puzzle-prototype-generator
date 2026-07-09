@@ -3844,6 +3844,159 @@ levels:
       - input: left
         events: [pull_object, box_to_sticky]
 
+  - id: RA_FRESH_2026_07_09_L_SWEEP_DOOR_PULL_v6
+    title: L sweep door pull v6
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ###########
+      ###PL######
+      ###########
+      ###########
+      ###MM.#####
+      ###@.M#####
+      ###..SG.MM#
+      #####B#####
+      #####.#####
+      ###########
+    lineage:
+      source: fresh_design_review_loop
+      created_by: codex
+      created_at: "2026-07-09"
+    design_notes: >
+      Fresh Reality Anchor candidate produced by the sokoban design review loop.
+      The accepted v6 version keeps the clean post-prune form: a one-step opening
+      comfort buffer, active sticky L construction through pull and sticky_merge,
+      reuse of that L as a B/S door-sweeping piston, and a final far single target
+      that requires two pull_object strokes with the sticky domino. Prototype
+      pre-submission workflows were executed: invalid_goal_prune removed the
+      v3/v4 top, bottom, and redundant adjacent right target; opening_comfort_check
+      moved the start one cell left; redundant_element_prune found the final v6
+      clean after those changes. Evidence: shortest cost 13, complete graph with
+      22 reachable states, 32 legal transitions, and 1 winning state. Core event
+      probe is complete with no winning bypass missing push, pull, sticky rigid
+      movement, B/S shift, force_chain, or sticky_merge. Count probes prove all
+      wins require pull_object >= 5, move_sticky_rigid >= 7, and sticky_merge >= 1.
+      Goal coverage shows target [6,6] is covered only on final step 13. Independent
+      evidence review returned supports_with_caveats / required_action none; puzzle
+      critic returned proposal_ready_with_caveats / required_action none, estimating
+      difficulty as mid 3 and aesthetic as low 4.
+    expected_trace:
+      - input: right
+        events: [walk]
+      - input: left
+        events: [pull_object, move_sticky_rigid, sticky_merge]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: down
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: left
+        events: [pull_object, move_sticky_rigid]
+      - input: up
+        events: [push_object, move_sticky_rigid]
+      - input: down
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: left
+        events: [pull_object, move_sticky_rigid]
+      - input: left
+        events: [pull_object, move_sticky_rigid]
+
+  - id: RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4
+    title: Vacate material lock v4
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      #...G.#
+      #L.BS.#
+      #P.CM##
+      #..CG@#
+      #######
+    lineage:
+      source: fresh_design_review_loop
+      created_by: codex
+      created_at: "2026-07-09"
+    design_notes: >
+      Fresh Reality Anchor compact challenge from the 2026-07-09 design-review
+      loop. The puzzle is a small P/L-enabled B/S vacate material lock: first
+      the B/S anchor is pushed upward so its S end covers the upper target; the
+      player then feeds the lower target by pushing a crate into sticky side,
+      which requires pulling B/S back down and temporarily vacating the upper
+      target; finally B/S is pushed back up to recover the upper target while
+      the lower target stays covered by sticky material. Full graph analysis is
+      complete: shortest cost 10, 638 reachable states, 1352 legal transitions,
+      and 5 winning states. Core event probe is complete with no winning bypass
+      missing B/S shift, box_to_sticky, sticky rigid movement, pull, or any
+      crate push. Count probes prove every win needs at least three B/S shifts,
+      at least one box_to_sticky, at least two sticky rigid moves, and at least
+      one pull. Target-vacate probe proves every win requires the upper target
+      to be covered, then uncovered, then covered again. Deleting the upper
+      target drops the shortest solution to 9 and removes the final recovery;
+      deleting the lower target collapses the puzzle to 2 steps. Independent
+      evidence review returned supports_with_caveats / required_action:none;
+      independent puzzle critic returned supports_with_noncore_caveats /
+      required_action:none, but 2026-07-09 human playtest overrides that
+      posture and archives the level as RA_CAND_0027 negative example,
+      aesthetic 1 / difficulty 2. The human verdict is that affordance is poor:
+      P/L is movable but the solution does not need to move it, and sticky can
+      stick but the solution does not use sticky geometry. The trace triggers
+      material-conversion and sticky-merge labels, but player-facing play does
+      not consume any sticky geometric structure, so visible mechanism
+      possibilities overpromise the actual insight. Do not return this level to
+      the playable queue as a positive candidate. Pre-submission checks retained
+      both targets, kept the compact start with caveat, and found no safe
+      redundant-element prune. Evidence:
+      prototypes/reality_anchor/reports/design_corpus_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4.zh.md,
+      prototypes/reality_anchor/reports/candidate_packet_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_review1.zh.md,
+      prototypes/reality_anchor/reports/pre_submission_checks_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4.zh.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4.md,
+      prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_expected.md,
+      prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_core_final_any_crate.md,
+      prototypes/reality_anchor/reports/target_vacate_probe_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_upper_goal_vacate.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_review_1.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_review_1.md.
+    expected_trace:
+      - input: left
+        events: [walk]
+      - input: up
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: down
+        events: [walk]
+      - input: left
+        events: [push_object]
+      - input: left
+        events: [push_object]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [push_object, box_to_sticky, sticky_merge]
+      - input: up
+        events: [walk]
+      - input: down
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+
   - id: RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4
     title: Active L rebind v4 pull constructor
     role: challenge

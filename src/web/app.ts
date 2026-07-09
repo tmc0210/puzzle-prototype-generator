@@ -91,6 +91,7 @@ type CandidateEntry = ArchiveEntry | TemporaryEntry;
 
 type CandidateTab = "archive" | "temporary";
 type CandidateFilter = "all" | "unreviewed" | "ready" | "attention";
+type ScoreFilter = "any" | "2" | "3" | "4" | "5";
 
 type ReviewDraft = {
   humanFinalStatus: string;
@@ -160,6 +161,8 @@ let reviewData = await loadReviewData(data);
 
 let activeTab: CandidateTab = reviewData.archiveEntries.length > 0 ? "archive" : "temporary";
 let activeFilter: CandidateFilter = "all";
+let activeAestheticScoreFilter: ScoreFilter = "2";
+let activeDifficultyScoreFilter: ScoreFilter = "any";
 let selectedEntryKey = "";
 let playState: PlayState | null = null;
 let saveStatus = reviewData.writable ? "可写评审服务已连接" : "静态只读试玩";
@@ -268,20 +271,44 @@ function renderHeader(): string {
 
 function renderCandidateRail(): string {
   const entries = filteredEntries();
+  const totalEntries = activeTab === "archive" ? reviewData.archiveEntries.length : reviewData.temporaryEntries.length;
   return `
     <div class="tab-strip" role="tablist" aria-label="候选来源">
       ${tabButton("archive", "归档候选", reviewData.archiveEntries.length)}
       ${tabButton("temporary", "临时游玩", reviewData.temporaryEntries.length)}
     </div>
-    <label class="filter-row">
-      <span>筛选</span>
-      <select data-filter>
-        ${filterOption("all", "全部")}
-        ${filterOption("unreviewed", "未人工评审")}
-        ${filterOption("ready", "可归档/已接受")}
-        ${filterOption("attention", "待处理")}
-      </select>
-    </label>
+    <div class="candidate-filter-grid">
+      <label class="filter-row">
+        <span>状态</span>
+        <select data-filter>
+          ${filterOption("all", "全部")}
+          ${filterOption("unreviewed", "未人工评审")}
+          ${filterOption("ready", "可归档/已接受")}
+          ${filterOption("attention", "待处理")}
+        </select>
+      </label>
+      <label class="filter-row">
+        <span>审美下限</span>
+        <select data-score-filter="aesthetic">
+          ${scoreFilterOption("any", "不限", activeAestheticScoreFilter)}
+          ${scoreFilterOption("2", "2+", activeAestheticScoreFilter)}
+          ${scoreFilterOption("3", "3+", activeAestheticScoreFilter)}
+          ${scoreFilterOption("4", "4+", activeAestheticScoreFilter)}
+          ${scoreFilterOption("5", "5", activeAestheticScoreFilter)}
+        </select>
+      </label>
+      <label class="filter-row">
+        <span>难度下限</span>
+        <select data-score-filter="difficulty">
+          ${scoreFilterOption("any", "不限", activeDifficultyScoreFilter)}
+          ${scoreFilterOption("2", "2+", activeDifficultyScoreFilter)}
+          ${scoreFilterOption("3", "3+", activeDifficultyScoreFilter)}
+          ${scoreFilterOption("4", "4+", activeDifficultyScoreFilter)}
+          ${scoreFilterOption("5", "5", activeDifficultyScoreFilter)}
+        </select>
+      </label>
+    </div>
+    <div class="filter-summary">显示 ${entries.length} / ${totalEntries}</div>
     <div class="candidate-list">
       ${
         entries.length > 0
@@ -674,6 +701,26 @@ function bindUiEvents(): void {
     render();
   });
 
+  app.querySelectorAll<HTMLSelectElement>("[data-score-filter]").forEach((select) => {
+    select.addEventListener("change", (event) => {
+      const target = event.currentTarget as HTMLSelectElement;
+      const value = scoreFilterValue(target.value);
+      if (!value) {
+        return;
+      }
+      captureDraftFromDom();
+      if (target.dataset.scoreFilter === "aesthetic") {
+        activeAestheticScoreFilter = value;
+      } else {
+        activeDifficultyScoreFilter = value;
+      }
+      toolMenuOpen = false;
+      selectedEntryKey = firstEntryKeyForActiveView();
+      resetPlayStateForSelection();
+      render();
+    });
+  });
+
   app.querySelectorAll<HTMLButtonElement>("[data-entry]").forEach((button) => {
     button.addEventListener("click", () => {
       const key = button.dataset.entry;
@@ -955,7 +1002,7 @@ function allEntries(): CandidateEntry[] {
 
 function filteredEntries(): CandidateEntry[] {
   const entries = activeTab === "archive" ? reviewData.archiveEntries : reviewData.temporaryEntries;
-  return entries.filter(matchesFilter);
+  return entries.filter((entry) => matchesFilter(entry) && matchesScoreFilters(entry));
 }
 
 function matchesFilter(entry: CandidateEntry): boolean {
@@ -982,11 +1029,21 @@ function matchesFilter(entry: CandidateEntry): boolean {
         !entry.review;
 }
 
+function matchesScoreFilters(entry: CandidateEntry): boolean {
+  return matchesScoreFilter(entryAestheticScore(entry), activeAestheticScoreFilter) &&
+    matchesScoreFilter(entryDifficultyScore(entry), activeDifficultyScoreFilter);
+}
+
+function matchesScoreFilter(score: number | null, filter: ScoreFilter): boolean {
+  const threshold = scoreFilterThreshold(filter);
+  return threshold === null || score === null || score >= threshold;
+}
+
 function pickInitialEntryKey(): string {
-  const archivePlayable = reviewData.archiveEntries.find((entry) => entry.level);
-  const firstArchive = archivePlayable ?? reviewData.archiveEntries[0];
-  const firstTemporary = reviewData.temporaryEntries[0];
-  return firstArchive ? entryKey(firstArchive) : firstTemporary ? entryKey(firstTemporary) : "";
+  const entries = filteredEntries();
+  const playable = entries.find((entry) => entry.kind === "temporary" || entry.level);
+  const first = playable ?? entries[0];
+  return first ? entryKey(first) : "";
 }
 
 function firstEntryKeyForActiveView(): string {
@@ -1040,13 +1097,21 @@ function entryStatus(entry: CandidateEntry): string {
 }
 
 function entryScoreSummary(entry: CandidateEntry): string {
-  const aesthetic = entry.kind === "archive"
-    ? scoreValue(entry.metadata.aesthetic_score)
-    : scoreValue(entry.review?.aesthetic_score);
-  const difficulty = entry.kind === "archive"
-    ? scoreValue(entry.metadata.difficulty_score)
-    : scoreValue(entry.review?.difficulty_score);
+  const aesthetic = entryAestheticScore(entry);
+  const difficulty = entryDifficultyScore(entry);
   return `审美 ${aesthetic ?? "-"} / 难度 ${difficulty ?? "-"}`;
+}
+
+function entryAestheticScore(entry: CandidateEntry): number | null {
+  return entry.kind === "archive"
+    ? scoreValue(entry.metadata.aesthetic_score ?? entry.humanCalibration.aesthetic_score)
+    : scoreValue(entry.review?.aesthetic_score);
+}
+
+function entryDifficultyScore(entry: CandidateEntry): number | null {
+  return entry.kind === "archive"
+    ? scoreValue(entry.metadata.difficulty_score ?? entry.humanCalibration.difficulty_score)
+    : scoreValue(entry.review?.difficulty_score);
 }
 
 function entryComments(entry: CandidateEntry): HumanComment[] {
@@ -1094,6 +1159,10 @@ function tabButton(tab: CandidateTab, label: string, count: number): string {
 
 function filterOption(value: CandidateFilter, label: string): string {
   return option(value, label, activeFilter);
+}
+
+function scoreFilterOption(value: ScoreFilter, label: string, current: ScoreFilter): string {
+  return option(value, label, current);
 }
 
 function option(value: string, label: string, current: string): string {
@@ -1189,6 +1258,16 @@ function scoreValue(value: unknown): number | null {
   return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 5
     ? value
     : null;
+}
+
+function scoreFilterValue(value: string): ScoreFilter | undefined {
+  return value === "any" || value === "2" || value === "3" || value === "4" || value === "5"
+    ? value
+    : undefined;
+}
+
+function scoreFilterThreshold(value: ScoreFilter): number | null {
+  return value === "any" ? null : Number(value);
 }
 
 function stringValue(value: unknown): string | undefined {

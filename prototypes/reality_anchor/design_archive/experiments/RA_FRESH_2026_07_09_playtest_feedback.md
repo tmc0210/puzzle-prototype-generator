@@ -7,9 +7,11 @@ status: accepted_partial
 selected_candidates:
   - RA_CAND_0025
   - RA_CAND_0026
+  - RA_CAND_0027
 source_candidate_versions:
   - RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4
   - RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed
+  - RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4
 human_final_status: accepted_partial
 archive_eligibility: clean_archive
 ```
@@ -20,6 +22,7 @@ archive_eligibility: clean_archive
 
 - `ACTIVE_L_REBIND_v4`：人类评价为审美 4 / 难度 4；价值在狭小空间中要求玩家主动构造 L 形反复活塞，前段构造不过度抢戏，终局右上双目标提示 L 形结构，归档为构造关类型强 4 正例。
 - `VACATE_INTERLOCK_v10_left_column_trimmed`：人类评价为审美 4 / 难度 4；价值在结构干净精巧，聚焦“锚点也是两格刚体”的紧凑腾挪挑战，归档为 compact anchor-as-rigid / target-vacate 正例。
+- `VACATE_MATERIAL_LOCK_v4`：人类评价为审美 1 / 难度 2；P/L 可动但无需移动，sticky 可黏但没有用到黏块几何结构，工具事件标签抬高机制期待而玩家洞见不足，归档为 affordance 污染和事件标签误导的负向警戒样本。
 
 未进入本归档的反馈处理：
 

@@ -41,7 +41,7 @@ description: 独立批评 Sokoban-like 候选关卡的玩家侧设计质量。Us
 - 不运行 solver / analyzer / graph 等 hard-evidence 工具，不补证据，不授予 accepted / mainline / positive_reference / reference。
 - 不把 tags、archive status、retrieval summary 或 LLM 派生评价当成人类审美依据。
 - 使用 archive taste context 时，只引用有人类评语支持的条目。
-- 如果 archive context 只有正例、没有低分 / 失败 / 下界人评例，标记 `archive_attack_calibration_incomplete`；可以主动读取更多 clean human-reviewed archive 条目或 index / retrieval summary 来增强攻击性。未归档 / 未完成材料中的 critic 分数或 designer 自评不可信，不能作为正向审美、难度或分数校准。
+- 如果 archive context 只有正例、没有低分 / 失败 / 下界人评例，标记 `archive_attack_calibration_incomplete`；可以主动读取更多 clean human-reviewed archive 条目或 index / retrieval summary 来增强攻击性。且必须读取所有1分审美的归档作为警戒。未归档 / 未完成材料中的 critic 分数或 designer 自评不可信，不能作为正向审美、难度或分数校准。
 - 没有可用 human archive anchors 时，不输出任何分数化审美或难度结论；禁止 `4`、`4+`、`4-`、`low 4`、`meets 4`、`3/3+` 等表述，只能写 `unscored_missing_human_archive_context`、`target_fit_unknown` 或非分数结构观察。
 - 如果候选继承 archive candidate 的主要因果链、对象角色或布局骨架，且 packet 没有明确授权 archive variant work，把 lineage 作为 core attack。
 - 使用 SCC / graph 事实时，必须确保已阅读 references/scc-graph-reading.md，必须写出 `graph_fact -> neutral_meaning -> player_facing_interpretation -> verdict_effect`；缺少玩家侧解释时，`verdict_effect` 必须是 `none`。

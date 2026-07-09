@@ -288,7 +288,7 @@ textarea:disabled {
 
 .candidate-rail {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr);
   gap: 12px;
 }
 
@@ -332,6 +332,17 @@ textarea:disabled {
   font-size: 12px;
 }
 
+.candidate-filter-grid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.candidate-filter-grid .filter-row:first-child {
+  grid-column: 1 / -1;
+}
+
 .filter-row,
 .field {
   display: grid;
@@ -356,6 +367,12 @@ textarea:disabled {
   background: #fff;
   color: var(--ink);
   padding: 7px 9px;
+}
+
+.filter-summary {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .field textarea {

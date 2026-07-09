@@ -409,6 +409,127 @@
   },
   "levels": {
     "mechanic": "reality_anchor",
-    "levels": []
+    "levels": [
+      {
+        "id": "RA_FRESH_2026_07_09_L_SWEEP_DOOR_PULL_v6",
+        "title": "L sweep door pull v6",
+        "role": "challenge",
+        "status": "candidate",
+        "targets": [
+          "K_runtime_smoke"
+        ],
+        "known_before": [
+          "K_runtime_smoke"
+        ],
+        "target_learning": [
+          "K_runtime_smoke"
+        ],
+        "support_level": "none",
+        "expected_solver_evidence": [
+          "solvable",
+          "player_win_standard",
+          "expected_trace_replays",
+          "full_graph_complete"
+        ],
+        "expected_llm_player_evidence": [],
+        "layout": "###########\n###PL######\n###########\n###########\n###MM.#####\n###@.M#####\n###..SG.MM#\n#####B#####\n#####.#####\n###########",
+        "lineage": {
+          "source": "fresh_design_review_loop",
+          "created_by": "codex",
+          "created_at": "2026-07-09"
+        },
+        "design_notes": "Fresh Reality Anchor candidate produced by the sokoban design review loop. The accepted v6 version keeps the clean post-prune form: a one-step opening comfort buffer, active sticky L construction through pull and sticky_merge, reuse of that L as a B/S door-sweeping piston, and a final far single target that requires two pull_object strokes with the sticky domino. Prototype pre-submission workflows were executed: invalid_goal_prune removed the v3/v4 top, bottom, and redundant adjacent right target; opening_comfort_check moved the start one cell left; redundant_element_prune found the final v6 clean after those changes. Evidence: shortest cost 13, complete graph with 22 reachable states, 32 legal transitions, and 1 winning state. Core event probe is complete with no winning bypass missing push, pull, sticky rigid movement, B/S shift, force_chain, or sticky_merge. Count probes prove all wins require pull_object >= 5, move_sticky_rigid >= 7, and sticky_merge >= 1. Goal coverage shows target [6,6] is covered only on final step 13. Independent evidence review returned supports_with_caveats / required_action none; puzzle critic returned proposal_ready_with_caveats / required_action none, estimating difficulty as mid 3 and aesthetic as low 4.\n",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object",
+              "force_chain",
+              "anchor_boundary_shift",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          }
+        ]
+      }
+    ]
   }
 }
