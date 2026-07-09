@@ -1,11 +1,9 @@
 # Design Archive Contract
 
-状态：当前设计归档合约。本文只定义 clean archive 的入档边界、候选记录
-完整性、人类评语和检索元数据；不定义关卡设计流程。
+状态：当前 clean archive 合约。本文只定义归档入口、候选短卡、人类评语和
+检索索引；不定义单关设计、证据审查或 review loop。
 
 ## 权威边界
-
-本文不是 designer / critic workflow。
 
 ```text
 单关设计、证据读取、编号 review loop、critic 攻击和 designer action：
@@ -15,14 +13,13 @@ multi-agent / reviewer prompt 形状：
   以 docs/20-multi-agent-prompt-templates.md 为准。
 
 归档层：
-  本文只决定记录是否能进入 clean archive，以及如何保存人类评语和检索元数据。
+  本文只决定哪些材料能进入 clean archive，以及如何用短卡保存人评和检索信息。
 ```
 
-如果本文和 `docs/21` / `docs/20` 对设计或审查流程的要求冲突，按
-`docs/21` / `docs/20` 执行。归档层不得把缺失的设计、证据或审查流程补写成
-已完成。
+archive pass 不是新的 designer、evidence reviewer、puzzle critic 或 judge。它
+不能补写缺失流程，不能把工具事实改写成审美裁决，也不能替人类打分。
 
-## 核心概念
+## Clean Archive 与 Raw Run
 
 ```text
 clean archive:
@@ -30,177 +27,95 @@ clean archive:
   其中可以有设计差的关卡，但不能有流程错产物。
 
 raw run:
-  实验过程材料、scratch 尝试、未完成执行、流程错产物或不可复现输出。
-  raw run 可以临时留在工作区或单独保存，但不能作为 clean archive 条目被检索
-  为设计参考。
+  实验过程材料、scratch 尝试、未完成执行、流程错产物或可再生工具输出。
+  raw run 不进入 clean archive，不作为 human taste calibration。
 
 candidate record:
-  候选的审美校准卡和导航事实来源。它直接保存 layout、solve instance、核心逻辑、
-  人类评语、状态字段和证据引用；工具命令、完整 review loop、attempt log 和
-  SCC 细节默认引用到 experiment ledger / reports，不在候选卡片里展开。
+  候选的短审美校准卡。它保存必要 metadata、layout、核心逻辑、人类评语、
+  人类校准分和短检索摘要。
 
 archive index:
-  检索层。它只能摘要 candidate record，不是事实来源。
-
-archive pass:
-  归档落盘步骤。它可以由 controller、LLM designer、人类或脚本执行，但权限
-  只限 formatting_and_integrity，不是新的 reviewer、critic 或 judge。
+  导航层。它只保存路径、状态、分数、标签化检索线索和 retrieval summary；
+  candidate record 与人类评语才是归档事实来源。
 ```
 
-不要再引入独立归档模型或归档设计角色。实践中通常由当前 LLM designer /
-controller 在完成设计和审查后执行 archive pass。
+清理 raw run 时只有保留和删除两种选择。不要创建隐藏历史归档、兼容副本或
+shadow archive。生成式 reports、旧 run、trace、probe 结果和过程日志默认可
+删除或重新生成。
 
-## Archive Pass 权限
-
-archive pass 可以：
+默认排除路径：
 
 ```text
-- 检查 candidate record 是否有必要 artifact。
-- 保存或整理已有 layout、核心逻辑、human comments、状态字段和证据引用。
-- 把 reviewer / critic / tool / designer action 细节留在 ledger / reports，并在
-  candidate record 中引用。
-- 派生检索标签、retrieval summary 和完整性状态。
-- 在流程缺失时降级 archive_eligibility，或拒绝进入 clean archive。
+prototypes/*/reports/**/*.md
+prototypes/*/reports/**/*.json
+prototypes/*/reports/**/*.txt
+prototypes/*/mechanism_lab/runs/**
 ```
 
-archive pass 不可以：
+## 默认读取路径
+
+designer / critic 需要归档校准时，默认先读 archive index 的检索摘要，再按目标
+读取少量候选短卡。不要默认全量读取所有 layout、旧 reports 或 mechanism lab
+runs。
+
+普通设计校准建议：
 
 ```text
-- 补写 critic 或 evidence reviewer。
-- 把 self-review 当成 independent review。
-- 修改 designer claim 让候选显得更好。
-- 根据自己的审美提升 status。
-- 用派生摘要覆盖人类评语。
-- 把缺失证据、浅搜索、缺 review 的候选包装成 positive reference。
-- 在没有人类明确评分时替人类填写 aesthetic_score 或 difficulty_score。
-```
-
-## Process Integrity
-
-每个候选进入 clean archive 前，必须有可检查的流程完整性记录。该记录可以在
-experiment ledger 中完整保存；candidate record 只需要保留状态快照和引用路径。
-
-```yaml
-process_integrity:
-  design_packet: present | missing
-  tool_evidence: present | missing | incomplete | not_applicable
-  evidence_reviewer_artifact: present | missing | blocked | not_applicable
-  puzzle_critic_artifact: present | missing | blocked | not_applicable
-  designer_actions_after_review: present | missing | not_needed
-  post_revision_evidence_rerun: present | missing | not_needed
-  latest_review_iteration: null
-  latest_candidate_version_reviewed: null
-  open_required_action_after_latest_review: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family | unknown
-  designer_action_after_latest_review: missing | present | not_needed
-  review_after_designer_action: missing | present | blocked | not_needed
-  review_integrity: independent_review | human_review | self_review_only | missing | blocked
-  review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_required | held_proposal | rejected_candidate | failed_search | structural_redesign_needed | unknown
-  unresolved_core_attacks: []
-  archive_eligibility: clean_archive | human_pending | raw_run_only | reject_do_not_archive
-  notes: ""
-```
-
-`review_integrity` 按 artifact 和 pass 边界判断，不按底层模型名称判断。
-
-```text
-independent_review:
-  有独立 reviewer / critic artifact。reviewer 接收 candidate packet 和证据，
-  输出审查结果；designer 随后逐条回应。
-
-human_review:
-  人类设计师直接给出足以替代 reviewer / critic 的审查意见。
-
-self_review_only:
-  designer 在同一设计 pass 中写了自我攻击、自我总结或 caveat。它有记录价值，
-  但不能满足独立 critic review。
-
-missing:
-  没有可检查的 review artifact。
-
-blocked:
-  controller / designer 认为无法调用独立 reviewer，或授权不清。必须显式记录
-  blocked，不得降级解释成“主线程多角色 critic 已完成”。
-```
-
-如果候选在 `review_N` 后被修改，必须按 `docs/21` 回到必要的工具证据刷新，并
-把新版本交给 `review_N+1`。如果 designer 在 `review_N` 后提交证据异议，该异
-议也必须交给 `review_N+1` 判断。没有下一轮 review 的 designer action 不能继
-承旧 critic 结论，也不能关闭核心攻击。
-
-## Archive Eligibility
-
-归档 eligibility 是流程完整性判断，不是关卡质量评分。
-
-```text
-clean_archive:
-  流程 artifact 足够完整，可作为未来设计参考。候选可以是 proposal、held、
-  rejected、failed search material 或 negative example。`accepted` / `mainline`
-  需要人类、campaign selection 或明确授权的最终评审。
-
-human_pending:
-  流程 artifact 足够完整，但还没有人类评语。可以入档，但必须标记人类评语
-  为空，不得把 LLM 派生评价当成人类审美来源。
-
-raw_run_only:
-  有过程记录价值，但缺少 clean archive 必需 artifact，例如 self_review_only、
-  evidence incomplete、search ledger shallow、review blocked 等。
-
-reject_do_not_archive:
-  流程错产物、误标 positive reference、证据不可复现、candidate record 与实际
-  输出不一致，或人类明确要求清理。应删除或移出 clean archive。
-```
-
-硬性限制：
-
-```text
-- review_integrity 为 self_review_only、missing 或 blocked 时，不能标记
-  positive_reference、reference 或 accepted。
-- review_loop_state 为 revise_required、held_proposal、rejected_candidate、
-  failed_search 或 structural_redesign_needed 时，archive pass 不能升级为
-  proposal_ready、accepted、positive_reference 或 reference。
-- unresolved_core_attacks 非空时，不能进入 proposal_ready / accepted。
-- open_required_action_after_latest_review 不是 none 时，不能进入
-  proposal_ready / proposal_ready_with_caveats / accepted。
-- designer_action_after_latest_review 为 present 且 review_after_designer_action
-  不是 present 时，不能进入 proposal_ready / proposal_ready_with_caveats。
-- latest review 必须对应最新 layout、solve instance、start、goal、
-  mechanism_scope 和 design_claim；否则不能进入 proposal_ready / clean_archive。
-- tool_evidence 为 missing / incomplete 且候选声称通过工具验证时，不能进入
-  clean_archive。
-- search ledger 缺失或浅时，只能降低结论强度；不能声称已充分探索设计空间。
-- archive index 不能把 candidate record 中没有被证据或 review 支持的亮点写成
-  检索摘要。
+- 先读 index。
+- 选 1-2 个相关高分 / 正例候选。
+- 选 1-2 个相关低分 / 失败 / 下界候选。
+- 只有需要防重复或判断人评边界时，才读候选卡里的完整 layout。
 ```
 
 ## Candidate Record 最小内容
 
-候选记录是给未来 designer / critic 做审美校准的短卡片，不是流程审计全文。
-它应包含：
+候选记录是短卡，不是流程审计报告。默认字段：
 
-```text
-- 顶层 metadata：status、llm_candidate_strength、human_final_status、
-  archive_eligibility、review_integrity、motifs、archive_use
-- human_calibration：human_reviewed、aesthetic_score、difficulty_score、
-  allowed_exposure_through
-- layout 和 solve instance
-- core logic：3-8 行事实链，说明核心逻辑和证据支持边界
-- human comments，原文保存
-- evidence_refs / ledger_ref
-- retrieval_summary：5-8 行以内，只服务检索
+```yaml
+candidate_id: CANDIDATE_ID
+prototype: MECHANIC_ID
+source_candidate_version: null
+status: unknown
+human_final_status: pending
+archive_eligibility: human_pending
+human_reviewed: false
+aesthetic_score: null
+difficulty_score: null
+allowed_exposure_through: null
+human_comment_ids: []
+ledger_ref: null
 ```
 
-以下内容默认不进入 candidate record 主体，只用引用保留可追溯性：
+主体只保留这些 section：
 
 ```text
+Layout
+Core Logic
+Human Verdict
+Human Calibration
+Retrieval Summary
+```
+
+`Core Logic` 写 3-5 行事实链：玩家侧洞见、关键对象关系、反直觉点或失败边界。
+它不是证据全文，也不是 designer 的审美作文。
+
+`Retrieval Summary` 写 2-5 行，只服务检索。它必须服从人类评语和人类评分，
+不能扩写成新的审美课。
+
+除上述最小字段和五个 section 外，过程材料默认不进入 candidate record：
+
+```text
+- review loop 全文
+- designer_action 流水账
 - tool commands
-- 完整 SCC / graph 表
-- 完整 review loop 和 designer_action 流水账
-- full exploration log / attempt log
-- meta pass 明细
-- start-position comparison 明细
+- SCC / graph 表
+- probe / trace / search report 全文
+- algorithm metrics 和图指标
+- 大型标签词表或实验目录
 ```
 
-candidate record 是审美校准入口。archive index 只保存导航摘要和路径。
+需要追溯时只保留一个 `ledger_ref`。如果没有稳定 ledger，就保持 `null`，不要
+为了可追溯性把 reports 清单粘进短卡。
 
 ## Human Comments
 
@@ -212,119 +127,112 @@ human_comments:
     author: human_designer
     text: >
       原文保留。
-    attached_to:
-      - candidate
-      - designer_claim
-      - critic_attack
-      - tool_evidence
 ```
 
-archive pass 可以写极短 retrieval_summary，但不得把人类评语扩写成 LLM 的
-审美课。若摘要和人类原文存在张力，保留张力，不要改写人类评语。
+archive pass 可以整理格式，但不得改写、扩写或替换人类原文。若 retrieval
+summary 和人类原文存在张力，保留张力，以人类原文为准。
 
-## Human Calibration Scores
+## Human Calibration
 
-人类评分是给未来 designer / critic 的审美与难度校准入口。它们是序数轴，不是
-工具分数，也不是 LLM 自评。
+人类评分是审美与难度校准入口。它们是序数轴，不是工具分数，也不是 LLM 自评。
 
 ```yaml
 human_calibration:
   human_reviewed: true | false
   aesthetic_score: 1 | 2 | 3 | 4 | 5 | null
-  aesthetic_label: 反例样本 | 功能库存 | 可用下界 | 亮点候选 | 标杆范例 | null
   difficulty_score: 1 | 2 | 3 | 4 | 5 | null
-  difficulty_label: 教学见证 | 简单练习 | 常规流程 | 阶段挑战 | 高难终局 | null
   allowed_exposure_through: null
   score_source:
     - human_comment_id
 ```
 
-审美分含义：
+审美分：
 
 ```text
 1 反例样本：明显审美负例，例如冗余、拼接、洞见缺失或过度包装。
-2 功能库存：流程完整但基本无审美价值；只在纯功能位、缓冲、水关时取材。
-3 可用下界：常规备选；为防止滑档，默认应要求 designer / critic 尝试优化。
-4 亮点候选：有明确审美亮点或解谜洞见，值得学习，较可能进入流程。
+2 功能库存：流程完整但基本无审美价值；只在功能位、缓冲、水关时取材。
+3 可用下界：常规备选；默认应继续优化。
+4 亮点候选：有明确审美亮点或解谜洞见，值得学习。
 5 标杆范例：模板级参考，具有很高审美校准价值。
 ```
 
-难度分含义：
+难度分：
 
 ```text
-1 教学见证：强引导玩家学习某机制事件或规则现象时可用的最小结构。
-2 简单练习：机制简单组合或练习关；无显式需求时不应批量生产。
-3 常规流程：有一定思考量但不多，常见于主流程水关 / 过渡关。
-4 阶段挑战：流程中的较难关卡，可作为阶段挑战。
-5 高难终局：高难关卡，适合支线、后期或终局内容。
+1 教学见证：强引导玩家学习某机制事件或规则现象的最小结构。
+2 简单练习：机制简单组合或练习关。
+3 常规流程：有一定思考量但不多。
+4 阶段挑战：流程中的较难关卡。
+5 高难终局：适合支线、后期或终局内容。
 ```
 
-难度是相对 `allowed_exposure_through` 的判断。同一关在前期机制暴露 cutoff
-可能是 4 分，放到全机制解锁后可能只有 3 分。
+`allowed_exposure_through` 是课程分层字段，用来判断这关可放在哪个知识阶段。
+它不是当前单个原型是否暂时使用该字段的问题；有值时必须保留。
 
-默认审美检索只使用 `human_reviewed: true` 的候选。没有人类评语或没有人类评分
-的候选可以保留为历史材料、工具证据或 attempt log，但不得作为 human taste
-calibration。标签、`accepted`、`archive_use` 和 retrieval summary 只能帮助检索；
-真正的审美引用必须回到人类评语原文、关键原文摘句或上述评分字段。
+没有人类评语或人类评分的候选不得作为 human taste calibration。标签、status
+和 retrieval summary 只能帮助检索；真正的审美引用必须回到人类原文或评分字段。
 
-## Derived Metadata
+## Archive Eligibility
 
-派生元数据只用于检索和 prompt 校准，不是最终审美裁决。候选卡片中只保留
-必要字段；复杂标签和流程细节应留在 index 或 ledger。
+```text
+clean_archive:
+  可作为未来设计参考。可以是正例、反例、held material 或 rejected material，
+  但必须有人类评语或足够明确的 clean archive 接收理由。
+
+human_pending:
+  暂存候选。可以有结构价值，但没有人类评语时不得作为审美校准来源。
+
+raw_run_only:
+  只保留过程价值，不进入 clean archive。默认不被 designer / critic 检索。
+
+reject_do_not_archive:
+  流程错产物、误标参考、证据不可复现、与实际输出不一致，或人类明确要求清理。
+  应删除。
+```
+
+archive pass 可以降级或删除，但不能升级候选质量。缺 review、缺证据、浅搜索、
+工具指标漂亮或 LLM 自评积极，都不能把候选变成 positive reference。
+
+## Archive Index
+
+index 只做导航，不做二级报告。推荐 entry：
 
 ```yaml
-archive_pass_derived:
+- candidate_id: CANDIDATE_ID
+  file: candidates/CANDIDATE_ID.md
+  source_candidate_version: null
   status: unknown
-  llm_candidate_strength: unknown
   human_final_status: pending
+  archive_eligibility: human_pending
   human_reviewed: false
   aesthetic_score: null
   difficulty_score: null
   allowed_exposure_through: null
-  archive_use: []
   motifs: []
+  strengths: []
   failure_modes: []
-  retrieval_summary: ""
+  human_comment_ids: []
+  retrieval_summary: >
+    Short search summary. Human comments remain in the candidate file.
 ```
 
-派生摘要不得升级 designer claim。若 review artifacts 没有证明某个 claimed
-highlight，metadata 应标记为 unverified、claim_underfit 或相关 failure mode。
-
-## Clean Archive 与 Raw Run 的清理
-
-clean archive 必须保持干净。流程错产物不应为了“留下负例”而进入候选库；负例
-也必须是流程完整的负例。
-
-可以清理的情况：
+index 不保存：
 
 ```text
-- self-review 被误写成 critic review。
-- candidate record 标记 positive_reference，但缺独立 review artifact。
-- 工具证据来自旧实例，候选修改后没有重跑。
-- designer action 发生在最新独立 review 之后，但没有进入下一轮 review。
-- 未获人类明确授权的 archive candidate 变体被写成 proposal。
-- archive index 摘要和 candidate record / human comments 冲突。
-- 人类明确指出该记录来自错误流程，不应作为审美或设计样本。
+- 顶层大型标签词表
+- 实验目录或 run catalog
+- 证据文件清单
+- 流程完整性大表
+- generated report excerpts
 ```
 
-清理可以删除文件，也可以移到不被未来 designer / critic 默认检索的 raw run
-位置。若只是设计质量差但流程完整，应保留为 rejected / negative_example，而
-不是删除。
-
 ## 推荐路径
-
-原型本地 clean archive：
 
 ```text
 prototypes/<mechanic_id>/design_archive/
   README.md
   index.yml
-  experiments/
   candidates/
-```
 
-可复用模板：
-
-```text
 templates/design_archive/
 ```

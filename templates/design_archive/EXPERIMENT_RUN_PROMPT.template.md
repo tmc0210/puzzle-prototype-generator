@@ -32,8 +32,8 @@ templates/design_archive/CANDIDATE_RECORD.template.md
    状的权威来源。
 4. docs/30-scc-graph-diagnostic-reading.md 是 SCC / graph 诊断事实如何进入
    质量判断的权威来源。
-5. docs/29-design-archive-contract.md 和 templates/design_archive/* 是归档记录、
-   流程完整性和 clean archive 入档边界的权威来源。
+5. docs/29-design-archive-contract.md 和 templates/design_archive/* 是归档短卡、
+   archive index 和 clean archive 入档边界的权威来源。
 6. <prototype_required_docs> 是该原型局部设计纪律、审美偏好、特殊流程的权威
    来源。
 7. <experiment_brief_path> 是本轮实验目标、机制范围、探索方向和限制的权威来源。
@@ -131,7 +131,7 @@ Archive Taste Context：
   critic_calibration 或 designer_claim_calibration。
 - 如果没有相关且带人类评语的 archive 条目，写 `none_found`，不要用
   critic-only / designer-derived / tool-only 归档条目补位。
-- archive tags、status、accepted、archive_use 和 retrieval_summary 只能用于检索；
+- archive tags、status、accepted 和 retrieval_summary 只能用于检索；
   真正的审美引用必须引用人类原文摘句或 human_calibration 分数。
 - `aesthetic_score` 决定 archive 例子的使用方式：1 只能作反例，2 只能作功能
   库存 / 水关下界警示，3 是可用下界且默认应优化，4-5 才能作为正向审美参考。
@@ -163,7 +163,7 @@ review loop 的候选必须至少有：
   required_winning_path_events / forbidden_winning_path_events /
   forbidden_if_seen_anywhere
 - layout
-- tool commands / evidence summary / evidence_refs
+- tool commands / evidence summary for the review packet
 - start-position 诊断，若该角色或原型需要
 - prototype-specific work 结论，若 brief 或原型明确要求；若原型文档或 brief
   声明它是 redesign_stage，应按该原型流程判断是否提出 redesign variant，并说
@@ -190,7 +190,7 @@ Review Loop 要求：
 - 如果无法产生独立 reviewer / critic artifact，必须标记：
 
   ```yaml
-  review_integrity: missing | blocked | self_review_only
+  review_source: missing | blocked | self_review_only
   terminal_state: held_proposal | failed_search | rejected_candidate
   ```
 
@@ -226,10 +226,12 @@ Prototype-Specific Work：
 Archive Pass：
 
 - archive pass 只记录 terminal state，不能升级 terminal state。
-- 候选记录必须写入 process_integrity、review_integrity、review_loop_state 和
-  archive_eligibility。
+- 候选记录只写入 docs/29 规定的短 metadata、layout、core logic、人类评语、
+  human calibration 和 retrieval summary。
+- review 状态、工具命令、证据文件清单、SCC / graph 表和 probe / trace / search
+  report 不写入候选记录。
 - human comments 为空时标记 pending / empty。
-- archive pass derived metadata 只能作为检索与导航元数据。
+- archive pass metadata 只能作为检索与导航元数据。
 - 不创建 <forbidden_files>。
 - 如果 terminal state 是 failed_search，可以保存 run ledger / failure
   distribution；不要创建伪 accepted candidate。

@@ -3592,3 +3592,370 @@ levels:
         events: [push_object]
       - input: right
         events: [push_object, move_sticky_rigid]
+
+  - id: RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed
+    title: Vacate interlock v10 left column trimmed
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      ##BSG.#
+      #C.LG.#
+      #.@P..#
+      #######
+    lineage:
+      source: fresh_design_review_loop
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Fresh Reality Anchor compact candidate from the 2026-07-08 review loop,
+      trimmed after user-spotted redundant spaces and objects. The remaining
+      player-facing value is a small target-vacate maneuver: the lower target is
+      first covered by the P/L L end, then vacated, and finally recovered through
+      positional setup while the upper target is reserved for the final B/S S-end
+      coverage. This is no longer claimed as a sticky-merge, sticky-successor,
+      or material-consumption insight. box_to_sticky and move_sticky_rigid still
+      appear in the runtime trace and event probes, but they are treated only as
+      mechanical facts, not as proof that the sticky conversion is meaningfully
+      consumed by the design. Full graph analysis is complete: shortest cost 17,
+      117 reachable states, 232 legal transitions, 1 winning state. v10 trims
+      the final redundant left wall column from v9 and keeps the same 17-step
+      structure. The remaining lower-left crate was checked by wallification in
+      v9 and is required; removing it makes the puzzle unsolved. This candidate
+      was accepted by 2026-07-09 human playtest as RA_CAND_0026, aesthetic 4 /
+      difficulty 4: a clean compact challenge focused on "anchors are also
+      two-cell rigid bodies", not on sticky/material construction.
+      Evidence:
+      prototypes/reality_anchor/reports/designer_correction_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed.zh.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed.md,
+      prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed_core6.md,
+      prototypes/reality_anchor/reports/target_vacate_probe_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed_lower_target_vacate.md,
+      prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed_no_top_goal.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed_no_lower_goal.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v9_second_topleft_crate_wallified_no_remaining_left_crate.md.
+    expected_trace:
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [pull_object]
+      - input: down
+        events: [pull_object, force_chain, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: right
+        events: [push_object, box_to_sticky]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: up
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+        events: [pull_object, anchor_boundary_shift]
+
+  - id: RA_FRESH_2026_07_08_NOTCH_SWEEP_RETURN_v2
+    title: Notch sweep return v2
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ######
+      #PL###
+      #MM.##
+      #@M.##
+      #..S##
+      #.GB##
+      ##.G##
+      ######
+    lineage:
+      source: fresh_design_review_loop
+      created_by: codex
+      created_at: "2026-07-08"
+    design_notes: >
+      Fresh Reality Anchor candidate from the 2026-07-08 design-review loop.
+      The compact claim is a fixed-P/L L-notch sticky handoff: the first push
+      moves the L-shaped sticky body and places the player on the pull side;
+      the next pull sweeps the B/S anchor onto the lower target; a return pull
+      then prepares the middle target, where the player standing on the goal is
+      not sufficient and the sticky body must become the final covering object.
+      Full graph analysis is complete: shortest cost 6, 43 reachable states,
+      81 legal transitions, and 1 winning state. Core event probes are complete
+      with no winning bypass missing sticky push, sticky pull, B/S shift, or
+      sticky rigid movement; count probes require at least three sticky pulls
+      and four sticky rigid moves. Goal-prune checks retain both targets:
+      removing the middle target collapses the puzzle to 2 steps, while removing
+      the lower target releases a 3-step core-event bypass. Independent evidence
+      review_2 returned supports_with_caveats / required_action:none; independent
+      puzzle critic review_2 returned supports_with_noncore_caveats / required_action:none,
+      estimating a conservative aesthetic floor 4 and difficulty floor 3. Caveat:
+      this should be presented as a tight 4/3 candidate, not as a high-difficulty
+      or material-conversion claim. 2026-07-09 human playtest rejected this
+      posture: the sticky use was too rough, P/L looked movable but was unused,
+      and B/S degenerated into a two-cell rigid body with poor affordance. It is
+      removed from playable and not entered as a clean archive card. Evidence:
+      prototypes/reality_anchor/reports/design_corpus_RA_FRESH_2026_07_08_NOTCH_SWEEP_RETURN_v2.zh.md,
+      prototypes/reality_anchor/reports/candidate_packet_RA_FRESH_2026_07_08_NOTCH_SWEEP_RETURN_v2_review1.zh.md,
+      prototypes/reality_anchor/reports/pre_submission_checks_RA_FRESH_2026_07_08_NOTCH_SWEEP_RETURN_v2.zh.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_FRESH_2026_07_08_NOTCH_SWEEP_RETURN_v2_review_2.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_FRESH_2026_07_08_NOTCH_SWEEP_RETURN_v2_review_2.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_08_NOTCH_SWEEP_RETURN_v2.md,
+      prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_08_NOTCH_SWEEP_RETURN_v2_core.md.
+    expected_trace:
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: down
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+      - input: left
+        events: [pull_object, move_sticky_rigid]
+      - input: down
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [pull_object, move_sticky_rigid]
+
+  - id: RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_trimmed
+    title: Active L rebind v2 trimmed
+    role: challenge
+    status: rejected
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      ########
+      #PL#####
+      #MM.####
+      #.GCG###
+      #.#...##
+      #@....##
+      ########
+      ##SB####
+      ########
+    lineage:
+      source: fresh_design_review_loop
+      created_by: codex
+      created_at: "2026-07-09"
+    design_notes: >
+      Fresh Reality Anchor candidate from the 2026-07-09 active L rebind loop,
+      submitted as the trimmed v2 after removing one isolated bottom-floor cell.
+      The player starts off the trigger and must enter the fixed P/L plus fixed
+      B/S workbench, then use a compact left/right/left piston sequence to
+      construct an L-shaped sticky body, cut resources back through the B/S
+      boundary, and later restore both targets. Full graph analysis is complete:
+      shortest cost 22, 474 reachable states, 960 legal transitions, and 5
+      winning states. Core event probes are complete with no winning bypass
+      missing pull, push, box_to_sticky, sticky_to_box, sticky_merge, or sticky
+      rigid movement; count probes prove all wins require at least four pulls,
+      one push, three box_to_sticky events, two sticky_to_box events, two
+      sticky_merge events, and two sticky rigid moves. Goal-prune checks retain
+      both targets: removing the right target collapses the puzzle to the 4-step
+      opening construction, while removing the left target removes the final
+      restoration and one box_to_sticky. Independent evidence review for v2
+      returned supports_with_caveats / required_action:none; independent puzzle
+      critic rereview, after reading the SCC guide, returned
+      supports_with_noncore_caveats / required_action:none. Positioning: this is
+      a middle/late active-L piston showcase with aesthetic floor 4 and
+      difficulty floor 3, not the later v4 open-constructor target. 2026-07-09
+      human playtest rejected this version because the better v4 candidate now
+      supersedes it; removed from playable and not entered as a clean archive
+      card. Evidence:
+      prototypes/reality_anchor/reports/design_corpus_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_trimmed.zh.md,
+      prototypes/reality_anchor/reports/candidate_packet_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_trimmed_submission.zh.md,
+      prototypes/reality_anchor/reports/pre_submission_checks_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_trimmed.zh.md,
+      prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_trimmed.md,
+      prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_trimmed_core.md,
+      prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_trimmed_goal_coverage.md,
+      prototypes/reality_anchor/reports/evidence_review_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_review_2.md,
+      prototypes/reality_anchor/reports/puzzle_critic_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_review_2_independent_rereview.md.
+    expected_trace:
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: left
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: right
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: down
+        events: [pull_object]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [pull_object, box_to_sticky]
+
+  - id: RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4
+    title: Active L rebind v4 pull constructor
+    role: challenge
+    status: candidate
+    targets: [K_runtime_smoke]
+    known_before: [K_runtime_smoke]
+    target_learning: [K_runtime_smoke]
+    support_level: none
+    expected_solver_evidence: [solvable, player_win_standard, expected_trace_replays, full_graph_complete]
+    expected_llm_player_evidence: []
+    layout: |-
+      #######
+      ##PL###
+      #######
+      ##..G##
+      #MMM.G#
+      #..#..#
+      ##...@#
+      #######
+      ###SB##
+      #######
+    lineage:
+      source: human_supervised_design
+      created_by: codex
+      created_at: "2026-07-09"
+    design_notes: >
+      Human-supervised v4 continuation of the active L rebind family. Compared
+      with v2_trimmed, the player no longer receives the v2 workbench already in
+      place. The opening gives reversible observation room, then asks the player
+      to approach from the right and pull a three-cell sticky row across the
+      B/S boundary, cutting its right end into a crate. The player then pushes
+      the remaining left pair upward to reconstruct the v2-style two-cell sticky
+      top bar, after which the familiar active L piston sequence is replayed.
+      Final cleanup removed redundant border space and the left target, which
+      only forced a tail-end box_to_sticky restoration. A later supervised
+      micro revision sealed the P/L anchor behind a full wall row to remove
+      apparent anchor mobility; the left-upper sticky wall remains closed
+      because opening it admits a one-sticky-merge bypass. Final evidence:
+      shortest cost 30, complete graph with 306 reachable states, 653 legal
+      transitions, and 2 winning states. Core event probe is complete with no
+      winning bypass missing pull, push, box_to_sticky, sticky_to_box,
+      sticky_merge, sticky rigid movement, or the opening construction cut.
+      Count probes prove all wins still require sticky_merge >= 2,
+      move_sticky_rigid >= 4, and sticky_to_box >= 3. This version was accepted
+      for playtest by direct human supervision rather than independent reviewer
+      / critic review. 2026-07-09 human playtest accepted it as RA_CAND_0025,
+      aesthetic 4 / difficulty 4, as a compact active-L constructor where the
+      player actively builds the repeated piston structure.
+      Evidence:
+      prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4.md,
+      prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_core.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_sticky_merge_min2_sticky_merge_min2.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_rigid_min4_move_sticky_rigid_min4.md,
+      prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_sticky_to_box_min3_sticky_to_box_min3.md.
+    expected_trace:
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: right
+        events: [pull_object, move_sticky_rigid, sticky_to_box]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [push_object, move_sticky_rigid]
+      - input: right
+        events: [walk]
+      - input: left
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: right
+        events: [push_object, move_sticky_rigid, sticky_to_box]
+      - input: left
+        events: [pull_object, box_to_sticky, sticky_merge]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: down
+        events: [pull_object]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]

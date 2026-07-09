@@ -250,6 +250,10 @@ for (let index = 0; index < iterations; index += 1) {
     ((analysis.agency.scc as { handoffScriptiness?: { scriptedCount?: number } } | undefined)
       ?.handoffScriptiness?.scriptedCount ?? 0) * 8;
 
+  const scriptedCount =
+    ((analysis.agency.scc as { handoffScriptiness?: { scriptedCount?: number } } | undefined)
+      ?.handoffScriptiness?.scriptedCount);
+
   hits.push({
     ...solverHit,
     score,
@@ -257,7 +261,7 @@ for (let index = 0; index < iterations; index += 1) {
     winStates: analysis.graph.winStateCount,
     probeStates: probe.exploredStates,
     sccShape: analysis.agency.scc?.winSubgraphShape,
-    scriptedCount: analysis.agency.scc?.handoffScriptiness.scriptedCount,
+    scriptedCount,
   });
   hits.sort((left, right) => right.score - left.score);
   hits.splice(maxHits);

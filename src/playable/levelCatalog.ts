@@ -122,16 +122,6 @@ export async function readPlayableLevelsForExport(
   prototype: PrototypePackage,
 ): Promise<LevelsDoc> {
   const playableQueue = await readPlayableQueue(prototype.root, prototype.mechanic.id);
-  const hasExplicitQueue = playableQueue.entries.length > 0;
-
-  if (!hasExplicitQueue) {
-    const archivedSourceLevelIds = await readArchivedCanonicalSourceLevelIds(prototype.root);
-    return {
-      ...prototype.levels,
-      levels: prototype.levels.levels.filter((level) => !archivedSourceLevelIds.has(level.id)),
-    };
-  }
-
   const catalog = await buildEditableLevelCatalog(prototype);
   const byKey = new Map(catalog.sources.map((source) => [source.key, source] as const));
   const levels: LevelDoc[] = [];

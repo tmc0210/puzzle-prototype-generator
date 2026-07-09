@@ -3,43 +3,17 @@
 ```yaml
 candidate_id: RA_CAND_0012
 prototype: reality_anchor
-experiment_id: RA_CURR_2026_07_05_box_sticky_curriculum
 source_candidate_version: RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2
 status: accepted
-llm_candidate_strength: proposal_ready_with_caveats
 human_final_status: accepted
 archive_eligibility: clean_archive
-review_integrity: human_review
 human_reviewed: true
 aesthetic_score: 2
-aesthetic_label: 功能库存
 difficulty_score: 1
-difficulty_label: 教学见证
 allowed_exposure_through: null
-motifs:
-  - box_sticky_anchor
-  - fixed_anchor
-  - sticky_merge
-  - sticky_rigid_move
-  - sticky_join_intro
-archive_use:
-  - human_taste_reference
-  - critic_calibration
-  - designer_calibration
-strengths:
-  - compact_causal_chain
-failure_modes:
-  - tiny_forced_witness
 human_comment_ids:
   - HP_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_001
 ledger_ref: prototypes/reality_anchor/design_archive/experiments/RA_CURR_2026_07_05_box_sticky_curriculum.md
-evidence_refs:
-  - prototypes/reality_anchor/reports/candidate_packet_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_review2.zh.md
-  - prototypes/reality_anchor/reports/evidence_review_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_review_2.md
-  - prototypes/reality_anchor/reports/puzzle_critic_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_review_2.md
-  - prototypes/reality_anchor/reports/layout_analysis_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2.md
-  - prototypes/reality_anchor/reports/event_probe_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_core.md
-  - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2.md
 ```
 
 ## Layout
@@ -66,9 +40,7 @@ box_sticky_anchor: fixed horizontal wall-pocket
 ## Core Logic
 
 ```text
-第七关固定 B/S sticky join intro：两个黏块初始分离，第一推使它们相邻并触发 sticky_merge，第二推移动合并刚体并覆盖目标。
-核心探针完整，所有胜路都需要 sticky_merge 与 move_sticky_rigid；reachable scan 无 P/L/B/S 位移和材料转化。
-人类归档定位为“精简的黏箱机制快速witness”，审美 2 / 难度 1。
+固定 B/S sticky join intro：两个黏块先合并，再作为刚体移动并覆盖目标。价值是极简展示 sticky_merge 与刚体移动。
 ```
 
 ## Human Verdict
@@ -102,19 +74,9 @@ human_calibration:
     - HP_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_001
 ```
 
-## Evidence Refs
-
-```text
-- prototypes/reality_anchor/reports/candidate_packet_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_review2.zh.md
-- prototypes/reality_anchor/reports/evidence_review_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_review_2.md
-- prototypes/reality_anchor/reports/puzzle_critic_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_review_2.md
-- prototypes/reality_anchor/reports/layout_analysis_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2.md
-- prototypes/reality_anchor/reports/event_probe_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2_core.md
-- prototypes/reality_anchor/reports/fixed_anchor_probe_RA_CURR_2026_07_05_L07_FIXED_BS_STICKY_RIGID_v2.md
-```
-
 ## Retrieval Summary
 
 ```text
-人类接受的 Reality Anchor 第七关固定 B/S sticky join witness，审美 2、难度 1。两个黏块先拼接再作为刚体移动，目标由拼接后的下方黏块覆盖。它是功能性教学库存和“早期 witness 可以极短但必须清楚”的校准样本，不应包装成高难或高密度谜题。
+人类接受第七关固定 B/S sticky join witness，审美2、难度1。两个黏块先拼接再作为刚体移动，属于精简机制教学库存。
 ```
+

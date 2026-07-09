@@ -31,7 +31,7 @@
 - 这条禁令不覆盖原型文档或 experiment brief 明确声明的 prototype-specific
   meta / redesign 流程；这种流程按原型文档自己的适用性、证据格式和审美标签执
   行。
-- 把 archive tags、status、archive_use 和 retrieval_summary 视为导航元数据。
+- 把 archive tags、status 和 retrieval_summary 视为导航元数据。
   审美判断必须引用人类评语摘句或人类评分字段。
 - 提交 critic-facing packet 前，应选择 0-4 个相关且带有人类评语的 clean archive
   examples 作为 `archive_taste_context`。普通实验默认 0-2 个；challenge /
@@ -55,8 +55,8 @@
   证据格式执行。不要假设每个游戏都有 meta-interface、重访、大地图接口或跨关
   入口。
 - 如果原型文档要求入待玩列表前的 prototype-specific cleanup，必须在加入待玩
-  列表前完成；candidate output 只记录结果摘要和证据引用，不把原型专属流程扩
-  写成每次通用评审材料。
+  列表前完成；candidate packet 只记录结果摘要和必要证据边界，不把原型专属流程
+  扩写成每次通用评审材料。
 - 如果原型或 brief 提供 mechanic exposure sequence，candidate packet 必须显式
   写明 `allowed_exposure_through` 和 `claimed_core_events`。不要把抽象知识当成
   probe；证据检查只看已有事件。
@@ -88,7 +88,8 @@
 - 对每个 serious start candidate，比较 opening comfort、first irreversible
   commitment、core causal chain preservation、target-event coverage 和 reading
   order。
-- 在 candidate record 中记录 chosen start 和 rejected starts。
+- 在 candidate packet 中记录 chosen start 和 rejected starts；archive record
+  只保留最终 layout 与必要摘要。
 - 如果最佳 start 仍然狭窄或强制，把它保留为 caveat，不要用 solver success 掩盖。
 ```
 

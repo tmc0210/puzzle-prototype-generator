@@ -20,7 +20,11 @@ description: 编排 Sokoban-like 原型的单关设计审查循环。Use when Co
 - `accepted`、`mainline`、`positive_reference`、`reference` 不是本 skill 可授予状态。
 - prototype-specific workflow 被原型声明时必须服从，未声明时绝不默认运行。`kind: pre_submission_check` 表示提交给人类查看或加入待玩列表前要跑的检查；它必须在执行对应提交动作前完成，不进入 reviewer / critic packet，也不改变 `review_loop_state`。当前待玩队列入口是 `prototypes/<mechanic_id>/playable_queue.yml`。
 - archive taste context 只用于审美校准和失败模式校准；检查已有工作只用于保护工作区、识别历史参考和选择校准样本。
-- 设计 / 提交候选请求默认 `fresh_required`；除非本轮 brief 明确点名 archive / run / candidate id 并要求 replay / audit / resubmit / repair / remix / continue，否则已有 archive / run / candidate / packet 不能作为设计起点，包括布局、接口、对象角色、因果链或最小改动变体的起点，也不能作为 independent review 对象、交付物或目标完成条件。类似的，其他的工作区未完成流程中的任何形式的关卡草稿、中间产物都不能作为设计的起点或以此继续流程。
+- 设计 / 提交候选请求默认 `fresh_required`；除非本轮 brief 明确点名 archive / run / candidate id 并要求 replay / audit / resubmit / repair / remix / continue，否则已有 archive / run / candidate / packet 不能作为设计起点，包括布局、接口、对象角色、因果链或最小改动变体的起点，也不能作为 independent review 对象、交付物或目标完成条件。
+- 设计工作可能在多个线程发生。所以即使发生上下文压缩、线程恢复或工作区已有看似完整的 packet/review/check/artifact 或任何其他中间产物，
+  只要 controller 不能在当前可见上下文中证明该候选是在本轮 brief 下按 fresh_required 顺序
+  由自己流程产生，
+  都视作是其他线程正在进行的工作；不得补审、续审、提交、加入待玩列表或作为目标完成条件。
 
 ## 必读路由
 
