@@ -1,0 +1,15 @@
+candidate_version: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17
+probe_semantics:
+  implementation: prototypes/reality_anchor/reports/probe_split_key_win_without_event.ts
+  method: "BFS 禁止命中指定事件的边；status=complete 表示队列闭合且无胜局。"
+  max_states_each: 1000000
+results:
+  sticky_to_box: {bypass: false, status: complete, states: 2861}
+  box_to_sticky: {bypass: false, status: complete, states: 12}
+  sticky_merge: {bypass: false, status: complete, states: 12}
+  anchor_boundary_shift_push_pull: {bypass: false, status: complete, states: 155}
+  anchor_boundary_shift_box_sticky: {bypass: false, status: complete, states: 7}
+claim_boundary:
+  all_win_supported: [sticky_to_box, box_to_sticky, sticky_merge, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky]
+  all_win_sticky_split_claimed: false
+  instance_identity_supported: false

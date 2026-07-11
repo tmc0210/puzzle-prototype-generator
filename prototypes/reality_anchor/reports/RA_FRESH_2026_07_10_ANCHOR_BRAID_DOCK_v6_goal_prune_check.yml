@@ -1,0 +1,106 @@
+candidate_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6
+check_kind: reality_anchor_goal_prune
+status: clean
+source_revision:
+  reviewed_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+  review_loop_state: proposal_ready_with_caveats
+  polish_change_to_v6:
+    removed_targets:
+      - [1, 2]
+      - [3, 2]
+    reason: >-
+      v5 的三个底行目标存在组合冗余；按逐个与组合删除反事实，删至只保留
+      [3,1] 与 [2,2] 时最短成本、完整图、规范解与核心 mixed-chain 门均保持。
+      这是 proposal_ready 后的原型专属提交前优化，不进入 reviewer / critic packet。
+  predecessor_prune_matrix:
+    baseline_v5_targets:
+      - [3, 1]
+      - [1, 2]
+      - [2, 2]
+      - [3, 2]
+    single_removals:
+      remove_[3,1]: {cost_delta: "17->5", graph_status: complete, result: keep}
+      remove_[1,2]: {cost_delta: "17->17", graph_status: complete, result: removable}
+      remove_[2,2]: {cost_delta: "17->17", graph_status: complete, result: removable}
+      remove_[3,2]: {cost_delta: "17->17", graph_status: complete, result: removable}
+    combination_removals:
+      remove_[1,2]_[2,2]: {cost_delta: "17->6", graph_status: complete, result: reject}
+      remove_[1,2]_[3,2]: {cost_delta: "17->17", graph_status: complete, result: selected_v6}
+      remove_[2,2]_[3,2]: {cost_delta: "17->17", graph_status: complete, result: viable_not_selected}
+      remove_all_bottom_three: {cost_delta: "17->4", graph_status: complete, result: reject}
+    selection_reason: >-
+      两个最小二目标版本都保持成本；选择保留 [2,2] 的版本，是因为规范解 step 16
+      先由 P 覆盖该目标，step 17 再把覆盖责任交给 L，同时 B/S 恢复上目标，形成更强的
+      双目标端点接力。随后 exact v6 的完整图、expected trace 与核心事件探针全部重跑通过。
+baseline:
+  layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_layout.txt
+  targets:
+    - [3, 1]
+    - [2, 2]
+  shortest_cost: 17
+  graph_status: complete
+  reachable_states: 178
+  winning_states: 1
+  expected_trace_win: true
+  core_event_bypass: none
+  core_events_all_win_required:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - force_chain:n2
+    - pull_object:push_pull_anchor
+    - pull_object:box_sticky_anchor
+targets_checked:
+  - target: [3, 1]
+    action: keep
+    reason: >-
+      删除后最短成本 17->3，且出现绕过 B/S shift、mixed n2、P/L pull 与 B/S pull
+      的三步胜路，违反必须保留条件。
+    cost_delta: "17->3"
+    graph_status: complete
+    reachable_states: 108
+    winning_states: 5
+    expected_trace_legal: true
+    expected_trace_win: true
+    core_event_bypass:
+      - anchor_boundary_shift:box_sticky
+      - force_chain:n2
+      - pull_object:push_pull_anchor
+      - pull_object:box_sticky_anchor
+  - target: [2, 2]
+    action: keep
+    reason: >-
+      删除后最短成本 17->4，且出现绕过 B/S shift、mixed n2、P/L pull 与 B/S pull
+      的四步胜路，违反必须保留条件。
+    cost_delta: "17->4"
+    graph_status: complete
+    reachable_states: 70
+    winning_states: 2
+    expected_trace_legal: true
+    expected_trace_win: true
+    core_event_bypass:
+      - anchor_boundary_shift:box_sticky
+      - force_chain:n2
+      - pull_object:push_pull_anchor
+      - pull_object:box_sticky_anchor
+removed_targets: []
+retained_targets:
+  - [3, 1]
+  - [2, 2]
+evidence_refs:
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_goal_remove_3_1.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_goal_remove_1_2.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_goal_remove_2_2.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_goal_remove_3_2.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_goal_remove_1_2__2_2.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_goal_remove_1_2__3_2.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_goal_remove_2_2__3_2.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_goal_remove_1_2__2_2__3_2.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+  - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+  - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_expected_trace.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_remove_top.json
+  - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_remove_top.json
+  - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_remove_top_expected_trace.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_remove_lower.json
+  - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_remove_lower.json
+  - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_remove_lower_expected_trace.json

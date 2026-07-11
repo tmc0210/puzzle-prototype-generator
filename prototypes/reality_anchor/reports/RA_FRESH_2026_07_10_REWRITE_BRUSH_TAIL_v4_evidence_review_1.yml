@@ -1,0 +1,95 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v4
+review_input_type: candidate_version
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+supported_claims:
+  - claim: "七个 required winning-path event group 均为 all-solution 必经。"
+    evidence: >-
+      event probe 的 combined probe 状态为 complete、found bypass=false、explored states=2530；
+      pp_shift、bs_shift、split、rigid、pull、rebind、merge 七个 individual probe 也都为
+      complete 且 found bypass=false。
+    scope: "支持 event-pattern 层面的全胜路必经，不扩张为对象实例必要性。"
+  - claim: "所有胜路至少发生三次 anchor_boundary_shift:push_pull。"
+    evidence: >-
+      event-count probe 以 required minimum count=3 完整结束，found bypass below count=false，
+      explored states=1214。
+    scope: >-
+      返回的最短 trace 在 steps 1、2、5 恰好发生三次该事件；全胜路 gate 只证明次数下界，
+      不单独证明玩家必然以“前两次释放把手、第三次配置 push-to-pull”来理解这些动作。
+  - claim: "给定证据支持 split、rigid、rebind、merge 的中心事件顺序约束。"
+    evidence: >-
+      rebind_after_split probe 完整且无 violation win；rebind_after_rigid probe 完整且无
+      violation win；merge_after_rigid probe 完整且无 violation win。最短 trace 进一步展示
+      step 3 sticky_to_box、step 10 move_sticky_rigid、step 11 box_to_sticky 与 sticky_merge。
+    scope: >-
+      全胜路层面支持 box_to_sticky 必须已有 sticky_to_box 与 move_sticky_rigid，且
+      sticky_merge 不能先于 move_sticky_rigid；只有返回 trace 证明 rebind 与 merge 在同一步发生。
+  - claim: "近目标 [7,5] 在所有胜路中必须经历 covered -> uncovered -> covered。"
+    evidence: >-
+      target-vacate probe 报告 initial covered=true、status=complete、found bypass=false，
+      explored states=1875；最短 trace 中 step 10 腾空该目标并让玩家落在目标上，step 11 重新覆盖并获胜。
+    scope: "支持目标 vacate 的全胜路事实前提。"
+  - claim: "返回的 11 步最短解实现 packet 所述的完整核心事件链。"
+    evidence: >-
+      solver found=true、shortest cost=11；trace 依次出现三次 P/L shift、B/S shift 与 split、
+      MM rigid shift、crate pull、box_to_sticky、sticky_merge，终态获胜。
+    scope: "这是返回最短 trace 的实例证据，不是所有胜路都采用相同对象实例与逐步脚本的证明。"
+  - claim: "本轮不存在需要用 complete reachable exposure scan 排除的 later/forbidden exposure。"
+    evidence: >-
+      packet 将 allowed_exposure_through 声明为 all_current_reality_anchor_runtime_rules，
+      forbidden_if_seen_anywhere 与 forbidden_winning_path_events 均为空；已声明核心事件另有完整
+      all-solution required gate。
+    scope: "未运行 forbidden reachable scan 在本 claim 范围内不是缺失 gate。"
+  - graph_fact: >-
+      主可达图 status=complete，reachable states=1214，legal transitions=3101，winning states=1；
+      agency/SCC 分析同为 complete，未发生 graph exhaustion。
+    neutral_meaning: >-
+      给定预算内的主可达状态图已经闭合，因此 packet 引用的状态数、胜态数与 SCC/region 结构可按完整图事实读取。
+    player_facing_interpretation: >-
+      这些事实只保证审查所用的可达结构没有因预算截断而漏掉分支；它们不证明玩家会识别设计者描述的洞见。
+    verdict_effect: none
+  - graph_fact: >-
+      initial SCC 有 16 states、2 个出口，其中 1 个 win-reaching、1 个 dead；胜路 SCC 路径有
+      5 次 commitment，forcedWinPrefix=2/5，win subgraph 为 branching_win_dag。
+    neutral_meaning: >-
+      开局可逆区之后的前两个胜路承诺各只有一个通向胜利的出口，第三个承诺起存在胜路分支，之后发生合流。
+    player_facing_interpretation: >-
+      玩家可以在开局可逆区走动，但一旦跨出，前两次承诺的可行续接受限；后段并非唯一输入序列。
+      这支持“存在五个承诺阶段”的事实前提，同时不能把受限续接直接解释为玩家洞见或 why_not_execution 成立。
+    verdict_effect: caveat
+unsupported_or_overclaimed:
+  - claim: >-
+      若“先推走 MM 尾巴，再把上方 C 拉回”被解读为任何 pull_object:crate#1 都不得在
+      move_sticky_rigid 之前发生，则该宽泛顺序不受证据支持。
+    reason: >-
+      packet 已披露较长胜路可在 required tail move 前做一次无效 crate pull。给定 order probes
+      没有检查 pull_object 必须晚于 move_sticky_rigid。
+    impact: >-
+      这是 claim wording caveat，不是 central order claim 的崩溃：完整 gate 仍证明每条胜路都需要
+      move_sticky_rigid，并且 box_to_sticky 与 sticky_merge 均不能在该 rigid move 之前完成；
+      最短 trace 的最终跨界拉回也确实在 rigid move 后触发 rebind 与 merge。
+  - claim: "所有胜路都由同一个 C 实例在同一步完成 pull、rebind、merge，并与被移动的同一个 MM 实例合并。"
+    reason: >-
+      返回 trace 支持 crate#1 与 sticky#1 的该实例叙事，但 all-solution probes 是 event-pattern gate；
+      它们不证明 per-object identity，也没有证明 rebind 与 merge 在所有胜路中同一步耦合。
+    impact: "不得把返回 trace 的对象实例链扩写成全胜路对象身份定理。"
+  - claim: "玩家必然把前三次 P/L 位移读成未来把手释放与 force-side 配置，且主要体验不是执行。"
+    reason: >-
+      工具证据支持三次位移的必要性、最短 trace 的几何结果和五次 commitment，但不能证明玩家的认知表征、
+      洞见形成或 why_not_execution；前两次 commitment 在完整图中还是 forced viable continuation。
+    impact: "该玩家侧价值判断必须留给独立 puzzle critic 或实际试玩，不能由本 evidence verdict 代替。"
+evidence_limits:
+  - "所有 all-solution 结论均限于给定 probe 的事件 pattern 与计数/顺序谓词；不自动推出对象实例必要性。"
+  - "返回 trace 证明一条最短胜路的具体空间因果链，不能证明所有较长胜路都保持相同局部动作顺序。"
+  - "complete graph 中只有一个 winning state 不等于只有一条 winning route；packet 已明确存在带无效 crate 往复的较长胜路。"
+  - "图与 SCC 数据只能支撑 player_insight、why_not_execution 的事实前提，不能单独证明这些玩家侧设计 claim。"
+  - "本审查不评价审美、难度、campaign placement 或 prototype-specific 提交前检查。"
+questions_for_designer:
+  - >-
+      非阻断：后续对外表述可否把“再把 C 拉回”明确为“最终把 C 跨界拉回并触发 rebind/merge”，
+      从而避免被误读为不存在任何更早的无效 crate pull？
+  - >-
+      非阻断：若后续要声称所有胜路都由同一对象实例完成同一步 rebind+merge，是否愿意把该声明降为
+      returned-trace 叙事，或另行提供 per-object/coupling 证据？

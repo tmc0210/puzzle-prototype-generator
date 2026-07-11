@@ -1,5 +1,7 @@
 # Player Model Derivation
 
+Status: obsolete.
+
 本文档描述未来 agent 如何从任意规则集推导玩家模型。它只记录可泛化流程，不记录某个原型的迁移历史。
 
 目标输出：

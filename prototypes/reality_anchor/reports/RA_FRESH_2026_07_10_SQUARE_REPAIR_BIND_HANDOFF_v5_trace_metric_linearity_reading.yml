@@ -1,0 +1,58 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5
+task: player_side_linearity_diagnosis
+status: supports_user_concern_with_scope_limit
+
+trace_metric_interpretation:
+  calibration: reality_anchor_trace_metrics_v0
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact:
+      aggregate_band: 4
+      solution_cost: 23
+      non_walk_event_count: 24
+    allowed_reading: >-
+      规范解具有较高的操作与机制事件密度；该指标不测量洞见、因果依赖或非线性。
+    player_facing_check: >-
+      九次对象输入均改变后续状态，没有明显重复动作 padding；因此“线性”不是因为动作空洞，
+      而是状态职责沿单向流水线依次交付。
+    verdict_effect: none
+  solution_space_reuse:
+    metric_fact:
+      aggregate_band: 1
+      player_total_visits: 24
+      player_unique_visited_cells: 23
+      revisit_rate: 0.041666666666666664
+      heavy_reuse_cell_count: 0
+      heavy_reuse_ratio: 0
+    allowed_reading: >-
+      当前规范解几乎一次性穿过所有玩家落脚格，不依赖反复回到同一工作区。
+      低值本身不等于低质量，也不能单独证明线性。
+    player_facing_check: >-
+      补角、刷线、纵剪、单箱抽取、重绑和最终交付分别发生在连续向左推进的不同位置；
+      旧工作区很少因局面变化获得新用途。结合玩家侧流程，这支持“中段过于单向”的反馈。
+    verdict_effect: caveat
+
+graph_and_trace_cross_check:
+  facts:
+    complete_graph_winning_states: 1
+    solution_commitments: 9
+    forced_optimal_commitment_prefix: 9
+    win_continuation_branching_sccs: 1
+    win_continuation_merging_sccs: 1
+  neutral_meaning: >-
+    图事实说明最短承诺链高度收窄；它不要求增加第二条可胜计划，也不把 SCC 分叉数量当作质量目标。
+  player_facing_reading: >-
+    在识别 1+3 拆分后，后续主要是沿唯一把手顺序完成单箱让位、抽取、重绑与左拉交付；
+    这与 space-reuse band 1 的“一次性穿行”读法一致。
+
+design_consequence:
+  rejected_fix: 增加两条职责不同的可胜计划
+  required_fix: >-
+    保持唯一宏观职责链，但让同一对象或同一工作区至少在两个相隔阶段承担不同职责，
+    并由前一阶段留下的状态约束后一阶段；任何新增回访都必须被后续消费，不能只是 shuttle。
+  hard_gate: >-
+    one winning state 不是唯一解法证明；必须另外攻击所有胜路的对象事件序列、职责里程碑顺序与汇合旁路。
+
+evidence_refs:
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.json
+  - skills/sokoban-puzzle-critic/references/trace-metric-reading.md

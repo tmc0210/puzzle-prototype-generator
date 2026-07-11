@@ -1,5 +1,7 @@
 # 求解器与形式化评估器
 
+Status: obsolete.
+
 求解器负责证明和分析。形式化评估器只检查关卡声明的 `expected_solver_evidence`，不直接猜测关卡质量。
 
 ## 状态图模型

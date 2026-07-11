@@ -1,0 +1,69 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5
+workflow: reality_anchor_invalid_goal_prune
+execution_order: 1
+triggered_after_reviews:
+  evidence_review_4: {review_loop_state: proposal_ready_with_caveats, required_action: none}
+  puzzle_critic_4: {review_loop_state: proposal_ready, required_action: none}
+goal_prune_check:
+  status: clean
+  baseline: {shortest_cost: 23, graph_status: complete, reachable_states: 165454, winning_states: 1}
+  targets_checked:
+    - target: [2, 4]
+      action: keep
+      reason: 单删后成本仍为23且原trace通关，但出现缺少box_to_sticky/sticky_merge的胜路，并绕过精确偏移2x2。
+      cost_delta: "23->23"
+      graph_status: complete
+      graph_states: 165303
+      winning_states: 7
+      expected_trace_win: true
+      core_event_bypass: [box_to_sticky, sticky_merge]
+      required_shape_bypass: rebound_offset_2x2_exact
+    - target: [3, 4]
+      action: keep
+      reason: 单删后最短成本从23降至21，命中必须保留条件。
+      cost_delta: "23->21"
+      graph_status: complete
+      graph_states: 165431
+      winning_states: 17
+      expected_trace_win: true
+      core_event_bypass: not_required_after_cost_drop_gate
+    - target: [2, 5]
+      action: keep
+      reason: 单删后成本仍为23且原trace通关，但出现完全不移动B/S的胜路，并绕过精确偏移2x2。
+      cost_delta: "23->23"
+      graph_status: complete
+      graph_states: 165299
+      winning_states: 24
+      expected_trace_win: true
+      core_event_bypass: [anchor_boundary_shift:box_sticky]
+      required_shape_bypass: rebound_offset_2x2_exact
+    - target: [3, 5]
+      action: keep
+      reason: 单删后成本仍为23且原trace通关，但出现缺少box_to_sticky/sticky_merge的胜路，并绕过精确偏移2x2。
+      cost_delta: "23->23"
+      graph_status: complete
+      graph_states: 165384
+      winning_states: 6
+      expected_trace_win: true
+      core_event_bypass: [box_to_sticky, sticky_merge]
+      required_shape_bypass: rebound_offset_2x2_exact
+  combination_removal_check:
+    status: not_applicable
+    reason: 没有任何相邻目标通过单删门。
+  removed_targets: []
+  retained_targets: [[2, 4], [3, 4], [2, 5], [3, 5]]
+  evidence_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_2_4.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_3_4.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_2_5.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_3_5.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_2_4.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_3_4.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_2_5.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_3_5.json
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_2_4.json
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_2_5.json
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_3_5.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_2_4_rebound_offset_2x2_exact.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_2_5_rebound_offset_2x2_exact.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_GOAL_REMOVE_3_5_rebound_offset_2x2_exact.json

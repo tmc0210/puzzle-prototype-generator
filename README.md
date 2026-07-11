@@ -75,10 +75,9 @@
 npm run inspect
 npm run solve
 npm run explain:level -- L20
-npm run explain:layout -- path/to/layout.txt scratch K_move_portal_to_open_path
+npm run explain:layout -- path/to/layout.txt scratch
 npm run evaluate
 npm run evaluate:write
-npm run coverage
 npm run audit
 npm run audit:write
 npm run curriculum:v2

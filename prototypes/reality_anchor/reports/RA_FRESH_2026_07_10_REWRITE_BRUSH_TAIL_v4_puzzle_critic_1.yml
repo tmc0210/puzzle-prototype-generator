@@ -1,0 +1,220 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v4
+review_input_type: candidate_version
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+review_method:
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_initial_review: true
+
+initial_review:
+  verdict: supports_with_noncore_caveats
+  review_loop_state: proposal_ready_with_caveats
+  required_action: none
+  player_facing_merits:
+    - >-
+      核心洞见不依赖把前两次 P/L 连推本身包装成谜题；真正需要理解的是第三次 P/L
+      shift 会同时改写未来 tail 的推动侧和玩家落点的拉动侧。玩家必须把早期边界配置与数步后的
+      sticky 移动、crate 回拉联系起来，不能只追逐眼前最近的可动物。
+    - >-
+      split -> target vacate -> push-to-pull -> rebind 构成可读的因果闭环：B/S 先给出最终填洞材料，
+      MM tail 为覆盖远目标而主动撤掉近目标覆盖，随后 crate 被拉回近目标并与 tail 合并。临时破坏
+      已完成目标不是装饰性反转，而是最终三格 sticky 横条成立所必需的状态消费。
+    - >-
+      两组可见锚点和初始 sticky 形状均获得明确职责：P/L 负责释放 B/S handle 与配置推拉交接，
+      B/S 负责 split 与允许最终 rebind，L 形 tail 同时承担远目标覆盖、近目标腾空和最终合并接口。
+      这与 RA_CAND_0027 的可见 affordance 闲置或事件标签空转有实质区别。
+    - >-
+      最终三格 sticky 横条以两个目标为端点，把开局已覆盖的近目标、远端空目标和中间合并接口
+      收束成一个紧凑图形 payoff；终局能够反向解释为何必须先移动原有 tail。
+    - >-
+      结构难度来自五次有后果的状态承诺之间的依赖，而不只来自 11 步长度：split 的材料输出、
+      第三次 P/L 配置、tail 的目标腾空以及最后 pull/rebind 互相制约。后段存在分支后汇合，也使
+      正解不等同于从头到尾照走唯一狭廊输入。
+  archive_taste_context_used:
+    - RA_CAND_0022
+    - RA_CAND_0025
+    - RA_CAND_0019
+    - RA_CAND_0027
+  score_calibration:
+    human_archive_anchors_present: true
+    score_claim_allowed: true
+    archive_attack_calibration: complete_positive_and_lower_bound_negative_anchors
+    positive_anchors:
+      - >-
+        RA_CAND_0022（human 5/4）：用于检查是否达到短、强反直觉、紧凑高空间利用的 5 分审美上界；
+        当前候选没有复用其布局或逻辑。
+      - >-
+        RA_CAND_0025（human 4/4）：用于校准主动构造与干净 payoff 足以支持 4 分审美；当前候选没有
+        复用其 active-L 逻辑。
+    lower_bound_or_negative_anchors:
+      - >-
+        RA_CAND_0019（human 2/2）：用于攻击显然 anchor stroke 是否让洞见退化为执行。
+      - >-
+        RA_CAND_0027（human 1/2）：用于检查可见 affordance 是否闲置、事件名称是否超过玩家实际体验。
+    missing_anchor_effect: none
+  aesthetic_target_fit: supports_4_not_5
+  difficulty_target_fit: supports_3_not_4
+  critic_items:
+    - &forced_opening_strokes_cap_insight
+      id: forced_opening_strokes_cap_insight
+      type: nonblocking_risk
+      target: player_insight
+      claim_relation: >-
+        攻击前两次 P/L 连推是否只是强制或显然输入，以及是否重演 RA_CAND_0019 的第一步 anchor
+        stroke 过显然问题。
+      evidence_basis: >-
+        P/L 位于顶部走廊；最短解前两步均为 P/L shift；hard facts 给出 forced_viable_prefix=2，且
+        玩家读法说明前两次 shift 用于释放 old-L cell。
+      player_facing_reason: >-
+        玩家很可能把前两次右推读成走廊内唯一自然进展，因此这两步本身不应计为洞见。与
+        RA_CAND_0019 的区别是，本关的主要判断负担落在随后 B/S split 后仍需执行第三次 P/L shift，
+        并预见它会配置 tail push 与 crate pull 的交接；因而风险限制上界，但没有把完整谜题降为执行。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - &difficulty_three_not_four
+      id: difficulty_three_not_four
+      type: score_boundary
+      target: why_not_execution
+      claim_relation: >-
+        攻击 11 步、5 commitments 是否稳定达到难度 3，以及是否支持难度 4。
+      evidence_basis: >-
+        shortest cost=11；irreversible_progress 给出 commitments=5、forced_viable_prefix=2、
+        win_dag=branching_then_merging；关键顺序含 split、第三次 P/L 配置、target vacate 与 final pull/rebind。
+      player_facing_reason: >-
+        玩家需要跨阶段理解状态责任，足以越过纯执行并支持难度 3；但开局两个有效进展被强制、总输入短，
+        后段目标也在移动 tail 后较快显形，因此当前材料不足以把推理负担抬到难度 4。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - &aesthetic_four_not_five
+      id: aesthetic_four_not_five
+      type: score_boundary
+      target: role_fit
+      claim_relation: >-
+        攻击 split -> target vacate -> push-to-pull -> rebind 闭环是否达到审美 4，以及是否支持 5。
+      evidence_basis: >-
+        玩家读法把两组锚、L 形 sticky、两目标与 split crate 串成同一闭环；payoff 为目标位于最终三格
+        sticky 横条两端。RA_CAND_0022 提供 human 5 上界，RA_CAND_0025 提供 human 4 正例。
+      player_facing_reason: >-
+        目标腾空与最终补回让同一 tail 同时承担障碍、运输体和合并接口，结构干净且有重读 payoff，
+        支持审美 4；但两次显然开局 stroke 和较直接的末段收束没有 RA_CAND_0022 所代表的强反直觉、
+        高空间压缩强度，不能据此支持 5。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - &optional_detour_cadence_risk
+      id: optional_detour_cadence_risk
+      type: nonblocking_risk
+      target: why_not_execution
+      claim_relation: >-
+        检查较长获胜路线中的 crate push/pull detour 是否会把体验稀释成执行噪声。
+      evidence_basis: >-
+        evidence_limits 明确较长获胜路线可能在必需 tail move 前增加一次 crate push/pull detour，且唯一
+        winning state 不代表唯一路线。
+      player_facing_reason: >-
+        绕路玩家可能经历一小段非必要搬运，使最短解的节奏不完全代表所有通关体验；但所有解仍须经过
+        同一组核心事件与次序边界，detour 未替代核心洞见，故只保留为非阻塞风险。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - &do_not_overclaim_route_identity
+      id: do_not_overclaim_route_identity
+      type: diagnostic_note
+      target: evidence_support
+      claim_relation: >-
+        限制“所有可见对象在所有解中都以完全相同身份兑现”或“路线唯一”的过强表述。
+      evidence_basis: >-
+        evidence_limits 明确没有超出单个初始 sticky group / 单一 split crate 几何的逐对象全解身份证明，
+        且 exactly one winning state 不等于 exactly one route。
+      player_facing_reason: >-
+        当前最短解读法已足以判断可见双锚与 sticky 的职责，但 critic 结论不外推到每条路线的逐对象
+        完全同构；该边界不削弱当前玩家侧闭环。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - &pre_submission_checks_pending
+      id: pre_submission_checks_pending
+      type: diagnostic_note
+      target: diagnostic_reading
+      claim_relation: >-
+        记录原型专属提交前流程仍为 pending，但不把其完成与否当作审美、难度或 role-fit 证据。
+      evidence_basis: routed_diagnostics.prototype_specific_pre_submission_checks=pending_and_not_quality_evidence
+      player_facing_reason: >-
+        此状态不改变玩家体验判断；最终提交所有者仍须在加入待玩列表前完成对应流程。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+  diagnostic_interpretations:
+    - graph_fact: >-
+        图枚举 complete，共 1214 states、3101 transitions、1 winning state。
+      neutral_meaning: >-
+        给定规则与范围内的状态图已完整枚举，终局状态唯一；这不等于路线唯一，也不说明路线有趣。
+      player_facing_interpretation: >-
+        完整性只让当前关卡可被审查；玩家仍可能沿不同分支或带 detour 到达同一终局，因此不能从
+        winning_states=1 推出唯一解感或审美收束。
+      verdict_effect: none
+    - graph_fact: >-
+        initial SCC 有 16 states、2 exits、其中 1 viable exit 与 1 dead exit，distance=5。
+      neutral_meaning: >-
+        开局存在一个 16 状态的可逆区域，玩家在距离 5 的边界可作两个不可逆离开选择，其中仅一个
+        保留获胜可能。
+      player_facing_interpretation: >-
+        玩家有少量开局试走空间并会面对一次有后果的出口选择；然而若走廊对齐已经把有效出口显示得
+        很自然，这个二选一也可能被体验成显然正向与明显死路，而非深层洞见。
+      verdict_effect: caveat
+    - graph_fact: >-
+        irreversible_progress 给出 5 commitments、前 2 个有效进展 forced，获胜 DAG 后段
+        branching_then_merging。
+      neutral_meaning: >-
+        所有获胜路径共享前两个有效承诺，之后存在会分开再汇合的获胜进展；图形不是完整单链。
+      player_facing_interpretation: >-
+        前两次 P/L 连推很可能形成脚本化开场，限制洞见与难度上界；后段分支和汇合则避免把整关简化为
+        唯一走廊输入，但分支存在本身不自动产生审美价值。
+      verdict_effect: caveat
+  handoff_notes:
+    - >-
+      当前玩家侧结论支持目标门槛：审美 4、难度 3；不支持审美 5 或难度 4。两个分数边界须随
+      handoff 保留。
+    - >-
+      facts 声明 lineage 为 fresh，未使用 archive 布局、对象职责、路线或因果链；当前没有未授权
+      archive variant blocker。archive anchors 只用于口味校准，不构成复用授权。
+    - >-
+      prototype-specific pre-submission checks 仍 pending；它们必须由最终提交流程处理，但无论完成与否
+      都不得被当作本 critic 的玩家侧优点。
+    - >-
+      本 critic 不授予 accepted、mainline、positive_reference 或 reference。
+
+claim_followup:
+  claim_read: true
+  verdict_changed: false
+  score_or_state_changed: false
+  change_summary: >-
+    设计 claim 与初评所见的 split、target vacate、push-to-pull、rebind 因果链一致，没有推翻任何
+    玩家侧优点或风险。审美 5 与难度 4_or_higher 仍只作为追求目标；final 仅支持 aesthetic floor=4、
+    difficulty floor=3。补充 role-fit 边界：可支持 late_application，但不足以证明更高强度 challenge。
+  change_reason: >-
+    claim 是设计者对既有 facts 的 framing，没有新增能够增强反直觉程度、减少强制开场感或提高推理
+    层数的独立事实；按 claim-last 纪律不得因此升档。其 fresh relation 与 facts 一致，未产生 lineage
+    blocker；其 archive_novelty_check 不作为人类审美分数依据。
+  final_verdict: supports_with_noncore_caveats
+  final_review_loop_state: proposal_ready_with_caveats
+  final_required_action: none
+  final_critic_items:
+    - *forced_opening_strokes_cap_insight
+    - *difficulty_three_not_four
+    - *aesthetic_four_not_five
+    - *optional_detour_cadence_risk
+    - *do_not_overclaim_route_identity
+    - *pre_submission_checks_pending
+    - id: role_fit_late_application_not_high_challenge
+      type: score_boundary
+      target: role_fit
+      claim_relation: >-
+        design_target 将 intended_role 写为 late_application_or_challenge，并同时把 difficulty 4_or_higher
+        作为目标、3 作为下限。
+      evidence_basis: >-
+        初评已基于 11 inputs、5 commitments、forced viable prefix=2 与后段 branching_then_merging 判断
+        supports_3_not_4；claim 没有提供新的独立玩家侧事实。
+      player_facing_reason: >-
+        全规则综合与跨阶段状态责任适合规则已学会后的 late application；但短链和脚本化开场不足以
+        稳定承担以难度 4+ 为含义的高强度 challenge 角色。该边界不破坏 brief 的 difficulty floor=3。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking

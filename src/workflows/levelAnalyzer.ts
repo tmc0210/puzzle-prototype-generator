@@ -1,7 +1,6 @@
 import type {
   GraphAnalysis,
   InputId,
-  KnowledgeItem,
   LevelDoc,
   MechanicDoc,
   PrototypePackage,
@@ -12,10 +11,8 @@ import type {
 import { analyzeGraphWithRuntime } from "../core/graphAnalyzer.js";
 import {
   counterfactualOptions,
-  findUncoveredGoalPathWithRuntime,
   solveWithRuntime,
 } from "../core/solver.js";
-import { coversEventPatterns } from "../core/events.js";
 import {
   analyzeObjectParticipation,
   type ObjectParticipationSummary,
@@ -29,7 +26,15 @@ import {
   type SccSolutionBranchSummary,
 } from "../core/agencyAnalyzer.js";
 import { buildAgencyDigest, formatAgencyDigestMarkdown } from "../core/agencyDigest.js";
-import { getRuntimeAdapter, type CurrentRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
+import {
+  calibrateTraceMetrics,
+  type CalibratedTraceMetrics,
+  type RawSolutionTraceMetrics,
+} from "./traceMetricCalibration.js";
+import {
+  getRuntimeAdapter,
+  type CurrentRuntimeAdapter,
+} from "../prototypes/runtimeAdapter.js";
 
 type RuntimeState = unknown;
 
@@ -37,7 +42,6 @@ export type LevelAnalysisOptions = {
   maxStates?: number;
   maxDepth?: number;
   graphMaxStates?: number;
-  bypassMaxStates?: number;
   counterfactualMaxStates?: number;
 };
 
@@ -51,6 +55,14 @@ export type TraceSnapshot = {
   after: string;
 };
 
+export type SolutionTraceMetrics = RawSolutionTraceMetrics & {
+  playerTotalVisits?: number;
+  playerUniqueVisitedCells?: number;
+  walkableCellCount?: number;
+  heavyReuseCellCount?: number;
+  calibrated: CalibratedTraceMetrics;
+};
+
 export type CounterfactualAnalysis = {
   model: string;
   solvable: boolean;
@@ -60,38 +72,11 @@ export type CounterfactualAnalysis = {
   reason?: string;
 };
 
-export type BypassAnalysis = {
-  checked: boolean;
-  scope?: "shortest_cost_bound" | "full_search";
-  found?: boolean;
-  cost?: number;
-  inputs?: InputId[];
-  events?: string[];
-  exploredStates?: number;
-  searchStatus?: SearchStatus;
-  reason?: string;
-};
-
-export type TargetEventAnalysis = {
-  targetId: string;
-  statement?: string;
-  requiredEvents: string[];
-  forbiddenEvents: string[];
-  detectorConfigured: boolean;
-  returnedSolutionCovers: boolean | "unknown";
-  shortestBypass: BypassAnalysis;
-  winningBypass: BypassAnalysis;
-};
-
 export type LevelAnalysis = {
   prototype: string;
   level: {
     id: string;
     title: string;
-    role: string;
-    status: string;
-    targets: string[];
-    supportLevel: string;
     winCondition: WinCondition;
   };
   initialState: string;
@@ -106,12 +91,12 @@ export type LevelAnalysis = {
     events: string[];
     eventCounts: Record<string, number>;
     objectParticipation: ObjectParticipationSummary[];
+    traceMetrics: SolutionTraceMetrics;
   };
   keySnapshots: TraceSnapshot[];
   graph: GraphAnalysis;
   agency: AgencyAnalysis;
   counterfactuals: CounterfactualAnalysis[];
-  targets: TargetEventAnalysis[];
 };
 
 export function analyzeLevel(
@@ -138,34 +123,26 @@ export function analyzeLevel(
     winCondition,
     maxStates: options.graphMaxStates ?? maxStates,
   });
-  const keySnapshots = collectKeySnapshots(adapter, pkg.mechanic, initial, solution, winCondition);
+  const solutionTrace = collectSolutionTraceData(
+    adapter,
+    pkg.mechanic,
+    initial,
+    solution,
+    winCondition,
+  );
+  const traceMetrics: SolutionTraceMetrics = {
+    ...solutionTrace.traceMetrics,
+    calibrated: calibrateTraceMetrics(solutionTrace.traceMetrics, pkg.traceMetricCalibration),
+  };
   const counterfactuals = analyzeCounterfactuals(adapter, pkg.mechanic, initial, winCondition, {
     maxStates: options.counterfactualMaxStates ?? maxStates,
     maxDepth,
   });
-  const targets = level.targets.map((targetId) =>
-    analyzeTargetEvents({
-      mechanic: pkg.mechanic,
-      adapter,
-      knowledge: pkg.knowledge.knowledge,
-      targetId,
-      initial,
-      winCondition,
-      solution,
-      maxStates: options.bypassMaxStates ?? maxStates,
-      maxDepth,
-    }),
-  );
-
   return {
     prototype: pkg.mechanic.id,
     level: {
       id: level.id,
       title: level.title,
-      role: level.role,
-      status: level.status,
-      targets: level.targets,
-      supportLevel: level.support_level,
       winCondition,
     },
     initialState: adapter.renderState(initial),
@@ -180,47 +157,162 @@ export function analyzeLevel(
       events: solution.events,
       eventCounts: countEvents(solution.events),
       objectParticipation: analyzeObjectParticipation(pkg.mechanic.id, solution.events),
+      traceMetrics,
     },
-    keySnapshots,
+    keySnapshots: solutionTrace.keySnapshots,
     graph,
     agency,
     counterfactuals,
-    targets,
   };
 }
 
-function collectKeySnapshots(
+function collectSolutionTraceData(
   adapter: CurrentRuntimeAdapter,
   mechanic: MechanicDoc,
   initial: RuntimeState,
   solution: Solution,
   winCondition: WinCondition,
-): TraceSnapshot[] {
+): { keySnapshots: TraceSnapshot[]; traceMetrics: RawSolutionTraceMetrics & Pick<SolutionTraceMetrics, "playerTotalVisits" | "playerUniqueVisitedCells" | "walkableCellCount" | "heavyReuseCellCount"> } {
   if (!solution.found) {
-    return [];
+    return {
+      keySnapshots: [],
+      traceMetrics: {
+        status: "unavailable",
+        reason: "No winning solution was available for trajectory replay.",
+      },
+    };
   }
 
-  const snapshots: TraceSnapshot[] = [];
+  const keySnapshots: TraceSnapshot[] = [];
   let state = initial;
+  const visitCounts = new Map<string, number>();
+  let walkableCellCount: number | undefined;
+  let traceFailure: string | undefined;
+  const recordPlayerCells = (rendered: string, currentState: RuntimeState): void => {
+    if (traceFailure) return;
+    const board = readTrajectoryBoard(rendered, currentState);
+    if (!board) {
+      traceFailure = "Could not read a board for the canonical solution trace.";
+      return;
+    }
+    if (walkableCellCount === undefined) {
+      walkableCellCount = board.walkableCells.size;
+      if (walkableCellCount === 0) {
+        traceFailure = "The initial board has no readable walkable cells.";
+        return;
+      }
+    }
+    if (board.playerCells.size === 0) return;
+    for (const key of board.playerCells) {
+      visitCounts.set(key, (visitCounts.get(key) ?? 0) + 1);
+    }
+  }
+
+  const initialRendered = adapter.renderState(initial);
+  recordPlayerCells(initialRendered, initial);
+  if (!traceFailure && visitCounts.size === 0) {
+    traceFailure = "The initial board has no readable player cell.";
+  }
+
   for (const [index, input] of solution.inputs.entries()) {
-    const before = adapter.renderState(state);
+    const before = index === 0 ? initialRendered : adapter.renderState(state);
+    if (index > 0) recordPlayerCells(before, state);
+
     const result = adapter.step(mechanic, state, input, { winCondition });
     const afterState = result.legal ? result.state : state;
     const shouldKeep = result.events.some((event) => event !== "walk");
+    const isLast = index === solution.inputs.length - 1;
+    const after = shouldKeep || isLast ? adapter.renderState(afterState) : undefined;
     if (shouldKeep) {
-      snapshots.push({
+      keySnapshots.push({
         step: index + 1,
         input,
         legal: result.legal,
         events: result.events,
         reason: result.reason,
         before,
-        after: adapter.renderState(afterState),
+        after: after!,
       });
     }
+    if (!result.legal) {
+      traceFailure = `Canonical solution replay became illegal at input '${input}'.`;
+    }
     state = afterState;
+    if (isLast && after) recordPlayerCells(after, state);
   }
-  return snapshots;
+
+  if (traceFailure) {
+    return {
+      keySnapshots,
+      traceMetrics: { status: "unavailable", reason: traceFailure },
+    };
+  }
+
+  if (solution.inputs.length === 0 && visitCounts.size === 0) {
+    return {
+      keySnapshots,
+      traceMetrics: {
+        status: "unavailable",
+        reason: "The canonical solution trace did not contain a readable player cell.",
+      },
+    };
+  }
+
+  const playerTotalVisits = [...visitCounts.values()].reduce((sum, count) => sum + count, 0);
+  const playerUniqueVisitedCells = visitCounts.size;
+  const heavyReuseCellCount = [...visitCounts.values()].filter((count) => count >= 3).length;
+
+  return {
+    keySnapshots,
+    traceMetrics: {
+      status: "complete",
+      solutionCost: solution.cost,
+      nonWalkEventCount: solution.events.filter((event) => event !== "walk").length,
+      playerTotalVisits,
+      playerUniqueVisitedCells,
+      walkableCellCount,
+      revisitRate: safeDivide(playerTotalVisits - playerUniqueVisitedCells, playerTotalVisits),
+      heavyReuseCellCount,
+      heavyReuseRatio: safeDivide(heavyReuseCellCount, walkableCellCount ?? 0),
+    },
+  };
+}
+
+type TrajectoryBoard = {
+  playerCells: Set<string>;
+  walkableCells: Set<string>;
+};
+
+function readTrajectoryBoard(rendered: string, state: RuntimeState): TrajectoryBoard | undefined {
+  const rows = rendered.replace(/\r/g, "").split("\n");
+  const stateRecord = state as { width?: unknown; height?: unknown };
+  const width = typeof stateRecord.width === "number"
+    ? stateRecord.width
+    : Math.max(0, ...rows.map((row) => row.length));
+  const height = typeof stateRecord.height === "number" ? stateRecord.height : rows.length;
+  if (width === 0 || height === 0) return undefined;
+
+  const playerCells = new Set<string>();
+  const walkableCells = new Set<string>();
+  for (let y = 0; y < height; y += 1) {
+    const row = rows[y] ?? "";
+    for (let x = 0; x < width; x += 1) {
+      const glyph = row[x] ?? " ";
+      if (glyph === "#") continue;
+      const key = trajectoryCellKey(x, y);
+      walkableCells.add(key);
+      if (glyph === "@" || glyph === "+") playerCells.add(key);
+    }
+  }
+  return { playerCells, walkableCells };
+}
+
+function trajectoryCellKey(x: number, y: number): string {
+  return `${x},${y}`;
+}
+
+function safeDivide(numerator: number, denominator: number): number {
+  return denominator === 0 ? 0 : numerator / denominator;
 }
 
 function analyzeCounterfactuals(
@@ -252,115 +344,6 @@ function analyzeCounterfactuals(
   });
 }
 
-function analyzeTargetEvents({
-  mechanic,
-  adapter,
-  knowledge,
-  targetId,
-  initial,
-  winCondition,
-  solution,
-  maxStates,
-  maxDepth,
-}: {
-  mechanic: MechanicDoc;
-  adapter: CurrentRuntimeAdapter;
-  knowledge: KnowledgeItem[];
-  targetId: string;
-  initial: RuntimeState;
-  winCondition: WinCondition;
-  solution: Solution;
-  maxStates: number;
-  maxDepth: number;
-}): TargetEventAnalysis {
-  const item = knowledge.find((candidate) => candidate.id === targetId);
-  const requiredEvents = item?.detector.required_events ?? [];
-  const forbiddenEvents = item?.detector.forbidden_events ?? [];
-  const detectorConfigured = requiredEvents.length > 0 || forbiddenEvents.length > 0;
-
-  if (!detectorConfigured) {
-    return {
-      targetId,
-      statement: item?.statement,
-      requiredEvents,
-      forbiddenEvents,
-      detectorConfigured,
-      returnedSolutionCovers: solution.found ? true : "unknown",
-      shortestBypass: {
-        checked: false,
-        reason: "No event detector is configured for this target.",
-      },
-      winningBypass: {
-        checked: false,
-        reason: "No event detector is configured for this target.",
-      },
-    };
-  }
-
-  const returnedSolutionCovers = solution.found
-    ? coversEventPatterns(solution.events, requiredEvents, forbiddenEvents)
-    : "unknown";
-  const shortestBypass = solution.found
-    ? toBypassAnalysis(
-        findUncoveredGoalPathWithRuntime(
-          adapter.createRuntime(mechanic),
-          initial,
-          requiredEvents,
-          forbiddenEvents,
-          { winCondition, maxStates, maxDepth },
-          solution.cost,
-        ),
-        "shortest_cost_bound",
-      )
-    : {
-        checked: false,
-        reason: "No returned winning solution; shortest bypass was not checked.",
-      };
-  const winningBypass = solution.found
-    ? toBypassAnalysis(
-        findUncoveredGoalPathWithRuntime(
-          adapter.createRuntime(mechanic),
-          initial,
-          requiredEvents,
-          forbiddenEvents,
-          { winCondition, maxStates },
-        ),
-        "full_search",
-      )
-    : {
-        checked: false,
-        reason: "No returned winning solution; winning bypass was not checked.",
-      };
-
-  return {
-    targetId,
-    statement: item?.statement,
-    requiredEvents,
-    forbiddenEvents,
-    detectorConfigured,
-    returnedSolutionCovers,
-    shortestBypass,
-    winningBypass,
-  };
-}
-
-function toBypassAnalysis(
-  solution: Solution,
-  scope: NonNullable<BypassAnalysis["scope"]>,
-): BypassAnalysis {
-  return {
-    checked: true,
-    scope,
-    found: solution.found,
-    cost: solution.found ? solution.cost : undefined,
-    inputs: solution.found ? solution.inputs : undefined,
-    events: solution.found ? solution.events : undefined,
-    exploredStates: solution.exploredStates,
-    searchStatus: solution.searchStatus,
-    reason: solution.reason,
-  };
-}
-
 function countEvents(events: string[]): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const event of events) {
@@ -377,11 +360,7 @@ export function formatLevelAnalysisMarkdown(analysis: LevelAnalysis): string {
     "",
     `- Prototype: ${analysis.prototype}`,
     `- Title: ${analysis.level.title}`,
-    `- Role: ${analysis.level.role}`,
-    `- Status: ${analysis.level.status}`,
-    `- Support: ${analysis.level.supportLevel}`,
     `- Win: ${analysis.level.winCondition.type}`,
-    `- Targets: ${analysis.level.targets.length > 0 ? analysis.level.targets.join(", ") : "none"}`,
     "",
     "## Initial State",
     "",
@@ -390,6 +369,10 @@ export function formatLevelAnalysisMarkdown(analysis: LevelAnalysis): string {
     "## Shortest Solution",
     "",
     ...formatSolutionSummary(analysis),
+    "",
+    "## Solution Trace Metrics",
+    "",
+    ...formatSolutionTraceMetrics(analysis.solution.traceMetrics),
     "",
     "## Object Participation",
     "",
@@ -417,13 +400,10 @@ export function formatLevelAnalysisMarkdown(analysis: LevelAnalysis): string {
     "",
     ...formatCounterfactuals(analysis.counterfactuals),
     "",
-    "## Target Event Checks",
-    "",
-    ...formatTargets(analysis.targets),
-    "",
     "## LLM Reviewer Material",
     "",
     "- Treat this report as evidence, not as a quality verdict.",
+    "- Solution trace metrics describe execution pressure and space reuse only; they do not measure insight, causal dependency, counterintuitive reframing, or surprise payoff.",
     "- Read the key snapshots as candidate causal-chain nodes.",
     "- Check whether each non-walk event produces a later consumed state change.",
     "- Look for redundant space, forced weak edges, repeated same-operation padding, and bypass paths.",
@@ -451,6 +431,54 @@ function formatSolutionSummary(analysis: LevelAnalysis): string[] {
     `- Events: ${analysis.solution.events.join(" ") || "none"}`,
     `- Event counts: ${formatEventCounts(analysis.solution.eventCounts)}`,
   ];
+}
+
+function formatSolutionTraceMetrics(metrics: SolutionTraceMetrics): string[] {
+  if (metrics.status !== "complete") {
+    return [
+      `- Status: unavailable`,
+      `- Reason: ${metrics.reason ?? "unknown"}`,
+      ...formatCalibratedTraceMetrics(metrics.calibrated),
+    ];
+  }
+
+  return [
+    "- Scope: canonical solution trace only; not a quality verdict.",
+    `- Solution cost: ${metrics.solutionCost}`,
+    `- Non-walk events: ${metrics.nonWalkEventCount}`,
+    `- Player visits: ${metrics.playerTotalVisits} total / ${metrics.playerUniqueVisitedCells} unique`,
+    `- Walkable cells: ${metrics.walkableCellCount}`,
+    `- Revisit rate: ${formatRatio(metrics.revisitRate)}`,
+    `- Heavy-reuse cells: ${metrics.heavyReuseCellCount}`,
+    `- Heavy-reuse ratio: ${formatRatio(metrics.heavyReuseRatio)}`,
+    ...formatCalibratedTraceMetrics(metrics.calibrated),
+  ];
+}
+
+function formatCalibratedTraceMetrics(metrics: CalibratedTraceMetrics): string[] {
+  if (metrics.status === "unavailable") {
+    return [
+      `- Calibration: ${metrics.calibration}`,
+      `- Calibrated status: unavailable (${metrics.reason ?? "unknown"})`,
+    ];
+  }
+
+  return [
+    `- Calibration: ${metrics.calibration} (${metrics.status})`,
+    `- Execution-pressure band: ${formatCalibratedBand(metrics.solution_execution_pressure)}`,
+    `- Space-reuse band: ${formatCalibratedBand(metrics.solution_space_reuse)}`,
+  ];
+}
+
+function formatCalibratedBand(scope: CalibratedTraceMetrics["solution_execution_pressure"]): string {
+  if (!scope || scope.status !== "enabled" || scope.aggregateBand === undefined) {
+    return `unavailable (${scope?.reason ?? "unknown"})`;
+  }
+  return String(scope.aggregateBand);
+}
+
+function formatRatio(value: number | undefined): string {
+  return value === undefined ? "unknown" : value.toFixed(3);
 }
 
 function formatObjectParticipation(participation: ObjectParticipationSummary[]): string[] {
@@ -767,45 +795,6 @@ function formatWinStateCount(analysis: LevelAnalysis): string {
     return `${analysis.graph.winStateCount} (state-win count only; event wins are checked by solver and bypass probes)`;
   }
   return String(analysis.graph.winStateCount);
-}
-
-function formatTargets(targets: TargetEventAnalysis[]): string[] {
-  if (targets.length === 0) {
-    return ["No level targets are declared."];
-  }
-
-  return targets.flatMap((target) => [
-    `### ${target.targetId}`,
-    "",
-    ...(target.statement ? [`${target.statement}`, ""] : []),
-    `- Required events: ${target.requiredEvents.join(", ") || "none"}`,
-    `- Forbidden events: ${target.forbiddenEvents.join(", ") || "none"}`,
-    `- Detector configured: ${target.detectorConfigured}`,
-    `- Returned solution covers detector: ${target.returnedSolutionCovers}`,
-    `- Shortest bypass: ${formatBypass(target.shortestBypass)}`,
-    `- Winning bypass: ${formatBypass(target.winningBypass)}`,
-    "",
-  ]);
-}
-
-function formatBypass(bypass: BypassAnalysis): string {
-  if (!bypass.checked) {
-    return `not checked (${bypass.reason ?? "no reason"})`;
-  }
-
-  if (bypass.found) {
-    return `found cost=${bypass.cost}, inputs=${bypass.inputs?.join(" ") ?? "n/a"}`;
-  }
-
-  if (bypass.scope === "shortest_cost_bound" && bypass.reason?.startsWith("depth budget exceeded")) {
-    return `none found within returned shortest-cost bound; explored=${bypass.exploredStates}`;
-  }
-
-  if (bypass.searchStatus === "complete") {
-    return `none found; complete search, explored=${bypass.exploredStates}`;
-  }
-
-  return `unknown; status=${bypass.searchStatus ?? "unknown"}, explored=${bypass.exploredStates ?? "n/a"}, reason=${bypass.reason ?? "none"}`;
 }
 
 function formatEventCounts(counts: Record<string, number>): string {

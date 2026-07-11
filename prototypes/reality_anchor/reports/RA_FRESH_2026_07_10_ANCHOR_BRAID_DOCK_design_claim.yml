@@ -1,0 +1,104 @@
+candidate_family: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK
+prototype: reality_anchor
+task_kind: specific_prototype_level_design
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    本轮只从 handoff 许可的 mechanism_lab/lexicon.md 提取局部接口，不以任何归档布局、
+    对象角色、解法路线或因果链为起点。设计 claim 落盘后才执行归档与在途候选判重。
+
+design_target:
+  intended_role: late_game_challenge
+  known_before: reality_anchor 全部既有知识
+  allowed_exposure_through: dual_anchor
+  difficulty_score_target: "至少4，追求5"
+  aesthetic_score_target: "至少4，追求5"
+  required_configuration:
+    - push_pull_anchor_and_box_sticky_anchor_coexist
+    - both_anchors_movable_and_required_to_move_on_every_win
+  deliberate_material_scope:
+    crates: 0
+    sticky_cells: 0
+    rationale: >-
+      全图不放箱或黏块，玩家不会被 B/S 的材料转换信号承诺误导；本关专注两种锚点都是
+      不可旋转二格刚体，以及水平 P/L 的 push/pull 站位如何控制垂直 B/S。
+
+allowed_lexicon_parts:
+  - id: pl_transverse_handle_gate_matrix
+    source_heading: P/L 横向把手：玩家前格门与锚点占格门
+    use: >-
+      P/L 的向下 push、向上 pull 与另一半占格门；把“carried crate”局部接口扩展为
+      两锚同链，并由真实 T 形泊位消费。
+  - id: pl_pull_extraction_vertical_two_cell_object
+    source_heading: P/L pull 抽取把手：前格门、占格目标门与扫带
+    use: 在 L 侧整体左拉垂直 B/S，完整二格目标位决定动作是否合法。
+  - id: pl_mixed_force_chain_wall
+    source_heading: P/L 长轴墙廊：L 端余量棘轮（mixed-chain 补谱）
+    use: 两个锚点两次进入同一 force chain，一次完成中段上移，一次完成终局共同左移。
+  - id: single_object_goal_piston_order_lock
+    source_heading: 单箱目标活塞顺序锁：推入覆盖与回撤撤销
+    use: >-
+      仅提取“提前覆盖目标必须撤销”的状态责任；本关新增为垂直 B/S 完整泊位先完成、
+      再右移腾出 P/L pull 把手，最后与 P/L 同链回泊。
+
+design_claim:
+  player_insight: >-
+    四个目标组成一个清楚的 T：水平 P/L 应占底横两格，垂直 B/S 应占右竖两格。
+    但两个二格锚点不能直接依次归位。玩家必须先把 P/L 向下推离目标，释放旧 L 半格作为
+    B/S 的左拉站位；把 B/S 左拉后，再从下方推动 P/L，使两个锚点同链上移，B/S 会率先
+    完整覆盖竖目标。这个看似已经完成的泊位反而占住了 P/L 向上 pull 的玩家站位，所以必须
+    把 B/S 右推离目标；随后向上拉 P/L，最后再从上方左拉 B/S。最后一拉让 B/S 撞上 P/L，
+    两锚在同一 force chain 中同时左移，恰好一起落入 T 形终态。核心洞见是“先泊—腾位—同泊”。
+  causal_chain:
+    - 开局目标 T 明示两种不可旋转锚点的终态朝向
+    - P/L 先向下 push，背离目标并释放旧 L 半格
+    - 玩家站上旧 L 半格，在 pull side 整体向左抽出垂直 B/S
+    - 从下方 push P/L；其非接触半格撞上 B/S，二锚同链上移，B/S 首次完整泊入竖目标
+    - 已泊位的 B/S 占住 P/L 向上 pull 的玩家站位，必须向右推离目标以腾出把手
+    - 玩家从腾出的 pull 把手向上拉 P/L，使其到达横目标行但仍向右错一格
+    - 从上方左拉 B/S；B/S 的下半格撞上 P/L，终局同链把两锚一起左移并完整覆盖 T
+  why_not_execution: >-
+    玩家从 4 格目标 T 可以直接读出终态，却不能靠逐个就近归位。第一手有效物体动作反而把
+    P/L 推离目标；中段 B/S 首次完整覆盖目标不是进度终点而是一笔必须撤销的把手债；终局一手
+    同时移动两个不同锚点并兑现开局轮廓。每个锚点位置既是目标责任，也是另一锚点的玩家站位、
+    非接触半格目标门或 force-chain 垫片。难点来自未来把手与泊位状态责任，不是解长、重复扫锚点
+    或材料事件标签。
+  required_winning_path_events:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - force_chain
+    - pull_object:push_pull_anchor
+    - pull_object:box_sticky_anchor
+  required_instance_relations:
+    - all_wins_traverse_pl_lower_then_bs_left_anchor_states_in_order
+    - canonical_shortest_uses_the_vacated_old_l_handle_for_bs_left_pull
+    - all_wins_use_the_exact_middle_mixed_up_transition
+    - all_wins_traverse_bs_temp_dock_then_bs_right_vacate_states_in_order
+    - all_wins_reach_pl_up_prefinal_state_before_resolution
+    - all_wins_use_the_exact_final_bs_left_mixed_transition
+    - all_wins_have_at_least_two_force_chain_n2_events
+    - horizontal_goal_pair_is_covered_by_pl_and_vertical_goal_pair_by_bs_at_win
+  forbidden_winning_path_events_or_relations:
+    - win_without_push_pull_anchor_shift
+    - win_without_box_sticky_anchor_shift
+    - win_without_mixed_anchor_force_chain
+    - win_without_pl_pull
+    - win_without_bs_pull
+    - either_anchor_used_only_as_incidental_blocker_or_target_cover
+    - anchors_can_be_docked_independently_or_freely_reordered
+    - repeated_anchor_sweep_as_primary_difficulty
+  falsification:
+    - 任一胜路可绕过任一锚点位移、任一锚点 pull 或两锚同链，则整族失败
+    - 规范解中的 P/L 下移没有释放随后使用的 B/S 左拉站位，只是增加步数，则开局反直觉失败
+    - B/S 无需先完整覆盖竖目标再右移腾出 P/L 把手，则“先泊—腾位”责任失败
+    - 终局 B/S 左拉不同时移动 P/L，或两锚可独立落位，则 T 编结 payoff 失败
+    - 主要难度来自长廊逐格推拉、盲试死路或开放房间腾挪，则 why_not_execution 失败
+
+tool_questions:
+  - 完整图能否证明两锚位移、两锚 pull 与混合力链全胜路必经？
+  - 全胜路是否都经过 ordered anchor states，并分别包含中段同链上移与终局同链左收；允许非最优路径插入可逆 detour？
+  - 四目标是否分别消费 P/L 横向二格与 B/S 竖向二格，并形成唯一 T 形胜利状态？
+  - 是否还能裁掉任何目标、对象、空地或轮廓而不降低成本或破坏核心 waypoint？

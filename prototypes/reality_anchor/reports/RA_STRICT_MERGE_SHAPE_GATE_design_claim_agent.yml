@@ -1,0 +1,85 @@
+schema_version: 1
+artifact_kind: scratch_design_claim
+prototype: reality_anchor
+candidate_family: strict_merge_shape_gate
+fresh_required: true
+status: search_only
+
+brief:
+  role: challenge
+  allowed_exposure_through: dual_anchor
+  hard_targets:
+    difficulty: ">=4"
+    aesthetic: ">=4"
+    solution_execution_pressure: ">=4"
+    solution_space_reuse: ">=4"
+  strict_solution_boundary:
+    - "允许纯 walk 站位差异。"
+    - "允许对象完整回返到同一对象状态后再继续。"
+    - "规范初态到胜态的必要对象动作不得换序。"
+    - "唯一胜态不单独视为唯一解证明。"
+
+allowed_lexicon_parts:
+  - "B/S 绑定债：箱资源生成黏块形状"
+  - "桥格合并目标口：bridge crate 焊接既有 sticky 端点"
+  - "刚体黏块 + 墙口：目标口宽与反向施力格消费形状"
+  - "P/L 横向把手 / 边界交接：改变施力侧并提供回收把手"
+
+player_insight: >-
+  两个分离黏端点不是两件可分配货物；玩家必须先让中间箱跨过 B/S 边界，
+  把三格焊成同一刚体钥匙。只有这个连体形状能让一次施力同时穿过形状门并
+  搬动门后的锚点；之后 P/L 边界改变，玩家从另一侧把整把钥匙回收到终局位置。
+
+causal_chain:
+  - "窄入口只允许先移动 P/L 或 B/S 锚中的指定一个，生成唯一施力面。"
+  - "crate 跨 B/S 边界并与至少两个既有 sticky cells 合并，触发 sticky_merge。"
+  - "新生成的至少三格刚体进入非对称墙口；少一格、未合并或换序均不能通过/消费锚点。"
+  - "整块刚体移动至少两次，其中一次 force-chain 搬动另一锚或关键门件。"
+  - "锚点改侧后，玩家用反向施力把同一刚体回收到目标口，完成唯一职责链。"
+
+why_not_execution:
+  - "merge 不是事件 witness：未 merge 的反事实不得达到相同消费状态。"
+  - "多格刚体的占格形状必须进入墙口或扫带目标格集合；换成单格时链条断裂。"
+  - "对象动作链由 walk-SCC / 宏图强制，不以最短路唯一冒充全局唯一。"
+  - "至少一个工作区被 weld、门后推进、反向回收三个阶段重复使用。"
+
+required_events:
+  - sticky_merge
+  - move_sticky_rigid
+  - anchor_boundary_shift:push_pull
+  - anchor_boundary_shift:box_sticky
+  - pull_object
+  - push_object
+
+required_structural_facts:
+  - "最终或中段出现 cell_count>=3 的单一 sticky group。"
+  - "sticky_merge 在所有胜解中必要。"
+  - "move_sticky_rigid 至少 2 次且在所有胜解中必要。"
+  - "两个锚点均必移动；若搜索代价过高，最低仍为 B/S 必移、P/L 存在且参与施力侧切换。"
+  - "完整图 complete，胜态数=1。"
+  - "纯 walk 压缩后的所有可胜对象宏状态形成唯一必要动作链。"
+
+forbidden_or_reject:
+  - "必要对象动作可换序后在下游汇合。"
+  - "sticky_merge 只发生于终局 settle，之后没有刚体位移或形状消费。"
+  - "merge 仅生成 singleton 或二格但墙口不区分形状。"
+  - "主要难度来自长纯走路、目标猜位或重复无新责任的直线推拉。"
+  - "沿用现有 ROLE_RELAY_REWEAVE、BRUSH_PISTON 或 SQUARE_REPAIR 的布局/角色链。"
+
+falsification:
+  - id: win_without_merge
+    reject_if: "完整可胜图存在不含 sticky_merge 的胜路。"
+  - id: win_without_rigid_twice
+    reject_if: "完整可胜图存在 move_sticky_rigid 少于 2 次的胜路。"
+  - id: shape_not_consumed
+    reject_if: "把桥 crate / 一端 sticky 移除后，同一后缀仍可完成关键门消费。"
+  - id: movable_anchor_bypass
+    reject_if: "任一声称必移锚点可在不移动时获胜。"
+  - id: order_swap
+    reject_if: "walk SCC 压缩后任一可胜对象宏状态拥有两个不同、非完整回返的可胜出边。"
+
+tool_questions:
+  - "能否在 6x7 至 8x10 紧凑地形中找到完整图可穷举实例？"
+  - "是否存在唯一胜态且严格对象宏链唯一的实例？"
+  - "merge、三格刚体、双锚位移能否全部是所有胜解必要条件？"
+  - "规范解是否达到 10-16 个对象动作、execution/space calibrated band >=4？"

@@ -119,14 +119,6 @@ function makeScratchLevel(sample: CalibrationSample, layout: string): LevelDoc {
   return {
     id: sample.id,
     title: sample.label,
-    role: "challenge",
-    status: "calibration",
-    targets: [],
-    known_before: [],
-    target_learning: [],
-    support_level: "none",
-    expected_solver_evidence: ["solvable", "full_graph_complete"],
-    expected_llm_player_evidence: [],
     layout,
   };
 }

@@ -6,7 +6,7 @@ SCC / graph diagnostic 是证据，不是审美结论。
 graph_fact:
 neutral_meaning:
 player_facing_interpretation:
-verdict_effect: none | merit | caveat | core_attack
+verdict_effect: none | merit | caveat | core_blocker
 ```
 
 缺少玩家侧解释时，`verdict_effect` 必须是 `none`。

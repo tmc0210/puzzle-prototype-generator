@@ -81,6 +81,20 @@ reachable_event_exposure:
 graph_or_counterfactual_evidence:
 evidence_limits:
 
+Hard fact summary for critic:
+solver:
+required_or_forbidden_events:
+routed_diagnostic_facts:
+evidence_limits:
+artifact_refs:
+
+Player-facing reading:
+opening_read:
+intended_solution_read:
+commitment_points:
+state_responsibility:
+payoff_and_resolution:
+
 Routing:
 activated:
 not_applicable:
@@ -124,6 +138,13 @@ reviewer / critic / designer 不能输出任何分数化结论。禁止写 `4`�
 `unscored_missing_human_archive_context`、`target_fit_unknown` 或非分数的
 结构性观察。工具证据可以支持机制事实，但不能替代人类归档锚点生成审美或难度
 分数。
+
+`player_facing_reading` 是 critic 主输入，必须把正解流程、提交点、状态责任和
+payoff 落到玩家全视野可见的局面中。
+
+`kind: pre_submission_check` 的原型专属流程只在其声明阶段执行。review packet
+只记录阶段状态；除非 brief 明确路由为 review diagnostic，不把检查细节当作
+reviewer / critic 的设计质量证据。
 
 不要要求 reviewer / critic 自己补规则、补工具证据或猜测玩家模型。
 
@@ -235,7 +256,7 @@ Allowed evidence sources:
 Review rules:
 - Analyzer output is evidence, not a quality verdict.
 - 如果提供了 mechanic exposure context，检查 trace events 和 object facts 是否
-  支持 `claimed_core_events`。这里检查的是已有 probe event，不检查抽象知识。
+  支持 `claimed_core_events`，并核对已有 probe event。
 - 区分 winning-path event gate 和 reachable exposure gate。`forbidden_if_seen_anywhere`
   一旦在完整可达扫描中命中，就是 scope failure；扫描未完成时结论是 unknown，
   不能当作 clean pass。
@@ -304,12 +325,17 @@ Review rules:
   or can they win by local execution / nearest affordance?
 - Attack why_not_execution before accepting event counts, repeated operations,
   or designer-named role changes as depth.
+- Use `player_facing_reading` as the critic-facing surface: opening read,
+  intended solution read, commitment points, state responsibility, and
+  payoff/resolution.
 - Judge only routed diagnostics. Do not invent hidden hard checks for diagnostics that
   were marked not_applicable.
+- Prototype-specific `kind: pre_submission_check` work only contributes stage
+  status unless the brief explicitly routes it as a review diagnostic.
 - If SCC / graph evidence is supplied, use
   docs/30-scc-graph-diagnostic-reading.md to interpret it.
-- Any SCC / graph fact used as merit, caveat, core_attack, or verdict support
-  must appear in `scc_graph_interpretations`:
+- Any SCC / graph fact used as merit, caveat, critic item, or verdict support
+  must appear in `diagnostic_interpretations`:
   graph_fact -> neutral_meaning -> player_facing_interpretation ->
   verdict_effect.
 - If player_facing_interpretation is missing, verdict_effect must be none.
@@ -330,6 +356,9 @@ Review rules:
   prerequisite gaps, or analyzer facts.
 - Treat the review as attacks for the lead designer to answer. Do not reduce it
   to a score.
+- Human handoff is ownership transfer, not a missing review step. Resolve core
+  player-reading, role-fit, and why-not-execution judgments inside the current
+  review as current judgment, context_gap, nonblocking_risk, hold, or reject.
 
 Output:
 review_iteration:
@@ -338,31 +367,38 @@ review_input_type: candidate_version | evidence_disagreement | revised_claim | o
 verdict: supports_design_claim | supports_with_noncore_caveats | revise_required | hold_or_reject
 review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_required | held_proposal | rejected_candidate
 required_action: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family
-strongest_merits:
+player_facing_merits:
 archive_taste_context_used:
 score_calibration:
   human_archive_anchors_present:
   score_claim_allowed:
+  archive_attack_calibration:
   positive_anchors:
   lower_bound_or_negative_anchors:
   missing_anchor_effect:
 aesthetic_target_fit:
 difficulty_target_fit:
-core_attacks:
-  - attack:
-    target: player_insight | why_not_execution | role_fit | evidence_support | diagnostic_reading
-    reason:
-scc_graph_interpretations:
+critic_items:
+  - id:
+    type: core_blocker | context_gap | nonblocking_risk | improvement_opportunity | score_boundary | diagnostic_note
+    target: player_insight | why_not_execution | role_fit | evidence_support | diagnostic_reading | taste_calibration | lineage
+    claim_relation:
+    evidence_basis:
+    player_facing_reason:
+    blocks_proposal_ready: true | false
+    expected_designer_response: revise_now | answer_from_packet | add_context_next_review | accept_as_nonblocking | reject_with_reason | downgrade_or_hold | change_family
+diagnostic_interpretations:
   - graph_fact:
     neutral_meaning:
     player_facing_interpretation:
-    verdict_effect: none | merit | caveat | core_attack
-noncore_caveats:
-questions_for_designer:
+    verdict_effect: none | merit | caveat | core_blocker
+handoff_notes:
 
 约束：
 - 如果 required_action 不是 none，review_loop_state 不能是 proposal_ready 或
   proposal_ready_with_caveats。
+- 如果存在 blocks_proposal_ready: true 的 critic_items，required_action 不能是
+  none，review_loop_state 不能是 proposal_ready 或 proposal_ready_with_caveats。
 - evidence_disagreement_for_next_review 只用于具体证据读取分歧。未解决的
   player_insight、why_not_execution、role_fit、未授权变体、lineage 或 taste
   攻击需要结构修改、hold、reject 或 change_family。
@@ -385,13 +421,16 @@ Inputs:
 Rules:
 - Follow docs/21-current-workflow-standard.md.
 - designer_action_N 不能关闭 review loop。
-- 如果核心攻击指向 player_insight、why_not_execution、evidence support、role
-  fit、未授权变体、lineage 或 taste，不能由这个 designer action 标记为
-  proposal_ready 或 proposal_ready_with_caveats。
+- 如果 reviewer / critic 的 required_action 不是 none，或 critic item 标记
+  blocks_proposal_ready: true，不能由这个 designer action 标记为 proposal_ready
+  或 proposal_ready_with_caveats。
+- 必须逐项处理 critic_items。designer 可以反对 critic，但要写清 response 和理由。
 - 如果 candidate 被修改，重跑必要工具，并把新版本交给 review_N+1。
 - 如果 designer 反对一个具体证据读取攻击，写 evidence_disagreement packet 给
   review_N+1。不要用 evidence_disagreement 处理未解决的 player_insight、
   why_not_execution、role_fit、lineage 或 taste 攻击。
+- 如果某个问题会改变 proposal_ready 是否成立，把它路由为当前修订、下一轮补上下文、
+  降级 / hold、reject 或 change family。
 - 如果最诚实的结果是 held / rejected / failed_search，记录该状态。
 - 不要声称 accepted、mainline、positive_reference 或 reference。
 
@@ -399,14 +438,26 @@ Output:
 review_iteration_answered:
 candidate_version_answered:
 designer_action_type: revise_structure | revise_claim | evidence_disagreement_for_next_review | downgrade_or_hold | reject_or_change_family | failed_search | unresolved
-actions_for_core_attacks:
-  - attack:
-    action_type: revise_structure | revise_claim | evidence_disagreement_for_next_review | downgrade_or_hold | reject_or_change_family | unresolved
-    evidence_or_attempt_refs:
-    result:
+evidence_reviewer_action:
+  required_action:
+  response:
+  evidence_or_attempt_refs:
+  result:
+critic_item_triage:
+  - critic_item_id:
+    response: revise_now | answer_from_packet | add_context_next_review | accept_as_nonblocking | reject_with_reason | downgrade_or_hold | change_family
+    reason:
+    refs:
+    produces:
+    next_review_needed: true | false
+handoff_notes:
+  - note:
+    source_critic_item_id:
+    claim_not_being_made:
 produces:
   candidate_version:
   evidence_disagreement_packet:
+  revised_packet_context:
 next_step: review_N_plus_1 | hold | reject_or_change_family | failed_search
 ```
 
@@ -424,7 +475,7 @@ design_claim:
 evidence_refs:
 route_summary:
 prototype_specific_work:
-unresolved_core_attacks:
+unresolved_critic_items:
 human_comments: pending
 ```
 

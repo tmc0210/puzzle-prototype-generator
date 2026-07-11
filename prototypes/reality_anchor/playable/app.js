@@ -430,22 +430,10 @@ var layers = [
 function tool(layerId, id, label, value, glyph) {
   return editorTool(layerId, id, label, value, editorVisualForGlyph(glyph));
 }
-function defaultTarget(knowledge) {
-  return knowledge.knowledge[0]?.id ?? "solvable";
-}
-function defaultLevel(_mechanic, knowledge) {
-  const target = defaultTarget(knowledge);
+function defaultLevel(_mechanic, _knowledge) {
   return {
     id: "STUDIO_DRAFT",
     title: "Studio Draft",
-    role: "review",
-    status: "draft",
-    targets: [target],
-    known_before: [],
-    target_learning: [target],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: normalizeAsciiLayout(
       `
 @..G
@@ -909,22 +897,10 @@ var layers2 = [
 function tool2(layerId, id, label, value, glyph) {
   return editorTool(layerId, id, label, value, editorVisualForGlyph(glyph));
 }
-function defaultTarget2(knowledge) {
-  return knowledge.knowledge[0]?.id ?? "solvable";
-}
-function defaultLevel2(_mechanic, knowledge) {
-  const target = defaultTarget2(knowledge);
+function defaultLevel2(_mechanic, _knowledge) {
   return {
     id: "STUDIO_DRAFT",
     title: "Studio Draft",
-    role: "review",
-    status: "draft",
-    targets: [target],
-    known_before: [],
-    target_learning: [target],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: normalizeAsciiLayout(`
 #######
 #@ C G#
@@ -1868,22 +1844,10 @@ var layers3 = [
     editorTool("mechanism", "clear", "\u6E05\u673A\u5236", void 0, renderEditorCell3({ terrain: "floor" }))
   ])
 ];
-function defaultTarget3(knowledge) {
-  return knowledge.knowledge[0]?.id ?? "solvable";
-}
-function defaultLevel3(_mechanic, knowledge) {
-  const target = defaultTarget3(knowledge);
+function defaultLevel3(_mechanic, _knowledge) {
   return {
     id: "STUDIO_DRAFT",
     title: "Studio Draft",
-    role: "review",
-    status: "draft",
-    targets: [target],
-    known_before: [],
-    target_learning: [target],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: normalizeAsciiLayout(`
 #######
 #@ C G#
@@ -2246,7 +2210,7 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mrdg3n7w" : String(Date.now());
+var buildId = true ? "mrfthv53" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);
@@ -3045,7 +3009,7 @@ function entrySubtitle(entry) {
   if (entry.kind === "archive") {
     return `${entry.levelId ?? "\u672A\u5339\u914D level"} \xB7 ${level?.title ?? "\u65E0\u53EF\u73A9\u5E03\u5C40"}`;
   }
-  return `${entry.levelId} \xB7 ${entry.level.role} \xB7 ${entry.level.status}`;
+  return `${entry.levelId} \xB7 ${entry.level.title}`;
 }
 function entryStatus(entry) {
   if (entry.kind === "archive") {

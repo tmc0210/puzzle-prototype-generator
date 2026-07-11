@@ -1,0 +1,143 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10
+review_input_type: revised_claim
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+supported_claims:
+  - claim: >-
+      exact v10 可解，solver 返回的 23 步最短 trace 确实实现当前缩减后的
+      canonical shortest 核心事件链并在第 23 步获胜。
+    evidence:
+      - >-
+        layout analysis 报告 found=true、cost=23、depth=23、explored_states=795；
+        exact v10 trace 以同一组 23 个 inputs replay，全部动作合法，step 23 win=true。
+      - >-
+        step 2 同时出现 anchor_boundary_shift:box_sticky、box_to_sticky:n3、
+        sticky_merge:n1；steps 3/6/7/8/11 搬运、再次拼接并抬升 sticky rigid body；
+        steps 16-17 各出现 pull_object:push_pull_anchor 与
+        anchor_boundary_shift:push_pull；step 22 出现 sticky_to_box:n3 与
+        sticky_split:n1；step 23 出现 B/S 位移、box_to_sticky:n2、
+        sticky_merge:n1 并获胜。
+      - >-
+        snapshots 支持 returned trace 上的可见状态序列：step 2 三箱转黏并接入共享轮廓，
+        step 11 共享黏块被上提且上路可通行，steps 16-17 P/L 横移后覆盖上方双目标，
+        step 22 桥排切成箱并分开黏端，step 23 两箱重新转黏、合并并闭合全部目标。
+    scope: >-
+      returned canonical shortest trace 的 event-pattern 与逐帧布局事实；不扩张为所有最短解、
+      所有胜路、对象身份或 per-object necessity。
+
+  - claim: >-
+      sticky_split 对 canonical 23 步路线具有 shortest-dominant 支持，但不是
+      all-solution necessary。
+    evidence:
+      - >-
+        bounded splitless probe 在排除 sticky_split 的条件下首先找到 48 步胜路；packet
+        记录 first_found_cost=48、explored_states_before_first_found=629709。
+      - >-
+        exact split-bypass trace 共 48 步、全程合法、最终 win=true，且没有 sticky_split；
+        因而直接反驳 all-solution sticky_split necessity，同时支持 23 步 canonical
+        切割路线相对已验证 splitless 路线有 25 步优势。
+    scope: >-
+      在该 probe 的按成本穷举至首个 splitless win 的语义下，支持所有 cost<48 的胜路
+      不能规避 sticky_split；不支持所有胜路必经，也不支持把其余核心事件一并写成
+      shortest-dominant 或 all-shortest necessary。
+
+  - claim: >-
+      packet 已正确把 all-solution necessity、完整图结论和对象实例结论降级。
+    evidence:
+      - >-
+        claimed_core_events 明列 all_solution_necessity_claimed=false；evidence_limits 明列
+        split_is_not_all_solution_required，且 48 步 splitless winning trace 与该降级一致。
+      - >-
+        graph 与 agency 均为 exhausted：reachable_states=1000001，graph budget=1000000，
+        reason=state budget exceeded；packet 明列 complete_graph_claims=none，未把
+        winning_states_seen=6 写成完整图或唯一性证据。
+      - >-
+        object_or_instance_evidence.status=unavailable，layout analysis 的
+        objectParticipation=[]；packet 明列 no_instance_level_participation 与
+        no_per_object_necessity，没有把 event pattern 自动升级为逐对象必要性。
+    scope: claim_hygiene_and_evidence_boundary
+
+  - claim: >-
+      dual_anchor 暴露窗口没有一个更晚的 prototype stage 需要由 reachable scan 排除。
+    evidence: >-
+      mechanic_exposure_sequence.yml 将 dual_anchor 列为当前线性序列最后阶段；packet 的
+      forbidden_if_seen_anywhere 与 forbidden_winning_path_events 均为空，并明确
+      later_than_allowed_exposure=not_applicable_no_later_stage_than_dual_anchor。
+    scope: >-
+      只支持“没有 later stage 集合需要排除”；complete_reachable_scan=false 仍不得用来
+      声称完整可达空间中的事件集合已经枚举，也不得据此证明 dual-anchor knowledge
+      在所有胜路中必经。
+
+  - graph_fact: >-
+      exact v10 主图在 maxStates=1000000 时 exhausted，报告 1000001 个已见可达状态、
+      2166138 条 legal transitions 与 6 个 exhaustion 前已见 winning states；agency 图同样 exhausted。
+    neutral_meaning: >-
+      搜索预算在可达图闭合前耗尽，已见状态与胜态只是未完成前缀，不能用于 complete graph、
+      全胜路、唯一解、SCC 或完整 reachable exposure 结论。
+    player_facing_interpretation: >-
+      当前证据能展示一条经过完整拼接/切割/重黏链的最短胜路及一条较长 splitless 胜路，
+      但不能据未闭合图断言玩家所有可赢选择都共享同一中间形状或对象责任。
+    verdict_effect: caveat
+
+unsupported_or_overclaimed:
+  - claim: >-
+      mechanism_scope.required_winning_path_events 中九个 event group 均为
+      all_23_step_shortest_wins 必经。
+    reason: >-
+      exact v10 layout analysis 与 canonical trace 只返回一条 23 步最短胜路；graph exhausted，
+      也没有 all-shortest enumeration。splitless probe 只对 sticky_split 给出 cost<48
+      的规避门，不能替其它八个 event group 证明所有 23 步最短解必经。
+    impact: >-
+      当前 verdict 只接受 mechanic_exposure_context 已缩减的 canonical-shortest/
+      shortest-dominant 表述；不得把本 review 引用为九组事件的 all-shortest gate。
+
+  - claim: >-
+      返回 trace 中的三箱、两个黏端、终局两箱与保留第三箱具有可跨归一化追踪的确定对象身份，
+      或这些指定对象在所有最短解/所有胜路中逐对象必要。
+    reason: >-
+      analyzer 未报告 instance-level participation，box/sticky normalization 事件与逐帧字符布局
+      只支持数量和形状状态，不提供稳定对象身份或 per-object necessity gate。
+    impact: >-
+      “三箱桥—切成三箱—两箱重黏、另一个保持独立”可以作为 returned trace 的可见状态叙事，
+      不能升级为指定对象身份定理。
+
+  - claim: >-
+      player_insight、why_not_execution、状态责任是否被玩家理解，以及该路线是否好玩、优雅或困难。
+    reason: >-
+      solver、trace、bounded bypass 与未完成 graph 只能支持这些设计判断的事实前提；
+      calibrated_trace_metrics 按 reviewer 纪律完全忽略，不能证明玩家认知或谜题质量。
+    impact: >-
+      这些判断应交给独立 puzzle critic 与实际试玩，本 evidence verdict 不评价审美、难度或 campaign placement。
+
+evidence_limits:
+  - >-
+    verdict 仅使用 packet 明列的 exact v10 layout analysis JSON/MD、canonical trace JSON/MD、
+    split-bypass trace JSON/MD、design_claim、design_handoff 与 mechanic_exposure_sequence；
+    未使用其它在途候选作正向证据。
+  - >-
+    graph status=exhausted；所有依赖完整主图、完整 agency/SCC、所有胜路或完整 reachable scan
+    的主张均保持 unknown，winning_states_seen=6 没有 verdict merit。
+  - >-
+    splitless first_found_cost=48 只建立 sticky_split 的 bounded cost dominance；48 步 witness
+    同时证明 sticky_split 不是 all-solution necessary。
+  - >-
+    event pattern、带 n 的数量事件、逐帧形状、对象 participation 与 per-object necessity
+    严格分开；instance evidence unavailable 已正确降级。
+  - >-
+    canonical trace 的每个 listed core event pattern 均有直接记录，但除 sticky_split 外，
+    没有 all-shortest gate；其它 all-solution gates 明确为 unknown_graph_exhausted。
+  - >-
+    calibrated_trace_metrics、execution-pressure、space-reuse、审美、难度、好玩与提交前优化流程
+    均不属于本 evidence review 的判定范围。
+
+questions_for_designer:
+  - >-
+    非阻断：后续 packet 是否会把 required_winning_path_events.claim_scope 从
+    all_23_step_shortest_wins 明确改为 returned_canonical_shortest_trace，并只为
+    sticky_split 保留 bounded_below_48_shortest_dominance，以消除字段间的 scope 歧义？
+  - >-
+    非阻断：若未来要恢复“所有最短解都共享完整九事件链”或稳定对象身份主张，是否会补
+    complete all-shortest enumeration / event-bypass gates 与 instance-level participation 证据？

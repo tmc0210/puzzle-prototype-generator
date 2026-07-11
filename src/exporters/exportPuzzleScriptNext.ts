@@ -247,8 +247,6 @@ function formatLevel(level: LevelDoc): string {
 
   return [
     `// ${level.id}: ${level.title}`,
-    `// role: ${level.role}`,
-    `// targets: ${level.targets.join(", ")}`,
     `// win: ${level.win ? JSON.stringify(level.win) : "mechanic default"}`,
     normalized,
   ].join("\n");

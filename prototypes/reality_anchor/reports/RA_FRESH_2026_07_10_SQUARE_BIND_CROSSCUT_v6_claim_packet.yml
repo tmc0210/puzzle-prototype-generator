@@ -1,0 +1,61 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6
+review_iteration: 1
+claim_last_review: true
+
+slot_brief:
+  intended_role: late_challenge_or_capstone
+  known_before: all_current_reality_anchor_runtime_rules
+  target: 双锚点后期挑战；难度至少 4，追求更高；审美至少 4，追求 5。
+
+target_role_notes: >-
+  这是构造/解构题，不把两次锚点移动或事件标签本身当谜底。核心是玩家先主动
+  将四个独立箱绑定为 2x2，再让完整正方形横跨 B/S 被按列切开，最后把箱列和
+  黏条送往方向不同的目标口。P/L 明确墙封，只提供被实际使用的 push/pull 语义。
+
+design_claim:
+  player_insight: >-
+    玩家必须先主动放弃四箱的独立性，构造一个完整 2x2 sticky 正方形；这个形状
+    横向跨过最终 B/S 边界时，左列才会变回两枚可分配箱，右列仍是竖直黏条。
+    两枚箱需要分别使用横向与纵向 pull 把手，黏条则必须作为刚体回到双目标列。
+  causal_chain:
+    - 连续左推 B/S 两次；两列箱分批 box_to_sticky 并 merge 成完整 2x2。
+    - 第一次移动后 x=6 出口仍封闭，第二次移动后 x=5 入口释放；半成品不能提前离场。
+    - 最短计划从左侧 pull 完整 2x2；完整图另有更长的右侧 push 同洞见计划，不声称横切方向唯一。
+    - 横移后 x=3 列 sticky_to_box 成两箱，x=4 列保留为竖直黏条。
+    - 上箱横向拉入 [2,5]，下箱纵向拉入 [3,7]；黏条整体回到 [5,5]/[5,6]，B/S 覆盖 [3,3]/[4,3]。
+  why_not_execution: >-
+    规范解 23 步，其中 17 步是取得三个方向不同把手的走位；它们不增加对象搬运
+    次数。结构难点应来自完整 2x2 的先绑定后切列、箱列/黏条职责和终局顺序：
+    下箱拉入 [3,7] 后玩家落入单格终点，必须最后完成。若 critic 认为这些把手路线
+    仍以路线税为主，难度/审美目标即失败，必须改结构。
+  required_winning_path_events:
+    - anchor_boundary_shift:box_sticky at least 2
+    - box_to_sticky occurrence at least 2
+    - sticky_merge at least 1
+    - pull_object at least 1
+    - move_sticky_rigid at least 2
+    - sticky_to_box at least 1
+  forbidden_winning_path_events:
+    - sticky movement before second B/S shift
+    - sticky_to_box before second B/S shift
+    - win_without_fixed_P/L_pull_semantics
+  falsification:
+    - 任一完整 all-solution/count/order probe 违反上述事件与阶段门，核心 claim 失败。
+    - 若不构造完整 2x2 也能逐箱通关，构造 claim 失败。
+    - 若两个切出箱不需要不同方向 consumer，列职责 claim 失败。
+    - 若 P/L 可移动，固定锚点读图承诺失败。
+    - 若玩家侧评审认为主要难度是 17 步走位、目标只是延长路线，难度 4 与审美 4 claim 失败。
+
+lineage_claim:
+  relation: fresh
+  archive_variant_authorized: false
+  why_not_archive_variant: >-
+    从 lexicon 局部接口写 fresh claim 后定布局；没有使用 archive 或其它线程候选的
+    布局、对象位置、路线或因果链。前一 L 形切尾 family 在发现重复风险后已拒绝。
+
+lexicon_used:
+  - B/S 绑定债：箱资源生成黏块形状
+  - Pull 侧对象可动性：单箱基线与刚体墙口
+new_linkage: >-
+  两次 B/S sweep 先把四箱构造成 2x2；完整正方形横移跨回 B/S 后按列切成 CC+MM，
+  两箱用正交 pull 分配，黏条整体回填。固定 P/L 只提供精确的 force-mode 地形。

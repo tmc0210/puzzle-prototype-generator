@@ -1,0 +1,357 @@
+candidate_version: RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1
+review_iteration: 5
+review_input_type: candidate_version
+
+task_classification:
+  kind: specific_prototype_level_design
+  prototype: prototypes/Reality_Anchor
+  generic_capability_change: false
+  player_side_priority: true
+
+revision_context:
+  human_feedback: >-
+    方阵修补 v5 的逻辑稳健但中段过于线性；用户随后明确纠正：不得用两条职责不同的
+    可胜计划制造非线性，推箱子应保持唯一解。
+  rejected_intermediate:
+    candidate: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v6
+    reason: >-
+      虽只有一个 winning state，但完整枚举发现两种职责里程碑：先 B/S 后拉箱，或先拉箱后 B/S；
+      分别产生 n1+n1 与 n2 转换，故已硬拒绝且未入队。
+  selected_direction: >-
+    换到全新紧凑 role-relay family：唯一不可逆可胜链内复用同一中廊，并让箱、B 锚、M
+    分担三个目标。exact v1 已在正式分析前墙化一枚静止箱和一个无责任单格袋。
+  queue_policy: 旧的方阵修补 v5 条目继续保留；新候选合格前不替换、不新增。
+
+prototype_context:
+  confirmed_rules:
+    - P/L 两格锚按 P/L 两侧决定输入时的 push 或 pull；锚本体也是可移动二格刚体并可覆盖目标。
+    - B/S 两格锚移动后，全局材料按新的 B/S 边界归一化；B/S 本体也可覆盖目标。
+    - push 可沿方向形成 force chain；链中任一对象不能移动则整步失败。
+    - pull 要求玩家前格为空，并把身后相邻对象沿玩家方向抽入旧位。
+    - sticky 连体块按刚体移动；本候选只生成单格 M，但仍由 move_sticky_rigid 路径移动。
+  win_condition: 所有 G 被箱、黏块或任意锚点格覆盖；玩家不算覆盖。
+  object_and_event_semantics:
+    - 初始两箱不可区分；规范解第一手对象动作以 force_chain:n2 同时下移。
+    - P/L 竖放；下方 L 行可拉，上方 P 行可推。
+    - B/S 横放；连续左移会把 box/sticky 分界线从右廊移入中央廊道。
+  tool_boundary:
+    runtime_adapter: available
+    full_graph_and_agency: available
+    event_count_product_graph: available
+    event_order_product_graph: available
+    shortest_and_scc_plan_enumeration: available_candidate_specific
+    human_live_play: not_run
+
+slot_brief:
+  intended_role: late_challenge
+  known_before: all_current_reality_anchor_runtime_rules
+  target: unique_macro_role_relay_with_stateful_space_reuse
+  difficulty_or_support_expectation: difficulty_floor_4; aesthetic_floor_4; aspire_higher; support_none
+
+mechanic_exposure_context:
+  mechanic_window: all_current_reality_anchor_runtime_rules
+  allowed_exposure_through: all_post_knowledge
+  claimed_core_events:
+    - force_chain:n2
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - pull_object:crate#1
+    - box_to_sticky:n1
+    - pull_object:sticky#1
+    - move_sticky_rigid
+
+solve_instance:
+  layout: |-
+    ########
+    #P.@####
+    #LC..BS#
+    ##CG.G.#
+    ##G##.##
+    ########
+  player_start: [3, 1]
+  goal_cells: [[3, 3], [5, 3], [2, 4]]
+  initial_crates: [[2, 2], [2, 3]]
+  initial_sticky: []
+  anchors:
+    push_pull: {P: [1, 1], L: [1, 2], orientation: vertical, movable: true}
+    box_sticky: {B: [5, 2], S: [6, 2], orientation: horizontal, movable: true}
+  final_unique_goal_roles:
+    bottom_goal_2_4: crate
+    central_goal_3_3: B_anchor_end
+    right_goal_5_3: sticky_singleton
+
+mechanism_scope:
+  central:
+    - 开局二箱链下推，远端箱留在底部目标，近端箱成为后续唯一载体。
+    - P/L 在 L 行右拉、P 行左推复位；该往返把玩家送回上层而不提前移动载体。
+    - B/S 被 L 侧连续左拉两格，材质边界移入中廊。
+    - 载体被上抽；B/S 下推后由 B 端覆盖中央目标。
+    - 载体连续右抽，跨 B/S 边界变成 M；M 继续右抽，玩家绕右廊后向下拉 M 覆盖右目标。
+  allowed_support:
+    - 紧凑墙廊与目标格承担把手门、锚点占格门和终局回返门。
+  incidental_allowed:
+    - 同一 SCC 内不改变目标分工与对象职责的可逆走位或完整撤销动作。
+  required_winning_path_events:
+    - anchor_boundary_shift:push_pull at least 2
+    - pull_object:push_pull_anchor at least 1
+    - push_object:push_pull_anchor at least 1
+    - anchor_boundary_shift:box_sticky at least 3
+    - pull_object:box_sticky_anchor at least 2
+    - push_object:box_sticky_anchor at least 1
+    - push_object:crate#1 at least 1
+    - force_chain:n2 at least 1
+    - pull_object:crate#1 at least 3
+    - box_to_sticky:n1 at least 1
+    - pull_object:sticky#1 at least 2
+    - move_sticky_rigid at least 2
+  forbidden_winning_path_events: []
+  forbidden_if_seen_anywhere: []
+
+evidence:
+  solver_result:
+    found: true
+    shortest_cost: 19
+    explored_states_before_shortest: 140
+    canonical_inputs: [left, down, right, up, left, right, down, right, left, left, up, right, down, right, right, right, down, left, down]
+  canonical_trace_summary:
+    - steps_1_2: 向左站到箱链上方；向下 force_chain:n2，底箱覆盖 [2,4]，上箱留在 [2,3]。
+    - steps_3_5: L 行向右拉 P/L；上一格后在 P 行向左推 P/L 回原位，玩家到达载体上方通路。
+    - steps_6_10: 三步进入右廊；连续左拉 B/S 两格，把边界停在 B=[3,2], S=[4,2]。
+    - steps_11_13: 向上抽出载体箱；换位后向下推 B/S，B 覆盖中央目标 [3,3]。
+    - steps_14_16: 三次向右抽载体；第二次跨界触发 box_to_sticky:n1，第三次以 M 刚体继续右移。
+    - steps_17_19: 向下、向左绕到右目标 [5,3]；玩家站目标不计覆盖，最后向下拉 M 进入旧位并获胜。
+  canonical_event_counts:
+    walk: 8
+    push_object_crate_1: 1
+    force_chain_n2: 1
+    pull_object_push_pull_anchor: 1
+    push_object_push_pull_anchor: 1
+    anchor_boundary_shift_push_pull: 2
+    pull_object_box_sticky_anchor: 2
+    push_object_box_sticky_anchor: 1
+    anchor_boundary_shift_box_sticky: 3
+    pull_object_crate_1: 3
+    box_to_sticky_n1: 1
+    pull_object_sticky_1: 2
+    move_sticky_rigid: 2
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost: {raw: 19, band: 4, weight: 0.35}
+        nonWalkEventCount: {raw: 20, band: 4, weight: 0.45}
+        heavyReuseRatio: {raw: 0.1875, band: 5, weight: 0.2}
+      aggregateBand: 4
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate: {raw: 0.5, band: 5, weight: 0.55}
+        heavyReuseRatio: {raw: 0.1875, band: 5, weight: 0.45}
+      aggregateBand: 5
+  raw_trace_metrics:
+    scope: analyzer_facts_only_not_additional_scoring_dimensions
+    player_total_visits: 20
+    player_unique_visited_cells: 10
+    walkable_cell_count: 16
+    revisit_rate: 0.5
+    heavy_reuse_cell_count: 3
+    heavy_reuse_ratio: 0.1875
+  graph:
+    status: complete
+    reachable_states: 142
+    legal_transitions: 229
+    winning_states: 1
+    compressed_regions: 63
+    commitment_transitions: 71
+    solution_commitments: 11
+  scc:
+    status: complete
+    sccs: 58
+    edges: 61
+    win_reachable_sccs: 9
+    winning_sccs: 1
+    win_subgraph_shape: one_win_continuation_per_scc
+    solution_irreversible_steps: 8
+    forced_win_prefix: 8_of_8
+    branching_win_sccs: 0
+    merging_win_sccs: 0
+    scripted_handoffs: 4_of_8
+    max_scripted_run: 2
+  unique_plan_scope:
+    irreversible_responsibility_chain_unique: true
+    target_assignment_unique: true
+    strict_object_action_order_unique: false
+    exact_state_convergence: >-
+      27步提前序 step17 与规范 step9 汇合于
+      Ply:3,2|C:2,3;2,4|M:|PL:P:1,1;L:1,2|BS:B:4,2;S:5,2。
+    boundary: >-
+      候选只支持“唯一不可逆职责链”，不支持“所有必要锚动作的原始先后完全唯一”；
+      后者是否是用户所要求的唯一解硬门槛，必须由 critic 判定。
+  all_win_event_count_checks:
+    anchor_boundary_shift_push_pull_min2: {found_bypass: false, status: complete, explored_states: 201}
+    pull_object_push_pull_anchor_min1: {found_bypass: false, status: complete, explored_states: 184}
+    push_object_push_pull_anchor_min1: {found_bypass: false, status: complete, explored_states: 212}
+    anchor_boundary_shift_box_sticky_min3: {found_bypass: false, status: complete, explored_states: 145}
+    pull_object_box_sticky_anchor_min2: {found_bypass: false, status: complete, explored_states: 142}
+    push_object_box_sticky_anchor_min1: {found_bypass: false, status: complete, explored_states: 145}
+    push_object_crate_1_min1: {found_bypass: false, status: complete, explored_states: 150}
+    force_chain_n2_min1: {found_bypass: false, status: complete, explored_states: 151}
+    pull_object_crate_1_min3: {found_bypass: false, status: complete, explored_states: 348}
+    box_to_sticky_n1_min1: {found_bypass: false, status: complete, explored_states: 142}
+    pull_object_sticky_1_min2: {found_bypass: false, status: complete, explored_states: 144}
+    move_sticky_rigid_min2: {found_bypass: false, status: complete, explored_states: 144}
+  all_win_order_checks:
+    PL_shift_before_opening_n2: {found_violation_win: false, status: complete, explored_states: 151}
+    PL_push_before_PL_pull: {found_violation_win: false, status: complete, explored_states: 184}
+    BS_push_before_first_crate_pull: {found_violation_win: false, status: complete, explored_states: 174}
+    BS_push_before_two_BS_pulls: {found_violation_win: false, status: complete, explored_states: 142}
+    bind_before_BS_push: {found_violation_win: false, status: complete, explored_states: 145}
+    sticky_pull_before_bind: {found_violation_win: false, status: complete, explored_states: 142}
+  reversible_order_noise:
+    early_crate_pull_before_two_BS_shifts:
+      found: true
+      shortest_depth: 21
+      reading: >-
+        开局 n2 后先把载体上拉、随即下推回 exact post-n2 state，再进入同一职责链；
+        这是完整撤销动作，不改变目标分工或后续里程碑。
+    first_BS_pull_before_PL_pull:
+      found: true
+      shortest_depth: 27
+      reading: >-
+        玩家先临时上拉载体以绕到右廊，左拉 B/S 一格，再把载体推回并完成 P/L 往返；
+        必要职责、B/S 最终位置、载体转换与三个目标分工均不变，但原始对象动作顺序不同。
+      order_lock_search: >-
+        48 个单墙、起点、起点+单墙变体无严格命中；该交换序必须由 reviewer/critic 按
+        “同职责可逆预置 vs 第二解法”边界独立判断，designer 不自证。
+  goal_coverage:
+    status: complete
+    canonical_trace_all_legal: true
+    final_win: true
+    final_roles:
+      - {goal: [2, 4], role: crate}
+      - {goal: [3, 3], role: B_anchor_end}
+      - {goal: [5, 3], role: sticky_singleton}
+
+hard_fact_summary_for_critic:
+  solver: shortest_cost_19; graph_complete_142_states_229_transitions; one_winning_state
+  irreversible_macro_graph: 9 win-reachable SCCs; 0 branching; 0 merging; forced win prefix 8/8
+  required_or_forbidden_events: 12 event minima all complete with no below-count win
+  routed_diagnostic_facts:
+    - execution-pressure band 4; space-reuse band 5
+    - P/L shift min2 and B/S shift min3 are all-win facts
+    - final unique win assigns bottom crate, central B anchor, right M
+    - raw 27-step trace can place first B/S pull before P/L pull while preserving all later responsibilities
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost: {raw: 19, band: 4, weight: 0.35}
+        nonWalkEventCount: {raw: 20, band: 4, weight: 0.45}
+        heavyReuseRatio: {raw: 0.1875, band: 5, weight: 0.2}
+      aggregateBand: 4
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate: {raw: 0.5, band: 5, weight: 0.55}
+        heavyReuseRatio: {raw: 0.1875, band: 5, weight: 0.45}
+      aggregateBand: 5
+  evidence_limits:
+    - 指标只描述 exact canonical 的执行压力与空间复用，不证明洞见、因果、难度或审美。
+    - SCC 唯一不可逆链证明没有第二条不可逆职责分支；它不把每个可逆对象往返自动等同为同一人类解法。
+    - P/L 右拉再左推会回到原锚状态，可能被玩家读成精巧换层，也可能只是路线机关。
+    - B/S 连续左拉两格可能被读成边界定位，也可能只是重复拖动。
+    - 最终只生成单格 M，不声称黏块几何复杂；优点若成立，应来自 C->M 身份接力和目标分工。
+    - 没有独立真人试玩；错误分支公平性和 4 分难度仍由 critic/后续试玩判断。
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1.md
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1.md
+    - prototypes/reality_anchor/reports/order_lock_search_RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1.md
+    - prototypes/reality_anchor/reports/order_witness_comparison_RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1.md
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1_unique_plan_evidence.yml
+
+player_facing_reading:
+  opening_read: >-
+    全图只有两箱、三目标和两枚可动锚。两箱竖列正对底部目标，但单推上箱会推整条 n2；
+    正确第一承诺先让底箱完成，同时保留上箱为后续载体。开局可逆区有 4 状态、三个出口，
+    只有该 n2 出口可胜；另外两个早期承诺的公平性留给 critic。
+  intended_solution_read: >-
+    玩家不能直接上移穿过载体箱，只能借 P/L 本体在 L 行拉出、P 行推回，把自己换到上层。
+    随后 B/S 被抽到载体右侧，载体上抽后 B/S 下压：B 端占中央目标，载体获得横向抽取线。
+    载体穿过新 B/S 边界变 M，先被抽到右端；玩家再绕到目标下方，把 M 拉回自己刚站过的目标。
+  commitment_points:
+    - 开局选择是否以 n2 同时下推两箱；错误对象承诺不进入可胜 SCC 链。
+    - P/L 回返与 B/S 第一格定位存在同职责的可逆准备次序；第二次 B/S 左拉后，唯一载体抽取链被锁定。
+    - B/S 下压把 B 端留在中央目标；若未先抽出载体或未完成两格定位，完整顺序 probe 无胜。
+    - 箱跨界成为 M 后，右目标必须由 M 而非玩家覆盖；最终拉动同时兑现规则与视觉反馈。
+  state_responsibility: >-
+    底箱在 step2 永久承担底目标；上箱先是 n2 近端、再是窄列载体、横向 pull 资源和 B/S 转换输入，
+    最终以 M 身份承担右目标；P/L 承担玩家换层门并必须复位；B/S 先承担边界定位，后由 B 端承担中央目标。
+  payoff_and_resolution: >-
+    终局画面把三个目标明确分给三类对象：原箱、锚点端、再生黏块。step18 玩家亲自站在右目标上却仍未获胜，
+    step19 离开并把身后 M 拉入旧位才完成，直观兑现“玩家不算覆盖”和前面的 C->M 身份接力。
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0022
+      human_scores: {aesthetic: 5, difficulty: 4}
+      use: 短步骤、强反直觉、空间高利用与锚点反向交付的上界正锚。
+    - candidate_id: RA_CAND_0026
+      human_scores: {aesthetic: 4, difficulty: 4}
+      use: 小空间中锚点作为二格刚体与目标接力的4/4正锚。
+    - candidate_id: RA_CAND_0006
+      human_scores: {aesthetic: 2, difficulty: 5}
+      use: 目标位置只增加腾挪难度、削弱机制美感的负锚。
+    - candidate_id: RA_CAND_0024
+      human_scores: {aesthetic: 1, difficulty: 3}
+      use: 双锚与高机制事件最终只兑现为推拉走位的强负锚。
+  all_aesthetic_1_entries_read: [RA_CAND_0024, RA_CAND_0027]
+
+diagnostic_routing:
+  hard_evidence: [complete_graph, event_count_product_graphs, order_product_graphs, goal_coverage, exact_trace_metrics]
+  mechanism_scope: [dual_movable_anchors, force_chain_n2, C_to_M_relay, anchor_goal_coverage]
+  claim_hygiene: [one_winning_state_not_unique_plan, reversible_order_noise_disclosed, metrics_not_quality]
+  taste_probes: [PL_shuttle_or_route_tax, BS_double_pull_or_padding, singleton_M_payoff, final_player_on_goal_reframe]
+  scc_graph: [one_win_continuation_per_scc, forced_win_prefix_8_of_8, zero_branching_zero_merging]
+  variant_family: fresh_role_relay_reweave
+  start_position: exact_v1
+  prototype_specific_work: pre_submission_not_started_until_proposal_ready
+
+prototype_specific_contracts:
+  interface_pair_policy:
+    status: no_extra_pair_policy_declared_for_this_candidate
+    declared_interface_points: []
+    target_pairs: []
+    ignored_pair_classes: []
+    risky_pair_classes: []
+  pair_diagnostics:
+    ignored_pairs: []
+    risky_pairs: []
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work: {enabled: false, authorized_by: null, candidate_ids: [], allowed_operations: []}
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    布局来自本轮独立严格扫描与玩家侧精简；archive 仅用于人评口味校准，未作为布局、对象角色或因果链起点。
+
+attempt_log:
+  serious_structural_attempts:
+    - 方阵修补 v5：4/4 已入队，但 canonical space-reuse band 1，用户确认中段过线性。
+    - central v6：space reuse 5，但完整最短解有两种职责里程碑，已拒绝。
+    - T-rebind：存在不同箱处理顺序与 exact-state 汇合，已拒绝。
+    - role-relay v1：改族后得到唯一不可逆 SCC 链与职责型高复用，送本轮独立双审。
+  local_repairs:
+    - 墙化完全静止的第三箱；solver 与完整图不变。
+    - 墙化单格上袋；canonical 不变，完整图 143/231 收紧为 142/229。
+    - 48 个单墙/起点 order-lock 变体未消灭早期 B/S/P-L 可逆准备交换且保持核心。
+  abandoned_families: [multi_plan_order_fork, T_rebind, central_four_stroke, open_PL_return_track]
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1_claim_packet.yml
+  read_order: facts_then_claim

@@ -1,0 +1,111 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4
+workflow: reality_anchor_opening_comfort_check
+execution_order: 2
+ran_after: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_goal_prune_check.yml
+opening_comfort_check:
+  status: revised
+  baseline:
+    player_start: [8, 6]
+    shortest_solution: 22
+    initial_scc_size: 1
+    initial_exit_count: 1
+    initial_exit_source_distances: [0]
+    initial_win_exit_source_distances: [0]
+    nearest_irreversible_exit_distance: 0
+    nearest_win_reaching_exit_distance: 0
+    dead_exits_before_first_win_exit: 0
+    first_step_legal_events:
+      up: [push_object:sticky, move_sticky_rigid, sticky_to_box]
+    reading: challenge 起点无可逆观察空间，唯一第一步就是关键补角承诺；采纳 critic 的非阻塞风险并执行微调。
+  variants_checked:
+    - id: opening_buffer_down
+      candidate_start_position: [8, 7]
+      layout_delta: 在原起点下方增加一格封闭缓冲，并将原起点改为地面。
+      shortest_solution_delta: "22->23"
+      initial_scc_size: 2
+      initial_exit_source_distances: [1]
+      initial_win_exit_source_distances: [1]
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events: {up: [walk]}
+      whether_core_chain_preserved: true
+      hard_evidence: fixed-anchor 组合探针 complete 无旁路；四个精确形状探针 complete 无旁路；唯一胜态。
+      decision: reject
+      player_side_reason: 虽然是最安全的舒适度修复，但只增加一格单向脚垫与一次路线步，观察空间仍近似脚本且拉长外轮廓。
+    - id: opening_connect_right_start_original
+      candidate_start_position: [8, 6]
+      layout_delta: 打开 [9,6] 连接右侧回路。
+      shortest_solution_delta: not_promoted
+      initial_scc_size: 13
+      initial_exit_source_distances: [0, 2, 3, 6, 6, 8]
+      initial_win_exit_source_distances: [0, 3, 8]
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events: includes_immediate_irreversible_up
+      whether_core_chain_preserved: not_accepted
+      decision: reject
+      player_side_reason: 仍保留距离 0 的正确不可逆出口，未修复贴脸开局。
+    - id: opening_connect_left_start_original
+      candidate_start_position: [8, 6]
+      layout_delta: 打开 [7,6] 连接左侧观察区。
+      shortest_solution_delta: not_promoted
+      initial_scc_size: 13
+      initial_exit_source_distances: [0, 2, 4]
+      initial_win_exit_source_distances: [0]
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events: includes_immediate_irreversible_up
+      whether_core_chain_preserved: not_accepted
+      decision: reject
+      player_side_reason: 虽有更大 SCC，真实起点仍可第一手直接补角，关键承诺距离仍为 0。
+    - id: opening_connect_right_start_10_6
+      candidate_start_position: [10, 6]
+      layout_delta: 打开 [9,6] 并把起点移到右回路。
+      shortest_solution_delta: "22->24"
+      initial_scc_size: 13
+      initial_exit_source_distances: [1, 2, 2, 4, 4, 6]
+      initial_win_exit_source_distances: [1, 2, 6]
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events: [walk]
+      whether_core_chain_preserved: false_for_claimed_reading
+      decision: reject
+      player_side_reason: B/S 可在补角前成为 win-reaching 出口，改变“先补角再刷下排”的读题顺序，并引入三类早期死出口。
+    - id: opening_connect_left_start_7_6
+      candidate_start_position: [7, 6]
+      layout_delta: 打开 [7,6]，旧起点 [8,6] 改为普通地面，并把玩家左移一格。
+      shortest_solution_delta: "22->23"
+      initial_scc_size: 13
+      initial_exit_source_distances: [1, 1, 3]
+      initial_win_exit_source_distances: [1]
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events: {right: [walk], up: [walk]}
+      whether_core_chain_preserved: true
+      hard_evidence:
+        solver: {found: true, shortest_cost: 23}
+        graph: {status: complete, reachable_states: 165454, winning_states: 1}
+        fixed_anchor_combined: {found_bypass: false, status: complete, explored_states: 366670}
+        required_shapes:
+          crate_2x2: {found_bypass: false, status: complete, explored_states: 118558}
+          sticky_exact_2x2: {found_bypass: false, status: complete, explored_states: 165387}
+          split_single_plus_l_exact: {found_bypass: false, status: complete, explored_states: 165446}
+          rebound_offset_2x2_exact: {found_bypass: false, status: complete, explored_states: 165429}
+      decision: select_for_next_version
+      player_side_reason: >-
+        两个首步都只是可逆走位，玩家可先进入 13 状态观察区；正确补角出口推迟到距离 1，
+        且在第一个正确出口之前没有死出口。相较单格脚垫，它不增加外轮廓，并让玩家主动
+        站到 M 下方后再承诺；完整证据仍保留四种形态与双锚点职责。
+  selected_revision:
+    next_candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5
+    source_variant: opening_connect_left_start_7_6
+    requires_fresh_evidence_and_reviews: true
+    reason: 起点和一格地形发生变化；不得沿用 v4 review。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_BASE.json
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_BUFFER_DOWN.json
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_RIGHT_START_ORIGINAL.json
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_LEFT_START_ORIGINAL.json
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_RIGHT_START_10_6.json
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_LEFT_START_7_6.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_LEFT_START_7_6.json
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_LEFT_START_7_6.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_LEFT_START_7_6_crate_2x2.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_LEFT_START_7_6_sticky_exact_2x2.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_LEFT_START_7_6_split_single_plus_l_exact.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_OPENING_CONNECT_LEFT_START_7_6_rebound_offset_2x2_exact.json

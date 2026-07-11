@@ -1,0 +1,322 @@
+candidate_version: RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1
+review_iteration: 1
+review_input_type: candidate_version
+
+task_classification:
+  kind: specific_prototype_level_design
+  prototype: prototypes/Reality_Anchor
+  generic_capability_change: false
+  player_side_priority: true
+
+revision_context:
+  human_feedback: >-
+    方阵修补 v5 逻辑稳健但中段过于线性；用户明确要求优化时仍保持推箱子式唯一解，
+    不接受两条真正可胜、职责不同或必要动作换序的计划。
+  rejected_intermediate:
+    candidate: RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1
+    reason: >-
+      27 步胜路把一次保留的 B/S 必要位移提前到 P/L 必要往返之前并 exact-state 汇合，
+      独立 critic 判为第二种对象动作计划；已拒绝，未入队。
+  selected_direction: >-
+    换用单箱、双移动锚的紧凑刷界活塞结构；非线性只来自唯一对象宏路径内部的空间回访、
+    目标换责和同一箱子的材质循环。
+  queue_policy: 新候选正式双审与提交前流程均通过前，不修改 levels 或 playable_queue。
+
+prototype_context:
+  confirmed_rules:
+    - P/L 两格锚按玩家所在 P/L 侧决定 push 或 pull；锚本体可移动且可覆盖目标。
+    - B/S 两格锚移动后，全局材料按新边界归一化；B/S 本体可移动且可覆盖目标。
+    - push 可形成 force chain；链内对象必须整体可移动。
+    - pull 要求玩家前格为空，并把身后相邻对象沿玩家方向抽入旧位。
+    - sticky 连体块按刚体移动；本候选仅出现 singleton M，不发生 sticky_merge。
+    - 所有 G 必须由箱、黏块或锚点覆盖；玩家站在 G 上不算覆盖。
+  tool_boundary:
+    runtime_adapter: available
+    full_graph_and_agency: available
+    event_count_product_graph: available
+    walk_macro_unique_path_audit: available_candidate_specific
+    human_live_play: not_run
+
+slot_brief:
+  intended_role: late_challenge
+  known_before: all_current_reality_anchor_runtime_rules
+  difficulty_or_support_expectation: difficulty_floor_4; aesthetic_floor_4; aspire_higher; support_none
+
+solve_instance:
+  layout: |-
+    #######
+    #####P#
+    #C.G.L#
+    ##G.@.#
+    ##BSG.#
+    #######
+  exact_layout_sha256: 2bccfca39c6b080c65cd211c5b73d33104e9dfeb55ba8516e54533a3467f5f88
+  player_start: [4, 3]
+  goal_cells: [[3, 2], [2, 3], [4, 4]]
+  initial_crates: [[1, 2]]
+  initial_sticky: []
+  anchors:
+    push_pull: {P: [5, 1], L: [5, 2], orientation: vertical, movable: true}
+    box_sticky: {B: [2, 4], S: [3, 4], orientation: horizontal, movable: true}
+  final_goal_roles:
+    upper_goal_3_2: P_anchor_end
+    middle_goal_2_3: crate
+    lower_goal_4_4: S_anchor_end
+
+mechanism_scope:
+  canonical_object_sequence:
+    - B/S 上拉一格。
+    - 箱子右拉两格；第二格触发 box_to_sticky:n1。
+    - B/S 右拉一格并触发 sticky_to_box:n1。
+    - P/L 下拉一格。
+    - 箱子右推一格并再次触发 box_to_sticky:n1。
+    - B/S 下推一格。
+    - P/L 左拉一格，触发 force_chain:n2、move_sticky_rigid 与 sticky_to_box:n1。
+    - P/L 再左拉一格，再次触发 force_chain:n2。
+    - 箱子下拉一格获胜。
+  required_winning_path_events:
+    - anchor_boundary_shift:box_sticky at least 3
+    - pull_object:box_sticky_anchor at least 2
+    - push_object:box_sticky_anchor at least 1
+    - anchor_boundary_shift:push_pull at least 3
+    - pull_object:push_pull_anchor at least 3
+    - pull_object:crate#1 at least 3
+    - push_object:crate#1 at least 1
+    - box_to_sticky:n1 at least 2
+    - sticky_to_box:n1 at least 2
+    - force_chain:n2 at least 2
+    - move_sticky_rigid at least 1
+  allowed_noise:
+    - 纯 walk 路径差异。
+    - 完整返回同一对象宏状态后可被 loop erase 的空转环。
+  forbidden_solution_properties:
+    - 第二条 loop-erased/simple 可胜对象宏路径。
+    - 必要对象动作换序后仍可胜。
+    - 不同目标职责分配的可胜计划。
+
+evidence:
+  solver_result:
+    found: true
+    shortest_cost: 19
+    explored_states_before_shortest: 146
+    canonical_inputs: [left, up, left, right, right, down, right, down, left, left, left, up, up, right, down, right, left, left, down]
+  shortest_solution_enumeration:
+    status: complete
+    truncated: false
+    exact_input_path_count: 2
+    distinct_non_walk_signature_count: 1
+    difference: >-
+      两条最短输入仅在首次上拉 B/S 时从锚点两个端部选择不同纯走位入口；
+      上拉后的对象配置相同、玩家坐标分别为 [3,2] 与 [2,2]，两状态由一步纯 walk 连通并属于同一 walk 宏状态；
+      完整去 walk 事件序列相同。
+  canonical_event_counts:
+    walk: 9
+    pull_object_box_sticky_anchor: 2
+    push_object_box_sticky_anchor: 1
+    anchor_boundary_shift_box_sticky: 3
+    pull_object_push_pull_anchor: 3
+    anchor_boundary_shift_push_pull: 3
+    pull_object_crate_1: 3
+    push_object_crate_1: 1
+    box_to_sticky_n1: 2
+    sticky_to_box_n1: 2
+    force_chain_n2: 2
+    move_sticky_rigid: 1
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost: {raw: 19, band: 4, weight: 0.35}
+        nonWalkEventCount: {raw: 23, band: 5, weight: 0.45}
+        heavyReuseRatio: {raw: 0.21428571428571427, band: 5, weight: 0.2}
+      aggregateBand: 5
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate: {raw: 0.45, band: 5, weight: 0.55}
+        heavyReuseRatio: {raw: 0.21428571428571427, band: 5, weight: 0.45}
+      aggregateBand: 5
+  raw_trace_metrics:
+    scope: canonical_solution_only_not_quality_verdict
+    player_total_visits: 20
+    player_unique_visited_cells: 11
+    walkable_cell_count: 14
+    revisit_rate: 0.45
+    heavy_reuse_cell_count: 3
+    heavy_reuse_ratio: 0.21428571428571427
+    heavy_reuse_cells:
+      - {cell: [4, 3], visits: 3}
+      - {cell: [3, 3], visits: 3}
+      - {cell: [3, 2], visits: 3}
+  graph:
+    status: complete
+    reachable_states: 151
+    legal_transitions: 282
+    winning_states: 1
+    compressed_regions: 47
+    commitment_transitions: 67
+    solution_regions: 12
+    solution_commitments: 11
+  scc:
+    status: complete
+    sccs: 38
+    edges: 46
+    win_reachable_sccs: 12
+    winning_sccs: 1
+    win_subgraph_shape: branching_win_dag
+    solution_irreversible_steps: 11
+    branching_win_sccs: 1
+    merging_win_sccs: 1
+    interpretation_limit: >-
+      SCC 分叉/汇合包含首次 B/S 上拉两端的纯走位入口差异；SCC 读数本身不证明或反驳对象计划唯一。
+  superseded_weak_walk_macro_audit:
+    status: superseded_not_admissible
+    reason: >-
+      旧审计把任意单向 pure-walk edge 用 DSU 无向合并；Reality Anchor 中反向输入可能触发 pull，
+      因而弱连通压缩可能吞掉不可互达的玩家状态。旧 38/11 bridge PASS 不再作为唯一性证据。
+    artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_strict_unique_audit_agent.json
+  directed_walk_unique_object_macro_audit:
+    status: root_recomputed_pending_independent_confirmation
+    criterion: >-
+      只压缩 directed pure-walk 子图的强连通分量，保留所有单向 walk 边；完整枚举初态到胜态的
+      每条 simple directed-walk-SCC 宏路径，并按“非 walk 事件 + 结果对象完整配置”归约。
+      任意有限胜路去掉完整返回同一宏节点的环后，都对应其中一条 simple 宏路径。
+    directed_walk_scc_macros: 51
+    relevant_macros: 13
+    enumerated_simple_winning_paths: 2
+    enumeration_exhausted: false
+    distinct_reduced_object_plans: 1
+    canonical_object_steps: 10
+    conclusion: 两条 simple 胜路只含纯走位入口差异；结果对象配置序列与十个必要动作完全一致。
+    artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_directed_walk_unique_audit_root.json
+    independent_confirmation: pending
+    exact_layout_sha256: 2bccfca39c6b080c65cd211c5b73d33104e9dfeb55ba8516e54533a3467f5f88
+  all_win_event_count_checks:
+    anchor_boundary_shift_box_sticky_min3: {found_bypass: false, status: complete, explored_states: 213}
+    pull_object_box_sticky_anchor_min2: {found_bypass: false, status: complete, explored_states: 197}
+    push_object_box_sticky_anchor_min1: {found_bypass: false, status: complete, explored_states: 195}
+    anchor_boundary_shift_push_pull_min3: {found_bypass: false, status: complete, explored_states: 203}
+    pull_object_push_pull_anchor_min3: {found_bypass: false, status: complete, explored_states: 233}
+    pull_object_crate_1_min3: {found_bypass: false, status: complete, explored_states: 173}
+    push_object_crate_1_min1: {found_bypass: false, status: complete, explored_states: 172}
+    box_to_sticky_min2: {found_bypass: false, status: complete, explored_states: 173}
+    sticky_to_box_min2: {found_bypass: false, status: complete, explored_states: 173}
+    force_chain_n2_min2: {found_bypass: false, status: complete, explored_states: 151}
+    move_sticky_rigid_min1: {found_bypass: false, status: complete, explored_states: 173}
+  goal_coverage:
+    canonical_trace_all_legal: true
+    final_win: true
+    responsibility_timeline:
+      - step: 2
+        roles: {middle_goal_2_3: B_anchor_end}
+      - step: 5
+        roles: {upper_goal_3_2: sticky_singleton, middle_goal_2_3: B_anchor_end}
+      - step: 7
+        roles: {upper_goal_3_2: crate}
+      - step: 14
+        roles: {}
+      - step: 15
+        roles: {lower_goal_4_4: S_anchor_end}
+      - step: 17
+        roles: {upper_goal_3_2: crate, lower_goal_4_4: S_anchor_end}
+      - step: 18
+        roles: {upper_goal_3_2: P_anchor_end, lower_goal_4_4: S_anchor_end}
+      - step: 19
+        roles: {upper_goal_3_2: P_anchor_end, middle_goal_2_3: crate, lower_goal_4_4: S_anchor_end}
+  goal_deletion_counterfactuals:
+    drop_upper_3_2: {shortest_cost: 11, winning_states: 2, core_bypass: true}
+    drop_middle_2_3: {shortest_cost: 9, winning_states: 3, core_bypass: true}
+    drop_lower_4_4: {shortest_cost: 5, winning_states: 1, core_bypass: true}
+
+hard_fact_summary_for_critic:
+  solver: shortest_cost_19; full_graph_complete_151_states_282_transitions; one_winning_state
+  strict_uniqueness: >-
+    旧 weak-walk bridge audit 已作废；root directed-walk SCC 重算为 51 宏、13 relevant、
+    2 条完整 simple 胜路、1 个事件+对象配置归约计划，等待独立复核。
+  event_necessity: 11 exact event minima complete with no below-count win
+  target_necessity: deleting any one goal shortens solution to 5-11 and bypasses most of the chain
+  calibrated_trace: execution_pressure_5; space_reuse_5
+  evidence_limits:
+    - Trace Metric 只描述规范解执行压力与空间复用，不证明洞见、难度或审美。
+    - one winning state 单独不证明唯一解；旧 weak-walk 宏桥审计已明确作废。
+    - directed-walk SCC simple-path 审计虽已由 root 完整重算，正式放行仍要求独立复核。
+    - 本候选只有一个箱子，M 永远是 singleton；没有 sticky_merge，也没有多格黏块几何。
+    - C/M 变化在视觉与 B/S 归一化事件上必经，但 singleton C 与 singleton M 的移动几何相同；critic 必须判断是否只是标签编排。
+    - step 8 到 step 14 含五次连续 walk 用于绕到箱子另一侧；需判断是必要换侧还是路线税。
+    - 双锚各移动三次且全胜路必经，但高机制信号是否兑现为玩家洞见仍需独立判断。
+    - 没有独立真人试玩；错误分支公平性与 4+ 难度仍由 critic/后续试玩判断。
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_strict_unique_audit_agent.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json
+
+player_facing_reading:
+  opening_read: >-
+    玩家位于两锚之间；最初 B/S 可从不同端部靠近，但严格审计显示两种最短入口只产生同一次上拉后的同一对象宏状态。
+    初始对象宏路径没有第二条可胜计划。
+  intended_solution_read:
+    前五次对象动作依次抬升 B/S、把箱子拉到上目标、右移 B/S 刷回箱态、下拉 P/L；
+    中段绕到箱左侧后主动把已覆盖目标的箱子推离，再下推 B/S；末段两次左拉 P/L 与箱/M 形成 n2 混链，
+    最后一拉箱完成 P/C/S 三目标分工。
+  payoff_and_resolution: >-
+    上目标在 step5-7 由 M/C 暂占，step14 被主动清空，step17 又由 C 短暂恢复，step18 改由 P 接管；
+    中目标则从早期 B 暂占变为终局箱，底目标由 S 接管。
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0022
+      human_scores: {aesthetic: 5, difficulty: 4}
+      use: 短步骤、强反直觉资源安置、高空间利用与精巧闭环的上界正锚。
+    - candidate_id: RA_CAND_0026
+      human_scores: {aesthetic: 4, difficulty: 4}
+      use: 单箱条件下聚焦锚点二格刚体与目标换责仍可成立为4/4的正锚。
+    - candidate_id: RA_CAND_0006
+      human_scores: {aesthetic: 2, difficulty: 5}
+      use: 目标位置只增加腾挪复杂度、削弱机制美感的负锚。
+    - candidate_id: RA_CAND_0024
+      human_scores: {aesthetic: 1, difficulty: 3}
+      use: 双锚与高机制信号最终只兑现为推拉腾挪、缺少黏块几何洞见的强负锚。
+  all_aesthetic_1_entries_read: [RA_CAND_0024, RA_CAND_0027]
+
+critic_questions:
+  - 严格对象宏路径唯一且空间复用5，是否从玩家侧消除了此前“用多解修线性”的误读？
+  - 上目标四次换责、双锚三次位移和末段双 n2 是否形成一个清晰洞见，还是机制标签过密？
+  - singleton M 没有多格几何，是否使 C/M 循环落入 RA_CAND_0024/0027 的 affordance 警戒？
+  - 五步换侧走位是否被后续反向推离消费，还是足以构成路线税？
+  - 玩家侧审美与难度能否均保守达到4；是否任一能支持5？
+
+diagnostic_routing:
+  hard_evidence: [complete_graph, directed_walk_scc_simple_path_audit_pending_independent_confirmation, event_count_product_graphs, goal_coverage, goal_deletion, exact_trace_metrics]
+  mechanism_scope: [dual_movable_anchors, target_responsibility_relay, singleton_material_cycle, mixed_force_chain_n2]
+  claim_hygiene: [one_winning_state_not_unique_plan, pure_walk_difference_disclosed, metrics_not_quality, singleton_limit_disclosed]
+  taste_probes: [target_relay_or_label_choreography, five_walk_reposition_or_route_tax, dual_anchor_payoff, single_crate_affordance]
+  variant_family: fresh_brush_piston_triple_relay
+  start_position: exact_v1
+  prototype_specific_work: pre_submission_not_started_until_proposal_ready
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work: {enabled: false, authorized_by: null, candidate_ids: [], allowed_operations: []}
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    布局由本轮独立随机底图与目标合成搜索产生，再从玩家侧删除两个无责任空格；
+    archive 仅用于人评口味校准，未作为布局、对象角色或因果链起点。
+
+attempt_log:
+  serious_structural_attempts:
+    - 方阵修补 v5：已入队 4/4，但规范 trace space-reuse band1，用户认为中段过线性。
+    - central v6：space5，但完整最短枚举有两种职责里程碑，硬拒绝。
+    - role-relay v1：space5，但存在保留的 B/S 必要动作换序胜路，独立 critic 硬拒绝。
+    - 42步 strict role weave：严格唯一且space5，但12对象动作配30走位，路线税过重，未送审。
+    - brush-piston v1：当前 exact 候选；19步、10对象动作、严格唯一对象宏路径。
+  exact_preanalysis_prune:
+    - 将随机底图左上两个规范解与完整对象宏路径均不消费的空格墙化；图从204/391收紧为151/282，规范对象序列不变。
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_claim_packet.yml
+  read_order: facts_then_initial_assessment_then_claim

@@ -1,0 +1,50 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v6
+status: rejected_candidate
+reason: multiple_winning_responsibility_chains
+
+user_constraint:
+  required: 推箱子式唯一解；不能以两条职责不同的可胜计划制造非线性
+  interpretation: >-
+    允许纯走位差异与不改变对象责任的可逆微序；不允许对象处理阶段顺序不同后汇合到同一终态。
+
+hard_facts:
+  complete_graph:
+    reachable_states: 116821
+    legal_transitions: 301684
+    winning_states: 1
+  winning_scc_subgraph:
+    win_reachable_sccs: 17
+    branching_sccs: 4
+    merging_sccs: 4
+    distinct_scc_paths: 16
+  shortest_solution_dag:
+    cost: 71
+    input_sequences: 36
+    object_event_sequences_after_walk_removal: 4
+    responsibility_milestone_sequences: 2
+
+witnesses:
+  - id: BS_BEFORE_PULL
+    reading: >-
+      先移动 B/S，只把一枚箱刷成黏块；随后再拉中央箱，产生第二次单格转换与 merge。
+    conversion_signature: [box_to_sticky:n1, box_to_sticky:n1, sticky_merge:n1]
+  - id: PULL_BEFORE_BS
+    reading: >-
+      先把中央箱拉入刷线，再移动 B/S，一次完成双箱转换。
+    conversion_signature: [pull_object:crate#1, box_to_sticky:n2]
+
+why_one_winning_state_is_insufficient: >-
+  两条 71 步最短胜路在中段采用不同物体职责顺序，之后汇合到同一物理状态；
+  因而终态唯一只证明结果唯一，不证明解法唯一。
+
+evidence_refs:
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v6_unique_responsibility_chain.md
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v6_WITNESS_BS_BEFORE_PULL.md
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v6_WITNESS_PULL_BEFORE_BS.md
+  - prototypes/reality_anchor/reports/order_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v6_BS_BEFORE_PULL.md
+  - prototypes/reality_anchor/reports/order_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v6_PULL_BEFORE_BS.md
+
+submission_effect:
+  send_to_independent_review: false
+  replace_queue_entry: false
+  add_to_playable_queue: false

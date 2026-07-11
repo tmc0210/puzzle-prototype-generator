@@ -67,17 +67,6 @@ exploration_guidance:
     - single-corridor execution
     - d1_d2 or d3 becomes the real core while d4 is decorative
     - high-difficulty potential but evidence/tooling is insufficient
-player_model_assumption:
-  known_before:
-    - d1_d2_stop
-    - d3_destroy_moving_ice
-    - d4_rebound
-    - target_ice_requirement
-    - explicit_edge_start_goal_contract
-  not_yet_known:
-    - d5_pass_through
-    - d6_plus_destroy_group
-    - slide_restart_after_group
 challenge_floor:
   must_not_be:
     - discovery_or_witness

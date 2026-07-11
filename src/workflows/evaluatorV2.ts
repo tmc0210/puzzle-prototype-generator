@@ -624,14 +624,6 @@ function toLevelDoc(candidate: CandidateLevelV2): LevelDoc {
   return {
     id: candidate.id,
     title: candidate.title,
-    role: "mechanic_witness",
-    status: "candidate",
-    targets: [candidate.spec_id],
-    known_before: [],
-    target_learning: [candidate.spec_id],
-    support_level: "high",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: candidate.layout,
   };
 }

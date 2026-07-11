@@ -1,0 +1,53 @@
+action_iteration: 1
+candidate_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+review_inputs:
+  evidence_review: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_evidence_review_1.yml
+  puzzle_critic: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_puzzle_critic_1.yml
+review_loop_state_before: held_proposal
+decision: evidence_disagreement_for_next_review
+layout_changed: false
+start_goal_or_win_changed: false
+design_claim_changed: false
+reason: >-
+  critic 已支持 4/4 且 required_action:none；evidence reviewer 唯一 central blocker 是
+  现有 all-win probe 只证明至少一次 n2，同一 ordered waypoint artifact 又没有把 step 10 与
+  step 17 的进入转移绑定到事件。布局与玩家侧 claim 不需要修改；补 event-aware product evidence 后进入 review_2。
+evidence_repair_plan:
+  - 完整搜索所有胜路，证明 force_chain:n2 的计数下界为 2
+  - 把六个 exact anchor transition 依次绑定到 action、对象事件、两种 anchor shift 与 next-state waypoint
+  - 证明中段 mixed-up transition 与终局 mixed-left transition 各自包含 n2
+  - 对首个 B/S shift 设置 first-occurrence latch，要求它发生在 P/L lower stage 后并以 left pull 进入 bs_left_extract
+  - 不用工具结论证明 player_insight、why_not_execution、审美或难度
+reviewer_item_triage:
+  - id: ER-01-two-mixed-chain-all-win
+    disposition: add_context_next_review
+    blocks_proposal_ready: true
+    response: 新增 event-aware + count + first-occurrence product probe，并交独立 evidence reviewer review_2
+  - id: ER-02-first-bs-event-binding
+    disposition: add_context_next_review
+    blocks_proposal_ready: true
+    response: 对 first B/S shift 使用 event-aware latch；若失败则收窄 claim，不修改布局硬凑
+critic_item_triage:
+  - id: PC-01
+    disposition: accept_as_nonblocking
+    response: 接受“审美达到4、不支持5”边界，试玩 handoff 保留
+  - id: PC-02
+    disposition: accept_as_nonblocking
+    response: 接受“难度达到4、不支持5”边界，试玩 handoff 保留
+  - id: PC-03
+    disposition: accept_as_nonblocking
+    response: 试玩重点观察玩家是否预见 final left，而非仅把 step 15 当局部唯一腾位
+  - id: PC-04
+    disposition: accept_as_nonblocking
+    response: 不把 SCC 出口数写成洞见证明；试玩观察开局诱饵与实际读法
+  - id: PC-05
+    disposition: accept_as_nonblocking
+    response: 不把去重结果写成 merit；只保留 lineage 风险说明
+next_review:
+  review_iteration: 2
+  candidate_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+  review_input_type: evidence_disagreement
+  required_role: independent_evidence_reviewer
+  critic_rereview_required: false
+  critic_rereview_reason: layout、solve instance、design claim 与玩家侧 packet 均未变化
+

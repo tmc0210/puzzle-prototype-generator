@@ -1,0 +1,474 @@
+candidate_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+packet_version: 2
+prototype_context:
+  confirmed_rules:
+    - P/L 是可移动二格锚点；玩家所在 P 侧使用 push，L 侧使用 pull
+    - B/S 是可移动二格锚点；本关没有 crate 或 sticky，因此只使用其二格刚体与目标覆盖性质
+    - 锚点只平移不旋转；任一半格的目标位被墙或对象阻挡时整次动作失败
+    - push/pull 可沿运动方向形成多对象 force chain
+  win_condition: 结算后全部目标都由 crate、sticky 或任意锚点格覆盖；玩家不计覆盖
+  object_and_event_semantics:
+    anchor_boundary_shift_push_pull: P/L 锚点本体发生平移
+    anchor_boundary_shift_box_sticky: B/S 锚点本体发生平移
+    force_chain_n2: 同一步中两个对象实例共同移动；本关唯一两个对象就是两种锚点
+    pull_object_push_pull_anchor: 玩家在 pull side 拉动 P/L
+    pull_object_box_sticky_anchor: 玩家在 pull side 拉动 B/S
+  tool_boundary:
+    available:
+      - runtime solver
+      - complete graph / agency / SCC analyzer
+      - all-winning-path event product probe
+      - candidate-specific ordered waypoint product probe
+      - candidate-specific mixed-chain count / transition product probe
+      - expected-trace goal coverage replay
+    unavailable_or_not_used:
+      - curated miner
+      - PuzzleScript exporter/checker
+    quality_boundary: 工具只证明状态、事件、顺序与覆盖事实，不证明好玩、审美或难度评分
+
+slot_brief:
+  intended_role: late_game_challenge
+  known_before: Reality Anchor 全部既有知识
+  target: 双锚点二格刚体编结；先泊位、主动腾位、终局同链共同泊位
+  difficulty_or_support_expectation: 难度至少4、追求5；审美至少4、追求5；无提示、无支持
+
+mechanic_exposure_context:
+  mechanic_window: 全部后期知识可用
+  allowed_exposure_through: dual_anchor
+  claimed_core_events:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - force_chain:n2
+    - pull_object:push_pull_anchor
+    - pull_object:box_sticky_anchor
+  exposure_sequence_ref: prototypes/reality_anchor/docs/mechanic_exposure_sequence.yml
+  later_forbidden_events: []
+  latest_exposure_gate: 双锚点配置存在，且两种锚点位移均由完整 all-win probe 证明必经
+
+design_target:
+  aesthetic_score_target: "至少4，追求5"
+  difficulty_score_target: "至少4，追求5"
+  target_role_notes: >-
+    追求短而高密度的后期挑战。四格 T 目标在开局展示终态；主链不靠材料标签，
+    而靠两枚不可旋转二格锚点互相占用把手、临时泊位与两次同链移动。
+
+solve_instance:
+  layout: |-
+    ######
+    ##.G.#
+    #GGGS#
+    #@PLB#
+    #...##
+    #..###
+    ######
+  player_start: [1, 3]
+  player_goal: not_applicable
+  win_condition: all_targets_covered_by_objects
+  goal_cells:
+    - [3, 1]
+    - [1, 2]
+    - [2, 2]
+    - [3, 2]
+
+mechanism_scope:
+  central:
+    - P/L 横向锚点的 transverse push / pull 把手门
+    - B/S 垂直二格刚体的完整占格目标门
+    - 两锚互相占用玩家站位与对象目标格
+    - 两次 n2 mixed-anchor force chain
+    - B/S 完整临时泊位、主动腾位、终局回泊
+  allowed_support:
+    - 紧凑空间内的可逆走位与回访
+    - 玩家短暂站上目标但不产生覆盖
+  incidental_allowed: []
+  required_winning_path_events:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - force_chain:n2
+    - pull_object:push_pull_anchor
+    - pull_object:box_sticky_anchor
+  forbidden_winning_path_events:
+    - box_to_sticky
+    - sticky_to_box
+    - sticky_merge
+    - sticky_split
+    - move_sticky_rigid
+  forbidden_if_seen_anywhere:
+    - box_to_sticky
+    - sticky_to_box
+    - sticky_merge
+    - sticky_split
+    - move_sticky_rigid
+
+design_claim:
+  player_insight: >-
+    四个目标组成一个清楚的 T：水平 P/L 应占底横两格，垂直 B/S 应占右竖两格。
+    但两个二格锚点不能直接依次归位。玩家必须先把 P/L 向下推离目标，释放旧 L 半格作为
+    B/S 的左拉站位；把 B/S 左拉后，再从下方推动 P/L，使两个锚点同链上移，B/S 会率先
+    完整覆盖竖目标。这个看似已经完成的泊位反而占住了 P/L 向上 pull 的玩家站位，所以必须
+    把 B/S 右推离目标；随后向上拉 P/L，最后再从上方左拉 B/S。最后一拉让 B/S 撞上 P/L，
+    两锚在同一 force chain 中同时左移，恰好一起落入 T 形终态。核心洞见是“先泊—腾位—同泊”。
+  causal_chain:
+    - P/L 向下 push，释放旧 L 半格
+    - 经旧 L 半格向左 pull 垂直 B/S
+    - 从下方 push P/L，与 B/S 同链上移，B/S 首次完整覆盖竖目标
+    - B/S 向右离开目标，腾出 P/L 的上拉玩家站位
+    - P/L 向上 pull 到横目标行但仍右错一格
+    - B/S 向左 pull，碰撞并带动 P/L 同链左移，两锚同时完成 T 泊位
+  why_not_execution: >-
+    玩家能直接读出终态，却不能逐个就近归位。第一手物体动作背离目标；B/S 的完整目标覆盖
+    是必须撤销的把手债；终局一手同时移动两锚并兑现开局轮廓。每个位置同时承担目标、玩家站位、
+    非接触半格门和 force-chain 垫片责任，难点来自未来把手和状态责任，而非步骤长度或重复操作。
+  falsification:
+    - 任一胜路绕过任一锚点位移、任一锚点 pull 或两锚同链
+    - 规范解中的 P/L 下移不产生随后被使用的 B/S 左拉站位
+    - B/S 不必先完整泊位再右移腾出 P/L 把手
+    - 终局 B/S 左拉不同时移动 P/L，或两锚可独立完成
+    - 玩家主要通过走廊重复、路线税或盲试而非未来把手推理解决
+
+evidence:
+  commands_run:
+    - >-
+      npx tsx src/cli.ts explain-layout prototypes/reality_anchor
+      prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_layout.txt
+      --id RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5 --targets K_runtime_smoke
+      --max-states 300000 --graph-max-states 300000 --write
+    - >-
+      npx tsx prototypes/reality_anchor/reports/probe_dual_axis_candidate.ts
+      prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_layout.txt
+      RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5 300000 80
+      pl_shift=anchor_boundary_shift:push_pull bs_shift=anchor_boundary_shift:box_sticky
+      mixed_anchor_chain=force_chain:n2 pl_pull=pull_object:push_pull_anchor
+      bs_pull=pull_object:box_sticky_anchor
+    - >-
+      npx tsx prototypes/reality_anchor/reports/probe_anchor_braid_waypoints.ts
+      prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_layout.txt
+      RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5 100000
+    - >-
+      npx tsx prototypes/reality_anchor/reports/probe_anchor_braid_mixed_gates.ts
+      prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_layout.txt
+      RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5 100000
+    - >-
+      npx tsx prototypes/reality_anchor/reports/probe_goal_coverage.ts
+      prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_layout.txt
+      RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_expected_trace
+      up right down right left left down down right up left up up right right up left
+  solver_result:
+    found: true
+    shortest_cost: 17
+    depth: 17
+    explored_states: 123
+    canonical_inputs: [up, right, down, right, left, left, down, down, right, up, left, up, up, right, right, up, left]
+  trace_summary:
+    non_walk_object_actions: 6
+    canonical_nodes:
+      - step: 3
+        input: down
+        events: [push_object:push_pull_anchor, anchor_boundary_shift:push_pull]
+        state_change: P/L 下移到 staging row，旧 L 半格释放
+      - step: 5
+        input: left
+        events: [pull_object:box_sticky_anchor, anchor_boundary_shift:box_sticky]
+        state_change: B/S 经旧 L 半格向左抽出
+      - step: 10
+        input: up
+        events: [push_object:push_pull_anchor, force_chain:n2, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky]
+        state_change: 两锚同链上移；B/S 完整覆盖竖目标
+      - step: 15
+        input: right
+        events: [push_object:box_sticky_anchor, anchor_boundary_shift:box_sticky]
+        state_change: B/S 右移腾出 P/L 上拉把手，竖目标暂时全部失去对象覆盖
+      - step: 16
+        input: up
+        events: [pull_object:push_pull_anchor, anchor_boundary_shift:push_pull]
+        state_change: P/L 上拉到横目标行并覆盖其中两格，但整体右错一格
+      - step: 17
+        input: left
+        events: [pull_object:box_sticky_anchor, force_chain:n2, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky]
+        state_change: B/S 碰撞 P/L 后两锚同链左移，四目标同时覆盖
+  target_events:
+    required_groups_status: complete_no_bypass
+    groups:
+      - pl_shift
+      - bs_shift
+      - mixed_anchor_chain
+      - pl_pull
+      - bs_pull
+    product_states_explored: 436
+  object_or_instance_evidence:
+    objects_in_layout: [push_pull_anchor, box_sticky_anchor]
+    force_chain_n2_interpretation: 本关只有两个对象，因此 n2 chain 必为两锚共同移动
+    ordered_waypoint_probe:
+      status: complete
+      explored_product_states: 439
+      bypass_found: false
+      ordered_waypoints:
+        - pl_lower_stage
+        - bs_left_extract
+        - mixed_up_bs_temp_dock
+        - bs_right_vacate
+        - pl_up_prefinal
+    mixed_chain_gate_probe:
+      status: complete
+      explored_product_states: 178
+      bypass_found: false
+      all_win_gates:
+        - force_chain:n2 count >= 2
+        - bsLeft --up push P/L + n2 + both shifts--> mixedUp temporary dock
+        - plUp --left pull B/S + n2 + both shifts--> final winning T
+  winning_path_event_checks:
+    graph_status: complete
+    reachable_states: 178
+    winning_states: 1
+    all_win_event_probe_status: complete
+    missing_required_winning_path: none
+    all_win_force_chain_n2_minimum_count: 2
+    all_win_middle_and_final_n2_transition_binding: complete_no_bypass
+  reachable_event_exposure:
+    status: complete_by_full_graph_plus_static_material_absence
+    dual_anchor_configuration: present
+    both_anchor_shift_events_all_win_required: true
+    material_objects_present: false
+    material_events_reachable: false
+    later_than_allowed_exposure_events: none_exist_after_dual_anchor
+  graph_or_counterfactual_evidence:
+    complete_graph:
+      reachable_states: 178
+      legal_transitions: 422
+      winning_states: 1
+    scc:
+      status: complete
+      scc_count: 9
+      initial_scc_states: 68
+      initial_scc_out: 3
+      initial_scc_win_out: 1
+      initial_scc_dead_out: 2
+      solution_irreversible_steps: 3
+      forced_win_prefix: "3/3"
+    agency:
+      status: complete
+      initial_region_states: 11
+      initial_region_commitments: 3
+      initial_region_viable_commitments: 3
+      initial_region_optimal_commitments: 1
+      canonical_commitment_steps: [3, 10, 16, 17]
+      forced_optimal_commitment_prefix: "4/4"
+    structural_counterfactuals:
+      v4_to_v5_top_left_floor_wallified:
+        old_cost: 17
+        new_cost: 17
+        effect: 删除 31 步无 P/L-pull 绕路；v5 全胜路要求 P/L pull
+  evidence_limits:
+    - winning_states=1 不等于只有一条输入序列；只声明唯一胜利状态
+    - waypoint probe 证明精确锚点状态顺序，不证明玩家会如何理解或喜欢它
+    - >-
+      更强的“六个 exact transition 全部无 detour”探针发现一条 21 步非最优路线会在临时泊位后额外下移/上拉 P/L；
+      因此只把 17 步六动作直连写成 canonical reading。all-win claim 限定为 ordered states、n2>=2、
+      中段 mixed-up 与终局 mixed-left；不声称所有胜路逐转移等同规范解。
+    - first-occurrence 探针发现非最优路径可在核心链前移动并复原 B/S，因此不保留“首次 B/S shift”全胜路声称
+    - SCC/agency 只提供拓扑事实，不直接支持审美或难度分
+    - analyzer 未提供通用 instance participation；本关通过对象总数与 exact waypoint 坐标补足两锚同链身份
+
+hard_fact_summary_for_critic:
+  solver:
+    found: true
+    shortest_cost: 17
+    canonical_non_walk_actions: 6
+    full_graph_status: complete
+    reachable_states: 178
+    winning_states: 1
+  required_or_forbidden_events:
+    all_win_required_complete:
+      - anchor_boundary_shift:push_pull
+      - anchor_boundary_shift:box_sticky
+      - force_chain:n2
+      - pull_object:push_pull_anchor
+      - pull_object:box_sticky_anchor
+    material_events: statically_unavailable_and_unreachable
+  routed_diagnostic_facts:
+    - 5 个 exact anchor waypoint 的有序 product search 完整，439 个 product states，无 winning bypass
+    - mixed-chain gate product search 完整，178 个 product states；所有胜路 n2>=2，且中段/终局 n2 分别绑定 exact transition
+    - B/S 在 step 10 完整覆盖竖目标，step 15 主动离开，step 17 回泊
+    - 最终一手 left 同时触发 B/S pull、n2 force chain 和两种 anchor shift
+    - initial SCC 有 68 states、3 个出口，其中 1 个可胜、2 个死路；开局先有两步无物体动作观察
+    - 规范解 4 个 commitment 均为 forced optimal progress；这是拓扑事实，不是质量结论
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost: {raw: 17, band: 3, weight: 0.35}
+        nonWalkEventCount: {raw: 16, band: 3, weight: 0.45}
+        heavyReuseRatio: {raw: 0.0625, band: 4, weight: 0.2}
+      aggregateBand: 3
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate: {raw: 0.3333333333333333, band: 4, weight: 0.55}
+        heavyReuseRatio: {raw: 0.0625, band: 4, weight: 0.45}
+      aggregateBand: 4
+  evidence_limits:
+    - trace metrics 只描述规范解执行压力与空间复用，不测量洞见、因果或审美
+    - graph / SCC / probe 完整性只表示可审，不是设计 merit
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+    - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+    - prototypes/reality_anchor/reports/anchor_braid_waypoint_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+    - prototypes/reality_anchor/reports/anchor_braid_mixed_gate_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+    - prototypes/reality_anchor/reports/anchor_braid_event_waypoint_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+    - prototypes/reality_anchor/reports/anchor_braid_core_event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_expected_trace.json
+
+player_facing_reading:
+  opening_read: >-
+    玩家开局一眼看到上方四目标组成 T；紧邻下方正好是一横一竖两枚锚点，终态朝向可读。
+    没有箱或黏块，因此不会期待未兑现的材料谜题。玩家先能走上两个目标观察，再决定第一手物体动作。
+  intended_solution_read: >-
+    直接往目标送锚点没有合法把手。玩家要先把 P/L 向下推，才释放其旧 L 格供自己站立并左拉 B/S；
+    绕到下方后，向上推 P/L 会因右半格撞上 B/S 而把两锚一起抬升。B/S 此时已完整落在竖目标上，
+    但它占住 P/L 上拉所需的格，必须右推腾位。P/L 上拉后只覆盖横目标的右格；最后从上方左拉 B/S，
+    B/S 撞上 P/L，二者一起左移，T 形在一手中闭合。
+  commitment_points:
+    - 开局两步观察后，step 3 把 P/L 向下推离目标；这是唯一 optimal 的首个对象承诺，但仍有可逆观察空间
+    - step 10 两锚同链上移后，B/S 临时完成；玩家必须识别“完成态占住把手”而不是停止规划
+    - step 15 右推 B/S 主动撤销两个目标覆盖；错误后续会进入 dead exit
+    - step 16 后只剩 final left 同链收束，反馈明确且终局无拖尾
+  state_responsibility:
+    - P/L 初态既是边界也是 B/S 左拉把手的占位者；先下移才释放 handle
+    - B/S 中段既是已完成竖目标对象，也是阻塞 P/L pull 玩家站位的门
+    - P/L prefinal 已覆盖横目标两格中的右侧两格关系，但要由 B/S 最终碰撞整体左移
+    - B/S 终局 pull 同时回收自身目标债与 P/L 横向错位债
+  payoff_and_resolution: >-
+    终局只有一个 left 输入，却让垂直 B/S 与水平 P/L 同时左移并精确填满开局看到的 T；
+    它把“先把完整目标拆掉”的反直觉中段重读为必要的共同泊位准备，形成短而可视的 payoff。
+
+diagnostic_routing:
+  hard_evidence:
+    reviewer: evidence_reviewer
+    refs:
+      - event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+      - anchor_braid_waypoint_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+  mechanism_scope:
+    reviewer: evidence_reviewer
+  claim_hygiene:
+    reviewer: evidence_reviewer
+  taste_probes:
+    critic_focus:
+      - 第一手背离目标是否产生真实洞见而非唯一显然动作
+      - B/S 临时完成再腾位是否足以支撑难度4+
+      - 六个物体动作是否高密度而非过短教学
+      - T 形终局同链闭合是否达到审美4或5边界
+  scc_graph:
+    critic_must_use_interpretation_chain: true
+    facts:
+      - initial_scc_states=68, out=3, winOut=1, deadOut=2
+      - forcedWinPrefix=3/3
+      - final SCC is a one-state forced handoff
+  variant_family:
+    lineage_check: >-
+      fresh claim 后对 clean archive 与在途候选判重；未发现“P/L 下移释放 B/S 抽取 -> 同链临时泊位
+      -> B/S 腾位 -> P/L pull -> final mixed-chain T dock”的完整同构。
+    closest_risk_only:
+      - RA_CAND_0026 只共享低噪声 anchor-as-rigid 命题，不含两锚同链、临时完整泊位或双泊位 T
+  start_position:
+    review_diagnostic: 开局先有两步观察；正式 opening_comfort_check 在 proposal_ready 后执行
+  prototype_specific_work:
+    review_stage_status: pre_submission_checks_pending_until_proposal_ready
+    checks:
+      - invalid_goal_prune
+      - opening_comfort_check
+      - redundant_element_prune
+
+prototype_specific_contracts:
+  interface_pair_policy: not_declared_by_handoff
+  pair_diagnostics: not_applicable
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: null
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    起点来自本轮 fresh claim 与候选专属结构搜索；归档只在 claim 后用于人评校准与重复检查。
+    完整因果链、对象角色和 T 泊位均未从 archive candidate 派生。
+
+attempt_log:
+  serious_structural_attempts:
+    - id: abandoned_horizon_weave
+      result: abandoned_before_layout
+      reason: >-
+        第一性原理发现“sticky 从 sticky 侧直接扫 B/S 后立刻切出 crate”与边界方向矛盾；
+        修订后的 bind/cut 闭环又与在途 L_SWEEP / REWRITE_BRUSH 局部链高重复，换 family。
+    - id: anchor_braid_v1
+      result: rejected_open_room
+      reason: 两锚可独立泊位，无 mixed chain，主链失败
+    - id: anchor_braid_v2
+      result: structurally_promising_raw_search_hit
+      reason: 找到 T 泊位与六动作编结主链，但外围随机墙噪声明显
+    - id: anchor_braid_v3_to_v5
+      result: exact_candidate
+      reason: 连续裁剪到 6x7；v5 墙化左上无责任格后移除无 P/L-pull 的长绕路
+  local_repairs:
+    - v2_to_v3: 裁除右下无关区域，成本与主链不变
+    - v3_to_v4: 裁到 6x7 并封闭未用下方区域，成本与主链不变
+    - v4_to_v5: 左上 floor 墙化，成本17不变，all-win P/L pull 从 false 变 true
+  evidence_repairs:
+    - review_1 后新增 mixed-chain gate product，证明所有胜路 n2>=2 且中段/终局各自绑定 n2 transition
+    - 接受 stronger exact-transition 与 first-occurrence 探针给出的非最优 detour，删除对应过度 all-win 声称
+  abandoned_families:
+    - HORIZON_WEAVE
+
+archive_taste_context:
+  score_claim_allowed: true
+  examples:
+    - candidate_id: RA_CAND_0022
+      human_reviewed: true
+      archive_eligibility: clean_archive
+      aesthetic_score: 5
+      difficulty_score: 4
+      human_comment: >-
+        这关的操作非常反直觉，将一个箱子先送入看似死局的死角，构造出拉锚点将两个箱子反向送入目标。
+        空间利用率高，结构精巧。在较短的步骤中要求强玩家洞见以发现反直觉操作，是优秀的范例。
+      relevance: 5分目标正例；校准“短步骤、反直觉、空间紧凑、终局反向送入”的上界
+    - candidate_id: RA_CAND_0017
+      human_reviewed: true
+      archive_eligibility: clean_archive
+      aesthetic_score: 4
+      difficulty_score: 5
+      human_comment: >-
+        很精彩的关卡，对于推拉和黏块拼接切割都有要求极高的应用，需要很强的推理和腾挪技巧，
+        有大量的反直觉操作，是极难的游戏末期挑战关卡。可惜太难了我没做出来直接看的答案，
+        所以审美分4起步，但不敢给到5，估计做出来了就给5了。此关的精巧设计、高机制密度、
+        高要素耦合值得学习。
+      relevance: 难度5正例与警戒；高耦合可取，但不以大量腾挪堆高难度
+    - candidate_id: RA_CAND_0026
+      human_reviewed: true
+      archive_eligibility: clean_archive
+      aesthetic_score: 4
+      difficulty_score: 4
+      human_comment: >-
+        紧凑腾挪关，优点是结构干净精巧。注意这里虽然箱黏锚点退化成了两格刚体，
+        但是这个关卡中本就只有一个箱子无法造黏块，不会给玩家过高期待，
+        反而可以作为聚焦“锚点也是两格刚体”的挑战关。
+      relevance: 最近邻4/4正例；校准低噪声 anchor-as-rigid 合法性，但不得复制其 vacate/interlock 链
+    - candidate_id: RA_CAND_0024
+      human_reviewed: true
+      archive_eligibility: clean_archive
+      aesthetic_score: 1
+      difficulty_score: 3
+      human_comment: >-
+        这关是算法指标看不出来的非典型反例。看起来机制利用率高，并且有“右上的目标竟然需要用角落里的锚点
+        而非看起来更显然的箱子达成”这一反转。但是这关玩家看到中间的三个黏块、两个可动的锚点，会期待
+        更精彩的切割拼接构造或是长链推动、黏块几何形状利用，但是实际上这关几乎只用到推拉腾挪走位而缺乏
+        玩家洞见。双锚点可动过于污染读题，导致玩家期待值拉高，最后却只得到一个腾挪关。
+      relevance: 1分负例；攻击双锚信号是否真的兑现，禁止用指标与事件标签掩盖普通腾挪
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_claim_packet.yml
+  read_order: facts_then_claim

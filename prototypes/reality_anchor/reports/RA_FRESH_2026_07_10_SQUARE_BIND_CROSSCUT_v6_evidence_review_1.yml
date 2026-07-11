@@ -1,0 +1,90 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6
+review_input_type: candidate_version
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+supported_claims:
+  - claim: all_wins_require_two_box_sticky_boundary_shifts
+    finding: supported
+    basis: >-
+      anchor_boundary_shift:box_sticky 的 min-2 bypass probe 状态为 complete，
+      未找到计数低于 2 的胜路。
+  - claim: all_wins_require_two_box_to_sticky_occurrences
+    finding: supported
+    basis: >-
+      box_to_sticky 的 occurrence min-2 bypass probe 状态为 complete，
+      未找到 occurrence 低于 2 的胜路；这里支持的是事件 occurrence 次数门。
+  - claim: all_wins_require_two_rigid_sticky_moves
+    finding: supported
+    basis: >-
+      move_sticky_rigid 的 min-2 bypass probe 状态为 complete，
+      未找到计数低于 2 的胜路。
+  - claim: all_wins_require_sticky_to_box
+    finding: supported
+    basis: >-
+      sticky_to_box 的 min-1 bypass probe 状态为 complete，
+      未找到缺失该事件的胜路。
+  - claim: all_wins_require_pull_and_sticky_merge
+    finding: supported
+    basis: >-
+      fixed-anchor individual probes 对 pull_object 与 sticky_merge 均为 complete，
+      且都未找到缺失对应事件组的胜路。
+  - claim: no_winning_path_moves_sticky_before_second_box_sticky_shift
+    finding: supported
+    basis: >-
+      move_sticky_rigid-before-count probe 状态为 complete，未找到在第二次
+      B/S shift 前触发该事件仍可胜利的路径。
+  - claim: no_winning_path_triggers_sticky_to_box_before_second_box_sticky_shift
+    finding: supported
+    basis: >-
+      sticky_to_box-before-count probe 状态为 complete，未找到在第二次
+      B/S shift 前触发该事件仍可胜利的路径。
+  - claim: push_pull_anchor_is_fixed_throughout_reachable_play
+    finding: supported
+    basis: >-
+      complete reachable event scan 覆盖 212 个可达状态和 415 条合法迁移，
+      anchor_boundary_shift:push_pull 的 forbidden hit 为 none。
+  - claim: shape_level_construct_then_crosscut_chain_has_a_winning_witness
+    finding: supported
+    basis: >-
+      canonical trace 在前两步各记录 box_to_sticky:n2 与 sticky_merge:n1，
+      随后完整 2x2 刚体移动并触发 sticky_to_box:n2；goal coverage 逐步记录
+      最终由 B/S、竖直黏条和两箱覆盖六个目标。all-solution 次数门和阶段门进一步
+      排除了不完成两次 B/S shift 就提前移动或切回 sticky 的胜路。
+  - claim: fixed_push_pull_semantics_are_consumed_on_every_win
+    finding: supported
+    basis: >-
+      complete winning-path pull_object probe 未找到无 pull 胜路，同时完整可达扫描
+      排除了 P/L 位移；这支持固定 P/L 提供且胜路实际使用 pull 语义。
+  - claim: claim_hygiene_avoids_unique_crosscut_direction
+    finding: supported
+    basis: >-
+      claim 将向左横切明确限定为最短计划，并明确承认更长的右侧 push 横切胜路，
+      未把横切方向或路线写成唯一。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >-
+    23 步、17 步 walk、向左横切和逐步目标覆盖只属于 returned canonical trace；
+    它们证明一条见证路径，不证明所有胜路采用该方向、该长度或同一动作顺序。
+  - >-
+    box_to_sticky min-2 probe 证明两个匹配事件 occurrence，不单独证明四个稳定对象身份；
+    analyzer 未报告 instance-level participation，材料归一化也会重建箱身份，因此不得推出
+    per-object identity necessity。
+  - >-
+    两个 event-before-count probe 是 winning-violation probes；它们支持当前
+    forbidden_winning_path_events，不应扩展成所有非胜利可达前缀都绝不出现早期事件。
+  - >-
+    complete reachable scan 对 P/L 的结论限于未出现 anchor_boundary_shift:push_pull；
+    它不证明玩家如何理解固定锚点。
+  - >-
+    工具证据支持 player_insight 与 why_not_execution 的机制前提，但不能单独证明玩家
+    实际形成该洞见，或证明走位不会被体验为执行负担；这些不改变本次机制证据门结论。
+  - graph_fact: >-
+      complete graph 报告 212 个可达状态、415 条合法迁移、1 个 winning state，
+      SCC/region 报告 forced prefix 与 dead commitments。
+    neutral_meaning: >-
+      这些数字只描述已枚举状态图及其压缩结构；1 个 winning state 不等于唯一胜利路线。
+    player_facing_interpretation: null
+    verdict_effect: none
+questions_for_designer: []

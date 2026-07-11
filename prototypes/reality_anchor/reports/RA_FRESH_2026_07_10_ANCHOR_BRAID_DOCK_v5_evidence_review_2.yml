@@ -1,0 +1,82 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+review_input_type: evidence_disagreement
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+supported_claims:
+  - claim: "所有胜路至少出现两次 force_chain:n2。"
+    evidence: >-
+      anchor_braid_mixed_gate_probe 以 force_chain_n2_count_at_least=2 为 gate；
+      result status=complete、found=false、exploredStates=178，明确报告没有胜路使用少于两次
+      force_chain:n2。该证据补齐 review_1 的计数缺口。
+  - claim: "中段 mixed-up 与终局 mixed-left 是所有胜路必经的两个 distinct n2 transition。"
+    evidence: >-
+      同一 complete probe 分别门控 bsLeft --up push P/L+n2+both shifts--> mixedUp
+      temporary dock，以及 plUp --left pull B/S+n2+both shifts--> final winning T；结果报告
+      no winning path skipped either mixed transition。因而两次 n2 不只是未定位的 event pattern，
+      而是分别绑定到中段和终局的 event instance。
+  - claim: "上述两个 n2 transition 的对象身份是 P/L 与 B/S 两枚锚点。"
+    evidence: >-
+      exact layout 只有 push_pull_anchor 与 box_sticky_anchor 两个对象实例；两个 transition gate
+      又同时要求 anchor_boundary_shift:push_pull 与 anchor_boundary_shift:box_sticky。
+      因而在 packet 明示的 n2=两个对象实例共同移动语义下，两处 n2 均只能由两锚共同参与，
+      没有 crate/sticky 或第三对象可混入该身份推断。
+  - claim: "五个 ordered anchor states 的全胜路顺序仍成立。"
+    evidence: >-
+      ordered waypoint probe status=complete、exploredProductStates=439、found=false，支持
+      pl_lower_stage -> bs_left_extract -> mixed_up_bs_temp_dock -> bs_right_vacate ->
+      pl_up_prefinal；新增 mixed-gate probe 只加强其中两个 transition，没有把状态顺序误写成
+      所有输入都逐步等同规范解。
+  - claim: "17 步、六个对象动作的直连序列只作为 canonical reading。"
+    evidence: >-
+      返回 trace 支持六个具体 transition；负向 anchor_braid_event_waypoint_probe 则找到 21 步胜路，
+      status=found、failedGates=[ordered_event_transitions]、transitionProgress=3，并显示临时泊位后
+      额外下移/上拉 P/L。packet v2 已在 evidence_limits 中明确承认该 detour，并把 all-win scope
+      限定为 ordered states、n2>=2 及中段/终局 exact n2 transition。
+  - claim: "不再声称首次 B/S shift 必为 lower-stage 后的 left extract。"
+    evidence: >-
+      负向 anchor_braid_core_event_probe status=found、failedGates=[first_box_sticky_shift]，给出一条
+      可在核心链前移动并复原 B/S 的胜路。packet v2 已删除 review_1 所指出的 first-occurrence
+      falsification，并明确写明不保留该 all-win 声称；该反例不绕过随后必经的 ordered core states
+      与两个 mixed transition。
+  - claim: "原五个 required winning-path event patterns 仍全部为 all-win required。"
+    evidence: >-
+      event probe 的 all-group 与五个 individual probe 均 complete 且 no winning bypass found，
+      分别覆盖两种 anchor shift、force_chain:n2 以及两种 anchor pull。新增负向路线没有反驳这些 gate。
+  - claim: "dual_anchor exposure gate 与 forbidden material exposure 仍受支持。"
+    evidence: >-
+      exposure sequence 的最后阶段为 dual_anchor；exact layout 静态包含两锚，且两种 shift 均由
+      complete all-win probe 证明必经。布局没有 C/M，权威机制规则不会从空材料集合生成 crate/sticky，
+      所以 box_to_sticky、sticky_to_box、sticky_merge、sticky_split、move_sticky_rigid 不可达；
+      dual_anchor 之后也没有更晚 exposure 阶段。
+  - claim: "complete graph 可用于本轮全胜路 gate，而不是预算前缀。"
+    graph_fact: "graph status=complete；178 reachable states、422 legal transitions、1 winning state，未耗尽 300000 状态预算。"
+    neutral_meaning: "可达图闭合；1 winning state 仅指状态数，不代表唯一输入序列。"
+    player_facing_interpretation: "非最优 detour 可以存在，但任何最终获胜路线仍受完整 all-win gate 约束。"
+    verdict_effect: merit
+  - claim: "规范解中的临时覆盖、主动腾位与最终 T 覆盖事实成立。"
+    evidence: >-
+      goal-coverage replay 显示 step 10 的 B/S 完整覆盖竖目标，step 15 后两个竖目标均失去对象覆盖，
+      step 16 的 P/L 位于右错一格预终态，step 17 两锚共同覆盖全部四目标并获胜。
+unsupported_or_overclaimed:
+  - claim: "所有胜路逐 transition 等同 17 步规范解，或六个对象 transition 之间没有 detour。"
+    status: "已由 event-waypoint 负向 artifact 反证；packet v2 已删除该 all-win 范围，因此不阻塞当前 central claim。"
+  - claim: "全局首次 B/S shift 必须是 lower-stage 后的 left pull。"
+    status: "已由 first-occurrence 负向 artifact 反证；packet v2 已撤回该范围，因此不阻塞当前 central claim。"
+  - claim: "工具已经证明玩家必然形成‘先泊—腾位—同泊’洞见，且难点不来自执行或盲试。"
+    status: "不受工具证据支持；仅其状态、事件与覆盖前提受支持，仍须由玩家侧试玩判断。"
+evidence_limits:
+  - >-
+    player_insight 中“必须先”只能按 productive ordered-state chain 理解，不能解释为输入历史中绝对没有
+    先行 B/S detour；packet v2 的 first-occurrence 限制与负向 artifact 已明确这一边界。
+  - >-
+    mixed-gate probe 证明 n2>=2 及中段/终局两个 exact transition，不证明其余四个 canonical
+    transition 在所有胜路中无插步、无重复或都是首次发生。
+  - >-
+    两个负向 artifact 证明反例存在，不用于推断该类 detour 的频率、玩家倾向或质量影响。
+  - >-
+    n2 身份结论仅适用于本 exact layout 的两对象库存，不可推广为通用 instance-participation analyzer 能力。
+  - "winningStateCount=1 不等于唯一输入序列；SCC/agency 不证明洞见、审美、难度或 campaign placement。"
+  - "calibrated_trace_metrics 按 reviewer 纪律完全忽略。"
+questions_for_designer: []

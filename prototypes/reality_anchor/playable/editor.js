@@ -425,22 +425,10 @@ var layers = [
 function tool(layerId, id, label, value, glyph) {
   return editorTool(layerId, id, label, value, editorVisualForGlyph(glyph));
 }
-function defaultTarget(knowledge) {
-  return knowledge.knowledge[0]?.id ?? "solvable";
-}
-function defaultLevel(_mechanic, knowledge) {
-  const target = defaultTarget(knowledge);
+function defaultLevel(_mechanic, _knowledge) {
   return {
     id: "STUDIO_DRAFT",
     title: "Studio Draft",
-    role: "review",
-    status: "draft",
-    targets: [target],
-    known_before: [],
-    target_learning: [target],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: normalizeAsciiLayout(
       `
 @..G
@@ -904,22 +892,10 @@ var layers2 = [
 function tool2(layerId, id, label, value, glyph) {
   return editorTool(layerId, id, label, value, editorVisualForGlyph(glyph));
 }
-function defaultTarget2(knowledge) {
-  return knowledge.knowledge[0]?.id ?? "solvable";
-}
-function defaultLevel2(_mechanic, knowledge) {
-  const target = defaultTarget2(knowledge);
+function defaultLevel2(_mechanic, _knowledge) {
   return {
     id: "STUDIO_DRAFT",
     title: "Studio Draft",
-    role: "review",
-    status: "draft",
-    targets: [target],
-    known_before: [],
-    target_learning: [target],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: normalizeAsciiLayout(`
 #######
 #@ C G#
@@ -1863,22 +1839,10 @@ var layers3 = [
     editorTool("mechanism", "clear", "\u6E05\u673A\u5236", void 0, renderEditorCell3({ terrain: "floor" }))
   ])
 ];
-function defaultTarget3(knowledge) {
-  return knowledge.knowledge[0]?.id ?? "solvable";
-}
-function defaultLevel3(_mechanic, knowledge) {
-  const target = defaultTarget3(knowledge);
+function defaultLevel3(_mechanic, _knowledge) {
   return {
     id: "STUDIO_DRAFT",
     title: "Studio Draft",
-    role: "review",
-    status: "draft",
-    targets: [target],
-    known_before: [],
-    target_learning: [target],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: normalizeAsciiLayout(`
 #######
 #@ C G#
@@ -2242,20 +2206,6 @@ var inputByKey = {
   d: "right",
   D: "right"
 };
-var roleOptions = [
-  "diagnostic",
-  "discovery",
-  "boundary",
-  "guided_application",
-  "independent_application",
-  "variation_transfer",
-  "combination",
-  "challenge",
-  "review",
-  "mechanic_witness"
-];
-var supportOptions = ["none", "low", "medium", "high"];
-var statusOptions = ["draft", "candidate", "accepted", "rejected"];
 var newDraftKey = "__new__";
 var sourceFilterStorageKey = "sokoban.editor.sourceFilters.v1";
 var sourceSearchStorageKey = "sokoban.editor.sourceSearch.v1";
@@ -2278,7 +2228,7 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mrdg3n7w" : String(Date.now());
+var buildId = true ? "mrfthv53" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);
@@ -2591,32 +2541,6 @@ function renderInspector(selectedSource) {
           <span>\u6807\u9898</span>
           <input data-field="title" value="${escapeAttribute(draft.title)}">
         </label>
-        <div class="field-grid">
-          <label class="field">
-            <span>\u72B6\u6001</span>
-            <select data-field="status">${renderOptions(statusOptions, draft.status)}</select>
-          </label>
-          <label class="field">
-            <span>\u89D2\u8272</span>
-            <select data-field="role">${renderOptions(roleOptions, draft.role)}</select>
-          </label>
-        </div>
-        <label class="field">
-          <span>Targets</span>
-          <input data-field="targets" value="${escapeAttribute(draft.targets.join(", "))}">
-        </label>
-        <label class="field">
-          <span>Known Before</span>
-          <input data-field="known_before" value="${escapeAttribute(draft.known_before.join(", "))}">
-        </label>
-        <label class="field">
-          <span>Target Learning</span>
-          <input data-field="target_learning" value="${escapeAttribute(draft.target_learning.join(", "))}">
-        </label>
-        <label class="field">
-          <span>Support</span>
-          <select data-field="support_level">${renderOptions(supportOptions, draft.support_level)}</select>
-        </label>
         <label class="field">
           <span>Win JSON</span>
           <textarea class="small-textarea" data-field="win">${escapeHtml(formatWin(draft.win))}</textarea>
@@ -2686,11 +2610,6 @@ function renderSnapshot(snapshot) {
       </div>
     </article>
   `;
-}
-function renderOptions(options, selected) {
-  return options.map(
-    (option) => `<option value="${escapeAttribute(option)}" ${option === selected ? "selected" : ""}>${escapeHtml(option)}</option>`
-  ).join("");
 }
 function renderVisualBoard(board, className, editable = false) {
   const tiles = orderedTiles(board);
@@ -2953,30 +2872,6 @@ function captureDraftFromDom() {
   const title = fieldValue("title");
   if (title !== void 0) {
     draft.title = title.trim();
-  }
-  const status = fieldValue("status");
-  if (status) {
-    draft.status = status;
-  }
-  const role = fieldValue("role");
-  if (role) {
-    draft.role = role;
-  }
-  const support = fieldValue("support_level");
-  if (support) {
-    draft.support_level = support;
-  }
-  const targets = fieldValue("targets");
-  if (targets !== void 0) {
-    draft.targets = splitList(targets);
-  }
-  const knownBefore = fieldValue("known_before");
-  if (knownBefore !== void 0) {
-    draft.known_before = splitList(knownBefore);
-  }
-  const targetLearning = fieldValue("target_learning");
-  if (targetLearning !== void 0) {
-    draft.target_learning = splitList(targetLearning);
   }
   const win = fieldValue("win");
   if (win !== void 0) {
@@ -3706,9 +3601,6 @@ function graphSummary(unique) {
 }
 function formatWin(win) {
   return win ? JSON.stringify(win, null, 2) : "";
-}
-function splitList(value) {
-  return value.split(/[,\n]/).map((item) => item.trim()).filter((item) => item.length > 0);
 }
 function cloneLevel(level) {
   return JSON.parse(JSON.stringify(level));

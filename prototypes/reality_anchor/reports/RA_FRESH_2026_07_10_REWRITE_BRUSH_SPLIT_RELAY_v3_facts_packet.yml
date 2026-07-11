@@ -1,0 +1,291 @@
+candidate_version: RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3
+review_iteration: 1
+review_input_type: candidate_version
+
+prototype_context:
+  confirmed_rules:
+    - P/L 以标签朝向定义 push/pull 两侧，锚点是可移动二格刚体。
+    - B/S 以标签朝向定义 box/sticky 两侧；合法动作结算后全局归一化材料。
+    - 相邻 sticky 自动合并为刚体；刚体任一目标格受阻则整步失败。
+    - push/pull 可沿运动方向通过多对象 force chain 传力。
+  win_condition: 所有 G 必须被箱、黏块或任意锚点格覆盖；玩家不算覆盖。
+  object_and_event_semantics:
+    anchor_boundary_shift_push_pull: P/L 本体发生平移。
+    anchor_boundary_shift_box_sticky: B/S 本体发生平移。
+    sticky_to_box: 黏格跨到 box side 后转为独立箱。
+    move_sticky_rigid: 至少一个 sticky 连通刚体发生整体平移。
+  tool_boundary:
+    runtime_adapter: available
+    solver_and_complete_graph: available
+    event_probes: available
+    raw_sampler: available_but_not_used
+    curated_miner: unavailable
+
+slot_brief:
+  intended_role: late_challenge_or_capstone
+  known_before: all_current_reality_anchor_runtime_rules
+  target: dual_anchor_composition_with_required_movement
+  difficulty_or_support_expectation: difficulty_floor_4_aspire_5; support_none
+
+mechanic_exposure_context:
+  mechanic_window: all_late_knowledge_allowed
+  allowed_exposure_through: dual_anchor
+  score_claim_scope: human_archive_calibrated_target_only
+  claimed_core_events:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - sticky_to_box
+    - pull_object
+    - move_sticky_rigid
+  later_exposure_scan: not_applicable_no_stage_after_dual_anchor
+
+design_target:
+  aesthetic_score_target: floor_4_aspire_5
+  difficulty_score_target: floor_4_aspire_higher
+  target_role_notes: 后期双锚点 challenge/capstone；不把 solver 指标当质量结论。
+
+solve_instance:
+  layout: |-
+    #########
+    #.@.#####
+    ##P#G####
+    ##LCBS.##
+    ##.....##
+    ##.#GmM##
+    ###..GM##
+    #########
+  player_start: [2, 1]
+  player_goal: null
+  win_condition: all_targets_covered_by_objects
+  goal_cells:
+    - [4, 2]
+    - [4, 5]
+    - [5, 5]
+    - [5, 6]
+
+mechanism_scope:
+  central:
+    - P/L 连续两次下移，生成旧 L 行 push 接口。
+    - relay 箱 force-chain 右移 B/S 并触发第一次 sticky_to_box。
+    - 竖直 sticky 二连在 pull side 向左刚体移动，force-chain 移交单箱并触发第二次 sticky_to_box。
+    - relay 箱最终被回收到上方孤立目标。
+  allowed_support:
+    - 短距离可逆走位
+    - 一个规范解中的临时目标腾空，但它不是全胜路 claim
+  incidental_allowed:
+    - walk
+  required_winning_path_events:
+    - anchor_boundary_shift:push_pull at least 2
+    - anchor_boundary_shift:box_sticky at least 1
+    - pull_object at least 1
+    - sticky_to_box occurrence at least 2
+    - move_sticky_rigid at least 1
+  forbidden_winning_path_events:
+    - winning path missing any required group above
+  forbidden_if_seen_anywhere: []
+
+evidence:
+  commands_run:
+    - npx tsx src/cli.ts explain-layout prototypes/reality_anchor <v3.layout.txt> --id <v3> --targets K_runtime_smoke --max-states 300000 --graph-max-states 300000 --write
+    - npx tsx prototypes/reality_anchor/reports/probe_dual_axis_candidate.ts <v3.layout.txt> <v3> 300000 80
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v3.layout.txt> <v3> anchor_boundary_shift:push_pull 2 300000 80
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v3.layout.txt> <v3> sticky_to_box 2 300000 80
+    - npx tsx prototypes/reality_anchor/reports/probe_target_vacate.ts <v3.layout.txt> <v3_target_5_5> 5,5 300000 80
+    - npx tsx prototypes/reality_anchor/reports/probe_goal_coverage.ts <v3.layout.txt> <v3> down down right down right right down left up up
+  solver_result:
+    found: true
+    shortest_cost: 10
+    explored_states_before_shortest: 47
+    canonical_inputs: [down, down, right, down, right, right, down, left, up, up]
+  trace_summary:
+    - steps_1_2: P/L 向下移动两次。
+    - step_3: relay 箱右推并 force-chain B/S；sticky_to_box:n1。
+    - step_7: 被拆出的单箱向下推。
+    - step_8: 向左 pull 竖直 sticky 二连；force_chain:n2、move_sticky_rigid、sticky_to_box:n2。
+    - step_9: 被侧移的单箱向上拉进 [4,5]。
+    - step_10: 原 relay 向上推入 [4,2]，胜利。
+  target_events:
+    dual_probe:
+      push_pull_anchor_shift: {found_bypass: false, status: complete, explored_states: 62}
+      box_sticky_anchor_shift: {found_bypass: false, status: complete, explored_states: 62}
+      pull_event: {found_bypass: false, status: complete, explored_states: 93}
+      material_normalization: {found_bypass: false, status: complete, explored_states: 62}
+      sticky_rigid_move: {found_bypass: false, status: complete, explored_states: 62}
+      sticky_merge: {found_bypass: true, status: found, routed_effect: not_required_and_not_claimed}
+    count_probes:
+      push_pull_shift_min_2: {found_bypass_below_count: false, status: complete, explored_states: 62}
+      sticky_to_box_occurrence_min_2: {found_bypass_below_count: false, status: complete, explored_states: 62}
+  object_or_instance_evidence:
+    scope: role_and_shape_level_only
+    limits: analyzer 未报告稳定 instance-level participation；归一化会重建箱身份，不声称 per-object identity necessity。
+  winning_path_event_checks:
+    status: complete
+    result: 所有胜路满足当前 required groups 与两个 count gate。
+  reachable_event_exposure:
+    status: not_applicable
+    reason: allowed_exposure_through 为最终 dual_anchor 阶段，后续无需排除的 exposure stage，且 forbidden_if_seen_anywhere 为空。
+  graph_or_counterfactual_evidence:
+    graph:
+      status: complete
+      reachable_states: 62
+      legal_transitions: 111
+      winning_states: 3
+      compressed_regions: 14
+      commitment_transitions: 13
+      initial_scc_states: 3
+      solution_commitments: 5
+      forced_win_prefix: 3
+      returned_solution_scripted_handoffs: 3_of_5
+      post_brush_region: commitments_3_viable_2_dead_1
+    target_5_5_vacate_probe:
+      result: found_bypass_to_vacate_pattern
+      status: found
+      depth: 11
+      meaning: 不允许声称 (5,5) 必须 covered-uncovered-covered；只保留规范解读法。
+  evidence_limits:
+    - 工具不证明审美、难度或玩家洞见。
+    - 三个最前 commitment 在完整图中是 forced viable，可能降低玩家侧难度。
+    - winning_states=3 不证明好坏，也不证明唯一计划。
+    - 没有 per-object identity necessity 证明；只声明事件组、次数门与规范解职责。
+
+hard_fact_summary_for_critic:
+  solver: shortest_cost_10; graph_complete_62_states; 3_winning_states
+  required_or_forbidden_events:
+    - all wins require >=2 P/L shifts
+    - all wins require >=1 B/S shift
+    - all wins require pull and material normalization
+    - all wins require >=2 sticky_to_box occurrences
+    - all wins require sticky rigid movement
+    - sticky_merge is not required and not claimed
+  routed_diagnostic_facts:
+    - first 3 commitments are forced viable/scripted handoffs
+    - after brush the main region has 3 commitments: 2 viable, 1 dead, only 1 progress/optimal
+    - vacate-return at [5,5] is canonical-only, not all-solution necessary
+  evidence_limits:
+    - graph facts are neutral diagnostics, not merits
+    - no stable object identity necessity claim
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3.md
+    - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3_anchor_boundary_shift_push_pull_min2.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3_sticky_to_box_min2.md
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3.md
+    - prototypes/reality_anchor/reports/target_vacate_probe_RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3_target_5_5.md
+
+player_facing_reading:
+  opening_read: >-
+    玩家先看到一个只能向下推进的竖直 P/L、其旧 L 行右侧的 relay 箱与横向 B/S，
+    下方则是一格已压目标的三格 L 形黏块和三个空目标。上方孤立目标没有直接箱路。
+    开局小口袋允许左右观察，但前两个有效 commitment 是 P/L 下移；它们把玩家送到
+    relay 同行并把该行改为 push side。
+  intended_solution_read: >-
+    relay 右推 B/S 后，L 形被改写成一个箱和一条竖直黏条。规范解把单箱下推，
+    再站到 pull side 向左拉黏条；黏条不能被逐格处理，它整体左移、侧推单箱，且
+    跨回 box side 后变成两枚箱。随后侧移箱被向上拉入目标，原 relay 则沿同列
+    向上推入孤立目标，完成四个对象的职责回收。
+  commitment_points:
+    - P/L 两次下移和 relay 推 B/S 是前三个 forced viable setup；这是可读性优点还是难度损失需 critic 判断。
+    - B/S 刷线后存在一个真实 dead commitment；错误处理输出会失去唯一 progress 关系。
+    - 规范解 step_7 下推单箱后，step_8 左拉黏条是核心不可逆移交；另有 11 步同职责胜路，所以不声称唯一动作序列。
+  state_responsibility:
+    relay_crate: 先驱动 B/S，最后覆盖 [4,2]。
+    split_single_crate: 由 L 形的 x=5 格转换而来，终局覆盖 [4,5]。
+    remaining_sticky_pair: 先保持竖直刚体，左拉时侧推单箱并转成两箱，终局覆盖 [5,5] 与 [5,6]。
+    push_pull_anchor: 下移两次生成旧 L 行 push 接口，之后被墙锁住避免普通腾挪 bypass。
+    box_sticky_anchor: 被 relay 右移一次完成刷线，之后由墙限制第二次横移。
+  payoff_and_resolution: >-
+    开局看似分散的 relay、双锚点和三格 L 形最后收束成四个目标箱；关键左拉同时
+    完成刚体换位、单箱移交和二格材料回收。上方孤立目标由开局 relay 在最后一手
+    回收，兑现“driver 不是一次性按钮”。
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0022
+      role: positive_5_aesthetic_4_difficulty_anchor
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: >-
+        这关的操作非常反直觉，将一个箱子先送入看似死局的死角，构造出拉锚点将两个箱子反向送入目标。
+        空间利用率高，结构精巧。在较短的步骤中要求强玩家洞见以发现反直觉操作，是优秀的范例。
+      calibration_use: 短步骤必须承载强洞见与空间职责，不能靠长度伪装难度。
+    - candidate_id: RA_CAND_0025
+      role: positive_4_4_constructor_anchor
+      human_scores: {aesthetic: 4, difficulty: 4}
+      human_comment: >-
+        在狭小紧凑的空间中，将L形反复活塞这一关键高难结构赋予合适的包装以要求玩家主动构造，
+        前几步构造不喧宾夺主，终局也有恰到好处的提示（右上角双目标暗示L形结构）。
+        整体达到强4分水准。是构造关类型的优秀案例。
+      calibration_use: 前置 setup 必须服务核心且不抢戏，终局目标形状应兑现材料读法。
+    - candidate_id: RA_CAND_0024
+      role: negative_1_aesthetic_anchor
+      human_scores: {aesthetic: 1, difficulty: 3}
+      human_comment: >-
+        这关是算法指标看不出来的非典型反例。看起来机制利用率高，并且有“右上的目标竟然需要用角落里的锚点而非看起来更显然的箱子达成”这一反转。
+        但是玩家看到三个黏块、两个可动锚点会期待更精彩的切割拼接、长链推动或黏块几何利用，实际却几乎只用推拉腾挪而缺乏玩家洞见。
+        双锚点可动污染读题、最终只得到腾挪关；警示是不要迷信指标和探针，要从玩家角度思考。
+      calibration_use: 双锚点与黏块信号必须在终局真实消费，不得用 probe 标签冒充 payoff。
+    - candidate_id: RA_CAND_0027
+      role: negative_1_aesthetic_anchor
+      human_scores: {aesthetic: 1, difficulty: 2}
+      human_comment: >-
+        典型反例。推拉锚点能推但解法不需要推，黏块能黏但不需要黏；即使触发黏块转化、拼接标签，
+        也完全没有使用黏块几何结构性质。玩家看到大量机制可能性却完全没用上，解法远低于预期。
+      calibration_use: 所有显著 affordance 必须成为必要玩家职责；v3 用 all-solution gate 排除未移动锚点与未移动黏条胜路。
+  none_found_reason: null
+
+diagnostic_routing:
+  hard_evidence:
+    - all-solution event gates
+    - event count gates
+    - complete graph and canonical replay
+    - goal coverage trace
+  mechanism_scope:
+    - user_requires_dual_anchor_and_required_movement
+    - all_late_knowledge_allowed
+  claim_hygiene:
+    - fresh_required
+    - vacate_claim_explicitly_downgraded_after_counterexample
+  taste_probes:
+    - forced_prefix_difficulty_risk
+    - payoff_vs_affordance_pollution
+    - short_chain_insight_strength
+  scc_graph:
+    status: routed
+    facts: complete_62_states; forcedWinPrefix_3_of_5; post_brush_one_dead_commitment
+  variant_family: not_authorized_archive_variant
+  start_position: pre_submission_check_pending_after_proposal_ready
+  prototype_specific_work: all_three_pre_submission_checks_pending_after_proposal_ready
+
+prototype_specific_contracts:
+  interface_pair_policy: not_declared
+  pair_diagnostics: not_applicable
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: null
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    archive 仅用于人评校准；v3 的因果链是旧 L 行重写生成 B/S driver、横向刷线拆 L、
+    竖条反向移交单箱、relay 回收目标，未匹配任何 archive retrieval summary 的主链。
+
+attempt_log:
+  serious_structural_attempts:
+    - v0: 手工最小骨架；图 300001 exhausted，空间过宽并有多余 B/S 二次移动。
+    - v1: 压缩到 28 状态但前三个 commitment 后几乎全脚本化，难度不足。
+    - v2: 正交重写结构，完整图 816；发现 39 步绕过 sticky rigid move 的普通腾挪胜路。
+    - v3: 封住 P/L 最终横向把手；完整图 62，核心事件组与次数门 complete 且无 bypass。
+  local_repairs:
+    - v0_to_v1: 裁去开放空间并阻止 B/S 二次位移。
+    - v1_to_v2: 改为竖直 P/L + 横向 B/S 的正交 family，加强对象角色。
+    - v2_to_v3: 增加 [3,5] 墙，消除移动 P/L 的普通箱腾挪 bypass。
+  abandoned_families:
+    - original_horizontal_PL_vertical_BS_minimal_family_due_low_difficulty
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3_claim_packet.yml
+  read_order: facts_then_claim

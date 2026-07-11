@@ -1,0 +1,298 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7
+review_iteration: 2
+review_input_type: candidate_version
+
+prototype_context:
+  confirmed_rules:
+    - P/L 定义 push/pull 两侧；本候选 P/L 被墙完全固定。
+    - B/S 定义 box/sticky 两侧；合法动作后全局材料归一化。
+    - 相邻 sticky 合并成刚体，刚体任一目标格受阻则整步失败。
+    - pull 世界中，玩家前格必须为空，身后相邻对象才会随玩家同向移动。
+  win_condition: 所有 G 被箱、黏块或任意锚点格覆盖；玩家不算覆盖。
+  tool_boundary:
+    runtime_adapter: available
+    solver_graph_agency: available
+    event_count_phase_and_prefix_state_probes: available
+    curated_miner: unavailable
+
+slot_brief:
+  intended_role: late_challenge_or_capstone
+  known_before: all_current_reality_anchor_runtime_rules
+  target: required_movable_BS_with_fixed_PL_composition
+  difficulty_or_support_expectation: difficulty_floor_4_aspire_higher; aesthetic_floor_4_aspire_5; support_none
+
+mechanic_exposure_context:
+  mechanic_window: all_late_knowledge_allowed
+  allowed_exposure_through: dual_anchor
+  claimed_core_events:
+    - anchor_boundary_shift:box_sticky
+    - box_to_sticky
+    - sticky_merge
+    - pull_object
+    - move_sticky_rigid
+    - sticky_to_box
+  later_exposure_scan: not_applicable_no_stage_after_dual_anchor
+
+solve_instance:
+  layout: |-
+    ##########
+    #####LP###
+    ##########
+    ###GGBS@##
+    ##.....###
+    #.G.*C####
+    #...*C####
+    #..G######
+    ###.######
+    ##########
+  player_start: [7, 3]
+  player_goal: null
+  win_condition: all_targets_covered_by_objects
+  goal_cells:
+    - [3, 3]
+    - [4, 3]
+    - [2, 5]
+    - [4, 5]
+    - [4, 6]
+    - [3, 7]
+
+mechanism_scope:
+  central:
+    - 第一次 B/S 左移后形成 C+M / C+M；两箱仍独立且已压在双目标上，x=6 下行入口同时开放。
+    - 玩家可先进入对象室分配独立箱；具体近解分支把上箱送入左目标、下箱对齐目标列后形成 pull knot，穷尽后无胜。
+    - 正确计划是在移动任何资源前第二次左移 B/S，把四格绑定为完整 2x2，再整体左拉跨线。
+    - 横切后左列切成两箱，右列竖黏条直接保留在双目标；两箱分别覆盖左目标与封闭终点目标。
+    - 固定 P/L 提供所有关键 pull 语义；完整可达扫描禁止 P/L 位移。
+  incidental_allowed:
+    - walk
+  required_winning_path_events:
+    - anchor_boundary_shift:box_sticky at least 2
+    - box_to_sticky occurrence at least 2
+    - sticky_merge occurrence at least 2
+    - pull_object at least 1
+    - move_sticky_rigid at least 1
+    - sticky_to_box at least 1
+  forbidden_winning_path_events:
+    - pull_object:crate before second B/S shift
+    - move_sticky_rigid before second B/S shift
+    - sticky_to_box before second B/S shift
+  forbidden_if_seen_anywhere:
+    - anchor_boundary_shift:push_pull
+
+evidence:
+  commands_run:
+    - npx tsx src/cli.ts explain-layout prototypes/reality_anchor <v7.layout.txt> --id <v7> --max-states 500000 --graph-max-states 500000 --write
+    - npx tsx prototypes/reality_anchor/reports/probe_fixed_anchor_candidate.ts <v7.layout.txt> <v7> push_pull 1000000 1000 strong_material
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v7.layout.txt> <v7> anchor_boundary_shift:box_sticky 2 1000000 1000
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v7.layout.txt> <v7> box_to_sticky 2 1000000 1000
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v7.layout.txt> <v7> sticky_merge 2 1000000 1000
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v7.layout.txt> <v7> move_sticky_rigid 1 1000000 1000
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v7.layout.txt> <v7> sticky_to_box 1 1000000 1000
+    - npx tsx prototypes/reality_anchor/reports/probe_event_before_count.ts <v7.layout.txt> <v7> anchor_boundary_shift:box_sticky 2 pull_object:crate 1000000 1000
+    - npx tsx prototypes/reality_anchor/reports/probe_event_before_count.ts <v7.layout.txt> <v7> anchor_boundary_shift:box_sticky 2 move_sticky_rigid 1000000 1000
+    - npx tsx prototypes/reality_anchor/reports/probe_event_before_count.ts <v7.layout.txt> <v7> anchor_boundary_shift:box_sticky 2 sticky_to_box 1000000 1000
+    - npx tsx prototypes/reality_anchor/reports/probe_prefix_dead_state.ts <v7.layout.txt> <false-near-win-id> <12-step-prefix> 500000
+    - npx tsx prototypes/reality_anchor/reports/probe_goal_coverage.ts <v7.layout.txt> <v7> <canonical_inputs>
+  solver_result:
+    found: true
+    shortest_cost: 15
+    explored_states_before_shortest: 277
+    canonical_inputs: [left, left, down, left, left, left, down, right, left, left, down, down, right, right, down]
+  canonical_trace_summary:
+    - steps_1_2: B/S 左移两次；每步 box_to_sticky:n2 与 sticky_merge:n1，形成完整 2x2。
+    - steps_3_8: 进入同一中央对象室并到达正方形左把手；六步 walk、无对象移动。
+    - step_9: 向左 pull 完整 2x2；move_sticky_rigid、sticky_to_box:n2，输出 CC+MM；MM 已覆盖双目标。
+    - step_10: 上箱横向 pull 到 [2,5]。
+    - steps_11_14: 四步到下箱把手。
+    - step_15: 下箱纵向 pull 到 [3,7]，玩家落入封闭终点并胜利。
+  target_events:
+    fixed_anchor_probe:
+      combined: {found_bypass: false, status: complete, explored_states: 38298}
+      movable_box_sticky_shift: {found_bypass: false, status: complete, explored_states: 38262}
+      fixed_push_pull_effect: {found_bypass: false, status: complete, explored_states: 38298}
+      material_normalization: {found_bypass: false, status: complete, explored_states: 38262}
+      box_to_sticky: {found_bypass: false, status: complete, explored_states: 38262}
+      sticky_merge: {found_bypass: false, status: complete, explored_states: 38262}
+      sticky_rigid_move: {found_bypass: false, status: complete, explored_states: 38262}
+      forbidden_reachable_push_pull_shift: {status: complete, hits: none, reachable_states: 38262}
+    count_probes:
+      B_S_shift_min_2: {found_bypass_below_count: false, status: complete, explored_states: 38624}
+      box_to_sticky_occurrence_min_2: {found_bypass_below_count: false, status: complete, explored_states: 38940}
+      sticky_merge_occurrence_min_2: {found_bypass_below_count: false, status: complete, explored_states: 39395}
+      sticky_rigid_move_min_1: {found_bypass_below_count: false, status: complete, explored_states: 38262}
+      sticky_to_box_min_1: {found_bypass_below_count: false, status: complete, explored_states: 38942}
+    phase_probes:
+      crate_pull_before_second_BS_shift: {found_violation_win: false, status: complete, explored_states: 38624}
+      sticky_move_before_second_BS_shift: {found_violation_win: false, status: complete, explored_states: 38931}
+      sticky_to_box_before_second_BS_shift: {found_violation_win: false, status: complete, explored_states: 38931}
+  concrete_false_plan:
+    prefix: [left, down, left, left, left, down, left, left, down, right, right, left]
+    local_progress:
+      - 第一次 B/S 左移后立即离开；保留两枚独立箱与一条竖黏条。
+      - 上箱被左拉两格并覆盖 [2,5]；下箱被左拉一格，进入终点列上方。
+    reached_layout: |-
+      ##########
+      #####LP###
+      ##########
+      ###GBS..##
+      ##.....###
+      #.*.GM####
+      #.@CGM####
+      #..G######
+      ###.######
+      ##########
+    immediate_read:
+      up: front blocked by solved upper crate
+      right: front blocked by lower crate
+      down: legal only by pulling the solved upper crate off its goal
+      left: legal only by pulling the lower crate past its needed column
+    suffix_solver: {found: false, explored_states: 33467}
+    suffix_graph: {status: complete, reachable_states: 37712, legal_transitions: 73990, winning_states: 0}
+  object_or_instance_evidence:
+    scope: role_and_shape_level_only
+    limits: 归一化会重建箱身份，不声称具体 crate identity 必要；只主张形状与目标职责。
+  winning_path_event_checks:
+    status: complete
+    result: 所有胜路满足 required groups、次数门与三个阶段门。
+  reachable_event_exposure:
+    status: complete_for_fixed_anchor_scan
+    result: P/L shift forbidden hit none；dual_anchor 已是最后 exposure 阶段。
+  graph_or_counterfactual_evidence:
+    graph:
+      status: complete
+      reachable_states: 38262
+      legal_transitions: 75120
+      winning_states: 1
+      compressed_regions: 10739
+      commitment_transitions: 17860
+      initial_scc_states: 1
+      solution_commitments: 5
+      forced_viable_prefix: 1_of_5
+      returned_solution_scripted_handoffs: 2_of_4
+      decision_regions:
+        after_first_shift: commitments_3_viable_3_dead_0
+        before_crosscut: commitments_4_viable_2_dead_2
+        after_crosscut: commitments_8_viable_1_dead_7
+  evidence_limits:
+    - 工具不证明审美、难度、洞见、诱惑可信度或路线质量。
+    - 规范解 15 步中 10 步为 walk；玩家侧节奏仍需 critic 独立攻击。
+    - 具体假方案无胜与所有早拉箱无胜，不等于每条失败分支都对玩家有吸引力。
+    - 不声称唯一输入序列或具体箱 identity。
+
+hard_fact_summary_for_critic:
+  solver: shortest_cost_15; graph_complete_38262_states; one_winning_state
+  required_or_forbidden_events:
+    - all wins require >=2 B/S shifts, >=2 box_to_sticky occurrences, and >=2 sticky_merge occurrences
+    - all wins require pull, sticky rigid movement, and sticky_to_box
+    - no win pulls a crate, moves sticky, or triggers sticky_to_box before the second B/S shift
+    - P/L shift is absent from the complete reachable graph
+  concrete_player_branch:
+    - after first shift, lower room is reachable and independent crates can be manipulated
+    - a 12-step near-win branch solves the upper target and aligns the lower crate, then reaches a complete 37712-state zero-win suffix graph
+  routed_diagnostic_facts:
+    - first B/S shift is forced; after it the solution SCC has multiple viable continuations
+    - before crosscut 2 of 4 commitments are dead; after crosscut 7 of 8 are dead
+    - shortest trace contains 10 walk steps, split into 6-step and 4-step handle routes
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7.md
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_anchor_boundary_shift_box_sticky_min2.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_box_to_sticky_min2.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_sticky_merge_min2.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_move_sticky_rigid_min1.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_sticky_to_box_min1.md
+    - prototypes/reality_anchor/reports/event_before_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_pull_object_crate.md
+    - prototypes/reality_anchor/reports/event_before_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_move_sticky_rigid.md
+    - prototypes/reality_anchor/reports/event_before_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_sticky_to_box.md
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_FALSE_NEAR_WIN.md
+    - prototypes/reality_anchor/reports/prefix_dead_state_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_FALSE_NEAR_WIN.md
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7.md
+
+player_facing_reading:
+  opening_read: >-
+    P/L 完全墙封，只留下清楚的左右 force-mode；第一次左移 B/S 是短 setup。此时
+    下行入口开放，玩家看到两枚仍压在双目标上的独立箱、旁边一条竖黏条，以及左、下
+    两个空目标，因而“保留独立箱并立刻分配”是可执行读法。
+  intended_solution_read: >-
+    玩家必须否定这个近解，先把 B/S 再左移一次，使已解箱也变黏并与竖条合成完整
+    2x2。随后从同一中央房间左拉正方形；边界把左列解码成两箱，右列黏条直接留在
+    双目标。上箱左拉入目标，下箱最后向下拉入封闭终点。
+  concrete_false_read: >-
+    只移动一次 B/S 后，上箱可先覆盖左目标，下箱也能进入终点列，看起来只差一次
+    下拉；但玩家被两个箱卡在 pull 世界交叉口。向下会拆掉已解上箱，向左会把下箱
+    拉过所需列，完整后继图无胜。
+  state_responsibility:
+    box_sticky_anchor: 两次左移构造完整 2x2，并最终覆盖 [3,3]/[4,3]。
+    initially_solved_crates: 诱使玩家保留独立性；正确解必须把它们并入刚体。
+    complete_square: 作为耦合搬运器，把两箱同步横移到可分配列。
+    retained_right_column: 横切后保持竖黏条并直接覆盖 [4,5]/[4,6]。
+    cut_left_column: 成为两箱，分别覆盖 [2,5] 与 [3,7]。
+    push_pull_anchor: 固定且无移动承诺；其 pull 前格规则既执行正确解，也制造假方案死结。
+  payoff_and_resolution: >-
+    看似已解的两箱并不是应被保护的终态，而是必须牺牲独立性、与邻列绑定的搬运器
+    一半；完整正方形横移后又在目标列按箱/黏分工解码。六个目标最终由 B/S、竖黏条
+    与两箱各承担两格，形成紧凑的绑定—横移—解码闭环。
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0022
+      role: positive_5_aesthetic_4_difficulty_anchor
+      human_scores: {aesthetic: 5, difficulty: 4}
+      calibration_use: 高分要求短流程中的强反直觉重读；v7 的“近解独立箱必须全绑”按此受攻。
+    - candidate_id: RA_CAND_0025
+      role: positive_4_4_constructor_anchor
+      human_scores: {aesthetic: 4, difficulty: 4}
+      calibration_use: 4/4 构造门槛要求玩家主动承担形状选择并在后段消费，而非强制事件前缀。
+    - candidate_id: RA_CAND_0006
+      role: negative_high_difficulty_route_tax_anchor
+      human_scores: {aesthetic: 2, difficulty: 5}
+      calibration_use: 走位与目标硬化不计入结构难度；v7 仍有 10 walk，必须独立审查。
+    - candidate_id: RA_CAND_0024
+      role: negative_1_aesthetic_affordance_anchor
+      human_scores: {aesthetic: 1, difficulty: 3}
+      calibration_use: 事件量与探针不代替黏块几何；只承认真实 2x2 搬运与按列解码。
+  all_aesthetic_1_entries_read: [RA_CAND_0024, RA_CAND_0027]
+  additional_warning_from_RA_CAND_0027: P/L 固定且必须有真实 pull 消费；不得出现可动未用锚点或未消费 sticky 形状。
+
+diagnostic_routing:
+  hard_evidence:
+    - fixed-anchor complete scan
+    - all-solution event count and phase gates
+    - concrete false-plan suffix graph
+    - complete graph and canonical goal coverage
+  taste_probes:
+    - false_plan_credibility_and_payoff
+    - route_tax_after_trace_shortening
+    - constructor_choice_strength
+    - fixed_anchor_readability
+  scc_graph:
+    status: routed_as_neutral_diagnostic
+    facts: complete_38262_states; forced_viable_prefix_1_of_5; branching_after_first_shift
+  prototype_specific_work:
+    invalid_goal_prune: pending_after_proposal_ready
+    opening_comfort_check: pending_after_proposal_ready
+    redundant_element_prune: pending_after_proposal_ready
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work: {enabled: false, authorized_by: null, candidate_ids: [], allowed_operations: []}
+  candidate_relation: fresh_family_revision
+  why_not_archive_variant: >-
+    archive 只用于人评校准；v7 是本轮 fresh family 对独立 critic_1 的结构修订，不使用
+    archive、package 其它 level 或其它线程候选的布局、对象位置、路线或因果链。
+
+attempt_log:
+  serious_structural_attempts:
+    - v0_v6: 建立 2x2 绑定与按列横切；v6 证据成立但独立 critic 判定强制构造、路线税，难度约 3。
+    - v7: 开放第一次位移后的半绑定对象室，把独立箱近解变为真实失败计划；同时删除黏条回拉和七步换把手。
+  revision_source:
+    previous_review: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_puzzle_critic_1.yml
+    designer_action: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_designer_action_1.yml
+  abandoned_families:
+    - REWRITE_BRUSH_SPLIT_RELAY_due_duplicate_risk
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_claim_packet.yml
+  read_order: facts_then_claim

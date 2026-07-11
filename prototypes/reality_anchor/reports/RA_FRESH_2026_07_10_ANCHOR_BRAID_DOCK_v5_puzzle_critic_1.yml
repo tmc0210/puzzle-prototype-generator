@@ -1,0 +1,212 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+review_input_type: candidate_version
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+review_method:
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_initial_review: true
+
+initial_review:
+  verdict: supports_with_noncore_caveats
+  review_loop_state: proposal_ready_with_caveats
+  required_action: none
+  player_facing_merits:
+    - >-
+      六次对象动作形成紧密的相互让位链：P/L 先下移释放 B/S 左拉把手，B/S 左移又成为两锚上移的碰撞条件；
+      之后 B/S 离开已完成的竖目标，既释放 P/L 上拉站位，也把自身放到终局左拉的位置。每次对象状态变化都在后续被消费，
+      不是靠步数或往返填充出来的长度。
+    - >-
+      开局 T 形目标与两锚终态朝向清楚，但正解先把 P/L 向下推离目标；目标导向的表面读法与真正的把手责任形成有效反差。
+    - >-
+      B/S 的临时完整泊位不是孤立假动作：它占用了 P/L 的上拉把手，主动右移既偿还该阻塞又为最终左拉蓄势，
+      因而“完成后再拆开”具有可见的因果责任。
+    - >-
+      最后一手 B/S 左拉撞上 P/L，以 n2 同链同时偿还 B/S 的竖向目标债与 P/L 的横向错位债，四格 T 一次闭合且没有拖尾，
+      终局重读简洁、对称且与开局目标图形呼应。
+  archive_taste_context_used:
+    - RA_CAND_0022：人评审美 5、难度 4；用于校准“短而反直觉、空间高复用且要求洞见”的上界。
+    - RA_CAND_0017：人评审美 4、难度 5；用于区分高机制耦合的末期难题与过量腾挪。
+    - RA_CAND_0026：人评审美 4、难度 4；用于校准纯双锚刚体题可成立的 4 分基线，不把共享基础命题视为新颖性。
+    - RA_CAND_0024：人评审美 1、难度 3；用于警戒“双锚预期最终只兑现为普通推拉腾挪”的失败模式。
+  score_calibration:
+    human_archive_anchors_present: true
+    score_claim_allowed: true
+    archive_attack_calibration: complete_with_positive_and_negative_human_anchors
+    positive_anchors:
+      - RA_CAND_0022
+      - RA_CAND_0017
+      - RA_CAND_0026
+    lower_bound_or_negative_anchors:
+      - RA_CAND_0024
+    missing_anchor_effect: none
+  trace_metric_interpretation:
+    calibration_status: pilot
+    solution_execution_pressure:
+      metric_fact: >-
+        reality_anchor_trace_metrics_v0 对本 exact candidate 的 aggregateBand 为 3；solutionCost=17、nonWalkEventCount=16，
+        而玩家侧摘要列出 6 次对象动作。
+      allowed_reading: >-
+        规范解具有中等执行与状态管理密度；该指标不测量洞见、反直觉或因果依赖，也不能单独推出难度分。
+      player_facing_check: >-
+        六次对象动作分别释放把手、建立碰撞、形成临时泊位、腾位兼终局蓄势、制造横向错位、完成混链闭合；
+        packet 中没有未被后续消费的重复动作，因此没有明显 padding 风险。
+      verdict_effect: merit
+    solution_space_reuse:
+      metric_fact: >-
+        aggregateBand 为 4，revisitRate=0.3333333333333333，heavyReuseRatio=0.0625。
+      allowed_reading: >-
+        规范解会回访同一上部目标与中央把手区；该指标不证明复用优雅、惊喜或整体审美。
+      player_facing_check: >-
+        同一区域依次承担开局观察、B/S 临时泊位、玩家取得 P/L 上拉站位、P/L 右错位预终态和最终 T 闭合，
+        每次回访的对象占用与路线责任均发生变化，不是无状态摆渡。
+      verdict_effect: merit
+    unmeasured_dimensions:
+      - causal_dependency
+      - player_insight
+      - counterintuitive_reframe
+      - surprise_and_payoff
+  aesthetic_target_fit: >-
+    支持审美 4：开局 T、临时完整泊位、互换把手与 final n2 T closure 形成统一图形与因果回环；
+    不支持审美 5，因为中段 B/S 右移在理解站位后仍可能显得是局部唯一腾位，惊喜主要集中在最终一手，尚未达到 RA_CAND_0022 人评所代表的持续反直觉上界。
+  difficulty_target_fit: >-
+    支持难度 4：短解要求先背离目标、识别两个锚点轮流占用对方把手，并预见临时完成必须拆开后才能混链收束；
+    不支持难度 5，因为只有 6 次对象动作，正确 SCC 路径上的不可逆承诺与最优承诺均被强制，难度主要来自发现单条因果链而非持续分支管理。
+  critic_items:
+    - id: PC-01
+      type: score_boundary
+      target: player_insight
+      claim_relation: >-
+        final mixed-chain T closure 足以支撑审美 4，但当前材料不支撑审美 5。
+      evidence_basis: >-
+        step 17 同时移动两锚并一次填满 T；step 15 的离开目标主要服务于释放上拉站位并搭建 final pull。
+      player_facing_reason: >-
+        终局回环明确而漂亮，但玩家一旦看见 P/L 的上拉把手被占，B/S 右移可能立即退化为唯一局部动作；
+        中段反转的再解释层数不足以稳到 5。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC-02
+      type: score_boundary
+      target: why_not_execution
+      claim_relation: >-
+        六次对象动作的因果密度足以支撑难度 4，但不支撑难度 5。
+      evidence_basis: >-
+        canonical_non_walk_actions=6；solution_irreversible_path_steps=3、forced_win_prefix=3/3，
+        canonical commitment steps=[3,10,16,17]、forced_optimal_commitment_prefix=4/4。
+      player_facing_reason: >-
+        关卡要求发现正确的把手交换顺序，而不是靠长执行取胜；反过来，进入正确结构后承诺顺序高度收窄，
+        缺少足以支撑 5 分难度的第二层规划压力。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC-03
+      type: nonblocking_risk
+      target: why_not_execution
+      claim_relation: >-
+        “临时完整泊位再腾位”当前成立为因果动作，但实际手感可能仍被读成普通腾位。
+      evidence_basis: >-
+        step 10 后 B/S 完整覆盖竖目标；step 15 必须右移使竖目标失去覆盖；step 16 才能由该站位上拉 P/L；
+        step 17 又把 B/S 拉回并触发 n2 闭合。
+      player_facing_reason: >-
+        右移同时承担释放把手和终局蓄势，排除了纯往返；但若玩家只按眼前阻塞逐步操作而无需预见 step 17，
+        这段体验仍可能表现为“先挪开再挪回”。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC-04
+      type: nonblocking_risk
+      target: player_insight
+      claim_relation: >-
+        开局向下推离目标具有反目标价值，但 SCC 数量本身不能证明它不是唯一显然按钮。
+      evidence_basis: >-
+        布局允许玩家先进入目标区观察，并从下方接近 P/L；initial_scc 有 3 个 out、仅 1 个 win_out，
+        但 packet 没有把三个 SCC 出口逐一映射为玩家可见动作。
+      player_facing_reason: >-
+        直接把 P/L 向上靠近横目标构成可信的目标导向诱饵，因此正解下推不是表面最顺手读法；
+        仍需把“有多个图出口”与“玩家看见多个有意义方案”严格区分。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC-05
+      type: nonblocking_risk
+      target: lineage
+      claim_relation: >-
+        当前 packet 不显示与 RA_CAND_0026 的完整链同构，但“未发现同构”不能作为玩家侧质量 merit。
+      evidence_basis: >-
+        lineage_facts 声明 fresh_required、未授权 archive variant、post_claim_duplicate_check 未发现完整链同构，
+        并把共享面限定为 anchor-as-rigid 基础命题；当前候选另有 reciprocal handle release、temporary full dock、vacate-and-restage 与 final n2 closure 的六拍责任链。
+      player_facing_reason: >-
+        已给出的对象责任比“纯双锚刚体成立”更具体，当前没有继承旧布局骨架或完整因果链的正面迹象；
+        但 packet 未提供与 RA_CAND_0026 的逐项布局/角色对照，所以只把同构风险保留为边界，不把去重陈述抬成新颖性得分。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+  diagnostic_interpretations:
+    - graph_fact: >-
+        initial_scc={states:68,out:3,win_out:1,dead_out:2}。
+      neutral_meaning: >-
+        初始可逆 SCC 有三个外出方向，其中一个进入可赢下游、两个进入死亡下游；这不等于只有一条输入序列。
+      player_facing_interpretation: >-
+        开局确实存在承诺筛选压力，但图事实没有说明三个出口在画面上是否同样可见或同样诱人，
+        因此不能独自证明“下推离目标”是洞见。
+      verdict_effect: caveat
+    - graph_fact: >-
+        solution_irreversible_path_steps=3，forced_win_prefix=3/3。
+      neutral_meaning: >-
+        赢解 SCC 路径上的三个不可逆外出选择全部位于强制前缀。
+      player_facing_interpretation: >-
+        玩家选中正确结构后，后续不可逆顺序高度确定；难点更接近发现完整因果链，而不是在多条持续可赢路线间规划。
+      verdict_effect: caveat
+    - graph_fact: >-
+        canonical_commitment_steps=[3,10,16,17]，forced_optimal_commitment_prefix=4/4；initial_region={states:11,commitments:3,viable:3,optimal:1}。
+      neutral_meaning: >-
+        规范最优线的四个承诺点全部强制；初始局部区域有三个可行承诺候选，但只有一个属于最优线。
+      player_facing_interpretation: >-
+        初始探索仍允许比较承诺，进入最优线后则几乎没有顺序自由；这支持紧凑性，也限制了难度 5 所需的持续决策宽度。
+      verdict_effect: caveat
+  handoff_notes:
+    - >-
+      试玩时最值得观察的主观边界是：玩家是否在看到 P/L 上拉把手被 B/S 占住后，立刻把 step 15 读成唯一腾位，
+      以及是否在执行该步前已经预见 final left 的混链闭合。该边界不构成当前提交前的缺失评审步骤。
+    - >-
+      当前判断是“达到审美 4 / 难度 4，不到 5”；硬证据完整性、winning_states=1 与 waypoint 必经性均未被用作抬分理由。
+
+claim_followup:
+  claim_read: true
+  verdict_changed: false
+  score_or_state_changed: false
+  change_summary: >-
+    design_claim 将已审事实概括为“先泊—腾位—同泊”，与初审识别的 reciprocal handle release、temporary full dock、
+    vacate-and-restage、final n2 T closure 一致；维持达到审美 4 / 难度 4、不到 5 的边界和全部非阻塞风险。
+  change_reason: >-
+    claim 没有新增硬事实，也没有推翻初审：六次对象动作均有后续消费，足以排除主要是长度或无状态往返；
+    但 claim 对“不是唯一显然动作”和“玩家会预见 final left 而非逐步腾位”的陈述仍只是设计主张，
+    不能消除 PC-03、PC-04。其 fresh 表述也不能把去重结果转换为审美 merit，PC-05 继续保留。
+  final_verdict: supports_with_noncore_caveats
+  final_review_loop_state: proposal_ready_with_caveats
+  final_required_action: none
+  final_critic_items:
+    - id: PC-01
+      type: score_boundary
+      target: player_insight
+      disposition: retained
+      blocks_proposal_ready: false
+    - id: PC-02
+      type: score_boundary
+      target: why_not_execution
+      disposition: retained
+      blocks_proposal_ready: false
+    - id: PC-03
+      type: nonblocking_risk
+      target: why_not_execution
+      disposition: retained_after_claim
+      blocks_proposal_ready: false
+    - id: PC-04
+      type: nonblocking_risk
+      target: player_insight
+      disposition: retained_after_claim
+      blocks_proposal_ready: false
+    - id: PC-05
+      type: nonblocking_risk
+      target: lineage
+      disposition: retained_after_claim
+      blocks_proposal_ready: false

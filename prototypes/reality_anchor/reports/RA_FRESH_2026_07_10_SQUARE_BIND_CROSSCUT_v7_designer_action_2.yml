@@ -1,0 +1,69 @@
+review_iteration_addressed: 2
+candidate_version_addressed: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7
+decision: structural_revision
+next_candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4
+critic_item_triage:
+  - id: PC_V7_01_BINARY_RETRY_BYPASSES_INSIGHT
+    response: revise_now
+    action: >-
+      删除“第一次位移后进房 / 多按一次 left”的二元开关。下一版要求玩家在第二次
+      B/S 位移前主动布置一个缺角资源；提前移动锚点得到不同形状或被结构阻止，不能
+      通过重开多按一次相邻输入替代理解。
+  - id: PC_V7_02_FALSE_PLAN_IS_CREDIBLE_BUT_NOT_NEAR_WIN
+    response: accept_and_replace
+    action: >-
+      接受 v7 分支只是资源姿态近解而非目标覆盖近胜；下一版不再以该 12 步分支承担
+      难度，改由补角位置、边界时机和完整刚体 consumer 的连续因果承担。
+  - id: PC_V7_03_ROUTE_TAX_CAPS_AESTHETIC
+    response: revise_now
+    action: >-
+      不保留 6+4 空走结构；下一版把补角、锚点位移与刚体 consumer 压在同一核心室，
+      并以对象状态变化打断换把手段。若无法避免纯走位主导则放弃该布局。
+  - id: PC_V7_04_AESTHETIC_SCORE_BOUNDARY
+    response: accept_as_boundary_and_retest
+    action: 不预宣称 5；先重新争取独立 critic 支持审美硬门槛 4。
+  - id: PC_V7_05_DIFFICULTY_SCORE_BOUNDARY
+    response: revise_now
+    action: >-
+      增加第二个不可由枚举替代的状态判断：先选择并完成缺角资源布置，再选择边界
+      位移与完整形状 consumer；难度不得来自更多目标距离或墙廊。
+  - id: PC_V7_06_CALIBRATED_TRACE_CONTEXT_MISSING
+    response: add_context_next_review
+    action: >-
+      下一 facts packet 显式给出 calibrated_trace_metrics.status=unavailable，并说明
+      analysis 只产生 raw traceMetrics、仓库无本候选校准映射；critic 不得从 raw 比例评分。
+evidence_review_triage:
+  - id: complete_2x2_shape_necessity_gap
+    response: add_shape_level_probe
+    action: >-
+      新增以状态谓词识别“同一 sticky group 恰为完整 2x2”的 all-solution 规避搜索；
+      必须 complete 且 found_bypass=false，才能声称完整 2x2 为所有胜路必经。
+  - id: initial_object_participation_gap
+    response: avoid_identity_overclaim_and_add_order_gate
+    action: >-
+      不声称 crate identity；只在可验证的形状/位置角色层主张补角。另对“第二次 B/S
+      位移前未到达补角状态”做 complete winning-violation probe。
+  - id: fixed_PL_counterfactual_limit
+    response: keep_claim_scoped
+    action: >-
+      只主张完整可达图中 P/L 不移动且胜路实际消费 pull；除非补做反事实，不主张
+      P/L 是唯一可能规则来源。
+submission_gate:
+  - 下一版必须先通过 evidence review 与 puzzle critic 的 proposal_ready 状态。
+  - difficulty 低于 4 或 aesthetic 低于 4 时不得进入原型专属提交前检查。
+  - 任一布局变更后重跑完整图、形状规避、事件/阶段门与 claim-last 独立复审。
+selected_revision:
+  family_change: SQUARE_BIND_CROSSCUT_to_SQUARE_REPAIR_BIND_HANDOFF
+  reason: >-
+    v7 的二元开局与分离 donor 状态收敛无法通过局部修补解决；v4 改为箱态方阵、
+    半黏刷产物、1+3 分离与偏移重并的连续形状责任，不保留旧横切终局。
+  candidate: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4
+  player_decisions:
+    - 只移动 B/S 一次，保留上 CC / 下 MM 的混合材料，而不是连续移动锚点。
+    - 通过唯一竖向口下压右列，生成 L 三格；提前左剪会失去该把手并进入完整无胜后继图。
+    - 先让剩余箱左移腾位，再下拉转为单 M，最后把 1+3 重并成偏移 2x2。
+  evidence_upgrade:
+    - all-solution crate 2x2 state predicate
+    - all-solution sticky 2x2 state predicate
+    - all-solution exact 1+3 split state predicate
+    - all-solution exact offset 2x2 rebound state predicate

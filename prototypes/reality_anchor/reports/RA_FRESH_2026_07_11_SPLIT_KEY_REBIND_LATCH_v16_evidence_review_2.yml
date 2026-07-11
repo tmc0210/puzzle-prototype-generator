@@ -1,0 +1,95 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+review_input_type: candidate_version
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+supported_claims:
+  - claim: "exact v16 可解，且返回的最短解成本为 28。"
+    status: supports_claim
+    basis:
+      - "layout analysis 报告 solver found=true、cost=28、exploredStates=366。"
+      - "shortest trace 逐步重放 28 个输入，step28 为 legal=true、win=true。"
+  - claim: "返回的 28 步最短 trace 包含拼接、切割、重黏并移动双锚。"
+    status: supports_claim
+    basis:
+      - "step2 记录 box_to_sticky:n3 与 sticky_merge:n1，并记录 B/S 的 anchor_boundary_shift:box_sticky。"
+      - "step7 再记录 sticky_merge:n1，trace 快照显示先前分离的黏块轮廓在此连成同一连通体。"
+      - "step18-21 各记录一次 pull_object:push_pull_anchor 与 anchor_boundary_shift:push_pull，P/L 最终覆盖上方目标对。"
+      - "step27 记录 sticky_to_box:n3 与 sticky_split:n1；step28 记录 box_to_sticky:n2、sticky_merge:n1 与 B/S 位移，并在 settle 后获胜。"
+  - claim: "sticky_to_box 是所有胜局必经的切割语义事件模式。"
+    status: supports_claim
+    basis: "event-avoiding BFS 禁止 sticky_to_box 后闭合 2861 个可达状态，status=complete，未找到胜局。"
+  - claim: "box_to_sticky 是所有胜局必经的事件模式。"
+    status: supports_claim
+    basis: "event-avoiding BFS 禁止 box_to_sticky 后闭合 12 个可达状态，status=complete，未找到胜局。"
+  - claim: "sticky_merge 是所有胜局必经的事件模式。"
+    status: supports_claim
+    basis: "event-avoiding BFS 禁止 sticky_merge 后闭合 12 个可达状态，status=complete，未找到胜局。"
+  - claim: "移动 P/L 是所有胜局必经的事件模式。"
+    status: supports_claim
+    basis: "event-avoiding BFS 禁止 anchor_boundary_shift:push_pull 后闭合 155 个可达状态，status=complete，未找到胜局。"
+  - claim: "移动 B/S 是所有胜局必经的事件模式。"
+    status: supports_claim
+    basis: "event-avoiding BFS 禁止 anchor_boundary_shift:box_sticky 后闭合 7 个可达状态，status=complete，未找到胜局。"
+  - claim: "allowed_exposure_through=dual_anchor 没有遗漏更晚阶段的排除义务。"
+    status: supports_claim
+    basis: >-
+      prototype mechanic_exposure_sequence.yml 把 dual_anchor 列为最后阶段，之后没有 later event 或
+      later configuration；packet 也没有 forbidden_if_seen_anywhere 声明。初始布局同时含 P/L 与 B/S，
+      两类锚点位移又分别通过完整 event-avoiding gate 证明为所有胜局必经。
+
+unsupported_or_overclaimed:
+  - claim: "sticky_split 是所有胜局必经。"
+    status: does_not_support_claim
+    disposition: "candidate 已明确 all_solution_sticky_split_claimed=false，因此不构成当前 claim 的冲突。"
+    evidence: >-
+      66 步合法胜路完全避开 sticky_split；该路线仍在 step38 触发 sticky_to_box:n3，故它只反驳
+      split 拓扑事件的 all-win 必经性，不反驳 sticky_to_box 切割语义的 all-win gate。
+  - claim: "任一具体 crate/sticky 实例在整条转换链中持续参与，或某一具体实例不可替代。"
+    status: unknown
+    disposition: "candidate 已明确不主张稳定对象身份、object participation 或 per-object necessity。"
+    evidence: "objectParticipation 为空；crate/sticky 的模型为 indistinguishable，且没有实例级证据。"
+  - claim: "U 形抬升是所有胜路进入上层的唯一因果方式。"
+    status: unknown
+    disposition: >-
+      返回 trace 支持“先重排/抬升，再进入上层并拖动 P/L”的可见时序与状态前提；现有证据不支持
+      unique、all-solution 或反事实唯一性。packet 未把这条提升为单独的 all-win gate，玩家洞见与
+      why_not_execution 仍应交由 puzzle critic 判断。
+
+evidence_limits:
+  - limit: graph_exhausted
+    graph_fact:
+      status: exhausted
+      reachable_states_seen: 1000001
+      legal_transitions_seen: 2416276
+      winning_states_seen_before_exhaustion: 6
+      budget: 1000000
+    neutral_meaning: "状态预算耗尽，未闭合完整可达图。"
+    player_facing_interpretation: "不能据此判断完整解空间、分支质量、唯一解、所有最短解或完整 SCC。"
+    verdict_effect: caveat
+  - limit: event_gate_scope
+    detail: >-
+      五个 complete no-win 结果只证明各 forbidden event pattern 单独被禁用时不存在胜局；它们不证明
+      某个特定事件实例、固定触发次数、固定相对顺序、固定对象身份或 packet 叙事中的整条具体路线
+      为所有胜局共有。
+  - limit: sticky_split_scope
+    detail: "sticky_split 仅由 canonical shortest trace 触发，且已有完整 witness 证明它不是 all-win gate。"
+  - limit: reachable_exposure_scope
+    detail: >-
+      complete_reachable_scan=false，因此不能外推完整 reachable event inventory；本轮之所以不形成
+      later-exposure blocker，仅因为 dual_anchor 已是 exposure sequence 的末阶段且没有
+      forbidden_if_seen_anywhere 声明。
+  - limit: object_evidence
+    detail: "无 object instance、object participation 或 per-object necessity 证据。"
+  - limit: calibrated_metrics_ignored
+    detail: >-
+      calibrated_trace_metrics 不是机制证据；本审查没有用 execution-pressure、reuse band、步数或
+      指标聚合支持或反驳 player_insight、审美、难度与关卡质量。
+  - limit: design_claim_boundary
+    detail: >-
+      player_insight、why_not_execution、状态责任是否能被玩家读出属于设计判断；工具证据这里只支持
+      返回 trace 的事件、快照、时序，以及五个事件模式级 all-win 前提。
+
+questions_for_designer: []

@@ -1,0 +1,41 @@
+opening_comfort_check:
+  exact_candidate: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17
+  prototype: reality_anchor
+  authority: prototypes/reality_anchor/docs/opening_comfort_check.md
+  status: clean
+  sequence_position: 2
+  layout_change_required: false
+  start_change_required: false
+  review_loop_reentry_required: false
+  enumeration:
+    method: exact_bidirectional_edge_initial_scc
+    initial_scc_states: 5
+    internal_bidirectional_edges: 10
+    exit_edges: 2
+    player_positions_seen: 5
+    valid_candidate_starts: 4
+  selected_start:
+    candidate_start_position: [2,4]
+    shortest_solution: 28
+    shortest_solution_delta: 0
+    initial_scc_size: 5
+    nearest_irreversible_exit_distance: 1
+    nearest_win_reaching_exit_distance: 1
+    dead_exits_before_first_win_exit: 0
+    first_step_legal_events:
+      down: {events: [walk], irreversible: false}
+      left: {events: [walk], irreversible: false}
+      right: {events: [push_object:sticky#1, move_sticky_rigid], irreversible: false}
+    whether_core_chain_preserved: true
+    selection_reason: >-
+      当前起点有两个纯 walk 首步；向右推动 L 形也仍在可逆 SCC 内，不会首步误触不可逆承诺。
+      [1,4] 可把最近正确承诺距离增至2，但增加一步路线税并削弱缺角施力提示，不优于当前起点。
+  candidate_starts:
+    - {candidate_start_position: [1,4], shortest_solution_delta: 1, nearest_irreversible_exit_distance: 2, nearest_win_reaching_exit_distance: 2, dead_exits_before_first_win_exit: 0, whether_core_chain_preserved: true}
+    - {candidate_start_position: [2,4], current: true, shortest_solution_delta: 0, nearest_irreversible_exit_distance: 1, nearest_win_reaching_exit_distance: 1, dead_exits_before_first_win_exit: 0, whether_core_chain_preserved: true}
+    - {candidate_start_position: [1,5], shortest_solution_delta: 2, nearest_irreversible_exit_distance: 1, nearest_win_reaching_exit_distance: 3, dead_exits_before_first_win_exit: 1, whether_core_chain_preserved: true}
+    - {candidate_start_position: [2,5], shortest_solution_delta: 1, nearest_irreversible_exit_distance: 0, nearest_win_reaching_exit_distance: 2, dead_exits_before_first_win_exit: 1, whether_core_chain_preserved: true}
+  evidence_refs:
+    - prototypes/reality_anchor/reports/opening_starts_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17_event_gate_report.yml
+  final_conclusion: "保留起点 [2,4]；它提供可逆观察缓冲、无前置死出口，也不增加路线税。"

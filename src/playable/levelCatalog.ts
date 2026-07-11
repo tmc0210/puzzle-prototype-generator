@@ -215,10 +215,7 @@ export async function promoteStudioLevel(
   }
 
   const index = packageDoc.levels.findIndex((candidate) => candidate.id === level.id);
-  const promoted = {
-    ...level,
-    status: normalizeLevelStatus(level.status),
-  };
+  const promoted = { ...level };
   if (index >= 0) {
     packageDoc.levels[index] = promoted;
   } else {
@@ -290,7 +287,6 @@ function normalizeStudioLevel(context: {
   const needsDerivedId = source?.source !== "studio" || packageIds.has(baseId) || studioIds.has(baseId);
   const preferredId = needsDerivedId ? `STUDIO_${baseId.replace(/^STUDIO_/, "")}` : baseId;
   const id = uniqueId(preferredId, new Set([...studioIds, ...packageIds]));
-  const target = defaultTarget(prototype);
   const now = new Date().toISOString();
   const lineagePatch = lineageFromSource(source);
   const lineageSource =
@@ -303,14 +299,6 @@ function normalizeStudioLevel(context: {
     ...incoming,
     id,
     title: incoming.title.trim() || id,
-    role: incoming.role ?? "review",
-    status: normalizeLevelStatus(incoming.status),
-    targets: nonEmptyStringArray(incoming.targets, target),
-    known_before: stringArray(incoming.known_before),
-    target_learning: nonEmptyStringArray(incoming.target_learning, target),
-    support_level: incoming.support_level ?? "none",
-    expected_solver_evidence: nonEmptyStringArray(incoming.expected_solver_evidence, "solvable") as LevelDoc["expected_solver_evidence"],
-    expected_llm_player_evidence: stringArray(incoming.expected_llm_player_evidence) as LevelDoc["expected_llm_player_evidence"],
     layout: incoming.layout.replace(/\r/g, "").trimEnd(),
     lineage: {
       ...(incoming.lineage ?? existingLevel?.lineage ?? {}),
@@ -436,18 +424,9 @@ function archiveLevelFromRecord(
     stringValue(record.metadata.source_candidate_version) ??
     stringValue(record.metadata.level_id) ??
     record.candidateId;
-  const target = defaultTarget(prototype);
   return {
     id: sanitizeId(sourceLevelId) ?? sanitizeId(record.candidateId) ?? `ARCHIVE_${dateStamp()}`,
     title: stringValue(record.metadata.title) ?? record.candidateId,
-    role: "review",
-    status: normalizeLevelStatus(stringValue(record.metadata.status)),
-    targets: [target],
-    known_before: [],
-    target_learning: [target],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: record.layout,
     ...(winFromSolveInstance(record.solveInstance) ? { win: winFromSolveInstance(record.solveInstance) } : {}),
     lineage: {
@@ -553,23 +532,6 @@ function isCanonicalArchiveCandidate(candidate: Record<string, unknown>): boolea
     stringValue(candidate.status) === "accepted";
 }
 
-function defaultTarget(prototype: PrototypePackage): string {
-  return prototype.knowledge.knowledge[0]?.id ?? "solvable";
-}
-
-function normalizeLevelStatus(status: string | undefined): "draft" | "candidate" | "accepted" | "rejected" {
-  if (status === "accepted" || status === "rejected" || status === "candidate" || status === "draft") {
-    return status;
-  }
-  if (status?.includes("reject")) {
-    return "rejected";
-  }
-  if (status?.includes("accept")) {
-    return "accepted";
-  }
-  return "draft";
-}
-
 function sanitizeId(value: string | undefined): string | undefined {
   const normalized = value
     ?.trim()
@@ -593,15 +555,6 @@ function uniqueId(preferred: string, blocked: Set<string>): string {
     }
   }
   throw new Error(`Unable to allocate unique level id for '${preferred}'`);
-}
-
-function nonEmptyStringArray<T extends string>(value: T[] | undefined, fallback: T): T[] {
-  const array = stringArray(value) as T[];
-  return array.length > 0 ? array : [fallback];
-}
-
-function stringArray(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
 function stringValue(value: unknown): string | undefined {

@@ -1,0 +1,46 @@
+candidate_version: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+probe_semantics:
+  implementation: prototypes/reality_anchor/reports/probe_split_key_win_without_event.ts
+  method: >-
+    对每个状态枚举 runtime.actions；任何合法 step 若其事件命中 forbidden pattern 则不入队；
+    以 runtime.key 去重，BFS 直到找到胜局或队列闭合。status=complete 表示队列已闭合且没有胜局。
+  max_states_each: 10000000
+results:
+  - forbidden_pattern: sticky_to_box
+    bypass: false
+    status: complete
+    reachable_states_without_event: 2861
+    interpretation: "任何胜局都必须发生切割语义 sticky_to_box。"
+  - forbidden_pattern: box_to_sticky
+    bypass: false
+    status: complete
+    reachable_states_without_event: 12
+    interpretation: "任何胜局都必须至少一次把箱转成黏格。"
+  - forbidden_pattern: sticky_merge
+    bypass: false
+    status: complete
+    reachable_states_without_event: 12
+    interpretation: "任何胜局都必须发生黏块拼接。"
+  - forbidden_pattern: anchor_boundary_shift:push_pull
+    bypass: false
+    status: complete
+    reachable_states_without_event: 155
+    interpretation: "任何胜局都必须移动 P/L。"
+  - forbidden_pattern: anchor_boundary_shift:box_sticky
+    bypass: false
+    status: complete
+    reachable_states_without_event: 7
+    interpretation: "任何胜局都必须移动 B/S。"
+  - forbidden_pattern: sticky_split
+    bypass: true
+    status: found
+    states_before_first_win: 53071
+    first_win_cost: 66
+    witness: prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_split_bypass.json
+    interpretation: >-
+      不主张 sticky_split 为所有胜局必要；该 witness 仍在 step38 触发 sticky_to_box:n3，
+      所以它避开的是拓扑 split 事件，不是切割语义。
+claim_boundary:
+  all_win_supported: [sticky_to_box, box_to_sticky, sticky_merge, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky]
+  all_win_not_supported: [sticky_split]
+  instance_identity_supported: false

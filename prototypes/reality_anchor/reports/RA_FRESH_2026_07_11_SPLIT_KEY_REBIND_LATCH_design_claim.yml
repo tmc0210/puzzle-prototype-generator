@@ -1,0 +1,81 @@
+candidate_family: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH
+prototype: reality_anchor
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    本轮只从 handoff 明确允许的 lexicon 接口零件出发；不继承任何 archive candidate
+    的布局、对象角色、入口出口关系、解法路线或主要因果链。
+
+design_target:
+  intended_role: late_game_dual_anchor_challenge
+  allowed_exposure_through: dual_anchor
+  aesthetic_score_target: 5
+  aesthetic_floor: 4
+  difficulty_score_target: 5
+  difficulty_floor: 4
+  central_mechanisms:
+    - sticky_merge
+    - sticky_split
+    - sticky rigid shape consumption
+    - anchor_boundary_shift:box_sticky
+    - anchor_boundary_shift:push_pull
+    - push/pull side handoff
+
+lexicon_parts_selected:
+  - B/S 绑定债：箱资源生成黏块形状
+  - 固定 B/S 切割：C+M 尾巴与单格目标袋
+  - 刚体黏块 + 墙口：反向施力格谱系
+  - P/L 锚点边界重写：旧半格把手与侧边对象改侧
+  - P/L L形缺角活塞：一推即侧拉
+new_composition_logic: >-
+  不把基础接口首尾串联成多个小题。开局 L 形把手先扫动 B/S，把三箱桥刷成连接两端的
+  U 形大刚体；同一大刚体被重新定位和抬升后，玩家才有路线横移 P/L 覆盖上方双目标并
+  改写末段施力侧。回到底部后，玩家把 U 形桥推过 B/S：桥排切成三个 crate、两端变成
+  独立 sticky；最后一推又移动 B/S，把其中两箱重黏为目标横条，留下第三箱承担底目标。
+
+design_claim:
+  player_insight: >-
+    玩家必须把“黏住”理解为临时制造共享形状，而不是永久升级：先用 L 形缺角侧拉 B/S，
+    将三箱桥和远端黏格拼成 U 形共享刚体；再把整块重新定位并抬升，借空出的上路横移 P/L。
+    末段不能继续保留 U 形，而要主动让桥排跨过 B/S 切成三个箱与两个黏端，随即再移动 B/S，
+    让其中两箱重黏为终局横条。上方 P/L 双目标、桥中 vacate 目标与底部双目标共同显示状态债务。
+  causal_chain:
+    - 用开局 L 形缺角完成右推后立即下拉，并以 force chain 下移 B/S。
+    - B/S 下移把三箱桥刷成 sticky，桥接主块与远端黏格，形成 U 形共享刚体。
+    - 左拉、右推再左拉重新定位 U 形与 B/S，随后把 U 形抬升，打开通往上方 P/L 的路线。
+    - 从 L 侧连续右拉 P/L 两格，使锚点覆盖上方双目标并改写末段下降施力侧。
+    - 回到底部把 U 形向下推进；桥排跨过 B/S 时产生 sticky_to_box 与 sticky_split。
+    - 再向下推进，联动 B/S 并把其中两箱重新转为 sticky、合并成覆盖目标的横条；第三箱保留底目标责任。
+  why_not_execution: >-
+    难度来自跨阶段状态责任：首次拼接牺牲三箱独立性来换取可搬运的 U 形共享刚体；抬升 U 形
+    同时打开 P/L 路线；P/L 横移既覆盖双目标又改写末段施力侧；切割把共享形状变回可分配桥排；
+    末手重拼只回收其中两箱，第三箱保留独立目标责任。正解 23 步、工具校准 execution-pressure=5；
+    不是靠重复处理同类分支或长走路堆难度。
+  required_events:
+    - sticky_merge
+    - sticky_split
+    - sticky_to_box
+    - box_to_sticky
+    - anchor_boundary_shift:box_sticky
+    - anchor_boundary_shift:push_pull
+    - push_object
+    - pull_object
+    - move_sticky_rigid
+  forbidden_events: []
+  falsification:
+    - 最短胜路跳过首次三箱桥拼接，或形成的 U 形共享刚体不参与后续搬运与抬升。
+    - 存在长度接近正解的简单胜路跳过 sticky_split；当前已知最短 splitless 胜路为 48 步，
+      因而不声称 all-solution necessity，只声称所有 23 步最短解必须切割及切割是强支配路线。
+    - 最短胜路无需移动任一锚点，或 P/L 横移不承担上方双目标与末段施力侧责任。
+    - 终局 sticky_merge 可从最短胜路省略，或目标形状未消费重拼后的连通几何。
+    - 主要难度来自长走路、重复搬运、贴脸唯一动作或不可读死路，而非上述状态责任。
+
+tool_questions:
+  - 是否存在满足全部 required_events 的可解紧凑实例？
+  - 首次 merge、split、两类 anchor shift 与终局 re-merge 是否为所有最短胜路必经？
+  - 形状门和 P/L 重写是否分别消费 exact sticky shape 与 crate key，而不是事件标签巧合？
+  - 完整图中是否存在跳过角色分工或直接覆盖目标的 winning bypass？
+  - 起点是否给末期挑战至少一小段可逆观察空间，而非第一步贴脸承诺？

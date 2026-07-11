@@ -46,7 +46,7 @@ import {
   parseLocalExperimentCasesDoc,
   runLocalExperimentCases,
 } from "./workflows/localExperimentRunner.js";
-import type { LevelDoc, LevelRole, WinCondition } from "./core/types.js";
+import type { LevelDoc, WinCondition } from "./core/types.js";
 import { randomInt } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -72,7 +72,6 @@ async function main(): Promise<void> {
       "explain-layout",
       "compare-starts-layout",
       "archive-remove-candidate",
-      "coverage",
       "audit",
       "curriculum-v2",
       "level-specs-v2",
@@ -343,7 +342,6 @@ async function main(): Promise<void> {
       maxStates: parseNumberOption(optionArgs, "--max-states"),
       maxDepth: parseNumberOption(optionArgs, "--max-depth"),
       graphMaxStates: parseNumberOption(optionArgs, "--graph-max-states"),
-      bypassMaxStates: parseNumberOption(optionArgs, "--bypass-max-states"),
       counterfactualMaxStates: parseNumberOption(optionArgs, "--counterfactual-max-states"),
     });
     const report = formatLevelAnalysisMarkdown(analysis);
@@ -369,12 +367,8 @@ async function main(): Promise<void> {
 
     const optionArgs = args.slice(3);
     const positionalOptions = optionArgs.some((arg) => arg.startsWith("--")) ? [] : optionArgs;
-    const targetsFromFlag = parseCsvOption(optionArgs, "--targets");
-    const targets = targetsFromFlag.length > 0 ? targetsFromFlag : positionalOptions.slice(1);
     const id = getOption(optionArgs, "--id") ?? positionalOptions[0] ?? "scratch_layout";
     const title = getOption(optionArgs, "--title") ?? id;
-    const role = parseRole(getOption(optionArgs, "--role") ?? "challenge");
-    const supportLevel = parseSupportLevel(getOption(optionArgs, "--support") ?? "none");
     const winCondition = parseExplainLayoutWinCondition(
       pkg.mechanic.id,
       parseWinCondition(getOption(optionArgs, "--win"), pkg.mechanic.win),
@@ -384,14 +378,6 @@ async function main(): Promise<void> {
     const level: LevelDoc = {
       id,
       title,
-      role,
-      status: "candidate",
-      targets,
-      known_before: [],
-      target_learning: targets,
-      support_level: supportLevel,
-      expected_solver_evidence: ["solvable"],
-      expected_llm_player_evidence: [],
       layout,
       win: winCondition,
     };
@@ -400,7 +386,6 @@ async function main(): Promise<void> {
       maxStates: parseNumberOption(optionArgs, "--max-states"),
       maxDepth: parseNumberOption(optionArgs, "--max-depth"),
       graphMaxStates: parseNumberOption(optionArgs, "--graph-max-states"),
-      bypassMaxStates: parseNumberOption(optionArgs, "--bypass-max-states"),
       counterfactualMaxStates: parseNumberOption(optionArgs, "--counterfactual-max-states"),
     });
     const report = formatLevelAnalysisMarkdown(analysis);
@@ -428,9 +413,6 @@ async function main(): Promise<void> {
     assertAllowedOptions(optionArgs, new Set([
       "--id",
       "--title",
-      "--role",
-      "--support",
-      "--targets",
       "--player-goal",
       "--goal",
       "--starts",
@@ -448,16 +430,10 @@ async function main(): Promise<void> {
     }
     const id = getOption(optionArgs, "--id") ?? "start_comparison";
     const title = getOption(optionArgs, "--title") ?? id;
-    const role = parseRole(getOption(optionArgs, "--role") ?? "challenge");
-    const supportLevel = parseSupportLevel(getOption(optionArgs, "--support") ?? "none");
-    const targets = parseCsvOption(optionArgs, "--targets");
     const layout = await readLayoutInput(layoutPath);
     const report = compareIceSlideStarts(pkg, layout, {
       id,
       title,
-      role,
-      supportLevel,
-      targets,
       playerGoal,
       starts: parsePointListOption(optionArgs, "--starts"),
       requiredWinningEvents: parseCsvOption(optionArgs, "--required-winning-events"),
@@ -506,29 +482,6 @@ async function main(): Promise<void> {
     return;
   }
 
-  if (command === "coverage") {
-    const results = evaluatePackage(pkg);
-    const resultByLevel = new Map(results.map((result) => [result.levelId, result]));
-    const playerWinStandard = pkg.mechanic.win.type;
-    const isCertifiedLevel = (level: typeof pkg.levels.levels[number]): boolean =>
-      level.status === "accepted" &&
-      resultByLevel.get(level.id)?.status === "pass" &&
-      (level.win ?? pkg.mechanic.win).type === playerWinStandard;
-    console.log(`Prototype: ${pkg.mechanic.id}`);
-    console.log(`Levels: ${pkg.levels.levels.length}`);
-    console.log("Coverage basis: certified levels only (accepted + evaluator pass + player win standard)");
-    for (const item of pkg.knowledge.knowledge) {
-      const targetLevels = pkg.levels.levels.filter((level) => level.targets.includes(item.id));
-      const certified = targetLevels.filter((level) => isCertifiedLevel(level));
-      const status = certified.length > 0 ? "OK" : "GAP";
-      const levels = targetLevels.length > 0 ? targetLevels.map((level) => level.id).join(", ") : "(none)";
-      const certifiedLevels =
-        certified.length > 0 ? certified.map((level) => level.id).join(", ") : "none";
-      console.log(`${status} ${item.id}: targets=${levels} certified=${certifiedLevels}`);
-    }
-    return;
-  }
-
   if (command === "audit") {
     const audit = auditPrototype(pkg);
     const report = formatAuditMarkdown(audit);
@@ -550,11 +503,10 @@ function printUsage(): void {
   console.log("  npm run inspect");
   console.log("  tsx src/cli.ts solve <prototype-path> [level-id]");
   console.log("  tsx src/cli.ts explain-level <prototype-path> <level-id> [--write]");
-  console.log("  tsx src/cli.ts explain-layout <prototype-path> <layout-file|-> [--id id] [--targets K1,K2] [--win player_on_goal|event_occurs:event] [--player-start x,y] [--player-goal x,y] [--max-states n] [--graph-max-states n] [--write]");
+  console.log("  tsx src/cli.ts explain-layout <prototype-path> <layout-file|-> [--id id] [--win player_on_goal|event_occurs:event] [--player-start x,y] [--player-goal x,y] [--max-states n] [--graph-max-states n] [--write]");
   console.log("  tsx src/cli.ts compare-starts-layout <prototype-path> <layout-file|-> --player-goal x,y [--starts x1,y1 x2,y2] [--required-winning-events E1,E2] [--forbidden-winning-events E1,E2] [--forbidden-reachable-events E1,E2] [--write]");
   console.log("  tsx src/cli.ts archive-remove-candidate <prototype-path> <candidate-id> [--apply] [--keep-file]");
   console.log("  tsx src/cli.ts evaluate <prototype-path>");
-  console.log("  tsx src/cli.ts coverage <prototype-path>");
   console.log("  tsx src/cli.ts audit <prototype-path> [--write]");
   console.log("  tsx src/cli.ts curriculum-v2 <prototype-path> [--write]");
   console.log("  tsx src/cli.ts level-specs-v2 <prototype-path> [--write]");
@@ -826,33 +778,6 @@ function parsePointOption(
     throw new Error(`${name} requires integer coordinates formatted as x,y or x y`);
   }
   return [x, y];
-}
-
-function parseRole(raw: string): LevelRole {
-  const roles: LevelRole[] = [
-    "diagnostic",
-    "discovery",
-    "boundary",
-    "guided_application",
-    "independent_application",
-    "variation_transfer",
-    "combination",
-    "challenge",
-    "review",
-    "mechanic_witness",
-  ];
-  if (!roles.includes(raw as LevelRole)) {
-    throw new Error(`Unknown role '${raw}'`);
-  }
-  return raw as LevelRole;
-}
-
-function parseSupportLevel(raw: string): LevelDoc["support_level"] {
-  const values: Array<LevelDoc["support_level"]> = ["none", "low", "medium", "high"];
-  if (!values.includes(raw as LevelDoc["support_level"])) {
-    throw new Error(`Unknown support level '${raw}'`);
-  }
-  return raw as LevelDoc["support_level"];
 }
 
 async function readLayoutInput(layoutPath: string): Promise<string> {

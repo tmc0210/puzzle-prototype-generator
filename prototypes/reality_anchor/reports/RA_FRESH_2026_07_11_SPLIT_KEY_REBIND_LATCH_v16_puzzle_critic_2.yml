@@ -1,0 +1,262 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+review_input_type: revised_candidate_version
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+review_method:
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_initial_review: true
+
+prior_iteration_action_verification:
+  artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_designer_action_1.yml
+  all_items_seen:
+    - PC1_SPLITLESS_ROLE_BYPASS
+    - PC1_PL_FORCE_SIDE_SUPPORT_GAP
+    - PC1_STATEFUL_BUT_SCRIPTED
+    - PC1_MECHANISM_SIGNAL_PAYOFF_BOUNDARY
+    - PC1_PL_COUPLING_BOUNDARY
+    - PC1_COMPACTION_COMFORT_RISK
+    - PC1_PARTIAL_GRAPH_BOUNDARY
+  all_items_triaged: true
+  blocking_items_resolved:
+    - id: PC1_SPLITLESS_ROLE_BYPASS
+      resolution: >-
+        v16 按原型规则把切割语义收紧为 sticky_to_box；禁用该事件的完整搜索闭合且无胜局。
+        66 步路线只绕过 sticky_split 拓扑事件，仍在 step38 触发 sticky_to_box:n3，因而不是无切割胜局。
+    - id: PC1_PL_FORCE_SIDE_SUPPORT_GAP
+      resolution: >-
+        已删除“P/L 改写末段施力侧”的未支撑表述；当前只主张 U 形抬升解锁 P/L 泊位与
+        P/L 位移的胜局必要性，不再把单向依赖夸大成双向力侧改写。
+  nonblocking_items_disposition: >-
+    PC1_STATEFUL_BUT_SCRIPTED、PC1_MECHANISM_SIGNAL_PAYOFF_BOUNDARY、PC1_PL_COUPLING_BOUNDARY、
+    PC1_COMPACTION_COMFORT_RISK、PC1_PARTIAL_GRAPH_BOUNDARY 均有逐项响应；第二轮继续把其中的
+    P/L 目标税、走廊脚本、开局舒适和不完整图边界保留为 caveat 或诊断，而不把它们静默抹去。
+
+initial_review:
+  verdict: supports_with_noncore_caveats
+  review_loop_state: proposal_ready_with_caveats
+  required_action: none
+  player_facing_merits:
+    - >-
+      三箱承担了可见且连续的状态责任：先从独立资源被刷成共享刚体，经过横移、吸收与整体抬升
+      获得通路功能，再被切回箱，最后只重织其中两格而保留一格独立。前一状态会被后一阶段消费，
+      不是 RA_CAND_0024/0027 所警告的事件标签展示。
+    - >-
+      大黏块的轮廓确实参与解题：共享后才能作为整体搬运和抬升，抬升后上层路线才开放；回到底部，
+      同一共享性又从工具变成分配障碍。玩家需要重读“黏住更强”为临时手段，而非终态。
+    - >-
+      终局先切三格、再选择性重织两格，把开局的造形责任回收到目标分配；规范解虽以连续下压执行，
+      但材质职责在这三步中发生清楚反转，足以形成末期综合题的玩家侧 payoff。
+  archive_taste_context_used:
+    - candidate_id: RA_CAND_0022
+      human_reviewed: true
+      human_scores: {aesthetic: 5, difficulty: 4}
+      use: >-
+        审美 5 正标尺要求短流程中有鲜明反直觉抉择、空间高复用和终局反向解释；v16 有材质重读，
+        但没有同等强度的“主动送入死局再反向取回”，因此不支持审美 5。
+    - candidate_id: RA_CAND_0017
+      human_reviewed: true
+      human_scores: {aesthetic: 4, difficulty: 5}
+      use: >-
+        双锚末期正标尺强调高机制密度、高要素耦合和大量反直觉操作；v16 的 B/S—黏块链达到
+        4 分结构下界，但 P/L 仍是单向解锁后的直线泊位，且后半执行更收束，因此不支持难度 5。
+    - candidate_id: RA_CAND_0024
+      human_reviewed: true
+      human_scores: {aesthetic: 1, difficulty: 3}
+      use: >-
+        已完整读取；用于警戒高事件数和双锚信号最终只兑现为推拉腾挪。v16 的共享轮廓、抬升、
+        切桥和选择性重织均改变后续责任，因而越过该负锚，但 P/L 直线泊位仍需保留攻击。
+    - candidate_id: RA_CAND_0027
+      human_reviewed: true
+      human_scores: {aesthetic: 1, difficulty: 2}
+      use: >-
+        已完整读取；用于警戒可动锚点与黏性 affordance 没有被解法消费。v16 两锚位移与拼切均为
+        胜局门槛，黏块几何也被实际搬运和拆分，故不属于完全无责任污染，但 P/L 的责任深度有限。
+  score_calibration:
+    human_archive_anchors_present: true
+    score_claim_allowed: true
+    archive_attack_calibration: complete_positive_and_negative_including_all_aesthetic_1_anchors
+    positive_anchors:
+      - RA_CAND_0022: aesthetic_5_difficulty_4
+      - RA_CAND_0017: aesthetic_4_difficulty_5
+    lower_bound_or_negative_anchors:
+      - RA_CAND_0024: aesthetic_1_difficulty_3
+      - RA_CAND_0027: aesthetic_1_difficulty_2
+    missing_anchor_effect: none
+  trace_metric_interpretation:
+    calibration_status: pilot
+    solution_execution_pressure:
+      metric_fact: >-
+        reality_anchor_trace_metrics_v0；solutionCost=28（band 5）、nonWalkEventCount=41（band 5）、
+        heavyReuseRatio=0.025（band 3），aggregateBand=5。
+      allowed_reading: >-
+        规范解的机制事件与操作压力较高；该指标不测量玩家洞见、因果依赖、反直觉重构或整体审美。
+      player_facing_check: >-
+        造共享体、横移并体、整体抬升、切回箱和选择性重织都留下后续被消费的状态；但 P/L 四次
+        同向横拉与终局连续下压仍有重复执行成分，不能把 band 5 直接换算为难度 5。
+      verdict_effect: caveat
+    solution_space_reuse:
+      metric_fact: >-
+        revisitRate=0.27586206896551724（band 3）、heavyReuseRatio=0.025（band 3），aggregateBand=3。
+      allowed_reading: >-
+        规范解具有中等空间回访；该指标不能说明回访本身是否优雅、是否构成惊喜或证明审美。
+      player_facing_check: >-
+        玩家在 U 形抬升后进入上层，再返回已经改变材质与相位的下层完成切织，同一工作区确有新用途；
+        但整体仍以一次性通行和窄轴调度为主，空间复用不是 5 分依据。
+      verdict_effect: merit
+    unmeasured_dimensions:
+      - causal_dependency
+      - player_insight
+      - counterintuitive_reframe
+      - surprise_and_payoff
+  aesthetic_target_fit: >-
+    支持审美 4 下界，不支持 5。相对 RA_CAND_0024/0027，v16 真实消费了共享黏块轮廓及其
+    “造形—搬运—切开—重织”职责；相对 RA_CAND_0022，反直觉抉择不够鲜明；相对 RA_CAND_0017，
+    P/L 只是被 U 形单向解锁的目标泊位，终局切织又以连续下压立即收束。整体主题完整、题面紧凑，
+    但仍是保守低位 4，而非 5 分结构。
+  difficulty_target_fit: >-
+    支持难度 4，不支持 5。难点来自预测大黏块刚体轮廓、保存施力格、理解共享性先有利后有害，
+    以及在切割后保留一格独立责任；这不是单靠 28 步长度成立。但中段动作受墙口强引导，P/L 是
+    四次直线拉，终局是三次同向下压，一旦读懂相位后执行较显然，低于 RA_CAND_0017 的难度 5 标尺。
+  critic_items:
+    - id: PC2_PL_TARGET_TAX_BOUNDARY
+      type: score_boundary
+      target: role_fit
+      claim_relation: >-
+        本轮是双锚末期挑战；P/L 必须不仅“有移动”，还应检查其玩家侧责任是否足以匹配高耦合预期。
+      evidence_basis: >-
+        U 形抬升后才可进入上层，P/L 位移又是任何胜局的必要事件；但规范解 step18-21 只是从 L 侧
+        连续横拉四格覆盖一对目标，之后 P/L 不再改变 B/S—黏块终局链。
+      player_facing_reason: >-
+        这是真实的一向依赖，所以不是 RA_CAND_0027 式可删装饰；然而玩家对 P/L 的决策基本是
+        “通路打开后把它拉到底”，仍带目标税性质，只支持双锚 4 分下界，不支持 5 分高耦合。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2_CORRIDOR_SCRIPT_BOUNDARY
+      type: score_boundary
+      target: why_not_execution
+      claim_relation: >-
+        状态责任成立不等于整条解法都需要持续推理；需攻击墙口是否替玩家决定了后半动作。
+      evidence_basis: >-
+        规范解中 P/L 为四次同向拉，回程为固定上层通道，终局为三次连续 down；完整 graph 又未闭合，
+        当前不能借分支事实证明这些走廊段具有额外选择质量。
+      player_facing_reason: >-
+        前半造形、吸收、抬升与末段材质重读提供结构难度；后半若玩家已找到正确相位，则较多动作
+        由地形直接指示。该风险限制审美和难度上限，但不推翻现有 4/4 下界。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2_CUT_REWEAVE_PAYOFF_BOUNDARY
+      type: score_boundary
+      target: player_insight
+      claim_relation: >-
+        切割与重织需要是玩家理解的状态反转，而不能只凭 sticky_split 事件或视觉标签获得高分。
+      evidence_basis: >-
+        step27 触发 sticky_to_box:n3 与 sticky_split:n1，step28 紧接着 box_to_sticky:n2 与
+        sticky_merge:n1 并获胜；另有 66 步胜路避开 sticky_split，但所有胜路仍必须 sticky_to_box。
+      player_facing_reason: >-
+        “切开三格、只重织两格、留一格独立”在材质分配上成立，足以满足拼接/切割 brief；但
+        canonical 中切后没有新的绕位或分支选择，payoff 主要是早期状态的回读，支持 4 不支持 5。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2_OPENING_COMFORT_RISK
+      type: nonblocking_risk
+      target: role_fit
+      claim_relation: >-
+        晚期紧凑题仍应让玩家在首个不可逆材质承诺前读清 L 形、B/S、三箱和上层 P/L 债。
+      evidence_basis: >-
+        玩家出生在 L 形缺角旁，能在小口袋内先走动观察，未出生即触发；但首个有效对象动作基本是
+        向右推出 L 形，随后下拉即一次性把三箱并入共享体，题面把首拍提示得很强。
+      player_facing_reason: >-
+        开局不是强迫即时提交，40 个 walkable cells 也比 v10 更有呼吸；不过自主试探余量仍有限，
+        试玩需观察玩家是在读共享轮廓，还是只把开局体验为“沿缺角唯一方向按键”。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2_STICKY_SPLIT_SEMANTIC_NOTE
+      type: diagnostic_note
+      target: diagnostic_reading
+      claim_relation: >-
+        本轮“切割”按原型规则由 sticky_to_box 定义；sticky_split 只是可能伴随的拓扑后果。
+      evidence_basis: >-
+        禁用 sticky_to_box 的 BFS 在 2861 个可达状态闭合且无胜局；禁用 sticky_split 时存在
+        66 步胜路，但该路线仍于 step38 触发 sticky_to_box:n3。
+      player_facing_reason: >-
+        玩家即使走长路避开 split 事件，也仍必须让黏块跨 B 侧恢复成箱，实际经历切割语义；因此
+        该 bypass 不违反“涉及黏块拼接/切割”的 brief，也不能复用首轮的错误 blocker。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2_PARTIAL_GRAPH_BOUNDARY
+      type: diagnostic_note
+      target: diagnostic_reading
+      claim_relation: >-
+        graph 事实只限定可审边界，不证明唯一解、所有最短解、完整 SCC 或分支质量。
+      evidence_basis: >-
+        graph 在 1,000,000 状态预算耗尽，见到 1,000,001 个状态、2,416,276 条合法转移和 6 个胜态；
+        complete graph claims 为 none。
+      player_facing_reason: >-
+        这些数字不能消除走廊脚本风险，也不能证明玩家必然以 canonical 的节奏理解 U 形；当前
+        玩家侧 4/4 判断只依赖可见状态链与人评标尺，不依赖完整图外推。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+  diagnostic_interpretations:
+    - graph_fact: graph_exhausted_at_1000000_with_6_winning_states_seen
+      neutral_meaning: >-
+        预算内已找到胜态并枚举大量转移，但搜索未闭合，没有完整 SCC、全部胜路、所有最短解或
+        分支结构结论。
+      player_facing_interpretation: >-
+        无法据此判断玩家会面对多少有意义的分支，也不能把该图事实用作“不脚本”或“必有洞见”的证明。
+      verdict_effect: none
+    - graph_fact: complete_event_avoiding_search_blocks_wins_without_sticky_to_box_but_not_without_sticky_split
+      neutral_meaning: >-
+        所有胜局都至少触发一次 sticky_to_box；sticky_split 不是所有胜局共有事件。
+      player_facing_interpretation: >-
+        每位通关玩家都必须经历黏块跨 B 侧恢复成箱的切割语义，但不一定观察到引擎记录的拓扑 split。
+      verdict_effect: merit
+  handoff_notes:
+    - >-
+      当前 critic 支持审美 4、难度 4，均不支持 5；这两个分数是人评档案校准后的试玩候选下界，
+      不是工具指标自动得分。
+    - >-
+      P/L 的真实职责是“U 形抬升后才开放的一向目标泊位”；不要在后续文案中恢复“改写终局力侧”
+      或“与 B/S 双向耦合”的旧说法。
+    - >-
+      开局舒适仍是提交前原型专属检查与试玩观察点；本次 critic 只把当前开局读法评为非阻塞风险，
+      不把未来 pre_submission_check 当作现有设计优点或隐藏通过条件。
+
+claim_followup:
+  claim_read: true
+  verdict_changed: false
+  score_or_state_changed: false
+  change_summary: >-
+    主张与初审的保守读法一致：它把核心洞见限定为独立箱—共享刚体—切回箱—选择性重织的
+    状态责任，把 P/L 限定为被抬升解锁的泊位，并明确不以 execution-pressure band 5 追认
+    审美或难度 5。首轮 designer action 的七项 item 均已逐项处理；两项 blocker 已通过
+    原型语义纠正、结构证据与主张降级消解，其余边界继续保留。
+  change_reason: >-
+    claim 没有把 sticky_split 冒充切割定义，也没有重新声称 P/L 会改变末段施力侧；falsification
+    与完整 event gate 对齐。它没有提供足以消除 P/L 目标税、走廊脚本和终局立即重织边界的新材料，
+    所以维持 proposal_ready_with_caveats 和 4/4、不支持 5。
+  final_verdict: supports_with_noncore_caveats
+  final_review_loop_state: proposal_ready_with_caveats
+  final_required_action: none
+  final_critic_items:
+    - id: PC2_PL_TARGET_TAX_BOUNDARY
+      status: remains_nonblocking_score_boundary
+      claim_followup_effect: supports_aesthetic_4_and_difficulty_4_not_5
+    - id: PC2_CORRIDOR_SCRIPT_BOUNDARY
+      status: remains_nonblocking_score_boundary
+      claim_followup_effect: supports_difficulty_4_not_5
+    - id: PC2_CUT_REWEAVE_PAYOFF_BOUNDARY
+      status: remains_nonblocking_score_boundary
+      claim_followup_effect: supports_aesthetic_4_not_5
+    - id: PC2_OPENING_COMFORT_RISK
+      status: remains_nonblocking_risk
+      claim_followup_effect: carry_to_pre_submission_check_and_playtest
+    - id: PC2_STICKY_SPLIT_SEMANTIC_NOTE
+      status: diagnostic_only
+      claim_followup_effect: sticky_split_bypass_is_not_cut_bypass
+    - id: PC2_PARTIAL_GRAPH_BOUNDARY
+      status: diagnostic_only
+      claim_followup_effect: none

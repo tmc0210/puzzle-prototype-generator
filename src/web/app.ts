@@ -1084,7 +1084,7 @@ function entrySubtitle(entry: CandidateEntry): string {
   if (entry.kind === "archive") {
     return `${entry.levelId ?? "未匹配 level"} · ${level?.title ?? "无可玩布局"}`;
   }
-  return `${entry.levelId} · ${entry.level.role} · ${entry.level.status}`;
+  return `${entry.levelId} · ${entry.level.title}`;
 }
 
 function entryStatus(entry: CandidateEntry): string {

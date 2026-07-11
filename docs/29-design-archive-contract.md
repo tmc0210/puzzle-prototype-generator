@@ -166,7 +166,7 @@ human_calibration:
 5 高难终局：适合支线、后期或终局内容。
 ```
 
-`allowed_exposure_through` 是课程分层字段，用来判断这关可放在哪个知识阶段。
+`allowed_exposure_through` 记录候选允许暴露到的机制阶段。
 它不是当前单个原型是否暂时使用该字段的问题；有值时必须保留。
 
 没有人类评语或人类评分的候选不得作为 human taste calibration。标签、status

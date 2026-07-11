@@ -9,7 +9,7 @@ scc_graph_interpretation:
   graph_fact:
   neutral_meaning:
   player_facing_interpretation:
-  verdict_effect: none | merit | caveat | core_attack
+verdict_effect: none | merit | caveat | core_blocker
 ```
 
 如果 `player_facing_interpretation` 为空，`verdict_effect` 必须是 `none`。
@@ -34,7 +34,7 @@ scc_graph_interpretation:
 graph_fact: forcedWinPrefix=3/3
 neutral_meaning: win-continuing order is fixed
 player_facing_interpretation: ""
-verdict_effect: core_attack
+verdict_effect: core_blocker
 ```
 
 这必须改为 `verdict_effect: none`。

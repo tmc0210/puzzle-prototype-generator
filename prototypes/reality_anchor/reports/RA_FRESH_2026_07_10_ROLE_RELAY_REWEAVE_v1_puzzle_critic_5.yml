@@ -1,0 +1,217 @@
+review_iteration: 5
+candidate_version_reviewed: RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1
+review_input_type: candidate_version
+verdict: hold_or_reject
+review_loop_state: rejected_candidate
+required_action: reject_or_change_family
+review_method:
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_initial_review: true
+
+initial_review:
+  verdict: hold_or_reject
+  review_loop_state: rejected_candidate
+  required_action: reject_or_change_family
+  player_facing_merits:
+    - >-
+      开局 n2 不是标签堆叠：一次下推同时把远端箱锁定到底目标，并把近端箱留下为后续唯一载体，
+      玩家能从同一动作读到“交付一个、保留一个”的责任分裂。
+    - >-
+      P/L 右拉、换层、左推复位虽不保留锚位差异，却让玩家在不提前上抽载体箱的前提下到达上层；
+      其结果随后被进入右廊和 B/S 定位消费，因此当前读法不是纯粹的往返填步。
+    - >-
+      B/S 下推同时完成两项可见责任：B 端覆盖中央目标，S 侧边界进入载体横抽线；
+      随后的 C->M 与终局回拉直接消费该状态。
+    - >-
+      终局先让玩家站上右目标却不胜，再离开并把身后 M 拉回旧位，干净兑现“玩家不算覆盖”；
+      最终画面由原箱、B 锚端和再生 M 分担三个目标，具备明确的角色接力收束。
+  archive_taste_context_used:
+    - >-
+      RA_CAND_0022（人评审美5/难度4）：用于校准短流程、反直觉交付和高空间利用的上界；
+      本候选有紧凑交付，但缺少同等级的强反转。
+    - >-
+      RA_CAND_0026（人评审美4/难度4）：用于校准小空间内“锚也是二格刚体”与目标接力可以成立为4/4；
+      本候选的 B 端接管目标与之相关，但机制承诺更高。
+    - >-
+      RA_CAND_0006（人评审美2/难度5）：用于警戒由目标位置和腾挪抬高难度却削弱机制美感；
+      本候选较短且动作多被后续消费，未落入该强负例，但 P/L/B/S 往返仍需警惕。
+    - >-
+      RA_CAND_0024（人评审美1/难度3）：用于警戒双锚与高事件数最后只兑现为推拉腾挪；
+      本候选的角色分工明显更强，但单格 M 未使用黏块几何，仍触及同类期待边界。
+    - >-
+      已完整读取全部审美1警戒条目 RA_CAND_0024 与 RA_CAND_0027；后者尤其警示 C->M 标签若未转化为
+      黏块独有的结构责任，不能仅凭事件出现获得审美加分。
+  score_calibration:
+    human_archive_anchors_present: true
+    score_claim_allowed: true
+    archive_attack_calibration: complete_positive_and_negative_human_anchors
+    positive_anchors:
+      - RA_CAND_0022: aesthetic_5; difficulty_4; human_reviewed
+      - RA_CAND_0026: aesthetic_4; difficulty_4; human_reviewed
+    lower_bound_or_negative_anchors:
+      - RA_CAND_0006: aesthetic_2; difficulty_5; human_reviewed
+      - RA_CAND_0024: aesthetic_1; difficulty_3; human_reviewed
+      - RA_CAND_0027: aesthetic_1; difficulty_2; human_reviewed; warning_only_not_primary_context_anchor
+    missing_anchor_effect: none
+  trace_metric_interpretation:
+    calibration_status: pilot
+    solution_execution_pressure:
+      metric_fact: >-
+        reality_anchor_trace_metrics_v0 对 exact v1 canonical trace 给出 aggregateBand 4；
+        显式分量为 solutionCost=19/band4、nonWalkEventCount=20/band4、heavyReuseRatio=0.1875/band5。
+      allowed_reading: >-
+        规范解具有较高的操作与状态管理密度；该指标只描述执行压力，不证明洞见、因果依赖、
+        难度分或审美分。
+      player_facing_check: >-
+        n2 留下载体、P/L 往返换玩家层、B/S 两次左移取得终局横坐标、B/S 下推兼任目标与边界、
+        横抽触发 C->M 并在终局回填，主要非行走动作均产生后续被消费的状态。
+        风险集中在相邻两次 B/S 左拉的第一格只表现为定位距离，以及单格 M 的材质身份没有独有几何用途。
+      verdict_effect: merit
+    solution_space_reuse:
+      metric_fact: >-
+        同一 calibration 对 exact v1 canonical trace 给出 aggregateBand 5；
+        显式分量为 revisitRate=0.5/band5、heavyReuseRatio=0.1875/band5。
+      allowed_reading: >-
+        规范解反复使用同一工作区；该指标不说明复用是否优雅，也不证明惊喜、因果依赖或整体审美。
+      player_facing_check: >-
+        中廊先承担 P/L 换层，后承担 B/S 泊位、载体上抽和横向材质交接；右廊先提供锚点拉动把手，
+        后承担 M 的绕行与终局回拉。回访时局面责任确有改变，因此不是单纯 shuttle。
+      verdict_effect: merit
+    unmeasured_dimensions:
+      - causal_dependency
+      - player_insight
+      - counterintuitive_reframe
+      - surprise_and_payoff
+      - strict_solution_order_uniqueness
+  aesthetic_target_fit: >-
+    4分边界、当前不支持5分。紧凑角色接力、B端接管中央目标与“玩家站目标仍不胜”的终局读法足以接近
+    RA_CAND_0026 的干净4分结构；但单格 C->M 没有黏块独有的几何责任，且存在必要对象动作换序，
+    不具备 RA_CAND_0022 那种单一强反直觉重构。该分数不等于候选可提交，唯一解硬口径仍被 blocker 违反。
+  difficulty_target_fit: >-
+    支持难度4，不支持5。判断来自玩家必须串联 n2 分工、P/L 换层、B/S 精确定位、锚端占目标、
+    C->M 与终局反向回填；指标 band4 只作为规范解执行压力旁证。完整可胜链高度收束、局部正确动作常较显然，
+    因而没有足够玩家侧依据上推到5。
+  critic_items:
+    - id: PC5_UNIQUE_OBJECT_ORDER_BLOCKER
+      type: core_blocker
+      target: role_fit
+      claim_relation: >-
+        brief 与用户纠正要求推箱子意义上的唯一解；facts 明示 strict_object_action_order_unique=false。
+      evidence_basis: >-
+        27步可胜见证在完成 P/L 往返之前先左拉 B/S 一格；该 B/S 位移没有被撤销，见证 step17 与规范 step9
+        exact-state 汇合，之后共享同一终局。两路在汇合前的对象事件序列分别为
+        “P/L右拉左推 -> B/S左拉”与“载体上拉 -> B/S左拉并保持 -> 载体下推 -> P/L右拉左推”。
+      player_facing_reason: >-
+        这不是纯走位噪声，也不是把某对象完整移回后才开始同一解；玩家确实可以把一个必要且持续保留的锚位进度
+        提前到另一必要锚动作之前。职责和目标分工相同只能证明没有第二条职责链，不能把两种对象动作次序改称唯一解。
+        在用户已经明确“推箱子肯定要有唯一解”的硬口径下，它就是第二种可胜对象计划。
+      blocks_proposal_ready: true
+      expected_designer_response: change_family
+    - id: PC5_PL_LAYER_SWAP_BOUNDARY
+      type: nonblocking_risk
+      target: player_insight
+      claim_relation: >-
+        P/L 右拉左推被读取为换层洞见，而不是路线机关。
+      evidence_basis: >-
+        P/L 两次边界位移在所有胜路中必要，且锚最终回到原位；净变化主要是玩家从载体下方换到上层，
+        避免直接上移时提前拉动载体。
+      player_facing_reason: >-
+        该往返有清楚的因果消费，因此当前不判为 padding；但锚位完全复原、正确动作又处于紧窄局部，
+        真人可能只把它体验成唯一可走的小门。它支持4分结构，不足以单独支持更高洞见分。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC5_BS_DOUBLE_PULL_BOUNDARY
+      type: improvement_opportunity
+      target: why_not_execution
+      claim_relation: >-
+        B/S 连续两次左拉被读取为有状态定位，而不是重复拖动。
+      evidence_basis: >-
+        所有胜路要求至少三次 B/S 位移；规范解前两次相邻左拉把 B/S 从 [5,2]-[6,2] 定位到 [3,2]-[4,2]，
+        后续下推使 B 端覆盖 [3,3] 并把边界放入载体横抽线。
+      player_facing_reason: >-
+        第二次左拉决定中央目标与转换线，职责明确；第一次主要承担一格距离。两步很短，不构成当前 blocker，
+        但若后续重构唯一序，优先让第一格位移也即时改变可读责任，可提高动作密度的审美含量。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC5_SINGLETON_M_PAYOFF_BOUNDARY
+      type: score_boundary
+      target: why_not_execution
+      claim_relation: >-
+        C->M 身份接力与三目标分工能否支撑审美4并追求5。
+      evidence_basis: >-
+        所有胜路都发生 box_to_sticky:n1 与两次 singleton sticky pull；终局由 crate、B anchor end、singleton M
+        各覆盖一目标，但没有 sticky merge、形状构造或只有黏块刚体才能完成的几何动作。
+      player_facing_reason: >-
+        转换被最终目标消费，优于只触发标签；然而单格 M 的移动能力在本局面中没有表现出相对 crate 的独特性。
+        结合 RA_CAND_0024/0027 的人评警戒，本轮最多支持审美4边界，不支持5。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+  diagnostic_interpretations:
+    - graph_fact: complete graph has 142 reachable states, 229 legal transitions, and 1 winning state
+      neutral_meaning: exact 状态图中只有一个胜态。
+      player_facing_interpretation: >-
+        三目标的最终对象分工唯一，但 winning_states=1 不约束抵达同一胜态的对象动作次序，不能回答用户的严格唯一解口径。
+      verdict_effect: none
+    - graph_fact: >-
+        9 win-reachable SCCs, one winning SCC, forcedWinPrefix 8/8, branchingWinSccs 0, mergingWinSccs 0
+      neutral_meaning: >-
+        SCC 压缩后的不可逆可胜子图是一条无分叉、无汇合的链。
+      player_facing_interpretation: >-
+        目标职责和不可逆里程碑没有第二套分工；但 s29 内仍容纳不同对象动作次序，SCC 单链不能豁免该差异。
+      verdict_effect: none
+    - graph_fact: >-
+        27步见证先保持第一次 B/S 左移，再完成载体回落与 P/L 往返，并与规范 step9 exact-state 汇合；
+        汇合前未把 B/S 推回。
+      neutral_meaning: >-
+        同一 SCC 内存在至少两种抵达同一后续状态的对象事件次序，其中一个必要锚位进度在替代路线中被提前并保留。
+      player_facing_interpretation: >-
+        玩家可执行两种不同的必要对象动作排序后继续获胜；这超过纯走位或完整撤销噪声，违反本轮严格唯一解角色要求。
+      verdict_effect: core_blocker
+    - graph_fact: scripted handoffs 4/8 with maximum scripted run 2
+      neutral_meaning: 规范解部分不可逆交接从同一状态或单状态 SCC 发出，但没有长连续 scripted run。
+      player_facing_interpretation: >-
+        该事实本身既不证明“太线性”，也不证明洞见成立；玩家侧线性判断应由动作职责与状态重读决定。
+      verdict_effect: none
+  handoff_notes:
+    - >-
+      初评已在读取 claim_packet 前写定；当前 blocker 只要求修复对象动作顺序唯一性，不要求制造多条职责不同的可胜计划。
+    - >-
+      重构方向应保留唯一职责链与中廊重读，同时让第一次 B/S 有效位移依赖于 P/L 往返产生的不可逆条件，
+      或让提前 B/S 位移必然失败且不能通过载体上拉/下推回路恢复。
+    - >-
+      本评审未运行 solver/analyzer，也未修改布局、levels、queue 或通用流程。
+
+claim_followup:
+  claim_read: true
+  verdict_changed: false
+  score_or_state_changed: false
+  change_summary: >-
+    claim 对 n2 残余债、P/L 换层、B/S 目标接管、C->M 接力和状态复用的叙述与事实初评一致；
+    它也如实披露27步先移 B/S 的见证并把边界交给 critic，未提供能把持续保留的必要锚位进度
+    降格为纯走位或完整撤销噪声的新玩家侧理由。
+  change_reason: >-
+    claim 增强了因果链的可读表达，但没有改变 strict_object_action_order_unique=false 这一事实；
+    “同职责、同 SCC、exact-state 汇合”只能排除第二套职责分工，不能满足用户明确的严格唯一解口径。
+    claim 对指标边界的表述合规，亦不足以替代该硬约束。
+  final_verdict: hold_or_reject
+  final_review_loop_state: rejected_candidate
+  final_required_action: reject_or_change_family
+  final_critic_items:
+    - id: PC5_UNIQUE_OBJECT_ORDER_BLOCKER
+      disposition: remains_core_blocker
+      reason: >-
+        第一次 B/S 左移在替代胜路中没有撤销，且与 P/L 必要动作发生真实换序；必须通过结构修改锁序。
+    - id: PC5_PL_LAYER_SWAP_BOUNDARY
+      disposition: remains_nonblocking_risk
+      reason: >-
+        claim 说明其避免提前扰动载体并被后续站位消费，支持换层读法；锚位完全复原仍限制其洞见上界。
+    - id: PC5_BS_DOUBLE_PULL_BOUNDARY
+      disposition: remains_improvement_opportunity
+      reason: >-
+        双拉最终定位由事实支撑，但第一格位移的即时玩家侧责任仍弱于第二格。
+    - id: PC5_SINGLETON_M_PAYOFF_BOUNDARY
+      disposition: remains_score_boundary
+      reason: >-
+        claim 强调身份接力与右目标消费，却没有证明 singleton M 使用了相对 crate 独有的几何或移动责任；
+        维持审美4边界、不支持5。

@@ -1,0 +1,19 @@
+condition: B_bounded_opening_exploration
+before_exploration:
+  observed_macro_goal: "需要让上方黏块、P/L 锚点与下方 B/S—箱结构共同参与覆盖分散目标，而不是只在下方做普通装箱。"
+  observed_primary_contradiction: "上方四格黏块贴着左、上方墙体且整体较大，直接搬向目标区的转向与通行空间明显不足。"
+  predicted_first_strategy: "先从玩家右侧推动上方黏块向右，确认它能否脱离墙角并获得向下接近转换锚点的通路。"
+  interpretation_of_lower_structure: "下方 S/B 与三只箱形成转换、拆分或重组黏块的操作装置；其意义应超过就地覆盖目标。"
+tool_calls:
+  - "npx tsx prototypes/reality_anchor/reports/opening_explore_layout.ts prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17.txt right right down right"
+  - "npx tsx prototypes/reality_anchor/reports/opening_explore_layout.ts prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17.txt right down up left"
+after_exploration:
+  observed_changes: "首次向右把上方四格黏块平移一格，继续向右被挡。随后向下时，玩家与该黏块一同下移，黏块顶动 S/B 锚点下移，并把下方三只箱全部变成黏格；目标上的箱也变成目标上的黏格。重置复现后，紧接着向上被挡，而向左成功并使玩家与上方黏块再次同向平移。"
+  revised_macro_goal: "先利用首次接触建立的持续联动，把上方黏块作为主动操作体送入下方转换结构；借它推动 S/B 并生成新的下方黏块，再分别安排黏块、锚点对分散目标的覆盖。"
+  revised_primary_contradiction: "真正的开局矛盾不是黏块能否离开墙角，而是首次推动后玩家输入会持续牵动整个黏块，且表面看似有空间的反向移动仍可能失败；必须先理解绑定后的方向约束、脱离或重新绑定方式，才谈得上精确摆位。"
+  newly_discovered_property: "向右推上方黏块后形成了持续的玩家—黏块绑定：玩家随后朝没有直接顶住黏格的方向移动，黏块仍与玩家同向平移。该绑定能把一次普通走位放大成对 S/B 锚点和三箱转换的连锁操作。"
+  current_solution_idea: "以‘右、下’作为有意义的开局骨架：右建立绑定，下让黏块顶动转换锚点并把三箱转黏；之后优先利用已验证可行的左向联动为上方黏块腾挪，同时寻找解除或重绑的站位，再决定两团黏块与两枚锚点各自承担哪些目标。"
+  still_unexplained_or_overbuilt_structure: "P/L 锚点及顶部双目标尚未参与；绑定为何在向上时阻塞、向左时却可行，如何解除或重新绑定，也仍未从可见结果解释。若这些关系没有后续清晰反馈，顶部 P/L 与狭窄通道会显得像额外搜索分支。"
+  execution_or_search_burden: "两步即可触发核心联动，开局洞见出现得快；但一次输入同时改变玩家、整块黏体、S/B 位置和三只箱的材质，且失败方向无法仅凭空格判断，后续精确执行负担为中高。"
+  insight_vs_obvious_execution_risk: "关键机制不是显然执行：‘右、下’容易被自然试探发现，但发现后仍不能直接推出可逆性、脱离方法或完整路线。当前风险偏向理解后的状态搜索，而非单纯重复长操作。"
+  confidence: "中高（0.82）；持续绑定与下方转换均被两次独立调用复现，但只观察了 8 个输入，尚不足以判断完整解法。"

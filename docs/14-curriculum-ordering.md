@@ -1,5 +1,7 @@
 # Curriculum Ordering
 
+Status: obsolete.
+
 本文档定义未来如何对 `player_model.yml` 中的学习目标排序。它面向可泛化能力，不依赖某个示例原型，也不引用旧式知识条目或迁移映射。
 
 核心观点：

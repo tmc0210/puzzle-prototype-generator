@@ -1,0 +1,237 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7
+review_input_type: candidate_version
+verdict: revise_required
+review_loop_state: revise_required
+required_action: structural_revision
+
+review_method:
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_initial_review: true
+
+initial_review:
+  verdict: revise_required
+  review_loop_state: revise_required
+  required_action: structural_revision
+  player_facing_merits:
+    - >-
+      第一次 B/S 左移后，下行入口真实开放，玩家能够保留两枚独立箱并开始按目标分配；
+      上箱可落到左目标、下箱可进入终点列上方，因而半绑定路线不是只存在于事件标签里的
+      假选择。终态四向受限又直接来自 pull 世界中两个箱对玩家站位的夹持，失败原因与机制相连。
+    - >-
+      正解真实消费完整 2x2 的几何性质：四格先绑定为刚体、整体横拉跨过 B/S 边界，随后左列
+      变回两箱、右列保留竖黏条。这里的 sticky_merge、刚体移动和 sticky_to_box 共同构成一次
+      可见的形状重读，不是 RA_CAND_0024/0027 所警戒的“有标签、无几何”。
+    - >-
+      横切后的职责闭合清楚：B/S 覆盖顶部双目标，竖黏条覆盖中部双目标，两箱各承担一个
+      分离目标；固定 P/L 也被三次实际拉动所消费。绑定、搬运、解码与最终覆盖属于同一条因果链。
+  archive_taste_context_used:
+    - RA_CAND_0022：人评审美 5、难度 4；短流程中的强反直觉重读、紧凑空间和强洞见正锚。
+    - RA_CAND_0025：人评审美 4、难度 4；玩家主动构造形状并在后段消费的 4/4 正锚。
+    - RA_CAND_0006：人评审美 2、难度 5；以腾挪和目标位置硬化抬难度的负锚。
+    - RA_CAND_0024：人评审美 1、难度 3；机制信号强而实际只剩推拉腾挪的负锚。
+    - RA_CAND_0027：人评审美 1、难度 2；可动未用 P/L 与未消费 sticky 几何的 affordance 负锚。
+  score_calibration:
+    human_archive_anchors_present: true
+    score_claim_allowed: true
+    archive_attack_calibration: complete_with_positive_negative_and_all_aesthetic_1_entries
+    positive_anchors:
+      - candidate_id: RA_CAND_0022
+        human_scores:
+          aesthetic: 5
+          difficulty: 4
+        human_basis: >-
+          人评强调把箱送入看似死局后再借锚点反向送入目标，空间利用率高、结构精巧，且短步骤要求强洞见。
+      - candidate_id: RA_CAND_0025
+        human_scores:
+          aesthetic: 4
+          difficulty: 4
+        human_basis: >-
+          人评强调玩家在紧凑空间主动构造 L 形反复活塞，前段构造克制、终局提示恰当，达到强 4。
+    lower_bound_or_negative_anchors:
+      - candidate_id: RA_CAND_0006
+        human_scores:
+          aesthetic: 2
+          difficulty: 5
+        human_basis: 人评明确把由目标位置与腾挪复杂度制造的高难判为削弱机制美感的反例。
+      - candidate_id: RA_CAND_0024
+        human_scores:
+          aesthetic: 1
+          difficulty: 3
+        human_basis: >-
+          人评明确指出机制利用率和探针信号不能替代真实切割、拼接与黏块几何；只剩推拉走位时不构成洞见。
+      - candidate_id: RA_CAND_0027
+        human_scores:
+          aesthetic: 1
+          difficulty: 2
+        human_basis: >-
+          人评把可动却不需移动的 P/L、能黏却不使用几何的 sticky 判为 affordance 污染。
+    missing_anchor_effect: none
+  trace_metric_interpretation:
+    calibration_status: context_missing
+    solution_execution_pressure:
+      metric_fact: >-
+        允许证据只给出未校准的规范解事实：15 个输入中 10 个是 walk，分成到正方形把手的 6 步和
+        到下箱把手的 4 步；packet 没有提供 analysis.solution.traceMetrics.calibrated 的原样副本。
+      allowed_reading: >-
+        只能把 6+4 路线作为当前规范解的非评分节奏事实；缺少校准上下文时，不能由比例直接推出难度或审美分数。
+      player_facing_check: >-
+        两段路线都把玩家送到下一次拉动的唯一把手，绝对长度不大，但在一次失败重开后会重复放大纯走位等待。
+      verdict_effect: none
+    solution_space_reuse:
+      metric_fact: >-
+        未校准原始值为 16 次总访问、15 个唯一访问格、26 个可走格、heavy-reuse 为 0；缺少 calibrated 副本。
+      allowed_reading: 只描述这一条规范轨迹几乎不回访，不能证明空间利用率、玩家洞见或整体审美。
+      player_facing_check: >-
+        中央房间同时承担半绑定试探、正方形把手与两箱收尾，但规范解的大部分落脚格只作为一次性通路经过。
+      verdict_effect: none
+    unmeasured_dimensions:
+      - 半绑定路线对真实玩家的诱惑强度
+      - 玩家是否能用二元试错绕过因果理解
+      - 假方案失败反馈的时机与重开摩擦
+      - 2x2 横切解码的惊喜与审美 payoff
+  aesthetic_target_fit: supports_4_at_boundary_but_not_5
+  difficulty_target_fit: supports_3_to_3_plus_but_not_required_4
+  critic_items:
+    - id: PC_V7_01_BINARY_RETRY_BYPASSES_INSIGHT
+      type: core_blocker
+      target: player_insight
+      claim_relation: >-
+        design_claim 把难度 4 建立在半绑定假方案与“全绑后再解码”的反向计划上；当前玩家路径尚不能保证
+        这个因果理解是过关所必需的。
+      evidence_basis: >-
+        第一次输入被强制为左；半绑定失败方案共 12 步，其中 8 步为 walk。失败后 packet 给出的正确计划级
+        修正就是在同一开局多执行一次紧邻的 left，随后只有一次正方形横拉和两次单箱收尾。没有第二个独立的
+        状态判断来区分“理解了为何要全绑”与“把开局另一个分支试一遍”。
+      player_facing_reason: >-
+        玩家可以把失败总结为“进房这条路不行，重开后先再推一次”，而无需掌握独立箱为何在 pull 交叉口
+        互相锁死、完整正方形为何是唯一合适搬运器。对 late challenge/capstone 而言，这仍是可枚举的二元开关，
+        不足以把结构难度稳定托到 4。
+      blocks_proposal_ready: true
+      expected_designer_response: revise_now
+    - id: PC_V7_02_FALSE_PLAN_IS_CREDIBLE_BUT_NOT_NEAR_WIN
+      type: nonblocking_risk
+      target: why_not_execution
+      claim_relation: >-
+        半绑定路线可以成立为可信错误计划，但 claim 中“近解”一词的完成感强于玩家实际看见的覆盖进度。
+      evidence_basis: >-
+        12 步终态只覆盖 [4,3] 与 [2,5]；[3,3]、[4,5]、[4,6]、[3,7] 四个目标仍未覆盖。
+        竖黏条和下箱确实分别对齐在目标旁/上方，立即动作也会破坏现有对位，因此它是资源姿态上的近解，
+        不是目标覆盖上的近胜。
+      player_facing_reason: >-
+        玩家能相信“再把 B/S、竖条和下箱各就位即可”，所以 pull-knot 有教学价值；但到达反馈前要走 8 步，
+        且画面尚有四个空目标，这会削弱被骗到最后一刻的惊讶。该分支是洞见素材，却不足以单独提供 4 档难度。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC_V7_03_ROUTE_TAX_CAPS_AESTHETIC
+      type: nonblocking_risk
+      target: why_not_execution
+      claim_relation: >-
+        why_not_execution 承认 15 步中 10 walk，并主张 v7 已删除旧路线负担；当前版仍保留两段显著换把手。
+      evidence_basis: >-
+        规范解 steps 3-8 连走 6 步才执行正方形横拉，steps 11-14 再走 4 步才执行最终下拉；
+        正解的对象移动输入总共只有 5 次。假方案另含 8 次 walk，首次被骗后的完整重试会累计 18 次走位。
+      player_facing_reason: >-
+        两段走位都服务于不同把手，且总解仅 15 步，所以尚未把审美压到 4 以下；但玩家理解正方形后仍要等待
+        6+4 步把手路由，路径本身没有新增状态判断。它仍是明确路线税，并阻止本材料支持审美 5。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC_V7_04_AESTHETIC_SCORE_BOUNDARY
+      type: score_boundary
+      target: role_fit
+      claim_relation: 对应 aesthetic_floor_4_aspire_5。
+      evidence_basis: >-
+        真实 2x2 几何消费、横切后的两箱/竖条分工和固定 P/L 的实际 pull 使用，明显越过 RA_CAND_0024/0027
+        的低分 affordance 反例；但相较 RA_CAND_0022 的短而强反直觉标杆，v7 的洞见仍可被开局二元重试替代，
+        且存在 6+4 走位段。
+      player_facing_reason: >-
+        当前支持审美 4：几何闭环清楚、对象职责完整；不支持审美 5：没有证据证明玩家必须形成同等强度的
+        反直觉重读，节奏也不够凝练。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC_V7_05_DIFFICULTY_SCORE_BOUNDARY
+      type: score_boundary
+      target: role_fit
+      claim_relation: 对应 difficulty_floor_4_aspire_higher。
+      evidence_basis: >-
+        一条可信错误计划与一次全绑重读使它高于纯执行练习，但第一次移动强制，关键纠错是开局紧邻的第二次左移，
+        全绑后收束为一次刚体拉动和两次单箱拉动；图分支数量和死出口比例不构成难度分数。
+      player_facing_reason: >-
+        当前最多支持难度 3 到 3+。要达到 4，玩家应在不能靠“失败后试另一个开局动作”替代的局面中，
+        再次使用绑定/解码因果作出计划选择。
+      blocks_proposal_ready: true
+      expected_designer_response: revise_now
+    - id: PC_V7_06_CALIBRATED_TRACE_CONTEXT_MISSING
+      type: context_gap
+      target: evidence_support
+      claim_relation: critic 输入要求 calibrated_trace_metrics 为 analysis.solution.traceMetrics.calibrated 的原样副本。
+      evidence_basis: >-
+        facts packet 与 candidate packet 均未提供 calibrated_trace_metrics；允许的 layout analysis 只有 status=complete
+        的原始 traceMetrics 数值，没有 calibrated 字段。
+      player_facing_reason: >-
+        当前可以直接从逐步轨迹攻击 6+4 路线，却不能把原始访问率或 heavy-reuse 数值映射成任何分数。
+        下一版 packet 必须显式提供 calibrated 副本，或按规范给出 unavailable 状态与原因。
+      blocks_proposal_ready: true
+      expected_designer_response: add_context_next_review
+  diagnostic_interpretations:
+    - graph_fact: >-
+        initial SCC/region 只有一个可胜承诺；forced viable prefix 为 1/5。第一次左移后的 s1 有 36 个状态、
+        5 个出口，其中 3 个可到胜利、2 个死亡。
+      neutral_meaning: 首个不可逆进展固定，但第一次位移后的可胜子图并非单线。
+      player_facing_interpretation: >-
+        这排除了“整个关卡从头到尾只有一个图分支”的说法，却不说明三个可胜出口在画面上是否构成三个不同计划，
+        也不证明半绑定诱惑或难度 4。
+      verdict_effect: none
+    - graph_fact: >-
+        before_crosscut 的压缩区域有 4 个承诺、2 个可胜与 2 个死亡；after_crosscut 有 8 个承诺、
+        1 个可胜与 7 个死亡。
+      neutral_meaning: 横切前后都存在不可逆错误出口，横切后可胜承诺尤其稀少。
+      player_facing_interpretation: >-
+        死出口只有在玩家能预见差异或从反馈学到核心因果时才增加谜题价值；当前正解横切后只剩两箱的直接分配，
+        因此这些比例不能补足玩家侧难度。
+      verdict_effect: none
+    - graph_fact: >-
+        12 步半绑定终态的完整后继图有 37712 个状态、0 个胜态；立即上/右受阻，下/左分别会拉走已对位对象。
+      neutral_meaning: 这一个 exact prefix 已不可恢复，不是浅搜索未找到后继。
+      player_facing_interpretation: >-
+        四向结果在画面上能让玩家看见“两个独立箱把 pull 站位夹死”，所以失败反馈与核心机制相连；
+        但它只证明该分支公平，不证明所有玩家会被它吸引，也不证明失败后必须理解而非枚举。
+      verdict_effect: merit
+  handoff_notes:
+    - >-
+      保留“完整 2x2 作为耦合搬运器、横切后按列恢复箱/黏分工”这一玩家侧强项；下一版不要用更多事件门或图指标
+      替代结构修改。
+    - >-
+      结构修订应让全绑选择依赖至少一个无法由开局二元重试替代的后续状态判断，或让半绑定与全绑定路线共享进展后
+      再发生有因果可读性的分岔；目标是让玩家必须理解 pull-knot 与耦合搬运，而不是只多按一次 left。
+    - >-
+      若仍以审美 4 为提交门，可把 6+4 路线税作为 caveat；若继续追求 5，则应显著压缩至少一段纯换把手，并让
+      假方案的局部完成感更接近真实终局。
+    - 下一 review packet 补齐 calibrated_trace_metrics 原样副本，或显式声明 unavailable 及原因。
+
+claim_followup:
+  claim_read: true
+  verdict_changed: false
+  score_or_state_changed: false
+  change_summary: none
+  change_reason: >-
+    claim packet 没有新增玩家侧证据；它把难度 4 明确押在同一条 12 步半绑定假方案上，也主动承认若 critic 仍只支持
+    难度 3 或认为走位主导节奏，则门槛失败。claim 对因果链的表述与 facts 一致，但没有消除“失败后开局多按一次 left”
+    的二元枚举，也没有改变 6+4 换把手事实，因此不改写 initial_review。
+  final_verdict: revise_required
+  final_review_loop_state: revise_required
+  final_required_action: structural_revision
+  final_critic_items:
+    - id: PC_V7_01_BINARY_RETRY_BYPASSES_INSIGHT
+      disposition: unchanged_core_blocker
+    - id: PC_V7_02_FALSE_PLAN_IS_CREDIBLE_BUT_NOT_NEAR_WIN
+      disposition: unchanged_nonblocking_risk
+    - id: PC_V7_03_ROUTE_TAX_CAPS_AESTHETIC
+      disposition: unchanged_nonblocking_risk
+    - id: PC_V7_04_AESTHETIC_SCORE_BOUNDARY
+      disposition: unchanged_supports_4_not_5
+    - id: PC_V7_05_DIFFICULTY_SCORE_BOUNDARY
+      disposition: unchanged_supports_3_to_3_plus_not_4
+    - id: PC_V7_06_CALIBRATED_TRACE_CONTEXT_MISSING
+      disposition: unchanged_context_gap

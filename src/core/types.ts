@@ -395,16 +395,6 @@ export type LlmPlayerEvidenceId =
 export type LevelDoc = {
   id: string;
   title: string;
-  role: LevelRole;
-  status: string;
-  targets: string[];
-  known_before: string[];
-  withheld_until_level?: string[];
-  target_learning: string[];
-  support_level: SupportLevel;
-  expected_solver_evidence: SolverEvidenceId[];
-  expected_llm_player_evidence: LlmPlayerEvidenceId[];
-  failure_interpretation?: Record<string, string>;
   layout: string;
   win?: WinCondition;
   expected_events?: string[];
@@ -431,10 +421,32 @@ export type PrototypePackage = {
   root: string;
   mechanic: MechanicDoc;
   knowledge: KnowledgeDoc;
+  traceMetricCalibration: TraceMetricCalibrationConfig;
   playerModel?: PlayerModelDoc;
   curriculumV2?: CurriculumV2Doc;
   curriculum: CurriculumDoc;
   levels: LevelsDoc;
+};
+
+export type TraceMetricCalibrationStatus = "pilot" | "active" | "unavailable";
+
+export type TraceMetricComponent =
+  | "solutionCost"
+  | "nonWalkEventCount"
+  | "revisitRate"
+  | "heavyReuseRatio";
+
+export type TraceMetricCalibrationScope = {
+  weights: Partial<Record<TraceMetricComponent, number>>;
+  percentileThresholds: Partial<Record<TraceMetricComponent, [number, number, number, number]>>;
+};
+
+export type TraceMetricCalibrationConfig = {
+  calibrationId: string;
+  status: TraceMetricCalibrationStatus;
+  reason?: string;
+  solutionExecutionPressure?: TraceMetricCalibrationScope;
+  solutionSpaceReuse?: TraceMetricCalibrationScope;
 };
 
 export type CurriculumV2Package = {
@@ -492,39 +504,8 @@ export type EvaluationResult = {
   probeEvents: string[];
   exploredStates: number;
   graphAnalysis?: GraphAnalysis;
-  targetResults: TargetEvaluation[];
-  counterfactuals: CounterfactualEvaluation[];
-  solverContract: SolverContractEvaluation;
   status: "pass" | "fail" | "warning";
   notes: string[];
-};
-
-export type EvidenceLevel =
-  | "static"
-  | "trace"
-  | "optimal"
-  | "full_graph"
-  | "heuristic"
-  | "unknown";
-
-export type MetricStatus = "pass" | "fail" | "unknown";
-
-export type MetricResult = {
-  id: string;
-  status: MetricStatus;
-  evidence: EvidenceLevel;
-  reason?: string;
-};
-
-export type SolverContractMetric = MetricResult & {
-  evidenceId: SolverEvidenceId;
-  knowledgeId?: string;
-};
-
-export type SolverContractEvaluation = {
-  expected: SolverEvidenceId[];
-  metrics: SolverContractMetric[];
-  status: "pass" | "fail" | "warning";
 };
 
 export type GraphAnalysis = {
@@ -540,28 +521,4 @@ export type GraphAnalysis = {
     terminalizeWins?: boolean;
   };
   reason?: string;
-};
-
-export type TargetEvaluation = {
-  knowledgeId: string;
-  requiredEvents: string[];
-  forbiddenEvents: string[];
-  observations: {
-    shortestSolutionCovers: boolean;
-    probeTraceCovers: boolean;
-    basis: "solution" | "probe" | "solution_and_probe" | "none";
-  };
-  metrics: MetricResult[];
-  acceptance: MetricResult;
-  bypassCost?: number;
-};
-
-export type CounterfactualEvaluation = {
-  knowledgeId: string;
-  model?: string;
-  solvable?: boolean;
-  exploredStates?: number;
-  checked: boolean;
-  metric: MetricResult;
-  notes?: string;
 };

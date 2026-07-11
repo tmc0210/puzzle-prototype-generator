@@ -1,0 +1,107 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5
+workflow: reality_anchor_redundant_element_prune
+execution_order: 3
+ran_after:
+  - RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_goal_prune_check.yml
+  - RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_opening_comfort_check.yml
+redundant_element_prune:
+  status: clean
+  sequence:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+  candidates_checked:
+    - element: {kind: goal, id_or_cell: all_four_goals}
+      action_tested: remove
+      result: keep
+      reason: exact v5 的四个目标均命中成本下降或核心事件/偏移重绑旁路。
+      hard_facts:
+        cost_delta: "23->21 or 23"
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass: present_for_three_same_cost_removals
+        opening_delta: none
+        target_obligation_bypass: present
+      semantic_role: structural
+    - element: {kind: object, id_or_cell: fixed_PL_pair}
+      action_tested: remove
+      result: keep
+      reason: >-
+        原版完整探针证明所有胜路都需要 P/L 提供的 pull，且 P/L 从不移动。补充删除反事实中，
+        规范 trace 全程合法但最终不胜，500000 状态内零胜且图超预算；按硬门槛不得删除。
+      hard_facts:
+        cost_delta: "23->unknown_no_win_within_500000"
+        graph_status: exhausted
+        expected_trace_win: false
+        core_event_bypass: unknown_counterfactual_but_baseline_pull_required_complete
+        opening_delta: not_used_due_remove_gate_failure
+        target_obligation_bypass: unknown
+      semantic_role: structural
+    - element: {kind: object, id_or_cell: fixed_PL_pair}
+      action_tested: wallify
+      result: keep
+      reason: >-
+        墙化反事实同样使规范 trace 最终不胜，500000 状态内零胜且图超预算；不能证明 P/L
+        只是 blocker。baseline fixed-anchor 完整证据反而证明其全局 pull 语义是必要职责。
+      hard_facts:
+        cost_delta: "23->unknown_no_win_within_500000"
+        graph_status: exhausted
+        expected_trace_win: false
+        core_event_bypass: unknown_counterfactual_but_baseline_pull_required_complete
+        opening_delta: not_used_due_wallify_gate_failure
+        target_obligation_bypass: unknown
+      semantic_role: structural
+    - element: {kind: object, id_or_cell: movable_BS_pair}
+      action_tested: candidate_screen
+      result: keep
+      reason: 规范解实际移动 B/S，且完整次数探针证明所有胜路至少一次 B/S 位移。
+      hard_facts: {cost_delta: not_tested_active_object, graph_status: complete_baseline, expected_trace_win: true, core_event_bypass: none, opening_delta: none, target_obligation_bypass: none}
+      semantic_role: structural
+    - element: {kind: object, id_or_cell: initial_M_and_three_crates}
+      action_tested: candidate_screen
+      result: keep
+      reason: 四个材料格均移动或转换并参与必经形态链；删任一格还会使材料数少于四目标。
+      hard_facts: {cost_delta: not_tested_active_material, graph_status: complete_baseline, expected_trace_win: true, core_event_bypass: none, opening_delta: none, target_obligation_bypass: material_count_below_goal_count}
+      semantic_role: structural
+    - element: {kind: space, id_or_cell: [1, 4]}
+      action_tested: wall_prune
+      result: keep
+      reason: 唯一 static degree 1 普通地面；规范解最终玩家站在此格完成第三次整体 pull，是明确把手/胜利落点。
+      hard_facts: {cost_delta: not_tested_trace_occupied_hard_screen, graph_status: complete_baseline, expected_trace_win: true, core_event_bypass: none, opening_delta: none, target_obligation_bypass: final_pull_handle_removed_if_walled}
+      semantic_role: structural
+    - element: {kind: space, id_or_cell: remaining_floor_cells}
+      action_tested: candidate_screen
+      result: keep
+      reason: 其余普通空地 degree>=2；所有低度走廊被玩家/对象路径、锚点把手或13状态开局观察区消费，无单入口无责任 pocket。
+      hard_facts: {cost_delta: not_tested_no_prune_candidate, graph_status: complete_baseline, expected_trace_win: true, core_event_bypass: none, opening_delta: initial_scc_13_retained, target_obligation_bypass: none}
+      semantic_role: read_graph
+    - element: {kind: wall_outline, id_or_cell: all_four_outer_sides}
+      action_tested: trim_screen
+      result: keep
+      reason: >-
+        v4 已删左右冗余纯墙列。exact v5 再删左框会令 [1,4] 成为外缘非墙；删右框会暴露 B/S；
+        删上框会暴露 P/L；删下框会暴露起点观察区。无可继续裁剪的 wall-only 外行/列。
+      hard_facts: {cost_delta: not_tested_outer_wall_invariant_failure, graph_status: complete_baseline, expected_trace_win: true, core_event_bypass: none, opening_delta: would_break_complete_frame, target_obligation_bypass: none}
+      semantic_role: structural
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline: []
+  retained_elements:
+    - {kind: goal, id_or_cell: all_four_goals, reason: structural_constraints}
+    - {kind: object, id_or_cell: fixed_PL_pair, reason: required_pull_semantics}
+    - {kind: object, id_or_cell: movable_BS_pair, reason: required_anchor_shift}
+    - {kind: object, id_or_cell: all_four_material_cells, reason: active_shape_chain_and_material_count}
+    - {kind: space, id_or_cell: all_remaining_spaces, reason: trace_object_route_read_graph_or_opening_comfort}
+    - {kind: wall_outline, id_or_cell: complete_single_layer_frame, reason: no_further_valid_trim}
+  final_candidate_unchanged: true
+  evidence_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_goal_prune_check.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_PRUNE_OBJECT_REMOVE_PL.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_PRUNE_OBJECT_REMOVE_PL.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_PRUNE_OBJECT_WALLIFY_PL.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_PRUNE_OBJECT_WALLIFY_PL.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.json
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.json

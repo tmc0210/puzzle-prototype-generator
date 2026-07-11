@@ -212,7 +212,6 @@ export function runGenericSampler(
           maxStates: normalized.maxStates,
           maxDepth: normalized.maxDepth,
           graphMaxStates: normalized.graphMaxStates,
-          bypassMaxStates: Math.min(normalized.maxStates, 5_000),
           counterfactualMaxStates: Math.min(normalized.maxStates, 5_000),
         });
       } catch {
@@ -299,21 +298,9 @@ function sampleToLevel(
   sample: GenericSample,
   instance: GenericSolveInstance,
 ): LevelDoc {
-  const targets =
-    profile.targetMode === "first_knowledge" && pkg.knowledge.knowledge.length > 0
-      ? [pkg.knowledge.knowledge[0]!.id]
-      : [];
   return {
     id: `sample_${String(sample.index).padStart(4, "0")}_${instance.id}`,
     title: instance.title ?? `Sample ${sample.index} ${instance.id}`,
-    role: "mechanic_witness",
-    status: "candidate",
-    targets,
-    known_before: [],
-    target_learning: targets,
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: sample.layout,
     win: instance.winCondition,
   };

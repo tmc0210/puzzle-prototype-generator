@@ -1,0 +1,378 @@
+auditVersion: directed_strict_unique_audit_2
+candidate: RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1
+scope: 候选专属严格唯一性审计；不修改正式 packets、levels 或 playable queue。
+exactInstance:
+  layoutPath: prototypes/Reality_Anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1.layout.txt
+  tracePath: prototypes/Reality_Anchor/reports/trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json
+  layoutSha256: 2bccfca39c6b080c65cd211c5b73d33104e9dfeb55ba8516e54533a3467f5f88
+  layout: |-
+    #######
+    #####P#
+    #C.G.L#
+    ##G.@.#
+    ##BSG.#
+    #######
+criterion:
+  pureWalkEquivalence: 只合并纯 walk 有向子图的强连通分量；单向 pure-walk 边保留为 commitment。
+  objectStageIdentity: 输入方向 + 全部非 walk 事件 + 前对象配置 + 后对象配置。
+  allowedDifferences:
+    - 纯走位路径差异
+    - 回到同一 directed-walk SCC（同对象配置且可互相纯走位）的完整环
+  forbiddenDifference: loop-erased 胜路中任何必要对象动作的增删、换序、方向变化或不同对象前后态。
+graph:
+  status: complete
+  reachableStates: 151
+  legalTransitions: 282
+  winningStates: 1
+  pureWalkEdges: 218
+  nonWalkEdges: 64
+  directedWalkSccs: 51
+  impureWalkSccs: []
+  macroEdges: 77
+  objectMacroSelfLoops: 0
+  crossSccWalkCommitments: 15
+  relevantMacros: 13
+  relevantCrossSccWalkCommitments: 2
+  startMacro: 0
+  winMacros:
+    - 50
+canonical:
+  inputs:
+    - left
+    - up
+    - left
+    - right
+    - right
+    - down
+    - right
+    - down
+    - left
+    - left
+    - left
+    - up
+    - up
+    - right
+    - down
+    - right
+    - left
+    - left
+    - down
+  inputCount: 19
+  rawMacroEdgeCount: 12
+  loopErasedMacroEdgeCount: 12
+  objectStageCount: 10
+  objectStages:
+    - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky|{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,4","sticky":"3,4"}}=>{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+    - right:pull_object:crate#1|{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":["2,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+    - right:pull_object:crate#1&box_to_sticky:n1|{"crates":["2,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":[],"sticky":[["3,2"]],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+    - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1|{"crates":[],"sticky":[["3,2"]],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+    - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+    - right:push_object:crate#1&box_to_sticky:n1|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+    - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky|{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+    - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1|{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"4,2","pull":"4,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+    - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"4,2","pull":"4,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["2,2"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+    - down:pull_object:crate#1|{"crates":["2,2"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["2,3"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+  objectOrder:
+    - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+    - right:pull_object:crate#1
+    - right:pull_object:crate#1&box_to_sticky:n1
+    - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1
+    - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull
+    - right:push_object:crate#1&box_to_sticky:n1
+    - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+    - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1
+    - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull
+    - down:pull_object:crate#1
+  macroPath:
+    - 0
+    - 5
+    - 3
+    - 9
+    - 11
+    - 19
+    - 24
+    - 38
+    - 41
+    - 40
+    - 45
+    - 48
+    - 50
+evidenceA:
+  method: 枚举 relevant directed-walk-SCC 宏图的全部 node-simple 胜路；任意有限胜路删除重复宏节点之间的完整返回环后必落入该集合。
+  budget: 5000000
+  truncated: false
+  traversedPrefixes: 24
+  completedSimpleWinningPaths: 2
+  distinctExactObjectStageSequences: 1
+  distinctObjectOrderSequences: 1
+  allMatchCanonical: true
+  paths:
+    - pathIndex: 1
+      macroPath:
+        - 0
+        - 5
+        - 3
+        - 9
+        - 11
+        - 19
+        - 24
+        - 38
+        - 41
+        - 40
+        - 45
+        - 48
+        - 50
+      objectStageCount: 10
+      objectStages:
+        - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky|{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,4","sticky":"3,4"}}=>{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+        - right:pull_object:crate#1|{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":["2,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+        - right:pull_object:crate#1&box_to_sticky:n1|{"crates":["2,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":[],"sticky":[["3,2"]],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+        - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1|{"crates":[],"sticky":[["3,2"]],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+        - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+        - right:push_object:crate#1&box_to_sticky:n1|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+        - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky|{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+        - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1|{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"4,2","pull":"4,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+        - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"4,2","pull":"4,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["2,2"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+        - down:pull_object:crate#1|{"crates":["2,2"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["2,3"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+      objectOrder:
+        - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+        - right:pull_object:crate#1
+        - right:pull_object:crate#1&box_to_sticky:n1
+        - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1
+        - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull
+        - right:push_object:crate#1&box_to_sticky:n1
+        - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+        - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1
+        - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull
+        - down:pull_object:crate#1
+      walkCommitments:
+        - 5->3:left
+        - 41->40:right
+      exactWitness:
+        inputs:
+          - left
+          - up
+          - left
+          - right
+          - right
+          - down
+          - right
+          - down
+          - left
+          - left
+          - left
+          - up
+          - up
+          - right
+          - down
+          - right
+          - left
+          - left
+          - down
+        inputCount: 19
+        legal: true
+        win: true
+        finalState: 145
+        objectOrder:
+          - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+          - right:pull_object:crate#1
+          - right:pull_object:crate#1&box_to_sticky:n1
+          - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1
+          - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull
+          - right:push_object:crate#1&box_to_sticky:n1
+          - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+          - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1
+          - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull
+          - down:pull_object:crate#1
+    - pathIndex: 2
+      macroPath:
+        - 0
+        - 3
+        - 9
+        - 11
+        - 19
+        - 24
+        - 38
+        - 41
+        - 40
+        - 45
+        - 48
+        - 50
+      objectStageCount: 10
+      objectStages:
+        - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky|{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,4","sticky":"3,4"}}=>{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+        - right:pull_object:crate#1|{"crates":["1,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":["2,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+        - right:pull_object:crate#1&box_to_sticky:n1|{"crates":["2,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":[],"sticky":[["3,2"]],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}
+        - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1|{"crates":[],"sticky":[["3,2"]],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"2,3","sticky":"3,3"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+        - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,1","pull":"5,2"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+        - right:push_object:crate#1&box_to_sticky:n1|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}
+        - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky|{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,3","sticky":"4,3"}}=>{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+        - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1|{"crates":[],"sticky":[["4,2"]],"pushPull":{"push":"5,2","pull":"5,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["3,2"],"sticky":[],"pushPull":{"push":"4,2","pull":"4,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+        - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull|{"crates":["3,2"],"sticky":[],"pushPull":{"push":"4,2","pull":"4,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["2,2"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+        - down:pull_object:crate#1|{"crates":["2,2"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}=>{"crates":["2,3"],"sticky":[],"pushPull":{"push":"3,2","pull":"3,3"},"boxSticky":{"box":"3,4","sticky":"4,4"}}
+      objectOrder:
+        - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+        - right:pull_object:crate#1
+        - right:pull_object:crate#1&box_to_sticky:n1
+        - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1
+        - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull
+        - right:push_object:crate#1&box_to_sticky:n1
+        - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+        - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1
+        - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull
+        - down:pull_object:crate#1
+      walkCommitments:
+        - 41->40:right
+      exactWitness:
+        inputs:
+          - left
+          - left
+          - up
+          - right
+          - right
+          - down
+          - right
+          - down
+          - left
+          - left
+          - left
+          - up
+          - up
+          - right
+          - down
+          - right
+          - left
+          - left
+          - down
+        inputCount: 19
+        legal: true
+        win: true
+        finalState: 145
+        objectOrder:
+          - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+          - right:pull_object:crate#1
+          - right:pull_object:crate#1&box_to_sticky:n1
+          - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1
+          - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull
+          - right:push_object:crate#1&box_to_sticky:n1
+          - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+          - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1
+          - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull
+          - down:pull_object:crate#1
+evidenceB:
+  method: 在 node-simple 宏路径空间上运行 visited-mask × 10 阶段规范序列自动机；任何对象阶段不匹配都会进入 mismatch 状态并保留到胜态。
+  budget: 5000000
+  truncated: false
+  exploredProductStates: 24
+  generatedProductTransitions: 23
+  acceptedWinCount: 2
+  mismatchWinFound: false
+  mismatchWitness: null
+rawLoopControl:
+  found: true
+  searchComplete: true
+  interpretation: raw 严格序列的偏离来自对象 detour；宏环擦除后返回 canonical，不构成必要动作换序。
+  rawInputs:
+    - left
+    - up
+    - left
+    - right
+    - right
+    - down
+    - right
+    - down
+    - left
+    - left
+    - left
+    - up
+    - up
+    - right
+    - down
+    - up
+    - down
+    - right
+    - left
+    - left
+    - down
+  rawObjectOrder:
+    - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+    - right:pull_object:crate#1
+    - right:pull_object:crate#1&box_to_sticky:n1
+    - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1
+    - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull
+    - right:push_object:crate#1&box_to_sticky:n1
+    - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+    - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+    - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+    - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1
+    - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull
+    - down:pull_object:crate#1
+  rawMacroPath:
+    - 0
+    - 5
+    - 3
+    - 9
+    - 11
+    - 19
+    - 24
+    - 38
+    - 41
+    - 38
+    - 41
+    - 40
+    - 45
+    - 48
+    - 50
+  loopErasedInputs:
+    - left
+    - up
+    - left
+    - right
+    - right
+    - down
+    - right
+    - down
+    - left
+    - left
+    - left
+    - up
+    - up
+    - right
+    - down
+    - right
+    - left
+    - left
+    - down
+  loopErasedObjectOrder:
+    - up:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+    - right:pull_object:crate#1
+    - right:pull_object:crate#1&box_to_sticky:n1
+    - right:pull_object:box_sticky_anchor&anchor_boundary_shift:box_sticky&sticky_to_box:n1
+    - down:pull_object:push_pull_anchor&anchor_boundary_shift:push_pull
+    - right:push_object:crate#1&box_to_sticky:n1
+    - down:push_object:box_sticky_anchor&anchor_boundary_shift:box_sticky
+    - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull&move_sticky_rigid&sticky_to_box:n1
+    - left:pull_object:push_pull_anchor&force_chain:n2&anchor_boundary_shift:push_pull
+    - down:pull_object:crate#1
+  loopErasedMacroPath:
+    - 0
+    - 5
+    - 3
+    - 9
+    - 11
+    - 19
+    - 24
+    - 38
+    - 41
+    - 40
+    - 45
+    - 48
+    - 50
+  loopErasedMatchesCanonical: true
+verdict:
+  status: PASS
+  graphComplete: true
+  bothProofsComplete: true
+  necessaryObjectReorderFound: false
+  conclusion: 未发现必要对象动作换序；全部 loop-erased 胜路都严格匹配同一 10 阶段对象链。两条 simple 胜路只差纯走位入口/单向走位 commitment，不是第二套对象计划。
+  caveat: 该结论只覆盖题设的对象计划唯一性口径，不声称输入字符串唯一，也不评价审美与难度。

@@ -17,6 +17,9 @@ import type {
   MechanicDoc,
   PlayerModelDoc,
   PrototypePackage,
+  TraceMetricCalibrationConfig,
+  TraceMetricCalibrationScope,
+  TraceMetricComponent,
 } from "./types.js";
 
 type SchemaName =
@@ -57,6 +60,99 @@ async function fileExists(filePath: string): Promise<boolean> {
   }
 }
 
+async function loadTraceMetricCalibration(root: string): Promise<TraceMetricCalibrationConfig> {
+  const calibrationPath = path.join(root, "docs", "trace_metric_calibration.md");
+  if (!(await fileExists(calibrationPath))) {
+    return unavailableTraceMetricCalibration("calibration_missing");
+  }
+
+  try {
+    const markdown = await readFile(calibrationPath, "utf8");
+    const frontmatter = extractYamlFrontmatter(markdown);
+    if (!frontmatter) return unavailableTraceMetricCalibration("calibration_frontmatter_missing");
+    const doc = YAML.parse(frontmatter);
+    if (!isRecord(doc)) return unavailableTraceMetricCalibration("calibration_frontmatter_invalid");
+
+    const calibrationId = typeof doc.calibration_id === "string" && doc.calibration_id.length > 0
+      ? doc.calibration_id
+      : "trace_metrics_unavailable";
+    if (doc.status === "unavailable") {
+      return {
+        calibrationId,
+        status: "unavailable",
+        reason: typeof doc.reason === "string" ? doc.reason : "calibration_unavailable",
+      };
+    }
+    if (doc.status !== "pilot" && doc.status !== "active") {
+      return unavailableTraceMetricCalibration("calibration_status_invalid", calibrationId);
+    }
+
+    return {
+      calibrationId,
+      status: doc.status,
+      solutionExecutionPressure: parseTraceMetricScope(doc.solution_execution_pressure),
+      solutionSpaceReuse: parseTraceMetricScope(doc.solution_space_reuse),
+    };
+  } catch {
+    return unavailableTraceMetricCalibration("calibration_load_failed");
+  }
+}
+
+function unavailableTraceMetricCalibration(
+  reason: string,
+  calibrationId = "trace_metrics_unavailable",
+): TraceMetricCalibrationConfig {
+  return { calibrationId, status: "unavailable", reason };
+}
+
+function extractYamlFrontmatter(markdown: string): string | undefined {
+  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  return match?.[1];
+}
+
+function parseTraceMetricScope(value: unknown): TraceMetricCalibrationScope | undefined {
+  if (!isRecord(value)) return undefined;
+  const weights = parseTraceMetricValues(value.weights, parseFiniteNumber);
+  const percentileThresholds = parseTraceMetricValues(value.percentile_thresholds, parseThresholds);
+  if (Object.keys(weights).length === 0 || Object.keys(percentileThresholds).length === 0) return undefined;
+  return { weights, percentileThresholds };
+}
+
+function parseTraceMetricValues<T>(
+  value: unknown,
+  parse: (value: unknown) => T | undefined,
+): Partial<Record<TraceMetricComponent, T>> {
+  if (!isRecord(value)) return {};
+  const fieldMap: Record<string, TraceMetricComponent> = {
+    solution_cost: "solutionCost",
+    non_walk_event_count: "nonWalkEventCount",
+    revisit_rate: "revisitRate",
+    heavy_reuse_ratio: "heavyReuseRatio",
+  };
+  const parsed: Partial<Record<TraceMetricComponent, T>> = {};
+  for (const [key, raw] of Object.entries(value)) {
+    const metric = fieldMap[key];
+    const result = metric ? parse(raw) : undefined;
+    if (metric && result !== undefined) parsed[metric] = result;
+  }
+  return parsed;
+}
+
+function parseFiniteNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
+function parseThresholds(value: unknown): [number, number, number, number] | undefined {
+  if (!Array.isArray(value) || value.length !== 4 || !value.every((item) => typeof item === "number" && Number.isFinite(item))) {
+    return undefined;
+  }
+  return [value[0], value[1], value[2], value[3]];
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 async function validateAgainstSchema(
   repoRoot: string,
   name: SchemaName,
@@ -92,6 +188,7 @@ export async function loadPrototypePackage(
     : undefined;
   const curriculum = await readYaml<CurriculumDoc>(path.join(root, "curriculum.yml"));
   const levels = await readYaml<LevelsDoc>(path.join(root, "levels.yml"));
+  const traceMetricCalibration = await loadTraceMetricCalibration(root);
 
   await validateAgainstSchema(repoRoot, "mechanic", mechanic);
   await validateAgainstSchema(repoRoot, "knowledge", knowledge);
@@ -155,21 +252,7 @@ export async function loadPrototypePackage(
     }
   }
 
-  for (const level of levels.levels) {
-    const referencedKnowledge = [
-      ...level.targets,
-      ...level.known_before,
-      ...(level.withheld_until_level ?? []),
-      ...level.target_learning,
-    ];
-    for (const target of referencedKnowledge) {
-      if (!knowledgeIds.has(target)) {
-        throw new Error(`Level ${level.id} references unknown knowledge '${target}'`);
-      }
-    }
-  }
-
-  return { root, mechanic, knowledge, playerModel, curriculumV2, curriculum, levels };
+  return { root, mechanic, knowledge, traceMetricCalibration, playerModel, curriculumV2, curriculum, levels };
 }
 
 export async function loadCurriculumV2Package(

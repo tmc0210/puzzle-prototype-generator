@@ -2,10 +2,8 @@ import type {
   InputId,
   KnowledgeDoc,
   LevelDoc,
-  LevelRole,
   LevelsDoc,
   MechanicDoc,
-  SupportLevel,
   WinCondition,
 } from "../core/types.js";
 import {
@@ -129,21 +127,6 @@ const inputByKey: Record<string, InputId> = {
   D: "right",
 };
 
-const roleOptions: LevelRole[] = [
-  "diagnostic",
-  "discovery",
-  "boundary",
-  "guided_application",
-  "independent_application",
-  "variation_transfer",
-  "combination",
-  "challenge",
-  "review",
-  "mechanic_witness",
-];
-
-const supportOptions: SupportLevel[] = ["none", "low", "medium", "high"];
-const statusOptions = ["draft", "candidate", "accepted", "rejected"];
 const newDraftKey = "__new__";
 const sourceFilterStorageKey = "sokoban.editor.sourceFilters.v1";
 const sourceSearchStorageKey = "sokoban.editor.sourceSearch.v1";
@@ -517,32 +500,6 @@ function renderInspector(selectedSource: EditableLevelSource | undefined): strin
         <label class="field">
           <span>标题</span>
           <input data-field="title" value="${escapeAttribute(draft.title)}">
-        </label>
-        <div class="field-grid">
-          <label class="field">
-            <span>状态</span>
-            <select data-field="status">${renderOptions(statusOptions, draft.status)}</select>
-          </label>
-          <label class="field">
-            <span>角色</span>
-            <select data-field="role">${renderOptions(roleOptions, draft.role)}</select>
-          </label>
-        </div>
-        <label class="field">
-          <span>Targets</span>
-          <input data-field="targets" value="${escapeAttribute(draft.targets.join(", "))}">
-        </label>
-        <label class="field">
-          <span>Known Before</span>
-          <input data-field="known_before" value="${escapeAttribute(draft.known_before.join(", "))}">
-        </label>
-        <label class="field">
-          <span>Target Learning</span>
-          <input data-field="target_learning" value="${escapeAttribute(draft.target_learning.join(", "))}">
-        </label>
-        <label class="field">
-          <span>Support</span>
-          <select data-field="support_level">${renderOptions(supportOptions, draft.support_level)}</select>
         </label>
         <label class="field">
           <span>Win JSON</span>
@@ -921,30 +878,6 @@ function captureDraftFromDom(): void {
   const title = fieldValue("title");
   if (title !== undefined) {
     draft.title = title.trim();
-  }
-  const status = fieldValue("status");
-  if (status) {
-    draft.status = status;
-  }
-  const role = fieldValue("role");
-  if (role) {
-    draft.role = role as LevelRole;
-  }
-  const support = fieldValue("support_level");
-  if (support) {
-    draft.support_level = support as SupportLevel;
-  }
-  const targets = fieldValue("targets");
-  if (targets !== undefined) {
-    draft.targets = splitList(targets);
-  }
-  const knownBefore = fieldValue("known_before");
-  if (knownBefore !== undefined) {
-    draft.known_before = splitList(knownBefore);
-  }
-  const targetLearning = fieldValue("target_learning");
-  if (targetLearning !== undefined) {
-    draft.target_learning = splitList(targetLearning);
   }
   const win = fieldValue("win");
   if (win !== undefined) {
@@ -1768,13 +1701,6 @@ function graphSummary(unique: DiagnoseResult["uniqueness"]): string {
 
 function formatWin(win: WinCondition | undefined): string {
   return win ? JSON.stringify(win, null, 2) : "";
-}
-
-function splitList(value: string): string[] {
-  return value
-    .split(/[,\n]/)
-    .map((item) => item.trim())
-    .filter((item) => item.length > 0);
 }
 
 function cloneLevel(level: LevelDoc): LevelDoc {

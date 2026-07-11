@@ -1,0 +1,254 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+review_input_type: revised_claim
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+review_method:
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_initial_review: true
+
+initial_review:
+  verdict: supports_with_noncore_caveats
+  review_loop_state: proposal_ready_with_caveats
+  required_action: none
+  player_facing_merits:
+    - >-
+      任何胜路都必须至少两次触发 n2，并经过中段“两锚混链上移”和终局“两锚混链左移”两个 exact mixed transition；
+      玩家不能把双锚拆成两个互不相干的普通归位任务。两个锚点先互相建立碰撞，再互相偿还把手债，是关卡稳定的玩家侧骨架。
+    - >-
+      17 步 canonical 的六次对象动作全部有后续消费：P/L 下移释放 B/S 抽取位，B/S 左拉建立第一次混链，
+      临时泊位后的右移同时释放 P/L 把手并为终局蓄势，P/L 上拉制造横向错位，最后混链左移一次闭合 T。
+    - >-
+      B/S 的临时完整泊位不是可删除的装饰：它位于所有胜路的有序状态骨架中，随后必须让出 P/L 的 pull handle；
+      即使允许非最优试探，玩家最终仍要理解“完成态也可能是把手债”。
+    - >-
+      最后一手把 B/S 自身的竖向目标债、P/L 的横向错位债和开局 T 轮廓同时兑现，四格目标无拖尾完成；
+      中段 mixed-up 与终局 mixed-left 构成方向不同但角色呼应的双重闭合。
+    - >-
+      关卡没有 crate 或 sticky 噪声，直接要求玩家调用后期知识理解两个可移动二格锚、pull handle 与 mixed force chain；
+      机制暴露和认知要求符合 late_game_challenge，而不是教学关。
+  archive_taste_context_used:
+    - RA_CAND_0022：人评审美 5、难度 4；校准短步骤、强洞见与高空间复用的上界。
+    - RA_CAND_0017：人评审美 4、难度 5；校准高耦合末期挑战及大量腾挪的过载边界。
+    - RA_CAND_0026：人评审美 4、难度 4；校准纯双锚刚体题成立的 4 分基线，不把共享 anchor-as-rigid 命题视为新颖性。
+    - RA_CAND_0024：人评审美 1、难度 3；警戒双锚最终只兑现为普通推拉腾挪，以及迷信指标/探针的失败模式。
+  score_calibration:
+    human_archive_anchors_present: true
+    score_claim_allowed: true
+    archive_attack_calibration: complete_with_positive_and_negative_human_anchors
+    positive_anchors:
+      - RA_CAND_0022
+      - RA_CAND_0017
+      - RA_CAND_0026
+    lower_bound_or_negative_anchors:
+      - RA_CAND_0024
+    missing_anchor_effect: none
+  trace_metric_interpretation:
+    calibration_status: pilot
+    solution_execution_pressure:
+      metric_fact: >-
+        reality_anchor_trace_metrics_v0 对 exact v5 的 17 步 canonical 给出 aggregateBand=3，
+        solutionCost=17、nonWalkEventCount=16、heavyReuseRatio=0.0625；该快照不覆盖已发现的 21 步非最优胜路。
+      allowed_reading: >-
+        指标只说明 canonical 的执行与状态管理压力处于 band 3，不能证明洞见或因果依赖，也不能代表所有获胜体验。
+      player_facing_check: >-
+        canonical 六次对象动作均改变并消费后续状态，没有 padding；但 21 步胜路会在临时泊位后额外下移/上拉 P/L，
+        说明玩家可插入可恢复的普通腾挪，canonical 的六拍纯度不是 all-win 保证。
+      verdict_effect: caveat
+    solution_space_reuse:
+      metric_fact: >-
+        17 步 canonical 的 aggregateBand=4，revisitRate=0.3333333333333333、heavyReuseRatio=0.0625；
+        21 步 detour 的复用数据未包含在该 calibrated snapshot 中。
+      allowed_reading: >-
+        canonical 会回访同一目标/把手区；指标不判断这种回访是否优雅，也不能用未校准 detour 推高或压低分数。
+      player_facing_check: >-
+        canonical 中同一区域依次承担观察、B/S 临时泊位、P/L 上拉站位、右错位预终态和最终 T 闭合，
+        每次回访的局面责任不同，构成有状态的空间复用。
+      verdict_effect: merit
+    unmeasured_dimensions:
+      - causal_dependency
+      - player_insight
+      - counterintuitive_reframe
+      - surprise_and_payoff
+      - nonoptimal_route_experience
+  aesthetic_target_fit: >-
+    支持审美 4：双 mixed transition、临时完整泊位的把手反转和 final T closure 形成统一的六拍 canonical，
+    且 21 步 detour 仍不能绕开中段/终局两个核心 mixed gate。暂不支持 5：非最优胜路允许在最关键的临时泊位之后额外下移/上拉 P/L，
+    玩家实际体验未必保持六拍直连的纯净，惊喜仍主要集中在把手反转与最后一手。
+  difficulty_target_fit: >-
+    支持难度 4：所有胜路都要发现两次不同方向的 mixed n2，并经过“先完整泊位—再腾出把手—最终共同归位”的有序骨架，
+    因而不能仅靠把两个锚依次推到目标。暂不支持 5：正确 SCC 路径的承诺高度强制，且 21 步 detour 提供可恢复试探空间，
+    玩家可能通过局部操作逐步接近正确骨架，而不必持续维护多层可赢分支。
+  critic_items:
+    - id: PC2-01
+      type: score_boundary
+      target: player_insight
+      claim_relation: >-
+        双 mixed gate 与 final T closure 支持审美 4，但 21 步 detour 阻止把 canonical 六拍纯度外推为审美 5。
+      evidence_basis: >-
+        all-win mixed_chain_gate_probe 要求 n2>=2、中段 mixed-up 与终局 mixed-left；
+        stronger exact-transition probe 同时发现临时泊位后额外下移/上拉 P/L 的 21 步胜路。
+      player_facing_reason: >-
+        核心图形与因果回环不会被绕过，但部分玩家会在 payoff 前经历一次可撤回的普通腾挪，
+        使“完成—拆开—共同完成”的节奏不再总是最纯净的六拍展示。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2-02
+      type: score_boundary
+      target: why_not_execution
+      claim_relation: >-
+        必经的两次 mixed transition 足以支撑难度 4；强制承诺结构与可恢复 detour 不支撑难度 5。
+      evidence_basis: >-
+        required_on_all_wins 包含两次 n2 及两个 exact mixed transition；solution_irreversible_path_steps=3、
+        forced_win_prefix=3/3、forced_optimal_commitment_prefix=4/4，另有 21 步非最优胜路。
+      player_facing_reason: >-
+        玩家必须找到正确的双锚责任链，难度不是单纯解长；但找到核心关系后顺序很窄，
+        且局部试探可以撤回，缺少难度 5 所需的持续规划宽度。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2-03
+      type: nonblocking_risk
+      target: why_not_execution
+      claim_relation: >-
+        21 步 detour 证明“六次对象动作直接相邻”只属于 canonical，增加普通腾挪手感风险；该风险不升级为 blocker。
+      evidence_basis: >-
+        非最优胜路在 B/S 临时完整泊位后额外下移并上拉 P/L；但所有胜路仍必须经过 ordered states、
+        中段 mixed-up、终局 mixed-left 且 n2>=2。
+      player_facing_reason: >-
+        玩家可以在关键反转处做一次不必要但可恢复的 P/L 往返，因而未必以最精炼方式理解 step 15；
+        不过该往返不能替代释放把手、两次混链或最终共同闭合，核心体验没有退化成可绕过的普通搬运。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2-04
+      type: nonblocking_risk
+      target: player_insight
+      claim_relation: >-
+        新 probe 没有证明第一手背离目标在玩家眼中存在多个同样显然的选择；PC-04 不升级为 blocker。
+      evidence_basis: >-
+        initial_scc={states:68,out:3,win_out:1,dead_out:2}，布局允许玩家进入目标区观察并从下方接近 P/L；
+        packet 仍未把三个 SCC 出口逐一映射到玩家可见 affordance。
+      player_facing_reason: >-
+        直接向上靠近横目标仍是可信的目标导向诱饵，使 canonical 下推具备背离目标的意义；
+        图出口数量不能证明玩家会把多个方案看得同样有意义，但当前也没有“下推是唯一显然按钮”的正面玩家侧事实。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC2-05
+      type: diagnostic_note
+      target: evidence_support
+      claim_relation: >-
+        all-win 设计结论必须限定为 ordered states、n2>=2 和两个 exact mixed gate，不能再声称所有胜路都是六动作直连。
+      evidence_basis: >-
+        mixed_chain_gate_probe 未发现绕过核心 gate；更强 exact-transition probe 已找到 21 步 detour。
+      player_facing_reason: >-
+        前者保证所有玩家最终都要处理双锚共同受力，后者说明部分玩家可在过程中插入无必要往返；
+        两者分别约束核心结构与体验纯度，不能相互替代。
+      blocks_proposal_ready: false
+      expected_designer_response: answer_from_packet
+    - id: PC2-06
+      type: nonblocking_risk
+      target: lineage
+      claim_relation: >-
+        当前仍无与 RA_CAND_0026 完整因果链或布局骨架同构的正面事实，但 duplicate-check 不能作为审美 merit。
+      evidence_basis: >-
+        lineage_facts 仅报告共享 anchor-as-rigid 基础命题；exact v5 的玩家侧骨架另含 reciprocal handle release、
+        temporary full dock、两个方向的 mandatory mixed transition 与 final T closure。
+      player_facing_reason: >-
+        当前对象责任比纯双锚刚体命题更具体，足以避免把共享机制直接判作同构；
+        未提供逐项 archive 对照仍限制新颖性加分，因此只保留边界。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+  diagnostic_interpretations:
+    - graph_fact: >-
+        mixed_chain_gate_probe 完整覆盖 178 个 reachable states，所有胜路要求 force_chain:n2 count>=2，
+        且中段 bsLeft-to-mixedUp 与终局 plUp-to-win 两个 exact mixed transition 均不可绕过。
+      neutral_meaning: >-
+        任一获胜路径都包含两次指定方向、指定对象共同位移的混链门；这不等于玩家必须事先理解它们，也不等于只有一条输入序列。
+      player_facing_interpretation: >-
+        无论玩家如何试探，最终都必须让两个锚互相成为受力链的一部分，先共同上移形成临时泊位，再共同左移完成 T；
+        核心双锚责任不会退化为两个独立归位动作。
+      verdict_effect: merit
+    - graph_fact: >-
+        更强 exact-transition probe 找到 21 步非最优胜路：B/S 临时泊位后，P/L 会额外下移再上拉；
+        因而仅 17 步 canonical 保持六次对象动作直连。
+      neutral_meaning: >-
+        ordered core states 与两个 mixed gate 是全胜路事实，但 canonical 相邻转移和无额外对象动作不是全胜路事实。
+      player_facing_interpretation: >-
+        玩家可在关键反转后插入一次可恢复的局部搬动，削弱所有获胜体验都呈现六拍因果纯度的说法；
+        由于该搬动不能绕开两个 mixed gate，它增加执行噪声风险而不抹除核心洞见。
+      verdict_effect: caveat
+    - graph_fact: >-
+        initial_scc={states:68,out:3,win_out:1,dead_out:2}，solution_irreversible_path_steps=3，forced_win_prefix=3/3。
+      neutral_meaning: >-
+        初始可逆 SCC 有三个出口，仅一个进入可赢下游；赢解 SCC 路径的三个不可逆外出均位于强制前缀。
+      player_facing_interpretation: >-
+        开局具有承诺筛选但图数据不描述各出口的视觉显然性；进入正确结构后不可逆顺序收窄，
+        所以难度来自发现责任链而不是持续分支管理。
+      verdict_effect: caveat
+    - graph_fact: >-
+        initial_region={states:11,commitments:3,viable:3,optimal:1}，canonical_commitment_steps=[3,10,16,17]，
+        forced_optimal_commitment_prefix=4/4。
+      neutral_meaning: >-
+        初始局部区域有三个可行承诺候选、一个最优候选；canonical 的四个承诺点全部位于强制最优前缀。
+      player_facing_interpretation: >-
+        玩家可以探索多个承诺，但精炼解的承诺顺序没有宽度；这与短而强耦合的 late-game role 相容，
+        同时限制难度 5 的依据。
+      verdict_effect: caveat
+  handoff_notes:
+    - >-
+      PC-03 与 PC-04 均维持非阻塞：21 步 detour 增加“先挪再试”的手感风险，却无法绕开两次 mixed gate；
+      新事实也没有把开局下推证明成唯一显然按钮。
+    - >-
+      试玩时应记录玩家是否自然走入 21 步 detour，以及走入后是否仍能口头重建“临时泊位占把手—右移蓄势—final mixed-left”的责任链；
+      这是分数边界观察，不是当前提交前的缺失评审步骤。
+    - >-
+      当前仍判断审美 4、难度 4，不到 5；probe 完整性、winning_states=1 与 all-win 必经性均未被直接当作审美或洞见得分。
+
+claim_followup:
+  claim_read: true
+  verdict_changed: false
+  score_or_state_changed: false
+  change_summary: >-
+    revised claim 保留“先泊—腾位—同泊”的玩家洞见，并把 all-win falsification 精确收窄为任一胜路都不得绕过两次 mixed chain、
+    中段/终局 exact n2 transition；六拍直接消费则以“规范解”表述。PC2-05 的范围要求已满足，
+    但 PC2-03 的 detour 手感风险与 PC2-04 的开局显然性风险继续保留。最终仍支持审美 4、难度 4，不支持 5。
+  change_reason: >-
+    revised claim 没有把 21 步 detour 误写成核心绕过，也没有声称所有胜路都保持六动作直接相邻；
+    它与 facts 中 ordered states、n2>=2 及两个 exact mixed gate 一致。另一方面，claim 对“难度来自未来把手”与
+    “体验不是唯一显然动作/普通腾挪”的表述仍是待试玩检验的玩家侧主张，不能抹去非阻塞风险。
+  final_verdict: supports_with_noncore_caveats
+  final_review_loop_state: proposal_ready_with_caveats
+  final_required_action: none
+  final_critic_items:
+    - id: PC2-01
+      type: score_boundary
+      target: player_insight
+      disposition: retained
+      blocks_proposal_ready: false
+    - id: PC2-02
+      type: score_boundary
+      target: why_not_execution
+      disposition: retained
+      blocks_proposal_ready: false
+    - id: PC2-03
+      type: nonblocking_risk
+      target: why_not_execution
+      disposition: retained_after_claim
+      blocks_proposal_ready: false
+    - id: PC2-04
+      type: nonblocking_risk
+      target: player_insight
+      disposition: retained_after_claim
+      blocks_proposal_ready: false
+    - id: PC2-05
+      type: diagnostic_note
+      target: evidence_support
+      disposition: resolved_by_revised_scope_no_action
+      blocks_proposal_ready: false
+    - id: PC2-06
+      type: nonblocking_risk
+      target: lineage
+      disposition: retained_after_claim
+      blocks_proposal_ready: false

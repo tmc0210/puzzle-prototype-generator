@@ -1,0 +1,50 @@
+candidate_version: RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1
+review_iteration: 1
+packet_role: designer_claim_after_initial_fact_assessment
+read_order_contract: >-
+  Reviewer/critic 必须先只读 facts_packet 与硬证据，写定 initial assessment，随后才可读取本 claim packet。
+
+design_claim_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_design_claim.yml
+
+designer_claim:
+  player_insight: >-
+    箱子第一次到达上目标时不是完成，而是被 B/S 刷成临时 M；随后又被刷回 C、主动推离目标并再次变成 M。
+    末段 P/L 连续两次左拉把 M、P/L 与 B/S 终局线组成活塞：第一次把 M 拉回并刷回 C，第二次把 P 送入旧目标，
+    最后 C 改投中目标，S 接管底目标。唯一解的非线性来自同一目标和同一资源被反复重读，而不是第二条计划。
+  causal_chain:
+    - B/S 上拉建立第一次 C->M 刷线，并以 B 暂占中目标。
+    - 箱右拉到上目标成为 M；B/S 右拉同时让 M->C 并撤销中目标覆盖。
+    - P/L 下拉建立后半段推面和长轴余量。
+    - 玩家换侧后把上目标的 C 主动右推，第二次 C->M；B/S 随即下推，使 S 覆盖底目标。
+    - P/L 第一次左拉以 n2 携带 M 并 M->C；第二次 n2 让 P 接管上目标。
+    - 最后下拉 C 覆盖中目标，P/C/S 三责闭合。
+  why_not_execution: >-
+    execution5/space5 只是诊断结果。若玩家不需要理解目标撤销、双锚先后和 P/L+M 的末段混链，
+    或 singleton C/M 的变化只剩视觉标签，本 claim 不成立，不能靠指标放行。
+  uniqueness_claim_scope: >-
+    不声称输入字符串唯一；只声称在纯走位差异与完整回返空转被消去后，
+    所有可胜 simple 对象宏路径的十个必要动作及顺序唯一。该范围由 candidate-specific 桥审计支持。
+  aesthetic_hypothesis: >-
+    14格工作区、10次对象动作和三目标多次换责形成紧凑闭环，预期可达审美4；
+    是否达到5以及 singleton 材质循环是否过度标签化，完全交给独立 critic。
+  difficulty_hypothesis: >-
+    正解要求连续读出 B/S 抬升、箱目标临时化、B/S 横移刷回、P/L 换相、主动撤目标、
+    B/S 下压与双 n2 活塞，预期至少难度4；不以图分支数或指标直接推5。
+
+lexicon_used:
+  - B/S 移动边界刷产物：远程生成与门口消费
+  - P/L pull 抽取把手：前格门、占格目标门与扫带
+  - P/L 长轴墙廊：L 端余量棘轮（mixed-chain 补谱）
+  - 单箱目标活塞顺序锁：推入覆盖与回撤撤销
+
+new_linkage: >-
+  B/S 抬升刷入 M -> B/S 右拉刷回 C -> P/L 下拉换相 -> 单箱离位再刷 M ->
+  B/S 下压对齐 -> P/L 双级 n2 把 M 刷回 C 并接管旧目标 -> C 下拉、S 侧接管；
+  以移动边界、目标活塞和 mixed-chain 余量棘轮组成严格唯一的 P/C/S 三责回织链。
+
+claim_limits:
+  - 不把 one winning state 简写为唯一解证明。
+  - 不把两条最短纯走位入口差异包装成玩家决策分支。
+  - 不声称 singleton M 具有多格 sticky 几何。
+  - 不把 calibrated Trace Metric 当作洞见、难度或审美得分。
+  - 未经真人试玩，不声称错误分支的公平性已获验证。

@@ -1,0 +1,73 @@
+schema: reality_anchor_candidate_specific_search_result_v1
+status: NO_QUALIFYING_CANDIDATE
+scope: latch_material_revisit_payout_local_family
+submission_recommended: false
+queue_or_levels_changed: false
+
+comparison_floor:
+  name: role-relay exact
+  required_space_reuse_band: 4
+  required_unique_macro_chain: true
+  required_low_route_tax: true
+
+strongest_counterexample:
+  id: RA_LATCH_MATERIAL_REVISIT_MANUAL_K
+  layout_file: prototypes/Reality_Anchor/reports/RA_LATCH_MATERIAL_REVISIT_MANUAL_K.layout.txt
+  solution:
+    cost: 16
+    walk_events: 11
+    non_walk_events: 11
+    trace_metrics:
+      calibration: reality_anchor_trace_metrics_v0
+      execution_pressure_band: 3
+      space_reuse_band: 1
+      revisit_rate: 0
+      heavy_reuse_ratio: 0
+  graph:
+    status: complete
+    reachable_states: 945
+    legal_transitions: 1824
+    winning_states: 1
+  scc:
+    count: 126
+    win_reachable: 5
+    branching_win_sccs: 0
+    merging_win_sccs: 0
+    forced_win_prefix: 4
+    irreversible_steps: 4
+  mandatory_all_win_events:
+    - pattern: anchor_boundary_shift:box_sticky
+      min_count: 3
+      probe_status: complete_no_bypass
+    - pattern: pull_object:crate#3
+      min_count: 1
+      probe_status: complete_no_bypass
+    - pattern: pull_object:box_sticky_anchor
+      min_count: 1
+      probe_status: complete_no_bypass
+    - pattern: force_chain:n4
+      min_count: 1
+      probe_status: complete_no_bypass
+  rejection_reason: >-
+    唯一宏观职责链成立，但规范解用 11 步单通道回程换取锁定，空间复用仅 1 档，
+    不构成对 space-reuse 5 的 role-relay exact 基线的竞争。
+
+exhaustive_corridor_search:
+  script: prototypes/Reality_Anchor/reports/search_latch_material_revisit_corridors.ts
+  combinations: 4096
+  qualifying_hits: 0
+  filters:
+    max_cost: 18
+    max_walk_events: 12
+    complete_graph: true
+    unique_winning_state: true
+    required_events:
+      - anchor_boundary_shift:box_sticky>=3
+      - pull_object:crate#3>=1
+      - pull_object:box_sticky_anchor>=1
+      - force_chain:n4>=1
+    reuse_prefilter:
+      revisit_rate_gte: 0.325
+      or_heavy_reuse_ratio_gte: 0.047
+  boundary: local_family_only_not_global_impossibility
+

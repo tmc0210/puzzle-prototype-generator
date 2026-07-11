@@ -1,5 +1,7 @@
 # Level Spec Contract
 
+Status: obsolete.
+
 本文档定义 `curriculum_v2` 到具体关卡候选之间的中间层。它面向可泛化能力，不描述某个原型的历史关卡，也不替代 evaluator。
 
 核心观点：

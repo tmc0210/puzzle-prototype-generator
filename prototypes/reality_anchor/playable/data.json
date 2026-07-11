@@ -413,25 +413,6 @@
       {
         "id": "RA_FRESH_2026_07_09_L_SWEEP_DOOR_PULL_v6",
         "title": "L sweep door pull v6",
-        "role": "challenge",
-        "status": "candidate",
-        "targets": [
-          "K_runtime_smoke"
-        ],
-        "known_before": [
-          "K_runtime_smoke"
-        ],
-        "target_learning": [
-          "K_runtime_smoke"
-        ],
-        "support_level": "none",
-        "expected_solver_evidence": [
-          "solvable",
-          "player_win_standard",
-          "expected_trace_replays",
-          "full_graph_complete"
-        ],
-        "expected_llm_player_evidence": [],
         "layout": "###########\n###PL######\n###########\n###########\n###MM.#####\n###@.M#####\n###..SG.MM#\n#####B#####\n#####.#####\n###########",
         "lineage": {
           "source": "fresh_design_review_loop",
@@ -526,6 +507,696 @@
             "events": [
               "pull_object",
               "move_sticky_rigid"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_FRESH_2026_07_10_CHAIN_EXTRACT_BIND_v6",
+        "title": "Chain extract bind v6",
+        "layout": "##########\n##PLBS####\n##########\n##.....###\n#.CCG...##\n#@###MG###\n##########",
+        "lineage": {
+          "source": "fresh_design_review_loop",
+          "created_by": "codex",
+          "created_at": "2026-07-10"
+        },
+        "design_notes": "Fresh Reality Anchor candidate from the 2026-07-10 design-review loop. The compact claim is a fixed P/L chain extract into fixed B/S material bind: the shortest route uses two consecutive P-side chain pushes, leaves a residual crate covering the left target, converts the chain-end crate into sticky material, merges it with the waiting M, then uses an L-side pull to move the merged sticky vertical body so the lower waiting sticky cell covers the lower target. Full graph analysis is complete: shortest cost 9, 68 reachable states, 130 legal transitions, and 1 winning state. Event-count probes prove every win requires push_object >= 2, force_chain >= 1, pull_object >= 1, box_to_sticky >= 1, sticky_merge >= 1, and move_sticky_rigid >= 1; force_chain >= 2 is only an intended-shortest-route fact because a 21-step alternate uses one force_chain. Fixed-anchor scans report no reachable P/L or B/S anchor shift. Goal-prune checks retain both targets: removing the left target admits a one-push shortest win, while removing the lower target collapses the puzzle to 2 steps and bypasses pull, material bind, and sticky-rigid movement. Opening comfort and redundant-element prune were completed for this exact v6. Independent evidence review_2 returned supports_with_caveats / required_action:none; independent puzzle critic review_2 returned proposal_ready_with_caveats / required_action:none, supporting aesthetic 4 floor and difficulty 3 floor, but not 5/4.\n",
+        "expected_trace": [
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "force_chain"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "force_chain",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v6",
+        "title": "边界改写·切尾重黏 v6",
+        "layout": "###########\n#@.PL...###\n#...B.##..#\n#..#S..M..#\n#....#.mMG#\n#...##....#\n###########",
+        "lineage": {
+          "source": "human_feedback_revision",
+          "source_candidate_id": "RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v5",
+          "created_by": "codex",
+          "created_at": "2026-07-10"
+        },
+        "design_notes": "v5 的人类反馈微调版：在原 9x5 有效区域外补回完整一层墙框，确保玩家和所有可走格都不直接 接触版面边缘。内部地形、对象、目标、起点相对关系与解法完全不变。验证结果仍为最短解 12、 完整图 974 states / 2534 transitions / 1 winning state，最短事件序列与 v5 完全一致。 用户明确要求按不会改变解的纯外框微调直接加入，不追加独立复审。\n",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5",
+        "title": "方阵修补·拆分交接 v5",
+        "layout": "############\n#####LP#####\n#######...##\n#####.CC...#\n#.GG..C.#.B#\n##GG...M..S#\n######@.#..#\n############",
+        "lineage": {
+          "source": "fresh_design_review_loop",
+          "created_by": "codex",
+          "created_at": "2026-07-10"
+        },
+        "design_notes": "全新 Reality Anchor 后期挑战。玩家先以可逆走位选择补角把手，把 M 跨 B/S 刷成箱并补齐 箱态 2x2；随后移动 B/S 生成 CC/MM 混合刷形，从唯一上口纵剪右列得到单箱与 L3。 单箱必须先让位，再由固定 P/L 在 pull 侧抽成缺角 M；L3 与单格于偏移位重并为黏态 2x2， 最后整体左拉覆盖四目标。完整图 165454 states / 413620 transitions / 1 winning state， 最短解 23。完整探针证明所有胜路都经过箱态 2x2、黏态 2x2、指定 1+3 分裂态与指定偏移 重绑态，并满足 B/S 位移、sticky_to_box、box_to_sticky >=3、sticky_merge >=3、force_chain、 pull 与 sticky 刚体移动 >=5；P/L 在完整可达图中从不移动。独立 evidence review_4 与 puzzle critic_4 均为 required_action none，critic 保守支持审美 4 / 难度 4，均不支持 5。 exact v5 已按固定顺序完成 invalid_goal_prune、opening_comfort_check、redundant_element_prune； 四目标全部保留，开局为 13 状态可逆 SCC，外框无可继续裁剪要素。\n",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "move_sticky_rigid",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "force_chain",
+              "move_sticky_rigid",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_object"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object",
+              "box_to_sticky"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6",
+        "title": "双锚编结·目标接力 v6",
+        "layout": "######\n##.G.#\n#.G.S#\n#@PLB#\n#...##\n#..###\n######",
+        "lineage": {
+          "source": "fresh_design_review_loop",
+          "source_candidate_id": "RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5",
+          "created_by": "codex",
+          "created_at": "2026-07-10"
+        },
+        "design_notes": "全新 Reality Anchor 后期双锚挑战，无箱与黏块。P/L 先下推释放旧 L 半格，玩家借该格 左拉 B/S；随后从下方推 P/L，使两锚第一次 n2 同链上移，S 端临时覆盖上目标。 B/S 必须右移撤销覆盖并腾出 P/L pull 把手；P/L 上拉后由 P 端先覆盖下目标，最后左拉 B/S 触发第二次 n2：S 恢复上目标，同时 P/L 左移把下目标覆盖从 P 端接力给 L 端。 最短解 17；完整图 178 states / 422 transitions / 1 winning state。完整探针证明所有胜路 都要求两种锚点位移与 pull、至少两次 force_chain:n2，并经过指定中段上移和终局左移。 独立 evidence review_2 与 puzzle critic_2 在 v5 上均为 required_action:none / proposal_ready_with_caveats，critic 保守支持审美 4 / 难度 4，均不支持 5。按原型专属 pre_submission_check，v6 删除 v5 的两个冗余引导目标，不重走 review；exact v6 已重跑 solver、完整图、expected trace 与核心事件门，并依次完成 invalid_goal_prune、 opening_comfort_check、redundant_element_prune。剩余两目标任删都会降为 3/4 步并绕过核心； 当前起点两个首步均为 walk，最近不可逆出口距离 3；两锚、空地与外框均无可再裁项。 保留非阻塞边界：存在 21 步可恢复 P/L 往返 detour，不声称所有胜路都是六拍直连。\n",
+        "expected_trace": [
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object",
+              "force_chain",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "force_chain",
+              "anchor_boundary_shift"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "STUDIO_L_1",
+        "title": "匠心手作1",
+        "layout": "########\n# #*m###\n#C GBSL#\n#    #P#\n# G@####\n########",
+        "design_notes": "Curriculum slot 1 intro witness. No anchors and no material mechanics: the player walks once, then pushes one crate onto one target. Solver evidence gives a 2-step shortest solution and complete graph; event probe proves every win path requires push_object. Independent evidence reviewer returned supports_claim / required_action:none; independent puzzle critic returned proposal_ready_with_caveats / required_action:none for first-slot role fit. Caveat: this is only an intro witness, not a depth-bearing puzzle. 2026-07-04 human playtest accepted it as RA_CAND_0007, aesthetic 2 / difficulty 1: the most basic no-anchor teaching level.\n",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object"
+            ]
+          }
+        ],
+        "lineage": {
+          "source": "package",
+          "source_level_id": "RA_CURR_2026_07_05_L01_INTRO_PUSH_v1",
+          "created_by": "web_editor",
+          "created_at": "2026-07-10T16:30:54.083Z"
+        }
+      },
+      {
+        "id": "RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17",
+        "title": "双锚织桥·切键回扣 v17",
+        "layout": "##########\n##PL..GG.#\n###.#....#\n##MMM.####\n#.@M...###\n#...S..M##\n###GBC*C##\n###.GGG###\n###GG#####\n##########",
+        "lineage": {
+          "source": "fresh_design_review_loop",
+          "source_candidate_id": "RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16",
+          "created_by": "codex",
+          "created_at": "2026-07-11"
+        },
+        "design_notes": "全新 Reality Anchor 末期双锚挑战。玩家借 L 形缺角侧拉 B/S，把三箱刷入并拼成共享 U 形刚体；横移、再吸收并整体抬升该轮廓后，才可进入上层从 L 侧将 P/L 泊入目标对。 回到底部后必须让共享桥跨 B 侧切回三个箱，再移动 B/S 只重黏其中两格，保留一格独立 承担底目标。最短解 28，规范 trace 41 个非 walk 事件；完整 event-avoiding BFS 证明 所有胜局都必须发生 sticky_merge、sticky_to_box、box_to_sticky 及两种锚点位移。 sticky_split 只在规范最短解中出现，不主张所有胜局必经；主图在 1,000,000 状态预算耗尽， 不主张唯一解或完整分支质量。独立 evidence review_2 与 puzzle critic_2 均为 required_action:none / proposal_ready_with_caveats；critic 以人评档案校准后支持审美4、难度4， 均不支持5。按固定顺序完成 goal_prune、opening_comfort、redundant_element_prune：九目标 全部保留，当前起点有5状态可逆 SCC、两个纯 walk 首步且无前置死出口；内部疑似冗余空格 因完整图未知保留，仅裁去一列纯外墙形成坐标平移同构 v17，并已重跑 exact solver、trace、 五项核心事件门与开局 SCC。目标删减随后按同一非终止式100万状态前缀重新执行；任删一个 目标都会新增4至48个胜态键，因此九目标均非预算内伪唯一解等价项，全部保留。\n",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "pull_object",
+              "force_chain",
+              "anchor_boundary_shift",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "move_sticky_rigid",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "force_chain",
+              "anchor_boundary_shift",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "pull_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "move_sticky_rigid"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "move_sticky_rigid",
+              "sticky_to_box",
+              "sticky_split"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object",
+              "force_chain",
+              "anchor_boundary_shift",
+              "move_sticky_rigid",
+              "box_to_sticky",
+              "sticky_merge"
             ]
           }
         ]

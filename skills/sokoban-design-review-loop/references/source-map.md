@@ -21,14 +21,14 @@
 | 没有 human archive anchors 时禁止分数化审美 / 难度结论 | `docs/20-multi-agent-prompt-templates.md` `## Candidate Packet Template`, `## Puzzle Design Critic Template`; `docs/21-current-workflow-standard.md` `### Archive Taste Context` |
 | 未归档 / 未完成材料默认不能作为正向审美、难度或分数校准 | `new_glue_rule`: 未进入 clean human-reviewed archive 或未经人类明确追认的 round/report/critic-only score 默认按流程失效或未获接收处理 |
 | critic archive anchors 必须包含正例和低分 / 失败 / 下界人评例，critic 可主动读取更多 clean human-reviewed 条目增强攻击性 | `new_glue_rule`: 防止只给正例导致 critic 攻击性不足 |
-| 证据完整性不是 critic merit；`strongest_merits` 只能写玩家侧审美 / 难度 / role-fit 优点 | `docs/21-current-workflow-standard.md` `## Roles`, `## Diagnostic Routing`, `## Review Loop`; `docs/30-scc-graph-diagnostic-reading.md`; `new_glue_rule`: 防止 admission-control 事实被写成设计优点 |
+| 证据完整性不是 critic merit；`player_facing_merits` 只能写玩家侧审美 / 难度 / role-fit 优点 | `docs/21-current-workflow-standard.md` `## Roles`, `## Diagnostic Routing`, `## Review Loop`; `docs/30-scc-graph-diagnostic-reading.md`; `new_glue_rule`: 防止 admission-control 事实被写成设计优点 |
 | SCC / graph 解释链 | `docs/30-scc-graph-diagnostic-reading.md` `## Core Rule` |
 | Prototype-specific workflow 不默认泛化 | `docs/21-current-workflow-standard.md` `### Prototype-Specific Work`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md` `## Prototype-specific Extension Requirement` |
 | 未授权 archive candidate 变体禁令 | `docs/21-current-workflow-standard.md` `### Variant / Family Diagnostic`, `### Archive Taste Context`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md` |
-| 机制暴露 sequence 与 `allowed_exposure_through` 硬证据门 | `prototypes/ice_slide_escape/docs/mechanic_exposure_sequence.yml`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md`; `new_glue_rule`: 最高知识 / exposure claim 必须由 all-solution required gate 和完整 reachable scan 支持 |
+| 机制暴露 sequence 与 `allowed_exposure_through` 硬证据门 | `prototypes/ice_slide_escape/docs/mechanic_exposure_sequence.yml`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md`; `new_glue_rule`: exposure claim 必须由 all-solution required gate 和完整 reachable scan 支持 |
 | design handoff 文件 | `new_glue_rule`: 将已存在的 prototype docs 以机器可读索引交给通用 skill |
 | interface pair policy 由原型 handoff / brief 声明，generic critic 只服从不发明 | `new_glue_rule`: 防止原型专属 pair 风险在通用 skill 中漂移 |
-| `kind: pre_submission_check` 只在候选准备提交给人类查看或加入待玩队列前运行，不进入 reviewer / critic packet | `new_glue_rule`: 将原型专属自然语言 polish checklist / cleanup checklist 接入提交动作前检查 |
+| `kind: pre_submission_check` 只在候选准备提交给人类查看或加入待玩队列前运行 | `new_glue_rule`: 将原型专属自然语言 polish checklist / cleanup checklist 接入提交动作前检查 |
 | playable queue 当前实现 | `src/playable/repository.ts`; `prototypes/<mechanic_id>/playable_queue.yml` 是唯一待玩队列入口 |
 
 ## Drift sentinels
@@ -44,9 +44,9 @@
 - archive taste context 使用没有人类评语的条目。
 - 未归档 / 未完成材料中的 critic 分数、designer 自评或 tool-only 质量结论被当作正向 taste anchor。
 - critic / designer 在没有 human archive anchors 时输出 `4`、`4+`、`4-`、`low 4`、`meets 4` 或其他分数化结论。
-- evidence reviewer 用 `supports_with_caveats` 保留不被证据支持的 central mechanism / knowledge / exposure claim。
+- evidence reviewer 用 `supports_with_caveats` 保留不被证据支持的 central mechanism / exposure claim。
 - prototype-specific workflow 在未声明时被默认执行。
 - design corpus 未经 handoff / brief 明确列出就被读取，或读取了 excluded sources。
 - designer 从 archive candidate 开始改题，但 brief 没有明确授权候选 id 和允许操作。
-- critic 把 handoff 声明为 ignored 的 pair 解读成 caveat、core attack 或审美风险。
-- 提交前 polish / cleanup checklist 被放入 reviewer / critic packet、用于改变 review_loop_state、证明 failed_search，或未完成时仍执行对应提交动作。
+- critic 把 handoff 声明为 ignored 的 pair 解读成 caveat、core blocker 或审美风险。
+- 提交前 polish / cleanup checklist 的细节被放入 reviewer / critic packet、用于改变 review_loop_state、证明 failed_search，或未完成时仍执行对应提交动作。

@@ -3,9 +3,8 @@
 Status: active execution contract for level design, review, and archive-facing
 proposal states.
 
-本文档只定义当前可执行的单关设计与审查协议。它不定义
-`ruleset -> player_model -> curriculum -> level_specs` 的完整自动流程，也不把
-SCC、variant、taste 或 prototype-specific redesign 当成每关必跑的通过条件。
+本文档定义当前可执行的单关设计与审查协议。SCC、variant、taste 和
+prototype-specific redesign 由 routing 按需触发。
 
 旧版本中很多流程片段已经在实践中有效，例如 analyzer-backed revision、
 reuse-strengthen、critic attack / designer action、SCC reading、variant
@@ -76,17 +75,18 @@ critic artifact，必须把 review_integrity 标为 `self_review_only`、`missin
   family_iteration_2:
     如有必要，开始不同的因果链 family
 
-pre_playable_queue:
-  运行被 routing 触发且声明为入待玩列表前执行的原型专属最小清理。
-  若清理改变 layout、起点、目标、对象或胜利实例，必须作为新的
-  candidate_version 重跑必要证据和 review。
+pre_submission_check:
+  运行被 routing 触发且声明为提交给人类查看或加入待玩列表前执行的
+  原型专属最小清理。通常在review loop 之外完成，如清理未改变胜利实例，不需要完成后重复本阶段或重跑review流程，仅重跑必要证据验证核心逻辑不变即可。
 
-playable_queue / human_playtest:
-  人类游玩的是 exact candidate_version。反馈只绑定到这个版本。
+human_handoff / playable_queue:
+  人类接收的是 exact candidate_version。proposal_ready 表示 agent 已经对
+  当前版本的核心玩家读法、证据边界和 role fit 负责；人类反馈是所有权移交后的
+  外部判断，不是 agent review loop 的缺失验证步骤。
 
-post_playtest_feedback_routing:
+post_handoff_feedback_routing:
   ready_for_archive -> archive pass
-  needs_revision -> 新 candidate_version，回到 design / review / pre_playable_queue
+  needs_revision -> 新 candidate_version，回到 design / review / pre_submission_check
   reject -> rejected_candidate 或移出待玩列表
   hold -> held_proposal
 
@@ -95,14 +95,14 @@ archive pass:
   也不得做布局、起点、目标、对象或胜利实例变更
 ```
 
-所有会改变 solve instance 的最小清理必须发生在加入待玩列表前。人类游玩之后若
-发现仍需清理、压缩或修补，结果是新版候选，并重新进入待玩列表；不能在
-archive pass 中黑盒改动后直接归档。
+所有会改变 solve instance 的最小清理必须发生在人类 handoff / 加入待玩列表前。
+handoff 之后若人类反馈要求清理、压缩或修补，结果是新版候选，并重新进入
+design / review / pre_submission_check；不能在 archive pass 中黑盒改动后直接归档。
 
-`designer_action_N` 永远不能关闭 review loop。核心攻击只能由后续
-`review_N+1`、更晚的独立 review，或人类 review 关闭。designer 若认为 critic
-漏读证据，只能提交 `evidence_disagreement` 给下一轮 review；这不是提交给人类
-的最终材料。
+`designer_action_N` 永远不能关闭 review loop。阻塞性 critic item 只能由后续
+`review_N+1`、更晚的独立 review，或人类明确接收当前风险并接管所有权来关闭。
+designer 若认为 critic 漏读证据，只能提交 `evidence_disagreement` 给下一轮
+review；这不是提交给人类的最终材料。
 
 critic 之后没有“继续下一个阶段”。`review_N` 之后只有这些动作：
 
@@ -125,9 +125,8 @@ prototype_context:
 
 slot_brief:
   intended_role:
-  known_before:
   target:
-  difficulty_or_support_expectation:
+  difficulty_expectation:
 
 mechanic_exposure_context:
   allowed_exposure_through:
@@ -162,12 +161,27 @@ evidence:
   commands_run:
   solver_result:
   trace_summary:
-target_events:
-object_or_instance_evidence:
-winning_path_event_checks:
-reachable_event_exposure:
-graph_or_counterfactual_evidence:
-evidence_limits:
+  target_events:
+  object_or_instance_evidence:
+  winning_path_event_checks:
+  reachable_event_exposure:
+  graph_or_counterfactual_evidence:
+  evidence_limits:
+
+hard_fact_summary_for_critic:
+  solver:
+  required_or_forbidden_events:
+  routed_diagnostic_facts:
+  calibrated_trace_metrics: # required, puzzle_critic_only
+  evidence_limits:
+  artifact_refs:
+
+player_facing_reading:
+  opening_read:
+  intended_solution_read:
+  commitment_points:
+  state_responsibility:
+  payoff_and_resolution:
 
 diagnostic_routing:
   activated:
@@ -184,6 +198,17 @@ attempt_log:
 个解法为什么对目标玩家有设计价值。一个候选可以有有效 causal_chain，但仍然
 无法支撑自己的 design_claim。
 
+`hard_fact_summary_for_critic` 只给 critic 提供精简事实索引和 artifact refs；
+完整 solver / graph / probe 数据仍由 evidence reviewer 审查。critic 的主要输入
+是 `player_facing_reading`：它把当前候选声称的玩家体验落到全视野局面、正解
+关键动作、不可逆提交、状态责任和终局 payoff 中。
+
+`calibrated_trace_metrics` 是送审包必填的 critic-only 区块，不属于 `evidence`，
+evidence reviewer 不审查它。designer 必须将当前 exact candidate 的
+`analysis.solution.traceMetrics.calibrated` 原样写入，不得自行重算或省略。若原型
+校准状态为 `unavailable`，该字段只含状态与原因。它不能证明 `design_claim`、玩家
+洞见、因果依赖、反直觉或整体审美。
+
 ## Design Studio Loop
 
 lead designer 在 review 前必须自己完成设计和证据读取：
@@ -192,9 +217,16 @@ lead designer 在 review 前必须自己完成设计和证据读取：
 2. 设计 layout，并声明求解实例。
 3. 运行 solver / analyzer / evaluator 中本轮允许的工具。
 4. 读 trace、事件、对象参与、图事实、反事实和工具边界。
-5. 完成 diagnostic routing。
-6. 若证据不支持 claim，修正、降级、放弃或换 family。
-7. 只有 evidence-supported candidate 才进入 review loop。
+5. 写 `player_facing_reading`，说明玩家在关键局面看见什么、为什么做正解动作、
+   哪些提交点需要比较、状态如何被创建和消费、终局如何兑现前面的读法。
+6. 完成 diagnostic routing。
+7. 若证据不支持 claim，或 `player_facing_reading` 无法支撑核心 claim，修正、
+   降级、放弃或换 family。若工具找到绕过设计预期的胜路，先看预期解比旁路多
+   做出了什么；快速检索本轮已授权的设计语料，有结构能利用这个差异就复用或
+   改造，没有则围绕这个差异自行设计。当前布局装不下时可以插入行列或平移局
+   部，不能把固定尺寸内加墙失败或语料中没有现成条目当作 family 不可行。只有
+   加入所需限制后核心读法被明显淹没时，才放弃或换 family。
+8. 只有 evidence-supported 且玩家侧读法可被攻击的 candidate 才进入 review loop。
 
 如果修改了 layout、起点、终点、胜利条件、核心机制使用或 design_claim，旧证据
 和旧 critic 结论不得继承。必须重跑必要证据，并把新版本送入下一轮
@@ -229,7 +261,7 @@ diagnostic_routing:
     status: triggered | not_applicable | unavailable | unknown
     reason:
   prototype_specific_work:
-    kind: diagnostic | redesign_stage | paired_design_mode | pre_playable_queue_cleanup | post_playtest_feedback_routing | not_applicable | unknown
+    kind: diagnostic | redesign_stage | paired_design_mode | pre_submission_check | post_handoff_feedback_routing | not_applicable | unknown
     status: triggered | not_applicable | unavailable | unknown
     reason:
 ```
@@ -343,8 +375,8 @@ variant 诊断的目的不是打分，而是防止旋转、平移、加长、移
 diagnostic:
   对候选做额外检查或证据读取。
 
-pre_playable_queue_cleanup:
-  已确定候选骨架后、加入待玩列表前执行的最小布局清理或一致性检查。
+pre_submission_check:
+  已确定候选骨架后、加入待玩列表或提交给人类查看前执行的最小布局清理或一致性检查。
   它可以改变 layout / start / targets / objects，但一旦改变 solve instance，
   必须产出新的 candidate_version，并重跑必要证据和 review。
 
@@ -355,14 +387,12 @@ paired_design_mode:
   由原型文档或 experiment brief 显式启用，同时设计和审查一组互相关联的
   solve instances；它不是默认流程。
 
-post_playtest_feedback_routing:
-  人类游玩之后根据反馈决定归档、修订、删除或搁置。若处理反馈需要改变
-  solve instance，结果是新版候选，必须重新经过 review 和 pre_playable_queue。
+post_handoff_feedback_routing:
+  人类 handoff 之后根据反馈决定归档、修订、删除或搁置。若处理反馈需要改变
+  solve instance，结果是新版候选，必须重新经过 review 和 pre_submission_check；若为明确的微调，可以直接修改并验证是否解结构改变，如未变化可以跳过 review。
 ```
 
-meta-interface、重访入口、跨关连通、大地图接口等都不是通用流程默认项。只有
-prototype docs 或 experiment brief 明确声明时才触发。通用流程不得假设所有游
-戏都有 meta 机制。
+`pre_submission_check` 都是微调结构，通常只需标记完成，不需要再次review。
 
 如果原型专属工作是 `redesign_stage` 或 `paired_design_mode`，不要把它执行成
 机械筛查或边缘枚举。只有 prototype docs、experiment brief 或人类请求明确授权
@@ -467,17 +497,33 @@ review_input_type: candidate_version | evidence_disagreement | revised_claim | o
 verdict:
 review_loop_state:
 required_action:
-core_attacks:
-noncore_caveats:
-questions_for_designer:
+player_facing_merits:
+critic_items:
+  - id:
+    type: core_blocker | context_gap | nonblocking_risk | improvement_opportunity | score_boundary | diagnostic_note
+    target: player_insight | why_not_execution | role_fit | evidence_support | diagnostic_reading | taste_calibration | lineage
+    player_facing_reason:
+    evidence_basis:
+    blocks_proposal_ready: true | false
+    expected_designer_response:
+diagnostic_interpretations:
+handoff_notes:
 ```
 
 如果 `required_action` 不是 `none`，`review_loop_state` 不能是
 `proposal_ready` 或 `proposal_ready_with_caveats`。
 
+critic 输出统一使用 `critic_items`。每个 item 都必须说明它是阻塞项、上下文缺口、
+非阻塞风险、优化机会、分数边界还是诊断记录。若存在 `blocks_proposal_ready: true`
+的 item，`required_action` 不能是 `none`。
+
+核心玩家读法、role fit 和 why-not-execution 在当前 review 中路由：当前可判断
+时写当前判断；当前材料不足时写 `context_gap`；只是主观手感风险时写
+`nonblocking_risk` 或 `handoff_notes`。
+
 如果 reviewer / critic 攻击 central `player_insight`、`why_not_execution`、证
-据支持或 role fit，候选不能进入 `proposal_ready` 或
-`proposal_ready_with_caveats`。lead designer 必须选择：
+据支持或 role fit，或 critic item 标记 `blocks_proposal_ready: true`，候选不能
+进入 `proposal_ready` 或 `proposal_ready_with_caveats`。lead designer 必须选择：
 
 - 结构修改并重跑证据；
 - 提交具体证据异议或失败尝试给下一轮 review 判断；
@@ -490,11 +536,13 @@ questions_for_designer:
 lineage/taste 失败；这些问题必须通过结构修改、claim 收窄后进入下一轮 review、
 hold、reject 或 change family 处理。
 
-“承认核心 caveat 但仍通过”不是有效动作。
+“承认核心 caveat 但仍通过”不是有效动作。designer 不必须接受 critic 的每个判断，
+但必须对每个 critic item 做 triage：修改、引用 packet 回答、下一轮补上下文、
+接受为非阻塞、说明拒绝理由、降级 / hold 或换 family。
 
 `designer_action_N` 之后如果还想推进候选，必须进入 `review_N+1`。没有后续独
-立 review 或人类 review 的 designer action 不能关闭核心攻击，也不能产生
-`proposal_ready*`。
+立 review，或没有人类明确接收当前风险并接管所有权的 designer action，不能关闭
+阻塞性 critic item，也不能产生 `proposal_ready*`。
 
 ## Terminal States
 
@@ -503,14 +551,16 @@ hold、reject 或 change family 处理。
 ```text
 proposal_ready:
   最新 review iteration 对最新 candidate version 输出 required_action: none，
-  且没有未关闭核心攻击。可进入待玩列表、提交给人类设计师或进入
-  campaign-level comparison，但不是 accepted，也不是 clean_archive。
+  且没有 `blocks_proposal_ready: true` 的未处理 critic item。它表示 agent 已经
+  基于当前证据和玩家侧读图判断，对 exact candidate version 作为成品候选负责。
+  可进入待玩列表、提交给人类设计师或进入 campaign-level comparison，但不是
+  accepted，也不是 clean_archive。
 
 proposal_ready_with_caveats:
   最新 review iteration 对最新 candidate version 输出 required_action: none。
   核心 design_claim 成立，剩余 caveats 不破坏 player_insight、
   why_not_execution、evidence support、role fit，也不是未授权变体问题。若进入
-  待玩列表，caveats 必须随 candidate packet 保留。
+  待玩列表，非阻塞 `critic_items` 和 handoff notes 必须随 candidate packet 保留。
 
 revise_required:
   存在可修复的结构或证据问题。必须回到 design studio loop。
@@ -534,11 +584,16 @@ structural_redesign_needed:
 `accepted`、`mainline`、`positive_reference` 和 `reference` 不是 LLM designer
 自有状态。它们只能由人类设计师或显式授权的 campaign selection 过程授予。
 
-## Playtest Queue And Archive Routing
+## Human Handoff And Archive Routing
 
-待玩列表是人类 playtest queue。进入待玩列表前，必须完成当前原型声明为
-`pre_playable_queue_cleanup` 的最小清理；未触发或不适用的流程只记录 routing
-结论，不要求把原型专属细节写进每次通用 review 材料。
+待玩列表 / 人类查看是 ownership handoff。进入这个阶段的 exact candidate
+version 应已经由 agent 完成当前证据、玩家侧读图和 role fit 判断；核心 critic
+问题在 handoff 前通过当前判断、补上下文后重审、降级 / hold、reject 或 change
+family 处理。
+
+进入待玩列表或提交给人类查看前，必须完成当前原型声明为
+`pre_submission_check` 的最小清理；未触发或不适用的流程只记录 routing 结论，
+不要求把原型专属细节写进每次通用 review 材料。
 
 人类反馈只作用于被游玩的 exact candidate_version：
 
@@ -547,7 +602,7 @@ ready_for_archive:
   归档同一版。archive pass 只记录流程、证据和人类评语，不再改变布局。
 
 needs_revision:
-  修改后生成新 candidate_version，回到 design / review / pre_playable_queue，
+  修改后生成新 candidate_version，回到 design / review / pre_submission_check，
   再重新加入待玩列表。
 
 reject:
@@ -618,7 +673,6 @@ exploration pressure 或建议覆盖方向，但数量达标不证明质量，�
 
 ## What Is Not Solved
 
-- `ruleset -> player_model -> curriculum -> level_specs` 尚未验证为可靠自动流程。
 - 工具可以报告证据，但不能自动评价 puzzle quality。
 - LLM critic 仍可能误判 taste；人类评语和归档正反例仍是重要审美来源。
 - 本标准不能保证 LLM designer 会产出好关。它只能降低伪通过、伪归档和证据漂移。

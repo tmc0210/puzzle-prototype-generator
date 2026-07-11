@@ -1,4 +1,4 @@
-import type { LevelDoc, LevelRole, Point, PrototypePackage, SupportLevel, WinCondition } from "../../../core/types.js";
+import type { LevelDoc, Point, PrototypePackage, WinCondition } from "../../../core/types.js";
 import { analyzeLevel, type LevelAnalysis } from "../../../workflows/levelAnalyzer.js";
 import { eventMatchesPattern } from "../../../core/events.js";
 import { getRuntimeAdapter } from "../../runtimeAdapter.js";
@@ -9,9 +9,6 @@ type PointTuple = [number, number];
 export type IceSlideStartComparisonOptions = {
   id: string;
   title: string;
-  role: LevelRole;
-  supportLevel: SupportLevel;
-  targets: string[];
   playerGoal: PointTuple;
   starts?: PointTuple[];
   requiredWinningEvents: string[];
@@ -123,7 +120,6 @@ function compareSingleStart(
       maxStates: options.maxStates,
       maxDepth: options.maxDepth,
       graphMaxStates: options.graphMaxStates,
-      bypassMaxStates: options.graphMaxStates ?? options.maxStates,
     });
     const adapter = getRuntimeAdapter(pkg.mechanic);
     const runtime = adapter.createRuntime(pkg.mechanic);
@@ -225,14 +221,6 @@ function buildLevel(
   return {
     id: `${options.id}_start_${playerStart[0]}_${playerStart[1]}`,
     title: `${options.title} start ${formatPoint(playerStart)}`,
-    role: options.role,
-    status: "candidate",
-    targets: options.targets,
-    known_before: [],
-    target_learning: options.targets,
-    support_level: options.supportLevel,
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout,
     win: {
       type: "ice_slide_escape_explicit_goal",

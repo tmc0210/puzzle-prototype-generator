@@ -1,0 +1,247 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10
+review_input_type: candidate_version
+verdict: revise_required
+review_loop_state: revise_required
+required_action: structural_revision
+review_method:
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_initial_review: true
+
+initial_review:
+  verdict: revise_required
+  review_loop_state: revise_required
+  required_action: structural_revision
+  player_facing_merits:
+    - >-
+      23 步主线并非仅靠长度成立：step1-2 的缺角推后正交拉同时搬动 L 黏块与 B/S，
+      立刻把三箱刷成桥；step7 的再次拼接、step8 的边界相位横移、step11 的整体抬升，
+      都改变了后续能否进入 P/L 上路以及终局列对齐，前态会被后态消费。
+    - >-
+      开局的 L 缺角、下方三箱桥、远端黏端和密集目标给出了可见的形状问题；规范解把材料从
+      独立箱转为共享刚体，再切回三箱并重织两箱横条，确实使用了黏块几何，而非只触发事件标签。
+    - >-
+      step22 到 step23 的“中排暂满但底部仍空”形成可回读的未完成态；终局材质分配让两箱重黏、
+      第三箱保持独立，并让玩家回看中段 B/S 相位调整为何必要。
+  archive_taste_context_used:
+    - candidate_id: RA_CAND_0022
+      human_reviewed: true
+      human_scores: {aesthetic: 5, difficulty: 4}
+      use: >-
+        正标尺要求短解中的反直觉动作带来明确的终局反向解释；v10 有状态回读，但没有 0022 那种
+        “主动送进看似死局再反向取回”的鲜明抉择，因此不支持审美 5。
+    - candidate_id: RA_CAND_0017
+      human_reviewed: true
+      human_scores: {aesthetic: 4, difficulty: 5}
+      use: >-
+        末期双锚正标尺要求高机制密度与高要素耦合；v10 的 B/S—黏块链达到较高耦合，
+        但 P/L 主要是被解锁后的直线两拉泊位，且规范解显著短于该高难标尺，只支持难度 4 边界。
+    - candidate_id: RA_CAND_0024
+      human_reviewed: true
+      human_scores: {aesthetic: 1, difficulty: 3}
+      use: >-
+        负标尺禁止把事件密度当作几何应用；v10 主线的造桥、刚体搬运、切桥和重织均改变可见轮廓，
+        因而不落入 0024 的纯推拉腾挪反例，但 splitless 胜路会让一条完整通关体验重新滑向该警戒。
+    - candidate_id: RA_CAND_0027
+      human_reviewed: true
+      human_scores: {aesthetic: 1, difficulty: 2}
+      use: >-
+        负标尺要求可见机制承担解法责任；v10 的两锚都移动且 sticky 几何被主线消费，
+        但 P/L 的实际责任偏一次性目标泊位，仍低于“末期双锚高耦合”的 5 分追求。
+  score_calibration:
+    human_archive_anchors_present: true
+    score_claim_allowed: true
+    archive_attack_calibration: complete_positive_and_negative_human_anchors
+    positive_anchors:
+      - RA_CAND_0022: aesthetic_5_difficulty_4
+      - RA_CAND_0017: aesthetic_4_difficulty_5
+    lower_bound_or_negative_anchors:
+      - RA_CAND_0024: aesthetic_1_difficulty_3
+      - RA_CAND_0027: aesthetic_1_difficulty_2
+    missing_anchor_effect: none
+  trace_metric_interpretation:
+    calibration_status: pilot
+    solution_execution_pressure:
+      metric_fact: >-
+        reality_anchor_trace_metrics_v0；solutionCost=23（band 5）、nonWalkEventCount=37（band 5）、
+        heavyReuseRatio=0.027777777777777776（band 3），aggregateBand=5。
+      allowed_reading: >-
+        规范解的机制事件密度与操作压力高；该指标不证明洞见、因果依赖、反直觉或审美。
+      player_facing_check: >-
+        主要互动动作会留下后续消费的状态：开局刷桥、step7-8 拼接与相位调整、step11 抬升、
+        step16-17 上锚泊位、step21-23 终局下压。与此同时，多个事件被捆绑在单次输入中，
+        而两段连续直线输入仍有走廊脚本感，所以高 band 不能直接当作难度 5。
+      verdict_effect: merit
+    solution_space_reuse:
+      metric_fact: >-
+        revisitRate=0.25（band 3）、heavyReuseRatio=0.027777777777777776（band 3），aggregateBand=3。
+      allowed_reading: >-
+        规范解有中等程度工作区回访；该指标不说明回访本身是否优雅或产生惊喜。
+      player_facing_check: >-
+        上部通道在抬升刚体后获得 P/L 泊位用途，下部同一列在 B/S 相位改变后承担切桥与重织，
+        回访具有新状态；但多数空间仍是一遍式穿行，复用不是本关达到高分的主要来源。
+      verdict_effect: merit
+    unmeasured_dimensions:
+      - causal_dependency
+      - player_insight
+      - counterintuitive_reframe
+      - surprise_and_payoff
+  aesthetic_target_fit: >-
+    支持审美 4 的结构下界，但不支持 5。相对 RA_CAND_0024/0027，规范主线确实兑现 U/桥的
+    刚体搬运、切割和重织；相对 RA_CAND_0022，缺少同等鲜明且可比较的反直觉抉择；相对
+    RA_CAND_0017，P/L 的双锚耦合偏单向。36 个 exact-trace walkable cells 的极限压缩还把
+    中后段显著收束成直线泊位和连续下压，削弱开局呼吸感与形状展示空间。
+  difficulty_target_fit: >-
+    支持难度 4，不支持 5。难点来自多阶段状态责任与 B/S 相位记忆，而非单纯 23 步长度；
+    但关键动作大量发生在窄通道，P/L 是直线两拉，终局是连续三次 down，玩家一旦进入正确相位，
+    后半段执行高度显然，未达到 RA_CAND_0017 的难度 5 标尺。
+  critic_items:
+    - id: PC1_SPLITLESS_ROLE_BYPASS
+      type: core_blocker
+      target: role_fit
+      claim_relation: >-
+        本轮 brief 明示为涉及黏块拼接/切割的末期双锚关；sticky_split 不能只在最短主线占优。
+      evidence_basis: >-
+        现有完整 48 步胜路不含 sticky_split；它先把黏体经 B/S 边界拆为独立箱，再以手工箱子排布
+        覆盖目标，最终合法获胜。该路线 cost=48，远长于 23 步，但不是未完成探针或理论可能。
+      player_facing_reason: >-
+        Sokoban 玩家以“赢”为终点，不以最短为默认义务。晚期玩家若走入这条更长的箱子整理路线，
+        会在没有经历本轮核心“切桥”的情况下完成关卡；因此机制承诺取决于玩家是否自行选择短路，
+        不满足明示的切割职责。
+      blocks_proposal_ready: true
+      expected_designer_response: revise_now
+    - id: PC1_STATEFUL_BUT_SCRIPTED
+      type: score_boundary
+      target: why_not_execution
+      claim_relation: >-
+        23 步不能仅凭 cost 与 event count 被称为高难；需区分相位责任与窄走廊顺序执行。
+      evidence_basis: >-
+        规范 trace 的关键相位动作确会被后续消费，但 step16-17 是同方向 P/L 两拉，step21-23 是
+        同一列连续三次 down；v10 仅保留规范 trace 用到的 36 个 walkable cells 且 cost 不变。
+      player_facing_reason: >-
+        前半段造桥—接体—横移—抬升要求状态推理，成立；进入上路与终局列后，地形基本代替玩家
+        选择动作。故难度可到 4，但不能把高事件密度或 23 步视为难度 5 证据。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC1_MECHANISM_SIGNAL_PAYOFF_BOUNDARY
+      type: score_boundary
+      target: player_insight
+      claim_relation: >-
+        U 形、切桥与重织需要是玩家主动维护的几何关系，而不只是连续输入中的强视觉事件。
+      evidence_basis: >-
+        主线 step2 建桥、step7 并体、step8 改相位、step11 抬升均改变后续可达与终局对齐；
+        但 step22 切桥后底目标明显未满，step23 的下一次 down 立即重织并获胜。
+      player_facing_reason: >-
+        U 形责任在中段真实成立，足以越过 0024/0027 的事件标签反例；终局切—织本身却缺少一次
+        新选择，惊喜主要是对早先相位动作的回读。这支持审美 4 的 payoff，不支持 5。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC1_PL_COUPLING_BOUNDARY
+      type: score_boundary
+      target: role_fit
+      claim_relation: >-
+        双锚点末期挑战应检查 P/L 是否参与全局因果，而不只检查它是否移动或覆盖目标。
+      evidence_basis: >-
+        P/L 在 step16-17 仅以连续横拉覆盖上方目标对；此前需要先抬升黏体开放上路，之后 P/L
+        不再接触或改变 B/S—黏块终局链。
+      player_facing_reason: >-
+        先处理 U 再泊位 P/L 构成真实的一向依赖，故不是 0027 式完全无责任；但 P/L 更像被解锁的
+        独立目标锁，尚未达到 RA_CAND_0017 那种双锚互相索取的 5 分耦合。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC1_COMPACTION_COMFORT_RISK
+      type: nonblocking_risk
+      target: role_fit
+      claim_relation: >-
+        v10 的 exact-trace 极限压缩可能把晚期紧凑误做成开局拥挤和解路外形泄露。
+      evidence_basis: >-
+        布局只有 36 个 walkable cells，且事实记录明确说明只保留 canonical trace 使用格；开局玩家
+        位于 L 缺角旁，虽然仍可先观察走动，但首个有效互动几乎贴脸，后段主要沿狭长通道往返。
+      player_facing_reason: >-
+        开局题面仍能同时看到 L、双锚与三箱桥，因此未到阻塞；但留白不足会削弱轮廓辨识与
+        自主试探感，试玩需特别观察是否感到“沿洞口按唯一方向”，而非在管理共享刚体。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC1_PARTIAL_GRAPH_BOUNDARY
+      type: diagnostic_note
+      target: diagnostic_reading
+      claim_relation: graph evidence 只能界定可审边界，不能证明解法唯一或分支质量。
+      evidence_basis: graph 在 1,000,000 状态预算耗尽前看到 6 个 winning states，完整图结论为 none。
+      player_facing_reason: >-
+        该事实无法告诉玩家会遇到多少有意义的分支，也不能消除走廊脚本或 splitless 绕路风险。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+  diagnostic_interpretations:
+    - graph_fact: graph_exhausted_at_1000000_with_6_winning_states_seen
+      neutral_meaning: >-
+        当前枚举只覆盖预算内部分状态，确认至少出现过胜态，但没有完整 SCC、全部胜路或分支结构结论。
+      player_facing_interpretation: >-
+        不能据此断言唯一解、非脚本、多解质量或玩家必然经历某种洞见。
+      verdict_effect: none
+    - graph_fact: exact_canonical_trace_space_compaction_to_36_walkable_cells_preserved_cost_23
+      neutral_meaning: >-
+        删除未被这条规范最短 trace 使用的可走格后，已知最短成本没有变化；这不等于删去的空间没有玩家侧价值。
+      player_facing_interpretation: >-
+        压缩提高主题聚焦，同时减少试探、绕位与轮廓展示余量；当前表现为审美 5 与开局舒适度风险。
+      verdict_effect: caveat
+  handoff_notes:
+    - >-
+      结构修订的首要目标不是再压短 48 步，而是让任意胜路都必须经历一次玩家可见、可理解的
+      sticky_split；同时应尽量保持 step2 建桥、step8 相位、step11 抬升和 step22-23 回读链。
+    - >-
+      若修订只封住 splitless 路线而不改变主线，审美预期仍为 4、不为 5；要追 5，应强化 P/L 与
+      B/S 终局的双向依赖，或让切桥后的重织包含一次真正的状态选择，而不是继续同方向输入。
+
+claim_followup:
+  claim_read: true
+  verdict_changed: false
+  score_or_state_changed: false
+  change_summary: >-
+    claim packet 没有改变 revise_required / structural_revision，也没有改变审美 4、不支持 5与
+    难度 4、不支持 5的边界。它确认设计者把 splitless=48 视为可接受的最短优势，而不是
+    all-solution 机制责任；同时把“P/L 改写末段施力侧”明确成当前 packet 尚未支撑的因果表述。
+  change_reason: >-
+    designer framing 不能覆盖玩家可合法获胜的体验。48 步绕路仍是完整无 split 胜路，直接让
+    明示的切割角色依赖玩家自选最短；claim 的 falsification 只排斥“接近 23 步”的简单绕路，
+    门槛比本轮 brief 更宽。另一方面，规范 trace 中 P/L 两次横拉后不再与下部对象接触，
+    claim 没有给出 P/L 泊位为何改变末段施力侧的动作对比或状态后果。
+  final_verdict: revise_required
+  final_review_loop_state: revise_required
+  final_required_action: structural_revision
+  final_critic_items:
+    - id: PC1_SPLITLESS_ROLE_BYPASS
+      status: remains_core_blocker
+      claim_followup_effect: >-
+        claim 明确只把“接近 23 步的简单 splitless 胜路”列为 falsification；这不能满足 brief 对
+        切割职责的玩家侧要求。48 步路线合法获胜，长度差只说明最短优势，不消除绕过核心体验。
+    - id: PC1_PL_FORCE_SIDE_SUPPORT_GAP
+      status: added_blocking_context_gap
+      claim_followup_effect: >-
+        design_claim 与 why_not_execution 均称 P/L 会改变末段施力侧，但 trace 只显示 step16-17
+        将 P/L 直线拉上目标，之后玩家自行走回下部，P/L 不再接触终局链。当前 packet 缺少
+        “不泊位/不同泊位时末段施力侧为何失败”的动作对比；在该关系补清或结构落实前，
+        双锚高耦合表述不成立。
+      blocks_proposal_ready: true
+      expected_designer_response: revise_now
+    - id: PC1_STATEFUL_BUT_SCRIPTED
+      status: score_boundary_unchanged
+      claim_followup_effect: supports_difficulty_4_not_5
+    - id: PC1_MECHANISM_SIGNAL_PAYOFF_BOUNDARY
+      status: score_boundary_unchanged
+      claim_followup_effect: >-
+        claim 对“主动切开—末手重织”的命名不改变其输入层为连续 down 的事实；中段相位责任
+        足以支持审美 4，但终局本身没有新增选择，仍不支持 5。
+    - id: PC1_PL_COUPLING_BOUNDARY
+      status: escalated_by_claim_to_blocking_context_gap
+      claim_followup_effect: >-
+        初评只把 P/L 视为一向依赖的 5 分边界；claim 进一步声称它改写末段施力侧，却未提供
+        玩家侧因果，因此升级为 PC1_PL_FORCE_SIDE_SUPPORT_GAP。
+    - id: PC1_COMPACTION_COMFORT_RISK
+      status: remains_nonblocking_risk
+      claim_followup_effect: >-
+        attempt_log 确认 v9-v10 把 walkable 从 81 压到 36，目标就是 unused_space_wallification；
+        这强化了“按规范 trace 削空间”的走廊脚本与开局呼吸风险，但当前仍不单独阻塞 4 分下界。
+    - id: PC1_PARTIAL_GRAPH_BOUNDARY
+      status: diagnostic_only
+      claim_followup_effect: none

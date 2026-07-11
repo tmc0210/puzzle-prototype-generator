@@ -1,0 +1,79 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5
+title: 方阵修补·拆分交接 v5
+task_classification: specific_prototype_level_design
+submission_status: added_to_playable_queue
+quality_gate:
+  difficulty: {score: 4, supports_5: false, source: puzzle_critic_4}
+  aesthetic: {score: 4, supports_5: false, source: puzzle_critic_4}
+  role: late_challenge
+  support_level: none
+independent_reviews:
+  evidence_review_4:
+    verdict: supports_with_caveats
+    review_loop_state: proposal_ready_with_caveats
+    required_action: none
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_evidence_review_4.yml
+  puzzle_critic_4:
+    verdict: supports_with_noncore_caveats
+    review_loop_state: proposal_ready
+    required_action: none
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_puzzle_critic_4.yml
+verified_design_facts:
+  shortest_cost: 23
+  complete_graph: {status: complete, reachable_states: 165454, legal_transitions: 413620, winning_states: 1}
+  both_anchors_present: true
+  movable_anchor: B_S
+  movable_anchor_required_on_all_wins: true
+  fixed_anchor: P_L
+  fixed_anchor_pull_required_on_all_wins: true
+  required_shapes_on_all_wins:
+    - crate_2x2
+    - sticky_exact_2x2
+    - exact_singleton_plus_L3
+    - exact_offset_rebound_2x2
+  required_event_minima_on_all_wins:
+    anchor_boundary_shift_box_sticky: 1
+    sticky_to_box: 1
+    box_to_sticky: 3
+    sticky_merge: 3
+    force_chain: 1
+    pull_object: 1
+    move_sticky_rigid: 5
+prototype_specific_pre_submission_workflows:
+  execution_order:
+    - invalid_goal_prune
+    - opening_comfort_check
+    - redundant_element_prune
+  invalid_goal_prune:
+    status: clean
+    result: 四个目标全部保留；单删会降成本或产生核心/重绑旁路。
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_goal_prune_check.yml
+  opening_comfort_check:
+    status: clean
+    result: initial SCC 13；首步均为 walk；最近正确不可逆出口距离 1。
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_opening_comfort_check.yml
+  redundant_element_prune:
+    status: clean
+    result: exact v5 无可再删目标/对象/空地或外框；P/L、B/S 与四格材料均有结构职责。
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_redundant_element_prune.yml
+lexicon_used:
+  - B/S 绑定债：箱资源生成黏块形状
+  - B/S 移动边界刷产物：远程生成与门口消费
+  - P/L 边界交接：推入、跨侧与抽取分配
+new_linkage: >-
+  M 跨 B/S 补成箱态正方形；移动 B/S 远程刷出 CC/MM，唯一上口纵剪为 L3+箱；
+  箱让位后由固定 P/L 抽成单格 M，再与 L3 偏移重绑成黏态正方形并整体交付。
+package_and_queue:
+  levels_entry: prototypes/reality_anchor/levels.yml
+  queue_entry: prototypes/reality_anchor/playable_queue.yml
+  queue_status: pending_playtest
+  playable_export: prototypes/reality_anchor/playable/data.json
+  queue_match_count: 1
+  playable_match_count: 1
+verification:
+  yaml_parse: pass
+  typescript_check: pass
+  package_solver: {status: solved, cost: 23, explored_states: 11664}
+  package_evaluator: pass
+  playable_export: pass
+  full_graph_evidence_ref: prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.json

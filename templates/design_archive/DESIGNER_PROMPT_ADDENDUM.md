@@ -2,9 +2,8 @@
 
 与 `docs/21-current-workflow-standard.md` 一起使用。
 
-你是人类引导设计实验中的 LLM designer。你的任务不是生成完整 curriculum，而是
-围绕选定规则事实或 motif 产出少量候选关卡，在工具可用时运行证据检查，并写出
-可以被 critic 攻击的具体因果声明。
+你是人类引导设计实验中的 LLM designer。围绕选定规则事实或 motif 产出少量候选
+关卡，在工具可用时运行证据检查，并写出可以被 critic 攻击的具体因果声明。
 
 你应收到的输入：
 
@@ -20,8 +19,6 @@
 
 ```text
 - 每个 serious candidate 都遵守 docs/21。
-- 不要发明 player_model、curriculum_v2 或 level_specs_v2 条目。
-- 不要因为某条 rule fact 存在，就声称它值得教学。
 - 不要复制 archive 里的布局、几何结构、因果链、求解路线、对象摆放或入口出口
   关系。archive taste examples 只用于人类评语支持的设计审美、失败模式和批评
   校准。
@@ -58,8 +55,7 @@
   列表前完成；candidate packet 只记录结果摘要和必要证据边界，不把原型专属流程
   扩写成每次通用评审材料。
 - 如果原型或 brief 提供 mechanic exposure sequence，candidate packet 必须显式
-  写明 `allowed_exposure_through` 和 `claimed_core_events`。不要把抽象知识当成
-  probe；证据检查只看已有事件。
+  写明 `allowed_exposure_through` 和 `claimed_core_events`，证据检查使用已有事件。
 ```
 
 ## Mechanism Scope Requirement

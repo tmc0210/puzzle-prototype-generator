@@ -1,0 +1,173 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7
+review_input_type: candidate_version
+verdict: unknown
+review_loop_state: held_proposal
+required_action: evidence_disagreement_for_next_review
+
+supported_claims:
+  - claim: >-
+      候选可解，且返回的最短 15 步实例确实执行“两次 B/S 左移—完整方形左拉横切—
+      两箱分别落位”的因果链。
+    evidence:
+      - >-
+        layout analysis 的 solver 为 found=true、shortest_cost=15、
+        explored_states_before_shortest=277；canonical inputs 与 facts packet 完全一致。
+      - >-
+        返回 trace 的第 1、2 步各含 anchor_boundary_shift:box_sticky、
+        box_to_sticky:n2、sticky_merge:n1；第 9 步含 move_sticky_rigid 与
+        sticky_to_box:n2；第 10、15 步分别 pull 两个 crate。
+      - >-
+        goal coverage 在第 15 步逐格确认：[3,3]/[4,3] 由 B/S 两端覆盖，
+        [4,5]/[4,6] 由保留的竖黏条覆盖，[2,5]/[3,7] 由两个箱覆盖并获胜。
+    scope: returned_shortest_trace_instance_only
+
+  - claim: >-
+      所有胜路都至少出现两次 B/S 边界位移、两次 box_to_sticky 事件 occurrence、
+      两次 sticky_merge 事件 occurrence，并至少出现一次刚体移动与一次 sticky_to_box。
+    evidence:
+      - >-
+        anchor_boundary_shift:box_sticky min2：found_bypass_below_count=false，
+        status=complete，explored_states=38624。
+      - >-
+        box_to_sticky min2：found_bypass_below_count=false，status=complete，
+        explored_states=38940。
+      - >-
+        sticky_merge min2：found_bypass_below_count=false，status=complete，
+        explored_states=39395。
+      - >-
+        move_sticky_rigid min1：found_bypass_below_count=false，status=complete，
+        explored_states=38262。
+      - >-
+        sticky_to_box min1：found_bypass_below_count=false，status=complete，
+        explored_states=38942。
+      - >-
+        fixed-anchor individual probes 另行确认 movable_box_sticky_shift、
+        material_normalization、box_to_sticky、sticky_merge、sticky_rigid_move 均为
+        found_bypass=false、status=complete、explored_states=38262。
+    scope: all_winning_paths_event_pattern_and_occurrence_level
+
+  - claim: >-
+      胜路不能在累计两次 B/S 位移之前拉箱、移动黏块刚体或触发 sticky_to_box。
+    evidence:
+      - >-
+        pull_object:crate before B/S count 2：found_violation_win=false，
+        status=complete，explored_states=38624。
+      - >-
+        move_sticky_rigid before B/S count 2：found_violation_win=false，
+        status=complete，explored_states=38931。
+      - >-
+        sticky_to_box before B/S count 2：found_violation_win=false，
+        status=complete，explored_states=38931。
+    scope: >-
+      这是 winning-path phase gate，不是 reachable-exposure gate；早拉箱实际上可达，
+      但含该早期动作的路径不能获胜。
+
+  - claim: >-
+      P/L 在完整可达空间中固定，且所有胜路都实际消费 pull 语义。
+    evidence:
+      - >-
+        fixed-anchor reachable scan 为 status=complete、reachable_states=38262、
+        legal_transitions=75120，anchor_boundary_shift:push_pull forbidden hits=none。
+      - >-
+        fixed_push_pull_effect 的模式为 pull_object；其 winning-path bypass probe 为
+        found_bypass=false、status=complete、explored_states=38298。
+      - >-
+        combined fixed-anchor probe 同为 found_bypass=false、status=complete、
+        explored_states=38298。
+    scope: fixed_anchor_reachability_and_pull_event_necessity
+
+  - claim: >-
+      packet 指定的 12 步半绑定假方案到达一个具体、不可挽回的无胜状态。
+    evidence:
+      - >-
+        trace 逐步确认 prefix 全部合法：第一次 B/S 左移后，上箱被拉到 [2,5]，
+        下箱被拉到终点列上方，最终 reached layout 与 facts packet 一致。
+      - >-
+        该状态的 up/right 因 pull_world_front_blocked 非法；down/left 分别会 pull
+        crate#1/crate#2，和 packet 的局部后果描述一致。
+      - >-
+        suffix solver found=false、explored_states=33467；suffix graph 为
+        status=complete、states=37712、transitions=73990、wins=0。
+    scope: exact_prefix_and_its_complete_successor_graph
+
+unsupported_or_overclaimed:
+  - claim: >-
+      “完整 2x2 本身是所有胜路必经的形状状态，且正是这两枚初始已解箱与竖黏条
+      共同形成该 2x2”目前没有 all-solution 必要性证据。
+    reason: >-
+      五个 count probes 只对 event pattern 的 occurrence 计数；例如
+      box_to_sticky min2 证明至少两次匹配事件，并不证明每次均为 :n2、同一对箱参与，
+      或四个格在同一时刻组成指定 2x2。三个 phase probes 只排除胜路在第二次 B/S
+      位移前发生指定早期事件，也不等价于“所有胜路必经完整方形”。layout snapshots
+      与 goal coverage 只覆盖返回的 canonical trace；layout analysis 明示没有
+      instance-level object participation。complete graph 的 one winning state 也只约束
+      终止状态，不能单独证明所有到达它的路径共享该中间形状。
+    verdict_effect: core_blocker
+
+  - claim: >-
+      具体假方案对玩家是否可信、是否产生所述洞见，以及 10 次 walk 是否不主导节奏。
+    reason: >-
+      完整无胜后继图证明该具体状态不能恢复，但不能证明玩家会自然选择该分支、会把
+      失败归因于“保留独立性”，或会从中读出“先全绑再解码”。这些属于 puzzle critic
+      的玩家侧判断；工具证据也不能证明难度至少 4、审美至少 4 或 why_not_execution。
+    verdict_effect: none
+
+  - claim: >-
+      固定 P/L 是相对于其它规则配置不可替代的唯一因果来源。
+    reason: >-
+      现有证据证明 P/L 不移动且所有胜路含 pull_object；没有移除、移动或改写 P/L
+      的 counterfactual。结合 packet 已确认的运行时规则，足以支持“固定 pull 世界被
+      实际消费”，但不能外推为更强的反事实唯一性。
+    verdict_effect: caveat
+
+evidence_limits:
+  - >-
+    所有 complete/no-bypass 数值均已回查原始 allowed evidence source，未发现 facts
+    packet 与报告之间的数值或 status 不一致。
+  - >-
+    event pattern、带 n 的 event instance、对象参与和 per-object necessity 必须分开；
+    本审查不把 pattern occurrence 自动解释成指定对象或指定 2x2 状态。
+  - >-
+    三个 event-before-count 报告是 winning violation probes；它们不能用来声称早期
+    crate pull、sticky movement 或 sticky_to_box 在可达图中不存在。
+  - >-
+    fixed-anchor forbidden scan 才是完整 reachable exposure 证据；它只对
+    anchor_boundary_shift:push_pull 给出 complete/none。
+  - >-
+    packet 将 dual_anchor 声明为 exposure sequence 的最后阶段，因此没有 later stage
+    可排除；fixed-anchor all-solution probes 支持两类锚点效应都被胜路消费。本审查不从
+    该阶段标签推导难度、品质或玩家知识掌握。
+  - >-
+    graph complete、winning_states=1、SCC/commitment 数量、forced prefix 与 scripted
+    handoff 都不是谜题质量或唯一输入序列的结论。
+
+scc_graph_interpretation:
+  - graph_fact: >-
+      主图 status=complete，reachable_states=38262，legal_transitions=75120，
+      winning_states=1；SCC/agency 报告 branching_win_dag、forced viable prefix 1/5
+      与 returned-solution scripted handoffs 2/4。
+    neutral_meaning: >-
+      在给定预算内可达状态图已完成，终止化后只有一个获胜状态；压缩图中存在分支、
+      汇合与若干固定承诺。它不证明唯一输入序列、洞见强度、审美或难度。
+    player_facing_interpretation: null
+    verdict_effect: none
+
+  - graph_fact: >-
+      指定 12 步 false-near-win 前缀的 suffix graph 为 complete，states=37712，
+      transitions=73990，wins=0。
+    neutral_meaning: >-
+      从该精确 reached state 出发，完整枚举中没有获胜后继。
+    player_facing_interpretation: >-
+      玩家若按该具体顺序先分配两箱，会到达局部看似接近完成、但无法挽回的状态。
+    verdict_effect: merit
+
+questions_for_designer:
+  - >-
+    请补一个以“从未进入指定完整 2x2 形状/角色状态”为规避条件的 complete
+    all-solution probe，并明确状态谓词；若 found_bypass=false，才可保留“完整 2x2
+    必需”的中心主张。
+  - >-
+    如果不补形状级 probe，请把中心 claim 降为“返回的 canonical 最短解使用完整
+    2x2；所有胜路只已证明满足所列事件次数与阶段门”，不要继续声称形状或两枚箱的
+    all-solution/per-object necessity。

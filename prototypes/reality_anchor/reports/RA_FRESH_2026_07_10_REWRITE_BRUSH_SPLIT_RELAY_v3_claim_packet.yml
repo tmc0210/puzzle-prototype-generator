@@ -1,0 +1,67 @@
+candidate_version: RA_FRESH_2026_07_10_REWRITE_BRUSH_SPLIT_RELAY_v3
+review_iteration: 1
+claim_last_review: true
+
+slot_brief:
+  intended_role: late_challenge_or_capstone
+  known_before: all_current_reality_anchor_runtime_rules
+  target: >-
+    双锚点后期挑战；至少一个锚点可移动且所有胜利路径必须移动。难度至少 4，
+    追求更高；审美至少 4，追求 5。
+
+target_role_notes: >-
+  不把开局两次 P/L 推进本身包装成谜底；它们是把玩家放到旧 L 行的可读 setup。
+  核心判断发生在 B/S 刷线以后：玩家要理解被拆开的单箱、剩余竖直黏条和原始
+  relay 的三种新职责，并用一次横向 pull 同时完成刚体换位、force-chain 资源移交
+  和第二次材料转换。
+
+design_claim:
+  player_insight: >-
+    玩家必须看出 relay 箱并不是一次性按钮：先在 P/L 下移后得到的旧 L 行上用它
+    推动 B/S，随后还要把它回收为上方孤立目标的覆盖物。B/S 右移会把三格 L 形
+    黏块拆成一个箱与一条竖直二连黏块；正确终局不是分别把三格按最近目标处理，
+    而是在 pull side 横拉竖条，让竖条把单箱侧向移交并同时跨回 box side，最终
+    三格材料各自变成目标箱。
+  causal_chain:
+    - 竖直 P/L 下移两格，旧 L 行从被占格的 pull 区接口变成可用 push 行。
+    - relay 箱从该行右推，force-chain 横移 B/S；远处 L 形黏块的 x=5 格转为箱，x=6 竖条保持黏连。
+    - 规范解把新箱下推；随后玩家进入 pull side，向左拉竖条，竖条把该箱侧推并跨回 box side，变成两枚箱。
+    - 单箱被向上拉进下方左目标；原 relay 紧接着被向上推入上方孤立目标，四个目标完成。
+    - 11 步替代胜路可不让 (5,5) 显式腾空，但仍保留同一 relay、单箱、竖条职责和全部核心事件；因此不声称 target-vacate 全胜路必要。
+  why_not_execution: >-
+    规范解只有 10 步，路线税很低。玩家负担来自对象职责连续变化：relay 先是
+    B/S driver 后是目标箱；L 形一格先变箱并被竖条横向移交；剩余竖条必须作为
+    刚体被横拉并在同一步变成两个目标箱。若玩家只按最近 affordance 逐格处理，
+    会触发完整图中可见的 dead commitment，不能靠重复搬运补救。
+  required_winning_path_events:
+    - anchor_boundary_shift:push_pull at least 2
+    - anchor_boundary_shift:box_sticky at least 1
+    - pull_object at least 1
+    - sticky_to_box occurrence at least 2
+    - move_sticky_rigid at least 1
+  forbidden_winning_path_events:
+    - win_below_two_push_pull_anchor_shifts
+    - win_without_box_sticky_anchor_shift
+    - win_without_pull
+    - win_below_two_sticky_to_box_occurrences
+    - win_without_sticky_rigid_move
+  falsification:
+    - 任一完整 all-solution probe 找到缺少上述事件组的胜路，核心 claim 失败。
+    - relay 箱若可删除、墙化或不回收而仍保留核心胜路，双职责 claim 失败。
+    - 竖直黏条若可按普通独立箱处理，或不必作为刚体横拉，材料几何 claim 失败。
+    - 若玩家侧评审认为前三个强制 commitment 把整关降为按部就班 witness，或机制信号仍高于实际 payoff，则难度/审美目标失败并要求结构修改。
+
+lineage_claim:
+  relation: fresh
+  archive_variant_authorized: false
+  why_not_archive_variant: >-
+    本轮从 lexicon 的局部接口写 fresh claim 后才定布局；没有使用 archive candidate
+    的布局、对象位置、求解路线或因果链。全量 human-reviewed archive 只用于 taste
+    与失败边界校准。
+
+lexicon_used:
+  - P/L 锚点边界重写：旧半格把手与侧边对象改侧
+  - B/S 移动边界刷产物：远程生成与门口消费
+new_linkage: >-
+  将旧 L 行生成的 push 接口直接作为唯一 B/S driver；刷线输出不是直接进门，
+  而是由剩余黏条在 pull side 反向 force-chain 移交单箱，并在同一步完成材料回收。

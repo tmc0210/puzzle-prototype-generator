@@ -1,0 +1,80 @@
+review_iteration: 4
+candidate_version_reviewed: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5
+review_input_type: candidate_version
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+supported_claims:
+  - >-
+    v5 作为独立版本的规范解成立：layout analysis 返回 23 步合法最短解，第一步为 walk，
+    后续关键快照与 claim 所写补角、B/S 刷形、纵剪、让位、pull 侧转化、重并和交付链一致；
+    goal coverage 确认全部输入合法且第 23 步由四格黏块覆盖四目标并胜利。
+  - >-
+    v5 完整图未耗尽：status=complete，165454 个可达状态、413620 条合法转移、
+    1 个胜利状态。新起点和裁边后的完整图规模与 facts packet、源 JSON 一致。
+  - >-
+    新起点没有产生核心事件旁路。七个 winning-path count probe 均为 complete 且无低于门槛的
+    胜路：B/S shift >=1、sticky_to_box >=1、box_to_sticky >=3、sticky_merge >=3、
+    force_chain >=1、pull_object >=1、move_sticky_rigid >=5。
+  - >-
+    裁边后的四个形状门均使用 exactCoordinateOffset={x:-1,y:0}，谓词坐标与 v5 布局一致；
+    crate 2x2、exact sticky 2x2、singleton {(5,4)} + L {(7,4),(6,5),(7,5)}，以及
+    offset 2x2 {(5,4),(6,4),(5,5),(6,5)} 的 avoidance search 均 complete 且无胜利旁路。
+  - >-
+    双锚点硬事实继续成立：fixed-anchor combined probe 与各 individual probe 均 complete、
+    无胜利旁路；完整可达扫描没有 anchor_boundary_shift:push_pull 命中，而 pull_object
+    在所有胜路上必需，B/S 位移也在所有胜路上必需。
+  - >-
+    opening 拓扑变化得到 fresh v5 证据支持：initial SCC 有 13 状态、3 个不可逆出口，
+    其中 1 个可达胜利、2 个为 dead；正确出口最近距离为 1，开局 right 与 up 都只是 walk。
+    因此“关键补角不再是唯一首步”和“承诺前存在可逆移动”是硬事实。
+  - >-
+    wrong_early_shear 的新坐标版本成立：指定 12 步前缀合法到达报告状态，仍有合法即时动作，
+    但其完整 1044 状态后继图有 2632 条转移和 0 个胜利状态。该证据只授予具体前缀死态，
+    不授予玩家会相信它或反馈公平的判断。
+  - >-
+    v5 facts packet 的布局、解、图、opening、fixed scan、七个 count、四个 shape、prefix 与
+    goal coverage 数值已逐项对照源 JSON；修正后的 revisit_rate 也与源值
+    0.041666666666666664 一致。没有发现会改变机制结论的 packet/source 漂移。
+  - >-
+    mechanic_exposure_sequence 将 dual_anchor 列为最后暴露阶段；brief 允许全部后期知识，
+    因而没有待排除的更晚阶段事件。两种锚点共存、B/S 必动、P/L 固定且 pull 必经均有证据。
+
+unsupported_or_overclaimed:
+  - >-
+    opening metrics 只证明 13 状态 SCC、出口距离与可逆拓扑；它不证明玩家实际“读图”，
+    不证明同距离 dead exit 公平，也不能独立证明操作舒适度已修复。claim 已把这些留给 critic，
+    本 review 不授予对应质量结论。
+  - >-
+    四个 shape probe 分别证明各谓词在所有胜路上出现，但不直接证明所有胜路都按 claim 的
+    固定时序经过它们，也不把某个事件实例与某个形态建立普遍一一因果。规范 trace 只支持
+    所写时序存在一条合法胜利实现。
+  - >-
+    “B/S 上移一次”由规范 trace 支持为该解实例；all-solution gate 只证明 B/S 位移 >=1，
+    不证明所有胜路恰好一次或固定方向。facts packet 已明确放弃该更强解读。
+  - >-
+    硬证据不证明 player_insight、why_not_execution、横剪计划的视觉诱惑、墙齿提示强度、
+    路线税、难度或审美；这些必须由独立 puzzle critic 与玩家侧测试判断。
+  - >-
+    归一化会重建箱身份；现有材料不支持具体 crate identity 连续或 per-object necessity。
+    本 verdict 仅支持事件模式、材料形态、坐标谓词与阶段职责级主张。
+
+evidence_limits:
+  - >-
+    event-count probe 证明匹配 event pattern 的最低 occurrence 数，不证明精确次数、方向、
+    具体对象参与或不同事件之间的固定配对。
+  - >-
+    shape necessity probe 是彼此独立的 state-predicate gate，不自带跨谓词时序、玩家可读性、
+    对象身份或审美结论。
+  - >-
+    one winning state 不等于唯一输入序列；SCC/agency 的出口数与 commitment 数只作中性拓扑
+    诊断，不能单独转写为选择质量或谜题深度。
+  - >-
+    calibrated_trace_metrics 已按 evidence reviewer 纪律排除在 verdict 依据之外；对其源值的
+    一致性核验只确认 packet 完整性，不把 band、搜索规模或事件量解释为洞见或质量。
+  - >-
+    v4 的 review verdict 没有用于支持 v5；本结论只基于 v5 白名单布局、fresh graph、
+    fresh probes、opening metrics、错误前缀和 goal coverage。
+
+questions_for_designer: []

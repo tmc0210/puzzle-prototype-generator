@@ -1,0 +1,111 @@
+review_iteration_answered: 1
+candidate_version_answered: RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v4
+designer_action_type: revise_structure
+
+evidence_reviewer_action:
+  required_action: none
+  response: >-
+    接受 supports_with_caveats。对外只声称“最终跨界 pull 在 rigid move 后完成 rebind/merge”，
+    不声称任何较早 pull 都不存在，也不声称全胜路对象身份或同一步 coupling。
+  evidence_or_attempt_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v4_evidence_review_1.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_design_claim_v3.md
+  result: claim wording normalized; no evidence disagreement
+
+critic_item_triage:
+  - critic_item_id: forced_opening_strokes_cap_insight
+    response: revise_now
+    reason: >-
+      接受前两次 P/L stroke 的上界风险；不把它们单独包装成洞见。opening check 将起点从 v4 [2,2]
+      移到 v5 [0,0]（坐标裁剪后），让第一手成为可逆 walk，首个 win-reaching commitment 距离 1。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v4_opening_comfort_check.md
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v5_opening_comfort_check.md
+    produces: RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v5
+    next_review_needed: true
+  - critic_item_id: difficulty_three_not_four
+    response: accept_as_nonblocking
+    reason: 接受 difficulty 3，不再声称达到 4；满足本轮至少 3 的硬门槛。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v4_puzzle_critic_1.yml
+    produces: handoff score boundary
+    next_review_needed: false
+  - critic_item_id: aesthetic_four_not_five
+    response: accept_as_nonblocking
+    reason: 接受 aesthetic 4、不声称 5；满足本轮审美 4 保底。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v4_puzzle_critic_1.yml
+    produces: handoff score boundary
+    next_review_needed: false
+  - critic_item_id: optional_detour_cadence_risk
+    response: accept_as_nonblocking
+    reason: 保留较长胜路可加入无效 crate 往复的 caveat；不声称唯一路线。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v4_evidence_review_1.yml
+    produces: route-identity disclaimer
+    next_review_needed: false
+  - critic_item_id: do_not_overclaim_route_identity
+    response: accept_as_nonblocking
+    reason: v3 claim 明确删除 all-solution per-object identity 与唯一路线声称。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_design_claim_v3.md
+    produces: narrowed claim
+    next_review_needed: false
+  - critic_item_id: pre_submission_checks_pending
+    response: revise_now
+    reason: >-
+      exact v5 已完成 invalid_goal_prune、opening_comfort_check、redundant_element_prune；三项均 clean。
+      V4 检查先产生 start/space/outline 修改，再对 exact v5 独立重跑，不继承旧结论。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v5_goal_prune_check.md
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v5_opening_comfort_check.md
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v5_redundant_element_prune.md
+    produces: exact v5 pre-submission status clean
+    next_review_needed: true
+  - critic_item_id: role_fit_late_application_not_high_challenge
+    response: accept_as_nonblocking
+    reason: package role 收束为 independent_application，不再声称高强度 challenge。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_design_claim_v3.md
+    produces: role normalization
+    next_review_needed: false
+
+handoff_notes:
+  - note: 审美校准为 4，不声称 5。
+    source_critic_item_id: aesthetic_four_not_five
+    claim_not_being_made: aesthetic 5
+  - note: 难度校准为 3，不声称 4。
+    source_critic_item_id: difficulty_three_not_four
+    claim_not_being_made: difficulty 4+
+  - note: 较长胜路可能含无效 crate detour；唯一 winning state 不等于唯一路线。
+    source_critic_item_id: optional_detour_cadence_risk
+    claim_not_being_made: unique route
+
+produces:
+  candidate_version: RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v5
+  evidence_disagreement_packet: null
+  revised_packet_context:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_v5_candidate_packet.md
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_REWRITE_BRUSH_TAIL_design_claim_v3.md
+next_step: review_N_plus_1
+
+human_override:
+  source: user_message
+  text: 可以不需要review，这个过程只是微调
+  interpretation: >-
+    人类明确接收 v4->v5 的复审风险并豁免 review_2；授权范围仅限已验证的起点缓冲、leaf/pocket/outline
+    微调及 role/claim 收束，不扩张到核心机制或因果链修改。
+  review_2_status: explicitly_waived_by_human
+  ownership: human_risk_acceptance
+  effective_next_step: exact_v5_pre_submission_checks_then_playable_queue
+
+exact_v5_status_after_override:
+  solver_and_graph: complete
+  required_event_gates: complete_no_bypass
+  pre_submission_checks:
+    invalid_goal_prune: clean
+    opening_comfort_check: clean
+    redundant_element_prune: clean
+  independent_review_scope: exact v4
+  human_accepted_micro_adjustment_scope: exact v5
+  archive_eligibility: human_pending

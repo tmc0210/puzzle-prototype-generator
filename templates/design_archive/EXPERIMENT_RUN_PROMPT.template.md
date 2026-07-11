@@ -271,5 +271,3 @@ Archive Pass：
 `<candidate_sequence>` 应分别描述每个候选或 family 的探索方向，让 designer 保持串行推进。
 
 `<archive_status_policy>` 用来限制本轮实验可使用的归档状态。默认应禁止 LLM designer 直接使用 `accepted`、`positive_reference`、`reference` 或 `mainline`。
-
-`<forbidden_files>` 通常包括本轮实验不允许创建或修改的上游知识、课程、关卡规格文件。

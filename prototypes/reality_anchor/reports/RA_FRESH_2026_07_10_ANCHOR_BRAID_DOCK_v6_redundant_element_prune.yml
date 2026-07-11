@@ -1,0 +1,362 @@
+redundant_element_prune:
+  exact_candidate: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6
+  prototype: reality_anchor
+  authority: prototypes/reality_anchor/docs/redundant_element_prune.md
+  status: clean
+  layout_change_required: false
+  successor_version_required: false
+  review_loop_reentry_required: false
+  review_loop_reentry_reason: >-
+    本次是 proposal-ready 后的原型专属提交前优化；按 authority 只进入关键指标检查，
+    不进入 reviewer / critic packet。检查未产生 layout change。
+  shared_files_modified: false
+  sequence:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+
+  exact_baseline:
+    layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_layout.txt
+    dimensions: 6x7
+    targets:
+      - [3, 1]
+      - [2, 2]
+    movable_objects:
+      - P/L
+      - B/S
+    shortest_cost: 17
+    graph_status: complete
+    reachable_states: 178
+    legal_transitions: 422
+    winning_states: 1
+    expected_trace_legal: true
+    expected_trace_win: true
+    core_event_probe:
+      status: complete
+      winning_bypass: none
+      all_win_required_groups:
+        - anchor_boundary_shift:push_pull
+        - anchor_boundary_shift:box_sticky
+        - force_chain:n2
+        - pull_object:push_pull_anchor
+        - pull_object:box_sticky_anchor
+    mixed_gate_probe:
+      status: complete
+      winning_bypass: none
+      obligations:
+        - force_chain:n2_count_at_least_2
+        - middle_mixed_transition
+        - final_mixed_transition
+    opening_baseline:
+      graph_status: complete
+      reachable_states: 178
+      initial_scc_size: 68
+      initial_exit_count: 3
+      initial_win_exit_count: 1
+      initial_dead_exit_count: 2
+      nearest_irreversible_exit_distance: 3
+      nearest_win_reaching_exit_distance: 9
+      dead_exits_before_first_win_exit: 2
+
+  stage_results:
+    goal_prune:
+      status: clean
+      delegated_exact_artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_check.yml
+      retained_targets:
+        - cell: [3, 1]
+          deletion_cost_delta: "17->3"
+          deletion_graph_status: complete
+          deletion_expected_trace_win: true
+          deletion_core_event_bypass:
+            - anchor_boundary_shift:box_sticky
+            - force_chain:n2
+            - pull_object:push_pull_anchor
+            - pull_object:box_sticky_anchor
+        - cell: [2, 2]
+          deletion_cost_delta: "17->4"
+          deletion_graph_status: complete
+          deletion_expected_trace_win: true
+          deletion_core_event_bypass:
+            - anchor_boundary_shift:box_sticky
+            - force_chain:n2
+            - pull_object:push_pull_anchor
+            - pull_object:box_sticky_anchor
+      removed_targets: []
+
+    object_remove_prune:
+      status: clean
+      counterfactual_variants_run: []
+      routing_reason: >-
+        authority 只把未移动、未转换、未参与核心事件或疑似孤立材料的对象送入 remove 反事实。
+        exact v6 的 P/L 与 B/S 均在 returned trace 中多次移动，并被 complete all-win event probe
+        证明承担不可绕过的核心事件，因此没有合格 remove 候选。
+      objects_screened:
+        - id: P/L
+          initial_cells:
+            - [2, 3]
+            - [3, 3]
+          returned_trace_shift_steps: [3, 10, 16, 17]
+          returned_trace_roles:
+            - 首段下移释放 B/S 左抽把手
+            - 中段参与 n2 同链上移
+            - 终段上拉后参与 n2 同链左收
+          all_win_required_events:
+            - anchor_boundary_shift:push_pull
+            - pull_object:push_pull_anchor
+            - force_chain:n2
+          result: keep
+          semantic_role: structural
+        - id: B/S
+          initial_cells:
+            - [4, 2]
+            - [4, 3]
+          returned_trace_shift_steps: [5, 10, 15, 17]
+          returned_trace_roles:
+            - 首段左抽进入编结位
+            - 中段参与 n2 同链上移并覆盖上目标
+            - 终段先右移腾位，再参与 n2 同链左收
+          all_win_required_events:
+            - anchor_boundary_shift:box_sticky
+            - pull_object:box_sticky_anchor
+            - force_chain:n2
+          result: keep
+          semantic_role: structural
+      removed_objects: []
+
+    object_wallify_prune:
+      status: clean
+      counterfactual_variants_run: []
+      routing_reason: >-
+        wallify 的 authority 前提是对象不移动、不转换且不参与核心事件。P/L 与 B/S
+        均不满足此前提；不存在把静态 blocker 伪装成可动物体的候选。
+      objects_screened:
+        - id: P/L
+          result: keep
+          failed_wallify_candidate_preconditions:
+            - moves_in_returned_trace
+            - participates_in_core_events
+          semantic_role: structural
+        - id: B/S
+          result: keep
+          failed_wallify_candidate_preconditions:
+            - moves_in_returned_trace
+            - participates_in_core_events
+          semantic_role: structural
+      wallified_objects: []
+
+    space_prune:
+      status: clean
+      counterfactual_variants_run: []
+      static_scan:
+        walkable_cells: 16
+        ordinary_floor_cells_checked: 9
+        minimum_static_degree: 2
+        degree_le_1_candidates: []
+        single_entry_pockets: []
+        edge_hole_candidates: []
+      path_consumption:
+        player_unique_visited_cells: 12
+        player_path_consumed_ordinary_floor:
+          - [2, 1]
+          - [1, 2]
+          - [3, 2]
+          - [1, 4]
+          - [2, 4]
+          - [1, 5]
+          - [2, 5]
+        object_path_consumed_remaining_ordinary_floor:
+          - cell: [4, 1]
+            role: B/S 右移后的 S 端点及终段回收路线
+          - cell: [3, 4]
+            role: P/L 首段下移后的 L 端 staging 位
+        start_cell:
+          cell: [1, 3]
+          role: opening_comfort_and_player_path
+      result: keep
+      reason: >-
+        所有普通空地静态 degree 均不低于 2，且不存在单入口 pocket；九个普通空地
+        全部被 exact returned trace 的玩家路径或对象路径消费。起点 [1,3] 同时属于
+        initial SCC 的 opening comfort。按 authority 没有进入 floor->wall 反事实的合格候选。
+      semantic_role: structural_and_opening_comfort
+      removed_spaces: []
+
+    wall_outline_prune:
+      status: clean
+      counterfactual_variants_run: []
+      dimensions: 6x7
+      scan:
+        wall_only_outer_rows_or_columns_that_can_be_trimmed: []
+        empty_outer_rows_or_columns: []
+        double_thick_full_borders: []
+        outline_residue_after_prior_stages: []
+      result: keep
+      reason: >-
+        当前外圈已是单层封闭墙；紧邻四侧外墙的内行或内列均含目标、对象路线、玩家路线
+        或 opening 空间。裁去任一外行/外列都会让新的最外圈出现非墙格，不满足 playable
+        矩形布局与最外圈全墙要求，因此没有合法 trim 候选。
+      semantic_role: structural
+      trimmed_outline: []
+
+  candidates_checked:
+    - element:
+        kind: goal
+        id_or_cell: [3, 1]
+      action_tested: remove
+      result: keep
+      reason: 删除后成本 17->3，并出现四组核心事件绕过。
+      hard_facts:
+        cost_delta: "17->3"
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass:
+          - anchor_boundary_shift:box_sticky
+          - force_chain:n2
+          - pull_object:push_pull_anchor
+          - pull_object:box_sticky_anchor
+        opening_delta: not_required_after_core_bypass
+        target_obligation_bypass: upper_target_removed
+      semantic_role: structural
+    - element:
+        kind: goal
+        id_or_cell: [2, 2]
+      action_tested: remove
+      result: keep
+      reason: 删除后成本 17->4，并出现四组核心事件绕过。
+      hard_facts:
+        cost_delta: "17->4"
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass:
+          - anchor_boundary_shift:box_sticky
+          - force_chain:n2
+          - pull_object:push_pull_anchor
+          - pull_object:box_sticky_anchor
+        opening_delta: not_required_after_core_bypass
+        target_obligation_bypass: lower_target_removed
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: P/L
+      action_tested: remove_candidate_screen
+      result: keep
+      reason: returned trace 四次位移，且 complete all-win probe 证明 P/L shift、P/L pull 不可绕过。
+      hard_facts:
+        cost_delta: not_run_non_candidate
+        graph_status: baseline_complete
+        expected_trace_win: baseline_true
+        core_event_bypass: none_in_exact_candidate
+        opening_delta: not_applicable
+        target_obligation_bypass: none
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: B/S
+      action_tested: remove_candidate_screen
+      result: keep
+      reason: returned trace 四次位移，且 complete all-win probe 证明 B/S shift、B/S pull 不可绕过。
+      hard_facts:
+        cost_delta: not_run_non_candidate
+        graph_status: baseline_complete
+        expected_trace_win: baseline_true
+        core_event_bypass: none_in_exact_candidate
+        opening_delta: not_applicable
+        target_obligation_bypass: none
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: P/L
+      action_tested: wallify_candidate_screen
+      result: keep
+      reason: 对象移动且参与核心事件，不满足 wallify 前提。
+      hard_facts:
+        cost_delta: not_run_non_candidate
+        graph_status: baseline_complete
+        expected_trace_win: baseline_true
+        core_event_bypass: none_in_exact_candidate
+        opening_delta: not_applicable
+        target_obligation_bypass: none
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: B/S
+      action_tested: wallify_candidate_screen
+      result: keep
+      reason: 对象移动且参与核心事件，不满足 wallify 前提。
+      hard_facts:
+        cost_delta: not_run_non_candidate
+        graph_status: baseline_complete
+        expected_trace_win: baseline_true
+        core_event_bypass: none_in_exact_candidate
+        opening_delta: not_applicable
+        target_obligation_bypass: none
+      semantic_role: structural
+    - element:
+        kind: space
+        id_or_cell: all_ordinary_floor_cells
+      action_tested: wall_prune_candidate_scan
+      result: keep
+      reason: 无 degree<=1、单入口 pocket 或无责任边缘空洞；所有普通空地被玩家或对象路径消费。
+      hard_facts:
+        cost_delta: not_run_no_candidate
+        graph_status: baseline_complete
+        expected_trace_win: baseline_true
+        core_event_bypass: none_in_exact_candidate
+        opening_delta: baseline_initial_scc_68
+        target_obligation_bypass: none
+      semantic_role: structural
+    - element:
+        kind: wall_outline
+        id_or_cell: outer_boundary
+      action_tested: trim_candidate_scan
+      result: keep
+      reason: 无可裁空行、空列、双厚整边或轮廓残留。
+      hard_facts:
+        cost_delta: not_run_no_candidate
+        graph_status: baseline_complete
+        expected_trace_win: baseline_true
+        core_event_bypass: none_in_exact_candidate
+        opening_delta: none
+        target_obligation_bypass: none
+      semantic_role: structural
+
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline: []
+  retained_elements:
+    - kind: goal
+      id_or_cell: [3, 1]
+      reason: 删除造成成本骤降与核心事件绕过。
+    - kind: goal
+      id_or_cell: [2, 2]
+      reason: 删除造成成本骤降与核心事件绕过。
+    - kind: object
+      id_or_cell: P/L
+      reason: 可移动核心编结对象。
+    - kind: object
+      id_or_cell: B/S
+      reason: 可移动核心编结对象。
+    - kind: space
+      id_or_cell: all_ordinary_floor_cells
+      reason: 无合格裁剪形状，且全被玩家或对象路径消费。
+    - kind: wall_outline
+      id_or_cell: outer_boundary
+      reason: 已是不可再裁的单层封闭轮廓。
+
+  evidence_refs:
+    - prototypes/reality_anchor/docs/redundant_element_prune.md
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_check.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_layout.txt
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+    - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+    - prototypes/reality_anchor/reports/anchor_braid_mixed_gate_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_expected_trace.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_redundant_prune_baseline.json
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_redundant_prune_baseline.json
+
+  final_conclusion: >-
+    Exact v6 的五阶段 redundant_element_prune 为 clean。两个目标均必须保留；P/L 与 B/S
+    因多次移动且承担 complete all-win 核心事件而不属于 remove/wallify 候选；普通空地没有
+    leaf、单入口 pocket 或无责任边缘空洞，并全部被玩家或对象路径消费；外轮廓已不可再裁。
+    本检查不要求新版本，不重走 reviewer / critic，不修改任何共享提交文件。

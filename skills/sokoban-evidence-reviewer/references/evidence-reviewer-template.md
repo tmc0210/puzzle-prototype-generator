@@ -8,13 +8,14 @@
 
 - `claimed_core_events` 是否被 trace events / object facts 支持。
 - Winning-path event gate 与 reachable exposure gate 是否分清。
-- 如果 packet / brief 声明 `allowed_exposure_through`、机制暴露窗口、最高核心知识或 knowledge-stage claim，是否使用 prototype `mechanic_exposure_sequence.yml` 或 packet 提供的等价 sequence：later events 需要由完整 reachable scan 排除；claimed latest exposed event / knowledge 需要由 all-solution required gate 证明在所有胜利路径中必经。缺少完整 reachable scan、缺少 all-solution gate，或存在 missing-required winning path 时，结论为 `unknown` 或 `does_not_support_claim`。
-- `supports_with_caveats` 不得保留不被证据支持的 central mechanism / knowledge / exposure claim；这类问题必须要求 revise claim、补证据或 reject/change family。
+- 如果 packet / brief 声明 `allowed_exposure_through` 或机制暴露窗口，是否使用 prototype `mechanic_exposure_sequence.yml` 或 packet 提供的等价 sequence：later events 需要由完整 reachable scan 排除；claimed latest exposed event 需要由 all-solution required gate 证明在所有胜利路径中必经。缺少完整 reachable scan、缺少 all-solution gate，或存在 missing-required winning path 时，结论为 `unknown` 或 `does_not_support_claim`。
+- `supports_with_caveats` 不得保留不被证据支持的 central mechanism / exposure claim；这类问题必须要求 revise claim、补证据或 reject/change family。
 - `forbidden_if_seen_anywhere` 是否依赖完整可达扫描；扫描未完成则为 `unknown`。
 - Event pattern、event instance、object participation、per-object necessity 是否混淆。
 - Returned trace 是否被误写成 all-solution / complete graph 证明。
 - Graph exhausted 时，graph-dependent claim 是否降级为 `unknown`。
 - Tool evidence 是否被过度解释为 player insight 或 puzzle quality。
+- `calibrated_trace_metrics` 是否被错误当作 evidence：它只供 puzzle critic 阅读，evidence reviewer 不评价其权重、分数或审美含义。
 
 ## 输出
 

@@ -21,7 +21,7 @@ scc_graph_interpretation:
   graph_fact: ""
   neutral_meaning: ""
   player_facing_interpretation: ""
-  verdict_effect: none | merit | caveat | core_attack
+  verdict_effect: none | merit | caveat | core_blocker
 ```
 
 如果 `player_facing_interpretation` 为空，`verdict_effect` 必须是 `none`。
@@ -415,7 +415,7 @@ verdict_effect: caveat
 graph_fact: "forcedWinPrefix=3/3"
 neutral_meaning: "The win-continuing commitment order is fixed."
 player_facing_interpretation: ""
-verdict_effect: core_attack
+verdict_effect: core_blocker
 ```
 
 上面的无效攻击缺少玩家侧解释，`verdict_effect` 必须改为 `none`。

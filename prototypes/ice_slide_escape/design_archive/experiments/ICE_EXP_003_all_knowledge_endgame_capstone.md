@@ -93,18 +93,6 @@ exploration_guidance:
     - boundary disappearance is accidental loss rather than designed responsibility
     - target coverage and edge-goal access are independent subproblems
     - complete graph or SCC evidence exposes a player-facing execution problem after applying docs/30-scc-graph-diagnostic-reading.md
-player_model_assumption:
-  known_before:
-    - d1_d2_stop
-    - d3_destroy_moving_ice
-    - d4_rebound
-    - d5_pass_through
-    - d6_plus_destroy_group
-    - restart_counting_after_group_interaction
-    - boundary_disappearance
-    - target_ice_requirement
-    - explicit_edge_start_goal_contract
-  not_yet_known: []
 challenge_floor:
   must_not_be:
     - discovery_or_witness

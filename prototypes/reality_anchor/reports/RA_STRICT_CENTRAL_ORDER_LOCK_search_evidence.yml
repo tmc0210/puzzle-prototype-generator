@@ -1,0 +1,144 @@
+schema_version: 1
+report_id: RA_STRICT_CENTRAL_ORDER_LOCK_SEARCH_EVIDENCE
+prototype_id: Reality_Anchor
+base_candidate_id: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v6
+status: no_complete_candidate
+objective:
+  - 所有胜路至少发生 4 次 anchor_boundary_shift:box_sticky。
+  - 所有胜路至少发生 2 次 box_to_sticky:n2。
+  - 所有胜路第一次移动 B/S 前必须已经完成关键拉箱。
+  - pull crate、pull sticky、force-chain、rigid move 均为胜路必经。
+  - 完整状态图 complete，且 winStateCount=1。
+
+conclusion: >-
+  在本报告列明的 540 个有界结构/目标变体中，没有候选同时满足全部目标。
+  最强变体 WALL_8_3 保住 complete、单胜态、四次 B/S 与全部核心事件，
+  但产品图仍存在“第一次刷后再拉箱”的 75 步胜路，只有一次 box_to_sticky:n2。
+
+base_counterexample:
+  artifact: event_count_probe_RA_STRICT_CENTRAL_COUNT_2_box_to_sticky_n2_min2.md
+  result:
+    found_bypass_below_count: true
+    explored_product_states: 286142
+    depth: 71
+    matched_count: 1
+  structural_reading: >-
+    标准路线先在 (5,4) 向下拉 (5,3) 的箱，再第一次上移 B/S；
+    绕过路线先上移 B/S，再执行同一空间动作。后者让箱在跨界时转黏并与邻格合并，
+    两条路线随后汇合到完全相同的原始状态。因此只改目标或终局锚点位置无法区分这两段历史。
+
+bounded_search:
+  evaluated_variant_count: 540
+  families:
+    - family: base_single_wall_add
+      variants: 15
+      result: 1 个可解且最短轨迹满足表面门槛；即 WALL_8_3，完整复核失败。
+      artifact: RA_STRICT_CENTRAL_ORDER_LOCK_single_add_search.txt
+    - family: right_corridor_pair_wall_add
+      variants: 78
+      result: 0 个可解。
+      artifact: RA_STRICT_CENTRAL_ORDER_LOCK_corridor_pair_search.txt
+    - family: key_inner_wall_remove
+      variants: 10
+      result: 9 个可解，4 个最短轨迹满足表面门槛；均未改变交换菱形，继承基线绕过。
+      artifact: RA_STRICT_CENTRAL_ORDER_LOCK_gate_remove_search.txt
+    - family: WALL_8_3_second_wall_add
+      variants: 14
+      result: 0 个可解。
+      artifact: RA_STRICT_CENTRAL_ORDER_LOCK_WALL_8_3_single_add_search.txt
+    - family: pure_floor_BS_relocation
+      variants: 30
+      result: >-
+        4 个可解，只有原位与上移一格两种几何达到最短事件门槛；
+        原位继承基线绕过，上移一格自身最短解就在拉箱前移动 B/S，且完整反例搜索失败。
+      artifact: RA_STRICT_CENTRAL_ORDER_LOCK_relocate_bs_all_search.txt
+    - family: two_box_brush_seed
+      variants: 45
+      result: >-
+        17 个可解，仅 FORCE_ENTRY 达到完整图/单胜态/最短事件门槛；
+        第 2 步后汇合回基线状态，完整计数 probe 找到一次 n2 的胜路。
+      artifact: RA_STRICT_CENTRAL_ORDER_LOCK_seed_two_brush_search.txt
+    - family: BS_wall_carve_and_old_site_closure
+      variants: 216
+      result: >-
+        25 个可解，6 个表面命中实际只归并为原位与上移一格两种几何；两者均被上述反例否定。
+    - family: explicit_phase_gate_seed
+      variants: 27
+      result: >-
+        B/S 上移封上通路、静态墙封下通路，目标直接让“刷后返回拉箱”非法；0 个可解。
+      artifact: RA_STRICT_CENTRAL_PHASE_GATE_seed_search.txt
+    - family: right_anchor_goal_pair
+      variants: 105
+      result: >-
+        完整原始图上枚举 15 个右区格的全部二目标组合；6 对产生单一终端胜态，
+        4 对最短轨迹满足四移/双 n2/核心事件，但目标不改变转移，全部继承基线的同态汇合绕过。
+      artifact: RA_STRICT_CENTRAL_ORDER_LOCK_goal_pair_search.txt
+
+strongest_failed_candidate:
+  id: RA_STRICT_CENTRAL_ORDER_LOCK_WALL_8_3
+  layout_artifact: RA_STRICT_CENTRAL_ORDER_LOCK_WALL_8_3.layout.txt
+  layout: |-
+    #############
+    #####LP######
+    #######.....#
+    #####.CC#G..#
+    #####G*.#GB##
+    #####GGM..S##
+    ######@.#..##
+    #############
+  shortest_solution:
+    cost: 75
+    anchor_boundary_shift_box_sticky_count: 4
+    box_to_sticky_n2_count: 2
+    required_events_present:
+      - pull_object:crate#1
+      - pull_object:sticky#1
+      - force_chain:n2
+      - move_sticky_rigid
+      - sticky_to_box:n2
+  graph:
+    status: complete
+    reachable_states: 37789
+    win_state_count: 1
+  positive_all_win_probe:
+    criterion: anchor_boundary_shift:box_sticky >= 4
+    bypass_found: false
+    status: complete
+    explored_product_states: 77216
+    artifact: event_count_probe_RA_STRICT_CENTRAL_ORDER_LOCK_WALL_8_3_SHIFT4_anchor_boundary_shift_box_sticky_min4.md
+  rejecting_probes:
+    - criterion: box_to_sticky:n2 >= 2
+      bypass_found: true
+      explored_product_states: 95385
+      depth: 75
+      matched_count: 1
+      artifact: event_count_probe_RA_STRICT_CENTRAL_ORDER_LOCK_WALL_8_3_BTS2_box_to_sticky_n2_min2.md
+    - criterion: pull_object:crate#1 必须早于第一次 anchor_boundary_shift:box_sticky
+      violation_win_found: true
+      explored_product_states: 58401
+      depth: 75
+      artifact: order_probe_RA_STRICT_CENTRAL_WALL_8_3_PULL_BEFORE_BS.md
+
+other_decisive_rejections:
+  - id: RA_STRICT_CENTRAL_SEED_FORCE_ENTRY
+    reason: 第 2 步汇合回基线；存在仅一次 box_to_sticky:n2 的 71 步胜路。
+    explored_product_states: 286157
+    artifact: event_count_probe_RA_STRICT_CENTRAL_SEED_FORCE_ENTRY_BTS2_box_to_sticky_n2_min2.md
+  - id: RA_STRICT_CENTRAL_BS_UP_ONE
+    reason: 最短解在关键拉箱前先移动 B/S；同时存在仅一次 box_to_sticky:n2 的胜路。
+    order_violation_product_states: 377687
+    count_bypass_product_states: 421194
+    artifact_order: order_probe_RA_STRICT_CENTRAL_BS_UP_ONE_PULL_BEFORE_BS.md
+    artifact_count: event_count_probe_RA_STRICT_CENTRAL_BS_UP_ONE_BTS2_box_to_sticky_n2_min2.md
+
+design_implication: >-
+  该交换不是“目标不够严格”，而是两个操作在当前局部规则下可交换并汇合。
+  真正修复必须让第一次 B/S 位移改变拉箱动作的可达性或合法性；
+  仅加远端墙、换起点、换目标、把 B/S 在现有地板上平移，都不能保存历史差异。
+  明确相位门结构已验证方向正确但当前 27 个种子全部不可解，若继续应重做工作区拓扑，
+  不应再在 v6 外壳上追加局部补丁。
+
+verification:
+  typescript_check: pass
+  levels_modified: false
+  playable_queue_modified: false

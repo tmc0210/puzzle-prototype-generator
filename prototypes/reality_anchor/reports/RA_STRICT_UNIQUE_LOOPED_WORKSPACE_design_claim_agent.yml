@@ -1,0 +1,51 @@
+schema_version: 1
+artifact_kind: fresh_design_claim
+prototype: reality_anchor
+owner: strict_unique_sampler
+archive_lineage_policy: fresh_required
+status: scratch_search_claim
+
+player_insight: >-
+  同一块紧凑中廊不是一次经过的运输线：玩家先把它当成 P/L 把手生成位，
+  再把它当成 B/S 边界的刷线位，最后从相反方向把刷出的材料交付到目标。
+  空间会回返、对象职责会接力，但正确计划只有一条。
+
+causal_chain:
+  - 用箱链或刚体的第一次施力制造唯一可用把手，并触发至少一个锚点位移。
+  - 必须在该把手仍开放时完成第二锚点的定位；提前处理终局材料会封掉站位。
+  - 第二锚点重写中廊材料边界，产出可被末段消费的 crate 或 sticky 单元。
+  - 玩家回到同一中廊，从相反方向移动该产物并覆盖末目标。
+
+required_events:
+  - anchor_boundary_shift:push_pull
+  - anchor_boundary_shift:box_sticky
+  - pull_object
+  - box_to_sticky|sticky_to_box
+forbidden_solution_properties:
+  - 必要对象动作存在可交换先后次序
+  - 两条 loop-erased 胜路具有不同的非 walk 对象事件序列
+  - 仅靠多个 winning state 或最短解唯一冒充计划唯一
+  - 主要空间只被单向经过一次
+
+why_not_execution: >-
+  合格结构必须让同一玩家站位区或中廊被至少两次、以不同职责重新进入；
+  若只是按提示依次搬动两个锚点，再把箱子送上目标，则即使事件很多也淘汰。
+
+tool_questions:
+  - 完整终止胜态图是否 complete，且 winning state 是否唯一？
+  - 纯 walk 连通分量压缩后的对象状态图，从初态到胜态是否只有一条 simple path？
+  - 全部最短胜路的去 walk 对象事件序列是否唯一？
+  - 两个锚点位移、转换与末段材料移动是否在所有胜路中必经且次序锁定？
+  - calibrated execution 与 space reuse 是否至少为 4？
+
+falsification: >-
+  发现任意两条不含重复对象宏状态的胜路，其必要非 walk 对象事件序列不同，
+  或出现事件次序可交换而仍能获胜，即判定该布局不满足“唯一解”，不进入正式候选。
+
+lexicon_parts:
+  - P/L 横向把手门
+  - P/L pull 抽取输出
+  - B/S 移动边界刷产物
+new_linkage: >-
+  用单格把手可达性把三段接口锁成唯一顺序，并让刷线产物回到同一中廊反向交付；
+  新增的是回返空间与唯一宏序列的耦合，而不是把三个基础用法直线串联。

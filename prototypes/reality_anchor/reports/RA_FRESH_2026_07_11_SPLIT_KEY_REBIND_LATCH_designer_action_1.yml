@@ -1,0 +1,96 @@
+review_iteration_answered: 1
+candidate_version_answered: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10
+designer_action_type: revise_structure
+
+evidence_reviewer_action:
+  required_action: none
+  response: >-
+    接受 scope 修正：第二轮把核心事件的正向事实限定为 returned canonical shortest trace；
+    只有单独完成的 event-avoiding 完整搜索才写 all-solution necessity。
+  evidence_or_attempt_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16.json
+  result: revised_packet_scope_and_new_exact_evidence
+
+critic_item_triage:
+  - critic_item_id: PC1_SPLITLESS_ROLE_BYPASS
+    response: revise_now
+    reason: >-
+      v10 的 48 步无 sticky_split 胜路证明原结构不能保证切割职责。v16 改写中层墙口与
+      初始黏块轮廓，并把核心切割语义收紧为 sticky_to_box；禁用 sticky_to_box 的完整搜索
+      在 2861 个状态闭合且无胜局。一个 66 步路线虽不触发 sticky_split，却仍在切割器上
+      触发 sticky_to_box:n3，因此不再被错误描述为“无切割”。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16.txt
+      - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_split_bypass.json
+    produces: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+    next_review_needed: true
+  - critic_item_id: PC1_PL_FORCE_SIDE_SUPPORT_GAP
+    response: revise_now
+    reason: >-
+      删除“P/L 改写末段施力侧”的未支撑主张。v16 只主张 P/L 是被 U 形抬升解锁的目标泊位，
+      同时以禁用 anchor_boundary_shift:push_pull 的完整 155 状态搜索证明其 all-win 必要性；
+      不把一向依赖夸大成双向力侧改写。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_candidate_packet.yml
+    produces: revised_claim
+    next_review_needed: true
+  - critic_item_id: PC1_STATEFUL_BUT_SCRIPTED
+    response: accept_as_nonblocking
+    reason: >-
+      接受难度 4 而非 5 的分数边界；28 步 canonical trace 的执行压力 band 5 只作描述，
+      不据此宣称洞见或难度 5。
+    refs:
+      - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16.json
+    produces: handoff_note
+    next_review_needed: true
+  - critic_item_id: PC1_MECHANISM_SIGNAL_PAYOFF_BOUNDARY
+    response: accept_as_nonblocking
+    reason: >-
+      接受终局连续下压限制审美上限；第二轮只争取审美 4 下界，不声称 5。
+    refs:
+      - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16.json
+    produces: handoff_note
+    next_review_needed: true
+  - critic_item_id: PC1_PL_COUPLING_BOUNDARY
+    response: accept_as_nonblocking
+    reason: >-
+      P/L 在玩家侧承担“一向依赖 + 必须泊位”的真实职责，但不宣称达到 RA_CAND_0017 式
+      双向耦合或审美/难度 5。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_candidate_packet.yml
+    produces: handoff_note
+    next_review_needed: true
+  - critic_item_id: PC1_COMPACTION_COMFORT_RISK
+    response: add_context_next_review
+    reason: >-
+      v16 比 v10 增至 40 个 walkable cells，并保留开局可走观察；提交前仍按原型专属流程
+      单独执行 opening comfort check。
+    refs:
+      - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16.json
+    produces: revised_packet_context
+    next_review_needed: true
+  - critic_item_id: PC1_PARTIAL_GRAPH_BOUNDARY
+    response: accept_as_nonblocking
+    reason: >-
+      主图在 1,000,000 状态预算耗尽；不主张唯一解、全图分支质量或完整 SCC。
+    refs:
+      - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16.json
+    produces: evidence_limit
+    next_review_needed: true
+
+handoff_notes:
+  - note: "目标是审美/难度均达到4的合格下界；5分仍是试玩后才可讨论的追求。"
+    source_critic_item_id: PC1_STATEFUL_BUT_SCRIPTED
+    claim_not_being_made: difficulty_5
+  - note: "P/L 是必要但单向耦合的上层泊位，不声称改变末段施力侧。"
+    source_critic_item_id: PC1_PL_FORCE_SIDE_SUPPORT_GAP
+    claim_not_being_made: pl_rewrites_final_force_side
+
+produces:
+  candidate_version: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+  evidence_disagreement_packet: null
+  revised_packet_context: >-
+    切割 gate 改为 sticky_to_box；补充四个独立、完整的 event-avoiding 搜索，分别覆盖拼接、
+    切割、P/L 位移与 B/S 位移；保留 graph exhausted 边界。
+next_step: review_N_plus_1

@@ -51,7 +51,7 @@ human_comments:
 ## Human Calibration（人类校准）
 
 这些评分只能来自人类判断。若不存在人类评分，保持 `human_reviewed: false`，
-分数保持 `null`。`allowed_exposure_through` 是课程分层字段；有值时保留。
+分数保持 `null`。`allowed_exposure_through` 有值时保留。
 
 ```yaml
 human_calibration:

@@ -165,6 +165,7 @@ trim wall-thick border while preserving rectangular layout
 - 裁剪不改变对象、目标和玩家的相对结构责任；
 - 裁剪不改变推/拉、force_blocked、destination_blocked 等机制边界；
 - playable / editor 仍能正常读取矩形布局。
+- 裁剪不会导致最外圈任意格非墙
 
 ## 输出形状
 

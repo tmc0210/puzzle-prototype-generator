@@ -1,0 +1,234 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1
+review_input_type: candidate_version
+reviewer_role: mechanic_evidence_reviewer
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+review_boundary:
+  task_classification: specific_prototype_level_design
+  taste_scoring_performed: false
+  difficulty_or_aesthetic_verdict_performed: false
+  live_play_performed: false
+  claim_last_order_observed: true
+  reading_order:
+    - facts_packet_and_hard_evidence
+    - initial_fact_assessment
+    - claim_packet_and_design_claim
+
+exact_instance_check:
+  layout_file: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1.layout.txt
+  expected_sha256: 2bccfca39c6b080c65cd211c5b73d33104e9dfeb55ba8516e54533a3467f5f88
+  independently_computed_file_sha256: 2bccfca39c6b080c65cd211c5b73d33104e9dfeb55ba8516e54533a3467f5f88
+  exact_match: true
+
+independent_hard_fact_checks:
+  solver_and_full_graph:
+    rerun_status: complete
+    shortest_solution_found: true
+    shortest_cost: 19
+    explored_states_before_shortest: 146
+    graph_status: complete
+    reachable_states: 151
+    legal_transitions: 282
+    winning_states: 1
+    finding: supported
+  shortest_solution_enumeration:
+    status: complete
+    truncated: false
+    exact_input_path_count: 2
+    distinct_non_walk_signature_count: 1
+    finding: >-
+      两条最短输入串的首次 B/S 上拉可从两个端部进入；它们的完整玩家状态在该动作后并不相同，
+      但对象配置相同、两玩家位置由一步纯 walk 连通，因而属于同一 walk 宏状态，后续去 walk 对象序列相同。
+      这不是两套对象计划。
+  strict_unique_object_macro_audit:
+    graph_status: complete
+    walk_macro_states: 38
+    winning_macro_states: 1
+    win_reachable_macro_states: 11
+    canonical_macro_path_nodes: 11
+    canonical_macro_edges: 10
+    off_path_win_reachable_macro_states: 0
+    every_canonical_edge_is_undirected_bridge: true
+    every_forward_bridge_has_one_non_walk_label: true
+    substantive_edges_collapsed_to_macro_self_loop: 0
+    independent_recheck_status: PASS
+    finding: >-
+      在声明允许消去纯 walk 差异和完整回返环的口径内，任一实际胜路的对象动作都跨越宏边；
+      初态至唯一胜宏的可胜子图只有同一条十边桥路径。必要动作换序会形成另一条 simple 宏路径或菱形，
+      但完整图中两者均不存在，因此此前 role-relay 式的必要动作换序已被排除。
+  all_win_event_count_checks:
+    status: all_complete_no_bypass
+    checks:
+      - {event: 'anchor_boundary_shift:box_sticky', min_count: 3, found_bypass: false, explored_states: 213}
+      - {event: 'pull_object:box_sticky_anchor', min_count: 2, found_bypass: false, explored_states: 197}
+      - {event: 'push_object:box_sticky_anchor', min_count: 1, found_bypass: false, explored_states: 195}
+      - {event: 'anchor_boundary_shift:push_pull', min_count: 3, found_bypass: false, explored_states: 203}
+      - {event: 'pull_object:push_pull_anchor', min_count: 3, found_bypass: false, explored_states: 233}
+      - {event: 'pull_object:crate#1', min_count: 3, found_bypass: false, explored_states: 173}
+      - {event: 'push_object:crate#1', min_count: 1, found_bypass: false, explored_states: 172}
+      - {event: box_to_sticky, min_count: 2, found_bypass: false, explored_states: 173}
+      - {event: sticky_to_box, min_count: 2, found_bypass: false, explored_states: 173}
+      - {event: 'force_chain:n2', min_count: 2, found_bypass: false, explored_states: 151}
+      - {event: move_sticky_rigid, min_count: 1, found_bypass: false, explored_states: 173}
+    finding: supported
+  goal_coverage:
+    canonical_trace_all_legal: true
+    final_win: true
+    unique_terminal_roles:
+      upper_goal_3_2: P_anchor_end
+      middle_goal_2_3: crate
+      lower_goal_4_4: S_anchor_end
+    responsibility_evidence:
+      upper_goal: M_at_step_5_then_C_at_step_7_then_empty_at_step_14_then_C_at_step_17_then_P_at_step_18
+      middle_goal: B_at_step_2_then_empty_at_step_7_then_C_at_step_19
+      lower_goal: S_from_step_15_through_win
+    finding: supported
+  goal_deletion_counterfactuals:
+    status: all_complete
+    drop_upper_3_2: {shortest_cost: 11, winning_states: 2, core_chain_bypassed: true}
+    drop_middle_2_3: {shortest_cost: 9, winning_states: 3, core_chain_bypassed: true}
+    drop_lower_4_4: {shortest_cost: 5, winning_states: 1, core_chain_bypassed: true}
+    finding: >-
+      删除任一目标都把最短解缩短到 5 至 11 步，并绕过原候选的大部分对象链；
+      三个目标对完整 19 步链均有实质约束作用。
+  trace_metric_copy_check:
+    calibrated_block_verbatim_equal_to_analyzer_json: true
+    raw_fields_equal: true
+    calibration: reality_anchor_trace_metrics_v0
+    execution_pressure_band: 5
+    space_reuse_band: 5
+    verdict_effect: none
+    reason: Trace Metric 仅为 critic 的执行压力与空间复用校准，不能支持洞见、难度或审美 claim。
+
+graph_reading:
+  graph_fact: >-
+    完整图为 151 状态、282 条合法边、1 个胜态；walk 宏可胜子图的 11 个节点恰为一条十边桥路径，
+    没有附着的可胜宏节点或被压缩的 substantive 自环。
+  neutral_meaning: >-
+    在声明的 loop-erased 对象宏等价关系下，所有胜路都必须按相同顺序跨越相同十条对象宏边；
+    输入串仍可因玩家走位而不同。
+  player_facing_interpretation: >-
+    玩家可以从 B/S 两个端部之一完成同一次首次上拉，但不能把箱、B/S、P/L 的必要阶段重新排序，
+    也不能改用另一套目标职责计划获胜。
+  verdict_effect: merit
+
+supported_claims:
+  - claim: causal_chain
+    finding: supported
+    basis: >-
+      规范 trace、11 项 all-win 事件下限与十边唯一宏序列共同支持 B/S 上拉、箱两次 C->M、
+      B/S 右拉 M->C、P/L 下拉、B/S 下推、末段双 n2、M->C 与最终下拉的顺序和必经性。
+  - claim: uniqueness_claim_scope
+    finding: supported
+    basis: >-
+      claim 明确不声称输入字符串唯一；在其纯 walk 与完整回返环消去口径内，完整宏图支持唯一 simple 对象动作序列。
+  - claim: target_responsibility_relay
+    finding: supported
+    basis: 唯一终止胜态给出 P/C/S 三责；goal coverage 逐步支持上目标和中目标的撤销、回占与终局交接。
+  - claim: dual_anchor_and_material_cycle_participation
+    finding: supported
+    basis: >-
+      两种锚各至少移动三次、箱/M 两次双向转换、两次 n2 与一次 move_sticky_rigid 均由完整 product graph 证明每条胜路必经。
+  - claim: state_reuse_premise
+    finding: supported
+    basis: 规范 trace 直接显示中上工作区先后承担刷界、换侧推离和末段混链/终局下拉职责。
+  - claim: why_not_execution
+    finding: supported_as_claim_hygiene
+    basis: claim 没有把 calibrated Trace Metric 当作洞见或质量证明，并明确把玩家侧兑现交给 critic。
+  - claim: new_linkage_mechanical_premise
+    finding: supported
+    basis: 每个箭头阶段均能映射到唯一宏路径的相邻对象动作及其后续消费。
+
+unsupported_or_overclaimed:
+  - item: player_insight_as_experienced_by_players
+    status: not_proven_by_tool_evidence
+    effect: caveat
+    reading: >-
+      工具证据支持“目标撤销、材料循环、双锚接力”的客观前提，但不能证明玩家会把它读成活塞洞见；
+      singleton 标签编排是否兑现为认知重读必须由 puzzle critic 或真人试玩判断。
+  - item: aesthetic_hypothesis_and_difficulty_hypothesis
+    status: outside_evidence_reviewer_scope
+    effect: none
+    reading: 不评价审美、难度或 campaign placement；本 review 不可代替 critic 的 4 分门槛判断。
+  - item: 三目标多次换责
+    status: supported_only_as_collective_shorthand
+    effect: caveat
+    reading: >-
+      上目标与中目标存在对象职责更替；底目标仅在 step 15 由 S 首次覆盖后保持到终局。
+      因而该短语不能理解为三个目标各自都经历多位对象轮换。
+
+resolved_precision_notes:
+  - item: 两条最短输入首次 B/S 上拉后的状态口径
+    status: corrected_in_revised_facts_packet_before_final_review
+    effect: none
+    reading: >-
+      修订后的 facts 已准确写明：对象配置相同，玩家分别位于 [3,2] 与 [2,2]，
+      两状态由一步纯 walk 连通并属于同一 walk 宏状态；不再声称 exact runtime state 相同。
+
+counterexample_disagreement_addendum:
+  source_artifact: prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CRITIC_ORDER_WITNESS.json
+  alleged_prefix: [left, left, up, right, down, up]
+  independent_replay:
+    exact_layout_sha256: 2bccfca39c6b080c65cd211c5b73d33104e9dfeb55ba8516e54533a3467f5f88
+    steps:
+      - {step: 1, input: left, legal: true, events: [walk]}
+      - {step: 2, input: left, legal: true, events: [walk]}
+      - {step: 3, input: up, legal: true, events: ['pull_object:box_sticky_anchor', 'anchor_boundary_shift:box_sticky']}
+      - {step: 4, input: right, legal: true, events: ['pull_object:crate#1']}
+      - {step: 5, input: down, legal: false, events: []}
+    step_5_state_changed: false
+    step_6_reached: false
+  exact_merge_check:
+    canonical_prefix: [left, up, left, right]
+    alleged_witness_legal_prefix: [left, left, up, right]
+    exact_merge: true
+    merged_state_key: 'Ply:3,2|C:2,2|M:|PL:P:5,1;L:5,2|BS:B:2,3;S:3,3'
+    non_walk_sequences_equal: true
+    common_non_walk_sequence:
+      - ['pull_object:box_sticky_anchor', 'anchor_boundary_shift:box_sticky']
+      - ['pull_object:crate#1']
+    interpretation: >-
+      exact merge 确实存在，但两条前缀都先上拉 B/S、后拉箱；差异只在首次 B/S 动作前后如何纯走位到箱右侧。
+      它证明同一对象宏动作的 walk 入口汇合，不证明箱动作早于 B/S，也不构成必要动作换序。
+  complete_order_recheck:
+    product_graph_status: complete
+    product_states: 160
+    reachable_crate_push_or_pull_before_first_box_sticky_boundary_shift: false
+    winning_path_with_crate_push_or_pull_before_first_box_sticky_boundary_shift: false
+    interpretation: >-
+      不仅该六键 witness 失败；对 exact 完整图加入“是否已移动 B/S、是否发生箱先行动作”历史位后，
+      没有任何可达路径能在首次 B/S 边界位移前推或拉箱，更不存在此类胜路。
+  finding: alleged_counterexample_refuted
+  effect_on_verdict: none
+  retained_verdict: supports_with_caveats
+  retained_review_loop_state: proposal_ready_with_caveats
+  retained_required_action: none
+
+evidence_limits:
+  - one winning state 单独不证明唯一对象计划；本结论依赖完整 graph 与 candidate-specific 宏桥审计。
+  - 本候选只有一个箱子；M 始终为 singleton，没有 sticky_merge，也没有多格黏块几何。
+  - singleton C 与 M 的平移几何相同；证据只证明边界转换和事件必经，不证明该转换具有足够玩家侧价值。
+  - Trace Metric 的 execution5/space5 已逐字核对，但按 reviewer 纪律不进入 evidence verdict。
+  - 没有真人试玩，错误分支公平性、可读性及玩家实际洞见均未获验证。
+  - 不存在 allowed_exposure_through、最高知识或 forbidden reachable exposure claim；因此本轮不需要 exposure sequence gate。
+
+questions_for_designer: []
+
+handoff_to_puzzle_critic:
+  - 判断 singleton C/M 循环是可感知的因果重读，还是仅有视觉标签变化。
+  - 判断 step 8 至 step 14 的五步换侧是否被主动撤目标与后续反向混链充分消费，还是路线税。
+  - 独立给出审美与难度分数；本 evidence review 不对 4 分门槛作任何暗示性放行。
+
+reviewed_artifacts:
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_facts_packet.yml
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_strict_unique_audit_agent.json
+  - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1.json
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json
+  - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_*.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_drop_*.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_claim_packet.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_design_claim.yml

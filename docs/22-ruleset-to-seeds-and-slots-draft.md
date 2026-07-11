@@ -1,18 +1,8 @@
 # Ruleset To Design Plan Blind Test
 
-Status: blind-test-safe draft. This document describes the upstream phase from a confirmed ruleset to an initial, revisable design plan. It does not try to define a complete knowledge ontology, curriculum topology, or final level list.
+Status: blind-test-safe draft. This document describes the upstream phase from a confirmed ruleset to an initial, revisable design plan.
 
 ## Purpose
-
-The goal is to avoid two opposite failure modes:
-
-```text
-over-planning:
-  invent a complete knowledge / ability / lesson taxonomy before any level design evidence exists.
-
-under-planning:
-  randomly roll maps from seeds or miner findings and only later pretend the good ones form a curriculum.
-```
 
 The intended path is:
 
@@ -30,13 +20,7 @@ confirmed ruleset
 
 This document covers initialization and plan revision. It does not certify final levels.
 
-## Hard Boundary
-
-Do not introduce formal entities named knowledge, ability, pattern, bundle, support level, guided application, independent application, review level, or challenge level in this upstream phase.
-
-If those words appear in older downstream documents, treat them as legacy vocabulary for local design discussion, not as the output schema of this phase.
-
-The upstream output is only:
+The upstream output is:
 
 ```text
 rule facts
@@ -269,9 +253,7 @@ Rules:
 
 ## Step 4: Initial Design Plan
 
-The design plan is a working plan, not a knowledge list.
-
-It records what the agent currently intends to do with observed facts and phenomena. It is expected to change after design attempts.
+The design plan records what the agent currently intends to do with observed facts and phenomena. It is expected to change after design attempts.
 
 Use coarse treatment states:
 
@@ -474,9 +456,6 @@ Do not output:
 
 ```text
 final campaign level list
-final knowledge topology
-ability / pattern / bundle taxonomy
-challenge or review level labels
 accepted final maps
 old generated report summaries
 ```
@@ -524,10 +503,6 @@ docs/19-multi-instance-object-model.md
 Do not read for the first blind test:
 
 ```text
-target_prototype/player_model.yml, if it exists from an earlier attempt
-target_prototype/knowledge.yml, if it exists from an earlier attempt
-target_prototype/curriculum*.yml, if it exists from an earlier attempt
-target_prototype/level_specs*.yml, if it exists from an earlier attempt
 target_prototype/candidates*.yml, if it exists from an earlier attempt
 target_prototype/levels.yml, if it exists from an earlier attempt
 target_prototype/reports/*
@@ -550,7 +525,6 @@ Tool-use constraints:
 
 - Temporary layouts may be created for probes or candidate attempts, but they are not final campaign levels.
 - Mined layouts are raw findings only.
-- Do not write back old player model, curriculum, level spec, candidate, or level files during the blind test.
 - Do not read generated reports from previous runs.
 - If no miner is implemented, mark miner findings as unavailable rather than inventing them.
 - Mark reasoning-only claims as `hypothesis`.
@@ -563,7 +537,6 @@ The controller should judge the output by asking:
 
 ```text
 Are rule facts faithful to the confirmed ruleset?
-Did the agent avoid inventing a knowledge / ability / bundle taxonomy?
 Are probes real observable structures rather than names?
 Were miner findings rewritten instead of accepted as maps?
 Does the initial design plan make conservative treatment decisions?

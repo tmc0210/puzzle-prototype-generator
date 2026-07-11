@@ -1,5 +1,7 @@
 # Generic Solver/Evaluator Contract
 
+Status: obsolete.
+
 本项目的求解器和评估器不应绑定某一个 Sokoban-like 原型。具体机制只通过 runtime adapter 暴露为有限状态转移系统。
 
 ## Runtime Interface

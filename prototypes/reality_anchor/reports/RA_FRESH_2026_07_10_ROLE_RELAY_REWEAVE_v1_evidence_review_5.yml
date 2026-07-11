@@ -1,0 +1,155 @@
+review_iteration: 5
+candidate_version_reviewed: RA_FRESH_2026_07_10_ROLE_RELAY_REWEAVE_v1
+review_input_type: candidate_version
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+supported_claims:
+  exact_candidate_identity:
+    finding: supports
+    basis: >-
+      layout analysis、goal coverage、12 个 event-count product graph、6 个 order probe、
+      2 个 event-before-count probe、两条 trace 与 witness comparison 均指向当前墙化后的
+      exact 8x6 布局；没有把删箱或删袋前草案的图事实沿用到 v1。
+  shortest_solution:
+    finding: supports
+    basis: >-
+      exact analyzer 与规范 trace 一致给出 19 个合法输入；终步 win=true，规范输入及逐步事件
+      与 facts packet 相符。这里仅支持“存在一条 19 步最短解”，不支持唯一输入序列。
+  complete_graph:
+    finding: supports
+    basis:
+      status: complete
+      reachable_states: 142
+      legal_transitions: 229
+      winning_states: 1
+    scope: >-
+      支持 exact 状态图只有一个终局胜态；不等价于只有一条到达该胜态的输入路径。
+  claimed_core_event_minima:
+    finding: supports
+    method_reading: >-
+      每项 product graph 都在 exact v1 上以 status=complete 结束且 found=false，因而支持
+      “不存在低于给定次数的胜路”，而不只是规范 trace 恰好包含这些事件。
+    checks:
+      - {event: 'anchor_boundary_shift:push_pull', minimum: 2, explored_states: 201}
+      - {event: 'pull_object:push_pull_anchor', minimum: 1, explored_states: 184}
+      - {event: 'push_object:push_pull_anchor', minimum: 1, explored_states: 212}
+      - {event: 'anchor_boundary_shift:box_sticky', minimum: 3, explored_states: 145}
+      - {event: 'pull_object:box_sticky_anchor', minimum: 2, explored_states: 142}
+      - {event: 'push_object:box_sticky_anchor', minimum: 1, explored_states: 145}
+      - {event: 'push_object:crate#1', minimum: 1, explored_states: 150}
+      - {event: 'force_chain:n2', minimum: 1, explored_states: 151}
+      - {event: 'pull_object:crate#1', minimum: 3, explored_states: 348}
+      - {event: 'box_to_sticky:n1', minimum: 1, explored_states: 142}
+      - {event: 'pull_object:sticky#1', minimum: 2, explored_states: 144}
+      - {event: 'move_sticky_rigid', minimum: 2, explored_states: 144}
+  macro_order_relations:
+    finding: supports_with_disclosed_exception
+    locked_relations_supported:
+      - force_chain:n2 先于 P/L 位移
+      - P/L pull 先于 P/L push
+      - 至少两次 B/S pull 先于 B/S push
+      - 首次 crate pull 先于 B/S push
+      - B/S push 先于 box_to_sticky:n1
+      - box_to_sticky:n1 先于 sticky pull
+    disclosed_unlocked_relation: >-
+      第一次 B/S pull 并不被锁在 P/L pull 之后；27 步胜路明确违反该原始动作次序。
+      因此证据只支持 packet 所声明的宏观职责里程碑，不支持所有必要对象动作的全序唯一。
+  final_goal_roles:
+    finding: supports
+    basis: >-
+      规范 goal-coverage trace 的唯一胜局由 [2,4] crate、[3,3] B anchor end、
+      [5,3] sticky singleton 覆盖；结合 complete graph 的 one winning state，支持所有终局胜态
+      采用这组目标职责。玩家在 step18 站上 [5,3] 仍未胜、step19 拉入 M 后才胜也被逐帧证实。
+  irreversible_responsibility_chain:
+    finding: supports_at_scc_scope
+    graph_reading:
+      graph_fact: >-
+        SCC 分析 complete：58 SCC / 61 edges；9 个 win-reachable SCC、1 个 winning SCC，
+        win continuation branching=0、merging=0，forced win prefix=8/8。
+      neutral_meaning: >-
+        从初始 SCC 到胜态 SCC 的凝聚图中，每个可胜 SCC 只有一个继续通向胜态的后继，
+        没有第二条不可逆分支或分支后的汇合。
+      player_facing_interpretation: >-
+        证据支持“目标分工不变的一条不可逆职责链”；它仍允许同一 SCC 内用不同可逆对象动作
+        和走位完成准备。
+      verdict_effect: merit
+  prepull_witness_boundary:
+    finding: supports_and_limits_unique_claim
+    exact_facts:
+      legal_winning_inputs: 27
+      first_bs_shift_step: 9
+      first_exact_state_convergence: canonical_step_9_equals_witness_step_17
+      exact_state_key: 'Ply:3,2|C:2,3;2,4|M:|PL:P:1,1;L:1,2|BS:B:4,2;S:5,2'
+      bs_first_shift_undone_before_convergence: false
+      same_scc: s29
+      same_scc_state_count: 17
+      reverse_path_exists: true
+    graph_reading:
+      graph_fact: >-
+        witness step9 的提前 B/S 状态与规范 step9/见证 step17 的汇合态双向可达，属于同一 s29；
+        见证 step17 与规范 step9 则是完全相同的状态键。
+      neutral_meaning: >-
+        见证在同一可逆 SCC 内先保持一次 B/S 左移，再完成 crate 上拉/下推与 P/L 回返，
+        此后与规范路共享全部状态和不可逆后缀。
+      player_facing_interpretation: >-
+        这是不同的合法胜利输入序列与对象动作排序，但没有形成不同目标分工或不同不可逆职责分支。
+      verdict_effect: caveat
+    scope_conclusion: >-
+      packet 当前的 explicit scope——irreversible_responsibility_chain_unique=true、
+      target_assignment_unique=true、strict_object_action_order_unique=false——与证据一致。
+
+unsupported_or_overclaimed:
+  - claim: exact_input_sequence_unique
+    finding: does_not_support_claim
+    reason: >-
+      19 步规范路和 27 步 B/S-first 路都是合法胜路，并在中途 exact-state 汇合；one winning state
+      不能排除多条到达路径。当前 claim packet 已没有作此强声明，提交材料不得再用无范围限定的
+      “输入序列唯一”替代“不可逆职责链唯一”。
+  - claim: strict_object_action_order_unique
+    finding: contradicted
+    reason: >-
+      见证把第一次 B/S pull 放在 P/L pull 之前，且该 B/S 位移没有撤销；packet 已正确标为 false。
+  - claim: scc_single_chain_implies_one_human_solution
+    finding: does_not_support_claim
+    reason: >-
+      SCC 凝聚单链只约束不可逆里程碑。s29 内存在对象动作次序交换，故不能把 0 branching / 0 merging
+      直接转写为“玩家只能按一个动作序列解”。当前 packet 已把这一边界交给 critic，未由图标签自证。
+  - claim: player_insight_and_quality
+    finding: not_tool_provable
+    reason: >-
+      工具证据支持 P/L 往返、B/S 三次位移、C->M 与终局角色这些前提；不能证明玩家会把它们读成
+      换层、职责接力或洞见，也不能证明难度/审美达到 4。此项应由 puzzle critic 与试玩判断。
+  - claim: per_named_crate_necessity
+    finding: not_separately_proven
+    reason: >-
+      crate#1 探针证明事件 pattern/count 下限，不是带持久对象身份的 per-object necessity 证明。
+      两箱不可区分；可支持几何位置角色和唯一终局分工，不应扩写成某个命名箱实例的身份定理。
+
+evidence_limits:
+  - >-
+    本审查只使用 candidate packet 允许的 exact candidate-scoped evidence；未把 calibrated trace metrics
+    当作机制证据，也未评价其分数或审美含义。
+  - >-
+    graph、SCC 与 product graph 均为 complete，故上述依赖完整图的结论不需要降级为 unknown；
+    但这些证明的范围分别是状态、SCC 和事件 pattern/count，不能互相替代。
+  - >-
+    one winning state 是唯一 exact 终局状态，不是唯一路径；0 branching/0 merging 是唯一不可逆
+    SCC 继续链，不是严格对象动作全序。
+  - >-
+    27 步 witness 已充分证明存在动作次序交换；“它在人类口径下仍算同一解还是第二解法”是设计门槛
+    与玩家侧判断，不属于 evidence reviewer 的美学/口味裁决。
+  - >-
+    packet 没有 forbidden_if_seen_anywhere，也没有比 all_post_knowledge 更窄的暴露上界；因此本轮没有
+    需要用 reachable exposure scan 排除的 later-event 声明。
+  - >-
+    没有独立真人试玩，因而错误分支公平性、P/L 是否像路线税、B/S 双拉是否像填充均不在本 verdict 内。
+
+questions_for_designer:
+  - >-
+    无需追加 solver 证据；后续提交文本是否会持续保留
+    strict_object_action_order_unique=false，并避免把“唯一不可逆职责链”简写成“唯一输入序列”？
+  - >-
+    请由独立 puzzle critic 按用户的“唯一解”口径明确裁决 27 步同 SCC 预置交换是否可接受；
+    若 critic 把它视为第二解法，则应结构返工，而不是用 one winning state 或 SCC 单链覆盖该异议。

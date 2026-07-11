@@ -1,0 +1,80 @@
+task_classification: specific_prototype_level_design
+prototype: reality_anchor
+candidate_family: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work: {enabled: false}
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    不使用 archive、现有 package level、其它线程 report 或 candidate 的布局、对象位置、
+    求解路线或因果链。前一 L 形切尾 family 因与其它线程重复已终止；本 family 从
+    四个独立箱构造 2x2，再整体横拉切列，不使用旧 L 格 driver 或预置 L 形 C+MM 主链。
+
+design_goal:
+  intended_role: late_challenge_or_capstone
+  known_before: all_current_reality_anchor_runtime_rules
+  allowed_exposure_through: dual_anchor
+  difficulty_target: {floor: 4, aspiration: 5}
+  aesthetic_target: {floor: 4, aspiration: 5}
+  prototype_requirement: >-
+    同时存在 P/L 与 B/S；B/S 可移动且所有胜利路径必须移动至少两次。P/L 由墙明确
+    固定，但其 pull-side 多格刚体语义必须被完整 2x2 横拉和切后资源操作实际消费。
+
+lexicon_parts_source:
+  source: prototypes/reality_anchor/mechanism_lab/lexicon.md
+  selected_parts:
+    - name: B/S 绑定债：箱资源生成黏块形状
+      role: 移动 B/S 两次，将四个可分配箱分列压成 2x2 sticky 正方形，主动牺牲独立性。
+    - name: Pull 侧对象可动性：单箱基线与刚体墙口
+      role: >-
+        固定 P/L 让同一 2x2 可从左侧 pull 或从右侧 push 横移；无论采用哪种同洞见
+        计划，整块目标格跨 B/S 后都把左列切回两箱、右列保留为竖直黏条。
+  new_composition_logic: >-
+    第一次 B/S 左移后出口仍封闭，玩家只能完成第二次左移；四箱因此必先组成完整
+    2x2。第二次移动释放唯一入口；最短计划从 P/L pull side 向左拉整块，完整图
+    另有更长的 push-side 同构计划。横移本身同时完成形状位移和纵向切列，两个箱
+    与一条黏条再进入方向不同的终局 consumer。
+
+design_claim:
+  player_insight: >-
+    玩家必须先把四个箱变得更不自由，构成完整 2x2；只有这个正方形作为刚体被
+    横向跨过 B/S 时，边界才会把它按列解成两枚独立箱和一条竖直黏条。终局要求
+    玩家预见切后列职责：两箱分别使用横向与纵向 pull 进入单格目标，黏条保持
+    刚体并回到双格目标列。
+  causal_chain:
+    - 在 P/L push side 连续左推 B/S 两次；x=5 与 x=4 两列依次 box_to_sticky 并 merge 成 2x2。
+    - 第一次移动后的 x=6 出口由墙封闭；第二次移动释放 x=5 入口，阻止半成品先行绕过。
+    - 最短计划从 2x2 左侧在 P/L pull side 向左拉整块；x=3 列转回两箱，x=4 列保持竖直 sticky。
+    - 完整图允许更长的右侧 push 横切，但它仍需完整 2x2、同一 sticky_to_box 列切与后续黏条回位；不声称横切方向唯一。
+    - 两箱分别沿横向与纵向 pull 把手进入两个单格目标；黏条整体向右拉回原双目标列。
+    - B/S 最终停位覆盖上方双目标；P/L 完整可达扫描保持固定。
+  why_not_execution: >-
+    难度来自“先绑定再切列”的资源计划、2x2 整体目标格检查、以及切后箱列/黏条
+    三类职责。两个箱必须使用不同方向的 pull，不能退化成重复分支；路径只负责
+    让玩家取得把手，不应成为主要难度来源。
+  required_winning_path_events:
+    - anchor_boundary_shift:box_sticky at least 2
+    - box_to_sticky occurrence at least 2
+    - sticky_merge at least 1
+    - pull_object at least 1
+    - move_sticky_rigid at least 2
+    - sticky_to_box at least 1
+  forbidden_winning_path_events:
+    - win_without_constructing_full_2x2_before_leaving_anchor_row
+    - win_without_2x2_crosscut
+    - win_without_distinct_horizontal_and_vertical_crate_consumers
+  falsification:
+    - 任一完整胜路缺少两次 B/S 位移、两次 box_to_sticky、sticky_merge、两次 sticky 刚体移动、pull 事件或 sticky_to_box，核心 claim 失败。
+    - 若第一次 B/S 位移后即可离开上层并以半成品通关，完整 2x2 claim 失败。
+    - 若不横移完整 2x2 也能逐箱通关，crosscut claim 失败。
+    - 若切出两箱只用同方向重复处理，why_not_execution 失败。
+    - 若 P/L 本体在任意可达路径中可移动，固定锚点读图承诺失败。
+    - 若高机制信号只换来普通腾挪/事件 witness，审美目标失败并换 family。
+
+tool_questions:
+  - 所有胜路是否都需要 B/S 至少移动两次、两次 box_to_sticky 与 sticky_merge？
+  - 第一次 B/S 位移后的提前离场/半成品胜路是否被完整排除？
+  - 所有胜路是否都需要完整 2x2 横切、两次 sticky 刚体移动、pull 事件与 sticky_to_box？
+  - 完整可达扫描能否证明 P/L 本体不可移动？
+  - 两枚箱能否由不同方向 consumer 消费，且每个目标都结构必要？
+  - 路线能否压缩到不喧宾夺主，同时保留开局观察缓冲？

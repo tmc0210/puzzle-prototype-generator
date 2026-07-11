@@ -1,5 +1,7 @@
 # Design Consensus and Skill Notes
 
+Status: obsolete.
+
 本文档记录当前阶段已经达成的设计共识。它不是最终 skill 规范，而是未来抽象成 Codex skill / plugin / MCP 时的素材池。
 
 目标是把本轮讨论中的经验沉淀下来，避免后续 agent 重复犯同样错误：未确认规则就实现、把模糊概念写成指标、让 LLM 自由出题、把 trace 覆盖误当成关卡质量。

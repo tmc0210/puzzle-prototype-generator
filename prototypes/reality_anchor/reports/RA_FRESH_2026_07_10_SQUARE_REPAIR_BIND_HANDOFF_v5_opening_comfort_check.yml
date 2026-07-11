@@ -1,0 +1,50 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5
+workflow: reality_anchor_opening_comfort_check
+execution_order: 2
+ran_after: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_goal_prune_check.yml
+opening_comfort_check:
+  status: clean
+  current_start:
+    candidate_start_position: [6, 6]
+    shortest_solution: 23
+    initial_scc_size: 13
+    initial_exit_count: 3
+    initial_win_exit_count: 1
+    initial_dead_exit_count: 2
+    initial_exit_source_distances: [1, 1, 3]
+    initial_win_exit_source_distances: [1]
+    initial_dead_exit_source_distances: [1, 3]
+    nearest_irreversible_exit_distance: 1
+    nearest_win_reaching_exit_distance: 1
+    dead_exits_before_first_win_exit: 0
+    first_step_legal_events: {right: [walk], up: [walk]}
+    whether_core_chain_preserved: true
+  player_side_judgment: >-
+    玩家第一手不会触发对象事件；向右可站到 M 下方读出“跨 B/S 补缺角”，向上可进入左侧
+    观察区。一个错误出口与正确出口同为距离 1，但它把 M 向右推离缺角且不跨界，后果在动作
+    方向上可预判。独立 critic_4 将其判为可读的非阻塞风险；不把 SCC 规模或新增 walk 计作难度。
+  comparison_provenance:
+    source_report: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4_opening_comfort_check.yml
+    variants_previously_compared: 5
+    selected_topology: opening_connect_left_start_7_6_then_x_minus_1_outline_trim
+    exact_v5_revalidation: complete
+  hard_evidence:
+    solver: {found: true, shortest_cost: 23}
+    graph: {status: complete, reachable_states: 165454, legal_transitions: 413620, winning_states: 1}
+    fixed_anchor_combined: {found_bypass: false, status: complete, explored_states: 366670}
+    required_shapes:
+      crate_2x2: {found_bypass: false, status: complete, explored_states: 118558}
+      sticky_exact_2x2: {found_bypass: false, status: complete, explored_states: 165387}
+      split_single_plus_l_exact: {found_bypass: false, status: complete, explored_states: 165446}
+      rebound_offset_2x2_exact: {found_bypass: false, status: complete, explored_states: 165429}
+  selected_action: keep_exact_start_and_layout
+  requires_new_version: false
+  evidence_refs:
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.json
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_crate_2x2.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_sticky_exact_2x2.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_split_single_plus_l_exact.json
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_rebound_offset_2x2_exact.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_puzzle_critic_4.yml

@@ -1,0 +1,149 @@
+candidate_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6
+record_kind: proposal_ready_pre_submission_polish_delta
+prototype: reality_anchor
+task_classification: specific_prototype_level_design
+review_inheritance:
+  reviewed_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+  evidence_review:
+    verdict: supports_with_caveats
+    review_loop_state: proposal_ready_with_caveats
+    required_action: none
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_evidence_review_2.yml
+  puzzle_critic:
+    verdict: supports_with_noncore_caveats
+    review_loop_state: proposal_ready_with_caveats
+    required_action: none
+    aesthetic_score: 4
+    difficulty_score: 4
+    supports_aesthetic_5: false
+    supports_difficulty_5: false
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_puzzle_critic_2.yml
+  rereview_after_polish: not_run_by_design
+  rereview_reason: >-
+    invalid_goal_prune、opening_comfort_check 与 redundant_element_prune 是 handoff 声明的
+    pre_submission_check；按 design-review-loop 规则，它们不进入 reviewer / critic packet，
+    polish alone 不改变既有 review_loop_state。v6 只删除无结构约束的引导目标；对象、墙、
+    起点、规范输入、最短成本、完整图与核心事件门均保持。
+exact_layout:
+  layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_layout.txt
+  layout: |-
+    ######
+    ##.G.#
+    #.G.S#
+    #@PLB#
+    #...##
+    #..###
+    ######
+  goals:
+    upper: [3, 1]
+    lower: [2, 2]
+  objects:
+    - movable_push_pull_anchor
+    - movable_box_sticky_anchor
+  material_objects: none
+polish_delta:
+  from_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+  changed:
+    - remove_goal_overlay_at_[1,2]
+    - remove_goal_overlay_at_[3,2]
+  unchanged:
+    - walls
+    - player_start
+    - both_anchor_positions
+    - canonical_inputs
+    - shortest_cost
+    - complete_reachable_graph
+    - winning_state_count
+    - ordered_anchor_waypoints
+    - both_exact_mixed_chain_transitions
+  reason: >-
+    v5 的底横目标中两格只会在核心双锚链完成时顺路覆盖；组合删除后所有关键指标仍保持，
+    因而按 invalid_goal_prune 必须删除。剩余两目标任删其一都会把成本降至 3 或 4，
+    并产生绕过 B/S 与 mixed-chain 核心的胜路，所以 v6 已是目标约束最小集。
+verified_exact_facts:
+  shortest_solution:
+    found: true
+    cost: 17
+    inputs: [up, right, down, right, left, left, down, down, right, up, left, up, up, right, right, up, left]
+    object_actions: 6
+  complete_graph:
+    status: complete
+    reachable_states: 178
+    legal_transitions: 422
+    winning_states: 1
+  all_win_required_events:
+    status: complete_no_bypass
+    events:
+      - anchor_boundary_shift:push_pull
+      - anchor_boundary_shift:box_sticky
+      - force_chain:n2
+      - pull_object:push_pull_anchor
+      - pull_object:box_sticky_anchor
+  ordered_state_gate:
+    status: complete_no_bypass
+    product_states: 439
+    states:
+      - pl_lower_stage
+      - bs_left_extract
+      - mixed_up
+      - bs_right_vacate
+      - pl_up_prefinal
+  mixed_chain_gate:
+    status: complete_no_bypass
+    reachable_states: 178
+    force_chain_n2_minimum: 2
+    exact_transitions:
+      - bs_left__up_mixed_chain__mixed_up
+      - pl_up__left_mixed_chain__winning_state
+  expected_trace_goal_relay:
+    step_10: upper_target_covered_by_S
+    step_15: upper_target_vacated
+    step_16: lower_target_covered_by_P
+    step_17:
+      win: true
+      upper_target_covered_by_S: true
+      lower_target_coverage_transferred_from_P_to_L: true
+player_facing_reading:
+  opening: >-
+    两个对角目标把注意力放在两枚不可旋转二格锚点的端点，而不再用冗余目标直接描出终态。
+    玩家有两步可逆走位先进入目标区观察；没有箱或黏块，不会承诺材料谜题。
+  causal_chain:
+    - P/L 先向下 push，释放旧 L 半格作为 B/S 的左拉把手
+    - B/S 经该把手向左 pull，建立第一次双锚碰撞关系
+    - 从下方 push P/L，两锚 n2 同链上移，S 暂时覆盖上目标
+    - B/S 必须右移撤销上目标覆盖，同时腾出 P/L 的上拉玩家站位
+    - P/L 向上 pull，P 先覆盖下目标
+    - B/S 向左 pull 触发第二次 n2；S 恢复上目标，P/L 左移使下目标覆盖者从 P 接力给 L
+  payoff: >-
+    最后一手不是两个锚各自归位，而是在同一向左力链中同时偿还两笔目标责任：
+    B/S 恢复上目标，P/L 在移动中把下目标覆盖从 P 端交给 L 端。中段“先覆盖再腾位”
+    因此被终局“双目标接力”重读，而不是单纯搬运。
+claim_limits:
+  - 不声称所有胜路都只有六次对象动作；存在 21 步非最优 P/L 往返 detour
+  - 不声称全局首次 B/S shift 必定就是核心左拉；非最优路径可先移动并复原 B/S
+  - all-win 范围只包括 ordered anchor states、n2 至少两次，以及中段/终局两个 exact mixed transition
+  - v6 沿用 v5 的审美4/难度4 review_loop_state，不把提交前指标当作新质量评分
+lexicon_used:
+  - id: pl_transverse_handle_gate_matrix
+    source_heading: P/L 横向把手：玩家前格门与锚点占格门
+    realization: P/L 下推释放旧 L 半格；中段与终局由另一锚点消费非接触半格门
+  - id: pl_pull_extraction_vertical_two_cell_object
+    source_heading: P/L pull 抽取把手：前格门、占格目标门与扫带
+    realization: 玩家站在旧 L 半格左拉垂直 B/S，并由二格目标位完整性约束动作
+  - id: pl_mixed_force_chain_wall
+    source_heading: P/L 长轴墙廊：L 端余量棘轮（mixed-chain 补谱）
+    realization: 两枚锚点先同链上移、再同链左移；两次 n2 分别建立与结算状态债
+  - id: single_object_goal_piston_order_lock
+    source_heading: 单箱目标活塞顺序锁：推入覆盖与回撤撤销
+    realization: 提取“目标覆盖必须主动撤销”的状态责任，改写成上目标覆盖/腾位/恢复与下目标端点接力
+new_lexicon_linkage: >-
+  双锚编结·目标接力：P/L 释放 B/S 抽取把手，B/S 的临时目标覆盖又占住 P/L pull 把手；
+  腾位后 P/L 先以 P 端覆盖下目标，最终 B/S pull 让两锚同链左移，同时恢复上目标并把下目标
+  从 P 端交给 L 端。该连接不依赖 crate/sticky 材料，只消费两种锚点的二格刚体、端点与把手关系。
+evidence_refs:
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+  - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+  - prototypes/reality_anchor/reports/anchor_braid_waypoint_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+  - prototypes/reality_anchor/reports/anchor_braid_mixed_gate_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+  - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_expected_trace.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_check.yml

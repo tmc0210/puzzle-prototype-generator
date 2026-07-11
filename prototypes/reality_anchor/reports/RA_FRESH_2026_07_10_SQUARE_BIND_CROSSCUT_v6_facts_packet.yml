@@ -1,0 +1,316 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6
+review_iteration: 1
+review_input_type: candidate_version
+
+prototype_context:
+  confirmed_rules:
+    - P/L 定义 push/pull 两侧；本候选 P/L 被墙完全固定。
+    - B/S 定义 box/sticky 两侧；合法动作后全局材料归一化。
+    - 相邻 sticky 合并成刚体，刚体任一目标格受阻则整步失败。
+    - push/pull 可以沿运动方向通过多个可动物体传力。
+  win_condition: 所有 G 被箱、黏块或任意锚点格覆盖；玩家不算覆盖。
+  object_and_event_semantics:
+    box_sticky_shift: B/S 本体平移并重写全局材料边界。
+    box_to_sticky: 箱跨到 sticky side。
+    sticky_merge: 不同 sticky 来源合并为同一刚体。
+    sticky_to_box: sticky 格跨回 box side 后变成独立箱。
+    move_sticky_rigid: sticky 连通刚体整体移动。
+  tool_boundary:
+    runtime_adapter: available
+    solver_graph_agency: available
+    event_count_and_phase_probes: available
+    raw_sampler: available_but_not_used
+    curated_miner: unavailable
+
+slot_brief:
+  intended_role: late_challenge_or_capstone
+  known_before: all_current_reality_anchor_runtime_rules
+  target: required_movable_BS_with_fixed_PL_composition
+  difficulty_or_support_expectation: difficulty_floor_4_aspire_5; support_none
+
+mechanic_exposure_context:
+  mechanic_window: all_late_knowledge_allowed
+  allowed_exposure_through: dual_anchor
+  claimed_core_events:
+    - anchor_boundary_shift:box_sticky
+    - box_to_sticky
+    - sticky_merge
+    - pull_object
+    - move_sticky_rigid
+    - sticky_to_box
+  later_exposure_scan: not_applicable_no_stage_after_dual_anchor
+
+design_target:
+  aesthetic_score_target: floor_4_aspire_5
+  difficulty_score_target: floor_4_aspire_higher
+  target_role_notes: 玩家侧 construct/crosscut challenge；工具只提供事实。
+
+solve_instance:
+  layout: |-
+    ##########
+    #####LP###
+    ##########
+    ###GGBS@.#
+    ##....####
+    #.G.C*.###
+    #.#.C*.###
+    #..G...###
+    ###.######
+    ##########
+  player_start: [7, 3]
+  player_goal: null
+  win_condition: all_targets_covered_by_objects
+  goal_cells:
+    - [3, 3]
+    - [4, 3]
+    - [2, 5]
+    - [5, 5]
+    - [5, 6]
+    - [3, 7]
+
+mechanism_scope:
+  central:
+    - B/S 左移两次，把 x=5 与 x=4 两列四箱依次绑定为 2x2。
+    - 完整 2x2 横移跨过最终 B/S，x=3 列切成两箱、x=4 列保持黏条。
+    - 两箱分别进入横向/纵向单格目标；黏条作为刚体回到双目标列。
+    - 固定 P/L 提供实际 pull 行为；完整可达扫描禁止 P/L 位移。
+  allowed_support:
+    - 三个把手之间的无对象走位
+    - 开局右侧一格可逆观察缓冲
+  incidental_allowed:
+    - walk
+  required_winning_path_events:
+    - anchor_boundary_shift:box_sticky at least 2
+    - box_to_sticky occurrence at least 2
+    - sticky_merge at least 1
+    - pull_object at least 1
+    - move_sticky_rigid at least 2
+    - sticky_to_box at least 1
+  forbidden_winning_path_events:
+    - move_sticky_rigid before second B/S shift
+    - sticky_to_box before second B/S shift
+  forbidden_if_seen_anywhere:
+    - anchor_boundary_shift:push_pull
+
+evidence:
+  commands_run:
+    - npx tsx src/cli.ts explain-layout prototypes/reality_anchor <v6.layout.txt> --id <v6> --targets K_runtime_smoke --max-states 300000 --graph-max-states 300000 --write
+    - npx tsx prototypes/reality_anchor/reports/probe_fixed_anchor_candidate.ts <v6.layout.txt> <v6> push_pull 300000 120 strong_material
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v6.layout.txt> <v6> anchor_boundary_shift:box_sticky 2 300000 120
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v6.layout.txt> <v6> box_to_sticky 2 300000 120
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v6.layout.txt> <v6> move_sticky_rigid 2 300000 120
+    - npx tsx prototypes/reality_anchor/reports/probe_event_count.ts <v6.layout.txt> <v6> sticky_to_box 1 300000 120
+    - npx tsx prototypes/reality_anchor/reports/probe_event_before_count.ts <v6.layout.txt> <v6> anchor_boundary_shift:box_sticky 2 move_sticky_rigid 300000 120
+    - npx tsx prototypes/reality_anchor/reports/probe_event_before_count.ts <v6.layout.txt> <v6> anchor_boundary_shift:box_sticky 2 sticky_to_box 300000 120
+    - npx tsx prototypes/reality_anchor/reports/probe_goal_coverage.ts <v6.layout.txt> <v6> <canonical_inputs>
+  solver_result:
+    found: true
+    shortest_cost: 23
+    explored_states_before_shortest: 135
+    canonical_inputs: [left, left, down, left, left, left, down, right, left, left, down, down, right, right, right, right, up, right, down, left, left, left, down]
+  trace_summary:
+    - steps_1_2: B/S 左移两次；每步 box_to_sticky:n2 与 sticky_merge:n1，形成 2x2。
+    - steps_3_8: 绕到 2x2 左侧把手；无对象移动。
+    - step_9: 向左 pull 完整 sticky 2x2；move_sticky_rigid、sticky_to_box:n2，输出 CC+MM。
+    - step_10: 上箱横向 pull 到 [2,5]。
+    - step_18: 竖直黏条整体 pull 回 [5,5]/[5,6]。
+    - step_23: 下箱纵向 pull 到 [3,7]，玩家落入封闭终点并胜利。
+  target_events:
+    fixed_anchor_probe:
+      combined: {found_bypass: false, status: complete, explored_states: 252}
+      movable_box_sticky_shift: {found_bypass: false, status: complete, explored_states: 212}
+      fixed_push_pull_effect: {found_bypass: false, status: complete, explored_states: 252}
+      material_normalization: {found_bypass: false, status: complete, explored_states: 212}
+      box_to_sticky: {found_bypass: false, status: complete, explored_states: 212}
+      sticky_merge: {found_bypass: false, status: complete, explored_states: 212}
+      sticky_rigid_move: {found_bypass: false, status: complete, explored_states: 212}
+      forbidden_reachable_push_pull_shift: {status: complete, hits: none, reachable_states: 212}
+    count_probes:
+      B_S_shift_min_2: {found_bypass_below_count: false, status: complete, explored_states: 215}
+      box_to_sticky_occurrence_min_2: {found_bypass_below_count: false, status: complete, explored_states: 215}
+      sticky_rigid_move_min_2: {found_bypass_below_count: false, status: complete, explored_states: 276}
+      sticky_to_box_min_1: {found_bypass_below_count: false, status: complete, explored_states: 237}
+    phase_probes:
+      sticky_move_before_second_BS_shift: {found_violation_win: false, status: complete, explored_states: 215}
+      sticky_to_box_before_second_BS_shift: {found_violation_win: false, status: complete, explored_states: 215}
+  object_or_instance_evidence:
+    scope: role_and_shape_level_only
+    limits: analyzer 未报告稳定 instance-level participation；归一化会重建箱身份，不声称 per-object identity necessity。
+  winning_path_event_checks:
+    status: complete
+    result: 所有胜路满足当前 required groups、次数门与阶段门。
+  reachable_event_exposure:
+    status: complete_for_fixed_anchor_scan
+    result: P/L shift forbidden hit none；dual_anchor 已是最后 exposure 阶段。
+  graph_or_counterfactual_evidence:
+    graph:
+      status: complete
+      reachable_states: 212
+      legal_transitions: 415
+      winning_states: 1
+      compressed_regions: 39
+      commitment_transitions: 50
+      initial_scc_states: 2
+      solution_commitments: 5
+      forced_win_prefix: 3_of_5
+      returned_solution_scripted_handoffs: 2_of_5
+      decision_regions:
+        before_crosscut: commitments_3_viable_1_dead_2
+        after_crosscut: commitments_4_viable_2_dead_2
+        before_final: commitments_5_viable_2_dead_3
+  evidence_limits:
+    - 工具不证明审美、难度、洞见或路线质量。
+    - 规范解 23 步中 17 步为 walk；这只是执行事实，质量效果由 critic 判断。
+    - 完整图另有更长的右侧 push 横切胜路；不声称唯一横切方向或唯一路线。
+    - 没有 per-object identity necessity 证明。
+
+hard_fact_summary_for_critic:
+  solver: shortest_cost_23; graph_complete_212_states; one_winning_state
+  required_or_forbidden_events:
+    - all wins require >=2 B/S shifts and >=2 box_to_sticky occurrences
+    - all wins require sticky_merge, pull, >=2 sticky rigid moves, and sticky_to_box
+    - no win moves sticky or triggers sticky_to_box before the second B/S shift
+    - P/L shift is absent from the complete reachable graph
+  routed_diagnostic_facts:
+    - opening initial SCC has 2 states and first commitment at distance 1
+    - first 3 of 5 win-continuing SCC commitments are forced
+    - post-construction and post-crosscut regions each expose dead commitments
+    - shortest trace contains 17 walk steps between three distinct handles
+  evidence_limits:
+    - graph facts are neutral diagnostics, not merits
+    - no unique-route or per-object identity claim
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6.md
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_anchor_boundary_shift_box_sticky_min2.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_box_to_sticky_min2.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_move_sticky_rigid_min2.md
+    - prototypes/reality_anchor/reports/event_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_sticky_to_box_min1.md
+    - prototypes/reality_anchor/reports/event_before_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_move_sticky_rigid.md
+    - prototypes/reality_anchor/reports/event_before_count_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_sticky_to_box.md
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6.md
+
+player_facing_reading:
+  opening_read: >-
+    顶部 P/L 被完整墙层封住，只作为清楚的左右 force-mode 边界；B/S 位于两枚上方
+    目标右侧，玩家右边有一格可逆观察缓冲。下方四个箱排成 2x2，其中右列已经压在
+    双目标上；左侧与下方各有一个单格目标。玩家能预见 B/S 左移会依次刷过两列。
+  intended_solution_read: >-
+    B/S 左移两次后覆盖上方双目标，四箱变成完整 2x2 黏块。玩家从第二次位移释放的
+    入口绕到左把手，横拉正方形；跨线后左列成为两箱、右列仍是竖直黏条。上箱立刻
+    左拉进单格目标；玩家绕到黏条右侧把整条拉回原双目标列；最后从下方把下箱拉进
+    下目标，落入封闭终点并胜利。
+  commitment_points:
+    - 第一次 B/S 位移后出口仍封闭；第二次位移前不能移动 sticky 或切列。
+    - 完整 2x2 横切前的决策区有 3 个 commitment，其中 2 个为 dead，只有 1 个继续核心计划。
+    - 横切后的决策区有 4 个 commitment，2 viable/2 dead；上箱、黏条、下箱的顺序需要预见最终把手。
+    - 下箱进入 [3,7] 后玩家落到 [3,8] 单格封闭位，因此必须作为最后责任。
+  state_responsibility:
+    box_sticky_anchor: 左移两次构造 2x2，并最终覆盖 [3,3]/[4,3]。
+    four_crates_as_square: 两列依次进入 sticky side，必须完整合并后才可离开上层。
+    cut_left_column: 横切后成为两枚独立箱，分别覆盖 [2,5] 与 [3,7]。
+    retained_right_column: 横切后保持竖直黏条，整体回填 [5,5]/[5,6]。
+    push_pull_anchor: 墙封固定，不承诺移动；其边界让所有关键拉取具有 pull 语义。
+  payoff_and_resolution: >-
+    开局的 2x2 箱阵先收拢为一个正方形，再按列解开：两格保持为可见竖条回到原位，
+    两格获得独立性并向左、向下分配。六个目标最终由 B/S 两格、黏条两格与两个箱
+    精确覆盖，兑现构造、切列与三路职责。
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0022
+      role: positive_5_aesthetic_4_difficulty_anchor
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: >-
+        这关的操作非常反直觉，将一个箱子先送入看似死局的死角，构造出拉锚点将两个箱子反向送入目标。
+        空间利用率高，结构精巧。在较短的步骤中要求强玩家洞见以发现反直觉操作，是优秀的范例。
+      calibration_use: 高分要求短而强的反直觉洞见与高空间职责；v6 的长走位必须接受攻击。
+    - candidate_id: RA_CAND_0025
+      role: positive_4_4_constructor_anchor
+      human_scores: {aesthetic: 4, difficulty: 4}
+      human_comment: >-
+        在狭小紧凑的空间中，将L形反复活塞这一关键高难结构赋予合适的包装以要求玩家主动构造，
+        前几步构造不喧宾夺主，终局也有恰到好处的提示。整体达到强4分水准，是构造关优秀案例。
+      calibration_use: v6 必须证明 2x2 主动构造与目标列提示达到同级别，而非事件 witness。
+    - candidate_id: RA_CAND_0006
+      role: negative_high_difficulty_route_tax_anchor
+      human_scores: {aesthetic: 2, difficulty: 5}
+      human_comment: >-
+        已有关卡的强复杂度变体，用较小目标位置改动极大弱化机制美感并增加腾挪难度；
+        这种增加难度的方式实为较差反例，仅做归档。
+      calibration_use: 难度 5 不可由目标位置和腾挪路线堆出；v6 的 17 步走位是核心攻击点。
+    - candidate_id: RA_CAND_0024
+      role: negative_1_aesthetic_affordance_anchor
+      human_scores: {aesthetic: 1, difficulty: 3}
+      human_comment: >-
+        看起来机制利用率高、双锚点和三个黏块承诺精彩切割拼接或几何利用，实际几乎只用推拉腾挪，
+        缺乏玩家洞见；双锚点可动污染读题，最终只得到腾挪关。警示是不要迷信指标和探针。
+      calibration_use: v6 必须真实消费 2x2 与切列几何；固定 P/L 不得制造可动假信号。
+  all_aesthetic_1_entries_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+  additional_warning_from_RA_CAND_0027: >-
+    事件标签不能替代黏块几何；v6 只有在 2x2 构造、切列和竖条回位成为玩家必要职责时才可过门。
+
+diagnostic_routing:
+  hard_evidence:
+    - fixed-anchor complete scan
+    - all-solution event and count gates
+    - phase order probes
+    - complete graph and canonical goal coverage
+  mechanism_scope:
+    - user_requires_dual_anchor_and_at_least_one_required_movement
+    - fixed_PL_plus_required_movable_BS
+  claim_hygiene:
+    - fresh_required
+    - no_unique_crosscut_direction_claim
+    - no_object_identity_necessity_claim
+  taste_probes:
+    - route_tax_vs_three_distinct_handles
+    - constructor_payoff_strength
+    - fixed_anchor_readability
+    - target_order_responsibility
+  scc_graph:
+    status: routed
+    facts: complete_212_states; forcedWinPrefix_3_of_5; dead_commitments_after_construct_and_crosscut
+  variant_family: fresh_not_archive_variant
+  start_position: pre_submission_check_pending_after_proposal_ready
+  prototype_specific_work: all_three_pre_submission_checks_pending_after_proposal_ready
+
+prototype_specific_contracts:
+  interface_pair_policy: not_declared
+  pair_diagnostics: not_applicable
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: null
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    archive 只用于人评校准。当前 archive/package 的检索摘要与 ID 中未发现
+    “四箱先构造 2x2 -> 整块横切成箱列+黏条 -> 正交分配”的主链。
+
+attempt_log:
+  serious_structural_attempts:
+    - v0: 初始 square 构造成立，但开放图超过 300000，且 P/L 可被额外移动。
+    - v1_v2: 压缩终局顺序仍超过图预算；暴露对象路线过宽。
+    - v3_v4: 图 complete，固定 P/L scan clean；发现第一次 B/S 后可提前离场的半成品胜路。
+    - v5: 封住提前出口但左把手入口会意外把 B/S 从目标上拉走，完整图无胜态。
+    - v6: 入口左绕一格；完整 2x2 阶段门成立，图 212 states / 1 winning state。
+  local_repairs:
+    - 将 P/L 完整墙封，删除可动但非必要的 affordance。
+    - 关闭第一次 B/S 后的 x=6 出口，只让第二次位移释放 x=5 入口。
+    - 把左把手入口从 B/S 正下方移到侧面，避免误拉锚点。
+    - 用 [2,6] 墙与 [3,8] 终点限制箱职责顺序，避免重复分支。
+  abandoned_families:
+    - REWRITE_BRUSH_SPLIT_RELAY_due_duplicate_risk
+    - push_then_pull_crosscut_as_all_solution_claim_due_longer_push_side_variant
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v6_claim_packet.yml
+  read_order: facts_then_claim

@@ -1,0 +1,182 @@
+schema_version: 1
+artifact_kind: bounded_search_failure
+prototype: reality_anchor
+date: 2026-07-10
+controller_scope: scratch_only
+claim_ref: prototypes/Reality_Anchor/reports/RA_STRICT_MERGE_SHAPE_GATE_design_claim_agent.yml
+search_script_ref: prototypes/Reality_Anchor/reports/search_strict_merge_shape_gate_agent.ts
+
+verdict: failed_search
+qualifying_candidate_found: false
+hard_gates_preserved:
+  - "directed pure-walk SCC；禁止用 weak DSU 合并单向 walk。"
+  - "唯一胜态不是唯一对象计划证明。"
+  - "必要对象动作不得换序；完整回返环可擦除，但汇合式换序不可接受。"
+  - "sticky_merge 后必须真实移动多格 rigid group。"
+  - "至少一个锚点必须在所有胜解中移动。"
+  - "solution execution / space reuse calibrated band 均须 >=4。"
+  - "不以路线税、重复直推或目标堆叠补难度。"
+
+directed_search_batches:
+  - seed: 2026071077
+    iterations: 300
+    graph_max_states: 30000
+    min_object_steps: 10
+    graph_complete: 284
+    event_universe_qualified: 198
+    unique_terminal_win_state: 40
+    directed_strict_chains: 13
+    strict_chain_edge_histogram:
+      4: 2
+      5: 1
+      8: 10
+    hard_hits: 0
+  - seed: 2026071078
+    iterations: 300
+    graph_max_states: 40000
+    min_object_steps: 10
+    graph_complete: 270
+    event_universe_qualified: 186
+    unique_terminal_win_state: 30
+    directed_strict_chains: 16
+    strict_chain_edge_histogram:
+      4: 1
+      5: 7
+      7: 2
+      8: 6
+    hard_hits: 0
+  - seed: 2026071079
+    iterations: 500
+    graph_max_states: 40000
+    exploratory_min_object_steps: 8
+    graph_complete: 467
+    event_universe_qualified: 342
+    unique_terminal_win_state: 42
+    directed_strict_chains: 5
+    strict_chain_edge_histogram:
+      5: 5
+    hard_hits: 0
+directed_search_aggregate:
+  iterations: 1100
+  graph_complete: 1021
+  event_universe_qualified: 726
+  unique_terminal_win_state: 112
+  directed_strict_chains: 34
+  longest_strict_chain_edges: 8
+  formal_hits_at_10_to_16: 0
+
+best_near_neighbors:
+  - id: RA_STRICT_VERTICAL_WELD_RETURN_TRAIN_scratch
+    layout_ref: prototypes/Reality_Anchor/reports/RA_STRICT_VERTICAL_WELD_RETURN_TRAIN_scratch.layout.txt
+    analysis_ref: prototypes/Reality_Anchor/reports/layout_analysis_RA_STRICT_VERTICAL_WELD_RETURN_TRAIN_scratch.json
+    layout: |-
+      ###########
+      ##BS###...#
+      ###M......#
+      #@C.G.....#
+      ###MG.....#
+      ##G.G.PL..#
+      ########..#
+      ###########
+    player_facing_chain:
+      - "首手 bridge C 跨界，与上下两个 M 焊成三格竖刚体。"
+      - "三格刚体向右穿过上轨；右端下沉一格。"
+      - "回程下沿齿咬住 P/L，四次左拉每次同时拖动刚体和 P/L，边界随玩家回收。"
+    exact_facts:
+      shortest_cost: 28
+      object_inputs: 11
+      walk_inputs: 17
+      non_walk_events: 31
+      execution_band: 4
+      space_reuse_band: 2
+      revisit_rate: 0.207
+      heavy_reuse_ratio: 0.0
+      full_graph: "complete 7661 states / 21775 transitions / 2 wins"
+    reject_reasons:
+      - "两个胜态，未过唯一胜态门。"
+      - "可胜 SCC 子图分支；directed 唯一对象计划未成立。"
+      - "右端绕行占 17 walk，且 canonical space reuse 仅 band 2。"
+      - "虽然形状消费很强，但不值得用目标或长廊补丁掩盖路线税。"
+
+  - id: RA_PHASE_LOCKED_L_WELD_scratch
+    layout_ref: prototypes/Reality_Anchor/reports/RA_PHASE_LOCKED_L_WELD_scratch.layout.txt
+    analysis_ref: prototypes/Reality_Anchor/reports/layout_analysis_RA_PHASE_LOCKED_L_WELD_scratch.json
+    directed_audit_ref: prototypes/Reality_Anchor/reports/RA_PHASE_LOCKED_L_WELD_scratch_directed_walk_unique_audit_root.json
+    layout: |-
+      ##########
+      ###SB@...#
+      #L...###.#
+      #P.GG..C.#
+      #MMGG....#
+      ##########
+    player_facing_chain:
+      - "顶层口袋把前三次 B/S 位移锁成开局唯一动作。"
+      - "玩家落入中层，把 C 左送并与 MM 焊成三格 L。"
+      - "下游从把手侧拉 P/L，两步同时搬动 P/L 与 L 刚体。"
+    exact_facts:
+      shortest_cost: 14
+      object_inputs: 10
+      walk_inputs: 4
+      execution_band: 4
+      space_reuse_band: 2
+      full_graph: "complete 2866 / 7326 / 3 wins"
+      directed_audit: "REJECT; 100 distinct reduced object plans within 101-path explicit budget"
+    reject_reasons:
+      - "开局虽锁住，但 B/S 离开口袋后仍可被玩家回访；中段 B/S / singleton / P/L 可穿插。"
+      - "三个胜态。"
+      - "三段空间仍是一次性串联，space reuse band 2。"
+
+  - id: RA_U_LOCKED_L_WELD_CUT_GOALS_scratch
+    layout_ref: prototypes/Reality_Anchor/reports/RA_U_LOCKED_L_WELD_CUT_GOALS_scratch.layout.txt
+    analysis_ref: prototypes/Reality_Anchor/reports/layout_analysis_RA_U_LOCKED_L_WELD_CUT_GOALS_scratch.json
+    directed_audit_ref: prototypes/Reality_Anchor/reports/RA_U_LOCKED_L_WELD_CUT_GOALS_scratch_directed_walk_unique_audit_root.json
+    layout: |-
+      ###########
+      ##@SB.#####
+      #MM.GG....#
+      #P...GGC..#
+      #L........#
+      ###########
+    player_facing_chain:
+      - "唯一开局把 B/S 推入右端止挡。"
+      - "玩家沿 U 形下廊绕到 C 右侧，把 C 左送并与 MM 焊成 L。"
+      - "L 刚体先拖 P/L 两格，第三格跨 B/S 发生 C+M 切割，第四格继续以分配资源收束目标。"
+    exact_facts:
+      shortest_cost: 19
+      object_inputs: 10
+      walk_inputs: 9
+      non_walk_events: 27
+      execution_band: 4
+      space_reuse_band: 2
+      full_graph: "complete 6351 / 17515 / 1 win"
+      directed_audit: "REJECT; 100 distinct reduced object plans within 101-path explicit budget"
+    reject_reasons:
+      - "唯一胜态成立，但底廊同时暴露 P/L 与 C；玩家可先移动 P/L，再搬 C，产生大量换序方案。"
+      - "U 廊视觉上回折，但 canonical 玩家轨迹只复用一次，space band 仍为 2。"
+      - "不能把 1 win 误写成唯一解。"
+
+failure_boundary:
+  established:
+    - "真正的 sticky_merge + 多格 rigid 后续移动 + 锚点 force-chain 可以在 10 个对象输入内紧凑实现。"
+    - "把开局锚点放进单出口 pocket，能锁住 opening，却不能自动锁住中段回访。"
+    - "同一底廊同时承担绕行和 P/L 把手时，会提高局部复用感，也会开放 P/L/C 的换序。"
+    - "仅靠目标合成可得到唯一胜态，但无法消除对象计划换序。"
+  not_established:
+    - "不存在合格 topology；本报告只覆盖上述 constrained motif sampler 与三个人工 U/return 家族。"
+    - "space band 4 与严格唯一不可兼得；只证明当前门禁接口未同时做到。"
+
+recommended_next_family_if_resumed:
+  name: consumable_one_way_handle
+  first_principle_change: >-
+    不再让 P/L 把手从开局就暴露在绕行廊中。把手格应由 merge 后的连体形状自身占格
+    才打开，并在第一次拉动后被 P/L 本体封回；这样 U 廊可以三次复用同一 hub，
+    而未 merge 时既不能提前动 P/L，也不能回访 B/S。
+  required_proof_before_candidate:
+    - "directed pure-walk SCC 宏图中，唯一胜态的 loop-erased object plan 数=1。"
+    - "canonical trace space reuse calibrated band >=4；不能靠无职责 walk 环堆叠。"
+    - "移除 bridge crate 或任一 sticky 端点后，P/L 把手不能打开。"
+
+workspace_mutation:
+  levels_yml: untouched
+  playable_queue_yml: untouched
+  formal_existing_candidate_packets: untouched

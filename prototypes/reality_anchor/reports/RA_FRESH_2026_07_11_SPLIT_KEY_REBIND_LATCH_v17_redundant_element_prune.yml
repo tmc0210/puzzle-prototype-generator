@@ -1,0 +1,69 @@
+redundant_element_prune:
+  exact_candidate: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17
+  prototype: reality_anchor
+  authority: prototypes/reality_anchor/docs/redundant_element_prune.md
+  status: pruned
+  sequence_position: 3
+  successor_from: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+  layout_change: "裁去左侧一整列纯外墙；11x10 -> 10x10。"
+  topology_change: false
+  coordinate_transform: "所有非墙格 x -> x-1；邻接、动作、事件和胜利状态严格同构。"
+  exact_v17_verification:
+    shortest_cost: 28
+    shortest_trace_win: true
+    non_walk_events: 41
+    player_visits: {total: 29, unique: 21}
+    walkable_cells: 40
+    graph_status: exhausted
+    core_event_gates:
+      sticky_to_box: complete_no_bypass
+      box_to_sticky: complete_no_bypass
+      sticky_merge: complete_no_bypass
+      anchor_boundary_shift_push_pull: complete_no_bypass
+      anchor_boundary_shift_box_sticky: complete_no_bypass
+    opening_initial_scc_size: 5
+  stage_results:
+    goal_prune:
+      status: clean
+      delegated_artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17_goal_prune_check.yml
+    object_remove_prune:
+      status: clean
+      removed_objects: []
+      reason: >-
+        三个初始箱均在 step2 转黏并进入共享轮廓；L 形黏块与远端黏格均被规范解搬运/拼接；
+        P/L 与 B/S 各自的位移又是 complete all-win gate。没有未移动、未转换、未参与核心链的对象。
+    object_wallify_prune:
+      status: clean
+      wallified_objects: []
+      reason: "所有对象都移动、转换或参与核心事件，不满足 wallify 前提。"
+    space_prune:
+      status: kept_with_unknown
+      canonical_consumption: "除 [3,2] 外，全部可走格由最短 trace 的玩家或对象占用。"
+      candidate_tested:
+        cell: [3,2]
+        action: floor_to_wall
+        shortest_cost: 28
+        core_event_gates_preserved: true
+        opening_metrics_preserved: true
+        graph_status: exhausted
+        result: keep_with_unknown
+        reason: "主图在1,000,000状态仍未闭合；不能仅凭规范解未使用就删去替代路线空间。"
+      removed_spaces: []
+    wall_outline_prune:
+      status: pruned
+      removed_outline:
+        - old_candidate: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+          element: leftmost_full_wall_column
+          result: removed_in_v17
+      remaining_trim_candidates: []
+      reason: "v17 四侧均已是单层必要边界；无空行、空列或双厚整边可继续裁。"
+  evidence_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17_shortest.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17_event_gate_report.yml
+    - prototypes/reality_anchor/reports/opening_starts_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v17.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_space_wall_4_2.json
+  final_conclusion: >-
+    固定五阶段已完成：同图100万状态反事实证明任删目标都会新增胜态，九目标全部保留；对象无
+    删除/wallify候选；唯一内部空地候选因完整图未知而保留；裁去一列纯外墙形成 v17。exact v17
+    的最短解、核心事件门、开局 SCC 和40个可走格全部保持。

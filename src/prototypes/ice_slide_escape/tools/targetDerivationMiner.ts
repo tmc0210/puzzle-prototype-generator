@@ -750,7 +750,6 @@ function evaluateTargetCandidate(
       maxStates: options.maxStates,
       maxDepth: options.maxDepth,
       graphMaxStates: options.graphMaxStates,
-      bypassMaxStates: Math.min(options.maxStates, 4_000),
       counterfactualMaxStates: Math.min(options.maxStates, 4_000),
     });
   } catch {
@@ -1163,14 +1162,6 @@ function baseLevel(sample: BaseSample): LevelDoc {
   return {
     id: sample.id,
     title: "Target derivation base",
-    role: "challenge",
-    status: "generated",
-    targets: ["K_ice_runtime_smoke"],
-    known_before: [],
-    target_learning: [],
-    support_level: "none",
-    expected_solver_evidence: [],
-    expected_llm_player_evidence: [],
     layout: sample.layout,
     win: {
       type: "ice_slide_escape_explicit_goal",
@@ -1189,14 +1180,6 @@ function targetLevel(sample: BaseSample, layout: string, target: TargetCandidate
   return {
     id: `${sample.id}_target_${target.point.x}_${target.point.y}`,
     title: "Derived target candidate",
-    role: "challenge",
-    status: "generated",
-    targets: ["K_ice_runtime_smoke"],
-    known_before: [],
-    target_learning: [],
-    support_level: "none",
-    expected_solver_evidence: ["solvable", "full_graph_complete"],
-    expected_llm_player_evidence: [],
     layout,
     win,
   };

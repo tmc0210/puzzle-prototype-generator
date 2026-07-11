@@ -40,8 +40,7 @@ mechanism_lab/runs。
 - Candidate record 是短审美校准卡，不是流程流水账或证据包。
 - 顶层 metadata 只保留 docs/29 规定的最小字段。
 - 保留 human comments 原文；没有人类评语时标记 pending。
-- `human_reviewed`、`aesthetic_score`、`difficulty_score`、`allowed_exposure_through`
-  只能来自人类评语、人类明确评分或明确课程分层判断；archive pass 不替人类打分。
+- `human_reviewed`、`aesthetic_score`、`difficulty_score` 只能来自人类评语或人类明确评分；archive pass 不替人类打分。
 - 工具命令、完整 SCC 表、review loop 细节、attempt log、probe / trace / search
   report、图指标和算法指标不粘进 candidate record。
 - 如需追溯，只写一个 `ledger_ref`；没有稳定 ledger 时保持 `null`。

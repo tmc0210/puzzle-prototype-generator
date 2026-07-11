@@ -1,0 +1,71 @@
+schema_version: 1
+prototype: reality_anchor
+status: human_maintained_draft
+event_authority: prototypes/reality_anchor/mechanic.yml
+description: >
+  当前 reality_anchor 关卡流程使用的线性机制暴露顺序。本文件只帮助 designer
+  判断玩家在某一关之前可以见过哪些机制，不证明事件必经、机制得到有效使用或
+  关卡质量合格。brief 启用该暴露门时，allowed_exposure_through 及之前的阶段
+  允许出现，之后阶段新增的事件与配置均视为 forbidden-if-seen-anywhere；未列入
+  本文件的事件默认忽略。anchor_boundary_shift 只表示对应锚点可以被玩家看到
+  发生移动，不承载边界移动或边界移动被使用等更强的设计结论。
+
+event_exposure_sequence:
+  - branch: push_baseline
+    title: 普通推箱与目标
+    source_rule: push_force
+    new_events:
+      - push_object
+
+  - branch: fixed_push_pull
+    title: 固定推拉锚点
+    source_rule: pull_force
+    new_events:
+      - pull_object
+
+  - branch: movable_push_pull_anchor
+    title: 可移动推拉锚点
+    source_rules:
+      - push_force
+      - pull_force
+    new_events:
+      - anchor_boundary_shift:push_pull
+
+  - branch: sticky_rigid_body
+    title: 固定箱黏锚点与黏块刚体
+    source_rules:
+      - push_force
+      - pull_force
+    new_events:
+      - move_sticky_rigid
+
+  - branch: box_to_sticky_binding
+    title: 箱转黏与拼接
+    source_rules:
+      - box_sticky_normalize
+      - sticky_merge
+    new_events:
+      - box_to_sticky
+      - sticky_merge
+
+  - branch: sticky_to_box_cutting
+    title: 黏转箱与切割
+    source_rule: box_sticky_normalize
+    new_events:
+      - sticky_to_box
+      - sticky_split
+
+  - branch: movable_box_sticky_anchor
+    title: 可移动箱黏锚点
+    source_rules:
+      - push_force
+      - pull_force
+    new_events:
+      - anchor_boundary_shift:box_sticky
+
+  - branch: dual_anchor
+    title: 双锚点共存
+    source_kind: level_configuration
+    new_events: []
+    new_configurations:
+      - push_pull_anchor_and_box_sticky_anchor_coexist

@@ -210,7 +210,6 @@ export function mineSeeds(pkg: PrototypePackage, options: MineOptions = {}): Min
         maxStates: normalized.maxStates,
         maxDepth: normalized.maxDepth,
         graphMaxStates: normalized.graphMaxStates,
-        bypassMaxStates: Math.min(normalized.maxStates, 5_000),
         counterfactualMaxStates: Math.min(normalized.maxStates, 5_000),
       });
     } catch {
@@ -390,14 +389,6 @@ function candidateToLevel(candidate: GeneratedCandidate, pkg: PrototypePackage):
   return {
     id: `mined_${String(candidate.index).padStart(4, "0")}`,
     title: `Mined candidate ${candidate.index}`,
-    role: "mechanic_witness",
-    status: "candidate",
-    targets: [],
-    known_before: [],
-    target_learning: [],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: candidate.layout,
     win: pkg.mechanic.win,
   };

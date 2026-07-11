@@ -1,0 +1,75 @@
+review_iteration: 3
+candidate_version_reviewed: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4
+review_input_type: candidate_version
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+supported_claims:
+  - >-
+    规范解证据成立：layout analysis 返回 22 步合法解，规范事件链与快照一致，
+    goal coverage 在第 22 步确认四个目标均由同一四格黏块覆盖并进入胜利。
+  - >-
+    完整可达图成立：status=complete，87481 个可达状态、215370 条合法转移、
+    1 个胜利状态；相关完整图结论没有 budget exhaustion。
+  - >-
+    四个形状门分别得到完整 all-solution avoidance search 支持：所有胜路都必须进入
+    post-initial 箱态 2x2、exact sticky 2x2、指定坐标的 singleton+L3 共存态，以及
+    指定坐标的偏移黏态 2x2。四个探针均为 found_bypass=false、status=complete。
+  - >-
+    七个最低次数门得到完整 winning-path bypass probe 支持：所有胜路都要求
+    anchor_boundary_shift:box_sticky >=1、sticky_to_box >=1、box_to_sticky >=3、
+    sticky_merge >=3、force_chain >=1、pull_object >=1、move_sticky_rigid >=5。
+  - >-
+    双锚点的硬事实成立：B/S 位移在所有胜路上必需；P/L 的完整可达扫描未命中
+    anchor_boundary_shift:push_pull，而所有胜路都要求 pull_object。结合候选确认规则，
+    这支持“可动 B/S 与固定 P/L pull 语义均被使用”，但不扩张为具体箱身份必要性。
+  - >-
+    规范解实例支持所述补角、B/S 刷下排、纵向剪切、箱让位、pull 侧转化、
+    L3 与单格重并、最终整体左拉的完整实现链；事件快照与各阶段布局相互一致。
+  - >-
+    wrong_early_shear 的事实边界成立：指定 11 步前缀合法到达报告中的状态，
+    该状态仍有合法后续动作，但其完整 765 状态后继图含 0 个胜利状态。
+    因此只支持“这个具体前缀是非即时非法的死态”，不据此判断其玩家侧可信度。
+  - >-
+    mechanic_exposure_sequence 将 dual_anchor 列为最后暴露阶段；本 brief 允许到
+    dual_anchor，因此不存在需要额外排除的更晚阶段事件。
+
+unsupported_or_overclaimed:
+  - >-
+    若把 claim 中的 one movable B/S shift 或 one sticky_to_box occurrence 解读为
+    “所有胜路恰好一次”，现有证据不支持；次数门只证明 >=1，规范解才各为一次。
+    本 verdict 按 facts packet 明示的 at least 1 语义读取，不授予 exactly-once 主张。
+  - >-
+    四个形状探针分别证明每个形状在所有胜路上出现，但没有直接证明所有胜路都按
+    同一固定时序经过四形态，也没有证明某个归一化事件实例必然造成指定形态。
+    规范 trace 只证明所写时序存在一条合法胜利实现。
+  - >-
+    现有 B/S 次数门不编码位移方向；“向上移动一次”由规范 trace 支持为该解实例，
+    不被本 review 扩张为所有胜路的方向或精确次数定理。
+  - >-
+    硬证据不证明 player_insight、why_not_execution、错误计划的视觉诱惑、失败反馈公平性、
+    难度、审美或路线质量；这些均保留给独立 puzzle critic 与玩家侧评审。
+  - >-
+    证据不支持归一化前后具体 crate identity 连续或某一原始箱的 per-object necessity；
+    本 review 仅支持材料数量、事件模式、形状与阶段角色级结论。
+
+evidence_limits:
+  - >-
+    event-count probe 证明的是匹配 event pattern 的最低 occurrence 数，不证明精确次数、
+    方向、具体对象参与或事件之间的固定配对。
+  - >-
+    shape necessity probe 是各自独立的 state-predicate gate；它不自带跨谓词时序、因果、
+    对象身份或玩家可读性结论。
+  - >-
+    完整图的 one winning state 不等于唯一输入序列，也不等于玩家具有充分主动选择。
+    SCC/agency 中的强制开局与 commitment 数只作中性诊断，不影响本机制证据 verdict。
+  - >-
+    calibrated_trace_metrics 已按 reviewer 纪律完全排除在证据判断之外；搜索规模和事件量
+    也没有被用来支持洞见、难度或审美。
+  - >-
+    candidate packet 明确排除的 move_sticky_rigid_min6、pull_object_crate_min1、
+    pull_object_sticky_min4、push_object_crate_min2 探针没有进入本 verdict，亦未授予
+    对应更强主张。
+
+questions_for_designer: []

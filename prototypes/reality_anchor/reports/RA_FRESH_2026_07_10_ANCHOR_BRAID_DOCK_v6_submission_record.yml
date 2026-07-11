@@ -1,0 +1,131 @@
+candidate_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6
+title: 双锚编结·目标接力 v6
+task_classification: specific_prototype_level_design
+submission_status: added_to_playable_queue
+quality_gate:
+  difficulty:
+    score: 4
+    supports_5: false
+    source: inherited_from_v5_puzzle_critic_2_before_pre_submission_polish
+  aesthetic:
+    score: 4
+    supports_5: false
+    source: inherited_from_v5_puzzle_critic_2_before_pre_submission_polish
+  role: late_game_challenge
+  support_level: none
+independent_reviews:
+  reviewed_version: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+  evidence_review_2:
+    verdict: supports_with_caveats
+    review_loop_state: proposal_ready_with_caveats
+    required_action: none
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_evidence_review_2.yml
+  puzzle_critic_2:
+    verdict: supports_with_noncore_caveats
+    review_loop_state: proposal_ready_with_caveats
+    required_action: none
+    aesthetic_score: 4
+    difficulty_score: 4
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_puzzle_critic_2.yml
+  exact_v6_review_policy:
+    rereview_run: false
+    reason: >-
+      v6 是 proposal_ready 后由 invalid_goal_prune 产生的提交前目标裁剪；按原型 handoff 与
+      sokoban-design-review-loop，pre_submission_check 不进入 reviewer / critic packet，
+      polish alone 不改变 review_loop_state。exact v6 只重跑规定的关键指标。
+    delta_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_pre_submission_delta.yml
+verified_design_facts:
+  layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_layout.txt
+  shortest_cost: 17
+  canonical_inputs: [up, right, down, right, left, left, down, down, right, up, left, up, up, right, right, up, left]
+  canonical_object_actions: 6
+  complete_graph:
+    status: complete
+    reachable_states: 178
+    legal_transitions: 422
+    winning_states: 1
+  both_anchors_present: true
+  both_anchors_movable: true
+  both_anchor_shifts_required_on_all_wins: true
+  both_anchor_pulls_required_on_all_wins: true
+  force_chain_n2_minimum_on_all_wins: 2
+  exact_mixed_transitions_required_on_all_wins:
+    - middle_up
+    - final_left
+  goal_relay:
+    step_10: S_covers_upper_target
+    step_15: upper_target_vacated
+    step_16: P_covers_lower_target
+    step_17:
+      upper_target: S
+      lower_target: L
+      result: win
+  evidence_refs:
+    - prototypes/reality_anchor/reports/level_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+    - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+    - prototypes/reality_anchor/reports/anchor_braid_waypoint_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+    - prototypes/reality_anchor/reports/anchor_braid_mixed_gate_probe_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6.json
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_expected_trace.json
+prototype_specific_pre_submission_workflows:
+  execution_order:
+    - invalid_goal_prune
+    - opening_comfort_check
+    - redundant_element_prune
+  invalid_goal_prune:
+    status: pruned_to_v6_then_clean
+    result: >-
+      从 v5 删除 [1,2]、[3,2] 两个组合冗余目标；exact v6 剩余 [3,1]、[2,2]
+      任删都会把成本 17 降至 3/4，并产生 B/S、n2 与两种 pull 的核心绕过，故全部保留。
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_goal_prune_check.yml
+  opening_comfort_check:
+    status: clean
+    result: >-
+      枚举 initial SCC 中 12 个有效起点；保留 [1,3]。两个首步均为 walk，initial SCC=68，
+      最近不可逆出口距离 3，最近可胜出口距离 9；更深起点只增加路线税。
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_opening_comfort_check.yml
+  redundant_element_prune:
+    status: clean
+    result: >-
+      P/L 与 B/S 均多次移动且为全胜路核心；9 个普通空地全被玩家或对象路径消费，
+      无 degree<=1 leaf 或单入口 pocket；6x7 单层封闭外框无合法裁边。
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_redundant_element_prune.yml
+lexicon_used:
+  - id: pl_transverse_handle_gate_matrix
+    name: P/L 横向把手：玩家前格门与锚点占格门
+    use: P/L 下推释放旧 L 半格，另一锚点随后消费该把手与非接触半格门
+  - id: pl_pull_extraction_vertical_two_cell_object
+    name: P/L pull 抽取把手：前格门、占格目标门与扫带
+    use: 玩家从旧 L 半格左拉垂直 B/S，二格刚体目标位共同决定合法性
+  - id: pl_mixed_force_chain_wall
+    name: P/L 长轴墙廊：L 端余量棘轮（mixed-chain 补谱）
+    use: 两锚分别在中段同链上移、终局同链左移，两次 n2 建立并结算状态债
+  - id: single_object_goal_piston_order_lock
+    name: 单箱目标活塞顺序锁：推入覆盖与回撤撤销
+    use: 提取“目标覆盖必须主动撤销”的责任，改写为上目标覆盖/腾位/恢复及下目标端点接力
+new_linkage: >-
+  双锚编结·目标接力：P/L 先释放 B/S 的抽取把手；B/S 的临时覆盖随后反过来占住
+  P/L pull 把手。腾位后 P 端先覆盖下目标，最终 B/S pull 让两锚同链左移，
+  同时恢复上目标并把下目标覆盖从 P 端交给 L 端。全链只使用两种锚点的二格刚体、
+  端点、把手和 mixed force chain，不依赖 crate/sticky 材料标签。
+nonblocking_caveats:
+  - 存在 21 步可恢复 P/L 往返 detour；不声称所有胜路保持六次对象动作直连
+  - 非最优胜路可先移动并复原 B/S；不声称首次 B/S shift 全局固定
+  - 审美与难度均保守为 4，不支持 5
+package_and_queue:
+  levels_entry: prototypes/reality_anchor/levels.yml
+  queue_entry: prototypes/reality_anchor/playable_queue.yml
+  queue_status: pending_playtest
+  playable_export: prototypes/reality_anchor/playable/data.json
+  level_match_count: 1
+  queue_match_count: 1
+  playable_match_count: 1
+verification:
+  yaml_parse: pass
+  json_parse: pass
+  typescript_check: pass
+  full_package_evaluator: pass_exit_0
+  package_solver: {status: solved, cost: 17, explored_states: 123}
+  package_full_graph: {status: complete, reachable_states: 178, legal_transitions: 422, winning_states: 1}
+  expected_trace_steps: 17
+  playable_export: pass
+  diff_check: pass

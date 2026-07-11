@@ -95,23 +95,10 @@ function tool(
 
 type EditorCellToolLayer = Parameters<typeof editorTool>[0];
 
-function defaultTarget(knowledge: KnowledgeDoc): string {
-  return knowledge.knowledge[0]?.id ?? "solvable";
-}
-
-function defaultLevel(_mechanic: MechanicDoc, knowledge: KnowledgeDoc): LevelDoc {
-  const target = defaultTarget(knowledge);
+function defaultLevel(_mechanic: MechanicDoc, _knowledge: KnowledgeDoc): LevelDoc {
   return {
     id: "STUDIO_DRAFT",
     title: "Studio Draft",
-    role: "review",
-    status: "draft",
-    targets: [target],
-    known_before: [],
-    target_learning: [target],
-    support_level: "none",
-    expected_solver_evidence: ["solvable"],
-    expected_llm_player_evidence: [],
     layout: normalizeAsciiLayout(`
 #######
 #@ C G#

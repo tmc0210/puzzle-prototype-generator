@@ -1,0 +1,266 @@
+candidate_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5
+review_iteration: 4
+review_input_type: candidate_version
+
+task_classification:
+  kind: specific_prototype_level_design
+  prototype: prototypes/Reality_Anchor
+  generic_capability_change: false
+  player_side_priority: true
+
+revision_context:
+  source_version: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4
+  source_reviews:
+    evidence_review_3: {verdict: supports_with_caveats, review_loop_state: proposal_ready_with_caveats, required_action: none}
+    puzzle_critic_3: {verdict: supports_with_noncore_caveats, review_loop_state: proposal_ready, required_action: none, aesthetic: 4, difficulty: 4}
+  pre_submission_findings:
+    goal_prune: clean_all_four_retained
+    opening_comfort: revised_from_initial_scc_1_distance_0
+    redundant_element_prune: trimmed_left_and_right_wall_only_columns
+  exact_changes:
+    - 打开原坐标 [7,6]，将起点从原 [8,6] 左移到 [7,6]；玩家必须先走到补角把手再承诺。
+    - 删除左右各一列纯外墙；所有内部坐标 x 减 1，拓扑与机制关系不变。
+  why_fresh_review: 起点和地形已改变，v4 评审不得沿用；v5 使用全新证据并重新进入 claim-last 双审。
+
+prototype_context:
+  confirmed_rules:
+    - P/L 定义 push/pull 两侧；本候选 P/L 被墙完全固定，x <= 5 为 pull 侧，x >= 6 为 push 侧。
+    - B/S 定义 box/sticky 两侧；本候选 B/S 可移动，合法动作后全局材料归一化。
+    - 相邻 sticky 合并成刚体；刚体任一目标格受阻则整步失败。
+    - force chain 沿动作方向传递，链中任一对象不能移动则整步失败。
+    - pull 世界中，玩家前格必须为空，身后相邻对象才会随玩家同向移动。
+  win_condition: 所有 G 被箱、黏块或任意锚点格覆盖；玩家不算覆盖。
+  tool_boundary:
+    runtime_adapter: available
+    solver_graph_agency: available
+    event_count_and_prefix_state_probes: available
+    prototype_specific_shape_necessity_probe: available_with_exact_coordinate_offset
+    curated_miner: unavailable
+
+slot_brief:
+  intended_role: late_challenge
+  known_before: all_current_reality_anchor_runtime_rules
+  target: active_shape_repair_split_and_rebind_with_movable_BS_and_fixed_PL
+  difficulty_or_support_expectation: difficulty_floor_4; aesthetic_floor_4; aspire_higher_but_no_5_claim; support_none
+
+solve_instance:
+  layout: |-
+    ############
+    #####LP#####
+    #######...##
+    #####.CC...#
+    #.GG..C.#.B#
+    ##GG...M..S#
+    ######@.#..#
+    ############
+  player_start: [6, 6]
+  goal_cells: [[2, 4], [3, 4], [2, 5], [3, 5]]
+  anchor_cells:
+    push_pull: {L: [5, 1], P: [6, 1], movable: false}
+    box_sticky: {B: [10, 4], S: [10, 5], movable: true}
+  initial_material:
+    crates: [[6, 3], [7, 3], [6, 4]]
+    sticky_singleton: [7, 5]
+
+mechanism_scope:
+  central:
+    - 玩家先在 13 状态 initial SCC 中观察；规范解第一步向右只是 walk，第二步才把 M 向上推过 B/S 并补成箱态 2x2。
+    - B/S 向上移动一次，把下排两箱刷成 MM，得到上 CC、下 MM 的混合 2x2。
+    - 唯一上口向下推右上箱；force chain 同步下移黏块并归一化，混合正方形被剪成一枚箱与三格 L 黏块。
+    - 剩余箱先左推让位，再在固定 P/L 的 pull 侧向下拉成单格 M；L3 左拉后与它重并为偏移黏态 2x2。
+    - 完整黏态 2x2 最后由固定 P/L 的 pull 语义整体左拉三格覆盖四目标。
+  required_winning_path_events:
+    - anchor_boundary_shift:box_sticky at least 1
+    - sticky_to_box occurrence at least 1
+    - box_to_sticky occurrence at least 3
+    - sticky_merge occurrence at least 3
+    - force_chain occurrence at least 1
+    - pull_object at least 1
+    - move_sticky_rigid at least 5
+  required_winning_path_shapes:
+    - crate_2x2 at some post-initial state
+    - sticky_exact_2x2 at some state
+    - exact split: singleton [5,4] plus L group [[7,4],[6,5],[7,5]]
+    - exact rebound offset 2x2 at [[5,4],[6,4],[5,5],[6,5]]
+  forbidden_if_seen_anywhere:
+    - anchor_boundary_shift:push_pull
+
+evidence:
+  solver_result:
+    found: true
+    shortest_cost: 23
+    explored_states_before_shortest: 11664
+    canonical_inputs: [right, up, right, right, down, right, up, left, up, up, up, left, left, down, left, down, left, down, left, up, left, left, left]
+  canonical_trace_summary:
+    - step_1: 向右 walk 到 M 下方；没有对象事件或不可逆承诺。
+    - step_2: M 向上推并 sticky_to_box，完成箱态 2x2。
+    - steps_3_7: 四步走位后把 B/S 向上推；box_to_sticky:n2、sticky_merge:n1 形成 CC/MM。
+    - steps_8_13: 六步到唯一上方把手；均为 walk。
+    - step_14: 右上箱向下推；force_chain:n2、move_sticky_rigid、box_to_sticky:n1、sticky_merge:n1，得到 L3 与单箱。
+    - step_15: 单箱左推至 [5,3]。
+    - steps_16_18: 两步换把手后向下 pull 单箱；box_to_sticky:n1，得到 [5,4] 单格 M。
+    - step_19: L3 左拉并 merge，形成 [[5,4],[6,4],[5,5],[6,5]] 偏移 2x2。
+    - steps_20_23: 一步换把手后连续左拉完整 2x2 三格覆盖目标。
+  canonical_event_counts:
+    walk: 14
+    move_sticky_rigid: 6
+    sticky_to_box_occurrences: 1
+    anchor_boundary_shift_box_sticky: 1
+    box_to_sticky_occurrences: 3
+    sticky_merge_occurrences: 3
+    force_chain_occurrences: 1
+    object_inputs: 9
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure_band: 4
+    solution_space_reuse_band: 1
+    solution_cost: 23
+    non_walk_event_count: 24
+    player_total_visits: 24
+    player_unique_visited_cells: 23
+    walkable_cell_count: 33
+    revisit_rate: 0.041666666666666664
+    heavy_reuse_cell_count: 0
+    heavy_reuse_ratio: 0
+    interpretation_limit: 只描述规范解执行压力与空间复用，不证明洞见、难度或审美。
+  graph:
+    status: complete
+    reachable_states: 165454
+    legal_transitions: 413620
+    winning_states: 1
+    compressed_regions: 11411
+    commitment_transitions: 34831
+    initial_region_states: 13
+    opening_commitments: 3
+    opening_viable_commitments: 1
+    opening_dead_commitments: 2
+    solution_commitments: 9
+  opening_comfort:
+    status: complete
+    initial_scc_size: 13
+    initial_exit_source_distances: [1, 1, 3]
+    initial_win_exit_source_distances: [1]
+    initial_dead_exit_source_distances: [1, 3]
+    nearest_irreversible_exit_distance: 1
+    nearest_win_reaching_exit_distance: 1
+    dead_exits_before_first_win_exit: 0
+    first_step_legal_actions: {right: walk, up: walk}
+    caveat: 一个 dead exit 与正确出口同为距离 1；指标不证明它公平或好读。
+  fixed_anchor_probe:
+    combined: {found_bypass: false, status: complete, explored_states: 366670}
+    movable_box_sticky_shift: {found_bypass: false, status: complete, explored_states: 165454}
+    fixed_push_pull_effect: {found_bypass: false, status: complete, explored_states: 192162}
+    material_normalization: {found_bypass: false, status: complete, explored_states: 174435}
+    box_to_sticky: {found_bypass: false, status: complete, explored_states: 224385}
+    sticky_merge: {found_bypass: false, status: complete, explored_states: 259751}
+    sticky_rigid_move: {found_bypass: false, status: complete, explored_states: 169467}
+    forbidden_reachable_push_pull_shift: {status: complete, hits: none, reachable_states: 165454}
+  count_probes:
+    B_S_shift_min_1: {found_bypass_below_count: false, status: complete, explored_states: 165454}
+    sticky_to_box_occurrence_min_1: {found_bypass_below_count: false, status: complete, explored_states: 189116}
+    box_to_sticky_occurrence_min_3: {found_bypass_below_count: false, status: complete, explored_states: 482871}
+    sticky_merge_occurrence_min_3: {found_bypass_below_count: false, status: complete, explored_states: 349911}
+    force_chain_occurrence_min_1: {found_bypass_below_count: false, status: complete, explored_states: 190441}
+    pull_object_min_1: {found_bypass_below_count: false, status: complete, explored_states: 192162}
+    sticky_rigid_move_min_5: {found_bypass_below_count: false, status: complete, explored_states: 559596}
+  shape_necessity_probes:
+    exact_coordinate_offset_from_v4: [-1, 0]
+    crate_2x2: {found_bypass: false, status: complete, explored_states: 118558, legal_transitions: 295023}
+    sticky_exact_2x2: {found_bypass: false, status: complete, explored_states: 165387, legal_transitions: 413450}
+    split_single_plus_l_exact: {found_bypass: false, status: complete, explored_states: 165446, legal_transitions: 413608}
+    rebound_offset_2x2_exact: {found_bypass: false, status: complete, explored_states: 165429, legal_transitions: 413564}
+  concrete_false_plan:
+    name: wrong_early_shear
+    prefix: [right, up, right, right, down, right, up, left, up, up, left, left]
+    local_progress: 已补角并移动 B/S；从上侧把上排 CC 提前向左剪，视觉上朝目标推进。
+    reached_layout: |-
+      ############
+      #####LP#####
+      #######...##
+      #####CC@..B#
+      #.GG..MM#.S#
+      ##GG.......#
+      ######..#..#
+      ############
+    suffix_solver: {found: false, explored_states: 1044}
+    suffix_graph: {status: complete, reachable_states: 1044, legal_transitions: 2632, winning_states: 0}
+  goal_coverage:
+    status: complete
+    expected_trace_all_legal: true
+    final_win: true
+  evidence_limits:
+    - 工具不证明审美、难度、洞见、错误计划可信度或路线质量。
+    - 23 步中 14 步是 walk；连续六步上口路线仍可能是路线税。
+    - opening SCC 的两个 dead commitments 可能提供可读试探，也可能只是额外惩罚；必须由 critic 判断。
+    - 墙齿仍明确标出唯一上口，可能把纵剪提示得过强。
+    - 不声称 B/S 在所有胜路恰好移动一次、固定方向，亦不声称具体 crate identity。
+
+hard_fact_summary_for_critic:
+  solver: shortest_cost_23; graph_complete_165454_states; one_winning_state
+  all_solution_gates:
+    - seven supported event minima all complete with no bypass
+    - four required shape predicates all complete with no bypass
+    - fixed P/L never shifts; pull is required on every win
+  opening_delta_from_reviewed_v4:
+    - initial SCC 1->13
+    - nearest correct irreversible exit 0->1
+    - first step forced object action -> two reversible walk options
+    - one dead exit occurs at the same source distance as the correct exit
+  taste_risks:
+    - one extra walk makes cost 22->23
+    - six-walk unique upper-mouth route remains
+    - outline is 14->12 columns without topology change
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.md
+    - prototypes/reality_anchor/reports/opening_metrics_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.md
+    - prototypes/reality_anchor/reports/fixed_anchor_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.md
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_crate_2x2.md
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_sticky_exact_2x2.md
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_split_single_plus_l_exact.md
+    - prototypes/reality_anchor/reports/square_shape_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_rebound_offset_2x2_exact.md
+    - prototypes/reality_anchor/reports/prefix_dead_state_probe_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_WRONG_EARLY_SHEAR.md
+    - prototypes/reality_anchor/reports/goal_coverage_RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5.md
+
+player_facing_reading:
+  opening_read: >-
+    玩家可先向右站到缺角 M 下方，或向上进入左侧观察区；两手都只是 walk。正确计划主动
+    回到 M 下方再向上补角。向上后若立即从左推 M 向右，会形成同距离的早期死承诺；其公平性留给 critic。
+  intended_solution_read: >-
+    B/S 上移生成 CC/MM 混合刷子；唯一上口纵剪右列得到 L3，剩余箱先让位再在固定 P/L
+    侧抽成单格 M。L3 与单格在偏移位重并成正方形，最后整体拉入目标。
+  concrete_false_read: >-
+    提前横剪上排 CC 看似直接接近目标且动作合法，但消耗唯一上方驱动位；完整后继图无胜。
+  payoff_and_resolution: >-
+    四格材料依次承担箱态正方形、CC/MM 混合刷子、1+3 拆分、偏移黏态正方形；
+    完整方块必须先拆、让位、跨侧补角并重绑，才成为可交付终态。
+
+archive_taste_context:
+  examples:
+    - {candidate_id: RA_CAND_0022, human_scores: {aesthetic: 5, difficulty: 4}, use: 5分审美与4分难度的短反直觉锚点}
+    - {candidate_id: RA_CAND_0025, human_scores: {aesthetic: 4, difficulty: 4}, use: 主动形状构造的4比4门槛}
+    - {candidate_id: RA_CAND_0006, human_scores: {aesthetic: 2, difficulty: 5}, use: 路线税与目标硬化负锚点}
+    - {candidate_id: RA_CAND_0024, human_scores: {aesthetic: 1, difficulty: 3}, use: 高事件数字不等于黏块几何}
+    - {candidate_id: RA_CAND_0027, human_scores: {aesthetic: 1, difficulty: 2}, use: 未用锚点与未消费形状负锚点}
+  all_aesthetic_1_entries_read: [RA_CAND_0024, RA_CAND_0027]
+
+diagnostic_routing:
+  hard_evidence: [complete_graph, fixed_anchor_scan, event_count_gates, exact_shape_gates, wrong_prefix_suffix_graph, opening_metrics]
+  taste_probes: [opening_same_distance_dead_exit_fairness, six_walk_route_tax, wall_hint_strength, active_1_plus_3_planning, payoff_against_human_anchors]
+  prototype_specific_workflows:
+    source_v4_invalid_goal_prune: completed
+    source_v4_opening_comfort_check: completed_and_revised
+    source_v4_redundant_element_prune: completed_and_pruned
+    exact_v5_final_rerun: pending_after_v5_reviews_proposal_ready
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work: {enabled: false, authorized_by: null, candidate_ids: [], allowed_operations: []}
+  candidate_relation: fresh_family_pre_submission_revision
+  why_not_archive_variant: archive 只用于人评校准；v5 只继承本轮 fresh v4，并由原型专属优化产生。
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5_claim_packet.yml
+  read_order: facts_then_claim

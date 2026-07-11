@@ -1,0 +1,220 @@
+review_iteration: 3
+candidate_version_reviewed: RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v4
+review_input_type: candidate_version
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready
+required_action: none
+
+review_method:
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_initial_review: true
+
+initial_review:
+  verdict: supports_with_noncore_caveats
+  review_loop_state: proposal_ready
+  required_action: none
+  player_facing_merits:
+    - >-
+      同四格材料不是按顺序触发标签，而是先补成箱态 2x2、再成为 CC/MM 混合刷形、
+      被纵剪成真正承担不同职责的 1+3，最后在偏移位重绑成黏态 2x2。每一阶段的几何
+      输出都被下一阶段消费，达到玩家侧的主动形状重构，而不是 RA_CAND_0024 式机制信号空转。
+    - >-
+      纵剪与提前横剪构成可读的轴选择。横剪确实把上排推向左侧目标，因此是可信的局部计划；
+      它同时把箱推离唯一上方驱动列，失败原因能从墙与把手关系回溯，不是完全不可见的盲猜。
+    - >-
+      B/S 必须由玩家上移以生成混合刷形，固定 P/L 则在单箱下拉、材料转化和最终整块交付中
+      持续承担 pull 语义。两锚点的可见承诺都被实际消费，没有 RA_CAND_0027 的闲置 affordance。
+    - >-
+      左侧四目标直接消费最终 2x2，而初态缺角与后段偏移重绑形成首尾呼应；完成感来自
+      “方块并非原样搬运，而是拆开后在新位置恢复”，其构造责任达到 RA_CAND_0025 的 4/4 门槛。
+  archive_taste_context_used:
+    corpus_read: all_27_clean_human_reviewed_records_RA_CAND_0001_through_RA_CAND_0027
+    primary_positive_anchors: [RA_CAND_0022, RA_CAND_0025]
+    primary_negative_or_boundary_anchors: [RA_CAND_0006, RA_CAND_0024, RA_CAND_0027]
+    all_aesthetic_1_entries_read: [RA_CAND_0024, RA_CAND_0027]
+    use_boundary: 仅用于审美、难度和失败模式校准；未把任何归档布局或因果链当作候选起点。
+  score_calibration:
+    human_archive_anchors_present: true
+    score_claim_allowed: true
+    archive_attack_calibration: complete_all_27_clean_human_reviewed_records
+    positive_anchors:
+      - >-
+        RA_CAND_0022（审美 5、难度 4）：短步骤、强反直觉死角重读、高空间利用率与精巧收束
+        是 5 分标杆。当前候选有结构性重读，但更长、更显式且有纯走位段，因此不能对齐审美 5。
+      - >-
+        RA_CAND_0025（审美 4、难度 4）：主动构造 L 形并在终局消费，是最接近的强 4 构造锚点。
+        当前候选的纵剪、1+3 职责分离和偏移重绑达到同档，但紧凑性较弱。
+      - >-
+        其余 4/4 与高难正例 RA_CAND_0001、0002、0005、0011、0017、0026 用于交叉检查：
+        强 4 需要明确矛盾、紧凑因果或高耦合；高步骤或高事件量本身不升档。
+    lower_bound_or_negative_anchors:
+      - >-
+        RA_CAND_0006（审美 2、难度 5）：目标硬化和腾挪路线可以抬高难度却损害机制美感；
+        因此本候选的 13 次 walk 与六步上口路线全部从结构难度中扣除。
+      - >-
+        RA_CAND_0024（审美 1、难度 3）：高机制信号若只兑现推拉腾挪仍是反例；当前候选
+        只有因为四种形态的职责真实改变并在终局消费，才越过该警戒。
+      - >-
+        RA_CAND_0027（审美 1、难度 2）：可动锚点或 sticky 标签若未用其几何性质即构成
+        affordance 污染；当前候选的 B/S 位移、固定 P/L pull 与 L3/2x2 几何均有明确责任。
+      - >-
+        RA_CAND_0019、0021、0023 用作 2 到 3 分边界：显然按钮、单个特殊结构或重复处理
+        不能冒充后期强 4；本候选越过边界靠的是跨阶段形状责任，而非事件计数。
+    missing_anchor_effect: none
+  trace_metric_interpretation:
+    calibration_status: pilot
+    solution_execution_pressure:
+      metric_fact: >-
+        reality_anchor_trace_metrics_v0 对当前 exact version 给出 execution-pressure band 4；
+        solution cost 22、non-walk event count 24。规范解另有 13 次 walk、9 次对象输入。
+      allowed_reading: >-
+        只说明规范解具有较高执行与状态管理压力，不证明洞见、因果依赖、难度或审美。
+      player_facing_check: >-
+        九次对象输入大多生成之后会被消费的状态变化，但连续六步上口走位和收尾三次同向整块拉动
+        并未各自增加新洞见；因此不能用 band 4 把评分推高。
+      verdict_effect: caveat
+    solution_space_reuse:
+      metric_fact: >-
+        space-reuse band 1；23 次玩家访问仅覆盖 22 个不同格，可行走格 32，revisit rate
+        0.043478260869565216，heavy reuse cell count 0。
+      allowed_reading: >-
+        只说明玩家路线主要是一次性穿行，不说明材料形状是否被优雅复用，也不直接判定整体审美。
+      player_facing_check: >-
+        材料本身在中央区域反复换形，抵消了“完全一次性事件链”的担忧；但玩家空间几乎不重读，
+        与 RA_CAND_0022 的高空间利用率仍有明显距离，因而只支持审美 4，不支持 5。
+      verdict_effect: caveat
+    unmeasured_dimensions:
+      - causal_dependency
+      - player_insight
+      - counterintuitive_reframe
+      - surprise_and_payoff
+  aesthetic_target_fit: meets_floor_4_but_not_5
+  difficulty_target_fit: meets_floor_4_but_not_5
+  critic_items:
+    - id: PC3_ROUTE_TAX
+      type: nonblocking_risk
+      target: why_not_execution
+      claim_relation: 限制但不推翻
+      evidence_basis: 规范解 22 步含 13 次 walk；B/S 上移后有连续六步纯走位才到唯一上口。
+      player_facing_reason: >-
+        这六步没有创造或消费状态，确属路线税，并会打断 B/S 刷形到纵剪之间的节奏；但它只发生一次，
+        且后续仍有纵剪、让位、抽取与重绑四段对象责任，所以不足以把核心降成执行题。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC3_WALL_HINT_BOUNDARY
+      type: score_boundary
+      target: player_insight
+      claim_relation: 支持 4，阻止升到 5
+      evidence_basis: >-
+        上方只有 [8,2] 能成为纵剪把手，墙齿清楚保护该列；正确路线到达后，下推右上箱是最近的对象动作。
+      player_facing_reason: >-
+        墙体把纵剪提示得较强，削弱发现瞬间；但在到达上口之前，玩家仍面对“立即横剪向目标”与
+        “绕行保留纵轴把手”的真实选择，故提示没有把整题压成顺墙脚本。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC3_FORCED_OPENING
+      type: nonblocking_risk
+      target: role_fit
+      claim_relation: 不构成难度优点
+      evidence_basis: initial SCC 仅 1 个状态且只有 1 个 outgoing commitment；开局唯一合法动作是向上推 M。
+      player_facing_reason: >-
+        玩家没有动作前的观察缓冲，开局补角带有脚本感；不过全图仍可直接观察，这一步只建立可见的
+        箱态 2x2，真正轴选择发生在其后，因此一次强制 setup 不损害 late-challenge 的 4 分门槛。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC3_FALSE_SHEAR_FAIRNESS
+      type: nonblocking_risk
+      target: player_insight
+      claim_relation: 基本支持，保留失败反馈风险
+      evidence_basis: >-
+        提前横剪会把 CC 明显推向左侧目标，但也把上排移到无上方把手的墙下；到达状态仍可继续移动，
+        其完整 765 状态后继图无胜。
+      player_facing_reason: >-
+        假计划具有局部吸引力，失败原因也可由“丢失唯一上方驱动列”解释，因而不是纯二元盲试；
+        风险在于错误不会立即报错，部分玩家可能要多走几步才确认不可恢复，应在试玩交接中观察。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC3_ACTIVE_REBIND_THRESHOLD
+      type: score_boundary
+      target: why_not_execution
+      claim_relation: 支持难度 4 与审美 4，不支持更高
+      evidence_basis: >-
+        玩家必须选择纵剪轴、把剩余箱左推让位、从 pull 侧下抽为单格 M，再左拉 L3 与其偏移重绑；
+        四形态均在所有胜路出现，但首个箱态 2x2 由唯一开局动作自动完成。
+      player_facing_reason: >-
+        1+3 拆分与偏移重绑要求预见不同形状的后续职责，已明显高于“触发事件后沿墙执行”；
+        但开局形态被迫、正确纵剪受墙提示、重绑后收尾线性，整体是稳定 4 而非 5 档终局。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC3_ROLE_SCORE_BOUNDARY
+      type: score_boundary
+      target: role_fit
+      claim_relation: late challenge 成立，capstone 与 5 分追求不成立
+      evidence_basis: >-
+        与 RA_CAND_0025 的主动构造门槛相当，但不具 RA_CAND_0022 的短、强反直觉与高空间利用率，
+        也没有 RA_CAND_0017 的极高推理和腾挪密度。
+      player_facing_reason: >-
+        可作为无辅助的后期 4/4 挑战移交试玩；不应包装成审美 5、难度 5 或最末 capstone。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+    - id: PC3_PRE_SUBMISSION_STAGE
+      type: diagnostic_note
+      target: diagnostic_reading
+      claim_relation: 与玩家侧评分无关
+      evidence_basis: invalid_goal_prune、opening_comfort_check、redundant_element_prune 仍标记为 proposal_ready 后执行。
+      player_facing_reason: 这些是提交前流程状态，不是当前设计优点，也不应提高本轮评分。
+      blocks_proposal_ready: false
+      expected_designer_response: accept_as_nonblocking
+  diagnostic_interpretations:
+    - graph_fact: 完整图 87481 状态、215370 合法转移、1 个 winning state。
+      neutral_meaning: 当前 exact version 的完整可达图只有一个胜态；不等于只有一条输入序列或具备高质量。
+      player_facing_interpretation: 单一胜态本身不告诉玩家是否需要洞见，也不评价错误分支是否公平。
+      verdict_effect: none
+    - graph_fact: initial SCC states 1，initial outgoing commitments 1。
+      neutral_meaning: 开局没有可逆移动区，第一步是唯一提交。
+      player_facing_interpretation: 缺少动作前观察缓冲并带来一次脚本式 setup；核心选择仍发生在 setup 后。
+      verdict_effect: caveat
+    - graph_fact: 第一步后的 solution region 有 6 个 commitments，其中 2 个 viable、4 个 dead。
+      neutral_meaning: 被迫补角后，可达结构并非继续保持单一路径，存在通向胜利与死亡的不同提交。
+      player_facing_interpretation: 开局强制不等于整关自动；但这些数量不证明分支本身有趣或公平。
+      verdict_effect: none
+    - graph_fact: wrong_early_shear 后继图完整，765 状态、1882 转移、0 胜态。
+      neutral_meaning: 提前横剪是确定不可恢复的提交，而不是预算未知。
+      player_facing_interpretation: 箱被推离唯一上口的几何后果可追溯，但失败反馈不是即时，保留试玩风险。
+      verdict_effect: caveat
+    - graph_fact: 四个 exact shape 避让搜索均 complete 且未发现胜路旁路。
+      neutral_meaning: 所有胜路都会经过箱态 2x2、黏态 2x2、指定 1+3 与指定偏移 2x2 状态。
+      player_facing_interpretation: 必经只保证形态出现，不保证玩家主动理解；主动性仍须由轴选择、让位和重绑责任判断。
+      verdict_effect: none
+    - graph_fact: solution irreversible steps 9。
+      neutral_meaning: 规范解包含九个离开当前可逆区域的步骤；该数值不是谜题深度评分。
+      player_facing_interpretation: 单凭不可逆步数无法区分有意义承诺与线性执行。
+      verdict_effect: none
+  handoff_notes:
+    - 当前保守评分为审美 4、难度 4；达到用户门槛，但两项均不支持 5。
+    - 六步上口路线是真实路线税，试玩时应观察它是否明显打断刷形到纵剪的因果连续性。
+    - 提前横剪的错误原因在几何上可见，但失败确认可能延迟；试玩时观察是否被体验为公平的轴选择。
+    - 一次强制开局不作为优点；opening_comfort_check 仍须按原型提交前流程完成。
+
+claim_followup:
+  claim_read: true
+  verdict_changed: false
+  score_or_state_changed: false
+  change_summary: >-
+    claim 准确把核心限定为纵剪、单箱让位、pull 侧补角与偏移重绑，并主动排除 13 次 walk、
+    被迫开局和工具计数作为难度来源；这些表述与先验初评一致，没有带来升档或降档。
+  change_reason: >-
+    读取 claim 后没有出现新的玩家侧事实。其 framing 没有消除六步路线税、墙齿提示、强制开局和
+    延迟失败反馈，因此仍维持 4/4 与非阻塞 caveats；同时也没有越界声称 5 分或工具即质量。
+  final_verdict: supports_with_noncore_caveats
+  final_review_loop_state: proposal_ready
+  final_required_action: none
+  final_critic_items:
+    - PC3_ROUTE_TAX
+    - PC3_WALL_HINT_BOUNDARY
+    - PC3_FORCED_OPENING
+    - PC3_FALSE_SHEAR_FAIRNESS
+    - PC3_ACTIVE_REBIND_THRESHOLD
+    - PC3_ROLE_SCORE_BOUNDARY
+    - PC3_PRE_SUBMISSION_STAGE

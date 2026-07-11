@@ -531,14 +531,6 @@ function caseToLevel(caseDoc: LocalExperimentCaseDoc, winCondition: WinCondition
   return {
     id: caseDoc.id,
     title: caseDoc.title ?? caseDoc.id,
-    role: "mechanic_witness",
-    status: "scratch",
-    targets: [],
-    known_before: [],
-    target_learning: [],
-    support_level: "none",
-    expected_solver_evidence: [],
-    expected_llm_player_evidence: [],
     layout: caseDoc.layout,
     win: winCondition,
   };

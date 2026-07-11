@@ -1,0 +1,351 @@
+prototype_context:
+  confirmed_rules:
+    - "P/L 锚点的 P 侧为推、L 侧为拉；B/S 锚点的 B 侧为箱、S 侧为黏。"
+    - "两种锚点都是可平移、不可旋转的二格刚体；同类每关最多一个。"
+    - "黏格四邻接自动合并；跨入 B 侧变独立箱，剩余连通块可产生 sticky_split。"
+    - "任一刚体占格目标被墙、边界或不可移动结构挡住时整步失败。"
+  win_condition: all_targets_covered_by_crate_sticky_or_anchor_after_settle
+  object_and_event_semantics:
+    player_on_goal_does_not_cover: true
+    anchor_cells_cover_goals: true
+    event_patterns_are_not_object_instance_proofs: true
+  tool_boundary:
+    runtime_adapter: implemented
+    solver: implemented
+    graph: implemented_but_budget_exhausted_for_exact_v10
+    curated_miner: unavailable
+    puzzlescript_exporter: unavailable
+
+slot_brief:
+  intended_role: late_game_dual_anchor_challenge
+  known_before: all_current_reality_anchor_runtime_rules
+  target: "双锚点末期困难关；明确包含黏块拼接/切割；难度至少4并追求更高，审美至少4并追求5。"
+  difficulty_or_support_expectation:
+    support_level: none
+    difficulty_floor: 4
+    difficulty_aspiration: 5
+
+mechanic_exposure_context:
+  mechanic_window: late_game_all_current_rules
+  allowed_exposure_through: dual_anchor
+  claimed_core_events:
+    scope: canonical_shortest_and_shortest_dominant_route
+    events:
+      - sticky_merge
+      - sticky_split
+      - sticky_to_box
+      - box_to_sticky
+      - anchor_boundary_shift:box_sticky
+      - anchor_boundary_shift:push_pull
+      - move_sticky_rigid
+      - push_object
+      - pull_object
+    all_solution_necessity_claimed: false
+    bounded_bypass_note: "规范最短解23步；已知最短 splitless 胜路48步。"
+
+design_target:
+  aesthetic_score_target: 5
+  aesthetic_score_floor: 4
+  difficulty_score_target: 5
+  difficulty_score_floor: 4
+  target_role_notes: >-
+    玩家侧目标是把同一批材料读成“先桥接成共享 U 形—抬升开路—切桥分配—末手重织”，
+    而不是以事件数量或长路线证明末期感。
+
+solve_instance:
+  candidate_version: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10
+  layout: |-
+    ###########
+    ###PLGG.###
+    ####....###
+    ###MM.#####
+    ##.@M...###
+    ##...S..M##
+    ####GBC*C##
+    ####.GGG###
+    ####GG#####
+    ###########
+  player_start: [3, 4]
+  player_goal: null
+  win_condition: all_targets_covered_by_objects
+
+mechanism_scope:
+  central:
+    - L_notch_push_then_orthogonal_pull
+    - moving_bs_brush_builds_three_crate_bridge_into_u_rigid_body
+    - u_rigid_body_reposition_and_lift_opens_pl_route
+    - pl_horizontal_pull_docks_anchor_on_goal_pair_and_rewrites_final_force_side
+    - bs_crossing_cuts_bridge_into_three_crates_and_two_sticky_components
+    - final_bs_shift_rebinds_two_crates_into_target_bar
+  allowed_support:
+    - compact_corridor_navigation
+    - anchor_target_coverage
+    - force_chain
+    - target_vacate_and_recoverage
+  incidental_allowed: []
+  required_winning_path_events:
+    claim_scope: all_23_step_shortest_wins
+    groups:
+      - [sticky_merge]
+      - [sticky_split]
+      - [sticky_to_box]
+      - [box_to_sticky]
+      - [anchor_boundary_shift:push_pull]
+      - [anchor_boundary_shift:box_sticky]
+      - [move_sticky_rigid]
+      - [push_object]
+      - [pull_object]
+  forbidden_winning_path_events: []
+  forbidden_if_seen_anywhere: []
+
+design_claim:
+  player_insight: >-
+    黏住是临时制造共享形状。开局 L 形先侧拉 B/S，把三箱桥与远端黏格拼成 U 形；
+    玩家搬运并抬升整块以打开 P/L 通道，横拉 P/L 覆盖上方双目标并改写末段施力侧。
+    回到底部后必须把 U 形桥主动切成三个箱与两个黏端，再用末手 B/S 位移把其中两箱
+    重黏成目标横条，保留第三箱覆盖底目标。
+  causal_chain:
+    - "right,down：L 缺角转向，B/S 下移；三箱桥 C->M 并 sticky_merge 成 U 形。"
+    - "left；right,right；left：U 形与 B/S 重新定位，并把远端目标格纳入共享刚体。"
+    - "up 路线与一次 sticky pull：抬升 U 形，打开上方锚点通道。"
+    - "right,right：从 L 侧横拉 P/L 两格，使 P/L 覆盖上方目标对。"
+    - "回到底部连续 down：先把 U 形送到边界，再让桥排 sticky_to_box:n3 + sticky_split:n1。"
+    - "末手 down：force_chain:n3 移动 B/S；两箱 box_to_sticky:n2 并 sticky_merge:n1，全部目标闭合。"
+  why_not_execution: >-
+    每段操作都改变后续责任：第一次拼接用独立箱换共享 U 形；抬升 U 形打开 P/L 路线；
+    P/L 既要覆盖目标又要改变末段施力侧；切割把共享桥恢复成可分配箱；末手只重黏两箱，
+    第三箱保留独立目标债。23 步中有 37 个非 walk 事件，但该指标只描述执行压力；玩家价值
+    必须来自这些状态重读，而不能由指标本身证明。
+  falsification:
+    - "存在接近23步的简单 splitless 胜路；当前最短已知 splitless 为48步。"
+    - "最短胜路可不移动任一锚点、可省略首次三箱桥拼接或终局重拼。"
+    - "U 形抬升与 P/L 通道无因果关系，或 P/L 只是目标覆盖装饰。"
+    - "玩家体验退化为唯一走廊按键、重复同操作或不可读路线税。"
+
+evidence:
+  commands_run:
+    - "npx tsx src/cli.ts explain-layout prototypes/reality_anchor prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10.txt --id RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10 --targets K_runtime_smoke --max-states 1000000 --graph-max-states 1000000 --write"
+    - "npx tsx prototypes/reality_anchor/reports/trace_layout.ts prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10.txt RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10 <23-step-trace> 300000 120"
+    - "npx tsx prototypes/reality_anchor/reports/probe_split_key_win_without_event.ts prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10.txt sticky_split 2500000"
+  solver_result:
+    found: true
+    cost: 23
+    depth: 23
+    explored_states: 795
+    inputs: [right, down, left, left, up, right, right, left, up, right, up, right, right, up, left, right, right, down, left, left, down, down, down]
+  trace_summary:
+    replayed: true
+    final_win: true
+    event_counts:
+      sticky_merge:n1: 3
+      sticky_split:n1: 1
+      sticky_to_box:n3: 1
+      box_to_sticky:n3: 1
+      box_to_sticky:n2: 1
+      anchor_boundary_shift:box_sticky: 3
+      anchor_boundary_shift:push_pull: 2
+      move_sticky_rigid: 10
+  target_events:
+    all_targets_covered_at_step: 23
+    upper_pair_covered_by_pl_after_step: 17
+    bridge_goal_vacated_and_recovered: true
+    bottom_pair_resolved_by_final_bs_and_rebind: true
+  object_or_instance_evidence:
+    status: unavailable
+    note: analyzer did not report instance-level participation; do not infer per-object necessity.
+  winning_path_event_checks:
+    shortest_trace_contains_all_claimed_core_events: true
+    splitless_probe:
+      first_found_cost: 48
+      explored_states_before_first_found: 629709
+      interpretation: "sticky_split is not all-solution necessary; it is shortest-dominant and present in every win cheaper than 48."
+    other_all_solution_gates: unknown_graph_exhausted
+  reachable_event_exposure:
+    later_than_allowed_exposure: not_applicable_no_later_stage_than_dual_anchor
+    complete_reachable_scan: false
+  graph_or_counterfactual_evidence:
+    graph_status: exhausted
+    graph_budget: 1000000
+    winning_states_seen_before_exhaustion: 6
+    complete_graph_claims: none
+    layout_compaction: "v10 仅保留 exact canonical trace 用到的36个 walkable cells；solver cost仍为23。"
+  evidence_limits:
+    - graph_not_complete
+    - no_instance_level_participation
+    - no_per_object_necessity
+    - split_is_not_all_solution_required
+
+hard_fact_summary_for_critic:
+  solver:
+    found: true
+    cost: 23
+    canonical_trace_replays_and_wins: true
+  required_or_forbidden_events:
+    canonical_shortest_has_join_cut_rebind: true
+    canonical_shortest_moves_both_anchors: true
+    splitless_first_found_cost: 48
+    no_all_solution_split_claim: true
+  routed_diagnostic_facts:
+    graph_status: exhausted_at_1000000
+    winning_states_seen: 6
+    walkable_cells: 36
+    exact_trace_space_compaction_preserved_cost: 23
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost:
+          raw: 23
+          band: 5
+          weight: 0.35
+        nonWalkEventCount:
+          raw: 37
+          band: 5
+          weight: 0.45
+        heavyReuseRatio:
+          raw: 0.027777777777777776
+          band: 3
+          weight: 0.2
+      aggregateBand: 5
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate:
+          raw: 0.25
+          band: 3
+          weight: 0.55
+        heavyReuseRatio:
+          raw: 0.027777777777777776
+          band: 3
+          weight: 0.45
+      aggregateBand: 3
+  evidence_limits:
+    - "指标只描述 canonical trace 的执行压力/空间复用，不证明洞见或审美。"
+    - "完整图 exhausted；不得从 winningStates=6 推唯一解、多解质量或 complete graph 结论。"
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10_split_bypass.json
+
+player_facing_reading:
+  opening_read: >-
+    开局全视野把三个问题并排摆出：左上 P/L 紧邻横向双目标但向左错位；中部 L 形黏块把玩家
+    卡在缺角；右下三箱桥、远端黏格、B/S 与密集目标像一个尚未接通的 U。第一手可观察移动
+    不是立刻承诺，真正的第一笔是把 L 形向右推出后从缺角向下拉。
+  intended_solution_read: >-
+    第一次 down 不是单纯移锚，而是把三箱同时刷成桥，突然将远端黏格接进一个大 U 形。
+    玩家随后用同一 U 形反复左拉/右推，但每次都改变 B/S 相对位置；将其上提后，上方 P/L
+    才能从 L 侧连续横拉到目标对。回到底部，向下推 U 形时桥排变成三个独立箱并切断两端；
+    最后一推又把其中两箱黏回横条，第三箱不黏，正好承担底部独立目标。
+  commitment_points:
+    - "step2 B/S 下刷：三箱失去独立性并接成 U；事件和轮廓反馈立即可见。"
+    - "step8 B/S 左移：改变 U/边界相位，为后续抬升和终局列对齐。"
+    - "step16-17 P/L 横拉：覆盖上方目标对，同时把末段区域留在正确推侧。"
+    - "step22 切桥：三箱一度覆盖中排目标，但底目标仍空，明确提示还需一次重拼。"
+  state_responsibility:
+    - "初始三箱：桥材料 -> U 形共享刚体 -> 切出的三箱；其中两箱终局重黏，第三箱保持独立。"
+    - "远端初始目标箱：先被刷入 U，随 U 搬运；split 后成为独立黏端并回到 vacate 目标。"
+    - "B/S：首次造桥、二次对齐、末手重织并覆盖底部锚点目标。"
+    - "P/L：上路锁与全局施力边界；抬升 U 后才可横移，最终覆盖明确的目标对。"
+  payoff_and_resolution: >-
+    终局在连续两步中完成“切开—重织”：倒数第二步把长桥切成可分配箱并让两端分离，最后一步
+    又移动 B/S，把两箱黏成目标横条而保留第三箱。玩家可从最终材质分布回读为什么开局要造 U、
+    为什么中段要横移 P/L、为什么切割后不能停手。
+
+diagnostic_routing:
+  hard_evidence:
+    - solver_and_replay
+    - canonical_event_trace
+    - bounded_splitless_bypass_search
+  mechanism_scope:
+    - returned_trace_event_support
+    - shortest_dominance_not_all_solution_necessity
+  claim_hygiene:
+    - exact_v10_only
+    - no_complete_graph_claim
+    - no_instance_necessity_claim
+  taste_probes:
+    - mechanism_signal_vs_actual_shape_use
+    - execution_pressure_vs_state_responsibility
+    - compactness_vs_corridor_script_risk
+    - splitless_48_step_route_as_noncanonical_risk
+  scc_graph:
+    - graph_exhausted_verdict_effect_none_unless_player_side_interpretation
+  variant_family:
+    - fresh_lineage_duplicate_check_against_archive_and_in_flight_claims
+  start_position:
+    - run_opening_comfort_pre_submission
+  prototype_specific_work:
+    - invalid_goal_prune_pre_submission_only
+    - opening_comfort_check_pre_submission_only
+    - redundant_element_prune_pre_submission_only
+
+prototype_specific_contracts:
+  interface_pair_policy:
+    declared_interface_points: []
+    target_pairs: []
+    ignored_pair_classes: []
+    risky_pair_classes: []
+  pair_diagnostics:
+    ignored_pairs: []
+    risky_pairs: []
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: null
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    本轮在 design claim 落盘后才实例化布局。归档仅用于审美标尺；现有在途材料仅用于重复风险检查。
+    本关的三箱 U 桥、U 抬升开 P/L 上路、P/L 横向目标泊位、连续两步切桥/重织因果链未在归档或
+    检查到的在途 claim 中出现。
+
+attempt_log:
+  serious_structural_attempts:
+    - "v1：完成18步 join-split-rebind，但 P/L 可完全绕过。"
+    - "v2-v4：用 P/L 目标对锁住双锚责任；发现19步 splitless 路线。"
+    - "v5-v8：增加墙门与 vacate/锚点终态目标，splitless 绕路被推迟到48步。"
+    - "v9-v10：按 canonical trace 使用格压缩空间；最短成本保持23，walkable 由81降到36。"
+  local_repairs:
+    - target_pair_for_pl_docking
+    - vacate_goal_on_bridge_material
+    - final_bs_column_goal_pair
+    - unused_space_wallification
+  abandoned_families:
+    - pl_incidental_v1
+    - open_room_v2_to_v8
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0022
+      role: positive_high_aesthetic_anchor
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: "操作非常反直觉；把箱子送入看似死局后，用拉锚点把两个箱子反向送入目标。空间利用率高、结构精巧、短步骤要求强洞见。"
+      calibration_use: "要求本关的反直觉动作产生可回读的终局后果，不能只堆机制。"
+    - candidate_id: RA_CAND_0017
+      role: positive_late_game_difficulty_anchor
+      human_scores: {aesthetic: 4, difficulty: 5}
+      human_comment: "推拉和黏块拼接切割都有极高应用，大量反直觉操作；精巧设计、高机制密度、高要素耦合值得学习。"
+      calibration_use: "末期高难正例；同时警惕腾挪负担。"
+    - candidate_id: RA_CAND_0024
+      role: negative_mechanism_signal_anchor
+      human_scores: {aesthetic: 1, difficulty: 3}
+      human_comment: "机制信号承诺切割拼接、长链与黏块几何，实际几乎只剩推拉腾挪；不要迷信指标和探针。"
+      calibration_use: "若 U 形、split 与 rebind 只是事件标签，直接失败。"
+    - candidate_id: RA_CAND_0027
+      role: negative_affordance_pollution_anchor
+      human_scores: {aesthetic: 1, difficulty: 2}
+      human_comment: "P/L 可动但解法不需要推，黏块能黏但不需要黏；事件标签远高于实际洞见。"
+      calibration_use: "检查两锚与黏块几何是否都承担玩家可见责任。"
+  none_found_reason: null
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v10_claim_packet.yml
+  read_order: facts_then_claim

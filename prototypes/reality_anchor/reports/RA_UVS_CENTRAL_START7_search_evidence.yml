@@ -1,0 +1,89 @@
+candidate: RA_UVS_CENTRAL_START7
+scope: Reality_Anchor 特定原型关卡设计；未修改 levels、playable_queue 或泛化流程
+
+layout: |-
+  #############
+  #####LP######
+  #######.....#
+  #####.CC.G..#
+  #####G*.#GB##
+  #####GGM..S##
+  ######.@#..##
+  #############
+
+selection:
+  relation_to_strict_baseline: "仅把玩家起点从 (6,6) 移到 (7,6)；与原起点互为一步合法 walk，故不改变可达结构状态集合"
+  shortest_cost: 70
+  pure_walk_steps: 56
+  state_changing_action_steps: 14
+  execution_pressure_band: 5
+  space_reuse_band: 5
+  player_visits: 71
+  player_unique_cells: 25
+  revisit_rate: 0.647887323943662
+  heavy_reuse_cells: 9
+
+complete_graph:
+  status: complete
+  reachable_states: 116821
+  legal_transitions: 301684
+  winning_states: 1
+
+agency:
+  irreversible_solution_steps: 10
+  forced_win_continuation_prefix: "2/10"
+  win_reachable_sccs: 17
+  win_continuation_branching_sccs: 4
+  win_continuation_merging_sccs: 4
+  reading: "唯一胜态不等于线性单链；该候选在可胜 SCC 子图中确有分支与汇流，但最终职责链不允许交换终局收束顺序"
+
+all_win_event_necessity:
+  sticky_to_box:
+    bypass_found: false
+    status: complete
+    explored_states: 23564
+  box_sticky_anchor_shift:
+    bypass_found: false
+    status: complete
+    explored_states: 6864
+  box_to_sticky:
+    bypass_found: false
+    status: complete
+    explored_states: 10849
+  pull_crate_1:
+    bypass_found: false
+    status: complete
+    explored_states: 112849
+  pull_sticky_1:
+    bypass_found: false
+    status: complete
+    explored_states: 115532
+  force_chain_2:
+    bypass_found: false
+    status: complete
+    explored_states: 50437
+  minimum_box_sticky_anchor_shifts:
+    required_at_least: 4
+    bypass_below_count_found: false
+    status: complete
+    explored_augmented_states: 221999
+
+rejected_compressions:
+  - variant: RA_UVS_CENTRAL_BOTTOM8
+    change: "打开 (8,6) 下方捷径"
+    result: "cost 49，但 500001 状态仍未完整且已见 1 win；规范解丢失 pull 与 sticky_to_box 等核心回读"
+  - variant: RA_UVS_CENTRAL_TOP6
+    change: "打开 (6,2) 上方捷径"
+    result: "cost 30，图预算耗尽且已见 4 wins，核心职责显著缩短"
+  - variant: RA_UVS_CENTRAL_TOP5
+    change: "打开 (5,2) 与 (6,2)"
+    result: "cost 29，图预算耗尽且已见 5 wins，空间复用降至 2"
+  - variant: RA_UVS_CENTRAL_PL_RIGHT
+    change: "P/L 边界右移一格"
+    result: "complete 46275 states，cost 37、reuse 4，但 2 wins；分别为先收锚点与先收黏块的可交换终局"
+  - search: all_start_positions
+    result: "不存在 cost < 70 且 complete graph / 1 win / 规范解含全部核心事件的起点"
+
+recommendation: >-
+  不应为降低步数打开捷径或右移 P/L；这些变化都把‘唯一职责链内部的回读’重新变成可交换职责或多胜态。
+  若必须在 strict baseline 上做安全微调，只采用 START7；它仅节省一步，不能宣称解决了长走位问题。
