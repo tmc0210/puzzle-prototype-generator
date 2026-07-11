@@ -1,0 +1,94 @@
+experiment_id: RA_LOGIC_REPRESENTATION_SHADOW_TEST_2026_07_11
+status: completed_representation_validity_only
+
+comparison:
+  - candidate: ANCHOR_BRAID_DOCK_v5
+    known_class: strong
+    visible_goal_contradictions: 1
+    exact_decision_contrasts: 1
+    player_reframes: 1
+    state_effect_or_paraphrase_segments: 1
+    failure_feedback_inputs: 0
+    post_choice_execution_inputs: 2
+    binary_retry: false
+    diagnostic_read: 完成态与取得把手不能兼得；反事实即时，末手共同闭合。
+    matches_known_outcome: true
+
+  - candidate: SQUARE_BIND_CROSSCUT_v7
+    known_class: boundary
+    visible_goal_contradictions: 1
+    exact_decision_contrasts: 1
+    player_reframes: 0
+    state_effect_or_paraphrase_segments: 2
+    failure_feedback_inputs: 11
+    post_choice_execution_inputs: 13
+    binary_retry: true
+    diagnostic_read: 有真实错误计划，但可被开局二元重试替代，反馈晚且选对后执行长。
+    matches_known_outcome: true
+
+  - candidate: BRUSH_PISTON_TRIPLE_RELAY_v1
+    known_class: noun_packaging_negative
+    visible_goal_contradictions: 0
+    exact_decision_contrasts: 0
+    player_reframes: 0
+    state_effect_or_paraphrase_segments: 3
+    failure_feedback_inputs: null
+    post_choice_execution_inputs: null
+    binary_retry: false
+    diagnostic_read: 多次 C/M 与目标交接均可记录，但没有因材质几何而改变的计划判断。
+    matches_known_outcome: true
+
+  - candidate: SPLIT_KEY_REBIND_LATCH_v16
+    known_class: current_human_rejected_drift
+    visible_goal_contradictions: 1
+    exact_decision_contrasts: 0
+    player_reframes: 0
+    goal_contradictions_without_plan_contrast: 1
+    state_effect_or_paraphrase_segments: 3
+    failure_feedback_inputs: null
+    post_choice_execution_inputs: null
+    binary_retry: false
+    diagnostic_read: P/L 不可达是真局部矛盾；U、桥、切割重黏没有被证明为独立计划选择。
+    matches_known_outcome: true
+
+observations:
+  - >-
+    “是否存在精确决策对照”单独不够：Anchor 与 Square 都有一个；失败反馈距离、二元重试暴露、
+    正确选择后的执行长度把强例与边界例分开。
+  - >-
+    “状态变化很多”也不够：Brush 与 Split 都能填写完整操作/效果链，但无法据此生成新的 decision_reason。
+  - >-
+    配对格式没有强迫把 Split 判成零逻辑；它保留了真人实际看到的 P/L 不可达，
+    同时把未获反事实支撑的 U/桥/重织降回 state_effect。
+  - >-
+    自然语言是否增加信息可以局部审计：删掉名词后，若剩余内容只是“先做 X 再做 Y”，就是 operational_paraphrase；
+    若只描述 X 导致状态 Z，就是 state_effect；只有解释 A 为何妨碍局部目标并由证据支持 B，才是 decision_reason。
+
+validity_result:
+  representation_signal: provisionally_supported
+  reason: >-
+    在四个已有独立结论的样本上，同一组非评分诊断同时复现了强例、边界例、名词包装反例与本次真人否定点，
+    没有依靠事件数量或抽象名词把后两者抬成洞见，也没有把边界例的真实错误计划抹掉。
+  strongest_use: 作为 claim 的可审计展开层，暴露自然语言到底增加了状态、理由还是仅仅改名。
+  not_yet_safe_for: 直接成为正式审批格式或自动门槛。
+
+anti_degradation_questions_left_open:
+  - 新 designer 能否伪造一个貌似精确但不具玩家显著性的对照分支？
+  - designer 会不会把任意非法操作包装成“显然方案失败”？
+  - 如何要求对照方案具有局部收益和玩家可见动机，而不引入复杂玩家能力模型？
+  - critic 如何在不完整试玩的前提下核对“显然”和“显著”？
+  - 哪些字段应直接删除，避免同一故事在 player_insight、causal_chain、why_not_execution 中重复三遍？
+
+next_experiment_recommendation:
+  title: adversarial_degradation_microtest
+  minimal_design: >-
+    不让新 designer 重做关卡；只给一个裸布局、主解和配对字段定义，让其为同一已知反例填 2 到 3 个段落。
+    然后检查它最常用哪种方式伪造 decision_reason：挑非法方案、挑明显愚蠢方案、把远期死局说成显然、
+    或把状态效果改名为矛盾。一次只测试这一件事。
+
+artifacts:
+  - RA_LOGIC_REPRESENTATION_SHADOW_TEST_PROTOCOL.yml
+  - RA_LOGIC_SHADOW_ANCHOR_BRAID_DOCK_v5.yml
+  - RA_LOGIC_SHADOW_SQUARE_BIND_CROSSCUT_v7.yml
+  - RA_LOGIC_SHADOW_BRUSH_PISTON_TRIPLE_RELAY_v1.yml
+  - RA_LOGIC_SHADOW_SPLIT_KEY_REBIND_LATCH_v16.yml

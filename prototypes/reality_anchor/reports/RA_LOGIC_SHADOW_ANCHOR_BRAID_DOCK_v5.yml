@@ -1,0 +1,79 @@
+experiment_id: RA_LOGIC_REPRESENTATION_SHADOW_TEST_2026_07_11
+candidate: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+known_role: strong_positive
+canonical_inputs: [up, right, down, right, left, left, down, down, right, up, left, up, up, right, right, up, left]
+
+paired_segments:
+  - segment_id: A1_RELEASE_AND_TEMP_DOCK
+    canonical_range: steps_1_to_10
+    exact_inputs: [up, right, down, right, left, left, down, down, right, up]
+    state_refs:
+      before: layout_file_initial
+      after: trace_RA_LOGIC_SHADOW_ANCHOR_KEEP_DOCK.json#frame_step_10
+    observable_change: >-
+      P/L 先下移；B/S 经原 L 半格左拉，随后两锚被同一受力链上移；B/S 此时完整覆盖其竖向目标。
+    player_logic:
+      local_goal: 让两个二格锚共同覆盖开局可见的 T 形四目标。
+      obvious_plan: 分别把两个锚送到各自对应的横/竖目标。
+      contradiction: null
+      inference: null
+      feedback: B/S 已形成视觉上的完整泊位，但 P/L 尚未进入横目标。
+    semantic_contribution: state_effect
+    audit_note: >-
+      本段支持“临时完整泊位”这一可见事实；仅凭这十步还不能证明玩家为何必须如此安排，
+      因而不把“释放债、共享钥匙”等命名计作洞见。
+
+  - segment_id: A2_VACATE_COMPLETION_TO_GET_HANDLE
+    canonical_range: steps_11_to_17
+    exact_inputs: [left, up, up, right, right, up, left]
+    decision_state:
+      trace_ref: trace_RA_LOGIC_SHADOW_ANCHOR_KEEP_DOCK.json#frame_step_14
+      layout: |-
+        ######
+        ##.S.#
+        #G+B.#
+        #.PL.#
+        #...##
+        #..###
+        ######
+    chosen_continuation:
+      exact_inputs: [right, up, left]
+      operation_meaning: B/S 右移离开完整泊位；P/L 上拉；B/S 左拉并推动 P/L，共同闭合 T。
+      final_result: win_at_step_17
+    contrasted_continuation:
+      exact_inputs: [up]
+      trace_ref: trace_RA_LOGIC_SHADOW_ANCHOR_KEEP_DOCK.json#frame_step_15
+      exact_result: >-
+        玩家只走到 B/S 上方；B 仍占据 P/L 上拉所需的站位，保持 B/S 完整泊位时无法执行该 P/L 拉动。
+    player_logic:
+      local_goal: 把 P/L 上拉进横目标，同时保留已完成的 B/S。
+      obvious_plan: B/S 已完成，接下来只操作 P/L。
+      contradiction: B/S 的 B 格正占据 P/L 上拉所需把手位；“保留完成态”与“取得 P/L 把手”不能兼得。
+      inference: 必须先把已完整泊位的 B/S 向右移开，再拉 P/L，最后借 B/S 左拉同时推动两锚归位。
+      feedback: 腾位后下一对象步即可拉动 P/L，最后一手同时移动两锚并完成 T。
+    semantic_contribution: player_reframe
+    contrast_support: exact_state_occupancy_plus_replayed_alternative
+    failure_feedback_inputs_after_divergence: 0
+    replay_confirmation_inputs: 1
+
+diagnostics:
+  visible_goal_contradiction_count: 1
+  exact_decision_contrast_count: 1
+  player_reframe_count: 1
+  state_effect_only_count: 1
+  operational_paraphrase_count: 0
+  delayed_failure_inputs_after_divergence: 0
+  post_choice_execution_inputs: 2
+  binary_retry_exposure: false
+  major_structure_decision_coverage:
+    covered: [B/S_full_dock, P/L_pull_handle, final_mixed_chain]
+    uncovered: [opening_P/L_down_move_player_obviousness]
+  reading: >-
+    该表征保留了一个真正不等价于操作复述的核心：完成 B/S 会占掉 P/L 把手，
+    所以必须撤销完成态。反事实在同一局面立即可见，正确重读后仅余两次对象执行并在末手反馈。
+
+artifact_refs:
+  - RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_layout.txt
+  - layout_analysis_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5.json
+  - trace_RA_LOGIC_SHADOW_ANCHOR_KEEP_DOCK.json
+  - RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5_puzzle_critic_2.yml

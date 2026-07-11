@@ -1,0 +1,67 @@
+experiment_id: RA_LOGIC_REPRESENTATION_SHADOW_TEST_2026_07_11
+status: shadow_only
+scope:
+  purpose: >-
+    只测试“精确操作/状态证据 + 玩家侧自然语言”配对表征能否诊断已知样本，
+    不测试新 designer 是否会填坏格式，也不修改正式送审流程。
+  explicitly_not_claimed:
+    - 不证明该格式可以防止 designer 讲故事。
+    - 不证明字段本身能发现玩家最显著的目标或矛盾。
+    - 不把下列诊断项合成为分数或审批门槛。
+
+samples:
+  - id: RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v5
+    known_role: strong_positive
+    known_outcome: critic_supports_aesthetic_4_and_difficulty_4
+  - id: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7
+    known_role: boundary
+    known_outcome: aesthetic_4_boundary_but_difficulty_3_to_3_plus
+  - id: RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1
+    known_role: noun_packaging_negative
+    known_outcome: aesthetic_3_rejected
+  - id: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+    known_role: current_human_rejected_drift
+    known_outcome: only_PL_inaccessibility_was_salient_lower_structure_overbuilt
+
+paired_segment_contract:
+  operation_evidence_required:
+    - exact_input_range_or_exact_alternative_inputs
+    - before_and_after_trace_reference
+    - observable_state_change
+  player_logic_slots:
+    - local_goal
+    - obvious_plan
+    - contradiction
+    - inference
+    - feedback
+  semantic_contribution_values:
+    operational_paraphrase: 只把按键或事件换成自然语言。
+    state_effect: 说明操作造成什么可见状态，但没有给出选择理由。
+    goal_contradiction: 指出一个玩家可见的局部目标及阻碍，但尚未证明两个计划之间的取舍。
+    decision_reason: 说明为什么一个可执行方案不能满足局部目标，并支持另一个方案。
+    player_reframe: 改变玩家对目标、完成态或对象职责的理解，且有状态/反事实证据。
+  contrast_rule: >-
+    凡声称“不能直接做 A”“必须改做 B”“看似完成却要撤销”，必须给出同一起点的
+    A/B 精确操作或精确状态占格冲突；没有对照证据时最多记为 goal_contradiction/state_effect，
+    不能记为 decision_reason。
+
+diagnostics_not_scores:
+  - visible_goal_contradiction_count
+  - exact_decision_contrast_count
+  - player_reframe_count
+  - state_effect_only_count
+  - operational_paraphrase_count
+  - delayed_failure_inputs_after_divergence
+  - post_choice_execution_inputs
+  - binary_retry_exposure
+  - major_structure_decision_coverage
+
+validity_expectations:
+  strong_positive: 应出现至少一个有精确对照、即时或近即时反馈的 decision_reason/player_reframe。
+  boundary: >-
+    可以保留真实 decision_reason，但 delayed failure、binary retry、post-choice execution
+    应揭示其为何不足以稳定支撑后期高难度。
+  noun_packaging_negative: 大量事件可以保留为 state_effect，但不应自动生成 decision_reason。
+  current_drift: >-
+    应保留真人确实看到的 P/L 不可达矛盾，同时让 U、桥、切割重黏等叙述暴露为
+    缺少反事实支撑的状态效果/执行链，而不是把整个关卡判成“毫无逻辑”。

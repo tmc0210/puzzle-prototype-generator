@@ -1,0 +1,98 @@
+experiment_id: RA_LOGIC_REPRESENTATION_SHADOW_TEST_2026_07_11
+candidate: RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16
+known_role: current_human_rejected_drift
+canonical_inputs: [right, down, left, left, up, right, right, left, up, right, right, right, up, right, up, left, left, right, right, right, right, down, left, left, left, down, down, down]
+
+paired_segments:
+  - segment_id: K1_OPENING_BRUSH
+    canonical_range: steps_1_to_2
+    exact_inputs: [right, down]
+    state_refs:
+      before: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_0
+      after: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_2
+    observable_change: 玩家右移后下拉 B/S；三箱被刷成黏格并接入原黏块。
+    player_logic:
+      local_goal: 改变下方材料形状，为上行路线准备可移动空间。
+      obvious_plan: null
+      contradiction: null
+      inference: null
+      feedback: 开局两个自然动作直接完成拼接，没有出现需要解释的计划冲突。
+    semantic_contribution: state_effect
+    rejected_noun_substitutes: [L缺角钥匙, 共享U形搬运器]
+
+  - segment_id: K2_LIFT_TO_REACH_PL
+    canonical_range: steps_3_to_13
+    exact_inputs: [left, left, up, right, right, left, up, right, right, right, up]
+    state_refs:
+      before: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_2
+      after: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_13
+    observable_change: 下方黏块被横向重排并整体抬升，玩家到达上方 P/L 附近。
+    player_logic:
+      local_goal: 到达开局被墙与材料隔开的 P/L 拉侧。
+      obvious_plan: 从下方寻找一条能把大黏块移开并抬升的路线。
+      contradiction: P/L 是明确必用的上方锚，但开局无法接近其有效推拉侧。
+      inference: 先移动下方黏块，直到上行通道和 P/L 把手同时开放。
+      feedback: step13 玩家实际进入上层，矛盾被可见地解除。
+    semantic_contribution: goal_contradiction
+    contrast_support: visible_initial_inaccessibility_plus_success_trace_only
+    audit_note: >-
+      这支持真人指出的“如何到达 P/L 附近”这一局部目标—矛盾；但没有同一起点的失败方案，
+      因而只支持路线目标，不支持“U 形是反直觉唯一搬运器”等更强故事。
+
+  - segment_id: K3_PL_DOCK
+    canonical_range: steps_14_to_21
+    exact_inputs: [right, up, left, left, right, right, right, right]
+    state_refs:
+      before: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_13
+      after: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_21
+    observable_change: 玩家换侧后连续四次右拉 P/L，使其覆盖上方双目标。
+    player_logic:
+      local_goal: 把已可达的 P/L 拉到上方目标。
+      obvious_plan: 从 L 侧连续右拉。
+      contradiction: null
+      inference: null
+      feedback: 操作按显然方案完成，没有新的判断。
+    semantic_contribution: operational_paraphrase
+
+  - segment_id: K4_CUT_AND_REBIND_FINISH
+    canonical_range: steps_22_to_28
+    exact_inputs: [down, left, left, left, down, down, down]
+    state_refs:
+      before: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_21
+      cut_state: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_27
+      after: trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json#frame_step_28
+    observable_change: 黏块下压经过 B 侧，三格转箱；最后 B/S 再下移使其中两箱重新变黏并获胜。
+    player_logic:
+      local_goal: 让下方材料覆盖剩余目标。
+      obvious_plan: 按当前唯一可用的下压路线把材料送过 B 侧并继续下移 B/S。
+      contradiction: null
+      inference: null
+      feedback: 切割与重黏在末两步发生，但没有证据表明玩家此前必须在两个计划之间理解并选择这一拓扑安排。
+    semantic_contribution: state_effect
+    rejected_noun_substitutes: [桥排, 选择性重织, 独立性债务]
+
+diagnostics:
+  visible_goal_contradiction_count: 1
+  exact_decision_contrast_count: 0
+  player_reframe_count: 0
+  goal_contradiction_count: 1
+  state_effect_only_count: 2
+  operational_paraphrase_count: 1
+  route_goal_resolution_count: 1
+  delayed_failure_inputs_after_divergence: null
+  post_choice_execution_inputs: null
+  binary_retry_exposure: false
+  major_structure_decision_coverage:
+    covered: [P/L_initial_inaccessibility]
+    uncovered: [opening_join_as_choice, U_shape_special_property, cut_vs_no_cut_plan, selective_rebind_plan]
+  reading: >-
+    配对表征没有抹掉这关确实清楚的矛盾：P/L 不可达，且 step3-13 解除它。
+    但它也阻止把其余事件自动包装成多个洞见：开局拼接、末段切割/重黏都有可见状态效果，
+    却没有对照计划或新的决策理由；大段下方结构因此仍主要表现为执行与状态展示。
+
+artifact_refs:
+  - RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16.txt
+  - trace_RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_shortest.json
+  - RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_candidate_packet.yml
+  - RA_FRESH_2026_07_11_SPLIT_KEY_REBIND_LATCH_v16_puzzle_critic_2.yml
+  - RA_OPENING_COGNITION_EXPERIMENT_ANALYSIS.yml

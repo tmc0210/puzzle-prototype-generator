@@ -1,0 +1,80 @@
+experiment_id: RA_LOGIC_REPRESENTATION_SHADOW_TEST_2026_07_11
+candidate: RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7
+known_role: boundary
+canonical_inputs: [left, left, down, left, left, left, down, right, left, left, down, down, right, right, down]
+
+paired_segments:
+  - segment_id: S1_HALF_BIND_PRESENTS_A_PLAN
+    canonical_range: step_1
+    exact_inputs: [left]
+    state_refs:
+      before: trace_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_FALSE_NEAR_WIN.json#frame_step_0
+      after: trace_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_FALSE_NEAR_WIN.json#frame_step_1
+    observable_change: >-
+      第一次左移 B/S 后，右列变为竖黏条，左列两箱仍独立且仍在目标上；房间入口同时打开。
+    player_logic:
+      local_goal: 把已经分工清楚的两箱与竖黏条分别送到剩余目标。
+      obvious_plan: 保留两箱独立，直接进入房间逐个分配。
+      contradiction: 尚未反馈。
+      inference: 尚未发生。
+      feedback: 局面提供了一个局部收益明确、可立即执行的半绑定方案。
+    semantic_contribution: state_effect
+
+  - segment_id: S2_KEEP_INDEPENDENT_VS_FULL_BIND
+    decision_state: after_common_step_1
+    successful_choice:
+      exact_inputs: [left]
+      result: 两枚独立箱转黏并与右列合成完整 2x2；随后正方形可被整体横拉并按列解码。
+    obvious_but_failing_choice:
+      exact_inputs_after_common_step: [down, left, left, left, down, left, left, down, right, right, left]
+      trace_ref: trace_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_FALSE_NEAR_WIN.json#frames_step_2_to_12
+      reached_state_ref: prefix_dead_state_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_FALSE_NEAR_WIN.json#reachedLayout
+      exact_result: complete_suffix_graph_has_37712_states_and_0_winning_states
+    player_logic:
+      local_goal: 在 pull 世界中把两箱分别送入左侧目标并保留竖黏条的目标职责。
+      obvious_plan: 不破坏已经在目标上的独立箱，按箱逐个拉入。
+      contradiction: 两箱进入交叉位置后彼此占掉拉动站位；该具体后继状态完整可达图无胜态。
+      inference: 在搬运任何单箱前再左移一次，让四格先完全绑定成 2x2，共同过线后再恢复分工。
+      feedback: 错误不是立即反馈；从分歧到确认死局需再输入 11 步，重开后正确修正只是多按一次相邻的 left。
+    semantic_contribution: decision_reason
+    contrast_support: exact_replayed_branch_plus_complete_suffix_graph
+    failure_feedback_inputs_after_divergence: 11
+
+  - segment_id: S3_CROSSCUT_AND_CLEANUP
+    canonical_range: steps_3_to_15
+    exact_inputs: [down, left, left, left, down, right, left, left, down, down, right, right, down]
+    state_refs:
+      before: canonical_after_step_2_full_2x2
+      after: layout_analysis_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7.json#solution_win
+    observable_change: 正方形被横拉；一列恢复成两箱，另一列保持黏条；随后两箱分别拉入目标并获胜。
+    player_logic:
+      local_goal: 执行已经确定的“整体过线后按列解码”。
+      obvious_plan: null
+      contradiction: null
+      inference: null
+      feedback: 几何分工兑现，但没有第二次独立计划选择。
+    semantic_contribution: state_effect
+
+diagnostics:
+  visible_goal_contradiction_count: 1
+  exact_decision_contrast_count: 1
+  player_reframe_count: 0
+  state_effect_only_count: 2
+  operational_paraphrase_count: 0
+  delayed_failure_inputs_after_divergence: 11
+  post_choice_execution_inputs: 13
+  binary_retry_exposure: true
+  major_structure_decision_coverage:
+    covered: [half_bind_vs_full_2x2]
+    uncovered: [crosscut_cleanup_has_no_second_decision]
+  reading: >-
+    这是一个真实而非虚构的选择：错误分支有精确操作且最终状态完整无胜。
+    但诊断同时显示它为何只是边界例：失败反馈晚，纠错是开局二选一，选对后仍有 13 输入执行且没有第二次判断。
+
+artifact_refs:
+  - RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7.layout.txt
+  - layout_analysis_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7.json
+  - trace_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_FALSE_NEAR_WIN.json
+  - prefix_dead_state_probe_RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_FALSE_NEAR_WIN.json
+  - RA_FRESH_2026_07_10_SQUARE_BIND_CROSSCUT_v7_puzzle_critic_2.yml
+

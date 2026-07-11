@@ -1,0 +1,76 @@
+experiment_id: RA_LOGIC_REPRESENTATION_SHADOW_TEST_2026_07_11
+candidate: RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1
+known_role: noun_packaging_negative
+canonical_inputs: [left, up, left, right, right, down, right, down, left, left, left, up, up, right, down, right, left, left, down]
+
+paired_segments:
+  - segment_id: B1_FIRST_MATERIAL_CYCLE
+    canonical_range: steps_1_to_7
+    exact_inputs: [left, up, left, right, right, down, right]
+    state_refs:
+      before: trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json#frame_step_0
+      after: trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json#frame_step_7
+    observable_change: 箱到达上目标时变为单格 M；B/S 右拉后该单格 M 又恢复为箱。
+    player_logic:
+      local_goal: 覆盖三个竖向目标。
+      obvious_plan: null
+      contradiction: null
+      inference: null
+      feedback: C/M 标签发生两次变化，但对象仍是单格，移动几何和可用把手没有改变。
+    semantic_contribution: state_effect
+    rejected_noun_substitutes: [刷线, 目标活塞, 第一次责任交接]
+
+  - segment_id: B2_REPOSITION_AND_SECOND_CYCLE
+    canonical_range: steps_8_to_15
+    exact_inputs: [down, left, left, left, up, up, right, down]
+    state_refs:
+      before: trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json#frame_step_8
+      after: trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json#frame_step_15
+    observable_change: P/L 下移；玩家五步换侧；箱被推离目标并再次变 M；B/S 下移覆盖底目标。
+    player_logic:
+      local_goal: 为末段从右侧向左拉 P/L 和材料腾出位置。
+      obvious_plan: null
+      contradiction: null
+      inference: null
+      feedback: 五步换侧途中没有新的状态判断；材质变化仍未改变单格对象几何。
+    semantic_contribution: operational_paraphrase
+    rejected_noun_substitutes: [换相, 余量棘轮, 二次活塞]
+
+  - segment_id: B3_FIXED_FINAL_RELAY
+    canonical_range: steps_16_to_19
+    exact_inputs: [right, left, left, down]
+    state_refs:
+      before: trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json#frame_step_15
+      after: trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json#frame_step_19
+    observable_change: P/L 两次左拉，单格 M 恢复为箱，P 与 S 分别接管上下目标，箱最后下拉覆盖中目标。
+    player_logic:
+      local_goal: 按已排好的顺序闭合三个目标。
+      obvious_plan: null
+      contradiction: null
+      inference: null
+      feedback: 目标职责发生交接，但 packet 没有给出同一起点的可信竞争计划或因材质而改变的选择。
+    semantic_contribution: state_effect
+    rejected_noun_substitutes: [三责回织, 双级活塞, mixed_chain_余量棘轮]
+
+diagnostics:
+  visible_goal_contradiction_count: 0
+  exact_decision_contrast_count: 0
+  player_reframe_count: 0
+  state_effect_only_count: 2
+  operational_paraphrase_count: 1
+  delayed_failure_inputs_after_divergence: null
+  post_choice_execution_inputs: null
+  binary_retry_exposure: false
+  major_structure_decision_coverage:
+    covered: []
+    uncovered: [first_C_M_cycle, second_C_M_cycle, P_L_final_chain]
+  reading: >-
+    操作链确有多次状态变化与目标交接，但配对后没有任何一段能提供“为什么不能做显然方案”的对照。
+    singleton C/M 不改变几何，因此“活塞、回织、棘轮”都没有增加独立于操作记录的玩家推理内容。
+
+artifact_refs:
+  - RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1.layout.txt
+  - trace_RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_CANONICAL.json
+  - RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_claim_packet.yml
+  - RA_FRESH_2026_07_10_BRUSH_PISTON_TRIPLE_RELAY_v1_puzzle_critic_1.yml
+
