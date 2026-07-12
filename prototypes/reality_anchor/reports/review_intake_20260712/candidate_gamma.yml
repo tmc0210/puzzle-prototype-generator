@@ -1,0 +1,108 @@
+candidate_id: RA_NEW_2026_07_12_CROSS_ANCHOR_RELAY
+candidate_version: v1
+packet_kind: candidate_packet
+prototype: reality_anchor
+
+prototype_rules:
+  win_condition: all_targets_covered_by_objects
+  push_pull_anchor: P/L 是可移动二格刚体；玩家所在侧决定 push 或 pull。
+  box_sticky_anchor: B/S 移动后重写材料边界；箱可转黏，相邻黏格合并，跨 B 侧切回箱。
+
+slot_brief:
+  intended_role: dual_anchor_stage_challenge
+  target: 双锚受力交接、侧别重写、双箱转黏与竖条回切闭环。
+
+designer_claim:
+  summary: >-
+    玩家先借上箱作为 B 半格受力端，上拉 B/S 时把箱顶回原行；随后移动 P/L，
+    在保持右目标覆盖的同时释放 B/S 的第二推位。B/S 左移使上下两箱同步转黏，
+    下黏格再与初始黏格合并成竖条，终手跨界切回箱完成底目标。
+  claimed_highlights:
+    - 上箱先被主动下推，又在拉 B/S 时被反向回收，构成可见的受力交接。
+    - P/L 的目标覆盖端点从 L 换到 P，同时把同一格从 pull 失败位重写为 B/S push 位。
+    - 双箱同步转黏与末段竖条合并、回切形成完整材料闭环。
+
+solve_instance:
+  layout: |-
+    ########
+    ##.@#..#
+    ###CP..#
+    ##G.L.G#
+    ###BS#.#
+    ##...M##
+    #.GC####
+    ########
+  canonical_exact_inputs: [down, right, down, up, right, up, right, down, left, down, left, down, down, left, left, down, left]
+  canonical_cost: 17
+  final_win: true
+
+player_reasoning:
+  player_goal:
+    description: 覆盖三个目标，并判断双锚、两个箱和右下黏格如何共享有限操作位。
+    state_ref: canonical.step_0
+  reasoning_units:
+    - id: RU1_borrowed_crate_lift
+      player_question: 上箱堵在 B/S 上方时，怎样移动 B/S 到左目标行而不把箱永久推离？
+      premises:
+        - 上箱位于 B 半格上方；继续向下会把箱与 B/S 一起送向下方窄区。
+        - 右推 P/L 后，玩家可站在 L 侧并向上拉身后的 B/S。
+      conclusion: 先把箱下推作为受力端，再右移 P/L；上拉 B/S 时 B 半格把箱顶回原行。
+      operation_steps: 1-4
+      alternative:
+        status: replayed_attempt
+        exact_inputs: [down]
+        local_gain: 一次输入同时移动箱与 B/S，看起来比横移 P/L 更直接。
+        concrete_outcome: 箱与 B/S 一起下移，当前没有取得目标或末段竖条条件；不额外声称不可恢复。
+      feedback: step4 时 B/S 上提到左目标行，上箱回到原位。
+    - id: RU2_reposition_pl_for_second_bs
+      player_question: 第一次 B/S 上提后，怎样取得其右侧左推站位并保持右目标覆盖？
+      premises:
+        - P/L 右移后释放站位，但该格仍在 L/pull 侧，直接左输入会失败。
+        - 从上方下推 P/L 后，P 覆盖右目标，该站位才成为可推 B/S 的 push 侧。
+      conclusion: 先右推 P/L，再绕到上方下推；随后从释放的推位左推 B/S，使两箱同步转黏。
+      operation_steps: 5-11
+      alternative:
+        status: replayed_attempt
+        exact_inputs: [down, left]
+        local_gain: 玩家立即到达 B/S 右侧，表面上省去绕到 P/L 上方的两步。
+        concrete_outcome: 第二步因仍是 L 侧且前格被 B/S 占住而失败，局面不变。
+      feedback: step8 P 覆盖右目标并释放推位；step11 B 覆盖左目标，两箱同步转黏。
+    - id: RU3_merge_then_cut_vertical_pair
+      player_question: 下部新黏格与右下初始黏格怎样组织成能送达底目标的对象？
+      premises:
+        - step11 后两黏格相差两列一行，仍是两个刚体。
+        - 在 x3 列形成竖条后整体左拉，会让两格同时跨到 B 侧。
+      conclusion: 把右下黏格连续左拉两格，与下黏格合并成竖条，再整体左拉切回两箱。
+      operation_steps: 12-17
+      alternative:
+        status: replayed_attempt
+        exact_inputs: [left, down]
+        local_gain: 黏格先左拉一格，视觉上更接近底目标。
+        concrete_outcome: 第二步因下方已有未合并黏格而失败，两块仍分离。
+      feedback: step15 合并成竖条；step17 同时切回两箱，下格覆盖底目标并胜利。
+  trace_partition:
+    status: complete
+    segments:
+      - {steps: 1-4, purpose: 借上箱传力上提 B/S}
+      - {steps: 5-11, purpose: P/L 换侧并释放第二 B/S 推位，双箱同步转黏}
+      - {steps: 12-17, purpose: 合并竖条并跨界切回完成底目标}
+
+hard_evidence:
+  solver: {found: true, cost: 17, explored_states: 295}
+  graph: {status: complete, reachable_states: 381, legal_transitions: 837, winning_states: 1}
+  shortest_layer: {depth: 17, shortest_input_sequence_count: 1}
+  all_winning_path_events: [push_pull_anchor_shift, box_sticky_anchor_shift, pull_object, box_to_sticky, sticky_merge, move_sticky_rigid, sticky_to_box]
+  event_counts_on_all_wins: {push_pull_anchor_shift_min: 3, box_sticky_anchor_shift_min: 2}
+  solution_uniqueness: unique_complete
+  evidence_limits:
+    - 图、唯一解和事件齐全只证明机械结构，不证明玩家会自然发现或觉得精巧。
+
+archive_taste_context_refs:
+  - positive_compact_reversal.yml
+  - positive_active_constructor.yml
+  - negative_high_cost_branching.yml
+  - negative_forced_order_show.yml
+
+claim_last_review:
+  mode: not_used
+

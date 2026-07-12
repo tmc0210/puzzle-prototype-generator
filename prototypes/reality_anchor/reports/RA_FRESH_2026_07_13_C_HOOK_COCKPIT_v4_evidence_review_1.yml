@@ -1,0 +1,106 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+review_input_type: candidate_version
+verdict: supports_with_caveats
+review_loop_state: held_proposal
+required_action: evidence_disagreement_for_next_review
+supported_claims:
+  - target_ref: solution_uniqueness
+    evidence_basis:
+      result_value_check: >-
+        unique_complete 严格属于允许值集合。
+      consistency_check: >-
+        v4 strict unique audit 与 v4 layout analysis 的 exact layout 一致；两者均报告 complete graph、
+        33 个可达状态、55 条合法转移、1 个胜利状态。strict audit 为 PASS，宏路径边均为桥、
+        正向非 walk 标签唯一，最短 cost10 的 exact input path count 为 1 且未截断；
+        因此 unique_complete 与所引完整图及严格审计不冲突。
+      graph_fact:
+        graph_fact: complete graph 中只有一个胜利状态，loop-erased/simple 胜路共享同一对象宏序列。
+        neutral_meaning: 在审计声明的纯走位差异与完整返回环等价准则下，没有第二条对象操作计划。
+        player_facing_interpretation: 玩家可以绕行或返回，但任何最终获胜路线都必须完成同一组三次对象宏动作。
+        verdict_effect: merit
+  - target_ref: mechanic_exposure_context.latest_exposure_timing_check
+    evidence_basis: >-
+      mechanic_exposure_sequence.yml 中 allowed_exposure_through=dual_anchor 的 new_events 为空，
+      向前最近的非空 stage 是 movable_box_sticky_anchor，其事件为
+      anchor_boundary_shift:box_sticky。dual_anchor 已是序列末端，因此不存在需要由 later-stage
+      reachable scan 排除的后续 stage；packet 也未声明 forbidden_if_seen_anywhere。
+      v4 event probe 的 bs_shift individual probe status=complete、exploredStates=33、
+      no winning bypass found，支持该事件在所有胜路中必经。
+  - target_ref: mechanic_exposure_context.latest_exposure_timing_check.canonical_occurrences
+    evidence_basis: >-
+      v4 exact replay 对 anchor_boundary_shift:box_sticky 的唯一 occurrence 是 step10；
+      step10 同时出现 force_chain:n3、anchor_boundary_shift:push_pull、
+      anchor_boundary_shift:box_sticky 与 move_sticky_rigid，并在结算后获胜。
+      step10 精确落入 OS4_double_hook_finish 的 10-10，OS4 只支持
+      RU2_use_notch_as_cockpit。派生结果为 later_phase_present，而不是 required_but_frontloaded。
+  - target_ref: mechanism_scope.required_winning_path_events
+    evidence_basis: >-
+      event probe 的 pl_shift、bs_shift、sticky_move、dual_force 四个 individual probe 均为
+      complete 且未找到 winning bypass；规范 step10 也同时出现两个 anchor shift 与 force_chain:n3，
+      move_sticky_rigid 则见于 step3、step9、step10。证据支持这四类 event pattern 对所有胜路必经，
+      但不把 pattern gate 扩写成每个对象的独立必要性证明。
+  - target_ref: player_reasoning.reasoning_units.RU1_relocate_whole_C
+    evidence_basis: >-
+      v4 exact replay 的 initial、step3.before、step3.after 与 OS1 的 [left, up, down]
+      支持玩家先到下臂下方，再把七格 sticky#1 整体向下拉一格；step3 事件为
+      pull_object:sticky#1 与 move_sticky_rigid。step3.after 的七格坐标为
+      (1,2)-(3,2)、(1,3)、(1,4)-(3,4)，支持凹腔移至中间行、上下臂对齐两条锚轨、
+      中间目标腾空。该 reasoning unit 的 canonical operation 成立。
+  - target_ref: player_reasoning.reasoning_units.RU2_use_notch_as_cockpit
+    evidence_basis: >-
+      step3.after、step8.after、step9.after、step10.before/after 支持 RU2 的坐标关系：
+      step8.after 玩家在 (2,3)，右前格 (3,3) 为空目标格，身后 (1,3) 为 C 的左竖脊；
+      step9 先将完整 C 右移一格并让上下臂贴近两个锚点，step10 再将 C、P/L、B/S
+      三个对象实例同时右移一格并覆盖三个目标。OS2、OS3、OS4 的 exact inputs 与规范 replay
+      的 step4-10 完全一致；RU2 的 alternative.status=not_claimed，不需要伪造 replay 证据。
+  - target_ref: player_reasoning.operation_segments_and_trace_partition
+    evidence_basis: >-
+      OS1=step1-3 [left,up,down]、OS2=step4-8 [right,up,up,left,left]、
+      OS3=step9 [right]、OS4=step10 [right] 均与 v4 exact replay 一致；四段依序覆盖 step1-10，
+      无遗漏、无重叠，并分别映射 RU1、RU2、RU2、RU2。
+  - target_ref: mechanism_scope.central.C_shape_connectivity_at_step10
+    evidence_basis: >-
+      step10.before 的 sticky 坐标为 (2,2)-(4,2)、(2,3)、(2,4)-(4,4)，
+      step10.after 为 (3,2)-(5,2)、(3,3)、(3,4)-(5,4)；两者都恰有七格，
+      四邻接连通，并保持向右开口的 C 形。step10 是整体平移，不存在 split 或 merge 事件。
+  - target_ref: mechanism_scope.central.identity_counterfactual_boundary
+    evidence_basis:
+      graph_fact:
+        graph_fact: >-
+          identity summary 明确引用的 split_blocks、straight_bar、filled_notch、no_upper_arm、
+          no_lower_arm 五个物理反事实 analysis 均为 graph status=complete 且 winStateCount=0；
+          可达状态数分别为 45、2861、27、65、201。
+        neutral_meaning: 这五个指定替换版本在各自完整可达图中均无胜态。
+        player_facing_interpretation: >-
+          对当前布局和胜利条件，删除竖脊中格造成的指定拆块、指定三格直条、填满凹口、
+          删除上臂或删除下臂，都不能完成关卡；完整七格连通 C、空凹口和两臂共同构成
+          当前候选所用机械结构。
+        verdict_effect: merit
+unsupported_or_overclaimed:
+  - target_ref: player_reasoning.reasoning_units.RU1_relocate_whole_C.premises[1].state_ref
+    issue: >-
+      premise 引用 v4.step2.before，但允许的 exact replay 中 step2.before 玩家仍在 (3,5)；
+      实际站到下臂下方 (3,4)、且下一次 down 前格开放并以身后 C 为拉取对象的状态是
+      v4.step3.before（等同 v4.step2.after）。机械事实可由同一允许 replay 支持，但 packet 的 exact
+      state_ref 不精确，应改为 v4.step3.before 或 v4.step2.after。
+  - target_ref: player_reasoning.reasoning_units.RU1_relocate_whole_C.alternative
+    issue: >-
+      该项声明 status=replayed_attempt，并给出六步 exact_inputs 与
+      v4_alt_early_cavity.step6.illegal，但 packet 的 artifact_refs/evidence_refs 没有明列可解析该
+      result_state_ref 的 ALT exact replay。允许的 v4 canonical exact replay 只包含规范十步路线，
+      无法验证两次 left 的 P/L 位移、最终 right 非法及 pull_world_front_blocked。
+      按本轮限定证据源，该 alternative 的具体结果为未获支持；审查者未读取未授权 ALT 文件、
+      未重放输入，也未补证据。
+evidence_limits: >-
+  本审查只支持机械事实，不评价审美、难度、玩家问题显著性、推理价值、role fit 或 campaign placement。
+  unique_complete 依 strict audit 明定的纯走位差异与完整返回环等价准则成立，不表示任意含环原始输入串
+  字面唯一。all-solution probe 支持 event pattern 必经，不单独证明某个特定对象实例的 per-object
+  necessity。五个反事实只证明明确替换版本在当前墙体、锚点、目标和胜利条件下无解；不能外推为所有
+  拆块方式、所有直条尺寸/位置、所有填口变体或所有非 C 几何均无解。identity summary 说明 v4 与 v2
+  基准 layout SHA256 相同，故其明确引用的 v2 命名反事实可用于 v4；本审查不进一步扩张这一同一性边界。
+questions_for_designer:
+  - >-
+    是否将 RU1 premise 的 state_ref 改为 v4.step3.before（或 v4.step2.after），并在 candidate packet
+    的 artifact_refs/evidence_refs 中明确加入能够解析 v4_alt_early_cavity.step6.illegal 的 exact replay，
+    然后以 revised_design 或 evidence_disagreement 进入下一轮证据审查？

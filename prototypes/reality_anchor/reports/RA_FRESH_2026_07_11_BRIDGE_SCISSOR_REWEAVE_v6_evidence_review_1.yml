@@ -1,0 +1,73 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+review_input_type: candidate_version
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: mechanic_exposure_context.claimed_core_events.all_solution_required
+    evidence_basis: >-
+      RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_event_gate.json 对
+      anchor_boundary_shift:push_pull、anchor_boundary_shift:box_sticky、pull_object、
+      sticky_to_box、sticky_split、move_sticky_rigid 分别给出 status=complete 且
+      bypassFound=false；因此支持这些事件 pattern 在所有胜路上至少出现一次。packet 同时把
+      allowed_exposure_through 声明为线性序列末端的 dual_anchor，并明确摘要不存在需要排除的更晚
+      配置/事件；双锚配置由初始状态直接给出，两种锚点边界移动又分别通过 all-solution gate。
+  - target_ref: mechanic_exposure_context.claimed_core_events.canonical_optimal_required_but_not_all_wins
+    evidence_basis: >-
+      event_gate 的 canonical 最短成本为 21；分别避免 box_to_sticky 与 sticky_merge 的 BFS
+      都找到第一条成本 64 的胜路，所以两种事件 pattern 对所有成本 21 的最优解均为必需，但并非
+      所有胜路必需。trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_NO_MERGE_BYPASS.json
+      的 64 步最终帧 win=true，且 trace 不含这两个事件，符合 packet 对 claim 边界的表述。
+  - target_ref: mechanism_scope.central
+    evidence_basis: >-
+      canonical trace 的 step 6 记录 C 形黏块整体右移并触发 move_sticky_rigid；steps 7-9
+      连续记录 pull_object:push_pull_anchor 与 anchor_boundary_shift:push_pull；step 14 记录
+      B/S 第二次右移并同时触发 sticky_to_box:n3 与 sticky_split:n1；step 20 记录
+      P/L—中箱力链、box_to_sticky:n1 与 sticky_merge:n1；step 21 记录整条黏块刚体右移且
+      win=true。上述 exact state/event 序列支持 central 字段所述规范路线的机械事件与终局占格。
+  - target_ref: player_reasoning.RU1_make_anchor_chute_before_cut
+    evidence_basis: >-
+      canonical steps 0 与 6 支持 C 形移位前后的占格变化；EARLY_CUT artifact 记录从初态输入
+      right 即触发 B/S 移动、sticky_to_box:n3 与 sticky_split:n1，随后最短后缀成本 36，
+      连同前缀总成本 37。SEG1 的 inputs 与 canonical steps 1-6 完全一致。
+  - target_ref: player_reasoning.RU2_pull_pl_through_reused_column
+    evidence_basis: >-
+      C_SHIFT artifact 精确到达 canonical step 6 状态，并记录 immediate right 为
+      legal=false、reason=pull_world_front_blocked，而 immediate down 为 legal=true 且触发
+      pull_object:push_pull_anchor 与 anchor_boundary_shift:push_pull；canonical steps 7-9
+      又连续复现三次 down 拉动。SEG2 与 steps 7-9 完全一致。
+  - target_ref: player_reasoning.RU3_cut_old_bridge_and_assign_outputs
+    evidence_basis: >-
+      canonical step 13 仅出现 B/S 边界移动，尚无 sticky_to_box 或 sticky_split；step 14
+      第二次 right 后出现三个箱格、两个分离黏端点，并触发 sticky_to_box:n3 与
+      sticky_split:n1。SEG3 的 inputs 与 canonical steps 10-14 完全一致。
+  - target_ref: player_reasoning.RU4_reweave_middle_then_move_as_rigid_bar
+    evidence_basis: >-
+      canonical steps 14、19、20、21 支持切割后的占格、P/L 就位、中箱进入黏侧并 merge、
+      三格竖条刚体右移及最终胜利；SEG4 与 SEG5 分别精确覆盖 steps 15-17 与 18-21。
+      NO_MERGE_BYPASS artifact 支持 alternative 的 64 个 exact_inputs 与 step 64 win=true。
+  - target_ref: player_reasoning.trace_partition
+    evidence_basis: >-
+      SEG1=1-6、SEG2=7-9、SEG3=10-14、SEG4=15-17、SEG5=18-21，按序完整覆盖
+      canonical 21 个输入；各段 exact_inputs 与 trace 对应步一致，段间无重叠且无未覆盖步骤。
+  - target_ref: evidence.graph_or_counterfactual_evidence.main_graph
+    evidence_basis: >-
+      layout_analysis artifact 明确记录 graph.status=exhausted、reachableStateCount=300001、
+      budget.maxStates=300000、reason=state budget exceeded。packet 仅据此报告预算耗尽，并明确
+      不主张完整 SCC、唯一解、所有胜路顺序或完整分支质量；graph-dependent verdict effect 为 none。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >-
+    all-solution gate 支持的是事件 pattern 至少出现一次，不支持特定 event instance、特定对象参与
+    或 per-object necessity；packet 已明确不主张不可区分箱子的身份。
+  - >-
+    box_to_sticky 与 sticky_merge 的证据只建立最优成本 21 与首个 avoiding-win 成本 64 的边界，
+    不能提升为所有任意长度胜路必经；packet 已保留这一区分。
+  - >-
+    主图在状态预算处耗尽，任何依赖完整 reachable graph 或完整 SCC 的结论均为 unknown；本次
+    verdict 未使用这类结论。
+  - >-
+    工具证据不证明玩家问题显著性、推理价值、好玩、审美、难度或 campaign placement；本审查
+    不对这些项目作结论，并忽略 calibrated_trace_metrics。
+questions_for_designer: []

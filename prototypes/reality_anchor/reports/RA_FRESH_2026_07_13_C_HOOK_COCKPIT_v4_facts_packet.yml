@@ -1,0 +1,82 @@
+candidate_version: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+review_iteration: 1
+prototype_rules:
+  - P/L 两格锚点定义推/拉侧；玩家在 L 侧向空前格移动时拉身后一格的完整对象。
+  - B/S 两格锚点定义箱/黏侧；sticky 四邻接为刚体，任一目标格阻挡则整次移动失败。
+  - 结算后所有目标必须由 crate、sticky 或锚点格覆盖。
+solve_instance:
+  layout: |-
+    #########
+    #MMM#####
+    #M...LPG#
+    #MMm.####
+    #....SBG#
+    #...@####
+    #########
+  player_start: [4, 5]
+  win_condition: all_targets_covered_by_objects
+canonical_solution:
+  exact_inputs: [left, up, down, right, up, up, left, left, right, right]
+  trace_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+  non_walk_steps:
+    - { step: 3, events: [pull_object:sticky#1, move_sticky_rigid] }
+    - { step: 9, events: [pull_object:sticky#1, move_sticky_rigid] }
+    - step: 10
+      events: [pull_object:sticky#1, force_chain:n3, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky, move_sticky_rigid]
+      win: true
+hard_facts:
+  complete_graph: { status: complete, reachable_states: 33, legal_transitions: 55, winning_states: 1 }
+  strict_uniqueness:
+    status: PASS
+    exact_shortest_input_paths: 1
+    distinct_non_walk_signatures: 1
+    all_loop_erased_simple_win_paths_same_object_sequence: true
+  all_win_required_groups:
+    status: complete_no_bypass
+    groups: [pl_shift, bs_shift, sticky_move, dual_force]
+  latest_exposure:
+    allowed_through: dual_anchor
+    derived_latest_nonempty_stage: movable_box_sticky_anchor
+    claimed_latest_event: anchor_boundary_shift:box_sticky
+    canonical_occurrences: [{ step: 10, reasoning_unit: RU2_use_notch_as_cockpit }]
+  identity_counterfactuals:
+    split_blocks: complete_0_win
+    straight_bar: complete_0_win
+    filled_notch: complete_0_win
+    no_upper_arm: complete_0_win
+    no_lower_arm: complete_0_win
+  scc:
+    graph_status: complete
+    initial_scc: { states: 10, exit_count: 3, win_exit_count: 1, dead_exit_count: 2, nearest_win_exit_distance: 4 }
+    win_subgraph: one_win_continuation_per_scc
+calibrated_trace_metrics:
+  calibration: reality_anchor_trace_metrics_v0
+  status: pilot
+  solution_execution_pressure:
+    status: enabled
+    components:
+      solutionCost: { raw: 10, band: 2, weight: 0.35 }
+      nonWalkEventCount: { raw: 9, band: 2, weight: 0.45 }
+      heavyReuseRatio: { raw: 0, band: 1, weight: 0.2 }
+    aggregateBand: 2
+  solution_space_reuse:
+    status: enabled
+    components:
+      revisitRate: { raw: 0.36363636363636365, band: 4, weight: 0.55 }
+      heavyReuseRatio: { raw: 0, band: 1, weight: 0.45 }
+    aggregateBand: 3
+archive_taste_context:
+  - { archive_id: RA_CAND_0025, human_aesthetic_score: 5, human_difficulty_score: 4, human_comment_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0025.md }
+  - { archive_id: RA_CAND_0022, human_aesthetic_score: 5, human_difficulty_score: 4, human_comment_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md }
+  - { archive_id: RA_CAND_0024, human_aesthetic_score: 1, human_difficulty_score: 3, human_comment_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md }
+  - { archive_id: RA_CAND_0032, human_aesthetic_score: 1, human_difficulty_score: 3, human_comment_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md }
+evidence_limits:
+  - 工具事实不证明玩家问题、自然性、审美或难度。
+  - 轨迹指标只描述规范解执行压力和空间复访。
+artifact_refs:
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_strict_unique_audit_agent.json
+  - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_identity_counterfactuals.yml
+

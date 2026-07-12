@@ -1,0 +1,97 @@
+candidate_version: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+review_iteration: 1
+design_target:
+  role: application
+  difficulty_score_target: 3
+  aesthetic_score_target: 4
+  target_identity: 完整 C 形凹腔内拉动，双臂同步钩推两条锚点线。
+mechanism_scope:
+  central:
+    - 七格 C 在关键动作前后保持完整连接。
+    - 玩家先整体下移 C，再进入向右凹腔并沿开口方向拉动。
+    - 上下双臂在同一刚体平移中同步推动 P/L 与 B/S；左竖脊覆盖中间目标。
+  support: 两锚提供 pull/sticky 语义并作为双臂的被推动对象；墙体只形成轨道和凹腔通道。
+player_reasoning_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_candidate_packet.yml#player_reasoning
+player_reasoning_summary:
+  - RU1_relocate_whole_C: >-
+      初始旧凹口与 P/L 同行；直接进入会把 P/L 拉入开口并阻塞。玩家从下臂下方拉完整 C 向下，
+      把凹腔换到中间隔离通道，同时腾空中央目标并对齐上下锚轨。
+  - RU2_use_notch_as_cockpit: >-
+      玩家绕入新凹腔，从内部连续向右拉两次；第一次让双臂贴锚，第二次同步推动两锚到目标，
+      同时左竖脊落到中央目标。
+alternative_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_ALT_EARLY_CAVITY.json
+player_reasoning:
+  canonical_trace_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+  player_goal:
+    description: 把上、下两对锚点各右移一格覆盖右侧目标，并让完整 C 的竖脊覆盖中间目标。
+    state_ref: v4.initial
+  reasoning_units:
+    - id: RU1_relocate_whole_C
+      player_question: 怎样让向右开口的凹腔成为可用操作位，而不在进入时把紧邻入口的 P/L 拖进凹口？
+      premises:
+        - statement: 初始凹腔与 P/L 同行；从右向左进入时玩家在 pull side，身后的 P/L 会跟着左移。
+          state_ref: v4.initial
+        - statement: 玩家可到 C 下臂右端下方；向下时前格开放、身后接触完整 C。
+          state_ref: v4.step3.before
+        - statement: 整体下移后凹腔落到中间墙廊，上下臂与两锚同行，中央目标被腾空。
+          state_ref: v4.step3.after
+      conclusion: 先从下臂下方拉动整个 C 向下一格，再绕入新凹腔。
+      operation_refs: [OS1_lower_complete_C]
+      alternative:
+        status: replayed_attempt
+        description: 直接沿旧凹口进入，再尝试向右拉 C。
+        local_gain: 玩家到达初始凹腔内部，看似获得内部把手位。
+        from_state_ref: v4.initial
+        exact_inputs: [up, up, up, left, left, right]
+        result_state_ref: v4_alt_early_cavity.step6.illegal
+        concrete_outcome: >-
+          P/L 被两次 left 从(5,2)-(6,2)拖到(3,2)-(4,2)；玩家到(2,2)后 right 前格被 L 占住，
+          以 pull_world_front_blocked 结束，失去同步右推所需的上轨起点。
+      feedback:
+        - state_ref: v4.step3.after
+          visible_change: 七格 C 完整下移，凹腔改到中间墙廊，中央目标显露，上下臂同时对准两锚轨。
+    - id: RU2_use_notch_as_cockpit
+      player_question: C 对齐后，怎样同时把上下两锚推到目标并重新覆盖中间目标？
+      premises:
+        - statement: step3 后两钩臂右端与两锚左端各隔一格。
+          state_ref: v4.step3.after
+        - statement: 玩家在(2,3)朝右时前格空、身后(1,3)是 C 左竖脊，处于 pull side。
+          state_ref: v4.step8.after
+        - statement: 两锚右半格各紧邻目标；C 竖脊两次右拉后会从(1,3)到(3,3)。
+          state_ref: v4.step8.after
+      conclusion: 从凹腔内连续右拉完整 C 两次；第一次贴锚，第二次双臂同步推两锚并由竖脊填中目标。
+      operation_refs: [OS2_enter_relocated_notch, OS3_prime_double_hook, OS4_double_hook_finish]
+      alternative:
+        status: not_claimed
+        description: 两锚没有可供玩家逐个向右推的左侧站位；作为可见空间前提，不伪造尝试。
+        local_gain: none
+        from_state_ref: v4.step3.after
+        exact_inputs: []
+        result_state_ref: not_applicable
+        concrete_outcome: not_claimed
+      feedback:
+        - state_ref: v4.step9.after
+          visible_change: C 整体右移一格，玩家仍在凹腔内，上下臂同时贴到两锚左端。
+        - state_ref: v4.step10.after
+          visible_change: C 再右移；两锚同步覆盖上下目标，左竖脊覆盖中间目标并获胜。
+  operation_segments:
+    - { id: OS1_lower_complete_C, step_range: 1-3, exact_inputs: [left, up, down], purpose: 把完整C下拉一格, supports_reasoning_units: [RU1_relocate_whole_C] }
+    - { id: OS2_enter_relocated_notch, step_range: 4-8, exact_inputs: [right, up, up, left, left], purpose: 从中间墙廊进入新凹腔, supports_reasoning_units: [RU2_use_notch_as_cockpit] }
+    - { id: OS3_prime_double_hook, step_range: 9-9, exact_inputs: [right], purpose: 拉C使双臂同时贴锚, supports_reasoning_units: [RU2_use_notch_as_cockpit] }
+    - { id: OS4_double_hook_finish, step_range: 10-10, exact_inputs: [right], purpose: 双臂同步推两锚并获胜, supports_reasoning_units: [RU2_use_notch_as_cockpit] }
+  resolution:
+    resolves: [RU1_relocate_whole_C, RU2_use_notch_as_cockpit]
+    operation_refs: [OS1_lower_complete_C, OS2_enter_relocated_notch, OS3_prime_double_hook, OS4_double_hook_finish]
+    final_state_ref: v4.step10.after
+    visible_confirmation: 三目标分别由 C 竖脊、P、B 覆盖；七格 C 仍为完整连接刚体。
+  trace_partition: { status: complete, ordered_segment_ids: [OS1_lower_complete_C, OS2_enter_relocated_notch, OS3_prime_double_hook, OS4_double_hook_finish], uncovered_steps: [], overlapping_steps: [] }
+lineage:
+  policy: fresh_required
+  relation: fresh
+  archive_variant_authorized: false
+language_boundary: >-
+  “C 形”“凹腔”“上下臂”“左竖脊”都对应 packet 中明确坐标与动作；不使用未定位的结构名称替代具体局面。
+score_boundary_revision:
+  source_review_attempt: RA_C_HOOK_V4_CRITIC_ATTEMPT_02_20260713
+  accepted_boundary: aesthetic_4_difficulty_3_application
+  claim_not_being_made: aesthetic_5_or_high_difficulty

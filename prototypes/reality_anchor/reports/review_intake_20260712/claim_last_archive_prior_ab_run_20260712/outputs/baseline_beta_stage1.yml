@@ -1,0 +1,167 @@
+experiment_arm: baseline
+target_code: Beta
+stage: raw_first
+stage_status: completed
+review_attempt_id: RA_NEW_TWIN_GATE_REVIEW_1_BASELINE_AB
+source_review_attempt_id: RA_NEW_TWIN_GATE_REVIEW_1
+critic_instance_id: /root/baseline_beta
+review_iteration: 1
+candidate_version_reviewed: RA_NEW_2026_07_12_TWIN_GATE_RESECTION_v1
+review_input_type: candidate_version
+archive_records_read: 31
+archive_record_ids_read:
+  - RA_CAND_0001
+  - RA_CAND_0002
+  - RA_CAND_0003
+  - RA_CAND_0004
+  - RA_CAND_0005
+  - RA_CAND_0006
+  - RA_CAND_0007
+  - RA_CAND_0008
+  - RA_CAND_0009
+  - RA_CAND_0010
+  - RA_CAND_0011
+  - RA_CAND_0012
+  - RA_CAND_0013
+  - RA_CAND_0014
+  - RA_CAND_0015
+  - RA_CAND_0016
+  - RA_CAND_0017
+  - RA_CAND_0018
+  - RA_CAND_0019
+  - RA_CAND_0020
+  - RA_CAND_0021
+  - RA_CAND_0022
+  - RA_CAND_0023
+  - RA_CAND_0024
+  - RA_CAND_0025
+  - RA_CAND_0026
+  - RA_CAND_0027
+  - RA_CAND_0028
+  - RA_CAND_0029
+  - RA_CAND_0030
+  - RA_CAND_0032
+candidate_packet_read: false
+designer_claim_read: false
+hard_evidence_tools_run: false
+
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+  coordinate_convention: layout rows and columns are one-based
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家需要先利用可移动 B/S 改写材料边界，把第 4 至第 6 行的三箱纵柱与
+    第 4、6 行各两格黏臂合成一个七格整体；随后从拉侧把整体右移过边界，
+    再安排上黏臂、中央门箱、下黏臂的消费顺序，使三个目标区域都能完成且不丢失把手。
+  salient_relations_seen:
+    - >-
+      玩家开局看见 B/S 在第 11 行、P/L 固定在第 13 行，而三箱纵柱位于第 4 至第 6 行第 5 列，
+      上下各有一条位于第 3 至第 4 列的两格黏臂；执行前两步 right、right 推动 B/S 后，
+      三箱转为黏性并与上下黏臂合成七格整体，从而把后续操作从五个局部对象改成一次整体搬运。
+    - >-
+      玩家随后绕到整体右侧，执行至第 14 步的 right；整体被向右拉并跨回 B 侧，
+      连接柱切回三个箱子、上下黏臂分裂，后续不再是搬运七格刚体，而是分别处理上臂、门箱和下臂。
+    - >-
+      第 14 步后，规范路线先在第 18 步拉上黏臂覆盖上目标，再于第 25 步用中央箱覆盖竖井底口目标，
+      最后第 32 步拉下黏臂覆盖下目标；这表明三个输出不是任意交换的重复收尾，而有访问权顺序。
+    - >-
+      同一第 14 步状态若先用 down、down、right 让门箱覆盖竖井底口，再用
+      down、down、left、left、left、up、down 完成下黏臂目标，会上黏臂把手不可达且无胜；
+      因而“先拿眼前两个目标”会具体改变最后一个对象的可操作面。
+  initial_merits:
+    - >-
+      第 2 步的 B/S 推动直接把屏幕中央可见的三箱纵柱与上下黏臂合成七格整体；
+      玩家操作、材料变化和后续搬运方式形成一次清楚且幅度大的因果反馈。
+    - >-
+      第 14 步不是简单撤销合并：玩家从右侧拉动整个七格刚体，棋盘上同时发生连接柱切箱与两臂分离，
+      于是一个整体搬运问题被改写为三个输出的消费排序，机制转换真正改变了计划理由。
+    - >-
+      第 14 步后的反例路线会先给予门箱和下黏臂两个局部成功，却失去上黏臂把手；
+      这至少显示目标顺序与可操作面存在结构因果，而非仅靠规范解长度制造难度。
+  unclear_or_unreadable_parts:
+    - >-
+      raw packet 没有给出第 14 步分裂后的完整逐格布局，因此尚不能确认玩家在选择先做门箱时，
+      是否能从当时可见位置直接推断上黏臂把手将不可达。
+    - >-
+      raw packet 未提供目标难度、课程位置或目标角色；当前只能判断结构质量，不能完成最终 role fit。
+  initial_quality_risks:
+    - >-
+      从第 2 步合并到第 14 步分裂之间主要是沿长竖井和右侧通道绕到拉侧；若候选说明把这段包装成独立推理，
+      玩家实际得到的可能只是十二步走位与唯一可执行的整体拉动。
+    - >-
+      错误顺序在门箱目标与下黏臂目标都已覆盖后才由“上黏臂把手不可达”结算；
+      若第 14 步局面没有共同的可见关系供玩家提前剪枝，这会接近高成本迟反馈分支，而非公平的顺序洞见。
+    - >-
+      上、下黏臂都以一次拉动覆盖目标，存在镜像重复风险；中央门箱必须在玩家侧明显改变两臂的访问关系，
+      才能避免后半段退化为三个输出按既定次序逐项消费。
+    - >-
+      棋盘纵向跨度较大、对象信号很强；若七格合并与切分之后没有更多复用，可能出现高设计成本只兑现一次大变形的问题。
+  initial_aesthetic:
+    score_boundary: 4
+    target_fit: target_fit_unknown
+    reading: >-
+      初步落在亮点候选边界：合并七格整体再拉回切分的可见反转，明显强于仅触发机制标签或普通腾挪；
+      但目前不支持标杆判断，因为开局绕行、上下臂重复与错误分支反馈时机仍可能稀释核心。
+  initial_difficulty:
+    score_boundary: 4
+    target_fit: target_fit_unknown
+    reading: >-
+      初步像阶段挑战，难点主要来自第 14 步后对三个输出访问顺序的规划，而不是 32 步本身；
+      若玩家无法预读错误顺序，则其中一部分难度应下调为搜索与返工成本，不能记作推理价值。
+  exact_basis:
+    - layout:r4c3-r4c5 contains M,M,C; r5c5 contains C; r6c3-r6c5 contains M,M,C
+    - layout:r11c4-r11c5 contains S,B and r13c4-r13c5 contains fixed P,L
+    - step:2 inputs right,right -> push_B/S + box_to_sticky + sticky_merge -> seven-cell rigid body
+    - step:14 input right -> pull_sticky_rigid + sticky_to_box + sticky_split
+    - step:18 input up -> upper sticky arm covers the upper target
+    - step:25 input right -> gate crate covers the shaft-mouth target
+    - step:32 input down -> lower sticky arm covers the lower target and wins
+    - alternative:step14 down,down,right then down,down,left,left,left,up,down -> two local targets covered but upper handle unreachable and no win
+
+archive_taste_context_used:
+  status: human_anchors_present
+  all_records_were_human_reviewed: true
+  positive_anchors:
+    - candidate_id: RA_CAND_0022
+      calibration: aesthetic_5_difficulty_4
+      relevance: 短步骤中用可见死角构成强反向送箱洞见，校准“反转必须改变计划理由”。
+    - candidate_id: RA_CAND_0025
+      calibration: aesthetic_5_difficulty_4
+      relevance: 主动构造并反复使用 L 形结构，校准“构造、提示、复用”达到标杆所需的密度。
+    - candidate_id: RA_CAND_0001
+      calibration: aesthetic_4_difficulty_4
+      relevance: 双锚、材料边界与目标压力强耦合，校准阶段挑战的亮点下界。
+  lower_bound_or_negative_anchors:
+    - candidate_id: RA_CAND_0030
+      calibration: aesthetic_1_difficulty_3
+      relevance: 大地图、多对象与高机制信号若只产生普通腾挪和迟反馈 deadend，属于高成本无亮点警戒。
+    - candidate_id: RA_CAND_0032
+      calibration: aesthetic_1_difficulty_3
+      relevance: 前后对象退休、子段割裂不可用机制覆盖掩饰，校准本候选合并段与三输出段必须保持因果连续。
+    - candidate_id: RA_CAND_0024
+      calibration: aesthetic_1_difficulty_3
+      relevance: 双锚与多黏块会抬高玩家期待；若最终仅为推拉腾挪则严重失配。
+    - candidate_id: RA_CAND_0006
+      calibration: aesthetic_2_difficulty_5
+      relevance: 通过目标位置制造高腾挪复杂度会削弱机制美感，校准错误分支不能靠返工增难。
+  archive_attack_calibration: complete
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete
+  missing_anchor_effect: none
+
+stage1_handoff_notes:
+  - independent_reading 已在未读取 candidate packet 或 designer claim 的条件下落盘，第二阶段不得覆写 initial 字段。
+  - 第二阶段重点核对 designer claim 是否把第 2 至第 14 步的绕行重复领功，以及第 14 步错误顺序能否由当时可见关系提前剪枝。
+  - 最终 verdict、review_loop_state 与 required_action 只能维持本初判或更严格。

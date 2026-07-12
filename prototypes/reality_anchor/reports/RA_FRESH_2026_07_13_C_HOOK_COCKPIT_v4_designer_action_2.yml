@@ -1,0 +1,53 @@
+review_iteration_answered: 1
+candidate_version_answered: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+designer_action_type: revise_claim
+
+evidence_reviewer_action:
+  required_action: none
+  response: evidence review_2 已通过；本轮不改任何机械 claim、layout、trace 或证据。
+  evidence_or_attempt_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_evidence_review_2.yml
+  result: unchanged
+
+critic_item_triage:
+  - critic_item_id: CI1_aesthetic_target_boundary
+    response: revise_claim
+    reason: >-
+      接受独立 critic 的分数上界：当前结构达到4，但开局下拉可被低成本试出、终局第二次 right 直接，
+      不足以主张5。用户要求是4分以上，因此把 aesthetic target 从5收窄为4，布局和核心身份不变。
+    refs:
+      - prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_puzzle_critic_attempt02.yml
+    produces: revised_design_target_aesthetic_4
+    next_review_needed: true
+  - critic_item_id: CI2_RU1_cheap_affordance_discovery
+    response: accept_as_nonblocking
+    reason: >-
+      接受为4分/难度3 application 的上界风险；不把短错误反馈包装成深搜索，也不因此增加噪声。
+    refs:
+      - player_reasoning.RU1_relocate_whole_C
+    produces: handoff_caveat
+    next_review_needed: false
+  - critic_item_id: CI3_RU2_direct_second_pull
+    response: accept_as_nonblocking
+    reason: >-
+      接受终局第二次 right 直接；其职责是清楚呈现双钩同步反馈，适合难度3收束，不主张更高难度或5分。
+    refs:
+      - player_reasoning.RU2_use_notch_as_cockpit
+    produces: handoff_caveat
+    next_review_needed: false
+
+handoff_notes:
+  - note: 开局关键下拉可能由最近 affordance 廉价试出，限制审美与难度上界。
+    source_critic_item_id: CI2_RU1_cheap_affordance_discovery
+    claim_not_being_made: 强承诺或高搜索深度
+  - note: 贴锚后的第二次 right 直接，作为可见收束而非新推理。
+    source_critic_item_id: CI3_RU2_direct_second_pull
+    claim_not_being_made: 末段再次改序或资源冲突
+
+produces:
+  candidate_version: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+  evidence_disagreement_packet: null
+  revised_packet_context:
+    aesthetic_score_target: 4
+    difficulty_score_target: 3
+next_step: review_N_plus_1

@@ -1,0 +1,72 @@
+review_attempt_id: RA_CROSS_RELAY_V4_CRITIC_ATTEMPT_03
+critic_instance_id: /root/critic_attempt03
+candidate_version_reviewed: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+review_phase: raw_only_independent_reading
+review_input_type: candidate_version
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家可直接理解的目标是让三个 G 都由对象覆盖；主要规划问题不是记住一串锚点移动，
+    而是怎样摆放两种二格锚点，使左、右目标保持覆盖，同时把两只分离箱转成可合并的黏格，
+    再把合并后的竖条跨回边界成为覆盖底目标的箱。
+  salient_relations_seen:
+    - >-
+      开局玩家看见箱在 (3,2)、P/L 竖排在 x4、B/S 横排在 y4，左目标在 (2,3)。
+      第 1 步先把箱下推到 (3,3)，第 2 步把 P/L 右移腾出 B/S 的上移位置，
+      第 4 步再从 B/S 上方将其上拉，并由 B 半格把该箱反向顶回 (3,2)；
+      这使后续 B/S 能在第 11 步横移到左目标旁并处理该箱，开局的下推因而不是单纯送箱接近目标。
+    - >-
+      玩家看见右目标 (6,3) 与可平移的 P/L。第 5 步把 P/L 推到 x6 后由 L 覆盖右目标，
+      第 8 步又从上方向下推同一锚点，使覆盖者从 L 换成 P 而目标仍被覆盖；
+      右目标覆盖具有状态保持，但这次换位对之后操作次序的独立约束在 raw trace 中不够显眼。
+    - >-
+      第 11 步前玩家可见两只箱分别在 (3,2)、(3,6)，B/S 在 y3 的 x3-x4。
+      玩家从右向左推 B/S 到 x2-x3 后，B 落到左目标 (2,3)，两只相隔较远但同处边界关系中的箱同时变成分离黏格；
+      因此左目标覆盖与末段合并材料的生成由同一动作完成，后续不再能把两只箱当作普通独立箱处理。
+    - >-
+      第 11 步后玩家看见原有黏格在 (5,5)，新黏格之一在 (3,6)。
+      第 14、15 步向左拉原有黏格到 (3,5)，使它与 (3,6) 合并成竖向二格刚体；
+      第 17 步再把竖条从 x3 拉到 x2，两格同时转箱且下格覆盖底目标，
+      所以后半段明确要求先完成相邻合并，才可用一次跨界平移收束胜利。
+  unclear_or_unreadable_parts:
+    - >-
+      第 8 步只呈现右目标由 L 覆盖改为 P 覆盖，raw trace 未显示若不做该换位会失去哪条后续路线；
+      玩家侧可能把它读成绕行中的被迫推移，而不是新的规划结论。
+    - >-
+      raw packet 只给规范解，没有同一决策状态下的自然替代路线，因此不能仅凭该轨迹判断前 5 步的选择面
+      是可分析的结构取舍，还是由墙体与最近可动物体形成的较窄执行序列。
+    - >-
+      两只相隔四行的箱在第 11 步同时转黏是明显可见的反馈，但仅凭静态布局与规范轨迹，
+      尚不能确认玩家在动作前能否从边界规则清楚预测这一远距同时变化。
+  initial_quality_risks:
+    - >-
+      中后段“同时转黏—拉近—合并—跨界转箱”的因果链有明确棋盘后果；相比之下，
+      第 6 至 10 步主要是走位与一次保持目标覆盖的锚点换位，可能削弱两段核心构造之间的节奏密度。
+    - >-
+      若第 1 至 5 步的大部分动作实际都由狭窄可达区唯一决定，开局箱子先下后上虽具反直觉外观，
+      但玩家洞见可能低于动作叙事所暗示的强度；当前只作为非阻塞风险，不据此否定后半段结构。
+    - >-
+      与人类低分锚点 RA_CAND_0024 所警示的“多对象却主要腾挪走位”相比，本候选确有转黏、合并、再转箱的具体几何后果，
+      不属于仅凭对象数量制造期待；但仍需警惕 P/L 的第 8 步及其周边走位沦为流程性搬运。
+  exact_basis:
+    - solve_instance.layout：箱 (3,2)、P/L 的 x4 竖排、B/S 的 y4 横排及三个目标 (2,3)、(6,3)、(2,6)
+    - canonical.step_1：箱 (3,2)->(3,3)
+    - canonical.step_2：P/L 从 x4 平移到 x5
+    - canonical.step_4：B/S 上移并把箱 (3,3)->(3,2)
+    - canonical.step_5：P/L 到 x6，L 覆盖右目标 (6,3)
+    - canonical.step_8：P/L 下移，右目标覆盖由 L 换成 P
+    - canonical.step_11：B/S 左移，B 覆盖左目标，两只箱 (3,2)、(3,6) 同时转黏
+    - canonical.step_14-canonical.step_15：黏格 (5,5)->(3,5)，并与 (3,6) 合并为竖条
+    - canonical.step_17：竖条 x3->x2、两格转箱，下格覆盖底目标并胜利
+    - archive_taste_calibration.RA_CAND_0024：多对象若只兑现腾挪而无几何洞见属于明确负面边界
+    - archive_taste_calibration.RA_CAND_0022：短步骤中的反直觉操作与反向送箱可构成正面审美参照

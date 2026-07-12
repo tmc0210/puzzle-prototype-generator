@@ -1,0 +1,25 @@
+opening_comfort_check:
+  status: clean_local_reversible_observation
+  candidate_start_position: [4, 6]
+  local_reversible_observation:
+    exact_inputs: [down, up]
+    legal: true
+    returns_to_initial_state_key: true
+    events: [walk, walk]
+  visible_commitment_exits:
+    - exact_inputs: [right]
+      effect: pull B/S right; anchor boundary shifts
+    - exact_inputs: [up, down]
+      effect: second input pulls the lower edge of the C-shaped sticky block; not a return path
+  first_step_legal_events: [walk_down, walk_up, pull_bs_right]
+  initial_scc_size: unavailable_full_graph_exhausted
+  initial_exit_source_distances: unavailable_full_graph_exhausted
+  initial_win_exit_source_distances: unavailable_full_graph_exhausted
+  dead_exits_before_first_win_exit: unavailable_full_graph_exhausted
+  whether_core_chain_preserved: true_exact_candidate_unchanged
+  evidence_refs:
+    - prototypes/reality_anchor/reports/pre_submission_cut_rebind_orthogonal_v7.ts
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_canonical.json
+  note: >-
+    application/capstone 起点至少提供一条两步可逆观察路线；另外两类承诺均由可见对象接触触发。
+    不因完整图耗尽而伪造 SCC 指标，未调整起点。

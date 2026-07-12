@@ -1,0 +1,51 @@
+redundant_element_prune:
+  candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31
+  status: pruned
+  workflow_order:
+    - goal_prune
+    - opening_comfort
+    - redundant_element_prune
+  changes_before_final_exact_version:
+    - source: v29
+      action: trim_pure_outer_wall_columns
+      result: v30
+      detail: 删除旧布局左侧一列、右侧两列纯外墙，内部坐标统一左移一格；玩法图同构。
+    - source: v30
+      action: remove_redundant_goal
+      result: v31
+      coordinate: [5, 4]
+      detail: 删除中连接箱上的目标覆盖；最短成本、完整图、核心事件责任与终局对象配置组均不变。
+  retained_elements:
+    - element: target_[3,2]
+      reason: 删除后最短成本由32降至20，并产生220个终局对象配置组。
+    - element: target_[5,3]
+      reason: 删除后虽然最短成本仍为32，但终局对象配置组由1增至2；保留唯一一格切割反馈目标。
+    - element: target_[6,5]
+      reason: 删除后最短成本由32降至28，并产生6个终局对象配置组；该目标同时定义门箱责任。
+    - element: target_[3,6]
+      reason: 删除后最短成本由32降至25，并产生8个终局对象配置组。
+    - element: middle_connector_crate_[5,4]
+      reason: 该箱参与 box_to_sticky 与 sticky_to_box，是三箱连接柱的中段；删除或墙化会改写拼切形状。
+    - element: fixed_PL_anchor
+      reason: 固定 P/L 提供跨边界拉侧规则，允许七格整体横拉并切割。
+    - element: movable_BS_anchor
+      reason: B/S 位移把三箱柱刷入上下黏臂并完成拼接。
+    - element: remaining_floor_and_corridors
+      reason: 被规范解、合法早封门替代路线、其延迟下锚进展或开局可逆观察使用；未发现只作装饰的可删内部空格。
+  final_outline: 单层闭合外框；无剩余纯外墙列可裁。
+  exact_regression:
+    solution_cost: 32
+    complete_graph_states: 514270
+    legal_transitions: 1058153
+    winning_states: 3
+    winning_object_configuration_groups: 1
+    all_core_event_gates_complete: true
+    sequence_gate_complete: true
+    early_gate_alternative_continuation: complete_no_win
+  conclusion: v31 已删除一格伪反馈目标并裁净纯外框；继续删减会改变终局责任、核心形状或开局读图。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_goal_prune_check.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_event_gate_report.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_alternative_report.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_equivalence_report.yml

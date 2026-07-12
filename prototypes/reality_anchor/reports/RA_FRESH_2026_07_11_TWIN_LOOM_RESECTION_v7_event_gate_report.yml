@@ -1,0 +1,237 @@
+candidate_id: "RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v7"
+command: "npx tsx prototypes/reality_anchor/reports/probe_twin_loom_resection_v7.ts"
+budgets:
+  max_states: 1200000
+  max_depth: 200
+solver:
+  found: true
+  status: "found"
+  cost: 28
+  explored_states: 828
+  inputs:
+    - "right"
+    - "right"
+    - "up"
+    - "up"
+    - "up"
+    - "up"
+    - "right"
+    - "right"
+    - "up"
+    - "right"
+    - "down"
+    - "left"
+    - "left"
+    - "down"
+    - "right"
+    - "right"
+    - "up"
+    - "right"
+    - "right"
+    - "up"
+    - "up"
+    - "up"
+    - "up"
+    - "left"
+    - "left"
+    - "left"
+    - "left"
+    - "up"
+  events:
+    - "walk"
+    - "push_object:box_sticky_anchor"
+    - "anchor_boundary_shift:box_sticky"
+    - "box_to_sticky:n3"
+    - "sticky_merge:n1"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "pull_object:sticky#1"
+    - "move_sticky_rigid"
+    - "sticky_to_box:n3"
+    - "sticky_split:n1"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "pull_object:sticky#2"
+    - "move_sticky_rigid"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "walk"
+    - "pull_object:sticky#1"
+    - "move_sticky_rigid"
+complete_graph:
+  status: "complete"
+  reachable_states: 47771
+  legal_transitions: 94722
+  winning_states: 33
+  shortest_win_depth: 28
+  reachable_event_types:
+    - "anchor_boundary_shift"
+    - "box_to_sticky"
+    - "force_chain"
+    - "move_sticky_rigid"
+    - "pull_object"
+    - "push_object"
+    - "sticky_merge"
+    - "sticky_split"
+    - "sticky_to_box"
+    - "walk"
+solution_uniqueness:
+  result: "unique_complete"
+  exact_optimal_input_path_count: "9"
+  optimal_winning_state_count: 1
+  distinct_optimal_non_walk_signatures: 1
+  optimal_non_walk_signatures:     - "anchor_boundary_shift:box_sticky+box_to_sticky:n+push_object:box_sticky_anchor+sticky_merge:n > move_sticky_rigid+pull_object:object+sticky_split:n+sticky_to_box:n > move_sticky_rigid+pull_object:object > move_sticky_rigid+pull_object:object"
+  interpretation: "完整图的全部最短输入路径压缩为同一非走位操作序列。"
+all_winning_path_event_gates:
+  - pattern: "anchor_boundary_shift:box_sticky"
+        status: "complete"
+        missing_required_winning_path: false
+        states: 47771
+  - pattern: "box_to_sticky"
+        status: "complete"
+        missing_required_winning_path: false
+        states: 47771
+  - pattern: "sticky_merge"
+        status: "complete"
+        missing_required_winning_path: false
+        states: 47771
+  - pattern: "sticky_to_box"
+        status: "complete"
+        missing_required_winning_path: false
+        states: 47771
+  - pattern: "sticky_split"
+        status: "complete"
+        missing_required_winning_path: false
+        states: 47771
+  - pattern: "pull_object"
+        status: "complete"
+        missing_required_winning_path: false
+        states: 47771
+  - pattern: "move_sticky_rigid"
+        status: "complete"
+        missing_required_winning_path: false
+        states: 47771
+all_winning_path_sequence_gate:
+  status: "complete"
+  violating_winning_path: false
+  states: 49381
+  obligations:
+    - "同一步 B/S 位移 + box_to_sticky + sticky_merge"
+    - "其后同一步 pull + sticky rigid move + sticky_to_box + sticky_split"
+    - "切割步之后至少两次独立 sticky rigid move"
+winning_object_configuration_groups:
+  - count: 1
+        minDepth: 28
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####.C##.##\n###...C.#.##\n####mM....##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 30
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####.C##.##\n###.....#.##\n####mM..C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 30
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####.C##.##\n###.....#.##\n####mMC...##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 32
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####.C##.##\n###.....#.##\n####mM.C..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 38
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###...C.#.##\n####mM..C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 38
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###...C.#.##\n####mMC...##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 40
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###.....#.##\n####mMC.C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 40
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###.....#.##\n####mMCC..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 40
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###...C.#.##\n####mM.C..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 54
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###..M..#.##\n####mM..C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 58
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###..M..#.##\n####mMC.C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 60
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####.C##.##\n###.....#.##\n####mMC.C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 62
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###..M.C#.##\n####mM..C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 64
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###..M..#.##\n####mMCC..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 64
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###..M.C#.##\n####mM....##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 66
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###..M.C#.##\n####mMC...##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 68
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###..M..#.##\n####mMC...##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 70
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###..M..#.##\n####mM.C..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 70
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###..M.C#.##\n####mM.C..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 72
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###..M..#.##\n####mM.CC.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 84
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###....C#.##\n####mM..C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 84
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###....C#.##\n####mMC...##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 86
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###....C#.##\n####mMC.C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 86
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###.....#.##\n####mM.CC.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 86
+        example: "############\n#####@######\n####mM....##\n###...C##.##\n#####..##.##\n###....C#.##\n####mM.C..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 88
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###...CC#.##\n####mM..C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 88
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###.....#.##\n####mMCCC.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 88
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###...CC#.##\n####mMC...##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 90
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###...C.#.##\n####mM.CC.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 90
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###...C.#.##\n####mMC.C.##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 90
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###....C#.##\n####mMCC..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 90
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###...C.#.##\n####mMCC..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"
+  - count: 1
+        minDepth: 90
+        example: "############\n#####@######\n####mM....##\n###....##.##\n#####..##.##\n###...CC#.##\n####mM.C..##\n####......##\n####.#######\n####.#######\n##...SB#####\n############\n####PL######\n############"

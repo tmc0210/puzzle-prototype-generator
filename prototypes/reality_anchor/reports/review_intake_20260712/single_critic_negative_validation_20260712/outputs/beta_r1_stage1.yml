@@ -1,0 +1,87 @@
+review_attempt_id: BETA_SINGLE_R1
+critic_instance_id: "/root/single_beta_r1"
+candidate_version_reviewed: RA_NEW_2026_07_12_TWIN_GATE_RESECTION_v1
+stage: raw_first
+archive_records_read:
+  - RA_CAND_0001
+  - RA_CAND_0002
+  - RA_CAND_0003
+  - RA_CAND_0004
+  - RA_CAND_0005
+  - RA_CAND_0006
+  - RA_CAND_0007
+  - RA_CAND_0008
+  - RA_CAND_0009
+  - RA_CAND_0010
+  - RA_CAND_0011
+  - RA_CAND_0012
+  - RA_CAND_0013
+  - RA_CAND_0014
+  - RA_CAND_0015
+  - RA_CAND_0016
+  - RA_CAND_0017
+  - RA_CAND_0018
+  - RA_CAND_0019
+  - RA_CAND_0020
+  - RA_CAND_0021
+  - RA_CAND_0022
+  - RA_CAND_0023
+  - RA_CAND_0024
+  - RA_CAND_0025
+  - RA_CAND_0026
+  - RA_CAND_0027
+  - RA_CAND_0028
+  - RA_CAND_0029
+  - RA_CAND_0030
+  - RA_CAND_0032
+candidate_packet_read: false
+designer_claim_read: false
+hard_evidence_tools_run: false
+
+player_reading:
+  core_visible_relation: >-
+    开局右推 B/S 会把三箱纵柱送入黏侧，使其与上下两条二格黏臂合成七格整体；
+    随后从右侧把整体拉回箱侧，又会把连接柱切回三个箱并释放上下黏臂。
+  core_player_operation: >-
+    玩家先用可移动 B/S 制造七格刚体，再借固定 P/L 提供的拉侧把它整体右拉并拆分，
+    最后必须依次处理上黏臂、竖井门箱和下黏臂。
+  core_board_change: >-
+    一个由上下黏臂和三格连接柱组成的七格整体，在 step 14 被重切为上下两个独立黏臂与中线三个箱；
+    之后三个输出分别覆盖上目标、竖井底口目标和下目标。
+  core_planning_effect: >-
+    玩家要把“合成后再切开”理解为一次输出制造，并进一步看出这些输出并非可任意排序：
+    上黏臂的可达性必须在门箱和下黏臂收束前先兑现。
+
+confirmed_aesthetic_problem:
+  status: present
+  exact_scene: >-
+    step 14 刚完成整体右拉与拆分时，上下黏臂和三个中线箱都已成为可处理输出，
+    但棋盘没有在玩家选择门箱优先时及时暴露上黏臂的访问债务。
+  player_operation: >-
+    玩家从 step 14 输入 [down, down, right]，先让门箱覆盖竖井底口目标且仍能向下离开；
+    再输入 [down, down, left, left, left, up, down]，让下黏臂也覆盖下目标。
+  board_change: >-
+    两个目标先后被正确外观的独立输出覆盖，但这一收束同时令上黏臂把手不可达，
+    该状态已无法完成剩余上目标。
+  player_visible_harm: >-
+    玩家在连续取得两次清楚、可归因的目标进展后才看到上黏臂失去把手；
+    错误顺序因此不能从首次局部收益处及时剪枝，迫使玩家撤销一整段已被棋盘正向确认的收尾流程。
+  raw_facts_sufficient: true
+
+pending_fact:
+  status: none
+  exact_missing_fact: none
+  why_it_changes_problem_existence: none
+
+provisional_aesthetic: 1
+initial_difficulty: 4
+initial_role_fit: >-
+  不适合作为后期机制阶段挑战的当前版本：核心合成再切开关系与玩家模型匹配，
+  但决定胜负的输出顺序主要通过一次反馈后置的长错误收尾来施压。
+exact_basis:
+  - raw step 2：右推 B/S 后，三箱纵柱与上下二格黏臂合成七格整体。
+  - raw step 14：整体右拉后连接柱切回三箱，上下黏臂分裂。
+  - raw canonical：step 18 先覆盖上目标，step 25 再覆盖竖井底口目标，step 32 覆盖下目标并胜利。
+  - raw alternative：门箱优先后玩家仍可向下离开，继续覆盖下目标后上黏臂把手不可达，且该状态无胜。
+  - 人评校准 RA_CAND_0009：前期局部收益不足以抵消过长、无意义错误路线的玩家伤害。
+  - 人评校准 RA_CAND_0030：多个看似可推进的处理方向若直到较晚才验证为 deadend，是明确的负向分支成本。

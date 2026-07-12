@@ -1,0 +1,34 @@
+candidate_version: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+task_scope: specific_prototype_level_design
+archive_lineage: fresh_required
+allowed_design_source:
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+excluded_sources_read: false
+entries:
+  - source_section: 固定 B/S 断桥：C 形黏块拆成两个端点
+    local_relation_used: B/S 边界切过连接柱后，旧 C 形变为箱柱与两个分离黏端点。
+    transformation_in_candidate: >-
+      把固定边界动作改为 B/S 与 P/L 四格同行 force-chain；第二次列车右推同时完成底部四目标停位和远端切割。
+  - source_section: B/S 移动边界：箱组变为 CC、C+M 或黏块
+    local_relation_used: 移动 B/S 的停位决定远处材料保留为箱、端点或黏连体。
+    transformation_in_candidate: >-
+      用四连续底部目标给出 B:x4/S:x5 的可见停位提示；右墙把多推一格降为即时反馈。
+  - source_section: P/L pull 抽取：玩家前格、对象目标格与侧向扫带
+    local_relation_used: 玩家在 pull 侧可先移动二格锚点，为后续同廊 force-chain 腾位。
+    transformation_in_candidate: >-
+      开局先向右拉 P/L 两格，再把 B/S 下推到同一横廊，使 B/S 成为推动 P/L 的列车头。
+  - source_section: 固定 B/S 切割：二格黏块分成箱子和黏块
+    local_relation_used: 箱进入黏侧与端点相邻后重新合并为刚体，目标口消费合并后的整体移动。
+    transformation_in_candidate: >-
+      三个切出箱分别重拼为屋顶横条、中部横条与最终 L 的下肢；三次相似手势承担不同目标职责。
+new_composed_relation: >-
+  双锚点四格列车的目标停位同时是远端 C 形切线；一次切割产生的三箱柱随后以三种不同职责重拼，
+  最后一个箱不是独立填目标，而是接回已经覆盖屋顶双目标的横条形成三格 L。
+human_archive_calibration_only:
+  positive: [RA_CAND_0017, RA_CAND_0022, RA_CAND_0025]
+  negative: [RA_CAND_0024]
+  reuse_of_archive_layout_or_causal_chain: false
+raw_sampler_usage:
+  command: npx tsx src/cli.ts mine prototypes/reality_anchor --preset deep ...
+  result_used_as_candidate: false
+  influence: 仅确认现有 raw sampler 不提供所需 split 结构；候选仍按 reasoning sketch 手工构造。

@@ -1,0 +1,23 @@
+designer_action_iteration: 1
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9
+candidate_version_before: v9_claim_r1
+candidate_version_after: v9_claim_r2
+review_loop_state_before: revise_required
+action: revise_claim
+layout_changed: false
+evidence_changed: true
+reason: reviewer 正确指出“下臂完成才打开左回廊”与 step14/before 冲突；删除该因果，并补充 exact all-winning-path 目标覆盖顺序监控。
+critic_item_triage:
+  - target_ref: mechanism_scope.central[2]
+    response: 修改；改为“下臂必须在上臂封袋终局前完成”，不再声称下臂打开回廊。
+  - target_ref: player_reasoning.RU3.premises[1]
+    response: 修改；step14/after 只说明下目标完成且玩家仍可离开。
+  - target_ref: player_reasoning.RU3.alternative.blocked_operation
+    response: 修改；阻塞关系改为上臂完成后的 (5,1) 封袋使下目标永远无法再处理。
+  - target_ref: player_reasoning.RU3.alternative.result_state_ref
+    response: 修改；删除不存在的 agency.scc.solutionPath 引用，改用补强后的 all-winning-path goal-order monitor。
+evidence_addition:
+  artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_event_gate_report.yml
+  new_obligation: 任一胜路中不得在下目标尚未覆盖时先覆盖上目标
+  result: {status: complete, violating_winning_path: false, monitored_states: 122}
+next_step: review_iteration_2_evidence_reviewer

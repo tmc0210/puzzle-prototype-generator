@@ -1,0 +1,358 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9
+candidate_version: v9
+review_iteration: 2
+
+prototype_context:
+  confirmed_rules:
+    - P/L 是水平固定锚点；P 在 x=4，L 在 x=5，因此玩家位于 x<=4 时为推世界，位于 x>=5 时为拉世界。
+    - B/S 是水平可移动锚点；初始 S 在 x=4、B 在 x=5，右推一格后 S 在 x=5、B 在 x=6。
+    - B/S 右推后，x<=5 的物体归一化为 sticky，正交相邻 sticky 自动拼成刚体；刚体跨回 x>=6 时对应格切回独立箱子，剩余 sticky 按连通块分裂。
+    - 玩家站在目标上不算覆盖；所有目标需由箱、黏块或锚点覆盖。
+  win_condition: all_targets_covered_by_objects
+  object_and_event_semantics:
+    - 初始上、下各有一条二格黏臂，位于 (3,3)-(4,3) 与 (3,5)-(4,5)。
+    - 三格箱柱位于 (5,3)-(5,5)，初始把两条黏臂隔开。
+    - B/S 右移把箱柱变黏，七格材料拼成开口朝左的 C 形刚体。
+    - 从右下把手拉 C 形向右一格后，原箱柱落在 x=6 的 box side，切成三只箱；上、下黏臂分别留在 x=4-5 并彼此分裂。
+  tool_boundary:
+    - runtime adapter / solver / graph / agency / trace analyzer 可用。
+    - curated miner 与 PuzzleScript exporter 不可用。
+    - 工具只支持机械事实，不授予审美、难度或 proposal-ready。
+
+slot_brief:
+  intended_role: late_game_dual_anchor_capstone
+  target: 双锚点、黏块拼接与切割的末期困难关卡
+  difficulty_expectation: 目标5，最低接受4
+
+mechanic_exposure_context:
+  mechanic_window: all_current_reality_anchor_runtime_rules
+  allowed_exposure_through: dual_anchor
+  claimed_core_events:
+    - anchor_boundary_shift:box_sticky
+    - box_to_sticky
+    - sticky_merge
+    - move_sticky_rigid
+    - sticky_to_box
+    - sticky_split
+    - pull_object
+
+design_target:
+  aesthetic_score_target: 5
+  difficulty_score_target: 5
+  target_role_notes:
+    - 最低交付边界为审美4、难度4。
+    - 难度必须来自三次局面重读：分散材料不是两条独立目标件；合体不是终态；切开后必须先下后上。
+    - 不把28步长度或走廊距离当作难度依据。
+
+solve_instance:
+  layout: |-
+    ##########
+    #####.####
+    #...G.####
+    #.#MMC.###
+    #.###C.###
+    #.#MMC..##
+    #.##G...##
+    #.....####
+    ####.#####
+    ####.#####
+    ##@.SB.###
+    ##########
+    ####PL####
+    ##########
+  player_start: [2, 10]
+  player_goal: null
+  win_condition: all_targets_covered_by_objects
+
+mechanism_scope:
+  central:
+    - B/S 一格右移把三格箱柱变成黏性连接柱，并把上下二格黏臂拼成七格 C 形刚体。
+    - 玩家在 L 侧从右下端把七格刚体整体向右拉一格；连接柱跨入 box side 切成三箱，上下黏臂分裂为两个二格刚体。
+    - 切后的下臂必须先向下拉入 (4,6) 目标；上臂一旦向上拉入 (4,2)，玩家就被锁进 (5,1) 收束袋，因此上臂只能最后完成。
+  allowed_support:
+    - 狭窄回廊只提供把手、隔离箱柱和锁定收束顺序。
+    - P/L 固定不移动，但其 x=4/5 边界决定 C 形右拉和两条黏臂纵向拉动是否合法。
+  incidental_allowed:
+    - 规范解中的普通 walk。
+  required_winning_path_events:
+    - anchor_boundary_shift:box_sticky
+    - box_to_sticky
+    - sticky_merge
+    - sticky_to_box
+    - sticky_split
+    - pull_object
+    - move_sticky_rigid
+  forbidden_winning_path_events: []
+  forbidden_if_seen_anywhere: []
+
+player_reasoning:
+  canonical_trace_ref: prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9.json#/solution/inputs
+  player_goal:
+    description: 把分散在上下两层的黏性材料分别送到 (4,2) 与 (4,6) 两个单格目标。
+    state_ref: initialState
+  reasoning_units:
+    - id: RU1_bind_the_connector
+      player_question: 为什么不能把上下两条二格黏臂直接各自送向目标，反而要先移动远处的 B/S？
+      premises:
+        - statement: 上下黏臂都在 x=3-4，而各自唯一可用的纵向拉把手必须位于 x=5 的 pull side；初始形状还没有 x=5 黏格。
+          state_ref: initialState
+        - statement: 三格箱柱位于 x=5，B/S 右移一格后 x=5 变为 sticky side，箱柱会变黏并同时接触上下两臂。
+          state_ref: keySnapshots/step=2/before
+      conclusion: 先右推 B/S；动作后箱柱变成连接柱，七格材料拼成一个开口 C 形刚体，才可能一次把两臂都移到 x=4-5。
+      operation_refs: [SEG1_anchor_sweep]
+      alternative:
+        status: structural_block
+        description: 不移动 B/S，或只尝试移动某一条初始黏臂。
+        local_gain: 看似能先靠近一个目标，或直接拉动 x=5 的单只箱子。
+        from_state_ref: initialState
+        exact_inputs: []
+        blocked_operation: 初始黏臂在 x=4 的操作点仍属于 push side，不能从目标外侧纵向 pull；下臂左把手又被 (2,5) 墙封住。
+        result_state_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_event_gate_report.yml#/all_winning_path_event_gates
+        concrete_outcome: 完整图不存在缺少 B/S 位移、box_to_sticky 或 sticky_merge 的胜路。
+      feedback:
+        - state_ref: keySnapshots/step=2/after
+          visible_change: 三格 C 与四格 M 变为一体的七格 C 形 sticky；远处 B/S 固定在新的 S5/B6 停位。
+    - id: RU2_pull_to_cut
+      player_question: 合体后的七格 C 形为什么还不能直接收目标，下一步应从哪里施力？
+      premises:
+        - statement: 七格 C 形的右下端紧邻 x=6 的玩家站位；该站位属于 L 侧，向右移动会拉动身后的整块 C 形。
+          state_ref: keySnapshots/step=10/before
+        - statement: C 形向右一格后，连接柱三格进入 x=6 的 box side，而上下两臂留在 x=4-5 的 sticky side。
+          state_ref: keySnapshots/step=10/before
+      conclusion: 从右下把手把整块 C 形向右拉一格；同一动作既把两臂送到可纵向拉的位置，又切走连接柱，使两臂重新独立。
+      operation_refs: [SEG2_reach_and_crosscut]
+      alternative:
+        status: structural_block
+        description: 合体后试图直接纵向处理某一条黏臂，或只移动连接柱的一部分。
+        local_gain: 似乎可以少做一次整体横移，直接靠近一个目标。
+        from_state_ref: keySnapshots/step=2/after
+        exact_inputs: []
+        blocked_operation: 七格材料仍是同一刚体；中部墙带和上下目标口不容整块纵向平移，连接柱也不能单独受力。
+        result_state_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_event_gate_report.yml#/all_winning_path_sequence_gate
+        concrete_outcome: 完整监控图未找到缺少“整块拉动+sticky_to_box+sticky_split”同一步责任的胜路。
+      feedback:
+        - state_ref: keySnapshots/step=10/after
+          visible_change: 七格 C 形解体为 x=6 的三箱柱与上下两个二格黏臂；两臂的右格都进入 x=5 的 pull side。
+    - id: RU3_lower_before_upper_seal
+      player_question: 两条已经独立的黏臂先处理哪一条？
+      premises:
+        - statement: 切割后玩家在右下；向下、向左到 (5,6) 正好能拉下臂，而下臂后方是 (4,6) 目标。
+          state_ref: keySnapshots/step=14/before
+        - statement: 下臂拉入目标后玩家落在 (5,7)，仍处于可自由离开的下方区域；下目标已经安全完成。
+          state_ref: keySnapshots/step=14/after
+        - statement: 上臂若拉入目标，玩家会进入 (5,1) 单格袋；左右和上方是墙，下方被完成后的上臂封住。
+          state_ref: keySnapshots/step=28/after
+      conclusion: 必须先完成下臂，再沿左回廊抵达上方；因为上臂完成会立即把玩家封入顶袋，它只能作为最后一次不可逆收束。
+      operation_refs: [SEG3_lower_arm, SEG4_return_corridor, SEG5_upper_final]
+      alternative:
+        status: structural_block
+        description: 在下目标仍空着时先把上臂拉入上目标。
+        local_gain: 上目标更接近视觉焦点，提前完成看似能减少一个待办目标。
+        from_state_ref: keySnapshots/step=10/after
+        exact_inputs: []
+        blocked_operation: 上臂完成后玩家位于 (5,1)；左右与上方为墙，下方被完成后的上臂占住，玩家无法离开，而下目标仍未覆盖。
+        result_state_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_event_gate_report.yml#/all_winning_path_sequence_gate
+        concrete_outcome: 完整目标顺序监控未找到“下目标未覆盖时先覆盖上目标”后仍能获胜的路径；所有胜路都保持 lower-before-upper。
+      feedback:
+        - state_ref: keySnapshots/step=14/after
+          visible_change: 下目标被二格黏臂覆盖，玩家仍留在可离开的下方区域，可以继续处理尚未完成的上目标。
+        - state_ref: keySnapshots/step=28/after
+          visible_change: 上目标被另一条二格黏臂覆盖，玩家落入封闭顶袋，两个目标同时保持覆盖并立即胜利。
+  operation_segments:
+    - id: SEG1_anchor_sweep
+      step_range: 1-2
+      exact_inputs: [right, right]
+      purpose: 先走到 B/S 左侧，再右推 B/S 一格，把三格箱柱变黏并拼成七格 C 形。
+      supports_reasoning_units: [RU1_bind_the_connector]
+    - id: SEG2_reach_and_crosscut
+      step_range: 3-10
+      exact_inputs: [up, up, up, up, right, right, up, right]
+      purpose: 到达 C 形右下拉把手，从 L 侧右拉整块一格，切出三箱柱并把上下黏臂分开。
+      supports_reasoning_units: [RU2_pull_to_cut]
+    - id: SEG3_lower_arm
+      step_range: 11-14
+      exact_inputs: [down, left, left, down]
+      purpose: 到达下臂外侧拉把手，在上臂封袋终局前先把下臂向下拉入 (4,6) 目标。
+      supports_reasoning_units: [RU3_lower_before_upper_seal]
+    - id: SEG4_return_corridor
+      step_range: 15-27
+      exact_inputs: [left, left, left, left, up, up, up, up, up, right, right, right, right]
+      purpose: 沿下方左侧通道和 x=1 回廊到达上目标外侧，不移动任何已完成对象。
+      supports_reasoning_units: [RU3_lower_before_upper_seal]
+    - id: SEG5_upper_final
+      step_range: 28-28
+      exact_inputs: [up]
+      purpose: 从 x=5 pull side 把上臂向上拉入目标，同时进入封闭顶袋并完成关卡。
+      supports_reasoning_units: [RU3_lower_before_upper_seal]
+  resolution:
+    resolves: [RU1_bind_the_connector, RU2_pull_to_cut, RU3_lower_before_upper_seal]
+    operation_refs: [SEG1_anchor_sweep, SEG2_reach_and_crosscut, SEG3_lower_arm, SEG4_return_corridor, SEG5_upper_final]
+    final_state_ref: keySnapshots/step=28/after
+    visible_confirmation: 两个目标分别被二格黏臂覆盖；三格切出箱柱留在右侧结构槽，玩家被锁入上方一格袋，胜利立即触发。
+  trace_partition:
+    status: complete
+    ordered_segment_ids: [SEG1_anchor_sweep, SEG2_reach_and_crosscut, SEG3_lower_arm, SEG4_return_corridor, SEG5_upper_final]
+    uncovered_steps: []
+    overlapping_steps: []
+
+evidence:
+  commands_run:
+    - npx tsx src/cli.ts explain-layout prototypes/reality_anchor prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9.layout.txt --id RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9 --max-states 1200000 --graph-max-states 1200000 --write
+    - npx tsx prototypes/reality_anchor/reports/probe_twin_loom_resection_v9.ts
+  solver_result:
+    found: true
+    search_status: found
+    cost: 28
+    explored_states: 75
+  trace_summary:
+    exact_inputs: [right, right, up, up, up, up, right, right, up, right, down, left, left, down, left, left, left, left, up, up, up, up, up, right, right, right, right, up]
+    non_walk_sequence:
+      - step: 2
+        events: [push_object:box_sticky_anchor, anchor_boundary_shift:box_sticky, box_to_sticky:n3, sticky_merge:n1]
+      - step: 10
+        events: [pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n3, sticky_split:n1]
+      - step: 14
+        events: [pull_object:sticky#2, move_sticky_rigid]
+      - step: 28
+        events: [pull_object:sticky#1, move_sticky_rigid]
+  target_events:
+    all_winning_paths_required: [anchor_boundary_shift:box_sticky, box_to_sticky, sticky_merge, sticky_to_box, sticky_split, pull_object, move_sticky_rigid]
+    result: complete_no_missing_required_winning_path
+  object_or_instance_evidence:
+    - step 2 同时转换三格箱柱并与上下两条既有黏臂合并为一个 sticky component。
+    - step 10 同一 sticky component 切出三箱并分成两个 sticky components。
+    - step 14 与 step 28 分别移动切后的下、上 sticky component。
+  winning_path_event_checks:
+    status: complete
+    reachable_states: 76
+    sequence_monitor_states: 122
+    violating_winning_path: false
+  reachable_event_exposure:
+    status: complete
+    reachable_event_types: [anchor_boundary_shift, box_to_sticky, move_sticky_rigid, pull_object, push_object, sticky_merge, sticky_split, sticky_to_box, walk]
+    later_than_allowed_exposure: none_because_dual_anchor_is_latest_declared_stage
+  graph_or_counterfactual_evidence:
+    graph_status: complete
+    reachable_states: 76
+    legal_transitions: 149
+    winning_states: 1
+    sccs: 5
+    scc_edges: 4
+    win_subgraph: one_win_continuation_per_scc
+    forced_win_prefix: 3/3
+  evidence_limits:
+    - 轨迹指标为 pilot，只描述规范解执行压力与空间复用，不证明洞见或审美。
+    - P/L 固定不移动；其责任由所有胜路必含 pull_object、具体 state refs 与布局侧别共同支持，而不是由 anchor shift 事件支持。
+
+solution_uniqueness:
+  result: unique_complete
+  evidence_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_event_gate_report.yml#/solution_uniqueness
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9.json#/graph
+
+hard_fact_summary_for_critic:
+  solver:
+    found: true
+    cost: 28
+    graph_status: complete
+    reachable_states: 76
+    winning_states: 1
+    solution_uniqueness: unique_complete
+  required_or_forbidden_events:
+    all_winning_paths_required: [anchor_boundary_shift:box_sticky, box_to_sticky, sticky_merge, sticky_to_box, sticky_split, pull_object, move_sticky_rigid]
+    missing_required_winning_path: false
+    forbidden_events: []
+  routed_diagnostic_facts:
+    - 完整 SCC 胜利子图为 one_win_continuation_per_scc，forcedWinPrefix=3/3；下臂动作位于同一 SCC 内，lower-before-upper 另由目标顺序监控证明。
+    - 初始 SCC 有2个状态：玩家可先退回观察，但唯一可胜承诺是第二步右推 B/S。
+    - step 10 后存在一个 dead commitment 与一个可胜承诺；可胜承诺最终要求下臂先完成。
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost: {raw: 28, band: 5, weight: 0.35}
+        nonWalkEventCount: {raw: 12, band: 3, weight: 0.45}
+        heavyReuseRatio: {raw: 0, band: 1, weight: 0.2}
+      aggregateBand: 3
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate: {raw: 0.10344827586206896, band: 2, weight: 0.55}
+        heavyReuseRatio: {raw: 0, band: 1, weight: 0.45}
+      aggregateBand: 2
+  evidence_limits:
+    - 指标不支持审美或洞见判断。
+    - 完整图只证明当前 exact layout 的可达状态与胜路，不代表试玩手感。
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9.md
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_event_gate_report.yml
+
+diagnostic_routing:
+  hard_evidence: solver + complete graph + all-winning-path event/sequence monitor
+  mechanism_scope: evidence_reviewer
+  design_evidence_alignment: evidence_reviewer_then_puzzle_critic
+  taste_probes: archive_taste_context
+  scc_graph: puzzle_critic_with_player_facing_interpretation_only
+  variant_family: fresh_v1_to_v9_design_studio_log
+  start_position: pre_submission_opening_comfort_check_after_proposal_ready
+  prototype_specific_work: pre_submission_only_not_review_input
+
+prototype_specific_contracts:
+  interface_pair_policy: not_declared
+  pair_diagnostics: not_applicable
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: null
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: 本轮从“C形连接柱先拼后切、切后把手跨入P/L拉侧、下开路上封口”的 reasoning sketch 起步；未复用任何归档布局、对象角色、求解路线或因果链。
+
+attempt_log:
+  serious_structural_attempts:
+    - v1-v3: 五格 C 形单端点 family；箱柱可直接冒充端点或被锚点覆盖目标，放弃。
+    - v4-v5: 七格 C 形双黏臂；核心事件成立，但开放空间产生大量无关状态和初始纵推旁路。
+    - v6-v8: 收紧 B/S 槽、目标死端和回廊；v8 仍允许切出箱柱在胜前做非等价额外操作。
+    - v9: 隔离下臂完成后的工作区，锁住切出箱柱；完整图收束为1个胜态与唯一非走位计划。
+  local_repairs:
+    - 用 x=3-4 二格黏臂替换单格端点，使初始箱柱不能冒充切割产物。
+    - 把目标放在 x=4 push-side 列，而把拉把手放在 x=5 pull-side 列，迫使切后形状横移一格。
+    - 把上方完成格做成一格死端；下臂必须在该封袋终局前完成，固定下先上后的收束。
+  abandoned_families:
+    - five_cell_single_endpoint_C
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0017
+      role: positive_late_game_difficulty_anchor
+      human_scores: {aesthetic: 4, difficulty: 5}
+      human_comment: 很精彩的末期挑战，推拉与黏块拼接切割要求高，精巧、高密度、高耦合；但腾挪负担很高。
+      use_for_attack: 本候选若只有长路线而没有三次形状重读，不应因事件密度获得4+。
+    - candidate_id: RA_CAND_0022
+      role: positive_aesthetic_ceiling_anchor
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: 反直觉操作、空间利用率高、结构精巧，短步骤中要求强洞见，是优秀范例。
+      use_for_attack: 5分需要强而清晰的反直觉因果；本候选28步若主要是回廊执行，只能守4不能追5。
+    - candidate_id: RA_CAND_0025
+      role: positive_constructive_shape_anchor
+      human_scores: {aesthetic: 4, difficulty: 4}
+      human_comment: 紧凑空间内主动构造 L 形，前段构造不喧宾夺主，终局提示恰当，达到强4。
+      use_for_attack: 检查 C 形拼接是否真由玩家读出并被切割消费，而不是包装过度。
+    - candidate_id: RA_CAND_0024
+      role: negative_affordance_anchor
+      human_scores: {aesthetic: 1, difficulty: 3}
+      human_comment: 双锚点与三个黏块抬高切割拼接期待，实际几乎只是推拉腾挪；不要迷信指标和探针。
+      use_for_attack: 若玩家只感到先走长廊再按唯一动作，本候选应因机制承诺落空而阻塞。
+  none_found_reason: null
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_claim_packet.yml
+  read_order: facts_then_claim

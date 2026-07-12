@@ -1,0 +1,41 @@
+review_attempt_id: RA_NEW_COLUMN_REWEAVE_REVIEW_1
+candidate_version: RA_NEW_2026_07_12_COLUMN_REWEAVE_v1
+prototype_rules:
+  rules:
+    - P/L 与 B/S 都是可平移二格锚点；P/L 定义 push/pull 侧，B/S 定义箱/黏材料边界。
+    - 相邻黏格自动合并为刚体；跨回 B 侧会切回箱并分裂；推拉可形成 force chain。
+  win_condition: 所有目标由对象覆盖。
+solve_instance:
+  layout: |-
+    ##########
+    ######GG##
+    ###.MMG.##
+    ###.M...##
+    ###.MMG.##
+    ###...#.##
+    #.BS@...##
+    #.PLGGGG##
+    ##########
+  canonical_exact_inputs: [down, right, right, up, left, left, up, left, down, left, left, down, right, right, up, up, up, up, up, right, right, down, right, up, left, left, left, down, down, right, up, left, up, right, right]
+mechanically_derived_trace:
+  completed: true
+  legal_through_step: 35
+  final_win: true
+  significant_states:
+    - {step: 2, events: [pull_P/L], visible_change: P/L 向右一格}
+    - {step: 3, events: [pull_P/L], visible_change: P/L 再向右一格}
+    - {step: 9, events: [push_B/S], visible_change: B/S 下推到 P/L 左侧同一横廊}
+    - {step: 13, events: [push_B/S, force_chain, shift_P/L], visible_change: B/S 推动 P/L，四格列车右移}
+    - {step: 14, events: [push_B/S, force_chain, shift_P/L, sticky_to_box, sticky_split], visible_change: 列车覆盖底部四目标，C 形切成三箱柱与上下黏端点}
+    - {step: 20, events: [push_crate, box_to_sticky, sticky_merge], visible_change: 上箱与上端点形成二格横条}
+    - {step: 24, events: [move_sticky_rigid], visible_change: 上横条覆盖屋顶双目标}
+    - {step: 30, events: [push_crate, box_to_sticky, sticky_merge], visible_change: 下箱与下端点形成二格条并覆盖中部目标}
+    - {step: 35, events: [move_sticky_rigid, sticky_merge], visible_change: 最后一格与屋顶横条合成三格 L，全部目标覆盖}
+raw_alternatives:
+  - {from: step14, exact_inputs: [up, up, up, right], result: 下端先重拼并覆盖中部目标；仍可37步到达同一终局}
+archive_taste_context_refs:
+  - positive_compact_reversal.yml
+  - positive_active_constructor.yml
+  - negative_forced_order_show.yml
+  - negative_disconnected_subpuzzles.yml
+

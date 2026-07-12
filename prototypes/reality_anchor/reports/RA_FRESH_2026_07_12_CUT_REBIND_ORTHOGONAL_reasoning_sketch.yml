@@ -1,0 +1,69 @@
+candidate_family: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL
+prototype: reality_anchor
+task_scope: specific_prototype_level_design
+archive_lineage_policy:
+  default: fresh_required
+  candidate_relation: fresh
+  authorized_archive_variant_work:
+    enabled: false
+design_target:
+  intended_role: game_late_capstone
+  allowed_exposure_through: dual_anchor
+  difficulty_score_target: "4_or_higher_prefer_5"
+  aesthetic_score_target: "4_floor_prefer_5"
+  required_mechanics:
+    - push_pull_anchor_and_box_sticky_anchor_coexist
+    - sticky_merge
+    - sticky_to_box
+    - sticky_split
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+reasoning_sketch:
+  player_goal: >-
+    把被墙口分隔的末端目标全部覆盖；初始闭合黏桥不能直接穿过单格目标口，
+    两个锚点也都不在最终可消费位置。
+  intended_question: >-
+    如何让两个锚点在底部狭廊中先组成同向力链，把闭合黏桥切成可独立移动的端点，
+    再用切出的箱柱分别与两个端点重新拼接，穿过整桥无法通过的墙齿并完成末端覆盖？
+  visible_premises:
+    - 闭合黏桥的连接柱跨在 B/S 可移动边界附近；整桥进入单格口会因刚体外沿撞墙。
+    - 玩家位于 P/L 的拉侧时，可以抽动垂直 B/S；B/S 的侧向目标格决定这次抽动是否合法。
+    - 切断连接柱后，上下黏端点彼此独立，但连接柱变成数个可单独推动的箱子。
+    - B/S 下压到 P/L 同一横廊后，二者能组成四格力链；第二次右推同时移动两种边界并切断连接柱。
+    - 切出的三格箱柱不能整体右移越过中段墙齿，但上下端点可分别与一格箱重新拼成二格横条。
+  intended_conclusion: >-
+    两锚点不是两个独立按钮：先移动 P/L 让底部目标空出并建立推侧，再把 B/S 下压到同一行，
+    从左侧连续推动 B/S→P/L 的四格列车。列车第二格停位切断闭合桥；随后箱柱必须拆成两次
+    “箱推动端点并在黏侧重拼”的短横条，分别越过上下墙口覆盖目标。
+  planned_mechanic_sequence:
+    - 在 pull 侧向右抽动 P/L 两格，暂时越过底部双目标，为之后列车停位留空间。
+    - 从上方把 B/S 下推到 P/L 左端，再绕到横廊左端。
+    - 连续右推 B/S；B/S 通过 force-chain 同步推动 P/L，第二推触发 sticky_to_box 与 sticky_split。
+    - 下方箱先右推端点，跨入黏侧后 box_to_sticky 并 merge 成二格横条，覆盖下目标。
+    - 中箱上推打开站位；上方箱再右推上端点并 merge，最后整体右推覆盖上目标。
+  intended_feedback:
+    - 切割后闭合桥明显变成“箱柱 + 两个分离黏端点”，墙口从拒绝整桥变为允许单端点操作。
+    - 两锚点在底部连成 `B/S/P/L` 四格列车并同步右移，双锚点职责在一个动作中可见闭合。
+    - 切割后上方明确变成“三箱柱 + 两个分离黏端点”，中段墙齿仍拒绝未拆箱柱。
+    - 两次重拼各生成一个二格横条并立即被不同目标口消费，底部双目标同时由列车终点覆盖。
+tool_questions:
+  - 是否存在不触发 sticky_split 的胜路。
+  - 是否存在切割后不重新 sticky_merge 的胜路。
+  - 两种锚点是否都必须移动，且是否存在不形成 B/S→P/L 同行力链的胜路。
+  - 是否存在端点或箱逐个直接送目标、绕过两次重拼的非等价胜路。
+  - canonical trace 是否在完整图内唯一，或只有走位等价变体。
+design_corpus_usage:
+  allowed_source: prototypes/reality_anchor/mechanism_lab/lexicon.md
+  selected_local_patterns:
+    - section: 固定 B/S 断桥：C 形黏块拆成两个端点
+      reused_relation: 连接柱跨线后变箱，两个黏端点分离；单格口消费独立端点而拒绝闭合刚体。
+    - section: B/S 移动边界：箱组变为 CC、C+M 或黏块
+      reused_relation: 回调边界只重写选定行，使远处材料形成不同连接形状。
+    - section: P/L pull 抽取：玩家前格、对象目标格与侧向扫带
+      reused_relation: 用 pull 侧先抽动 P/L，为另一锚点进入同行力链和目标停位腾出空间。
+    - section: 固定 B/S 切割：二格黏块分成箱子和黏块
+      reused_relation: 切后箱与端点通过 force-chain 再次相邻，进入黏侧后重拼成刚体横条。
+  new_composed_relation: >-
+    将“双锚点同行力链移动边界”作为切割 driver，再让切出的同一箱柱两次参与端点重拼；
+    切割不是终点，重拼也不是规则展示，而是上下两个墙口分别消费的唯一短形。
+  excluded_sources_read: false

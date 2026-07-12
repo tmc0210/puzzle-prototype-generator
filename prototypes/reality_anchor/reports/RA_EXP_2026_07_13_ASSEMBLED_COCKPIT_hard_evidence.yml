@@ -1,0 +1,72 @@
+task_classification: specific_prototype_level_design
+scope: hard_evidence_only_no_evidence_reviewer_no_fresh_critic_no_archive
+primary_candidate:
+  id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B2
+  identity: 双校准合舱；下臂左移、Γ 主体右移、上拉下臂时黏合并让玩家落入凹口，随后完整 C 双钩结算。
+  canonical_inputs: [left, up, right, up, right]
+  solver: { shortest_cost: 5, explored_states: 42 }
+  complete_graph: { status: complete, reachable_states: 70, legal_transitions: 98, winning_states: 1 }
+  strict_uniqueness:
+    status: PASS
+    exact_shortest_input_paths: 1
+    distinct_nonwalk_signatures: 1
+    loop_erased_simple_wins_share_object_macro: true
+  assembly_and_hook:
+    merge_step: 4
+    merge_event: sticky_merge:n1
+    after_merge_shape: seven_cell_complete_C_open_right
+    after_merge_single_connected_sticky_group: true
+    player_in_notch_after_merge: true
+    key_hook_step: 5
+    C_intact_before_key_hook: true
+    C_intact_after_key_hook: true
+    key_hook_events: [pull_object:sticky#1, force_chain:n3, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky, move_sticky_rigid]
+    win_after_key_hook: true
+  all_win_required_event_gates:
+    status: complete_no_bypass
+    required: [sticky_merge, move_sticky_rigid, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky, force_chain:n3]
+  evidence_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B2.json
+    - prototypes/reality_anchor/reports/RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B2_strict_unique_audit_agent.json
+    - prototypes/reality_anchor/reports/event_probe_RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B2.json
+    - prototypes/reality_anchor/reports/input_replay_RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B2.json
+alternate_candidate:
+  id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A3
+  identity: Γ 主体先右移对齐，下臂上拉合舱且玩家落入凹口；完整 C 再连续右移两次完成双钩。
+  canonical_inputs: [right, up, right, right]
+  complete_graph: { status: complete, reachable_states: 9, legal_transitions: 8, winning_states: 1 }
+  strict_uniqueness:
+    status: PASS
+    exact_shortest_input_paths: 1
+    distinct_nonwalk_signatures: 1
+  assembly_and_hook:
+    merge_step: 2
+    after_merge_shape: seven_cell_complete_C_open_right
+    after_merge_single_connected_sticky_group: true
+    player_in_notch_after_merge: true
+    whole_C_drive_steps_after_merge: [3, 4]
+    final_key_hook_step: 4
+    C_intact_before_final_key_hook: true
+    C_intact_after_final_key_hook: true
+  evidence_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A3.json
+    - prototypes/reality_anchor/reports/RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A3_strict_unique_audit_agent.json
+    - prototypes/reality_anchor/reports/event_probe_RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A3.json
+    - prototypes/reality_anchor/reports/input_replay_RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A3.json
+player_side_limits:
+  - A3 极短且四个对象承诺几乎连续，偏机制演示。
+  - B2 的装配判断更完整，但合舱后只有一次完整 C 输入便结算，驾驶持续感弱于 A3。
+  - 两版均未经过 evidence reviewer、fresh critic 或审美评分，不宣称达到正式 proposal_ready。
+package_and_playable_verification:
+  yaml_parse: pass
+  typescript_check: pass
+  full_package_evaluator: both_candidates_pass_exit_0
+  package_solver:
+    A3: { status: solved, cost: 4, explored_states: 9 }
+    B2: { status: solved, cost: 5, explored_states: 42 }
+  playable_export: pass
+  levels_match_count: { A3: 1, B2: 1 }
+  queue_match_count: { A3: 1, B2: 1 }
+  playable_match_count: { A3: 1, B2: 1 }
+  queue_status: pending_playtest
+  archive_status: not_archived

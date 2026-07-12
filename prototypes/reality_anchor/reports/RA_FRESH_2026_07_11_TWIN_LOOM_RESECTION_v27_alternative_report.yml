@@ -1,0 +1,69 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27
+command: npx tsx
+  prototypes/reality_anchor/reports/probe_twin_loom_resection_v27_alternatives.ts
+canonical_prefix_to_split_state:
+  - right
+  - right
+  - up
+  - up
+  - up
+  - right
+  - right
+  - right
+  - up
+  - up
+  - left
+  - right
+split_state: |-
+  ############
+  ###...######
+  ###.G.######
+  ###.MM*#####
+  ###.#.*##.##
+  ###.MMC@G.##
+  ###.G.#.#.##
+  ###.....####
+  ####.#######
+  ####.#######
+  ##...SB#####
+  ############
+  ####PL######
+  ############
+alternatives:
+  - id: ALT1_fill_near_crate_goal_immediately
+    exact_inputs:
+      - right
+      - right
+    replay_legal: true
+    replay_steps:
+      - step: 1
+        input: right
+        legal: true
+        events:
+          - pull_object:crate#3
+      - step: 2
+        input: right
+        legal: true
+        events:
+          - pull_object:crate#3
+    local_gain: 切割后连续右拉两次，把最下方切出箱直接送上同排近目标；该目标立即从空变为覆盖。
+    result_state: |-
+      ############
+      ###...######
+      ###.G.######
+      ###.MM*#####
+      ###.#.*##.##
+      ###.MM..*@##
+      ###.G.#.#.##
+      ###.....####
+      ####.#######
+      ####.#######
+      ##...SB#####
+      ############
+      ####PL######
+      ############
+    continuation_search:
+      found: false
+      status: complete
+      explored_states: 3
+      reason: search complete

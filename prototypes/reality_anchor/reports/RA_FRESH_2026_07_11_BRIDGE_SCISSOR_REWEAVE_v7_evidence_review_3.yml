@@ -1,0 +1,79 @@
+review_iteration: 3
+candidate_version_reviewed: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+review_input_type: revised_design
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: change.wall_outline_trim_coordinate_isomorphism
+    evidence_basis: >-
+      v7 initialState 的每一行都精确等于 v6 对应行裁去左侧两列和右侧一列后的结果；player_start
+      由 [3,6] 变为 [1,6]，六个目标由 v6 的 x=6/8 映射为 v7 的 x=4/6，均符合
+      x_v7=x_v6-2、y_v7=y_v6。v7 canonical 22 个 frames 与 v6 canonical 逐帧比较时，
+      每个 v7 layout 都等于对应 v6 layout 的同一裁框，input、legal、win 与 events 全部一致；
+      v7 no-merge 65 个 frames 也满足同一逐帧关系。
+  - target_ref: solve_instance_and_canonical_solution
+    evidence_basis: >-
+      layout_analysis_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7.json 对 exact v7 记录
+      solution.found=true、cost=21、depth=21、exploredStates=2612；21 个 inputs 与 delta 及
+      base packet 的 SEG1-SEG5 拼接完全一致。v7 canonical trace step 21 legal=true、win=true，
+      并保留与 v6 相同的事件序列。
+  - target_ref: mechanic_claims_exact_v7.all_solution_required_complete
+    evidence_basis: >-
+      RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_event_gate.json 对
+      anchor_boundary_shift:push_pull、anchor_boundary_shift:box_sticky、pull_object、
+      sticky_to_box、sticky_split、move_sticky_rigid 分别给出 status=complete 且
+      bypassFound=false；各 pattern、状态数与 v6 gate 完全一致，支持这些事件 pattern 在 exact v7
+      的所有胜路上至少出现一次。双锚配置由 exact v7 初态给出，base packet 的等价 exposure 摘要
+      将 dual_anchor 置于线性序列末端，不存在需排除的更晚事件。
+  - target_ref: mechanic_claims_exact_v7.optimal_route_only
+    evidence_basis: >-
+      v7 event gate 的 canonical 最短成本为 21；分别避免 box_to_sticky 与 sticky_merge 的搜索
+      都找到第一条成本 64 的胜路，exploredStates 分别为 179636 与 200504。因此两个事件 pattern
+      对所有成本 21 的最优解必需，但不对任意长度胜路必需。v7 NO_MERGE_BYPASS 的 64 个 inputs
+      全部合法、step 64 win=true，且整条 trace 不含 box_to_sticky 或 sticky_merge。
+  - target_ref: unchanged_from_v6.reasoning_units_and_operation_segments_after_coordinate_transform
+    evidence_basis: >-
+      SEG1=steps 1-6、SEG2=7-9、SEG3=10-14、SEG4=15-17、SEG5=18-21，仍按序覆盖 exact v7
+      canonical 的全部 21 个 inputs，无遗漏或重叠。坐标性前提按 x-2 映射后与 v7 frames 一致：
+      初始连接柱 x=3，step 6 后连接柱 x=4 且 x=3 下拉槽清空；step 14 后 x=4 为三箱、
+      x=5 为上下端点；step 20 中箱在 x=5 重织；step 21 竖条进入 x=6 目标列，左列 x=4
+      由上下箱与 P/L 的一格覆盖。operation inputs、state step refs、events 与反馈均保持成立。
+  - target_ref: calibrated_trace_metrics
+    evidence_basis: >-
+      v7 layout_analysis.solution.traceMetrics 与 v6 对应对象逐字段一致，包括 solutionCost=21、
+      nonWalkEventCount=25、playerTotalVisits=22、playerUniqueVisitedCells=15、walkableCellCount=28、
+      revisitRate=0.3181818181818182、heavyReuseRatio=0 及两组 pilot calibrated bands；这只支持
+      delta 所称“metrics 原样”，不支持任何质量解释。
+  - target_ref: graph_fact
+    evidence_basis: >-
+      exact v7 layout_analysis 记录 graph.status=exhausted、reachableStateCount=300001、
+      legalTransitionCount=650484、winStateCount=13、budget.maxStates=300000、
+      reason=state budget exceeded，且与 v6 graph 逐字段一致。delta 明确把完整图相关结论保留为
+      unknown，没有据此主张完整 SCC、唯一解或完整分支质量；verdict effect 为 none。
+  - target_ref: pre_submission_checks
+    evidence_basis: >-
+      三份 artifact 的 exact_candidate 均为 v7，分别记录 goal_prune.status=kept_with_unknown、
+      opening_comfort.status=complete_with_graph_caveat、redundant_element_prune.status=pruned；delta
+      记录固定执行顺序为 goal_prune、opening_comfort_check、redundant_element_prune。goal prune
+      对六个目标逐项登记且把六个预算耗尽结果保留为 unknown；opening comfort 把完整 initial SCC
+      保留为 unknown、仅将 10 状态 walk-only observation region 标为 complete；redundant prune
+      登记了纯外墙裁框与剩余闭合外框。上述证据支持三个阶段已执行并记录边界。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >-
+    all-solution gate 只支持事件 pattern 至少出现一次，不支持特定 event instance、特定对象参与
+    或 per-object necessity；坐标同构也不会扩大该证明范围。
+  - >-
+    box_to_sticky 与 sticky_merge 的证据只建立最优成本 21 与首个 avoiding-win 成本 64 的边界，
+    不能提升为所有任意长度胜路必经。
+  - >-
+    主图在状态预算处耗尽，任何依赖完整 reachable graph 或完整 SCC 的结论均为 unknown；本次
+    verdict 未使用这类结论。
+  - >-
+    goal_prune 的六个删目标图均耗尽，因此只支持“按流程保留并标 unknown”，不证明每个目标必要；
+    opening comfort 的完整 SCC 仍 unknown；redundant prune 的阶段状态不单独证明关卡质量。
+  - >-
+    calibrated_trace_metrics 仅供 critic 校准，不能证明玩家问题显著性、推理价值、难度或审美；
+    本审查不评价好玩、审美、难度或 campaign placement。
+questions_for_designer: []

@@ -1987,6 +1987,7 @@ levels:
       - input: right
         events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
 
+
   - id: RA_SMOKE_08_TARGET_COVER_WIN
     title: Target covered by object wins
     layout: |-
@@ -3181,6 +3182,29 @@ levels:
         events: [walk]
       - input: down
         events: [pull_object, move_sticky_rigid]
+  - id: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+    title: 双锚列车·切柱回织 v7
+    layout: |-
+      ##########
+      ######GG##
+      ###.MMG.##
+      ###.M...##
+      ###.MMG.##
+      ###...#.##
+      #.BS@...##
+      #.PLGGGG##
+      ##########
+    lineage:
+      source: fresh_design_review_loop
+      created_by: codex
+      created_at: "2026-07-12"
+    design_notes: >-
+      全新 Reality Anchor 游戏末期双锚黏块拼接/切割挑战。P/L 先右拉腾位，B/S 下压后与 P/L
+      组成四格列车；列车第二次右推同时覆盖底部四目标，并把上方 C 形黏块切成三箱柱与两个端点。
+      三箱随后分别重拼为屋顶横条、中部横条和最终三格 L。规范最短解35步；bottom-first 37步
+      到达完全相同终局，按 equivalent_variants_only 交接。evidence review_4 为 proposal_ready，
+      fresh critic attempt_02 为 proposal_ready_with_caveats / required_action:none，支持审美4与难度至少4，
+      不支持5。提交前目标、开局、冗余检查已按顺序完成；完整图耗尽与右侧空间 unknown 随 handoff 保留。
 
   - id: RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v2_trimmed
     title: Active L rebind v2 trimmed
@@ -3310,7 +3334,9 @@ levels:
       Goal coverage shows target [6,6] is covered only on final step 13. Independent
       evidence review returned supports_with_caveats / required_action none; puzzle
       critic returned proposal_ready_with_caveats / required_action none, estimating
-      difficulty as mid 3 and aesthetic as low 4.
+      difficulty as mid 3 and aesthetic as low 4. 2026-07-11 human playtest marked
+      this candidate as reject without additional comment; removed from playable
+      and not entered as a clean archive card.
     expected_trace:
       - input: right
         events: [walk]
@@ -3556,7 +3582,9 @@ levels:
       evidence review_2 returned supports_with_caveats / required_action:none;
       independent puzzle critic review_2 returned proposal_ready_with_caveats /
       required_action:none, supporting aesthetic 4 floor and difficulty 3 floor,
-      but not 5/4.
+      but not 5/4. 2026-07-11 human playtest marked this candidate as reject
+      without additional comment; removed from playable and not entered as a
+      clean archive card.
     expected_trace:
       - input: up
         events: [walk]
@@ -3647,7 +3675,8 @@ levels:
       v5 的人类反馈微调版：在原 9x5 有效区域外补回完整一层墙框，确保玩家和所有可走格都不直接
       接触版面边缘。内部地形、对象、目标、起点相对关系与解法完全不变。验证结果仍为最短解 12、
       完整图 974 states / 2534 transitions / 1 winning state，最短事件序列与 v5 完全一致。
-      用户明确要求按不会改变解的纯外框微调直接加入，不追加独立复审。
+      用户明确要求按不会改变解的纯外框微调直接加入，不追加独立复审。2026-07-11 人类
+      试玩标记 reject，未附加文字评语；已从待玩列表移除，不进入 clean archive。
     expected_trace:
       - input: right
         events: [walk]
@@ -3777,6 +3806,7 @@ levels:
       opening_comfort_check、redundant_element_prune。剩余两目标任删都会降为 3/4 步并绕过核心；
       当前起点两个首步均为 walk，最近不可逆出口距离 3；两锚、空地与外框均无可再裁项。
       保留非阻塞边界：存在 21 步可恢复 P/L 往返 detour，不声称所有胜路都是六拍直连。
+      2026-07-11 人类试玩后接受为 RA_CAND_0028，审美4 / 难度4；同时标注此类纯锚点刚体腾挪已收录较多，后续不宜继续集中追加同型关。
     expected_trace:
       - input: up
         events: [walk]
@@ -3844,7 +3874,8 @@ levels:
       全部保留，当前起点有5状态可逆 SCC、两个纯 walk 首步且无前置死出口；内部疑似冗余空格
       因完整图未知保留，仅裁去一列纯外墙形成坐标平移同构 v17，并已重跑 exact solver、trace、
       五项核心事件门与开局 SCC。目标删减随后按同一非终止式100万状态前缀重新执行；任删一个
-      目标都会新增4至48个胜态键，因此九目标均非预算内伪唯一解等价项，全部保留。
+      目标都会新增4至48个胜态键，因此九目标均非预算内伪唯一解等价项，全部保留。2026-07-11
+      人类试玩标记 reject，未附加文字评语；已从待玩列表移除，不进入 clean archive。
     expected_trace:
       - input: right
         events: [push_object, move_sticky_rigid]
@@ -3902,3 +3933,343 @@ levels:
         events: [push_object, move_sticky_rigid, sticky_to_box, sticky_split]
       - input: down
         events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid, box_to_sticky, sticky_merge]
+
+  - id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+    title: 双锚桥剪·回织成列 v7
+    layout: |-
+      ########
+      ##PL####
+      #..Mm.G#
+      #..MG.G#
+      #..Mm.G#
+      #...####
+      #@BS..##
+      ########
+    lineage:
+      source: fresh_design_review_loop
+      source_candidate_id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+      created_by: codex
+      created_at: "2026-07-11"
+    design_notes: >
+      全新 Reality Anchor 游戏末期双锚拼接/切割挑战。玩家不能开局就切桥：先把完整 C 形
+      黏块右移一格，旧连接柱列才会成为 P/L 的三格下拉通道；把 P/L 拉到底后，再右推 B/S
+      将右移后的连接柱切成三个箱与两个黏端点。最后把 P/L 推回中线，以锚点—中箱力链把
+      中箱送回端点之间重织成三格竖条，再整体推到右列三目标；切出的上下箱与 P/L 同时覆盖
+      左列三目标。最短解21，规范 trace 25个非 walk 事件；完整 event-avoiding BFS 证明所有
+      胜路都必须移动两类锚点、发生 pull、sticky_to_box、sticky_split 与黏块刚体移动。
+      box_to_sticky/sticky_merge 是所有最优解责任，但存在64步逐件调度胜路，因此保留为非阻塞
+      试玩 caveat；主图在300000状态预算耗尽，不主张唯一解或完整 SCC。exact v7 独立 evidence
+      review_3 为 proposal_ready / required_action:none，puzzle critic_3 为
+      proposal_ready_with_caveats / required_action:none；人评档案校准后支持审美4下界与难度至少4，
+      均不主张5。三项 Reality Anchor 提交前流程已按固定顺序完成：六目标删减因完整图未知全部
+      保留，开局有10状态完整 walk-only 观察区而完整 initial SCC 保持 unknown；冗余流程裁去
+      v6 左二右一纯外墙列形成坐标平移同构 v7，当前只剩单层闭合外框。2026-07-11 人类试玩
+      标记 reject，未附加文字评语；已从待玩列表移除，不进入 clean archive。
+    expected_trace:
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [push_object, move_sticky_rigid]
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: down
+        events: [pull_object, anchor_boundary_shift]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift, sticky_to_box, sticky_split]
+      - input: up
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [push_object, force_chain, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: right
+        events: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+  - id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31
+    title: 双锚织门·延迟封井 v31
+    layout: |-
+      #########
+      ####...##
+      ###G...##
+      ##MMCG.##
+      ####C..##
+      ##MMC.G.#
+      ###G.#..#
+      ###.....#
+      ###.#####
+      ###.#####
+      #@.SB.###
+      #########
+      ###PL####
+      #########
+    lineage:
+      source: fresh_design_review_loop
+      source_candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29
+      created_by: codex
+      created_at: "2026-07-11"
+    design_notes: >
+      全新 Reality Anchor 游戏末期双锚黏块拼接/切割挑战。玩家先右推 B/S，把三箱纵柱刷入
+      上下两条二格黏臂，拼成七格 C 形整体；再借固定 P/L 的拉侧将整体横拉，三格连接柱
+      切回箱、双臂分裂。切出的上箱覆盖唯一 holding goal，下箱则同时是目标件和上下区唯一
+      竖井的门。若切割后用三步 [down,down,right] 先完成门箱，玩家仍可离开，并用七步
+      [down,down,left,left,left,up,down] 完成下锚；只有回头处理上锚时才发现访问权已被提前
+      消耗。完整续搜 512051 状态证明该合法替代路线无胜，545240 状态顺序监视器证明所有胜路
+      都要求上锚早于门箱，而下锚可在两者之后自由换序。最短解32；完整图514270状态、
+      1058153条合法转移、3个胜态、1个终局对象配置组，故只主张 equivalent_variants_only。
+      v29 独立 evidence reviewer 为 proposal_ready / required_action:none，puzzle critic 为
+      proposal_ready_with_caveats / required_action:none；保守支持审美4、难度4，不支持5。
+      提交前依次完成目标裁剪、开局舒适度、冗余裁剪：裁去三列纯外墙并删除一格伪反馈目标，
+      v31 剩四目标、一步可逆开局观察且七项核心事件门全部 complete。2026-07-11 人类试玩
+      标记 reject，未附加文字评语；已从待玩列表移除，不进入 clean archive。
+    expected_trace:
+      - input: right
+        events: [walk]
+      - input: right
+        events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: right
+        events: [pull_object, move_sticky_rigid, sticky_to_box, sticky_split]
+      - input: up
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: right
+        events: [pull_object]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: down
+        events: [pull_object, move_sticky_rigid]
+  - id: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+    title: 双锚借位·竖条回切 v4
+    layout: |-
+      ########
+      ##.@#..#
+      ###CP..#
+      ##G.L.G#
+      ###BS#.#
+      ##...M##
+      #.GC####
+      ########
+    lineage:
+      source: fresh_design_review_loop
+      created_by: codex
+      created_at: "2026-07-12"
+    design_notes: >
+      全新 Reality Anchor 双锚点阶段挑战。玩家先下推上箱、右移 P/L，再从 L 侧上拉 B/S；
+      B 半格把箱顶回上行。随后 P/L 右移并下推，P 覆盖右目标并释放 B/S 右侧推位；
+      后段左推 B/S 同时覆盖左目标、把上下两箱转为分离黏格。右下初始黏格左拉两次后
+      与下黏格合成竖条，终手跨 B/S 左拉切回两箱并覆盖底目标。完整图381状态、1胜态，
+      唯一17步最短输入；所有胜路至少3次 P/L shift、2次 B/S shift，且 pull、box_to_sticky、
+      sticky_merge、sticky rigid move、sticky_to_box 均不可绕过。latest exposure event
+      anchor_boundary_shift:box_sticky 在规范解 steps4/11 出现，step11 落在第二 reasoning unit。
+      独立 evidence review3 为 proposal_ready / required_action:none；fresh critic attempt02 为
+      proposal_ready_with_caveats / required_action:none，支持审美4、难度4，不支持5或更高。
+      三项提交前检查无布局改动；保留上黏格后段责任较弱、后段失败廉价、跨区归一化依赖界面可读性的 caveats。
+    expected_trace:
+      - input: down
+        events: [push_object]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: down
+        events: [walk]
+      - input: up
+        events: [pull_object, force_chain, anchor_boundary_shift]
+      - input: right
+        events: [push_object, anchor_boundary_shift]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [walk]
+      - input: down
+        events: [push_object, anchor_boundary_shift]
+      - input: left
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: left
+        events: [push_object, anchor_boundary_shift, box_to_sticky]
+      - input: down
+        events: [walk]
+      - input: down
+        events: [walk]
+      - input: left
+        events: [pull_object, move_sticky_rigid]
+      - input: left
+        events: [pull_object, move_sticky_rigid, sticky_merge]
+      - input: down
+        events: [walk]
+      - input: left
+        events: [pull_object, move_sticky_rigid, sticky_to_box]
+  - id: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+    title: 巨C双钩·凹口驾驶舱 v4
+    layout: |-
+      #########
+      #MMM#####
+      #M...LPG#
+      #MMm.####
+      #....SBG#
+      #...@####
+      #########
+    lineage:
+      source: fresh_design_review_loop
+      created_by: codex
+      created_at: "2026-07-13"
+    design_notes: >
+      全新 Reality Anchor 中等 application/challenge。七格完整 C 形 sticky 先整体下移，
+      将向右凹口改造成玩家操作舱并使上下双臂同时对准 P/L 与 B/S；玩家随后从凹口内
+      连续右拉完整 C，终手由两臂同步推动两锚覆盖上下目标，左竖脊同时回填中央目标。
+      完整图 33 状态、55 转移、1 胜态，唯一 10 步最短输入；所有胜路均要求两种锚点位移、
+      sticky 刚体移动与 force_chain:n3。拆块、直条、填口、缺上臂、缺下臂五个指定身份反事实
+      均为 complete 0 win。独立 evidence review2 为 proposal_ready / required_action:none；
+      fresh critic attempt03 为 proposal_ready_with_caveats / required_action:none，支持审美4、难度3。
+      三项提交前检查均 clean；(1,5)/(2,5) 因承担完整 C 下臂多接触点操作面而保留，墙化版 v5
+      判定为 over-prune。保留“旧凹口错路反馈较快、终局两次右拉直接”的非阻塞难度上界。
+    expected_trace:
+      - input: left
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: down
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: up
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: left
+        events: [walk]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+  - id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A3
+    title: 横移合舱·凹口登舱 A3
+    layout: |-
+      ##########
+      #MMM..LPG#
+      #M..G.####
+      #M@...SBG#
+      ###MM#####
+      ##########
+    lineage:
+      source: targeted_hard_evidence_experiment
+      created_by: codex
+      created_at: "2026-07-13"
+    design_notes: >
+      拼接驾驶舱实验备选。玩家从未完成 Γ 主体的凹口侧右拉主体，使它与下方两格臂对齐；
+      随后上拉两格臂，黏合为完整七格 C 且玩家落入凹口。完整 C 再连续右拉两次，终手同步推动
+      P/L 与 B/S 并覆盖三目标。完整图 9 状态、8 转移、1 胜态；严格唯一审计 PASS，唯一 4 步
+      最短输入，所有胜路要求 sticky_merge、两种 anchor shift、sticky rigid move 与 force_chain:n3。
+      本条目只完成硬证据，不代表正式 review proposal_ready。
+    expected_trace:
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: up
+        events: [pull_object, move_sticky_rigid, sticky_merge]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: right
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
+  - id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B2
+    title: 双校准合舱·即刻双钩 B2
+    layout: |-
+      #########
+      #MMM.LPG#
+      #M.G.####
+      #M...SBG#
+      #..@MM###
+      #########
+    lineage:
+      source: targeted_hard_evidence_experiment
+      created_by: codex
+      created_at: "2026-07-13"
+    design_notes: >
+      拼接驾驶舱实验主候选。玩家先把两格下臂左拉一格，再进入缺口横拉五格 Γ 主体右移一格；
+      双锚轨阻止主体过度平移。上拉下臂时两件黏合为完整七格 C，玩家同时落入凹口；终手从
+      驾驶舱内拉动完整 C，由上下臂同步推动 P/L 与 B/S，竖脊覆盖中央目标。完整图 70 状态、
+      98 转移、1 胜态；严格唯一审计 PASS，唯一 5 步最短输入；所有胜路要求 sticky_merge、
+      两种 anchor shift、sticky rigid move 与 force_chain:n3。本条目只完成硬证据，不代表正式 review proposal_ready。
+    expected_trace:
+      - input: left
+        events: [pull_object, move_sticky_rigid]
+      - input: up
+        events: [walk]
+      - input: right
+        events: [pull_object, move_sticky_rigid]
+      - input: up
+        events: [pull_object, move_sticky_rigid, sticky_merge]
+      - input: right
+        events: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]

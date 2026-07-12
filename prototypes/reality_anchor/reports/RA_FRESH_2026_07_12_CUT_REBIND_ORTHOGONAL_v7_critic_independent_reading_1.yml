@@ -1,0 +1,129 @@
+review_attempt_id: RA_CRO_V7_CRITIC_ATTEMPT_01
+critic_instance_id: /root/critic_v7_a1
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+review_input_type: candidate_version
+review_stage: raw_only_independent_reading
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+  hard_evidence_tools_run: false
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家首先要把底部 P/L 与 B/S 两个二格锚点排成四格列车并送上底行四个连续目标；
+    这次锚点换界同时把上方五格 C 形黏块切成三箱柱和上下两个黏端点，之后要把三只箱分别与端点或既有黏条再绑定，
+    依次形成覆盖屋顶双目标的横条、覆盖中部目标的横条，以及补齐顶部第三目标并接回屋顶横条的 L 形。
+  salient_relations_seen:
+    - >-
+      初始底行 x2-x3 的 P/L 位于四连续目标 x4-x7 左侧，上一行 x2-x3 的 B/S 又位于 P/L 左上；
+      step 2-3 玩家从 L 侧连续向右拉 P/L 到 x4-x5，step 9 再把 B/S 下推到同一横廊，
+      step 13-14 从左推动 B/S，使相邻 P/L 一起右移，最终四个锚点格同时覆盖 x4-x7；
+      此后锚点已抵住右侧外墙，raw alternative 从 step 14 再向右会立即失败，因此后续不能再靠移动底部锚点改局。
+    - >-
+      step 14 玩家在底部把四格锚点列车推到目标带时，上方五格 C 形黏块可见地变成 x4 三箱柱和 x5 上下两个分离黏端点；
+      这把原先一个刚体拆成三只可逐个推动的箱与两个接收端，后续操作从“移动整块 C”改成“选择箱与哪一端点再绑定”。
+    - >-
+      step 20 玩家向右推最上箱，箱与上端点合成二格横条；step 21 再把横条右推到屋顶入口下方，step 24 整条上推，
+      屋顶两个并列目标被同时覆盖，但 x6,y2 的第三个顶部目标仍空；因此上端材料被固定成终局屋顶横条，余下箱不能再用来替代这两个覆盖。
+    - >-
+      step 30 玩家向右推最下箱，使它与下端点合成二格横条并覆盖 x6,y4 的中部目标；
+      这消费下端点后，最后一箱只能走另一条再绑定路径：step 34 向右进入黏侧成为顶部 L 目标左侧的单格黏块，
+      step 35 再右推进入 x6,y2，与 x6-x7,y1 的屋顶横条合并为三格 L 并完成所有覆盖。
+  unclear_or_unreadable_parts:
+    - >-
+      raw packet 展示了 step 14 的结果，却不足以判断玩家在执行该推之前，能否仅凭初始 B/S 边界与上方 C 形材料的位置，可靠预见“底部换界会远距离切成三箱柱加两个端点”；
+      这是核心计划理由是否可读的边界，不能由结果回放本身代替。
+    - >-
+      从 step 14 开始先做下端的 alternative [up, up, up, right] 是合法的，并会先合成下方横条、覆盖中部目标，但 packet 只说明玩家仍处在两只上箱下方；
+      尚不能判断这是一条玩家可推理排除的失败路线、可交换的正确顺序，还是需要继续试走才显现后果。
+  initial_quality_risks:
+    - >-
+      核心惊喜集中在 step 14 的跨区域换界：玩家操作发生在底部锚点列车，上方 C 形材料却同时切开。
+      若边界语义不能让玩家事前把这两处联系起来，难度会来自执行后观察结果，而不是行动前的结构推理；当前记为非阻塞可读性风险，待第二阶段的玩家推理材料核对。
+    - >-
+      step 20、30、34 都包含“向右推箱进入黏侧并再绑定”，视觉结果分别是屋顶横条、中部横条和最终 L，功能并不相同；
+      但如果实际选择顺序主要靠逐项试走，三次相似输入仍可能让后半段显得重复。bottom-first alternative 的最终后果尚缺，暂不能把这一风险升级为阻塞项。
+    - >-
+      底部四连续目标强烈提示把两个二格锚点拼成四格列车，且 overshoot 会被紧邻外墙立即拒绝；因此开局锚点段更像清晰的构造前置，而未必本身提供高强度洞见。
+      关卡质量将主要取决于玩家是否能从这一步推导上方切割和后续三种不同再绑定用途。
+  exact_basis:
+    - "layout step 0: P/L 位于底行 x2-x3，B/S 位于 y6 的 x2-x3，底行 x4-x7 是四连续目标，上方为五格 C 形黏块与四个材料目标。"
+    - "canonical step 13-14: B/S 推动相邻 P/L 形成四格 force chain；step 14 四个锚点格覆盖底部 x4-x7，同时 C 形黏块切为 x4 三箱柱与 x5 上下两个分离端点。"
+    - "alternative from canonical step 14 [right]: 右端锚点将撞外墙，动作立即失败且状态不变。"
+    - "canonical step 20-24: 上箱与上端点合为二格横条，右移并上推后同时覆盖屋顶两个目标，x6,y2 仍空。"
+    - "canonical step 30: 下箱与下端点合为二格横条并覆盖 x6,y4 中部目标。"
+    - "canonical step 34-35: 最后一箱先变成单格黏块，再进入 x6,y2 与屋顶横条合并成三格 L，触发胜利。"
+    - "alternative from canonical step 14 [up, up, up, right]: 合法地先合成下方横条并覆盖中部目标，但玩家仍位于两只上箱下方。"
+
+archive_taste_context_used:
+  - candidate_id: RA_CAND_0017
+    use: >-
+      正向警戒是高机制密度必须落实为拼接、切割、材料转换和刚体移动之间的真实耦合；本候选 step 14、20、24、30、35 至少在结果层面出现了这类连续兑现，
+      但 raw 阶段尚不据此断言达到同等推理强度。
+  - candidate_id: RA_CAND_0022
+    use: >-
+      正向警戒是短流程中的反直觉操作要带来可理解的结构反转；本候选的对应检查点是玩家能否在 step 14 前预见底部锚点换界会重写上方材料，而非只在回放后接受结果。
+  - candidate_id: RA_CAND_0025
+    use: >-
+      正向警戒是终局目标形状应提示并消费玩家主动构造的形状；本候选 step 24 留下 x6,y2，step 35 将单格黏块接到屋顶横条形成 L，存在具体终局消费关系。
+  - candidate_id: RA_CAND_0024
+    use: >-
+      1 分负例警戒双锚点和黏材料不能只制造高机制承诺、实际却只剩腾挪。本候选有真实切割和三次功能不同的再绑定，未直接落入该负例；
+      但若 step 14 不可事前推导、后段只能逐项试走，仍可能以机制事件数量掩盖玩家洞见不足。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_lower_bound_present
+  positive_anchors: [RA_CAND_0017, RA_CAND_0022, RA_CAND_0025]
+  lower_bound_or_negative_anchors: [RA_CAND_0024]
+  missing_anchor_effect: none
+
+raw_stage_critic_items:
+  - id: IR1_READABILITY_STEP14_REMOTE_CUT
+    type: nonblocking_risk
+    target_ref: canonical.step_14
+    design_relation: >-
+      玩家在底部把 B/S 与 P/L 四格列车右推到目标带，上方 C 形黏块同步切成三箱柱与两个端点，后续才获得逐箱再绑定的操作空间。
+    attack: >-
+      当前回放只证明变化发生，未证明玩家在动作前能从可见边界关系预测远距离切割；如果只能先推再看，核心因果会退化为结果揭示。
+    evidence_basis: "canonical step 13-14 的 visible_change 与初始布局的上下分区。"
+    player_facing_effect: "可能把核心难度从结构推导转成执行后的机制观察。"
+    blocks_proposal_ready: false
+    expected_designer_response: answer_from_packet
+  - id: IR1_ORDERING_BOTTOM_FIRST_UNRESOLVED
+    type: context_gap
+    target_ref: raw_alternative_replays.bottom_first_attempt
+    design_relation: >-
+      玩家在 step 14 后可以先把下箱与下端点合并并覆盖中部目标，但完成该局部收益时仍站在两只上箱下方；这会改变之后接触上箱与屋顶入口的路线。
+    attack: >-
+      packet 没给出该自然路线的继续结果，无法判断它是可交换顺序、及时可读的失败，还是要求玩家投入较多走位后才发现的顺序陷阱。
+    evidence_basis: "from canonical.step_14 的合法输入 [up, up, up, right] 及其结果说明。"
+    player_facing_effect: "决定后半段是可分析的改序题，还是靠枚举路线排错的搜索负担。"
+    blocks_proposal_ready: false
+    expected_designer_response: add_context_next_review
+  - id: IR1_REBIND_REPETITION_BOUNDARY
+    type: nonblocking_risk
+    target_ref: canonical.steps_20_30_34_35
+    design_relation: >-
+      三只箱先后向右进入黏侧；第一只形成屋顶横条，第二只形成中部横条，第三只成为单格后再接成屋顶 L，三次操作改变的后续用途不同。
+    attack: >-
+      不同结果支持结构分工，但输入外观高度相似；若玩家无需为三种用途作真正的次序或形状判断，后段节奏可能显得是重复兑现而非三次新洞见。
+    evidence_basis: "canonical step 20、30、34-35 的事件与 visible_change。"
+    player_facing_effect: "可能降低后半段的新信息密度，但 raw 材料尚不足以判定为结构失败。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+handoff_notes:
+  - >-
+    第一阶段仅读取指定 raw packet 与其明列的四份 human-reviewed archive candidate 原文；未读取完整 candidate packet、reasoning sketch、designer claim、目标分数、evidence review、旧 critic、designer action 或其他 reports。
+  - >-
+    第二阶段应优先核对：step 14 前可见 premises 是否足以推出远距离切割；bottom-first 合法路线的最终后果与反馈时机；三次向右再绑定是否各自要求不同计划理由。

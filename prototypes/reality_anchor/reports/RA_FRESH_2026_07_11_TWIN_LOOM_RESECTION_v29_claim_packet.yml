@@ -1,0 +1,53 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29
+candidate_version: v29
+review_iteration: 1
+packet_kind: claim_last_claims
+
+design_target:
+  intended_role: late_game_dual_anchor_capstone
+  aesthetic_score_target: 5
+  difficulty_score_target: 5
+  minimum_acceptable: {aesthetic: 4, difficulty: 4}
+
+player_reasoning_claims:
+  forced_setup_not_counted:
+    - B/S 拼接七格 C 和整体横切均为强制铺垫，不计独立矛盾。
+  reasoning_units:
+    - id: RU1_upper_before_gate_crate
+      question: 切割后是否立即完成只差一次拉动的门箱目标？
+      visible_premises:
+        - 门箱目标就在下箱右侧；从切割态三步即可合法覆盖。
+        - 覆盖后玩家没有被困，仍能离开并完成下臂，局部计划持续产生正反馈。
+        - 门箱同时占住 x=7 竖井底口；holding crate 封住 x=6，上臂把手因此无法从下方重新抵达。
+      conclusion: 上臂必须先于门箱；门箱与下臂在上臂完成后可交换。
+      exact_rejected_inputs: [down, down, right]
+      concrete_feedback: 错误分支完成门箱并可继续完成下臂，但512051状态完整续搜无胜；正确先上后门时，门箱封井成为可读的阶段交接而非终止陷阱。
+
+role_fit_claim:
+  strengths:
+    - 同一切割动作同时让两 holding crates 落位、分离双臂，并生成“目标即门”的下箱位置。
+    - 错误分支是合法目标完成且保留后续对象进展；失败延迟到玩家需要返回上方，明显强于 v27 的死袋终局。
+    - 正确路线把竖井使用权作为消耗资源：先上臂，后封井，最后进入下方区域。
+  risks_to_attack:
+    - 前14步脚本化；核心仍只有一个顺序洞见，可能只够3+。
+    - holding goals 可能继续显得像锁件工程；目标箱封竖井也可能一眼可见。
+    - 三个胜态虽同构，但非输入唯一；不得把 equivalent variants 当额外难度。
+    - 32步仍有走位负担，审美5不应成立。
+
+lineage_claim:
+  relation: fresh
+  non_reused_archive_chains:
+    - 未复用 RA_CAND_0022 的死角反推锚点链。
+    - 未复用 RA_CAND_0025 的 L 形活塞。
+    - 未复用 RA_CAND_0017 的目标腾挪布局或路线。
+  new_causal_chain: 三箱桥拼 C -> 横切落 holding goals -> 上臂先走竖井 -> 下箱上目标并封井 -> 下臂收束。
+
+language_boundary:
+  holding_goals: (6,3)/(6,4)；切割后上中两箱直接落位。
+  门箱目标: (7,5)；下箱覆盖它时同时占住上方竖井底口。
+  延迟失败: 门箱早填后玩家仍能完成下臂，只有在尝试返回上臂把手时才暴露无解。
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29_facts_packet.yml
+  read_order: facts_then_claim

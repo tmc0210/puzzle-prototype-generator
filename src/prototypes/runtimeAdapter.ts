@@ -309,20 +309,41 @@ export function normalizeAsciiLayout(
     .replace(/\r/g, "")
     .split("\n")
     .map((row) => row.replace(/\t/g, "  "));
-  while (rows.length > 0 && rows[0] === "") {
+  while (rows.length > 0 && rows[0]?.trim() === "") {
     rows.shift();
   }
-  while (rows.length > 0 && rows.at(-1) === "") {
+  while (rows.length > 0 && rows.at(-1)?.trim() === "") {
     rows.pop();
   }
   if (rows.length === 0) {
     return "";
   }
+  const contentRows = rows
+    .map((row, index) => {
+      const indent = row.match(/^ */)?.[0].length ?? 0;
+      return { index, indent, width: row.trimEnd().length - indent };
+    })
+    .filter(({ width }) => width > 0);
+  const commonIndent = Math.min(...contentRows.map(({ indent }) => indent));
+  const firstContentRow = contentRows[0]!;
+  const continuationRows = contentRows.slice(1);
+  const continuationIndent =
+    commonIndent === 0 &&
+    firstContentRow.index === 0 &&
+    continuationRows.length > 0 &&
+    continuationRows.every(
+      ({ indent, width }) => indent > 0 && width === firstContentRow.width,
+    )
+      ? Math.min(...continuationRows.map(({ indent }) => indent))
+      : 0;
+  const dedentedRows = rows.map((row, index) =>
+    row.slice(commonIndent || (index > firstContentRow.index ? continuationIndent : 0)),
+  );
   if (!options.rectangular) {
-    return rows.map((row) => row.trimEnd()).join("\n");
+    return dedentedRows.map((row) => row.trimEnd()).join("\n");
   }
-  const width = Math.max(...rows.map((row) => row.length));
-  return rows.map((row) => row.padEnd(width, fill)).join("\n");
+  const width = Math.max(...dedentedRows.map((row) => row.length));
+  return dedentedRows.map((row) => row.padEnd(width, fill)).join("\n");
 }
 
 export function validateLevelByParsing<State>(

@@ -1,0 +1,98 @@
+candidate_id: RA_NEW_2026_07_12_TWIN_GATE_RESECTION
+candidate_version: v1
+packet_kind: candidate_packet
+prototype: reality_anchor
+
+prototype_rules:
+  win_condition: all_targets_covered_by_objects
+  push_pull_boundary: 固定 P/L 提供拉侧。
+  box_sticky_boundary: 可移动 B/S 改写材料；相邻黏格合并，跨 B 侧切回箱并分裂。
+
+slot_brief:
+  intended_role: late_game_dual_anchor_resection_challenge
+  target: 双锚点共存下的黏桥拼接、整体切割与目标门顺序规划。
+
+designer_claim:
+  summary: >-
+    B/S 先把三箱纵柱刷入上下黏臂，拼成七格 C 形整体；固定 P/L 再把整体横拉，
+    三格连接柱切回箱、双臂分裂。切出的下箱既是目标件，也是上下区域唯一竖井的门。
+  claimed_highlights:
+    - 一次整体切割同时完成材料转换、刚体分裂、目标反馈和三项后续职责分配。
+    - 门箱早填后玩家仍可离开并完成下臂，错误具有持续局部收益，不是即时死袋。
+    - 正解只要求上臂早于门箱；下臂仍可调度，避免后半段成为全序脚本。
+
+solve_instance:
+  layout: |-
+    #########
+    ####...##
+    ###G...##
+    ##MMCG.##
+    ####C..##
+    ##MMC.G.#
+    ###G.#..#
+    ###.....#
+    ###.#####
+    ###.#####
+    #@.SB.###
+    #########
+    ###PL####
+    #########
+  canonical_exact_inputs: [right, right, up, up, up, right, right, right, up, up, up, up, left, right, up, left, left, up, right, right, down, down, down, down, right, down, down, left, left, left, up, down]
+  canonical_cost: 32
+  final_win: true
+
+player_reasoning:
+  player_goal:
+    description: 覆盖盘面全部目标，并安排切割后上下黏臂与门箱的完成次序。
+    state_ref: canonical.step_0
+  forced_setup_disclaimer:
+    - step1-2 的 B/S 拼接为机制铺垫，不单独申报矛盾。
+    - step3-14 的抵达与整体切割不虚构 alternative。
+  reasoning_units:
+    - id: RU1_upper_before_gate_crate
+      player_question: 切割后门箱目标只差一次拉动，是否应先完成它再处理两条黏臂？
+      premises:
+        - 切割态门箱位于目标左侧，三步即可合法覆盖。
+        - 覆盖后玩家仍能离开，并可继续完成下黏臂，局部计划持续产生正反馈。
+        - 门箱同时占住竖井底口；另一列被切出箱占据，上臂把手无法从下方重新抵达。
+      conclusion: 先沿未封闭的竖井完成上臂；之后门箱可封井，下臂在门箱前后均可完成。
+      operation_steps: 15-32
+      alternative:
+        status: replayed_attempt
+        exact_inputs: [down, down, right]
+        local_gain: 一次对象操作完成门箱目标，玩家仍可活动并继续完成下臂。
+        concrete_outcome: >-
+          门箱覆盖目标后玩家仍可用七步完成下臂；从该结果态完整续搜无胜，未完成的上臂再无可达把手。
+      feedback:
+        - step18 上臂先完成，玩家仍可从顶部返回竖井。
+        - step25 门箱落位时上方任务已安全完成。
+        - step32 下臂完成并立即胜利。
+  trace_partition:
+    status: complete
+    segments:
+      - {steps: 1-2, purpose: 推动 B/S，使三箱与上下黏臂合并成七格整体}
+      - {steps: 3-14, purpose: 抵达固定 P/L 拉侧并整体横切，生成双臂与切出箱}
+      - {steps: 15-18, purpose: 封井前完成上臂}
+      - {steps: 19-25, purpose: 返回并让门箱覆盖目标}
+      - {steps: 26-32, purpose: 从下方回路完成下臂}
+
+hard_evidence:
+  solver: {found: true, cost: 32}
+  graph: {status: complete, reachable_states: 514270, legal_transitions: 1058153, winning_states: 3}
+  winning_object_configuration_groups: 1
+  alternative: {exact_inputs: [down, down, right], delayed_lower_arm_inputs: [down, down, left, left, left, up, down], continuation_status: complete, continuation_found_win: false}
+  order_monitor: {status: complete, upper_before_gate_on_all_wins: true, lower_arm_order_free: true}
+  solution_uniqueness: equivalent_variants_only
+  evidence_limits:
+    - 图规模、强制铺垫和错误分支深度不直接证明审美或难度。
+    - alternative 证明该路线可执行并无胜，不证明玩家一定受诱导或觉得反馈公平。
+
+archive_taste_context_refs:
+  - positive_compact_reversal.yml
+  - positive_active_constructor.yml
+  - negative_high_cost_branching.yml
+  - negative_disconnected_subpuzzles.yml
+
+claim_last_review:
+  mode: not_used
+

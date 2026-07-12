@@ -1,0 +1,206 @@
+review_attempt_id: RA_CRO_V7_CRITIC_ATTEMPT_02
+critic_instance_id: /root/critic_v7_a2
+review_iteration: 4
+candidate_version_reviewed: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+review_input_type: revised_design
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家先把底行的 P/L 向右拉开，再把上一行的 B/S 下推到同一横廊并从左侧推动两组锚点；第二次推动使四个锚点格同时落到四个底部目标上，并把上方 C 形黏块切成可分别加工的三箱柱与两个黏端点。随后玩家需要把上箱与上端点做成二格横条送上屋顶双目标，把下箱与下端点合并覆盖中部目标，再把最后一箱送入黏侧并接成顶部三格 L，完成剩余目标。
+  salient_relations_seen:
+    - >-
+      初始可见 P/L 位于底行 x2-x3、B/S 位于其上一行 x2-x3，P/L 右侧是 x4-x7 四个连续目标；第 2、3 步向右输入把 P/L 拉到 x4-x5，第 9 步向下输入把 B/S 推到底行，第 13、14 步从左向右推动 B/S，使其与 P/L 组成的四格列车依次右移，最终覆盖 x4-x7，因此后续不再需要逐格处理这四个底部目标。
+    - >-
+      初始上方可见五格 C 形黏块；第 14 步推动四格锚点列车后，棋盘同时出现 x4 的三箱柱和 x5 的上下两个分离黏端点，因此玩家后续获得了三次“箱进入黏侧后再移动”的材料，而不是只完成锚点归位。
+    - >-
+      第 20 步上箱推动上端点后合并为二格横条，第 21、24 步把该横条右移再上推，屋顶两个目标同时被覆盖；这会消耗上端点并留下 x6,y2 顶部目标，迫使剩余材料承担不同的收尾职责。
+    - >-
+      第 30 步最下箱与下端点合并并覆盖中部 x6,y4 目标；第 34 步最后箱进入黏侧成为单格黏块，第 35 步再右推使其进入 x6,y2 并与屋顶横条合成三格 L，因此最后一箱的操作会改变屋顶横条的形状并直接触发胜利。
+  unclear_or_unreadable_parts:
+    - >-
+      原始布局与规则足以显示锚点边界变化会切分旧黏块，但 raw trace 没有呈现玩家在第 14 步前能否仅凭当前画面准确预判“x4 三箱柱加 x5 两个分离端点”这一具体结果；若该结果只能靠执行后观察，核心转折的计划感会弱于其视觉变化。
+    - >-
+      从第 14 步出发的 bottom-first 重放表明先处理下箱也是合法的，并能先覆盖中部目标，但材料没有给出该路线的后续可解性或失败反馈；目前无法判断上、中、末三段是否存在玩家可见的稳定改序理由，还是允许通过局部试走逐项排除。
+  initial_quality_risks:
+    - >-
+      第 2、3、9、13 步的锚点准备动作本身较直接；其质量取决于玩家是否能在行动前把它们与第 14 步的远端切分结果建立因果，而不是事后才把一串腾挪理解为机关启动。
+    - >-
+      切分后的三次加工都含有“箱推向黏端点并合并”的表面重复。屋顶二格横条、中部覆盖、最终三格 L 的结果确实不同，但 raw-only 阶段尚不能确认这些差异是否产生足够强的顺序推理，还是主要增加执行段长度。
+    - >-
+      overshoot 重放在第 14 步后继续向右会立刻撞外墙且状态不变，这个错误方向反馈清楚但过于廉价，不能单独支撑难度；真正的难度边界取决于 bottom-first 等合法局部收益路线能否由共同的可见关系提前剪枝。
+  exact_basis:
+    - "layout.step_0: P/L 在底行 x2-x3，B/S 在 y6 的 x2-x3，底行 x4-x7 为连续四目标，上方为五格 C 形黏块"
+    - "canonical.step_2-step_3: 两次 right 将 P/L 从 x2-x3 依次移到 x4-x5"
+    - "canonical.step_9,step_13-step_14: B/S 下推到底行后推动相邻 P/L；第二次右推同时覆盖底部 x4-x7 并把 C 形黏块切成 x4 三箱柱与 x5 两个分离黏端点"
+    - "canonical.step_20-step_24: 上箱与上端点合成二格横条，右移并上推后同时覆盖屋顶两个目标，x6,y2 仍空"
+    - "canonical.step_30,step_34-step_35: 下箱与下端点合并覆盖 x6,y4；最后箱进入黏侧后右推，与屋顶横条合成三格 L 并获胜"
+    - "alternative.bottom_first from canonical.step_14: [up, up, up, right] 合法且先覆盖中部目标，但未提供后续结果"
+    - "alternative.overshoot from canonical.step_14: [right] 因最右锚点将进入外墙而立即失败，状态不变"
+
+player_facing_merits:
+  - id: MERIT1_visible_cut_payoff
+    exact_state_relation: >-
+      step0 可见 P/L 在底行 x2-x3、B/S 在上一行 x2-x3、四目标在 x4-x7，C 形黏块的 x4 连接柱与 x5 两端点也同时可见；玩家先在 steps2-3 把 P/L 右拉两格、step9 把 B/S 下推，再在 steps13-14 从左推动 B/S→P/L 力链。结果四个锚点格覆盖底部四目标，x4 连接柱变为三箱而 x5 两端点分裂，后续操作从“移动锚点”切换为“用三个箱分别消费两个端点并重建目标形状”。
+    player_facing_value: >-
+      同一次停位同时兑现目标提示与远端材料重分配，锚点动作改变了之后能做什么，不只是把两个刚体搬到终点。
+  - id: MERIT2_upper_bar_changes_remaining_job
+    exact_state_relation: >-
+      step14 后玩家看见上箱 x4,y2 邻接上端点 x5,y2；step20 右推使二者合成二格横条，steps21、24 再把横条右移、上推。屋顶 x6-x7,y1 两目标随之同时覆盖，但 x6,y2 仍空，因此后续不能继续把同一横条平移，而必须保留下方箱与下端点完成中部目标并另送一格接入屋顶。
+    player_facing_value: >-
+      第一次重拼产生清楚可见的双目标回报，同时把终局缺口暴露成与屋顶横条正交相邻的一格，给最后材料明确而不直接代替推理的提示。
+  - id: MERIT3_distinct_final_consumption
+    exact_state_relation: >-
+      step24 可见屋顶横条已成而中部与 x6,y2 尚空；玩家在 step30 让最下箱与下端点合并覆盖中部目标，棋盘只剩 x4,y3 一箱，且 x4-x6,y2 通路开放。steps34-35 把最后箱推入黏侧再推到 x6,y2，它与 x6,y1 屋顶黏格合并成三格 L 并立即胜利，之后不再需要搬运中部二格条。
+    player_facing_value: >-
+      三个切出箱并非重复填三个等价孔位：上箱造屋顶横条、下箱封中部、末箱补 L 的下肢，材料职责在每次局面变化后重新收束。
+
+supported_reasoning:
+  - unit_ref: RU1_four_cell_anchor_train
+    reason: >-
+      player_goal 只写规则目标，没有提前命名解法。RU1 的两条 premise 均在 step0 可见：锚点与四连续目标给出 B/S/P/L 的终点坐标，C 形黏块的 x4 连接柱、x5 两端点结合已暴露的 B/S 边界规则，可在行动前推出 B:x4/S:x5 会产生三箱柱和两个分离端点。SEG1-SEG3 随后兑现这一计划。overshoot 被诚实限定为外墙立即拒绝的停位反馈，未冒充 alternative 或难度来源。
+  - unit_ref: RU2_split_output_order
+    reason: >-
+      该单元只支持很窄的最短换序判断：step14 后上下端均可先处理；bottom-first 的四步输入先获得中部覆盖，续走总长37并到达与35步规范解相同的 final state。它因此诚实证明“upper-first 少两步换位”，但不证明职责唯一、不构成旁路攻击，也不应为关卡核心难度领功。
+  - unit_ref: RU3_rebuild_final_l
+    reason: >-
+      第一条 premise 只描述 step24 的屋顶横条、空 x6,y2、两箱和下端点；第二条只描述 step30 已完成中部条后剩余一箱、开放的 x4-x6,y2 通路及 x6,y2 与 x6,y1 的正交邻接。SEG5 产生第二个决策局面，SEG6 再兑现从该局面可见的最终合并，没有把 steps31-35 的未来结果偷写进 step24 或 step30 的前提。
+
+archive_taste_context_used:
+  - candidate_id: RA_CAND_0017
+    human_basis: "aesthetic 4 / difficulty 5；人评强调推拉与黏块拼接切割、高机制密度和要素耦合。"
+    use_in_review: 校准末期双锚点关必须让锚点动作、切割与后续材料职责真正互相消费。
+  - candidate_id: RA_CAND_0022
+    human_basis: "aesthetic 5 / difficulty 4；人评强调短步骤、强洞见、空间利用和反向送目标。"
+    use_in_review: 校准冲击审美5所需的紧凑性与反直觉重读强度。
+  - candidate_id: RA_CAND_0025
+    human_basis: "aesthetic 5 / difficulty 4；人评强调主动构造 L、终局提示、结构紧凑清晰。"
+    use_in_review: 校准本候选屋顶 L 构造与目标提示的正向价值，同时检查前段是否抢戏。
+  - candidate_id: RA_CAND_0024
+    human_basis: "aesthetic 1 / difficulty 3；人评警告双锚点与多黏块若实际只剩推拉腾挪，会辜负构造预期。"
+    use_in_review: 作为下界警戒，拒绝把事件计数、指标或锚点搬运本身当审美优点。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_lower_bound
+  positive_anchors: [RA_CAND_0017, RA_CAND_0022, RA_CAND_0025]
+  lower_bound_or_negative_anchors: [RA_CAND_0024]
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: >-
+      reality_anchor_trace_metrics_v0 对同一 v7 规范 trace 给出 solutionCost=35/band5、nonWalkEventCount=36/band5、heavyReuseRatio=0.11428571428571428/band4，aggregateBand=5。
+    allowed_reading: >-
+      只说明35步规范解的操作与非行走事件密集，不能推出洞见、因果依赖、反直觉或审美档位。
+    player_facing_check: >-
+      关键对象动作均有后续消费：steps13-14 同时完成锚点停位与切分，steps20-24 生成并安置屋顶横条，step30 完成中部条，steps34-35 完成最终 L；但 SEG2、SEG4 前半与 SEG5 返回仍含明显绕位，因此高执行压力中混有路线税，不能整体记为难度 merit。
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: >-
+      同一校准对规范 trace 给出 revisitRate=0.3333333333333333/band4、heavyReuseRatio=0.11428571428571428/band4，aggregateBand=4。
+    allowed_reading: >-
+      只说明玩家会回访部分工作区，不能说明复用本身优雅或带来惊喜。
+    player_facing_check: >-
+      x3 竖通道与中央加工区的回访发生在 step14 切分、step24 屋顶覆盖之后，回访时材料和路线责任已变化；现有局面未显示纯粹为了拉长解而反复横穿同一未变化状态，但该指标也不额外提高审美判断。
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: >-
+  支持末期关卡的审美4保底，不足以由当前材料支持审美5。相对 RA_CAND_0024，本候选的双锚点停位确实切出三箱与两端点，且这些材料分别被屋顶横条、中部条和最终 L 消费，避免了“只剩推拉腾挪”。相对 RA_CAND_0022/0025 的人评高点，35步中的绕位以及三次“箱入黏侧”的表面重复削弱了紧凑性；最终 L 回报清楚，但未显示同等强度的短链反直觉重读。
+difficulty_target_fit: >-
+  支持至少4的目标，不支持追求5。难点主要来自 step0 同时读取四目标停位与 B/S 切线、step14 后理解三箱两端点的不同职责，以及 step24/30 分阶段完成最终 L；这不是单纯靠步数成立。RU2 只有35对37的两步最短优化且两序同终局，因此不计入核心难度；pilot 执行压力 band5 也不能替代玩家推理。当前缺少足以对齐 RA_CAND_0017 人评“极高要求、大量反直觉操作”的玩家侧关系。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI1_aesthetic_five_boundary
+    type: score_boundary
+    target_ref: design_target.aesthetic_score_target
+    design_relation: >-
+      玩家从 step0 的双锚点与 C 形黏块出发，经 steps13-14 同时完成底部停位和远端切分，再把三个箱分别用于屋顶横条、中部条和最终 L；然而在这些变化之间需要多段绕位，三次重拼共享“箱推入黏侧”的表面动作。
+    attack: >-
+      这些具体变化足以越过 RA_CAND_0024 所警告的纯腾挪下界，也足以支撑4档保底；但相较 RA_CAND_0022/0025 的紧凑强洞见与不抢戏前段，当前重复动作和路线税使审美5缺少依据。
+    evidence_basis: "canonical.step_0, steps13-14, steps20-24, step30, steps34-35；human anchors RA_CAND_0022/0024/0025"
+    player_facing_effect: >-
+      玩家能得到清晰的切分与 L 收束回报，但高点之间的走位和相似重拼可能稀释惊喜密度。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI2_difficulty_five_boundary
+    type: score_boundary
+    target_ref: design_target.difficulty_score_target
+    design_relation: >-
+      step0 的锚点终点与切线关系可提前分析，step24/30 的剩余材料与正交邻接支撑分阶段收尾；bottom-first 则以37步到达与35步完全相同终局，只多两步换位。
+    attack: >-
+      RU1 与 RU3 支撑至少4的结构推理，但 RU2 是廉价最短性优化而非核心难题；规范解执行压力 band5 不能补成洞见，因此没有足够玩家侧依据支持难度5。
+    evidence_basis: "RU1 step0 premises；RU2 canonical35 vs bottom-first37 same final；RU3 step24/step30 premises；pilot metric boundary"
+    player_facing_effect: >-
+      玩家需要读懂一次全局边界切分与一次分阶段 L 重建，但上下端先后次序可用近等价路线处理，未形成更高档位的强排他计划压力。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI3_ru2_is_optimization_only
+    type: nonblocking_risk
+    target_ref: player_reasoning.RU2_split_output_order
+    design_relation: >-
+      step14 后上端和下端都可先做；规范路线先做上端共35步，bottom-first 先立即覆盖中部目标，续走共37步并到达相同 final state。
+    attack: >-
+      当前文案已诚实限定其为少两步换位的最短顺序，因而成立；但 handoff 不应再把它扩张为对象职责唯一、失败 alternative、旁路排除或核心难度来源。
+    evidence_basis: "RU2 alternative.concrete_outcome；solution_uniqueness=equivalent_variants_only；evidence reviewer 对同终局换序的支持边界"
+    player_facing_effect: >-
+      选错先后不会破坏解题计划，只增加两步，因此玩家主要体验到路线优化而非因果纠错。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI4_execution_rhythm
+    type: nonblocking_risk
+    target_ref: player_reasoning.operation_segments
+    design_relation: >-
+      玩家在 SEG2 绕到 B/S 上方、SEG4 沿 x3 通道抵达上箱、SEG5 再返回下端；这些移动分别通向 step9、step20与step30 的状态变化，但中间多个输入只改变玩家位置。
+    attack: >-
+      对末期 capstone 来说这仍是可接受的操作承载，不过它解释了为何 pilot 执行压力很高却不能自动视为难度或审美，并形成节奏上的轻微稀释风险。
+    evidence_basis: "SEG2 exact steps4-9；SEG4 steps15-24；SEG5 steps25-30；solution_execution_pressure aggregateBand5"
+    player_facing_effect: >-
+      核心切分与重拼之间存在可感知的绕位间隔，可能让玩家把部分时长体验为到达操作面而不是继续推理。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: "scc_graph not_routed；reachable graph 在 500001 状态处耗尽。"
+    neutral_meaning: >-
+      当前材料不提供完整 SCC 或全图穷尽结论；equivalent_variants_only 仅覆盖完整首胜层和定向发现的同终局换序。
+    player_facing_interpretation: >-
+      这一边界既不增加也不削弱已由具体局面确认的切分、重拼、难度与审美判断。
+    verdict_effect: none
+  - graph_fact: "required scans 与 prototype pre-submission checks 属于证据/阶段状态。"
+    neutral_meaning: >-
+      它们说明候选可进入玩家侧评审，不说明玩家一定会形成相应洞见，也不构成审美优点。
+    player_facing_interpretation: none
+    verdict_effect: none
+
+handoff_notes:
+  - >-
+    最终结论维持 raw-first 初判，没有因 designer claim 或 evidence review 变得更宽松：候选可作为 game_late_capstone 提交，支持审美4保底与难度至少4；审美5、难度5均保留为未获支持的非阻塞追求档位。
+  - >-
+    后续若引用 RU2，必须保留“35步规范解 vs 37步同终局等价换序”的窄边界；overshoot 只能作为外墙停位反馈，不能恢复成 competing alternative。
+  - >-
+    本评审未运行 solver、analyzer、graph 或其他 hard-evidence 工具，也未授予 accepted、mainline、positive_reference 或 reference 状态。

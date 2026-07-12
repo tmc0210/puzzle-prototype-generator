@@ -9,6 +9,7 @@ import {
   promoteStudioLevel,
   readReviewQueueLevels,
   readPlayableLevelsForExport,
+  readStudioLevels,
   saveEditorLevel,
   type EditableLevelCatalog,
   type SaveEditorLevelRequest,
@@ -162,7 +163,11 @@ export function createPlayableRepository(packagePath: string): PlayableRepositor
 async function buildReviewData(prototype: PrototypePackage): Promise<Record<string, unknown>> {
   const index = await readArchiveIndex(prototype.root);
   const playtestReviews = await readPlaytestReviews(prototype.root, prototype.mechanic.id);
-  const levelById = new Map(prototype.levels.levels.map((level) => [level.id, level] as const));
+  const studioLevels = await readStudioLevels(prototype.root, prototype.mechanic.id);
+  const levelById = new Map([
+    ...studioLevels.levels.map((level) => [level.id, level] as const),
+    ...prototype.levels.levels.map((level) => [level.id, level] as const),
+  ]);
   const archiveRoot = path.join(prototype.root, "design_archive");
 
   const archiveEntries = await Promise.all(

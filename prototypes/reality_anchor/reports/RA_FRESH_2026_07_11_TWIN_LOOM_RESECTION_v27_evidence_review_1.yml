@@ -1,0 +1,90 @@
+review_iteration: 1
+candidate_version_reviewed: v27
+review_input_type: candidate_version
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: mechanic_exposure_context
+    evidence_basis:
+      - >-
+        mechanic_exposure_sequence.yml 将 dual_anchor 定义为当前序列最后阶段；exact initial state 同时包含固定 P/L 与可移动 B/S，dual-anchor 配置成立。
+      - >-
+        complete reachable scan 覆盖 94204 个状态并列出 reachable_event_types；candidate 的七个 claimed_core_events 均可达。七个 all_winning_path_event_gates 均为 complete 且 missing_required_winning_path=false，sequence gate 亦为 complete、violating_winning_path=false。
+      - >-
+        dual_anchor 之后没有更晚阶段需要排除；candidate 明确区分 reachable_event_exposure 与 all-winning-path required gates。
+  - target_ref: mechanism_scope.central[0]
+    evidence_basis:
+      - >-
+        step 2 snapshot 记录同一步 push_object:box_sticky_anchor、anchor_boundary_shift:box_sticky、box_to_sticky:n3、sticky_merge:n1；after 状态显示三格箱柱与上下黏臂组成七格 C 形 sticky component。
+      - >-
+        step 12 snapshot 记录 pull_object:sticky#1、move_sticky_rigid、sticky_to_box:n3、sticky_split:n1；before/after 状态显示整体右拉后 x=6 三格连接柱切成箱、上下黏臂在 x=4-5 分裂。P/L 的区域规则与玩家动作位置支持该动作属于拉侧操作。
+  - target_ref: mechanism_scope.central[1]
+    evidence_basis:
+      - >-
+        exact layout 共有 5 个目标，坐标为 (4,2)、(6,3)、(6,4)、(8,5)、(4,6)。step 12 after 在 (6,3)/(6,4) 均显示 `*`，证明同一切割动作让上、中切箱直接覆盖两个 holding goals；step 42 after 两处仍为 `*`。
+      - >-
+        initialState 的 x=3、rows 1-7 为 [.,.,M,.,M,.,.]，step 12 after 变为七个连续空地；两条黏臂同时移至 x=4-5。该 exact snapshot 支持“切割释放原 x=3 占格并打开中轴通道”。
+  - target_ref: mechanism_scope.central[2]
+    evidence_basis:
+      - >-
+        step 12 after 与 alternative split_state 完全一致：玩家在 (7,5)、下箱在 (6,5)、右目标在 (8,5)。ALT1 的两次 right 均合法并分别触发 pull_object:crate#3，第二步后下箱位于 (8,5)、玩家位于 (9,5)。
+      - >-
+        ALT1 result_state 中目标箱封住 pocket 左出口；玩家只能在 (9,4)-(9,6) 三格区移动。continuation_search 为 complete、found=false、explored_states=3，支持“立即完成右目标后无法继续完成两臂”的机械结论。
+      - >-
+        all_winning_path_sequence_gate 完整要求任一胜路都不得在两条黏臂目标均完成前覆盖右侧切出箱目标；candidate 没有对上下黏臂彼此先后作排他主张。
+  - target_ref: player_reasoning.forced_setup_disclaimer
+    evidence_basis:
+      - >-
+        SEG1_forced_anchor_merge 覆盖 step 1-2，SEG2_forced_reach_and_crosscut 覆盖 step 3-12；两段 supports_reasoning_units 均为空，前 12 步没有被申报为 reasoning unit。
+      - >-
+        complete agency evidence 的 forced commitment prefix 为 3；开局、拼接后以及 step 11 到切割的胜路承诺均唯一。玩家侧中性解释仅为这些步骤构成 forced setup，不推出其具有难度或洞见。
+  - target_ref: player_reasoning.RU1_defer_aligned_crate_goal_until_both_arms.alternative
+    evidence_basis:
+      - >-
+        candidate 的 exact_inputs=[right,right] 非空，并与 alternative_report 的 exact_inputs 及两条 replay_steps 完全一致；canonical_prefix_to_split_state 与 solution.inputs 的前 12 步一致，split_state 与 JSON keySnapshots step=12 after 完全一致。
+      - >-
+        replay step 1、2 均标记 legal=true，且都触发 pull_object:crate#3；result_state 的 (8,5) 为已覆盖目标 `*`，(9,5) 为玩家 `@`，与 blocked_operation 和 local_gain 一致。
+      - >-
+        continuation_search 原样为 status=complete、explored_states=3、found=false；candidate 的 concrete_outcome 没有把该 exact state 的无胜续搜扩写为玩家必然误选。
+  - target_ref: player_reasoning.RU1_defer_aligned_crate_goal_until_both_arms.conclusion
+    evidence_basis:
+      - >-
+        complete goal-order monitor 证明所有胜路都先完成两条黏臂目标，再覆盖 (8,5)；canonical step 26/36 分别完成两臂，step 41/42 才把下箱连续右拉到最终目标。
+      - >-
+        step 42 after 显示两个 holding goals、上下黏臂目标和右侧箱目标同时覆盖，玩家进入 pocket，并满足 mechanic.yml 的 all_targets_covered_by_objects 胜利条件。
+  - target_ref: player_reasoning.operation_segments_and_trace_partition
+    evidence_basis:
+      - >-
+        SEG1 至 SEG6 的 step_range 连续且无重叠地覆盖 1-42；各段 exact_inputs 顺序拼接后与 layout JSON solution.inputs 完全一致，符合 uncovered_steps=[]、overlapping_steps=[]。
+      - >-
+        step 2、12、26、36、41、42 的六个非 walk 操作与各 segment 边界、输入及 snapshot/events 一致；其余输入均为 canonical walk。
+  - target_ref: player_reasoning.resolution
+    evidence_basis:
+      - >-
+        final_state_ref 对应 step 42 after；五个目标全部覆盖、上中 holding crates 保持锁定、上下黏臂各覆盖一目标、下箱覆盖右目标。该状态与 event_gate_report 的唯一 winning object configuration 示例一致。
+  - target_ref: solution_uniqueness
+    evidence_basis:
+      - >-
+        result=unique_complete 严格属于 skill 允许枚举值，且 evidence_refs 指向 event_gate_report.yml#/solution_uniqueness。
+      - >-
+        complete graph 有 1 个 winning state，winning_object_configuration_groups 只有 1 组且 count=1；报告记录 3 条最短输入路径但仅 1 种最短非走位签名。该等价 walk-order 说明与 unique_complete 没有明显冲突。
+  - target_ref: hard_fact_summary_for_critic.calibrated_trace_metrics
+    evidence_basis:
+      - >-
+        candidate、facts packet 与 layout JSON 的 pilot 数值逐项一致：solutionCost=42、nonWalkEventCount=14、heavyReuseRatio=0.125、revisitRate=0.3953488372093023；两个 aggregateBand 均为 4，band 与 weight 也未改写。
+      - >-
+        该项仅确认转录一致性；按 evidence reviewer 纪律，calibrated_trace_metrics 不参与 verdict，也不支持或反驳玩家侧质量。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >-
+    ALT1 的 complete/3-state/no-win continuation 只证明该 exact result state 无胜路；不证明玩家一定会选择它或觉得近目标具有诱惑力。
+  - >-
+    all-winning-path sequence gate 支持的是两个黏臂目标都早于 (8,5) 的目标覆盖顺序；它不规定上下两臂彼此的先后，candidate 已保持这一边界。
+  - >-
+    solution.objectParticipation 为空；holding crates、下箱与上下 sticky component 的区分来自 exact 坐标、snapshot 和 replay，不应外推为一般化的 per-object 必要性定理。
+  - >-
+    complete graph、唯一胜态、forced commitments、42 步长度与 pilot metrics 均不证明审美、难度、洞见强度、执行疲劳或 campaign role；本审查未评价这些事项。
+  - >-
+    P/L 固定且没有自身 anchor shift；其责任由 mechanic.yml 的区域规则、动作位置与 pull 事件支持，不能表述为 P/L 被移动。
+questions_for_designer: []

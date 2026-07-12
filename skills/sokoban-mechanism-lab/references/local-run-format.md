@@ -17,7 +17,7 @@ cases:
     variant: "variant_a"
     changed_variable: "相对对照变体改动的结构旋钮"
     contrast_with: "case_b"
-    notes: "输入接口 / 输出接口 / 最小 consumer 的简短说明"
+    notes: "开始摆法 / 关键动作 / 动后局面 / 最小用法的简短说明"
     layout: |
       #####
       #@..#
@@ -90,13 +90,13 @@ prototypes/<mechanic_id>/mechanism_lab/runs/<round_id>/
   curator_decision.md
 ```
 
-默认线性循环中，`brief.md` 在运行 explorer 前写入，作为任务包；`curator_decision.md` 记录 `promote`、`merge`、`supplement`、`defer` 或 `relabel` 的裁决，以及对 `lexicon.md`、`lexicon_index.md`、`backlog.md` 的更新。并行 round 中，`round_manifest.md` 只记录各设计空间切片的边界、共用 source boundary 和不要读取项；`curator_synthesis.md` 在所有 topic 完成后写入，用来合并重复、冲突和弱结论。每个 topic 仍必须写成“输入 -> 产物 -> 最小 consumer”的设计空间切片。
+默认线性循环中，`brief.md` 在运行 explorer 前写入，作为任务包；`curator_decision.md` 记录 `promote`、`merge`、`supplement`、`defer` 或 `relabel` 的裁决，以及对 `lexicon.md`、`lexicon_index.md`、`backlog.md` 的更新。并行 round 中，`round_manifest.md` 只记录各设计空间切片的边界、共用 source boundary 和不要读取项；`curator_synthesis.md` 在所有 topic 完成后写入，用来合并重复、冲突和弱结论。每个 topic 仍必须写成“开始摆法 -> 关键动作 -> 动后局面 -> 最小用法”的设计空间切片。
 
 这些流程文件不是 `mechanism-lab-run --write` 的输出；不要要求用户在 prompt 中复述它们的内容。
 
 Topic brief 应包含建议顺手比较项。Explorer 完成后要在 `explorer_notes.md` 或 `proposed_families.md` 中写清结论范围校准：
 
-- 已支撑：哪些变体、对象或状态已经能支撑当前语料。
+- 已支撑：哪些变体、对象形状和动作结果已经能支撑当前语料。
 - 未覆盖导致的结论收窄：哪些未跑、等价、不适用、patch 隔离不了，或已经变成另一个题材。
-- 不应入库：哪些只是孤例、预算不足、没有 consumption probe，或尚未转成可用结构材料。
-- 是否打开了新设计空间或新组合接口：普通未覆盖变体只收窄本条语料，不直接写成下一轮 backlog。
+- 不应入库：哪些只是孤例、预算不足、没有 consumption probe，或尚未转成具体局部用法。
+- 是否打开了新设计空间或新组合关系：普通未覆盖变体只收窄本条语料，不直接写成下一轮 backlog。

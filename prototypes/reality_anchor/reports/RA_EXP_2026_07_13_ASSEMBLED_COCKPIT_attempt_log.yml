@@ -1,0 +1,33 @@
+task_classification: specific_prototype_level_design
+review_scope: hard_evidence_only_no_full_review
+core_identity: 玩家先把五格 Γ 主体与两格下臂组装为完整七格 C，再从凹口内移动完整 C 完成双锚钩推。
+attempts:
+  - id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A1
+    family: two_piece_directional_docking
+    status: rejected_graph_exhausted
+    change: 原设想为移动下臂；求解器发现更紧的 Γ 主体右移后上拉下臂合舱路线。
+    result: shortest_cost_5_graph_exhausted_at_1000001_states_73_wins
+  - id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A2
+    family: align_gamma_then_merge_into_cockpit
+    status: rejected_overcompressed_auto_dock
+    change: 压缩 A1，仅保留 Γ 主体右移对齐、上拉两格下臂合舱、凹口内连续右拉的因果链。
+    result: fragment_accidentally_already_aligned_shortest_up_right_right_right_complete_graph_7_states_but_no_alignment_decision
+  - id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A3
+    family: align_gamma_then_merge_into_cockpit
+    status: viable_baseline_pending_strict_audit
+    change: 将两格下臂右移一格；玩家必须先从凹口横拉 Γ 主体对齐，再上拉下臂合舱。
+    result: shortest_right_up_right_right_complete_graph_9_states_1_win
+  - id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B1
+    family: dual_alignment_merge_and_board
+    status: rejected_bypass_main_overtravel
+    change: 下臂再右移一格；玩家须先把下臂左拉对位，再横拉 Γ 主体，随后上拉下臂合舱并落入驾驶舱。
+    result: shortest_up_left_right_right_up_right；Γ 可右移两格直接适配未移动下臂，双校准 claim 不成立。
+  - id: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B2
+    family: dual_alignment_merge_and_board
+    status: viable_primary_hard_evidence_pass
+    change: 将双锚轨左移一格作为 Γ 过度平移的实体挡块；预期必须下臂左移一格且 Γ 右移一格后才能合舱。
+    result: shortest_left_up_right_up_right_complete_graph_70_states_98_edges_1_win_strict_unique_PASS_all_core_event_gates_complete
+selected_for_playtest:
+  primary: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_B2
+  alternate: RA_EXP_2026_07_13_ASSEMBLED_COCKPIT_A3
+  reason: B2 增加双校准；A3 保留合舱后完整 C 连续驾驶两步，供玩家侧比较。

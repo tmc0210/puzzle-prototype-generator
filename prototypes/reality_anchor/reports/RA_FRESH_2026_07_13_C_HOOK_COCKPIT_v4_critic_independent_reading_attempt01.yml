@@ -1,0 +1,63 @@
+review_attempt_id: RA_C_HOOK_V4_CRITIC_ATTEMPT_01_20260713
+critic_instance_id: /root/critic_v4_attempt01
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+review_input_type: candidate_version
+review_method:
+  difficulty_route: simple_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家要让三个目标都由对象覆盖。棋盘直接呈现为中央目标已被七格 C 形 sticky 的右下端覆盖，
+    上下两个右侧目标各自位于一对横向锚点右边；因此玩家需要在不永久丢掉中央覆盖的前提下，
+    设法让 sticky 的上下横臂同时参与把两对锚点各向右移动一格。
+  salient_relations_seen:
+    - >-
+      开局七格 sticky 的上横臂位于 y1 并贴着上方与右侧墙体，下横臂位于 y3，
+      两对锚点却分别位于 y2 与 y4；玩家从 (3,4) 向下走时拉动 (3,3) 所属的完整 sticky，
+      step 3 令整块下移一格。棋盘因此暂时揭开 (3,3) 的中央目标，同时把上下横臂改到 y2/y4，
+      既解除上横臂在 y1 向右移动会撞墙的限制，也让两条横臂分别与 L/P、S/B 对齐，
+      从而新增“进入凹口后向右拉整块”的后续操作。
+    - >-
+      sticky 下移后，玩家可由 (3,3) 走入其凹口 (2,3)；step 9 第一次向右拉让整块右移，
+      两条横臂的右端到达 (4,2)/(4,4)，为同时接触上下锚点建立位置。step 10 再向右拉时，
+      上下横臂在同一次刚体移动中分别推动 L/P 与 S/B 到 x6-7，P、B 覆盖两个右侧目标；
+      同时 sticky 竖脊回到 (3,3) 覆盖先前主动揭开的中央目标，因此三个目标在同一收束中完成。
+    - >-
+      玩家看见的“中央目标当前已经完成”并不是需要保护的静态成果：step 3 必须先失去该覆盖，
+      step 9-10 的两次右拉才会把竖脊带回。这个可见的先失后得关系给下拉操作提供了全局理由，
+      而不是只靠走位长度或局部腾挪制造过程。
+  unclear_or_unreadable_parts:
+    - >-
+      raw-only 材料未声明本轮具体玩家模型、目标难度档与候选角色；因此这里只能判断结构本身可读且连贯，
+      不能在第一阶段确认它是否精确匹配后续 brief 的 role fit。
+    - >-
+      canonical replay 证明一条十输入路线中的可见变化，但第一阶段不运行 solver/analyzer，
+      因而不把路线唯一性、失败分支数量或是否存在更廉价试探路径当作已知事实。
+  initial_quality_risks:
+    - >-
+      核心判断高度集中在“先把 sticky 下拉一格，再从凹口向右拉”这一换位；一旦 step 3 完成，
+      step 4-8 主要是进入凹口的走位，step 9-10 又是同方向连续拉动。若目标角色要求多层规划，
+      后半段可能过于直接；但这属于待 brief 校准的难度边界，不削弱当前可见的一体化收束。
+    - >-
+      玩家初始位置距 step 3 的下拉站位很近，且下拉是开局最醒目的可执行对象交互之一；
+      若玩家主要因最近 affordance 偶然执行它，中央目标的暂时牺牲可能在行动前没有形成足够强的问题。
+      第二阶段需用玩家推理材料判断该洞见是可分析选择还是低成本试出。
+    - >-
+      相比人评低分锚点 RA_CAND_0024 所批评的“有黏块与两个锚点却仅推拉腾挪”，本候选确实让
+      C 形几何、两个锚点与三个目标在 step 10 的同一因果链中共同收束；但它是否达到高分锚点所强调的
+      强反直觉构造与足够前置推理，仍取决于下拉必要性在实际游玩中是否过早显然。
+  exact_basis:
+    - layout: 开局七格 sticky 占据 (1-3,1)、(1,2)、(1-3,3)，中央目标在 (3,3)，L/P 与 S/B 分别在 (5-6,2)/(5-6,4)，右侧目标在 (7,2)/(7,4)。
+    - step 3: 从 (3,4) 输入 down，完整 sticky 下移，(3,3) 由 sticky 覆盖变为未覆盖目标，上下横臂转到 y2/y4。
+    - step 8: 玩家从 (3,3) 进入下移后 sticky 的凹口 (2,3)，获得向右拉动整块的站位。
+    - step 9: 从 (2,3) 输入 right，sticky 首次整体右移，上下横臂右端到达 (4,2)/(4,4)。
+    - step 10: 再输入 right，sticky 同时推动 L/P 与 S/B 到 x6-7，P/B 覆盖右侧两目标，sticky 竖脊回到 (3,3) 并获胜。

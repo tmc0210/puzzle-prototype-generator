@@ -1,0 +1,34 @@
+opening_comfort_check:
+  candidate_version: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+  status: clean_with_caveat
+  current_start_position: [3, 1]
+  shortest_solution_cost: 17
+  initial_scc_size: 2
+  initial_exit_count: 1
+  first_step_legal_events:
+    left: [walk]
+    down: [push_object:crate#1]
+  reversible_observation:
+    inputs: [left, right]
+    legal: true
+    returns_to_initial: true
+    events: [walk, walk]
+  alternate_start_comparison:
+    candidate_start_position: [2, 1]
+    shortest_solution_cost: 18
+    graph_status: complete
+    graph_states: 381
+    expected_trace_inputs: [right, down, right, down, up, right, up, right, down, left, down, left, down, down, left, left, down, left]
+    expected_trace_legal: true
+    expected_trace_win: true
+    core_event_probe_status: complete
+    core_event_bypass_found: false
+    effect: 只是在规范解前增加一次 right 返回当前起点，不增加新的观察关系或机制问题。
+  recommendation: keep_current_start
+  caveat: >
+    initial SCC 只有两个状态且唯一 viable exit 是下推上箱；开局属于受控导入，不能把第一手计为高难洞见。
+    当前起点仍允许玩家左走一格观察并无事件返回，符合 challenge 的最小缓冲。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_pre_submission_evidence.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_puzzle_critic_2.yml

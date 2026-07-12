@@ -1,0 +1,41 @@
+goal_prune_check:
+  candidate_version: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+  status: clean
+  base_shortest_cost: 17
+  targets_checked:
+    - target: [2, 3]
+      action: keep
+      reason: >
+        删除后最短成本仍为17、完整图381状态、规范解仍胜且核心事件无旁路，因此它不是结构门；
+        但该目标把 step4 的 B/S 上提与 step11 的 B/S 左移区分成“到达目标行”与“B 真正覆盖”，
+        是 critic 明确认可的双锚操作侧交接反馈与读图责任，属于核心审美反馈而非顺路覆盖。
+      semantic_role: read_graph_and_mechanism_feedback
+      cost_delta: 17->17
+      graph_status: complete
+      expected_trace_win: true
+      core_event_bypass: none
+    - target: [6, 3]
+      action: keep
+      reason: >
+        删除后最短成本仍为17、完整图381状态、规范解仍胜且核心事件无旁路，因此它不是结构门；
+        但它让 step5 的 L 覆盖与 step8 的 P 覆盖形成可见交接：P/L 下推在保持目标覆盖的同时释放 x5,y3，
+        是 RU2 与 critic merit 的直接反馈，属于核心审美反馈。
+      semantic_role: read_graph_and_mechanism_feedback
+      cost_delta: 17->17
+      graph_status: complete
+      expected_trace_win: true
+      core_event_bypass: none
+    - target: [2, 6]
+      action: keep
+      reason: 删除后最短成本降为10，并出现缺少 B/S shift、pull、box_to_sticky、sticky_merge、sticky rigid move、sticky_to_box 的胜路。
+      semantic_role: structural
+      cost_delta: 17->10
+      graph_status: complete
+      expected_trace_win: true
+      core_event_bypass: [box_sticky_anchor_shift, pull_event, box_to_sticky, sticky_merge, sticky_rigid_move, sticky_to_box]
+  removed_targets: []
+  retained_targets: [[2, 3], [6, 3], [2, 6]]
+  evidence_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_pre_submission_evidence.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_puzzle_critic_2.yml
+

@@ -1,0 +1,313 @@
+experiment_arm: baseline
+target_code: Alpha
+stage: final_claim_last_review
+final_review_issued: true
+review_attempt_id: RA_NEW_COLUMN_REWEAVE_REVIEW_1_BASELINE_AB
+critic_instance_id: /root/baseline_alpha
+review_iteration: 1
+candidate_version_reviewed: RA_NEW_2026_07_12_COLUMN_REWEAVE_v1
+review_input_type: candidate_version
+archive_records_read: 31
+candidate_packet_read: true
+designer_claim_read: true
+solver_analyzer_graph_run: false
+
+verdict: revise_required
+review_loop_state: revise_required
+required_action: structural_revision
+
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+  controller_route: raw_packet_then_full_candidate_packet
+  packet_declared_claim_last_mode: not_used
+  route_note: >-
+    packet 内 claim_last_review.mode 写为 not_used，但本次实际由 controller 在 frozen independent_reading 落盘后才提供完整 candidate packet；
+    本 artifact 按实际读取顺序记录 claim_last_used:true，元数据不一致另作非阻塞诊断。
+
+designer_claim_effect:
+  effect_on_final: maintained
+  severity_change: none
+  explanation: >-
+    designer claim 具体化了 step 14 的双重回报，并证实上下端可换序，支持 Stage 1 已记录的玩家侧优点；
+    但 slot brief 与 summary 也明确把 C 形切柱、上下端点加三箱柱、三路重拼作为核心，且 packet 未提供 RA_CAND_0020 archive variant 授权，
+    因此 Stage 1 的 lineage core_blocker 被维持。RU2 主要解释两步最短化、calibrated_trace_metrics 缺失等新增问题没有把最终动作收紧到拒绝或换 family。
+
+independent_reading:
+  status: completed
+  initial_verdict: revise_required
+  initial_review_loop_state: revise_required
+  initial_required_action: structural_revision
+  player_goal_seen: >-
+    玩家需要先把底部的 P/L 与 B/S 排成四格列车，使列车横移后覆盖底部四连目标；
+    同一次横移还会改变上方 C 形黏块相对 B/S 边界的位置，把它切成可重新拼合并送往屋顶和中部目标的对象。
+  salient_relations_seen:
+    - >-
+      初始底部第 7 行的 P/L 位于四连目标左侧，而第 6 行的 B/S 位于 P/L 左上；
+      step 2-3 把 P/L 向右拉两格，step 9 再把 B/S 下推到同一横廊，
+      因而 step 13-14 可由 B/S 推动 P/L 形成四格列车并覆盖四连目标。
+    - >-
+      初始第 2-4 行的五个 M 呈 C 形；step 14 的列车横移同时触发 sticky_to_box 与 sticky_split，
+      可见结果是三箱竖柱和上下两个黏端点，后续不再是搬运原 C 形，而是分别重组这些输出。
+    - >-
+      step 20 将上箱推向上端点形成二格横条，step 24 将横条送到屋顶双目标；
+      step 30 将下箱与下端点组成二格条覆盖中部目标，step 35 再让剩余对象与屋顶横条合成三格 L 完成全部目标。
+    - >-
+      raw alternative 从 step 14 先处理下端，仍可在 37 步到达同一终局，说明切分后的两端并非只有一种硬编码处理顺序。
+  initial_merits:
+    - id: IR_MERIT_01
+      relation: >-
+        玩家先看见底部四连目标、其左侧 P/L、上一行左侧 B/S，以及上方 C 形黏块；
+        step 2-14 先拉 P/L、再下推 B/S、最后推动四格列车；
+        棋盘在 step 14 同时出现底部四目标被覆盖与远处 C 形被切成三箱柱加两个黏端点；
+        这使后续操作从移动一个大刚体改为针对不同目标重新拼接输出，核心动作有双重且可见的回报。
+    - id: IR_MERIT_02
+      relation: >-
+        玩家在 step 14 后看见上、下两个黏端点和中间箱柱；
+        canonical 路线先在 step 20-24 处理上端，alternative 则先处理下端；
+        两条路线都改变相应端点与箱子的拼接形状并最终回到同一终局，
+        因而关卡至少没有把主要难度压成单一的三路固定顺序锁。
+  unclear_or_unreadable_parts:
+    - >-
+      raw trace 只列 significant states，没有逐格展示 step 20-35 每次刚体位移后的完整坐标；
+      可以判断各输出的用途，但尚不能从本阶段材料确认后半段每个转向是否都要求新的规划，而非局部执行。
+    - >-
+      raw packet 没有提供目标课程位置或预先声明的目标难度，故只能做 archive-relative 的独立难度判断，不能判断课程 role fit。
+  initial_quality_risks:
+    - >-
+      step 2-14 的开场包含两次拉 P/L、一次下推 B/S 和两次列车右推；底部四连目标使总体目的较可读，
+      但若中间走位没有有意义选择，这一段仍可能显得像为了触发 step 14 而铺设的较长机关演出。
+    - >-
+      step 14 后的三个箱输出分别与上下端点及目标配对，后半段可能退化成依次消费输出；
+      目前的不同拼形与可交换顺序缓解了重复风险，但不足以从 raw trace 单独证明每一支都有独立洞见。
+    - >-
+      初始 C 形五黏块、其下方 B/S、切分成上下端点与中间箱柱并分别消费的布局骨架和对象职责，
+      与 RA_CAND_0020 高度重合；raw packet 没有明确授权 archive variant work。
+  initial_aesthetic_assessment:
+    score: 4
+    label: 亮点候选边界
+    basis: >-
+      step 14 把底部目标收束与远端材料切分合为一个高回报动作，随后输出会重新拼成横条和 L 形，
+      单看玩家体验具备强 4 的耦合与形状回收；但后半段仍有顺次消费风险，且与 RA_CAND_0020 的骨架继承阻止其作为独立新设计进入 proposal-ready。
+  initial_difficulty_assessment:
+    score: 4
+    label: 阶段挑战边界
+    basis: >-
+      难点主要来自预判移动双锚边界会同时覆盖底部目标并重写上方材料形态，以及为多个终局目标规划重组顺序，
+      而非仅由 35 步长度产生；alternative 显示局部顺序可交换，因此不把难度归因于唯一顺序枚举。
+  exact_basis:
+    - "layout: 第7行 P/L 位于 x2-x3，四连目标位于 x4-x7；第6行 B/S 位于 x2-x3"
+    - "layout: 第2-4行五个 M 位于 (4,2)(5,2)(4,3)(4,4)(5,4)，形成 C 形"
+    - "input steps 2-3: 连续 right 拉动 P/L 两格"
+    - "input steps 9,13-14: down 将 B/S 推入底廊，随后两次 right 形成 force chain；step 14 同时覆盖底部四目标并触发 sticky_to_box/sticky_split"
+    - "input steps 20,24,30,35: 上端重组并覆盖屋顶双目标，下端重组覆盖中部目标，最后合成三格 L 完成全部目标"
+    - "raw alternative from step 14: [up, up, up, right] 先处理下端，37步到同一终局"
+    - "archive RA_CAND_0020: 同样的 C 形五黏块、下方 B/S、切成上下 sticky endpoint 与中心 crate 输出并分别消费"
+
+player_facing_merits:
+  - id: MERIT_DUAL_RETURN
+    target_ref: RU1_four_cell_anchor_train
+    relation: >-
+      玩家初始看见底部 P/L、上一行 B/S、右侧四连目标和远处 C 形黏块；
+      steps 2-14 把 P/L 拉出、B/S 下压，再由 B/S 推着 P/L 右移；
+      step 14 同时让四格锚点列车覆盖底部目标，并把 C 形切成三箱柱与两个黏端点；
+      后续因此新增“把切分输出重新拼成屋顶横条、中部条和终局 L”的操作，而不是让锚点停位后退休。
+  - id: MERIT_SHAPE_RECOVERY
+    target_ref: RU3_rebuild_final_l
+    relation: >-
+      玩家在 step 24 看见屋顶横条已覆盖两个目标、其下第三目标仍空，并看见剩余两箱与下端点；
+      steps 25-30 先把下箱与端点合成二格条覆盖中部目标，steps 31-35 再把最后箱转黏送到屋顶横条下方；
+      棋盘从分散输出变成三格 L 并立即获胜，使初始 C 形的切分最终得到新的几何收束。
+
+supported_reasoning:
+  - unit_ref: RU1_four_cell_anchor_train
+    reason: >-
+      player_question 在 step 0 即由底部四连目标、两枚二格锚点和 C 形连接柱共同提出；premises 都可由初始布局和规则读取，
+      conclusion 给出先抽 P/L、再下压 B/S、最后 force-chain 的计划理由，steps 1-14 与 step 14 的双重反馈兑现该结论。
+  - unit_ref: RU3_rebuild_final_l
+    reason: >-
+      问题在 step 24 的剩余目标与剩余材料状态中真实存在，premises 分别锚定 step 24 与 step 30，
+      conclusion 解释了为何必须先完成下端条、再让最后箱转黏接到屋顶横条下方；steps 25-35 兑现终局 L。
+
+archive_taste_context_used:
+  - ref: RA_CAND_0020
+    substantive_effect: >-
+      与候选共享 C 形五黏块、下方 B/S、切出上下黏端与中间箱柱并分路消费的主要骨架；
+      既提供“重复三分支只有审美3/难度2”的人评边界，也构成未授权 lineage core_blocker。
+  - ref: RA_CAND_0022
+    substantive_effect: >-
+      人评5/4的 compact reversal 以短步骤、强反直觉和高空间利用为标杆；本候选虽有 step 14 集中反转，
+      但流程更长，RU2 主要是两步最短化，故只支持审美4边界。
+  - ref: RA_CAND_0025
+    substantive_effect: >-
+      人评5/4的 active constructor 要求玩家主动构造并反复使用 L 形；本候选终局 L 有清晰回收，
+      但 L 只在最后五步形成，贯穿性不足以达到同一构造标杆。
+  - ref: RA_CAND_0023
+    substantive_effect: >-
+      人评指出逐格处理三个输出略带重复，只因紧凑几何与额外混淆达到审美3；
+      用于攻击本候选 step 14 后三路输出是否都具有独立计划价值。
+  - ref: RA_CAND_0031
+    substantive_effect: >-
+      人评1分反例警示机制齐全的长开场可能只是无效演出；本候选 step 14 同时改变底部目标与后半段材料，
+      因而不落入同等严重反例，但 steps 1-14 的执行段仍保留节奏风险。
+  - ref: RA_CAND_0032
+    substantive_effect: >-
+      人评1分反例警示前段要素退休和后段独立 witness；本候选的双锚停位直接生成后段材料状态，
+      因果交接成立，因此该攻击未升级为 disconnected-subpuzzle blocker。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete
+  positive_anchors: [RA_CAND_0022, RA_CAND_0025]
+  lower_bound_or_negative_anchors: [RA_CAND_0020, RA_CAND_0023, RA_CAND_0031, RA_CAND_0032]
+  missing_anchor_effect: none
+
+final_aesthetic_assessment:
+  score: 4
+  label: 亮点候选边界
+  target_fit: below_independent_new_late_game_acceptance_due_to_lineage
+  basis: >-
+    step 14 的双重回报、切分输出继续被使用和终局 L 的形状回收支持4；
+    RU2 只是可换序路线的两步优化，后三路的独立洞见密度不足以对齐 RA_CAND_0022/0025 的5分标杆，
+    且 RA_CAND_0020 lineage 阻止其作为独立新设计通过。
+
+final_difficulty_assessment:
+  score: 4
+  label: 阶段挑战边界
+  target_fit: supports_late_game_entry_difficulty_but_not_design_acceptance
+  basis: >-
+    玩家需预判双锚停位对远端材料边界的影响，并跨多个阶段保留输出用于最终 L，难度来源包含结构因果；
+    不把 canonical_cost 35、explored_states、事件数量或最短层唯一路径当作难度证明。
+
+aesthetic_target_fit: >-
+  玩家体验支持审美4，但未达到 compact reversal 或 active constructor 的5分标杆；
+  更关键的是未授权 RA_CAND_0020 lineage 阻塞独立新候选 role fit。
+difficulty_target_fit: >-
+  支持 late-game 阶段挑战4的结构难度，不支持以最短解唯一、搜索规模或35步长度抬高难度；
+  难度达标不能抵消 lineage 阻塞。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  concrete_mappings:
+    - "四格列车 = step 14 时同一底廊连续占位的 B/S/P/L"
+    - "C 形切柱 = 初始 (4,2)(5,2)(4,3)(4,4)(5,4) 五格 M 在 step 14 变为 x4 三箱与 x5 上下黏端"
+    - "三路材料重拼 = steps 20-24 上横条、steps 25-30 下端条、steps 31-35 最后一箱接入屋顶横条"
+    - "终局 L = step 35 屋顶横条与其下黏格合并后覆盖顶部三目标"
+  required_action: none
+
+trace_metric_interpretation:
+  calibration_status: context_missing
+  solution_execution_pressure:
+    metric_fact: candidate packet 缺少 calibrated_trace_metrics 字段，亦未声明 unavailable 与原因
+    allowed_reading: 不从 canonical_cost 35、solver explored_states 或最短层唯一路径替代轨迹指标校准
+    player_facing_check: 仅依据具体局面、动作和可见变化判断规划与执行压力
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: candidate packet 缺少 calibrated_trace_metrics 字段，亦未声明 unavailable 与原因
+    allowed_reading: 不从事件计数推导空间复用、洞见或审美
+    player_facing_check: 直接检查双锚停位是否生成后段材料，以及切分输出是否被继续使用
+    verdict_effect: caveat
+  unmeasured_dimensions:
+    - 规范解各阶段的执行压力校准
+    - 同一区域跨阶段复用的校准读数
+    - 非规范路线的搜索负担
+
+critic_items:
+  - id: FINAL_BLOCKER_LINEAGE_01
+    type: core_blocker
+    target_ref: slot_brief_and_designer_claim.C_shape_column_three_way_rebuild
+    design_relation: >-
+      玩家看见的五个 M 与 RA_CAND_0020 一样形成 C 形，B/S 同样位于其下方；
+      step 14 移动 B/S 后同样得到 x4 三箱柱与 x5 上下黏端，之后仍把这些输出分路送往目标。
+    attack: >-
+      designer claim 将“C 形切柱、三路材料重拼”明确列为本候选目标，却未声明或授权以 RA_CAND_0020 做 archive variant；
+      新增双锚列车改变了触发方式并提高了回收密度，但没有消除主要布局骨架和输出角色的继承。
+    evidence_basis:
+      - candidate slot_brief.target
+      - designer_claim.summary 与 claimed_highlights
+      - candidate layout 与 step 14 feedback
+      - RA_CAND_0020 layout、core logic 与人评
+    player_facing_effect: >-
+      完整体验的新鲜内容集中在“如何移动切割线”，切开之后的主问题仍是已归档的 C 形三路输出 family；
+      因而不能按独立 late-game reconstruction 新候选放行。
+    blocks_proposal_ready: true
+    expected_designer_response: revise_now
+  - id: FINAL_CLAIM_RU2_01
+    type: score_boundary
+    target_ref: RU2_split_output_order
+    design_relation: >-
+      玩家在 step 14 看见上下端点均可处理；canonical 先走上端在 step 24 覆盖屋顶，replayed alternative 先走下端也立即获得局部目标并在37步到达同终局。
+    attack: >-
+      该 unit 回答的是“哪条成功路线少两步”，不是避免失败或解锁新结构的必要洞见；
+      若玩家不追求最短解，先下后上没有形成矛盾，因此 RU2 不应被用来抬高 late-game 核心推理密度。
+    evidence_basis:
+      - RU2 premises/conclusion
+      - RU2 replayed_attempt 37步同终局
+      - canonical 35步
+    player_facing_effect: 两端选择提供自由度和较好节奏，但主要差异是换位效率，不构成新的解题门槛。
+    blocks_proposal_ready: false
+    expected_designer_response: revise_claim
+  - id: FINAL_RISK_POST_SPLIT_01
+    type: nonblocking_risk
+    target_ref: RU2_and_RU3_steps_15_35
+    design_relation: >-
+      玩家在切分后依次看见上端+上箱、下端+下箱和最后箱；
+      steps 20、30、35 各发生一次箱转黏并合并，棋盘依次完成屋顶横条、中部条和终局 L。
+    attack: >-
+      三次“箱接端点/既有黏块”的动作虽服务不同终局形状，但后两段的 premises 已几乎列出直接配对；
+      玩家侧可能在 step 14 的中心洞见后转入顺次执行，限制审美上限。
+    evidence_basis:
+      - RU2/RU3 premises 与 conclusions
+      - trace_partition steps 15-35
+      - target_events box_to_sticky:3, sticky_merge:3 仅作定位，不作质量证明
+      - RA_CAND_0020 与 RA_CAND_0023 人评重复边界
+    player_facing_effect: 后半程仍有形状回收，但每支的独立惊喜可能不足，整体支持4而不支持5。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: FINAL_CONTEXT_METRICS_01
+    type: context_gap
+    target_ref: calibrated_trace_metrics
+    design_relation: packet 提供 solver、graph、shortest_layer 与事件计数，但完全缺少 calibrated_trace_metrics 或 unavailable 原因。
+    attack: >-
+      baseline 输入合同要求该字段原样提供；当前不能做规范解执行压力与空间复用的校准读取，
+      也不能拿 explored_states、path_count 或事件计数代替。
+    evidence_basis: candidate packet field absence
+    player_facing_effect: 不影响已由具体局面形成的 lineage 与审美判断，但最终包上下文不完整。
+    blocks_proposal_ready: true
+    expected_designer_response: add_context_next_review
+  - id: FINAL_DIAGNOSTIC_CLAIM_ROUTE_01
+    type: diagnostic_note
+    target_ref: claim_last_review.mode
+    design_relation: 实际读取顺序为 raw-first artifact 落盘后才读取完整 candidate packet，但 packet 自报 mode:not_used。
+    attack: 路由元数据与 controller 实际调用不一致；本评审按实际顺序记录 claim_last_used:true。
+    evidence_basis:
+      - frozen Stage 1 artifact
+      - controller second-stage instruction
+      - candidate claim_last_review.mode:not_used
+    player_facing_effect: none
+    blocks_proposal_ready: false
+    expected_designer_response: add_context_next_review
+
+diagnostic_interpretations:
+  - graph_fact: "graph.status: exhausted, explored_states: 500001；evidence_limits 同时声明完整图未穷尽"
+    neutral_meaning: 搜索在给定规模边界停止，不能声明完整图、完整 SCC 或全图唯一性。
+    player_facing_interpretation: 该事实不说明玩家会感到结构精巧、困难或被迫；玩家侧结论仍来自布局和具体操作后果。
+    verdict_effect: none
+  - graph_fact: "shortest_layer.status: complete_through_first_win_depth, path_count: 1, win_state_count: 1"
+    neutral_meaning: 在首胜深度内记录到一个最短输入路径和一个胜利状态，不排除更长的等价成功路线。
+    player_facing_interpretation: 结合已 replay 的37步同终局路线，只能说明35步最短路线的收束性，不能把唯一最短路直接当作玩家洞见或审美优点。
+    verdict_effect: none
+  - graph_fact: "known_equivalent_variant.cost: 37, same_final_state: true"
+    neutral_meaning: step 14 后至少存在先处理下端的合法较长成功顺序。
+    player_facing_interpretation: 玩家无需靠试错找出唯一正确端点顺序；差异主要是两步换位效率，因此降低 forced-order 风险，但不增加核心难度分。
+    verdict_effect: none
+
+handoff_notes:
+  - 最终结论维持 Stage 1 的 revise_required / structural_revision，没有因 designer claim 放宽。
+  - 结构修订应保留“同一次双锚停位同时覆盖底部目标并改变远端材料”的玩家侧亮点，但直接替换 C 形五黏块切三路的 archive 骨架或根本改写输出职责。
+  - 修订后属于重新送审，必须换一个 fresh critic；同时补齐 calibrated_trace_metrics 原样副本或 unavailable 状态与原因。

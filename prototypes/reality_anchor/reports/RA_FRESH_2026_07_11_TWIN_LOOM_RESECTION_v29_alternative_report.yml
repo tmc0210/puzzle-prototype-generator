@@ -1,0 +1,140 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29
+command: npx tsx
+  prototypes/reality_anchor/reports/probe_twin_loom_resection_v29_alternatives.ts
+canonical_prefix_to_split_state:
+  - right
+  - right
+  - up
+  - up
+  - up
+  - right
+  - right
+  - right
+  - up
+  - up
+  - up
+  - up
+  - left
+  - right
+split_state: |-
+  ############
+  #####...####
+  ####G...####
+  ###.MM*@####
+  #####.*.####
+  ###.MMCG.###
+  ####G.#..###
+  ####.....###
+  ####.#######
+  ####.#######
+  ##...SB#####
+  ############
+  ####PL######
+  ############
+alternatives:
+  - id: ALT1_fill_gate_goal_before_upper_arm
+    exact_inputs:
+      - down
+      - down
+      - right
+    replay_legal: true
+    replay_steps:
+      - step: 1
+        input: down
+        legal: true
+        events:
+          - walk
+      - step: 2
+        input: down
+        legal: true
+        events:
+          - walk
+      - step: 3
+        input: right
+        legal: true
+        events:
+          - pull_object:crate#3
+    local_gain: 切割后立刻右拉下箱一格，直接覆盖 (7,5) 目标；玩家仍可从 (8,5) 向下离开并处理下臂。
+    result_state: |-
+      ############
+      #####...####
+      ####G...####
+      ###.MM*.####
+      #####.*.####
+      ###.MM.*@###
+      ####G.#..###
+      ####.....###
+      ####.#######
+      ####.#######
+      ##...SB#####
+      ############
+      ####PL######
+      ############
+    delayed_progress_probe:
+      exact_inputs:
+        - down
+        - down
+        - left
+        - left
+        - left
+        - up
+        - down
+      replay_legal: true
+      replay_steps:
+        - step: 1
+          input: down
+          legal: true
+          events:
+            - walk
+        - step: 2
+          input: down
+          legal: true
+          events:
+            - walk
+        - step: 3
+          input: left
+          legal: true
+          events:
+            - walk
+        - step: 4
+          input: left
+          legal: true
+          events:
+            - walk
+        - step: 5
+          input: left
+          legal: true
+          events:
+            - walk
+        - step: 6
+          input: up
+          legal: true
+          events:
+            - walk
+        - step: 7
+          input: down
+          legal: true
+          events:
+            - pull_object:sticky#2
+            - move_sticky_rigid
+      result_state: |-
+        ############
+        #####...####
+        ####G...####
+        ###.MM*.####
+        #####.*.####
+        ###....*.###
+        ####mM#..###
+        ####.@...###
+        ####.#######
+        ####.#######
+        ##...SB#####
+        ############
+        ####PL######
+        ############
+      visible_progress: 右目标已经覆盖后，玩家仍能离开并完成下黏臂目标；失败只在回头寻找上臂通路时暴露。
+    continuation_search:
+      found: false
+      status: complete
+      explored_states: 512051
+      reason: search complete

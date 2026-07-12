@@ -1,0 +1,266 @@
+review_iteration: 1
+candidate_version_reviewed: v29
+review_input_type: revised_design
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: >-
+    玩家看见五个目标、上下二格黏臂、三格箱柱、下方 B/S 与固定 P/L。切割后，上中两箱自动覆盖
+    (6,3)/(6,4)，上下黏臂需要各自覆盖 (4,2)/(4,6)，下箱需要覆盖 (7,5)。
+  salient_relations_seen:
+    - >-
+      玩家右推 B/S 把三箱柱变黏并接成七格整体，再从右上把手把整体右拉；棋盘变为两只已落目标的
+      holding crates、两条独立黏臂和一只与 (7,5) 目标相邻的下箱。
+    - >-
+      切割态玩家位于 (7,3)。若向下两步再 right，下箱会覆盖 (7,5)，玩家到 (8,5) 后仍可向下离开，
+      甚至可绕到下臂并完成下目标；错误没有立即终止，也持续给出真实目标进展。
+    - >-
+      目标箱同时占住 x=7 竖井底口；玩家进入下方后无法越过它返回上臂把手。正确计划必须先沿尚未
+      封闭的竖井完成上臂，再让门箱落位；下臂可在门箱前后处理。
+  unclear_or_unreadable_parts:
+    - >-
+      机械后果完整可读；试玩边界在于玩家是否能从切割态看出 (7,5) 同时是目标和上下区域的门，还是
+      会在完成下臂后才把失败归因到很早以前的门箱操作。
+  initial_quality_risks:
+    - >-
+      前十四步拼接与横切仍是强制铺垫；若后段门箱关系不能被玩家读为共享通路资源，体验仍可能退化为
+      一次换皮的“某目标最后做”。
+    - >-
+      两个 holding goals 在横切时自动完成并永久锁件，只提供反馈、不提供独立选择，存在目标膨胀与工程感。
+    - >-
+      规范解三十二步中对象操作集中在五个时点；较长到位过程不能被当作难度。
+
+player_facing_merits:
+  - exact_situation: initial state through canonical step 14
+    relation: >-
+      初始上下黏臂在 x=3-4、三箱柱在 x=5，两个相邻目标在 x=6；玩家右推 B/S 合成七格整体，
+      再从 (7,3) 一侧把整体横拉一格。
+    concrete_change: >-
+      上中连接格切成箱并覆盖 (6,3)/(6,4)，上下黏臂在 x=4-5 分裂，下连接箱停在 (6,5) 且只差
+      一次右拉便可覆盖 (7,5)。
+    later_operation_change: >-
+      同一切割同时收束两只连接箱、生成两条可独立完成的目标件，并把第三只切箱变成可关闭上下交通的门；
+      形状、材质与切出物分工均被后续消费，不是 RA_CAND_0024 式标签展示。
+  - exact_situation: ALT1 from step 14 plus its delayed lower-arm probe
+    relation: >-
+      切割后门箱目标近在下方；玩家输入 [down,down,right] 可合法完成它，之后仍可向下走，并用
+      [down,down,left,left,left,up,down] 完成下黏臂目标。
+    concrete_change: >-
+      玩家获得两个真实目标进展且保持移动能力，但 (7,5) 的目标箱封住竖井，仍为空的上目标从下区
+      再无可达把手。
+    later_operation_change: >-
+      错误不是一拍自锁，而是把“上区访问权”提前消费；玩家必须在局部收益出现之前预留非局部路线，
+      这使门箱成为资源规划而不只是终端死袋。
+  - exact_situation: canonical steps 15-32 and the complete order relation
+    relation: >-
+      玩家先沿 x=7 竖井到上臂把手并在 step 18 完成上目标，再回到门箱、在 step 25 封井，最后从
+      下方回路完成下臂；其他胜路允许下臂与门箱在上臂完成后交换。
+    concrete_change: >-
+      上臂完成后，门箱从“会切断未完成任务的错误动作”转为“安全关闭已消费通道的阶段交接”；下臂仍
+      保留可调度空间。
+    later_operation_change: >-
+      玩家需要掌握的是局部偏序“上臂早于门箱”，而不是死背三对象全序；下臂的自由次序让核心约束
+      更像共享资源责任，也避免后半段完全脚本化。
+
+supported_reasoning:
+  - unit_ref: RU1_upper_before_gate_crate
+    reason: >-
+      该问题在切割后真实存在：门箱只差一次对象操作即可完成目标，玩家随后仍能离开并完成下臂，局部收益
+      具有持续性；失败只在需要返回上区时暴露。premises 均能对应目标、门箱、竖井和 holding crate 的
+      可见位置，conclusion 解释了为何先消费上区访问权而不是只复述“先上”。exact alternative 与 delayed
+      probe 也不是不可执行假设。它仍是单一偏序洞见，但其延迟反馈与共享通道责任足以达到困难4下界。
+
+archive_taste_context_used:
+  - >-
+    RA_CAND_0017（人评审美4、难度5）：以高密度、高耦合拼切与推拉规划作为末期上界；v29 有真实门箱
+    资源责任，但只有一条核心偏序，不支持难度5。
+  - >-
+    RA_CAND_0022（人评审美5、难度4）：以短流程强反直觉洞见和精巧空间利用作为审美5锚；v29 的
+    “目标即门”具有重读价值并可支持难度4，但三十二步、强制前段与锁件目标使审美只能保守4。
+  - >-
+    RA_CAND_0025（人评审美4、难度4）：以紧凑主动构形和终局提示作为强4下界；v29 的切割分工与
+    门箱偏序同样把形状输出转成后续操作责任，支持双4边界。
+  - >-
+    RA_CAND_0024（人评审美1、难度3）：警示双锚高信号最终只剩腾挪。v29 前十四步虽脚本化，但切出的
+    下箱既提供目标收益又永久改变上区访问，两黏臂也分别被消费，已越过其机制承诺落空。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete
+  positive_anchors:
+    - {candidate_id: RA_CAND_0017, aesthetic: 4, difficulty: 5}
+    - {candidate_id: RA_CAND_0022, aesthetic: 5, difficulty: 4}
+    - {candidate_id: RA_CAND_0025, aesthetic: 4, difficulty: 4}
+  lower_bound_or_negative_anchors:
+    - {candidate_id: RA_CAND_0024, aesthetic: 1, difficulty: 3}
+  missing_anchor_effect: none
+  mandatory_aesthetic_1_warning_read: >-
+    已完整读取 RA_CAND_0024 与 RA_CAND_0027；遵照本轮“使用4个 archive anchors”，RA_CAND_0027
+    只用于技能要求的警戒核对，不进入本轮四锚分数校准。
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: >-
+      reality_anchor_trace_metrics_v0 中 solutionCost=32 为 band 5、nonWalkEventCount=13 为 band 3、
+      heavyReuseRatio=0.05128205128205128 为 band 3，aggregateBand=4。
+    allowed_reading: >-
+      规范解具有较高执行压力；该指标只描述长度、非走位事件与高频空间调度，不证明洞见、因果依赖或分数。
+    player_facing_check: >-
+      对象操作只出现在 step 2、14、18、25、32，且前十四步为强制铺垫；其余输入主要负责到达上把手、
+      返回门箱和进入下回路。它们服务已形成的门箱计划，但没有逐段增加推理，故不参与双4判断。
+    verdict_effect: none
+  solution_space_reuse:
+    metric_fact: >-
+      revisitRate=0.2727272727272727 为 band 3、heavyReuseRatio=0.05128205128205128 为 band 4，
+      aggregateBand=3。
+    allowed_reading: 规范解有中等空间回访；指标不能判断回访是否精巧或具有惊喜。
+    player_facing_check: >-
+      exact 局面显示 x=7 竖井先承担上区通路、后被门箱永久关闭，下方回路随后承担下臂收束；这是可见的
+      空间角色变化。但该判断来自门箱与通路关系，不由 aggregate band 推出。
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: >-
+  保守支持审美4，不支持5。横切把两只连接箱送入 holding goals、分离双臂，并把第三只箱同时变成目标件
+  与竖井门；随后上臂、门箱、下臂依次消费这组空间责任，形成清楚的阶段转换。两个 holding goals 仍偏工程化，
+  前十四步又是脚本化 set-piece，三十二步执行也不具备 RA_CAND_0022 的短而强，因此只到4分边界。
+
+difficulty_target_fit: >-
+  保守支持难度4，不支持5。v29 不再依靠显眼的终端死袋：早填门箱后玩家仍能完成下臂，真实局部进展会
+  掩盖早先消耗的竖井访问权；玩家必须在行动前识别“目标箱也是门”，并建立上臂早于门箱、下臂自由的偏序。
+  这一延迟、可分析、非全序的资源规划足以越过常规难度3。它仍只有一个核心洞见，前十四步强制，故不支持5；
+  512051 状态、三个胜态、最终配置和 pilot band 均未用于抬分。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI1_gate_relation_is_valid_but_single_layer
+    type: score_boundary
+    target_ref: player_reasoning.RU1_upper_before_gate_crate
+    design_relation: >-
+      切割后玩家可向下拉箱覆盖 (7,5)，再离开右侧并完成下臂；箱留在 (7,5) 后切断下区返回上臂把手
+      的唯一竖井，而正确路线先完成上臂再封井。
+    attack: >-
+      这已不是 v27 的即时死袋，也不只是口头换皮：错误方案有持续目标收益，失败源是共享通路资源被提前
+      消耗。不过全部困难仍集中在“上臂早于门箱”这一条偏序；一旦识别门格，其他对象次序大体自由。
+    evidence_basis: >-
+      ALT1 exact replay、delayed lower-arm probe、可见竖井布局与 dedicated order monitor；不使用续搜状态数量抬分。
+    player_facing_effect: >-
+      玩家需要做一次跨区域预留而非一拍试错，足以支持困难4；没有第二层重构或相互制约，因此不支持5。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI2_holding_goals_remain_engineering_risk
+    type: nonblocking_risk
+    target_ref: mechanism_scope.central[1] + role_fit_claim.strengths[0]
+    design_relation: >-
+      (6,3)/(6,4) 两个目标预先位于连接柱切割落点；横切后上中两箱自动覆盖并保持到终局，玩家不再操作它们。
+    attack: >-
+      它们能给切割明确反馈，也能让两只切箱获得可读归宿；但没有产生选择或共享责任，不能按两个额外谜题层
+      计分。窄槽和目标同时用于收束对象配置，试玩中仍可能显出“为锁件加目标”的工程痕迹。
+    evidence_basis: step 14/32 snapshots、holding crate 说明与 evidence limits。
+    player_facing_effect: >-
+      玩家会收到清晰的两格落位反馈，随后可完全忽略这两箱；若视觉重点被五目标数量带偏，这会压低审美手感，
+      但当前门箱与双臂仍提供足够独立责任，不阻塞4分下界。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI3_forced_prelude_and_sparse_operations
+    type: nonblocking_risk
+    target_ref: player_reasoning.forced_setup_disclaimer + operation_segments
+    design_relation: >-
+      玩家前十四步沿唯一胜路右推 B/S、到达把手并横切；切割后仅在 step 18、25、32 各进行一次对象操作，
+      中间由走位连接上臂、门箱与下臂。
+    attack: >-
+      核心拼接/切割仍非玩家方案比较，后段对象操作也稀疏；若实际走位手感不顺，32步可能让一个强洞见显得
+      被脚本和通勤包裹。长度、事件数与 pilot band 不能为此加分。
+    evidence_basis: exact segments、non_walk_steps 与 forced setup disclaimer。
+    player_facing_effect: >-
+      玩家主要在切割态作一次关键规划，之前和之后都有执行负担；这阻止审美或难度上探5，但资源偏序本身
+      足以维持双4边界。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI4_equivalent_variants_are_neutral
+    type: diagnostic_note
+    target_ref: solution_uniqueness
+    design_relation: >-
+      上臂完成后，下臂与门箱可换序，另有门箱下拉再复位的可逆绕动；完整图有三个胜态但一个最终对象配置。
+    attack: >-
+      这些变体只说明核心约束是局部偏序而非输入唯一；胜态数量少、最终配置相同或最优非走位签名一致都不是
+      审美或难度 merit。
+    evidence_basis: solution_uniqueness=equivalent_variants_only 与 order monitor。
+    player_facing_effect: >-
+      玩家在完成上臂后拥有合理调度自由，这是结构边界而非额外谜题；不因三个胜态升分，也不因非唯一降分。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI5_double_four_only
+    type: score_boundary
+    target_ref: design_target.minimum_acceptable
+    design_relation: >-
+      v29 以切割分工和门箱竖井偏序形成真实玩家计划，但 holding goals、强制前段与单一洞见限制上界。
+    attack: >-
+      人评四锚支持审美4/难度4，不支持任何5分主张；工具完整性、图规模、pilot 指标和 equivalent variants
+      均不改变该边界。
+    evidence_basis: RA_CAND_0017/0022/0025 正锚、RA_CAND_0024 负锚与 CI1-CI4。
+    player_facing_effect: >-
+      试玩者应能获得一次公平的非局部访问权规划和一次清楚的切割回报；是否达到更高密度或更强惊喜仍需试玩。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: complete graph 为 514270 个可达状态、1058153 条合法转移、3 个 winning states。
+    neutral_meaning: 当前 exact version 的完整状态图包含三个获胜状态。
+    player_facing_interpretation: >-
+      大图规模不表示难；三个终态也不自动表示自由或噪声。其玩家侧价值只能由具体门箱偏序与可逆变体判断。
+    verdict_effect: none
+  - graph_fact: >-
+      门箱早填结果态续搜 complete/no-win，并枚举 512051 个状态；delayed probe 可在该分支完成下臂。
+    neutral_meaning: 门箱早填后不存在胜路，但玩家仍可进行合法移动和取得下目标进展。
+    player_facing_interpretation: >-
+      可计分的是错误不会即时暴露、且下臂正反馈会延迟玩家发现上区访问权已失；512051 这一数量本身不说明
+      玩家投入、诱惑或难度。
+    verdict_effect: merit
+  - graph_fact: dedicated order monitor 未找到门箱早于上目标的胜路；下臂可在门箱前后完成。
+    neutral_meaning: 所有获胜计划都满足上目标早于门箱，且不要求下臂与门箱的固定顺序。
+    player_facing_interpretation: >-
+      这与可见竖井资源一致：只有使用上区访问权必须发生在封门前，其他任务未被无谓全序化。它支持
+      一条真实且可分析的偏序，不从 monitor 完整性本身抬分。
+    verdict_effect: merit
+  - graph_fact: >-
+      solution_uniqueness=equivalent_variants_only；6 条最短输入路径、1 种最优非走位签名、1 个最终对象配置组。
+    neutral_meaning: 获胜路线存在走位换序和上目标后的对象换序/可逆绕动，但共享相同核心责任与对象终局。
+    player_facing_interpretation: >-
+      这些等价变体不增加洞见，也不破坏“上臂先于门箱”；不作为分数依据。
+    verdict_effect: none
+  - graph_fact: 所有胜路均要求双锚位移、材质转换、合并、整体移动、切割与分裂事件。
+    neutral_meaning: 获胜不能完全绕开申报的机制链。
+    player_facing_interpretation: >-
+      机制责任真实但前十四步强制；审美 merit 来自切出物后续分工，难度 merit 来自门箱访问权，而不是事件齐全。
+    verdict_effect: caveat
+
+handoff_notes:
+  - >-
+    v29 相比 v27 的关键提升不是状态数，而是错误门箱完成后仍能离开并完成下臂；失败由较早的通路资源消耗
+    延迟产生，因此保守达到困难4。该关系应在试玩反馈中特别核对是否可见、可归因。
+  - >-
+    两个 holding goals、前十四步强制铺垫和对象操作稀疏均须随试玩 handoff 保留为风险；若玩家只感到目标多、
+    路线长或失败原因不明，应降回审美/难度3并结构修订。
+  - >-
+    当前 critic 仅给 proposal_ready_with_caveats，不授予 accepted 或 archive status；可进入后续原型专属
+    pre-submission checks 与待玩候选流程。

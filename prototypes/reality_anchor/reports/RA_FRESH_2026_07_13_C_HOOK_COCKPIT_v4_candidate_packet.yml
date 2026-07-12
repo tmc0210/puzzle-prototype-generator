@@ -1,0 +1,336 @@
+prototype_context:
+  confirmed_rules:
+    - P/L 为可移动两格刚体；P 侧推、L 侧拉，玩家输入时所在侧决定推拉。
+    - B/S 为可移动两格刚体；B 侧为箱、S 侧为黏，合法动作后统一归一化。
+    - sticky 四邻接自动合并为刚体；刚体任一目标格受阻则整个动作失败。
+    - 拉世界中玩家前格必须为空，只拉身后一格相邻的完整对象实例；force 可递归传递。
+  win_condition: 所有目标在结算后由 crate、sticky 或任一锚点格覆盖；玩家不算覆盖。
+  object_and_event_semantics:
+    C_shape: 初始七格 sticky 单一连通分量，坐标为上臂(1,1)-(3,1)、竖脊(1,2)、下臂(1,3)-(3,3)，凹口向右。
+    pull_object: 玩家在 pull side 向空前格移动并拉动身后完整对象。
+    move_sticky_rigid: 七格 C 形作为同一刚体平移。
+    force_chain_n3: 末次输入同时移动 C、P/L、B/S 三个对象实例。
+  tool_boundary:
+    available: runtime replay, solver, complete graph, SCC/agency, all-win event probe, strict uniqueness audit
+    unavailable: curated miner, PuzzleScript exporter/checker
+
+slot_brief:
+  intended_role: application
+  target: >-
+    玩家主动移动并从凹口内操作完整巨大 C 形，使上下双臂在同一刚体位移中同步推动两条锚点线；
+    拆块、直条、填口或缺任一臂均不能成立。
+  difficulty_expectation: 中等，数值目标3；错误反馈快，不用长度、重复或噪声增难。
+
+mechanic_exposure_context:
+  mechanic_window: Reality Anchor 全机制 application，双锚共存。
+  allowed_exposure_through: dual_anchor
+  claimed_core_events:
+    - move_sticky_rigid
+    - force_chain:n3
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+  latest_exposure_timing_check:
+    derived_latest_event_stage: movable_box_sticky_anchor
+    claimed_latest_exposed_event: anchor_boundary_shift:box_sticky
+    all_solution_required_evidence_ref: prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+    canonical_occurrences:
+      - step: 10
+        operation_segment_ref: OS4_double_hook_finish
+        reasoning_unit_refs: [RU2_use_notch_as_cockpit]
+    status: later_phase_present
+    revision_direction: none
+
+design_target:
+  aesthetic_score_target: 4
+  difficulty_score_target: 3
+  target_role_notes: >-
+    中等 application；审美目标为4。短解允许成立，但亮点必须来自 C 的完整轮廓、凹口方向、
+    主动整体位移和双臂同步，不从事件数量或轨迹指标取分。
+
+solve_instance:
+  layout: |-
+    #########
+    #MMM#####
+    #M...LPG#
+    #MMm.####
+    #....SBG#
+    #...@####
+    #########
+  player_start: [4, 5]
+  player_goal: 覆盖(7,2)、(3,3)、(7,4)三个目标。
+  win_condition: all_targets_covered_by_objects
+
+mechanism_scope:
+  central:
+    - 七格 C 在关键动作前后保持单一连通 sticky 刚体。
+    - 玩家先整体下移 C，使凹腔换到中间隔离通道，再进入凹腔沿开口方向拉动。
+    - 上下双臂在 step10 同时推动 P/L 与 B/S；左竖脊同时覆盖中间目标。
+  allowed_support:
+    - P/L 提供 pull side 并作为上钩臂的目标对象。
+    - B/S 维持 sticky 语义并作为下钩臂的目标对象。
+    - 墙只限制锚点轨道、呈现初始矛盾并保持凹腔通道清楚。
+  incidental_allowed:
+    - 玩家走位与目标上的初始 sticky overlay m。
+  required_winning_path_events:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - move_sticky_rigid
+    - force_chain:n3
+  forbidden_winning_path_events:
+    - sticky_split
+    - sticky_merge
+    - sticky_to_box
+    - box_to_sticky
+  forbidden_if_seen_anywhere: []
+
+player_reasoning:
+  canonical_trace_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+  player_goal:
+    description: >-
+      把上方 P/L、下方 B/S 各向右移动一格覆盖目标，并让完整 C 的某一格覆盖中间目标；
+      三者必须在同一终局保持覆盖。
+    state_ref: v4.initial
+  reasoning_units:
+    - id: RU1_relocate_whole_C
+      player_question: >-
+        怎样让向右开口的 C 凹腔成为可用操作位，而不在进入时把紧邻入口的 P/L 一起拖进凹口？
+      premises:
+        - statement: >-
+            初始 C 的中行凹腔与 L/P 在同一行；玩家从右向左进入时处于 pull side，身后的 P/L 会跟着左移。
+          state_ref: v4.initial
+        - statement: >-
+            C 的下臂右端下方可站人；从该格向下移动时，玩家身后接触的是七格 C 的下臂，前格开放。
+          state_ref: v4.step3.before
+        - statement: >-
+            整体下移一格后，凹腔落到中间墙廊，上下臂分别与 P/L、B/S 同行，且初始由下臂覆盖的(3,3)目标被腾空。
+          state_ref: v4.step3.after
+      conclusion: 先从下臂下方拉动整个 C 向下一格，再绕到新凹腔；不要先沿旧凹口进入。
+      operation_refs: [OS1_lower_complete_C]
+      alternative:
+        status: replayed_attempt
+        description: 开局直接沿旧凹口向左进入，再尝试向右拉 C。
+        local_gain: 玩家确实到达初始凹腔内部，看似获得了内部把手位。
+        from_state_ref: v4.initial
+        exact_inputs: [up, up, up, left, left, right]
+        result_state_ref: v4_alt_early_cavity.step6.illegal
+        concrete_outcome: >-
+          两次 left 分别把 P/L 从(5,2)-(6,2)拖到(3,2)-(4,2)；玩家到(2,2)后，right 的前格被 L 占住，
+          以 pull_world_front_blocked 结束。局面失去两锚同步右推所需的上轨起点。
+      feedback:
+        - state_ref: v4.step3.after
+          visible_change: >-
+            七格 C 完整下移；原先在锚点行的凹腔改到中间墙廊，中央目标显露，上下臂同时对准两条锚轨。
+    - id: RU2_use_notch_as_cockpit
+      player_question: >-
+        C 已对齐后，怎样用同一个动作关系同时把上下两个锚点推到右侧目标，并重新覆盖中间目标？
+      premises:
+        - statement: >-
+            step3 后 C 的上、下臂右端分别在(3,2)、(3,4)，两锚左端在(5,2)、(5,4)，中间各隔(4,2)/(4,4)一格。
+          state_ref: v4.step3.after
+        - statement: >-
+            中间墙廊只容玩家进入凹腔；玩家在(2,3)朝右时前格空、身后(1,3)是 C 的左竖脊，处于 pull side。
+          state_ref: v4.step8.after
+        - statement: >-
+            两个锚点的右半格各自紧邻目标；C 的左竖脊在两次右拉后会从(1,3)到(3,3)。
+          state_ref: v4.step8.after
+      conclusion: >-
+        从凹腔内连续向右拉完整 C 两次；第一次把双臂送到两锚旁，第二次由双臂同步推两锚，竖脊同时填中间目标。
+      operation_refs: [OS2_enter_relocated_notch, OS3_prime_double_hook, OS4_double_hook_finish]
+      alternative:
+        status: not_claimed
+        description: 两锚没有可供玩家逐个向右推的左侧站位；这是当前局面可见的空间前提，不伪造尝试序列。
+        local_gain: none
+        from_state_ref: v4.step3.after
+        exact_inputs: []
+        result_state_ref: not_applicable
+        concrete_outcome: not_claimed
+      feedback:
+        - state_ref: v4.step9.after
+          visible_change: C 整体右移一格，玩家仍在凹腔内，上下臂同时贴到两锚左端。
+        - state_ref: v4.step10.after
+          visible_change: >-
+            完整 C 再右移一格；P/L 与 B/S 同时右移并覆盖上下目标，左竖脊落在中间目标，三目标同时覆盖并获胜。
+  operation_segments:
+    - id: OS1_lower_complete_C
+      step_range: 1-3
+      exact_inputs: [left, up, down]
+      purpose: 走到下臂下方并把完整 C 下拉一格，使凹腔与双臂进入正确三行。
+      supports_reasoning_units: [RU1_relocate_whole_C]
+    - id: OS2_enter_relocated_notch
+      step_range: 4-8
+      exact_inputs: [right, up, up, left, left]
+      purpose: 绕过下臂右端，从中间墙廊进入向右开放的凹腔。
+      supports_reasoning_units: [RU2_use_notch_as_cockpit]
+    - id: OS3_prime_double_hook
+      step_range: 9-9
+      exact_inputs: [right]
+      purpose: 从凹腔内拉动完整 C，使上下臂同时靠到两个锚点左端。
+      supports_reasoning_units: [RU2_use_notch_as_cockpit]
+    - id: OS4_double_hook_finish
+      step_range: 10-10
+      exact_inputs: [right]
+      purpose: 再拉完整 C；双臂同步推动两锚，竖脊覆盖中目标并获胜。
+      supports_reasoning_units: [RU2_use_notch_as_cockpit]
+  resolution:
+    resolves: [RU1_relocate_whole_C, RU2_use_notch_as_cockpit]
+    operation_refs: [OS1_lower_complete_C, OS2_enter_relocated_notch, OS3_prime_double_hook, OS4_double_hook_finish]
+    final_state_ref: v4.step10.after
+    visible_confirmation: 完整七格 C、P/L、B/S 三个刚体均向右排列，三个目标分别由 C 竖脊、P、B 覆盖。
+  trace_partition:
+    status: complete
+    ordered_segment_ids: [OS1_lower_complete_C, OS2_enter_relocated_notch, OS3_prime_double_hook, OS4_double_hook_finish]
+    uncovered_steps: []
+    overlapping_steps: []
+
+evidence:
+  commands_run:
+    - npx tsx src/cli.ts try-inputs prototypes/reality_anchor prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.layout.txt --id RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4 --inputs left,up,down,right,up,up,left,left,right,right --write
+    - npx tsx src/cli.ts explain-layout prototypes/reality_anchor prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.layout.txt --id RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4 --targets K_runtime_smoke --max-states 1000000 --graph-max-states 1000000 --write
+    - npx tsx prototypes/reality_anchor/reports/audit_strict_unique_candidate_agent.ts prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.layout.txt RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4 100000
+    - npx tsx prototypes/reality_anchor/reports/probe_dual_axis_candidate.ts prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.layout.txt RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4 100000 40 pl_shift=anchor_boundary_shift:push_pull bs_shift=anchor_boundary_shift:box_sticky sticky_move=move_sticky_rigid dual_force=force_chain:n3
+    - npx tsx src/cli.ts try-inputs prototypes/reality_anchor prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.layout.txt --id RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_ALT_EARLY_CAVITY --inputs up,up,up,left,left,right --write
+  solver_result: found cost10 depth10 explored33；完整图 complete，33 states / 55 transitions / 1 winning state。
+  trace_summary: canonical exact inputs [left, up, down, right, up, up, left, left, right, right]；step10 win。
+  alternative_replay: >-
+    exact inputs [up,up,up,left,left,right]；前五步合法，P/L 左移两格；step6 right 非法，
+    reason=pull_world_front_blocked。artifact 为 input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_ALT_EARLY_CAVITY.json。
+  target_events:
+    - step3 pull_object:sticky#1 + move_sticky_rigid
+    - step9 pull_object:sticky#1 + move_sticky_rigid
+    - step10 pull_object:sticky#1 + force_chain:n3 + both anchor shifts + move_sticky_rigid
+  object_or_instance_evidence: step10 force_chain:n3 同时包含 sticky#1、anchor:push_pull、anchor:box_sticky；最终 C 仍为七格单一连通分量。
+  winning_path_event_checks: complete no-bypass for pl_shift, bs_shift, sticky_move, dual_force；每项 individual probe 均 complete。
+  reachable_event_exposure: allowed_through 为最后 dual_anchor stage，无后续 exposure stage 需排除；不声明 forbidden-if-seen-anywhere。
+  graph_or_counterfactual_evidence:
+    - strict uniqueness PASS；所有 loop-erased/simple 胜路共享同一对象宏序列。
+    - split blocks / straight bar / filled notch / no upper arm / no lower arm 均 complete graph 且 0 win。
+  evidence_limits: 工具事实不证明审美、自然性或难度；初始错误尝试只证明该 exact 输入的具体失败。
+
+solution_uniqueness:
+  result: unique_complete
+  evidence_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_strict_unique_audit_agent.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+
+hard_fact_summary_for_critic:
+  solver: cost10, exact shortest input count1, complete graph33 states, one win state, strict simple-win macro PASS。
+  required_or_forbidden_events: every win requires both anchor shifts, sticky rigid movement and force_chain:n3；no winning bypass found。
+  routed_diagnostic_facts: initial SCC10 states, three exits / one win-reaching / two dead；first winning irreversible exit distance4；latest exposed event step10 in RU2。
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost: { raw: 10, band: 2, weight: 0.35 }
+        nonWalkEventCount: { raw: 9, band: 2, weight: 0.45 }
+        heavyReuseRatio: { raw: 0, band: 1, weight: 0.2 }
+      aggregateBand: 2
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate: { raw: 0.36363636363636365, band: 4, weight: 0.55 }
+        heavyReuseRatio: { raw: 0, band: 1, weight: 0.45 }
+      aggregateBand: 3
+  evidence_limits: 轨迹指标只描述规范解执行压力与空间复访，不测洞见、因果依赖、反直觉或审美。
+  artifact_refs:
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_ALT_EARLY_CAVITY.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+    - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_identity_counterfactuals.yml
+
+diagnostic_routing:
+  hard_evidence: solver/complete graph/strict uniqueness/all-win event gates -> evidence reviewer
+  mechanism_scope: C 连通性、凹口、双臂机械必要性 -> evidence reviewer；玩家价值 -> critic
+  design_evidence_alignment: exact alternative 与 operation segments -> reviewer mechanics + critic player-side
+  taste_probes: archive anchors -> critic only
+  scc_graph: complete；只作为开局选择面与强制阶段事实，不作为审美优点
+  variant_family: v3 非等价胜路已拒绝；v4 为唯一解修复
+  start_position: pre-submission opening_comfort_check completed_clean；保留(4,5)
+  prototype_specific_work: goal_prune/opening_comfort/redundant_prune completed_clean；exact v4 无布局改动
+
+pre_submission_status:
+  execution_order: [invalid_goal_prune, opening_comfort_check, redundant_element_prune]
+  exact_version: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+  invalid_goal_prune:
+    status: clean
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_goal_prune_check.yml
+  opening_comfort_check:
+    status: clean
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_opening_comfort_check.yml
+  redundant_element_prune:
+    status: clean
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_redundant_element_prune.yml
+  rejected_overprune_version:
+    id: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v5
+    ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v5_overprune_reject.yml
+  layout_changed_after_review: false
+
+prototype_specific_contracts:
+  interface_pair_policy:
+    declared_interface_points: []
+    target_pairs: []
+    ignored_pair_classes: []
+    risky_pair_classes: []
+  pair_diagnostics:
+    ignored_pairs: []
+    risky_pairs: []
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: null
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    只读取 archive 人评校准；没有复用旧布局、对象角色、因果链或解路线。允许语料中的 C 形断桥是相反的拆分 family，未采用。
+
+attempt_log:
+  serious_structural_attempts:
+    - v1 开放 7x13 双钩；核心成立但图耗尽且空地过多。
+    - v2 7x9 紧凑版；严格唯一与身份反事实通过。
+    - v3 右移锚轨以纯化错误反馈；因非等价胜路被严格唯一审计拒绝。
+    - v4 恢复紧轨并收窄 claim；全部硬证据重新通过。
+  local_repairs:
+    - v1->v2 裁图、墙化锚轨、加入 C 初始对齐矛盾。
+    - v3->v4 删除可单独操作锚点的间隙，完成唯一解修复。
+    - critic attempt02 后仅将审美目标从5收窄为4；布局、玩家推理和机制范围不变。
+  abandoned_families:
+    - lexicon C 形断桥/拆端点 family：与完整 C 作品身份相反。
+    - v3 纯墙反馈 family：允许单独锚点胜路，拒绝。
+
+archive_taste_context:
+  examples:
+    - archive_id: RA_CAND_0025
+      human_aesthetic_score: 5
+      human_difficulty_score: 4
+      human_comments: >-
+        在狭小紧凑的空间中，将L形反复活塞这一关键高难亮点结构赋予合适的包装以要求玩家主动构造，
+        前几步构造不喧宾夺主，终局也有恰到好处的提示。结构紧凑逻辑清晰亮点突出，是构造关类型的优秀案例。
+    - archive_id: RA_CAND_0022
+      human_aesthetic_score: 5
+      human_difficulty_score: 4
+      human_comments: >-
+        这关的操作非常反直觉，将一个箱子先送入看似死局的死角，构造出拉锚点将两个箱子反向送入目标。
+        空间利用率高，结构精巧。在较短的步骤中要求强玩家洞见以发现反直觉操作，是优秀的范例。
+    - archive_id: RA_CAND_0024
+      human_aesthetic_score: 1
+      human_difficulty_score: 3
+      human_comments: >-
+        玩家看到中间的三个黏块、两个可动锚点，会期待更精彩的切割拼接构造或长链推动、黏块几何形状利用，
+        实际却几乎只有推拉腾挪；不要迷信指标和探针，要从玩家角度思考。
+    - archive_id: RA_CAND_0032
+      human_aesthetic_score: 1
+      human_difficulty_score: 3
+      human_comments: >-
+        开局段落使用到的要素完成后全部退休，和后面的黏块段割裂；务必杜绝拼接无关子关卡来提高机制覆盖、难度或审美。
+  none_found_reason: null
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_claim_packet.yml
+  read_order: facts_then_claim

@@ -1,0 +1,30 @@
+attack_attempt_id: GAMMA_ATTACK_R1
+attacker_instance_id: /root/attack_gamma_r1
+candidate_version_reviewed: RA_NEW_2026_07_12_CROSS_ANCHOR_RELAY_v1
+raw_only_used: true
+designer_claim_read: false
+archive_read: false
+hard_evidence_tools_run: false
+confirmed_player_problems:
+  - id: GAMMA_P1_EARLY_CRATE_PROGRESS_REVERSED
+    exact_scene: "canonical 第 1 步至第 4 步：玩家先把上箱下推一格，随后右移 P/L，并在第 4 步上提 B/S。"
+    visible_setup: "玩家在开局看到上箱可被向下推动；第 1 步后，上箱确实下移，形成最直接的早期进展反馈。"
+    player_operation: "玩家执行 down 推箱，之后执行 right、down、up，最后一次操作拉动 B/S 并触发 force chain。"
+    board_change: "第 4 步中，B 半格把上箱顶回原行，抵消第 1 步呈现的箱子位移。"
+    downstream_player_harm: "玩家刚建立的‘移动箱子即在推进目标’的早期反馈很快被回退；理解正解节奏时必须把一次显眼的箱子进展重新解释为短暂占位，增加返工感并削弱动作结果对后续计划的指引。"
+    raw_facts_sufficient: true
+  - id: GAMMA_P2_SEPARATED_BOXES_CHANGE_MATERIAL_TOGETHER
+    exact_scene: "canonical 第 11 步：玩家推动 B/S 左移并使其覆盖左目标。"
+    visible_setup: "此时棋盘上存在上下两个箱子，二者不是已合并的连续黏性对象。"
+    player_operation: "玩家执行 left，推动 B/S 横向移动一格。"
+    board_change: "B/S 覆盖左目标的同时，上下两箱一起转为彼此分离的黏格。"
+    downstream_player_harm: "一次局部锚点位移同时改写两个分离对象的材质状态；玩家必须在同一拍追踪远离操作点的双重变化，且后续合并操作依赖这次同步变材质，导致局部操作与反馈之间的空间对应变弱、状态理解负担陡增。"
+    raw_facts_sufficient: true
+  - id: GAMMA_P3_FINAL_ACTION_OVERLOADS_TRANSITION_AND_WIN_FEEDBACK
+    exact_scene: "canonical 第 17 步：第 15 步形成的竖向黏条已作为刚体存在，玩家执行最后一次 left。"
+    visible_setup: "玩家看到的是一个由初始黏格与下黏格合并成的竖条，而底目标尚未由下格覆盖。"
+    player_operation: "玩家向左拉动整个黏性刚体，使其跨过 B/S 定义的材料边界。"
+    board_change: "同一次操作让竖条整体左移、跨界切回两个箱子、失去合并形态，并由下格覆盖底目标后立即胜利。"
+    downstream_player_harm: "终局把刚体移动、跨界换材质、对象拆分、目标覆盖和胜利反馈压在同一拍；玩家没有独立状态来确认每条因果，胜利更像复合机关一次性结算，削弱对‘为何此步获胜’以及黏合关系如何解除的清晰理解。"
+    raw_facts_sufficient: true
+pending_factual_question: null

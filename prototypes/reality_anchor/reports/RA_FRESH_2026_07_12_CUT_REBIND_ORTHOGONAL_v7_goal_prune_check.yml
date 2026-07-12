@@ -1,0 +1,19 @@
+goal_prune_check:
+  status: kept_with_unknown
+  targets_checked:
+    - {target: [6, 1], action: keep, cost_delta: "35->35", graph_status: exhausted, expected_trace_win: true, core_event_bypass: unknown}
+    - {target: [7, 1], action: keep, cost_delta: "35->35", graph_status: exhausted, expected_trace_win: true, core_event_bypass: unknown}
+    - {target: [6, 2], action: keep, cost_delta: "35->26", graph_status: not_needed_cost_drop, expected_trace_win: true, core_event_bypass: not_needed_cost_drop}
+    - {target: [6, 4], action: keep, cost_delta: "35->29", graph_status: not_needed_cost_drop, expected_trace_win: true, core_event_bypass: not_needed_cost_drop}
+    - {target: [4, 7], action: keep, cost_delta: "35->35", graph_status: exhausted, expected_trace_win: true, core_event_bypass: unknown}
+    - {target: [5, 7], action: keep, cost_delta: "35->35", graph_status: exhausted, expected_trace_win: true, core_event_bypass: unknown}
+    - {target: [6, 7], action: keep, cost_delta: "35->35", graph_status: exhausted, expected_trace_win: true, core_event_bypass: unknown}
+    - {target: [7, 7], action: keep, cost_delta: "35->35", graph_status: exhausted, expected_trace_win: true, core_event_bypass: unknown}
+  removed_targets: []
+  retained_targets: [[6,1],[7,1],[6,2],[6,4],[4,7],[5,7],[6,7],[7,7]]
+  evidence_refs:
+    - prototypes/reality_anchor/reports/pre_submission_cut_rebind_orthogonal_v7.ts
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7.json
+  note: >-
+    两个材料目标删除会直接降低最短成本，明确保留。其余单删最短成本不变，但完整图与核心事件扫描未完成，
+    按 authority doc 禁止 clean prune，因此保留为 unknown；未修改布局。

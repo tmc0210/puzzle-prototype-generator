@@ -1,0 +1,373 @@
+candidate_id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+candidate_version: v6
+
+prototype_context:
+  confirmed_rules:
+    - "P/L 将棋盘按锚点朝向分为推侧和拉侧；动作模式取玩家输入前所在侧。"
+    - "B/S 将棋盘按锚点朝向分为箱侧和黏侧；合法动作后全图归一化。"
+    - "相邻黏格自动拼成四邻接刚体；跨入箱侧的黏格变箱，剩余连通分量可分裂。"
+    - "两格锚点是可移动刚体；力可沿方向传递。"
+  win_condition: "结算移动、归一化和黏合后，六个目标全部由箱、黏格或任一锚点格覆盖；玩家不计。"
+  object_and_event_semantics:
+    - "M/m 是黏块格；m 同时带目标。C/* 是箱格；* 同时带目标。"
+    - "anchor_boundary_shift:push_pull 与 anchor_boundary_shift:box_sticky 分别表示对应锚点发生平移。"
+    - "sticky_to_box:n3 + sticky_split:n1 表示连接柱三格变箱，并把原 C 形剩余部分拆成两个端点。"
+    - "box_to_sticky:n1 + sticky_merge:n1 表示中箱跨回黏侧并把上下端点桥接为三格竖条。"
+  tool_boundary:
+    - "solver 与 event-avoiding BFS 可证明可解、最短 cost、事件存在及特定事件的全胜路必要性。"
+    - "300000 状态主图耗尽；不主张完整 SCC、唯一解或完整分支质量。"
+    - "指标只描述规范解执行压力与空间复用，不证明洞见或审美。"
+
+slot_brief:
+  intended_role: game_late_dual_anchor_challenge
+  target: "黏块拼接/切割的双锚点游戏末期困难关；要求难度至少4，审美至少4，追求更高。"
+  difficulty_expectation: "4_or_higher"
+
+mechanic_exposure_context:
+  mechanic_window: dual_anchor
+  allowed_exposure_through: dual_anchor
+  claimed_core_events:
+    all_solution_required:
+      - anchor_boundary_shift:push_pull
+      - anchor_boundary_shift:box_sticky
+      - pull_object
+      - sticky_to_box
+      - sticky_split
+      - move_sticky_rigid
+    canonical_optimal_required_but_not_all_wins:
+      - box_to_sticky
+      - sticky_merge
+    configuration:
+      - push_pull_anchor_and_box_sticky_anchor_coexist
+
+design_target:
+  aesthetic_score_target: "4_floor_seek_5"
+  difficulty_score_target: "4_or_higher"
+  target_role_notes: >-
+    目标难度来自三次可见的因果重读：先移动整块以制造锚点通道；再用另一锚点剪断旧桥；
+    最后把被剪出的中箱作为新桥，由 P/L 同时承担推杆和左列中目标。避免靠纯路线长度或噪声增难。
+
+solve_instance:
+  layout: |-
+    ###########
+    ####PL#####
+    ###..Mm.G##
+    ###..MG.G##
+    ###..Mm.G##
+    ###...#####
+    ###@BS..###
+    ###########
+  player_start: [3, 6]
+  player_goal: null
+  win_condition: all_targets_covered_by_objects
+
+mechanism_scope:
+  central:
+    - "C 形黏块右移一格后，旧连接柱移到 x=6，原 x=5 竖列成为 P/L 的三格下拉通道。"
+    - "P/L 从 y=1 连续下拉到 y=4，随后承担回推中箱与覆盖左中目标的双重职责。"
+    - "B/S 从 x=4/5 右移到 x=6/7，把 x=6 三格连接柱切成三个箱并拆开 x=7 的上下黏端点。"
+    - "规范最短路线把 x=6 中箱推到 x=7 黏侧，桥接上下端点成竖条，再把整条推至 x=8 三目标。"
+  allowed_support:
+    - walk
+    - force_chain
+    - target_vacate_and_refill
+  incidental_allowed: []
+  required_winning_path_events:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - pull_object
+    - sticky_to_box
+    - sticky_split
+    - move_sticky_rigid
+  forbidden_winning_path_events: []
+  forbidden_if_seen_anywhere: []
+
+player_reasoning:
+  canonical_trace_ref: prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_CANONICAL.json
+  player_goal:
+    description: "让棋盘上的六个目标全部被箱、黏块或锚点格覆盖。"
+    state_ref: trace_step_0
+  reasoning_units:
+    - id: RU1_make_anchor_chute_before_cut
+      player_question: "先推 B/S 立即切桥，还是先移动完整 C 形？"
+      premises:
+        - statement: "初始 C 形连接柱位于 x=5；P/L 正在其上方 x=4/5，向下没有完整占格空间。"
+          state_ref: trace_step_0
+        - statement: "C 形右移到 x=6/7 后，x=5 从 y=2 到 y=4 全部空出，而左侧三目标暂由右移后的连接柱覆盖。"
+          state_ref: trace_step_6
+      conclusion: "先右移完整 C 形，用旧连接柱的空位制造 P/L 下拉通道；早切虽立即得到三个箱，却失去短路线的锚点通道。"
+      operation_refs: [SEG1]
+      alternative:
+        status: exact_trace
+        description: "开局立刻 right 推 B/S，马上触发切割，获得看似直接的局部收益。"
+        local_gain: "第1步就出现 sticky_to_box:n3 + sticky_split:n1。"
+        from_state_ref: trace_step_0
+        exact_inputs: [right]
+        blocked_operation: null
+        result_state_ref: prefix_EARLY_CUT_step_1
+        concrete_outcome: "仍可解，但最短后缀36步，总成本37；规范路线总成本21。"
+      feedback:
+        - state_ref: trace_step_6
+          visible_change: "整块 C 向右一格；x=5 三格竖槽清空，P/L 正下方出现连续通路。"
+    - id: RU2_pull_pl_through_reused_column
+      player_question: "C 形右移后，为什么不能继续把它直接推向右目标，而要先处理 P/L？"
+      premises:
+        - statement: "第6步后玩家位于 x=5 的 L 侧，右方是 C 形；right 不再是 push，前格被占使动作失败。"
+          state_ref: trace_step_6
+        - statement: "玩家向下时，身后正是 P/L；刚清出的 x=5 竖槽允许二格锚点整体连续下移。"
+          state_ref: trace_step_6
+      conclusion: "利用侧别反转连续 down 三次，把 P/L 拉到 C 形下沿；它随后才能从下方回推并成为终局横向推杆。"
+      operation_refs: [SEG2]
+      alternative:
+        status: structural_block
+        description: "在第6步状态继续 right，试图把完整 C 形直接推向右目标。"
+        local_gain: "若仍是推侧，可让 C 形更接近右列。"
+        from_state_ref: trace_step_6
+        exact_inputs: [right]
+        blocked_operation: right
+        result_state_ref: trace_step_6
+        concrete_outcome: "玩家已处于 L 侧且前格被 C 形占据，动作非法；必须先使用 P/L 下拉通道。"
+      feedback:
+        - state_ref: trace_step_9
+          visible_change: "P/L 从顶行移到 y=4，原三格空槽被锚点逐段穿过，右侧 C 形保持在位。"
+    - id: RU3_cut_old_bridge_and_assign_outputs
+      player_question: "B/S 应停在哪里，才会留下左列箱端、右侧分离端点和可重织的中箱？"
+      premises:
+        - statement: "右移后的 C 形连接柱在 x=6，端点在 x=7；B/S 初始边界不足以切过 x=6。"
+          state_ref: trace_step_12
+        - statement: "B/S 连续右推两格后，箱侧覆盖 x<=6，黏侧从 x=7 开始。"
+          state_ref: trace_step_14
+      conclusion: "将 B/S 推到 B=x6/S=x7，连接柱三格变成独立箱，上下端点留作黏块；左列上、下目标继续由箱覆盖，中箱留给 P/L 重织。"
+      operation_refs: [SEG3]
+      alternative:
+        status: not_claimed
+        description: "只推 B/S 一格会让边界停在 x=5，右移后的 C 形仍整体处于黏侧。"
+        local_gain: "锚点更接近材料，但还未切断。"
+        from_state_ref: trace_step_13
+        exact_inputs: []
+        blocked_operation: null
+        result_state_ref: trace_step_13
+        concrete_outcome: "尚无 sticky_to_box 或 sticky_split；核心材料分工没有发生。"
+      feedback:
+        - state_ref: trace_step_14
+          visible_change: "x=6 变成三个箱，x=7 只剩上下两个分离黏端点；旧 C 桥被清楚剪开。"
+    - id: RU4_reweave_middle_then_move_as_rigid_bar
+      player_question: "切出的中箱与两个端点怎样同时满足左右两列三目标？"
+      premises:
+        - statement: "切割后 x=6 上下箱已经覆盖左列上下目标，中箱位于 x=6,y=3；x=7 上下端点彼此不相邻。"
+          state_ref: trace_step_14
+        - statement: "P/L 可从 y=4 上推回 y=3，并从左侧形成 P/L—中箱的同轴力链。"
+          state_ref: trace_step_19
+        - statement: "中箱进入 x=7 后位于黏侧，正好桥接 x=7,y=2/4 两端点。"
+          state_ref: trace_step_20
+      conclusion: "先用 P/L 把中箱推到 x=7 重拼成三格竖条，再继续推动整条到 x=8；P/L 停在 x=6/7，其中 P 格覆盖左列中目标。"
+      operation_refs: [SEG4, SEG5]
+      alternative:
+        status: exact_trace
+        description: "刻意避免 box_to_sticky/sticky_merge，改用逐个箱、端点和锚点覆盖六目标。"
+        local_gain: "不必在第20步把中箱送回端点之间。"
+        from_state_ref: trace_step_0
+        exact_inputs: [up, up, right, right, down, left, left, down, right, right, up, up, up, up, down, down, left, left, up, up, right, right, left, down, right, left, left, down, right, right, left, up, up, up, right, down, right, right, down, up, left, left, left, down, right, up, right, right, left, down, left, left, down, down, down, right, up, up, left, up, right, left, up, right]
+        blocked_operation: null
+        result_state_ref: no_merge_bypass_step_64_win
+        concrete_outcome: >-
+          可胜但需64步。该路线在 C 形右移后立刻切桥，未先把 P/L 拉到底部形成共享推杆；
+          随后分别抽走三只箱、逐个把上下黏端点送到 x=8 上下目标、把 P/L 泊到 x=8 中目标，
+          再把三只箱逐个回填 x=6 三目标。它用“五个分件 + P/L 分别占位”替代一次重织，
+          玩家概念更直白但必须维护更多独立对象、反复让位和回填；作为非阻塞逃课风险保留。
+      feedback:
+        - state_ref: trace_step_20
+          visible_change: "x=7 中箱转黏并与上下端点拼成连续三格竖条。"
+        - state_ref: trace_step_21
+          visible_change: "三格条整体右移覆盖 x=8 三目标；x=6 上下箱与 P/L 同时覆盖左列三目标，立即胜利。"
+  operation_segments:
+    - id: SEG1
+      step_range: "1-6"
+      exact_inputs: [up, up, up, up, right, right]
+      purpose: "走到 C 形左侧并把完整 C 形右移一格，制造 P/L 下拉槽。"
+      supports_reasoning_units: [RU1_make_anchor_chute_before_cut]
+    - id: SEG2
+      step_range: "7-9"
+      exact_inputs: [down, down, down]
+      purpose: "在 L 侧沿空槽连续拉下 P/L。"
+      supports_reasoning_units: [RU2_pull_pl_through_reused_column]
+    - id: SEG3
+      step_range: "10-14"
+      exact_inputs: [left, left, down, right, right]
+      purpose: "返回 B/S 左侧并右推两格，切开旧 C 桥。"
+      supports_reasoning_units: [RU3_cut_old_bridge_and_assign_outputs]
+    - id: SEG4
+      step_range: "15-17"
+      exact_inputs: [up, left, up]
+      purpose: "走到 P/L 下方并把它推回中线。"
+      supports_reasoning_units: [RU4_reweave_middle_then_move_as_rigid_bar]
+    - id: SEG5
+      step_range: "18-21"
+      exact_inputs: [left, up, right, right]
+      purpose: "从左侧用 P/L 推中箱重拼竖条，再把竖条整体送入右目标列。"
+      supports_reasoning_units: [RU4_reweave_middle_then_move_as_rigid_bar]
+  resolution:
+    resolves: [RU1_make_anchor_chute_before_cut, RU2_pull_pl_through_reused_column, RU3_cut_old_bridge_and_assign_outputs, RU4_reweave_middle_then_move_as_rigid_bar]
+    operation_refs: [SEG1, SEG2, SEG3, SEG4, SEG5]
+    final_state_ref: trace_step_21
+    visible_confirmation: "右列三目标被同一竖直黏条覆盖，左列上下为箱、中央为 P/L；六目标同时完成。"
+  trace_partition:
+    status: complete
+    ordered_segment_ids: [SEG1, SEG2, SEG3, SEG4, SEG5]
+    uncovered_steps: []
+    overlapping_steps: []
+
+evidence:
+  commands_run:
+    - "npx tsx src/cli.ts explain-layout prototypes/reality_anchor ...v6.layout.txt --id ...v6 --max-states 300000 --graph-max-states 300000 --write"
+    - "npx tsx prototypes/reality_anchor/reports/trace_layout.ts ...v6.layout.txt ...v6_CANONICAL '<21 inputs>' 300000 80"
+    - "npx tsx prototypes/reality_anchor/reports/probe_bridge_scissor_reweave_v6.ts"
+    - "npx tsx prototypes/reality_anchor/reports/probe_prefix_dead_state.ts ... EARLY_CUT 'right' 300000"
+  solver_result:
+    found: true
+    shortest_cost: 21
+    explored_states: 2612
+  trace_summary:
+    exact_inputs: [up, up, up, up, right, right, down, down, down, left, left, down, right, right, up, left, up, left, up, right, right]
+    non_walk_events: 25
+    final_win: true
+  target_events:
+    all_solution_required_complete:
+      anchor_boundary_shift_push_pull: {bypass: false, status: complete, states: 429428}
+      anchor_boundary_shift_box_sticky: {bypass: false, status: complete, states: 158}
+      pull_object: {bypass: false, status: complete, states: 81}
+      sticky_to_box: {bypass: false, status: complete, states: 615}
+      sticky_split: {bypass: false, status: complete, states: 615}
+      move_sticky_rigid: {bypass: false, status: complete, states: 9480}
+    optimal_route_only:
+      box_to_sticky: {first_avoiding_win_cost: 64, status: found, states: 179636}
+      sticky_merge: {first_avoiding_win_cost: 64, status: found, states: 200504}
+  object_or_instance_evidence:
+    status: not_claimed
+    note: "不主张特定 indistinguishable crate identity；只主张状态位置与事件模式。"
+  winning_path_event_checks: "见 ...v6_event_gate.json；六项 all-solution required 搜索均 complete 且无 bypass。"
+  reachable_event_exposure: "allowed_exposure_through=dual_anchor；线性序列中不存在更晚配置/事件需要排除。"
+  graph_or_counterfactual_evidence:
+    main_graph: {status: exhausted, states: 300001, transitions: 650484, wins_seen: 13, budget: 300000}
+    early_cut_prefix: {prefix: [right], suffix_shortest_cost: 36, total_cost: 37, solver_found: true}
+  evidence_limits:
+    - "主图耗尽，不主张 unique solution、完整 SCC、所有胜路顺序或完整分支质量。"
+    - "sticky_merge/box_to_sticky 不是所有胜路必经；最短 avoiding win 为64步，因此只主张所有最优解需要重拼。"
+    - "无重拼路线在概念上更直白，可能被少数玩家用逐件整理发现；作为审美5边界与试玩 caveat 保留。"
+    - "不使用指标证明洞见、审美或因果价值。"
+
+hard_fact_summary_for_critic:
+  solver: "found=true; shortest_cost=21; explored=2612; canonical final win=true"
+  required_or_forbidden_events:
+    all_solution_required: [anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky, pull_object, sticky_to_box, sticky_split, move_sticky_rigid]
+    optimal_solution_required_not_all_wins: [box_to_sticky, sticky_merge]
+    forbidden: []
+  routed_diagnostic_facts:
+    - "开局 right 立即切桥仍可胜，但总最短成本37；规范先移 C 的总成本21。"
+    - "避免 box_to_sticky 或 sticky_merge 的第一条胜路成本64。"
+    - "64步无重拼路线把上下端点分别送入 x=8 上下目标、P/L 泊入 x=8 中目标，并逐箱回填 x=6 三目标；它是逐件分配的长绕路，不是另一条短洞见路线。"
+    - "主图300000预算耗尽；不做 complete-graph 质量结论。"
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost: {raw: 21, band: 4, weight: 0.35}
+        nonWalkEventCount: {raw: 25, band: 5, weight: 0.45}
+        heavyReuseRatio: {raw: 0, band: 1, weight: 0.2}
+      aggregateBand: 4
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate: {raw: 0.3181818181818182, band: 3, weight: 0.55}
+        heavyReuseRatio: {raw: 0, band: 1, weight: 0.45}
+      aggregateBand: 2
+  evidence_limits:
+    - "metric calibration=pilot；不能推出洞见、因果依赖、反直觉或整体审美。"
+    - "graph exhausted；完整图相关判断 unknown。"
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_CANONICAL.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_event_gate.json
+    - prototypes/reality_anchor/reports/prefix_dead_state_probe_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_EARLY_CUT.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_NO_MERGE_BYPASS.json
+
+diagnostic_routing:
+  hard_evidence: [solver, exact_trace, event_avoiding_bfs, prefix_alternative]
+  mechanism_scope: "review all-solution gates separately from optimal-route merge claim"
+  design_evidence_alignment: "review RU state refs, operation coverage, early-cut cost and 64-step no-merge boundary"
+  taste_probes: "critic only; anchors RA_CAND_0017/0022/0025/0024"
+  scc_graph: "main graph exhausted; graph-dependent verdict_effect must be none"
+  variant_family: "fresh C-shape chute -> cut -> P/L bridge reweave; no archive variant authorization"
+  start_position: "pre_submission_only; not a review hard gate"
+  prototype_specific_work: "three pre_submission_check workflows pending until proposal_ready"
+
+prototype_specific_contracts:
+  interface_pair_policy:
+    status: not_declared
+    declared_interface_points: []
+    target_pairs: []
+    ignored_pair_classes: []
+    risky_pair_classes: []
+  pair_diagnostics:
+    ignored_pairs: []
+    risky_pairs: []
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: null
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: >-
+    本轮从 reasoning_sketch 的“移动完整 C 形制造 P/L 通道，再由 B/S 切桥、P/L 回推中箱重织”起步；
+    未继承归档布局、目标关系、对象角色或解法路线。归档仅用于人评审美/失败边界校准。
+
+attempt_log:
+  serious_structural_attempts:
+    - "v0：开放房间，完整 C 形两次右推5步直胜，拒绝。"
+    - "v1：加入下端墙齿，出现6步 cut/rebind，但 P/L 无责任，拒绝。"
+    - "v2：移动 P/L 分界，形成10步 pull rebind，但推理层次不足。"
+    - "v3：增加左列目标义务，solver 发现 C 形移位后下拉 P/L 的新 family；转为当前 reasoning。"
+    - "v4：压缩开放房间为25可走格，保留20步因果链。"
+    - "v5：增加 target-vacate，阻止 P/L 直接代替中间拼接的31步旁路。"
+    - "v6：把右目标列移至 x=8，要求规范解重拼竖条后再整体移动；最短21步。"
+  local_repairs:
+    - "用右侧墙位阻止初始 C 形整块直推终局。"
+    - "删除开放房间纯空地，把玩家路线压到双锚共享工作区。"
+    - "通过左右两列三目标把切后箱端、P/L 中位和重拼竖条都赋予终局责任。"
+  abandoned_families:
+    - "单端点进袋 + 偏移 L 重拼：手工实例过于基础，未进入 serious packet。"
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0017
+      role: positive_game_late_anchor
+      human_scores: {aesthetic: 4, difficulty: 5}
+      human_comment: "很精彩的关卡，对于推拉和黏块拼接切割都有要求极高的应用，需要很强的推理和腾挪技巧，有大量的反直觉操作，是极难的游戏末期挑战关卡。"
+      calibration_use: "要求拼接/切割、双锚与高耦合都产生玩家侧责任；警惕只剩高腾挪负担。"
+    - candidate_id: RA_CAND_0022
+      role: positive_aesthetic_5
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: "将一个箱子先送入看似死局的死角，构造出拉锚点将两个箱子反向送入目标。空间利用率高，结构精巧。"
+      calibration_use: "5分边界需要短链中的强重读与空间复用，而非事件数量。"
+    - candidate_id: RA_CAND_0025
+      role: positive_constructor_4
+      human_scores: {aesthetic: 4, difficulty: 4}
+      human_comment: "在狭小紧凑的空间中，将L形反复活塞这一关键高难结构赋予合适的包装以要求玩家主动构造。整体达到强4分水准。"
+      calibration_use: "主动构造、紧凑空间、终局形状提示是强4下界。"
+    - candidate_id: RA_CAND_0024
+      role: negative_affordance_pollution
+      human_scores: {aesthetic: 1, difficulty: 3}
+      human_comment: "玩家会期待更精彩的切割拼接构造或长链推动、黏块几何形状利用，但是实际上几乎只用到推拉腾挪走位而缺乏玩家洞见。"
+      calibration_use: "若 C 形、双锚和六目标只制造腾挪或标签触发，应阻塞提交。"
+  none_found_reason: null
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_facts_packet.yml
+  claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_claim_packet.yml
+  read_order: facts_then_claim

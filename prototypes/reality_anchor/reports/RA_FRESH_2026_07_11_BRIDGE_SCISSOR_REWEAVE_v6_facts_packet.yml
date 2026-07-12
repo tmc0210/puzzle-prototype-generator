@@ -1,0 +1,132 @@
+candidate_id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+candidate_version: v6
+packet_kind: claim_last_facts
+
+prototype_rules:
+  - "P/L 按玩家输入前所在侧决定 push/pull。"
+  - "B/S 在每次合法动作后全图归一化箱/黏材质。"
+  - "相邻黏格自动合并为四邻接刚体；跨箱侧可变箱并分裂剩余连通块。"
+  - "箱、黏格和锚点格可覆盖目标；玩家不可。"
+
+layout: |-
+  ###########
+  ####PL#####
+  ###..Mm.G##
+  ###..MG.G##
+  ###..Mm.G##
+  ###...#####
+  ###@BS..###
+  ###########
+player_start: [3, 6]
+win_condition: all_targets_covered_by_objects
+target_coordinates:
+  left_column: [[6, 2], [6, 3], [6, 4]]
+  right_column: [[8, 2], [8, 3], [8, 4]]
+allowed_exposure_through: dual_anchor
+
+canonical_solution:
+  cost: 21
+  explored_states: 2612
+  inputs: [up, up, up, up, right, right, down, down, down, left, left, down, right, right, up, left, up, left, up, right, right]
+  events:
+    - push_object:sticky
+    - move_sticky_rigid
+    - pull_object:push_pull_anchor
+    - anchor_boundary_shift:push_pull
+    - push_object:box_sticky_anchor
+    - anchor_boundary_shift:box_sticky
+    - sticky_to_box:n3
+    - sticky_split:n1
+    - force_chain:n2
+    - box_to_sticky:n1
+    - sticky_merge:n1
+  final_win: true
+
+event_gates:
+  all_solution_required_complete:
+    anchor_boundary_shift_push_pull: {bypass: false, status: complete, states: 429428}
+    anchor_boundary_shift_box_sticky: {bypass: false, status: complete, states: 158}
+    pull_object: {bypass: false, status: complete, states: 81}
+    sticky_to_box: {bypass: false, status: complete, states: 615}
+    sticky_split: {bypass: false, status: complete, states: 615}
+    move_sticky_rigid: {bypass: false, status: complete, states: 9480}
+  canonical_optimal_only:
+    box_to_sticky: {avoiding_win_found: true, first_avoiding_win_cost: 64, states: 179636}
+    sticky_merge: {avoiding_win_found: true, first_avoiding_win_cost: 64, states: 200504}
+  early_cut_prefix:
+    prefix: [right]
+    immediate_events: [anchor_boundary_shift:box_sticky, sticky_to_box:n3, sticky_split:n1]
+    suffix_shortest_cost: 36
+    total_cost: 37
+
+no_merge_route_player_facing_summary:
+  trace_ref: prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_NO_MERGE_BYPASS.json
+  total_cost: 64
+  entry_relation: >-
+    先把完整 C 形右移一格，随后在尚未把 P/L 拉到底部前就把 B/S 右推两格切桥；
+    玩家得到 x=6 三箱与 x=7 上下端点，但失去规范路线的共享 P/L 推杆时序。
+  concrete_phases:
+    - >-
+      steps 15-30：只把 P/L 拉下两行，分别从 x=6 抽走下、中、上三箱，在狭小左侧工作区
+      将它们拆成多个独立搬运任务；P/L 被反复移动以腾站位和改变推拉侧。
+    - >-
+      steps 38-48：不把两端点桥接；分别把上、下单格黏端点送到 x=8 的上、下目标。
+    - >-
+      steps 45-64：把 P/L 泊在 x=8 中目标；再逐只推动三箱回填 x=6 的上、中、下目标。
+  concept_comparison: >-
+    该路线的总体概念是“把五个切割产物和 P/L 分别分配给六目标”，比重织概念更直白，
+    但要维护更多独立对象、反复让位、撤销/回填目标并执行64步；它不是另一条短而干净的洞见路线。
+  risk_boundary: >-
+    不能声称重拼为所有胜路硬门；逐件路线可能被穷举型玩家发现，作为审美5边界与试玩 caveat 保留。
+
+graph_facts:
+  status: exhausted
+  reachable_states_seen: 300001
+  transitions_seen: 650484
+  winning_states_seen: 13
+  budget: 300000
+  neutral_meaning: "完整图预算耗尽；unique、完整 SCC 与完整分支质量均 unknown。"
+
+calibrated_trace_metrics:
+  calibration: reality_anchor_trace_metrics_v0
+  status: pilot
+  solution_execution_pressure:
+    status: enabled
+    components:
+      solutionCost: {raw: 21, band: 4, weight: 0.35}
+      nonWalkEventCount: {raw: 25, band: 5, weight: 0.45}
+      heavyReuseRatio: {raw: 0, band: 1, weight: 0.2}
+    aggregateBand: 4
+  solution_space_reuse:
+    status: enabled
+    components:
+      revisitRate: {raw: 0.3181818181818182, band: 3, weight: 0.55}
+      heavyReuseRatio: {raw: 0, band: 1, weight: 0.45}
+    aggregateBand: 2
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0017
+      scores: {aesthetic: 4, difficulty: 5}
+      human_comment: "很精彩的关卡，对于推拉和黏块拼接切割都有要求极高的应用，需要很强的推理和腾挪技巧，有大量的反直觉操作。"
+    - candidate_id: RA_CAND_0022
+      scores: {aesthetic: 5, difficulty: 4}
+      human_comment: "将一个箱子先送入看似死局的死角，构造出拉锚点将两个箱子反向送入目标。空间利用率高，结构精巧。"
+    - candidate_id: RA_CAND_0025
+      scores: {aesthetic: 4, difficulty: 4}
+      human_comment: "在狭小紧凑的空间中，将L形反复活塞赋予合适包装以要求玩家主动构造。整体达到强4分水准。"
+    - candidate_id: RA_CAND_0024
+      scores: {aesthetic: 1, difficulty: 3}
+      human_comment: "玩家期待切割拼接、长链或黏块几何，实际却几乎只有推拉腾挪，缺乏玩家洞见。"
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6.json
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_CANONICAL.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_event_gate.json
+  - prototypes/reality_anchor/reports/prefix_dead_state_probe_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_EARLY_CUT.json
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_NO_MERGE_BYPASS.json
+
+evidence_limits:
+  - "不主张完整图、unique solution、完整 SCC 或所有胜路顺序。"
+  - "重拼是所有最优解责任，但不是所有任意长胜路硬门。"
+  - "指标不证明洞见、因果或审美。"

@@ -1,0 +1,193 @@
+review_iteration: 1
+candidate_version_reviewed: v29
+review_input_type: revised_design
+verdict: hold_or_reject
+review_loop_state: held_proposal
+required_action: downgrade_or_hold
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: >-
+    玩家要让全部目标被对象覆盖；前14步把底部 B/S 组合送入上方并完成一次整体切割，之后实际需要处理上臂、位于 (7,5) 的门箱目标和下臂。
+  salient_relations_seen:
+    - >-
+      切割态下，玩家可用 [down, down, right] 把下箱推到 (7,5)；棋盘立即多覆盖一个目标，玩家仍能离开，之后还可完成下黏臂，但 (7,5) 同时占住上方竖井底口，使后续返回上臂的操作消失。
+    - >-
+      规范路线先在 step 18 拉动上黏臂，再于 step 25 拉门箱、step 32 拉下黏臂；上臂完成后，门箱与下臂可交换，实际稳定顺序限制只有“上臂先于门箱”。
+  unclear_or_unreadable_parts:
+    - >-
+      facts packet 能证明早填门箱分支无胜续，但没有把玩家首次看见矛盾时的 exact 局面与失败输入呈现出来；512051 个续搜状态不是玩家可见反馈。
+    - >-
+      两个 holding goals 在切割时自动完成，因此它们增加了画面和机制事件，却不能单独算作玩家推理。
+  initial_quality_risks:
+    - 前14步被明确排除在推理层之外，32步总长可能主要增加执行与回走负担。
+    - >-
+      早填门箱既给出目标完成又允许下臂继续进展；如果封井关系没有在行动前被读出，错误只在投入后暴露，可能形成延迟且误导性的顺序陷阱。
+    - >-
+      若封井关系在切割态已经一眼可读，则唯一核心顺序问题的答案过于直接，难以支撑 late-game capstone。
+
+player_facing_merits:
+  - id: MERIT1_cut_changes_future_jobs
+    exact_situation: >-
+      在规范解 step 14 的切割动作中，玩家向右拉 sticky#1；相连材料发生 sticky_to_box:n3 与 sticky_split:n1，位于 (6,3)/(6,4) 的两个 holding crates 直接落位，并留下之后分别可操作的上、下黏臂。
+    player_operation: 向右拉动切割态的 sticky#1。
+    board_change: 两个中部目标被覆盖，原先相连的材料转换并分成承担不同后续任务的对象。
+    future_operation_change: 玩家此后可以先拉上臂使用竖井，并在上臂完成后处理门箱与下臂；同一次切割结果确实被后续三项操作消费。
+    merit: 一次可定位的机制动作同时完成落位、转换和分工，具备真实的机制压缩感；自动落位本身不另算推理层。
+  - id: MERIT2_goal_is_also_gate
+    exact_situation: >-
+      切割后，下箱只需 [down, down, right] 即可覆盖 (7,5)，而该格同时是通往上臂把手的竖井底口。
+    player_operation: 先完成上臂，再把下箱送上 (7,5)。
+    board_change: (7,5) 从通行接口变成已占用目标，向上臂回返的路线被关闭。
+    future_operation_change: 因为上臂已经完成，失去回返操作不再造成损失；门箱由普通得分动作变成可归因的阶段交接。
+    merit: “目标即门”把目标完成与路线资源消耗绑定在同一 exact 格上，是候选最清楚、最有玩家侧价值的关系。
+
+supported_reasoning:
+  - unit_ref: RU1_upper_before_gate_crate
+    reason: >-
+      部分支持。玩家在切割态确实面对一个自然问题：是否立即完成近在眼前的 (7,5) 目标；(7,5) 封住竖井且上臂把手仍需从下方抵达，能够给出“先上臂、后门箱”的计划理由。门箱与下臂在上臂之后可交换也与结论一致。但“早填后仍能完成下臂”是执行错误路线后才得到的结果，不是行动前 premise；“512051 状态无胜续”也不是 concrete_feedback，只能证明该分支确实无解。
+
+archive_taste_context_used:
+  - candidate_id: RA_CAND_0017
+    use: >-
+      以人评“高密度、高耦合但腾挪负担高”的审美4、难度5作为高难 capstone 的上界参照；当前候选没有同等数量的相互制约关系。
+  - candidate_id: RA_CAND_0022
+    use: >-
+      以人评“短步骤、强洞见、反直觉、空间利用率高”的审美5、难度4作为审美5参照；当前候选的32步和14步强制铺垫明显不具备这种压缩度。
+  - candidate_id: RA_CAND_0025
+    use: >-
+      以人评“主动构造、前段不喧宾夺主、终局提示恰当”的强4作为最低4参照；当前候选的强制铺垫和延迟失败使核心关系没有同样干净地占据体验中心。
+  - candidate_id: RA_CAND_0024
+    use: >-
+      以人评审美1、难度3且“机制期待最终退化为推拉腾挪”的失败例警戒双锚点与黏块事件数量虚抬质量；当前候选有真实的封井因果，故不落到同一下界，但仍受类似执行负担风险影响。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_negative_human_anchors
+  positive_anchors:
+    - RA_CAND_0017
+    - RA_CAND_0022
+    - RA_CAND_0025
+  lower_bound_or_negative_anchors:
+    - RA_CAND_0024
+  missing_anchor_effect: none
+
+aesthetic_target_fit: >-
+  3+；不支持目标5，也不足以稳定支持最低4。切割动作的多重结果与“目标即门”关系有真优点，使其明显高于只剩推拉腾挪的审美1警戒例；但14步强制铺垫、自动完成的 holding goals、以及错误路线用目标完成和下臂进展持续奖励玩家，削弱了强4所需的紧凑、清楚与及时反馈，更达不到审美5的短而强洞见。
+difficulty_target_fit: >-
+  3+；不支持目标5，也不足以把最低4视为稳固。当前非强制推理可归结为一个顺序关系“上臂先于门箱”，门箱与下臂其余次序自由。若封井关系行动前可读，答案直接；若不可读，额外困难主要来自延迟试错而非新的结构因果。32步、图规模、无胜续搜规模和 pilot 执行压力均不能把它提升为高质量难度。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI1_capstone_role_mismatch
+    type: core_blocker
+    target_ref: design_target / intended_role / RU1_upper_before_gate_crate
+    design_relation: >-
+      step 14 后，玩家看见上臂、(7,5) 门箱目标和下臂；实际必须先操作上臂，再填门箱，而上臂完成后门箱与下臂可交换。holding goals 已在切割中自动完成。
+    attack: >-
+      声明的 late_game_dual_anchor_capstone 与实际推理密度不匹配。唯一稳定限制是“上臂先于门箱”；其余机制事件主要是强制铺垫、自动落位或执行收束，不能把单一顺序判断包装成双锚点 capstone。
+    evidence_basis: >-
+      routed diagnostic 明确前14步不计推理；order_monitor 只强制上目标早于门箱，下臂次序自由；evidence_limits 明确 holding goals 不计独立推理层。人评正锚中，RA_CAND_0017 的难度5来自高密度高耦合，RA_CAND_0025 的强4要求前段不喧宾夺主。
+    player_facing_effect: >-
+      读出 (7,5) 会封井后，玩家只需执行剩余路线；没读出时则靠走入一条被持续奖励的死分支。两种体验都不能提供声明角色需要的多层可分析因果。
+    blocks_proposal_ready: true
+    expected_designer_response: downgrade_or_hold
+
+  - id: CI2_ru1_visibility_fairness_dilemma
+    type: core_blocker
+    target_ref: RU1_upper_before_gate_crate / concrete_feedback
+    design_relation: >-
+      切割态下箱三步覆盖 (7,5)，棋盘增加一个已完成目标且玩家能离开；继续 [down, down, left, left, left, up, down] 还能覆盖下臂目标，但门箱已封住竖井，之后无法返回上臂把手。
+    attack: >-
+      RU1 存在未化解的可读性二难：若玩家在三步前就能看出门箱封井和上臂把手的关系，结论几乎由单一可见阻挡直接给出，难度上限低；若玩家需要先完成门箱甚至下臂才发现问题，则目标完成和对象进展都在强化错误路线。完整续搜的512051状态只证明无解，不能充当及时、可归因的玩家反馈。
+    evidence_basis: >-
+      verified_alternative 的即时收益、延迟进展与 complete/found:false；claim 自述“只有在尝试返回上臂把手时才暴露无解”；技能边界要求 feedback 必须可见、可归因且在明显执行投入前显现。
+    player_facing_effect: >-
+      玩家要么一眼排除错误而缺少 capstone 洞见深度，要么在两个看似正确的目标完成后才被迫回退，感受到的是惩罚性顺序试错，而不是由局面逐步揭示的推理回报。
+    blocks_proposal_ready: true
+    expected_designer_response: downgrade_or_hold
+
+  - id: CI3_execution_pressure_is_not_reasoning
+    type: score_boundary
+    target_ref: calibrated_trace_metrics.solution_execution_pressure / exact_solution
+    design_relation: >-
+      规范解32步，机制性操作集中在 step 2、14、18、25、32；step 2 与前14步整体被声明为强制铺垫，后续三次对象操作消费切割结果。
+    attack: >-
+      aggregateBand 4 只说明规范解执行与状态管理压力较高。它不能补足只有一个顺序洞见的推理层；强制段与机制操作之间的走位还会稀释审美密度。
+    evidence_basis: >-
+      reality_anchor_trace_metrics_v0 pilot：solution_execution_pressure aggregateBand=4；routed diagnostic 明确图规模、32步和 pilot 指标不证明困难或审美。
+    player_facing_effect: 玩家承担较长操作与回走，但新增的计划理由没有按同等比例增长。
+    blocks_proposal_ready: false
+    expected_designer_response: downgrade_or_hold
+
+  - id: CI4_claim_feedback_wording
+    type: improvement_opportunity
+    target_ref: RU1_upper_before_gate_crate / concrete_feedback
+    design_relation: >-
+      早填门箱后棋盘先显示门箱目标和下臂目标相继完成，真正的局部矛盾是之后尝试从竖井底部返回上臂把手时没有可用路线。
+    attack: >-
+      当前 concrete_feedback 把“512051状态无胜”与“门箱封井”并列，容易把 hard evidence 写成玩家反馈。即使候选降级保留，也应只把 exact 可见阻挡称为反馈，并把完整无胜续搜留在证据边界。
+    evidence_basis: facts packet 的 evidence_limits 与 claim 的 language_boundary。
+    player_facing_effect: 更诚实的表述能防止人类 handoff 误以为玩家会感知 solver 已证明的全局无解。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: >-
+      graph complete：reachable_states=514270、winning_states=3；最优路径6条但只有1个最优胜态、1种非行走签名和1个最终对象配置组。
+    neutral_meaning: 当前可达图中存在一个机械解族，输入级差异属于等价换序或可逆绕动。
+    player_facing_interpretation: 这排除了“多个不同机制解法”的说法，但不会自动产生洞见、唯一性快感或更高难度。
+    verdict_effect: none
+  - graph_fact: >-
+      order_monitor complete：所有胜路都先完成上臂目标再完成门箱目标；下臂可在门箱前后完成。
+    neutral_meaning: 全部胜路共享一条偏序约束，除此之外下臂顺序不固定。
+    player_facing_interpretation: 玩家实际需要读出的核心计划理由只有“先用竖井处理上臂，再让门箱封井”；这是真因果，同时也是 capstone 推理密度偏低的直接边界。
+    verdict_effect: core_blocker
+  - graph_fact: >-
+      早填门箱 exact alternative 合法、能继续完成下臂，但完整续搜 explored_states=512051 且 found=false。
+    neutral_meaning: 该 exact 选择进入无胜区域，且无胜不是由一拍非法或立即死锁证明。
+    player_facing_interpretation: 玩家得到目标完成和下臂进展，无法看见续搜规模；只有封井造成的局部不可达才可能成为反馈，因此图规模本身不改善公平性。
+    verdict_effect: caveat
+  - graph_fact: >-
+      all_winning_path_events complete，全部胜路包含边界移动、转换、合并、切割、拉动与刚体移动等 required events。
+    neutral_meaning: 规范要求的机制事件在胜路上都发生。
+    player_facing_interpretation: 事件齐全说明候选可审，不说明每个事件都形成独立问题或审美价值；holding goals 仍是自动完成。
+    verdict_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: >-
+      aggregateBand=4；solutionCost=32/band5，nonWalkEventCount=13/band3，heavyReuseRatio=0.05128205128205128/band3。
+    allowed_reading: 规范解有较高的执行与状态管理压力，不能由此推出因果依赖、洞见、反直觉或审美。
+    player_facing_check: >-
+      step 14 的转换切割被 step 18/25/32 的对象操作消费，机制操作并非全是空转；但前14步被声明为强制，且32步中只有五个 non-walk steps 被列为关键事件，额外长度主要留下节奏负担风险。
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: >-
+      aggregateBand=3；revisitRate=0.2727272727272727/band3，heavyReuseRatio=0.05128205128205128/band4。
+    allowed_reading: 规范解只有中等空间回访，当前解法并不主要依靠高强度空间复用成立。
+    player_facing_check: packet 没有逐次说明回访是否因局面变化获得新用途，因此不把复用记为优点或缺点。
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+handoff_notes:
+  - >-
+    当前 exact v29 不应以 aesthetic 5 / difficulty 5 的 late_game_dual_anchor_capstone 移交。若不改变结构，应降级到较低角色并保留“封井关系可能过显或过迟”的 caveat；若坚持 capstone，则需新增第二层玩家可见且被后续消费的因果决策，并重新送审。
+  - >-
+    后续人类试玩应只验证玩家侧问题：玩家在切割态是否会认真考虑 [down, down, right]，何时首次能把失败归因到 (7,5) 封井，以及完成下臂后的回退成本是否被感受为公平；solver 的无胜证明不能替代这些观察。
+  - 本次评审未运行 solver、analyzer 或 graph 工具，也未补充 hard evidence。

@@ -1,0 +1,84 @@
+review_iteration: 1
+candidate_version_reviewed: v13
+review_input_type: candidate_version
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: mechanic_exposure_context
+    evidence_basis:
+      - >-
+        mechanic_exposure_sequence.yml 将 dual_anchor 定义为当前序列的最后阶段；exact initial state 同时包含固定 P/L 与可移动 B/S，因此 dual-anchor 配置成立。
+      - >-
+        complete graph 扫描 78 个可达状态并列出 reachable_event_types；candidate 的七个 claimed_core_events 均可达。event_gate_report 的七个 all_winning_path_event_gates 均为 complete 且 missing_required_winning_path=false，sequence gate 亦为 complete、violating_winning_path=false。
+      - >-
+        dual_anchor 之后没有更晚阶段需要排除；candidate 的 reachable_event_exposure 没有把 winning-path required gate 与 complete reachable exposure scan 混为一项证据。
+  - target_ref: mechanism_scope.central[0:2]
+    evidence_basis:
+      - >-
+        layout analysis 的 step 2 记录同一步 push_object:box_sticky_anchor、anchor_boundary_shift:box_sticky、box_to_sticky:n3、sticky_merge:n1；before/after 状态显示三格箱柱与上下黏臂合成七格 C 形 sticky component。
+      - >-
+        step 10 记录 pull_object:sticky#1、move_sticky_rigid、sticky_to_box:n3、sticky_split:n1；before/after 状态显示整体右拉后 x=6 连接柱切成三箱，上下黏臂分裂。all-winning-path sequence gate 完整要求上述拼接与切割的同一步责任。
+      - >-
+        alternative report 的 ALT1 证明 step 10 后立即右拉下箱为合法但 terminal no-win；ALT2 与目标顺序 obligation 证明先覆盖上目标不能继续获胜。这里支持的是机械选择与结果，不支持“即时诱惑”的玩家显著性。
+  - target_ref: player_reasoning.forced_setup_disclaimer
+    evidence_basis:
+      - >-
+        SEG1_forced_anchor_merge 覆盖 step 1-2，SEG2_forced_reach_and_crosscut 覆盖 step 3-10；两段的 supports_reasoning_units 均为空，candidate 没有把前十步申报为 reasoning unit 或虚构 rejected alternative。
+      - >-
+        complete agency evidence 在开局与拼接后区域都只有一个 viable commitment；玩家侧的中性解释仅为前两个对象操作是到达切割态的 forced winning setup，不推出其有趣、困难或具有洞见。
+  - target_ref: player_reasoning.RU1_leave_cut_crate_column_untouched.alternative
+    evidence_basis:
+      - >-
+        candidate 的 exact_inputs=[right] 非空，并与 alternative_report ALT1 的 exact_inputs 及 replay_steps 完全一致；alternative_report.split_state 与 layout JSON 的 keySnapshots step=10 after 逐字符一致。
+      - >-
+        replay step 1 标记 legal=true，事件为 pull_object:crate#3；result_state 显示下箱从 (6,5) 到 (7,5)、玩家从 (7,5) 到 (8,5)。该格上、下、右为墙，左侧被箱占据，与 blocked_operation 一致。
+      - >-
+        continuation_search 为 status=complete、found=false、explored_states=1；candidate 的 concrete_outcome 没有把该 exact state 的无解扩写为玩家必然选择它。
+  - target_ref: player_reasoning.RU1_leave_cut_crate_column_untouched.conclusion
+    evidence_basis:
+      - >-
+        ALT1 支持“不立即向右拉走切出下箱”；canonical SEG3 随后使用 [down,left,left,down] 到达并下拉下臂，step 14 after 显示下目标覆盖且玩家仍可离开。唯一 winning object configuration 中三箱柱保持在 x=6。
+  - target_ref: player_reasoning.RU2_lower_before_upper_seal.alternative
+    evidence_basis:
+      - >-
+        candidate 的 18 个 exact_inputs 非空，并与 ALT2 的 exact_inputs 和 18 条 replay_steps 一一一致；起点同为 canonical step 10 after，所有 replay_steps 均 legal=true。
+      - >-
+        前 17 步均为 walk，第 18 步 up 触发 pull_object:sticky#1 与 move_sticky_rigid；result_state 显示上目标已覆盖、玩家位于 (5,1)、下目标仍空。
+      - >-
+        continuation_search 为 status=complete、found=false、explored_states=1；结果格的左右、上方为墙，下方由完成后的上臂占据，与 blocked_operation 一致。
+  - target_ref: player_reasoning.RU2_lower_before_upper_seal.conclusion
+    evidence_basis:
+      - >-
+        ALT2 直接证明先上会形成 terminal no-win；all_winning_path_sequence_gate 进一步以 complete monitor 排除任何“下目标尚未覆盖时先覆盖上目标”后仍获胜的路径。
+      - >-
+        canonical step 14 after 显示先下后玩家仍可离开，step 28 after 显示上臂最后覆盖上目标、玩家进入顶袋并立即满足 all_targets_covered_by_objects。
+  - target_ref: player_reasoning.operation_segments_and_trace_partition
+    evidence_basis:
+      - >-
+        SEG1 至 SEG5 的 step_range 连续且无重叠地覆盖 1-28；五段 exact_inputs 顺序拼接后与 layout JSON solution.inputs 完全一致，符合 uncovered_steps=[]、overlapping_steps=[]。
+      - >-
+        step 2、10、14、28 的 segment 边界和作用分别对应四个 keySnapshots；SEG4 的 step 15-27 全部为 walk，没有遗漏对象操作。
+  - target_ref: player_reasoning.resolution
+    evidence_basis:
+      - >-
+        final_state_ref 对应 step 28 after：两个目标分别被二格 sticky 覆盖，三箱柱仍位于 x=6，玩家位于 (5,1)。该状态与 event_gate_report 的唯一 winning object configuration 及 mechanic.yml 胜利规则一致。
+  - target_ref: solution_uniqueness
+    evidence_basis:
+      - >-
+        result=unique_complete 严格属于 skill 允许枚举值，且 evidence_refs 指向 event_gate_report.yml#/solution_uniqueness。
+      - >-
+        complete graph 有 1 个 winning state；报告记录 2 条最短输入路径、1 个最短 winning state、1 种最短非走位签名和 1 个 winning object configuration group。两条输入换位变体被明确压缩为同一非走位方案，与 unique_complete 没有明显证据冲突。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >-
+    ALT1 与 ALT2 的 complete/no-win continuation 只证明各自 exact result state 无胜路；不证明玩家一定会选择、误判或觉得它们具有诱惑力。
+  - >-
+    complete graph、唯一胜态、forced commitments 与 pilot trace metrics 均不证明审美、难度、洞见强度、体验自然性或 campaign role；本审查未评价这些事项。
+  - >-
+    solution.objectParticipation 为空；canonical 快照能按位置区分 step 14/28 的下、上 sticky component，而 all-winning-path 证据支持的是事件模式与目标覆盖顺序，不应扩写为一般化的对象身份定理。
+  - >-
+    P/L 固定且没有自身 anchor shift；其机械责任由 mechanic.yml 的区域规则、动作位置和 canonical pull 事件支持，不能表述为 P/L 被移动。
+  - >-
+    calibrated_trace_metrics 仅为 critic 校准辅助，未被用作本 verdict 的支持或反驳证据。
+questions_for_designer: []

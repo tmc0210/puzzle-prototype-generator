@@ -1,0 +1,78 @@
+review_iteration: 3
+candidate_version_reviewed: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+review_input_type: evidence_disagreement
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: player_reasoning.player_goal
+    evidence_basis: >
+      目标要求覆盖盘面三个目标，并判断两枚锚点、两个箱与右下黏格如何共享操作位；这与原型
+      all_targets_covered_by_objects 胜利条件一致，且没有预先指定 B、P 与切回箱的终局分工。
+  - target_ref: player_reasoning.reasoning_units.RU1_borrowed_crate_lift
+    evidence_basis: >
+      exact replay 的 step1-4 支持上箱先下推、P/L 右移、玩家进入 x4,y3 的 L/pull 侧后上拉 B/S；
+      step4 同时触发 pull_object:box_sticky_anchor、force_chain:n2 与
+      anchor_boundary_shift:box_sticky，状态中上箱回到 x3,y2、B/S 上移到 y3。ALT1 从
+      canonical.step_1 输入非空 [down] 后的箱/B/S 位置和未取得目标的结果与规则一致，且没有再声称
+      后续可恢复性。
+  - target_ref: player_reasoning.reasoning_units.RU2_reposition_pl_for_second_bs
+    evidence_basis: >
+      canonical step4 的 x5,y3 由 L 占据；step5 横移 P/L 到 x6 后 x5,y3 释放但仍位于 L/pull 侧；
+      step8 从上方下推 P/L 后 P 位于右目标 x6,y3，x5,y3 才成为 B/S 的 push 侧左推站位。
+      step11 从该站位左推 B/S 并触发 anchor_boundary_shift:box_sticky 与 box_to_sticky:n2。
+      ALT2 的非空输入 [down, left] 及最后一手因 pull 前格被 B/S 占据而失败的结果机械成立。
+  - target_ref: player_reasoning.reasoning_units.RU3_merge_then_cut_vertical_pair
+    evidence_basis: >
+      修订后的问题只指向 step11 后的下部新黏格 x3,y6 与右下初始黏格 x5,y5，不再把终态仍留在
+      x3,y2 的上黏格纳入待组织对象，也不在问题中预设一次跨界答案。canonical step14-15 将初始
+      黏格连续左拉，step15 触发 sticky_merge:n1 形成 x3,y5-x3,y6 竖条；step17 将整条左拉并触发
+      sticky_to_box:n2，下格覆盖 x2,y6 目标且终态 isWin=true。ALT3 的非空输入 [left, down]
+      与最后一手 pull_world_front_blocked 的结果符合当时 x3,y6 的占用关系。
+  - target_ref: player_reasoning.operation_segments_resolution_and_trace_partition
+    evidence_basis: >
+      SEG1=step1-4、SEG2=step5-8、SEG3=step9-11、SEG4=step12-17 与 canonical 17-input replay
+      的输入和状态变化逐段一致；四段连续覆盖全部步骤，无遗漏、无重叠。final_state_ref step17 中
+      左目标由 B、右目标由 P、底目标由切回箱覆盖，并在结算后立即获胜。
+  - target_ref: mechanic_exposure_context.claimed_core_events
+    evidence_basis: >
+      canonical exact replay 出现全部七类 claimed core events：P/L shift 3 次、B/S shift 2 次、
+      pull_object 4 次、box_to_sticky 2 格、sticky_merge 1 次、move_sticky_rigid 3 次、
+      sticky_to_box 2 格。event probe 的 complete individual probes 证明所有胜路都不能避开 P/L shift、
+      B/S shift、pull、sticky_merge 与 sticky rigid move；新增 box_to_sticky min1 与 sticky_to_box
+      min1 complete count gates 分别证明两种材料事件各自在所有胜路中至少出现一次，不再依赖
+      material_normalization OR 组替代两个独立声明。
+  - target_ref: mechanism_scope.required_winning_path_event_counts
+    evidence_basis: >
+      明列的 B/S count-gate artifact 对 anchor_boundary_shift:box_sticky 使用 minCount=2，预算
+      100000 states/100 depth，result 为 found=false、status=complete、exploredStates=578；P/L
+      count-gate artifact 对 anchor_boundary_shift:push_pull 使用 minCount=3，同预算下 result 为
+      found=false、status=complete、exploredStates=498。二者分别支持所有胜路至少 2 次 B/S shift
+      与至少 3 次 P/L shift 的硬声明。
+  - target_ref: mechanic_exposure_context.latest_exposure_timing_check
+    evidence_basis: >
+      mechanic_exposure_sequence 的 dual_anchor 阶段 new_events 为空，向前派生的最后非空阶段是
+      movable_box_sticky_anchor，其新事件为 anchor_boundary_shift:box_sticky。该事件由 complete
+      box_sticky_anchor_shift avoid probe 证明在所有胜路中必经。canonical optimal trace 中全部
+      occurrence 为 step4 与 step11：step4 映射 SEG1/RU1，step11 映射 SEG3/RU2；第二个 occurrence
+      位于第二 reasoning unit，因此结论是 later_phase_present，不是 required_but_frontloaded。
+      dual_anchor 已是暴露序列末端，之后没有 later event 需要 reachable scan 排除。
+  - target_ref: solution_uniqueness
+    evidence_basis: >
+      result=unique_complete 属于允许值。提交的 layout analysis 与 unique-plan artifact 均报告完整图
+      381 个 reachable states、837 条 legal transitions、1 个 winning state、最短深度 17、最短
+      winning state 1 个且最短输入序列计数 1。unique-plan 中额外 19 步胜路仅比 canonical 多一个
+      down/up 完整回返环，不构成已知非等价玩家逻辑类，故未与 unique_complete 明显冲突。
+  - target_ref: hard_fact_summary_for_critic.calibrated_trace_metrics
+    evidence_basis: >
+      packet 与 layout analysis 的 pilot metrics 原样一致：solutionCost=17、nonWalkEventCount=21、
+      revisitRate=0.16666666666666666、heavyReuseRatio=0、solution_execution_pressure aggregateBand=4、
+      solution_space_reuse aggregateBand=2。依评审纪律，这只完成原样性核对；metrics 不作为支持或
+      反驳机械声明、玩家推理价值、难度或审美的证据。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - 完整图、SCC、事件探针与 exact replay 只支持机械结构，不证明玩家会自然发现、问题显著性、审美、实际难度或 campaign placement。
+  - runtime 没有 instance-level object participation；本评审只确认 event pattern、状态格与聚合计数，不声称不可区分箱或黏块的 per-object identity necessity。
+  - replayed_attempt 由 packet 的非空输入/结果摘要、canonical 起始状态与原型规则交叉核对；允许 evidence 中没有独立 alt replay artifact。
+  - complete graph 的单一胜态与唯一最短输入序列不表示不存在任意长度的纯走位或完整回返 detour。
+questions_for_designer: []

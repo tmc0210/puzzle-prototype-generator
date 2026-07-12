@@ -21,6 +21,9 @@ lead designer / controller
 -> archive pass（若本轮要求）
 ```
 
+若 evidence reviewer 因 `solution_uniqueness` 非法或与证据明显冲突而打回当前
+candidate version，controller 立即返回 Design Studio，不把同一版发送给 puzzle critic。
+
 `solver`、`analyzer`、`formal_evaluator` 是工具，不是 agent。它们不判断美感、
 教学价值或 campaign 位置。
 
@@ -64,11 +67,61 @@ required_winning_path_events:
 forbidden_winning_path_events:
 forbidden_if_seen_anywhere:
 
-Design claim:
-player_insight:
-causal_chain:
-why_not_execution:
-falsification:
+simple_level_design: # difficulty_score_target 1-2 only
+player_goal:
+  description:
+  state_ref:
+canonical_operation:
+  from_state_ref:
+  exact_inputs:
+  to_state_ref:
+mechanism_feedback:
+  visible_change:
+  state_ref:
+completion_feedback:
+  visible_change:
+  state_ref:
+
+player_reasoning: # difficulty_score_target 3+ only
+canonical_trace_ref:
+player_goal:
+  description:
+  state_ref:
+reasoning_units:
+  - id:
+    player_question:
+    premises:
+      - statement:
+        state_ref:
+    conclusion:
+    operation_refs:
+    alternative:
+      status: replayed_attempt | unresolved | not_claimed
+      description:
+      local_gain:
+      from_state_ref:
+      exact_inputs:
+      result_state_ref:
+      concrete_outcome:
+    feedback:
+      - state_ref:
+        visible_change:
+operation_segments:
+  - id:
+    step_range:
+    exact_inputs:
+    purpose:
+    supports_reasoning_units:
+resolution:
+  resolves:
+  operation_refs:
+  final_state_ref:
+  visible_confirmation:
+trace_partition:
+  status: complete | incomplete
+  ordered_segment_ids:
+  uncovered_steps:
+  overlapping_steps:
 
 Evidence:
 commands_run:
@@ -81,19 +134,16 @@ reachable_event_exposure:
 graph_or_counterfactual_evidence:
 evidence_limits:
 
+solution_uniqueness:
+  result: unique_complete | unique_within_budget | equivalent_variants_only
+  evidence_refs:
+
 Hard fact summary for critic:
 solver:
 required_or_forbidden_events:
 routed_diagnostic_facts:
 evidence_limits:
 artifact_refs:
-
-Player-facing reading:
-opening_read:
-intended_solution_read:
-commitment_points:
-state_responsibility:
-payoff_and_resolution:
 
 Routing:
 activated:
@@ -122,6 +172,12 @@ examples:
       - solution_route
       - object_placement
 none_found_reason:
+
+claim_last_review:
+  mode: sequential_single_call | not_used
+  facts_packet:
+  claim_packet:
+  read_order: facts_then_claim | not_applicable
 ```
 
 `archive_taste_context` 只能包含 `human_reviewed: true` 且带有人类评语的候选。
@@ -139,8 +195,22 @@ reviewer / critic / designer 不能输出任何分数化结论。禁止写 `4`�
 结构性观察。工具证据可以支持机制事实，但不能替代人类归档锚点生成审美或难度
 分数。
 
-`player_facing_reading` 是 critic 主输入，必须把正解流程、提交点、状态责任和
-payoff 落到玩家全视野可见的局面中。
+使用 brief 中预先声明的 `difficulty_score_target` 分流：目标难度 1-2 填写
+`simple_level_design`；目标难度 3+ 填写 `player_reasoning`。难度 3+ 在确定
+layout 或运行 miner / script search 前先写工作用 `reasoning_sketch`：玩家目标、
+问题、可见前提、预期结论、机制序列和反馈；取得 exact trace 后再生成正式设计字段。
+
+reasoning unit 的数量由关卡的实际逻辑决定。`operation_segments` 覆盖 canonical trace
+全部操作并说明每段目的；`resolution` 引用已有 segment，`trace_partition` 记录覆盖结果。
+
+`replayed_attempt` 从 `from_state_ref` 实际尝试非空的 `exact_inputs`，最后一个输入可以非法；`result_state_ref` 指向尝试结束后的游戏状态。`concrete_outcome` 写最后一项输入和具体后续操作条件的局面结果。写不出可尝试序列的空间事实进入 `premises`，或使用 `not_claimed`。`premises` 使用问题发生时玩家已能看到的关系；完整图和 all-win 结论继续放在 evidence。
+
+`solution_uniqueness` 是送审资格，只允许模板中的三个值。发现非等价胜解、多路线
+尚未证明等价、必要搜索未完成或证据不可用时，designer 留在 Design Studio 修订，
+不组装 serious candidate packet。一个 exact 非等价胜解已经足够，不要求继续枚举其它 bypass。
+
+所有难度都经过 evidence reviewer 和 puzzle critic。`claim_last_review` 是与难度无关的
+可选 critic 路由，默认 `not_used`；启用时先读 facts packet，再读 claim packet。
 
 `kind: pre_submission_check` 的原型专属流程只在其声明阶段执行。review packet
 只记录阶段状态；除非 brief 明确路由为 review diagnostic，不把检查细节当作
@@ -179,14 +249,18 @@ Tool boundary:
 Rules:
 - Follow docs/21-current-workflow-standard.md.
 - Do not claim accepted, mainline, positive_reference, or reference.
-- First write a falsifiable design_claim:
-  - player_insight
-  - causal_chain
-  - why_not_execution
-  - falsification
+- Route by the brief's target difficulty. For difficulty 1-2, record a working
+  player goal and intended mechanism operation before layout. For difficulty 3+,
+  first write a revisable reasoning_sketch. Derive the formal simple_level_design
+  or player_reasoning only after an exact trace.
 - Design and test serious candidates in the design studio loop:
-  design_claim -> layout -> tools -> evidence reading ->
+  working intent / reasoning sketch -> layout -> tools -> evidence reading ->
+  exact design fields ->
   revise / discard / hold / change family.
+- When describing or simulating concrete player operations, alternative attempts,
+  or failed routes and their resulting positions, prefer the input-sequence replay
+  tool listed in the prototype handoff and record exact inputs, step states, and
+  the final position.
 - 完成 routing。只运行被要求或被触发的诊断。如果 prototype-specific work item
   是 redesign 或 paired-design mode，按原型文档执行；不要把它变成机械筛查。
   没有证据时标记 unavailable / unknown，不要编造证据。
@@ -195,12 +269,17 @@ Rules:
   candidates. Archive taste context is calibration, not a reusable base.
 - Do not send a candidate to review unless tool evidence supports the minimum
   evidence claims.
+- Before assembling a serious candidate packet, complete the solution uniqueness
+  self-check. Only unique_complete, unique_within_budget, or
+  equivalent_variants_only may be sent to review. Otherwise revise in the Design
+  Studio immediately; one exact non-equivalent winning path is sufficient.
+- Every serious candidate requires both evidence reviewer and puzzle critic.
 - If no serious candidate survives, output failed_search with failure
   distribution. Do not weaken the role to claim success.
 
 Output:
 1. candidate packet, or failed_search packet
-2. design_claim
+2. simple_level_design or player_reasoning
 3. tool commands and evidence summary
 4. routing summary
 5. attempt_log summary
@@ -230,21 +309,23 @@ Rules:
 
 Output:
 1. draft layout
-2. expected design_claim
+2. expected simple_level_design or reasoning_sketch
 3. expected mechanism responsibility
 4. likely risks or bypasses
 ```
 
 ## Evidence Reviewer Template
 
-用于工具证据已经可用之后。它只判断证据是否支持 claim，不判断好不好玩。
+用于工具证据已经可用之后。它只判断证据是否支持设计字段的机械前提和硬声明，不判断好不好玩。
 
 ```text
 You are the Mechanic Evidence Reviewer.
 
 Task:
-Judge whether the supplied evidence supports the candidate's design_claim.
-Do not judge beauty, fun, or campaign placement except as evidence caveats.
+Judge whether the supplied evidence supports the candidate's structured design fields,
+mechanism scope, and hard claims.
+Do not judge beauty, fun, player-question salience, or
+campaign placement except as evidence caveats.
 Do not use tools or evidence sources outside the allowed list.
 
 Candidate packet:
@@ -263,20 +344,36 @@ Review rules:
 - Distinguish event pattern, event instance, object participation, and
   per-object necessity.
 - Distinguish returned trace evidence from all-solution / complete-graph claims.
-- If graph search is incomplete, graph-dependent claims are unknown.
-- Treat player_insight and why_not_execution as design claims. Tool evidence may
-  support their prerequisites, but it does not prove them by itself.
+- If graph search is incomplete, complete-graph claims are unknown;
+  unique_within_budget is only a bounded admission result.
+- Check only whether solution_uniqueness.result is one of unique_complete,
+  unique_within_budget, or equivalent_variants_only, and whether that value
+  obviously conflicts with its submitted evidence refs or a known exact bypass.
+  Do not rerun tools, enumerate solution families, or search for more bypasses.
+- Put an illegal value, missing evidence ref, or obvious contradiction in
+  unsupported_or_overclaimed; return does_not_support_claim with required_action
+  not none. Do not preserve admission with supports_with_caveats or unknown.
+- For simple_level_design, verify the goal state, canonical operation,
+  mechanism feedback, and completion feedback against the exact trace.
+- For player_reasoning, verify state/input/trace refs, operation segments,
+  replayed attempts and their result states, and trace partition.
+- Tool evidence may support mechanical prerequisites, but it does not prove
+  player-question salience or reasoning value.
 - If evidence contradicts central claim, say so directly.
 
 Output:
 review_iteration:
 candidate_version_reviewed:
-review_input_type: candidate_version | evidence_disagreement | revised_claim | other
+review_input_type: candidate_version | evidence_disagreement | revised_design | other
 verdict: supports_claim | supports_with_caveats | does_not_support_claim | unknown
 review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_required | held_proposal | rejected_candidate
 required_action: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family
 supported_claims:
+  - target_ref:
+    evidence_basis:
 unsupported_or_overclaimed:
+  - target_ref:
+    issue:
 evidence_limits:
 questions_for_designer:
 
@@ -302,6 +399,16 @@ allowed list.
 Candidate packet:
 <candidate_packet>
 
+Difficulty route:
+<simple_level | reasoning_level>
+
+Claim-last review:
+<not_used | sequential_single_call>
+
+When claim-last is enabled, provide:
+<facts_packet>
+<claim_packet>
+
 Archive taste context:
 <archive_taste_context>
 
@@ -321,13 +428,32 @@ Review rules:
   必须使用人类评语摘句和 human calibration scores。
 - 攻击候选是否达到 brief 中的 `aesthetic_score_target` 和
   `difficulty_score_target`；不要把 critique 降格为数字打分。
-- Attack player_insight first: does the intended player need to understand it,
-  or can they win by local execution / nearest affordance?
-- Attack why_not_execution before accepting event counts, repeated operations,
-  or designer-named role changes as depth.
-- Use `player_facing_reading` as the critic-facing surface: opening read,
-  intended solution read, commitment points, state responsibility, and
-  payoff/resolution.
+- When claim-last is enabled, write a short `independent_reading` from the facts
+  packet, then read the claim packet and complete the main review. Otherwise read
+  the complete candidate packet once.
+- Attack whether player_goal is a player goal rather than a solution name, and
+  whether player_question exists before the referenced action, or the player can
+  win by local execution, the only obvious action, or the nearest affordance.
+- Attack whether premises are visible at that state without future knowledge,
+  and whether conclusion adds a planning reason rather than restating operations.
+- Attack operation_refs for fulfillment, double-credit, or hidden reasoning;
+  attack whether replayed attempts are plausible player choices, have the stated
+  local gain, and end in the concrete board result claimed by the designer;
+  also attack whether cheap enumeration bypasses the claimed contradiction.
+- For each reasoning unit, judge whether the replayed attempt is a route the
+  player would seriously consider and whether its failure becomes visible before
+  substantial execution. Also inspect the same decision state for several equally
+  natural losing directions; even when each is short, treat the choice surface as
+  player-facing search burden when the player must test them one by one instead of
+  pruning them through a shared visible relation.
+- Attack whether feedback is visible and attributable, and whether resolution
+  fulfills the earlier reasoning units.
+- Attack whether difficulty comes from player-readable structural causality,
+  rather than length, repetition, corridors, obvious actions, or noise.
+- Run the small `language_drift` check: if a designer-created noun adds no
+  information beyond concrete objects, actions, occupied cells, or route
+  relations, mark obvious overpackaging. Authoritative mechanic terms and
+  planning shorthand with independent meaning remain valid.
 - Judge only routed diagnostics. Do not invent hidden hard checks for diagnostics that
   were marked not_applicable.
 - Prototype-specific `kind: pre_submission_check` work only contributes stage
@@ -356,18 +482,36 @@ Review rules:
   prerequisite gaps, or analyzer facts.
 - Treat the review as attacks for the lead designer to answer. Do not reduce it
   to a score.
+- Output items only for real merits and real problems; do not fill a full-field
+  PASS table.
+- Operation-segment length alone can produce only a minor nonblocking pacing note;
+  do not make extra walking a core attack by itself.
 - Human handoff is ownership transfer, not a missing review step. Resolve core
-  player-reading, role-fit, and why-not-execution judgments inside the current
+  player-reasoning and role-fit judgments inside the current
   review as current judgment, context_gap, nonblocking_risk, hold, or reject.
 
 Output:
 review_iteration:
 candidate_version_reviewed:
-review_input_type: candidate_version | evidence_disagreement | revised_claim | other
-verdict: supports_design_claim | supports_with_noncore_caveats | revise_required | hold_or_reject
+review_input_type: candidate_version | evidence_disagreement | revised_design | other
+verdict: supports_design | supports_with_noncore_caveats | revise_required | hold_or_reject
 review_loop_state: proposal_ready | proposal_ready_with_caveats | revise_required | held_proposal | rejected_candidate
-required_action: none | evidence_disagreement_for_next_review | structural_revision | downgrade_or_hold | reject_or_change_family
+required_action: none | evidence_disagreement_for_next_review | revise_claim_and_rereview | structural_revision | downgrade_or_hold | reject_or_change_family
+review_method:
+  difficulty_route: simple_level | reasoning_level
+  claim_last_used: true | false
+  read_order_ok: true | false | not_applicable
+  claim_read_after_independent_reading: true | false | not_applicable
+independent_reading:
+  status: completed | not_applicable
+  player_goal_seen:
+  salient_relations_seen:
+  unclear_or_unreadable_parts:
+  initial_quality_risks:
 player_facing_merits:
+supported_reasoning:
+  - unit_ref:
+    reason:
 archive_taste_context_used:
 score_calibration:
   human_archive_anchors_present:
@@ -378,15 +522,24 @@ score_calibration:
   missing_anchor_effect:
 aesthetic_target_fit:
 difficulty_target_fit:
+language_drift:
+  obvious_overpackaging: true | false
+  examples:
+    - target_ref:
+      packaged_phrase:
+      concrete_restatement:
+      why_no_information_was_added:
+  required_action: revise_claim_and_rereview | none
 critic_items:
   - id:
     type: core_blocker | context_gap | nonblocking_risk | improvement_opportunity | score_boundary | diagnostic_note
-    target: player_insight | why_not_execution | role_fit | evidence_support | diagnostic_reading | taste_calibration | lineage
-    claim_relation:
+    target_ref:
+    design_relation:
+    attack:
     evidence_basis:
-    player_facing_reason:
+    player_facing_effect:
     blocks_proposal_ready: true | false
-    expected_designer_response: revise_now | answer_from_packet | add_context_next_review | accept_as_nonblocking | reject_with_reason | downgrade_or_hold | change_family
+    expected_designer_response: revise_now | revise_claim | answer_from_packet | add_context_next_review | accept_as_nonblocking | reject_with_reason | downgrade_or_hold | change_family
 diagnostic_interpretations:
   - graph_fact:
     neutral_meaning:
@@ -399,8 +552,11 @@ handoff_notes:
   proposal_ready_with_caveats。
 - 如果存在 blocks_proposal_ready: true 的 critic_items，required_action 不能是
   none，review_loop_state 不能是 proposal_ready 或 proposal_ready_with_caveats。
+- 如果 language_drift.obvious_overpackaging 是 true，必须同时生成阻塞性 critic_item，
+  language_drift.required_action 必须是 revise_claim_and_rereview，顶层 required_action
+  不能是 none，review_loop_state 不能是 proposal_ready 或 proposal_ready_with_caveats。
 - evidence_disagreement_for_next_review 只用于具体证据读取分歧。未解决的
-  player_insight、why_not_execution、role_fit、未授权变体、lineage 或 taste
+  玩家推理、language_drift、role_fit、未授权变体、lineage 或 taste
   攻击需要结构修改、hold、reject 或 change_family。
 ```
 
@@ -427,8 +583,8 @@ Rules:
 - 必须逐项处理 critic_items。designer 可以反对 critic，但要写清 response 和理由。
 - 如果 candidate 被修改，重跑必要工具，并把新版本交给 review_N+1。
 - 如果 designer 反对一个具体证据读取攻击，写 evidence_disagreement packet 给
-  review_N+1。不要用 evidence_disagreement 处理未解决的 player_insight、
-  why_not_execution、role_fit、lineage 或 taste 攻击。
+  review_N+1。不要用 evidence_disagreement 处理未解决的玩家推理、role_fit、
+  lineage 或 taste 攻击。
 - 如果某个问题会改变 proposal_ready 是否成立，把它路由为当前修订、下一轮补上下文、
   降级 / hold、reject 或 change family。
 - 如果最诚实的结果是 held / rejected / failed_search，记录该状态。
@@ -445,7 +601,7 @@ evidence_reviewer_action:
   result:
 critic_item_triage:
   - critic_item_id:
-    response: revise_now | answer_from_packet | add_context_next_review | accept_as_nonblocking | reject_with_reason | downgrade_or_hold | change_family
+    response: revise_now | revise_claim | answer_from_packet | add_context_next_review | accept_as_nonblocking | reject_with_reason | downgrade_or_hold | change_family
     reason:
     refs:
     produces:
@@ -471,7 +627,7 @@ Archive-facing summary:
 terminal_state:
 review_integrity:
 process_integrity:
-design_claim:
+design_fields:
 evidence_refs:
 route_summary:
 prototype_specific_work:

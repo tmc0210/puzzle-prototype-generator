@@ -1,0 +1,82 @@
+review_attempt_id: RA_CROSS_RELAY_V4_CRITIC_ATTEMPT_02
+critic_instance_id: /root/critic_attempt02
+candidate_version_reviewed: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+review_phase: raw_only_independent_reading
+review_input_type: candidate_version
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    三个目标分别位于 (2,3)、(6,3)、(2,6)。玩家起初能看到上方箱 (3,2)、下方箱
+    (3,6)、初始黏格 (5,5)，以及 P/L 竖锚与 B/S 横锚。可读出的计划问题不是把最近对象直送目标，
+    而是如何让两个锚点先后接管上方定位与跨区归一化：P/L 需要占住右目标，B/S 需要占住左目标并把
+    两个分处上下的箱同时变成黏格，之后初始黏格才能与下方黏格合并并被拉过边界覆盖底目标。
+  salient_relations_seen:
+    - >-
+      玩家看到箱 (3,2) 紧邻其下方通道、B/S 在 y4。step 1 先把箱推到 (3,3)，step 4 再向上拉动
+      B/S，B 半格把该箱反向顶回 (3,2)，同时 B/S 上移到 y3；这不是净位移搬运，而是用暂时下推
+      换取锚点穿入中层并建立之后左移的站位，后续才能执行 step 11。
+    - >-
+      玩家看到 P/L 初始在 x4、右目标在 (6,3)。step 2 先把 P/L 推到 x5，step 5 再推到 x6，
+      此时 L 覆盖右目标；step 8 从上方把整根锚下推一格，覆盖目标的半格由 L 换成 P。棋盘仍保持
+      右目标覆盖，但玩家获得从 (5,2) 下行并在 step 11 从右侧推动 B/S 的通路，因此目标覆盖与中层
+      操作空间发生了真实交换。
+    - >-
+      step 11 中，玩家从 (5,3) 向左推动位于 x3-x4 的 B/S 到 x2-x3；B 覆盖左目标 (2,3)，同时
+      (3,2) 与 (3,6) 两个相隔较远的箱都越过 B 侧边界变成分离黏格。这个一次动作同时完成左目标定位，
+      并为下方合并准备材料，使此前对上方箱的反向复位和下方箱的保留在此处汇合。
+    - >-
+      玩家随后在 step 14-15 把初始黏格从 (5,5) 连拉到 (3,5)，它与 step 11 生成在 (3,6) 的黏格
+      合并成竖向二格刚体；step 17 再把该竖条从 x3 拉到 x2，两格同时越过边界变回箱，下格覆盖
+      (2,6) 并获胜。合并改变了最后一次拉动的对象规模与归一化结果，终局不是重复的单格搬运。
+  unclear_or_unreadable_parts:
+    - >-
+      step 11 对 (3,2) 与 (3,6) 的同步转换是跨越多行的可见变化。规则虽说明边界归一化，但仅凭静态
+      初局，玩家是否能在动作前清楚预测“锚点左移一次会同时处理两个远端箱”，仍存在界面表达风险；
+      若边界范围没有明确视觉延伸，这个关键因果可能被体验为规则猜测。
+  initial_quality_risks:
+    - >-
+      高价值转折集中在 step 4、8、11；step 12-17 的主体在 step 11 成功后较接近沿开放通道完成两次拉动、
+      合并和一次终拉。终局有结构兑现，但后半段的剩余决策压力可能明显低于前半段。
+    - >-
+      P/L 在 step 5 已用 L 覆盖右目标，step 8 又以 P 覆盖同一目标。这个换半格动作确实释放后续站位，
+      但如果玩家很容易从唯一可走通路得到它，其推理价值会弱于它在状态轨迹中的事件数量所显示的复杂度。
+    - >-
+      与低分警戒例 RA_CAND_0024 相比，本候选确有箱的反向复位、双锚分工、远端同步转换和黏块合并，
+      并非只靠锚点腾挪；但与高分例 RA_CAND_0022、RA_CAND_0025 所强调的强反直觉洞见或主动构造相比，
+      step 11 的可预测性和前半段是否存在有意义的竞争计划仍是后续 claim 审查时应攻击的边界。
+  exact_basis:
+    - layout: targets@(2,3),(6,3),(2,6); crate@(3,2),(3,6); sticky@(5,5); P/L@(4,2)-(4,3); B/S@(3,4)-(4,4)
+    - canonical.step_1: crate (3,2)->(3,3)
+    - canonical.step_4: B/S y4->y3 and crate (3,3)->(3,2)
+    - canonical.step_5: P/L x5->x6; L covers target (6,3)
+    - canonical.step_8: P/L y2-y3->y3-y4; target (6,3) changes from L coverage to P coverage
+    - canonical.step_11: B/S x3-x4->x2-x3; crates at (3,2) and (3,6) both become separate sticky cells
+    - canonical.step_14: initial sticky (5,5)->(4,5)
+    - canonical.step_15: sticky (4,5)->(3,5) and merges with sticky (3,6)
+    - canonical.step_17: vertical sticky rigid body x3->x2; both cells become crates and lower cell covers target (2,6)
+
+archive_taste_context_used:
+  - RA_CAND_0022
+  - RA_CAND_0025
+  - RA_CAND_0024
+  - RA_CAND_0028
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_for_raw_first
+  positive_anchors: [RA_CAND_0022, RA_CAND_0025, RA_CAND_0028]
+  lower_bound_or_negative_anchors: [RA_CAND_0024]
+  missing_anchor_effect: none_for_initial_structural_reading
+handoff_notes:
+  - 第二阶段尚未开始；未读取 designer claim、reasoning units、目标分数、其它评审或其它 reports。
+  - 顶层最终 verdict、review_loop_state、required_action 尚未形成，后续不得比本文件的 initial_* 更宽松。

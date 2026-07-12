@@ -1,0 +1,107 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29
+candidate_version: v29
+review_iteration: 1
+packet_kind: claim_last_facts
+
+prototype_rules:
+  win_condition: all_targets_covered_by_objects
+  push_pull_boundary: P=(4,12), L=(5,12); x<=4 push, x>=5 pull
+  box_sticky_boundary_initial: S=(4,10), B=(5,10); x<=4 sticky, x>=5 box
+  normalization: 合法移动后按 B/S 半平面归一化；相邻 sticky 合并，跨 box side 的 sticky 格变箱，剩余 sticky 分裂。
+
+layout: |-
+  ############
+  #####...####
+  ####G...####
+  ###MMCG.####
+  #####CG.####
+  ###MMC.G.###
+  ####G.#..###
+  ####.....###
+  ####.#######
+  ####.#######
+  ##@.SB.#####
+  ############
+  ####PL######
+  ############
+
+exact_solution:
+  cost: 32
+  inputs: [right, right, up, up, up, right, right, right, up, up, up, up, left, right, up, left, left, up, right, right, down, down, down, down, right, down, down, left, left, left, up, down]
+  non_walk_steps:
+    - {step: 2, input: right, events: [push_object:box_sticky_anchor, anchor_boundary_shift:box_sticky, box_to_sticky:n3, sticky_merge:n1]}
+    - {step: 14, input: right, events: [pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n3, sticky_split:n1]}
+    - {step: 18, input: up, events: [pull_object:sticky#1, move_sticky_rigid]}
+    - {step: 25, input: right, events: [pull_object:crate#3]}
+    - {step: 32, input: down, events: [pull_object:sticky#2, move_sticky_rigid]}
+
+verified_alternative:
+  id: ALT1_fill_gate_goal_before_upper_arm
+  from: canonical state after step 14
+  exact_inputs: [down, down, right]
+  legal: true
+  immediate_effect: 下箱覆盖 (7,5)，玩家位于 (8,5) 且仍能向下离开。
+  delayed_progress: {exact_inputs: [down, down, left, left, left, up, down], legal: true, result: lower_sticky_goal_covered}
+  continuation: {status: complete, found: false, explored_states: 512051}
+
+hard_evidence:
+  solver: {found: true, status: found, cost: 32, explored_states: 563}
+  graph: {status: complete, reachable_states: 514270, legal_transitions: 1058153, winning_states: 3}
+  solution_uniqueness:
+    result: equivalent_variants_only
+    exact_optimal_input_paths: 6
+    optimal_winning_states: 1
+    distinct_optimal_non_walk_signatures: 1
+    winning_object_configuration_groups: 1
+    equivalent_variants: 上目标完成后，门箱与下臂可交换；另有门箱下拉再复位的可逆绕动，三者最终配置相同。
+  all_winning_path_events:
+    status: complete
+    missing_required_winning_path: false
+    required: [anchor_boundary_shift:box_sticky, box_to_sticky, sticky_merge, sticky_to_box, sticky_split, pull_object, move_sticky_rigid]
+  order_monitor:
+    status: complete
+    states: 545240
+    violating_winning_path: false
+    obligation: 门箱目标不得早于上黏臂目标；下黏臂可在门箱前后完成。
+
+calibrated_trace_metrics:
+  calibration: reality_anchor_trace_metrics_v0
+  status: pilot
+  solution_execution_pressure:
+    status: enabled
+    components:
+      solutionCost: {raw: 32, band: 5, weight: 0.35}
+      nonWalkEventCount: {raw: 13, band: 3, weight: 0.45}
+      heavyReuseRatio: {raw: 0.05128205128205128, band: 3, weight: 0.2}
+    aggregateBand: 4
+  solution_space_reuse:
+    status: enabled
+    components:
+      revisitRate: {raw: 0.2727272727272727, band: 3, weight: 0.55}
+      heavyReuseRatio: {raw: 0.05128205128205128, band: 4, weight: 0.45}
+    aggregateBand: 3
+
+routed_diagnostics:
+  - 前14步强制，不计推理层。
+  - 早填门箱后仍可完成下目标；错误结果态的完整无胜续搜包含512051状态，失败并非一拍终止。
+  - 三个胜态只有一个最终对象配置；全部胜路均先上目标后门箱，下臂次序自由。
+  - 图规模、32步和 pilot 指标不证明困难或审美。
+
+archive_taste_context:
+  - {candidate_id: RA_CAND_0017, human_reviewed: true, human_scores: {aesthetic: 4, difficulty: 5}, human_comment: 很精彩的末期挑战，推拉与黏块拼接切割要求高，精巧、高密度、高耦合；但腾挪负担很高。}
+  - {candidate_id: RA_CAND_0022, human_reviewed: true, human_scores: {aesthetic: 5, difficulty: 4}, human_comment: 反直觉操作、空间利用率高、结构精巧，短步骤中要求强洞见，是优秀范例。}
+  - {candidate_id: RA_CAND_0025, human_reviewed: true, human_scores: {aesthetic: 4, difficulty: 4}, human_comment: 紧凑空间内主动构造 L 形，前段构造不喧宾夺主，终局提示恰当，达到强4。}
+  - {candidate_id: RA_CAND_0024, human_reviewed: true, human_scores: {aesthetic: 1, difficulty: 3}, human_comment: 双锚点与三个黏块抬高切割拼接期待，实际几乎只是推拉腾挪；不要迷信指标和探针。}
+
+evidence_limits:
+  - exact alternative 与顺序 monitor 不证明玩家会被误导或觉得反馈公平。
+  - holding goals 在切割时自动完成，不计独立推理层。
+  - equivalent variants 不支持输入路径唯一主张。
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29_event_gate_report.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29_sequence_report.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29_alternative_report.yml
+
+read_next: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29_claim_packet.yml

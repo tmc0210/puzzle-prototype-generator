@@ -1,0 +1,72 @@
+candidate_id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+candidate_version: v6
+packet_kind: claim_last_design_claim
+target_role: game_late_dual_anchor_sticky_cut_and_rebind_challenge
+target_scores:
+  aesthetic: "4_floor_seek_5"
+  difficulty: "4_or_higher"
+
+player_goal: "让棋盘上的六个目标全部被箱、黏块或锚点格覆盖。"
+
+reasoning_units:
+  - id: RU1_make_anchor_chute_before_cut
+    player_question: "先切桥，还是先移动完整 C 形？"
+    visible_premises:
+      - "C 形连接柱位于 P/L 正下方；当前二格锚点没有向下的完整空间。"
+      - "C 形右移一格后，旧 x=5 连接柱位置变成三格竖直空槽。"
+    conclusion: "先把完整 C 形右移，制造 P/L 下拉通道。"
+    canonical_operations: "steps 1-6: up up up up right right"
+    alternative: "开局 right 立即切桥有局部收益，但总最短成本37；规范路线21。"
+    feedback: "C 形右移，P/L 下方出现连续竖槽。"
+  - id: RU2_pull_pl_through_reused_column
+    player_question: "C 形右移后为什么先拉 P/L？"
+    visible_premises:
+      - "玩家位于 L 侧，右方 C 形挡住继续 right。"
+      - "向下走时 P/L 在身后，空槽允许二格锚点整体下移。"
+    conclusion: "连续 down 三次把 P/L 拉到 C 形下沿，准备成为回推中箱的推杆。"
+    canonical_operations: "steps 7-9: down down down"
+    alternative: "step6 继续 right 为 structural block：pull 侧前格被 C 形占用。"
+    feedback: "P/L 逐行穿过刚由 C 形让出的同一列空间。"
+  - id: RU3_cut_old_bridge_and_assign_outputs
+    player_question: "B/S 停在哪里才会得到左列箱端、右侧端点和可重织中箱？"
+    visible_premises:
+      - "右移后的连接柱在 x=6，端点在 x=7。"
+      - "B/S 到 B=x6/S=x7 时，x=6 在箱侧、x=7 在黏侧。"
+    conclusion: "右推 B/S 两格，切出 x=6 三箱并把 x=7 上下端点分开。"
+    canonical_operations: "steps 10-14: left left down right right"
+    feedback: "旧 C 形变成三个箱与两个分离黏端点。"
+  - id: RU4_reweave_middle_then_move_as_rigid_bar
+    player_question: "怎样同时完成左右两列目标？"
+    visible_premises:
+      - "x=6 上下箱已覆盖左列上下目标，中箱正对 x=7 两端点的缺口。"
+      - "P/L 从下方回到中线后可与中箱组成同轴力链。"
+    conclusion: "P/L 把中箱推入端点间重拼竖条，再整体把竖条送到 x=8；P/L 留在左列中央。"
+    canonical_operations: "steps 15-21: up left up left up right right"
+    alternative: >-
+      存在64步无重拼胜路：先提前切桥，再分别抽走三箱；上下黏端点逐个送到右列上下目标，
+      P/L 泊入右列中目标，三箱再逐个回填左列。其概念是逐件分配，较直白但维护对象更多、
+      反复让位与回填显著更笨重；因此只主张所有最优解必须重拼，并把逐件逃课作为试玩 caveat。
+    feedback: "第20步出现三格竖条，第21步整条刚体覆盖右列三目标并胜利。"
+
+operation_segments:
+  - {id: SEG1, steps: "1-6", inputs: [up, up, up, up, right, right]}
+  - {id: SEG2, steps: "7-9", inputs: [down, down, down]}
+  - {id: SEG3, steps: "10-14", inputs: [left, left, down, right, right]}
+  - {id: SEG4, steps: "15-17", inputs: [up, left, up]}
+  - {id: SEG5, steps: "18-21", inputs: [left, up, right, right]}
+trace_partition: {status: complete, uncovered_steps: [], overlapping_steps: []}
+
+lineage_claim:
+  default: fresh_required
+  candidate_relation: fresh
+  note: "未使用归档布局、目标关系、对象角色或解序；归档仅作人评 taste 校准。"
+
+language_boundary:
+  named_structure: "桥剪回织"
+  concrete_restatement: >-
+    先把 C 形整体右移空出 P/L 下拉槽；再移动 B/S 把 C 形连接柱切成箱；最后用 P/L
+    把中箱推回两个端点之间黏成竖条，并把整条送进右列目标。
+
+claim_last_review:
+  mode: sequential_single_call
+  read_order: facts_then_claim

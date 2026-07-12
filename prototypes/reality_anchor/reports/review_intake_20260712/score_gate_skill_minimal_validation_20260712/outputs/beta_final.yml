@@ -1,0 +1,335 @@
+target_code: Beta
+review_attempt_id: RA_NEW_TWIN_GATE_REVIEW_1_SCOREGATE_SKILL
+critic_instance_id: /root/scoregate_beta
+review_iteration: 1
+candidate_version_reviewed: RA_NEW_2026_07_12_TWIN_GATE_RESECTION_v1
+review_input_type: candidate_version
+archive_records_read: 31
+candidate_packet_read: true
+
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+final_aesthetic_score: 4
+final_difficulty_score: 4
+
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+  independent_reading_frozen: true
+  hard_evidence_tools_run: false
+  claim_last_route_source: controller_followup
+  packet_claim_last_mode: not_used
+  packet_route_note: >-
+    controller 实际在冻结第一阶段产物后才提供 candidate packet，因此本次实际阅读顺序满足 claim-last；
+    packet 内部的 claim_last_review.mode=not_used 与实际路由不一致，只记流程诊断，不作为设计缺点。
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  preliminary_aesthetic_score: 4
+  preliminary_difficulty_score: 4
+  player_goal_seen: >-
+    玩家要把上室的七个材料格经一次整体合并和一次跨界切分，重新分配到四个目标；
+    真正需要预先安排的不是“依次把最近对象送上目标”，而是先处理上黏臂，再处理门箱与会封住回路的下黏臂。
+  salient_relations_seen:
+    - >-
+      玩家开局看见自己位于第10行左侧，右边紧邻可移动的横向 S/B，而上室中第3、5行各有一条 M-M-C，
+      两条横臂由第4行中央 C 连接。执行 canonical step 1-2 的两次 right 后，S/B 被向右推，
+      中央三格箱柱转为黏性并与上下两条黏臂合成七格刚体；这使玩家后续不再能逐箱处理，而必须先把整块从右侧拉回边界。
+    - >-
+      玩家沿第3列上行、绕到上室右侧后，在 canonical step 13-14 执行 left、right；第二步从右侧拉动七格整体，
+      中央竖柱切回三个箱子，上下黏臂与箱柱分离。棋盘由一个不可分的大刚体变成三个可分别操作的输出，
+      因而后续才出现“上黏臂、门箱、下黏臂”的处理次序。
+    - >-
+      玩家在 step 15-18 从上方拉动上黏臂，使其覆盖第2行上目标；随后 step 19-25 绕到右侧拉门箱，
+      使其覆盖第5行右目标；最后 step 26-32 从下方拉动下黏臂，使其覆盖第6行下目标并获胜。
+      同一轮切分产生的三个输出因此都被后段实际消费，而不是只触发事件后退休。
+    - >-
+      从 step 14 改走 down、down、right，玩家会先让门箱覆盖目标且仍能向下离开；继续
+      down、down、left、left、left、up、down，又能让下黏臂覆盖目标，但此时上黏臂把手不可达且完整续搜无胜。
+      这说明下黏臂不是独立收尾物：它落到第6行狭口后会切断回到上黏臂操作侧的机会，要求玩家在行动前读出上先下后的次序。
+  unclear_or_unreadable_parts:
+    - >-
+      raw 只给出五个 significant states 的文字变化，没有逐步坐标化棋盘；因此目前能确认错误顺序最终封死上黏臂，
+      但还不能精确判断玩家在 step 14 当下能多清楚地看见该把手与第6行狭口的封锁关系。
+    - >-
+      raw 只列出一条自然替代路线，尚不能判断同一决策状态是否还有多条同样自然且同样延迟反馈的失败方向。
+  initial_quality_risks:
+    - >-
+      开局推动 S/B 与绕行到整体右侧看起来高度受走廊约束；若第二阶段材料不能证明玩家在执行前需要预测合并后的职责，
+      前14步可能更像强制展示机制，而不是玩家作出的构造决策。
+    - >-
+      step 14 后三个输出的处理动作都很短。当前可见的主要交叉约束只有“下黏臂会封住上黏臂把手”；
+      若该约束在局面中不够清楚，后段会从有因果的次序题退化成三个目标清理任务外加一次延迟惩罚。
+    - >-
+      错误路线连续给出门箱上目标、下黏臂上目标两个局部正反馈，之后才宣告上黏臂不可达。
+      单条这种路线尚不足以等同 RA_CAND_0030 的多分支高成本搜索，但它必须在第二阶段核验为可预判的结构后果，而不能只靠试错发现。
+    - >-
+      32步规范输入中大量步数用于在狭长通道间换侧；这只是轻微节奏边界，不单独构成阻塞问题，也不作为难度加分。
+  preliminary_score_basis:
+    aesthetic: >-
+      初步为4。七格整体在同一条可见因果链中经历“合并为刚体—跨界切分—三个输出分别承担目标职责”，
+      比审美3的重复输出样本 RA_CAND_0020、RA_CAND_0023 更有可记忆的结构变化；但开局偏强制、后段是否真正耦合仍需核验，
+      尚不具备 RA_CAND_0022 的短促反转凝练度或 RA_CAND_0025 的主动构造与反复消费，因此不支持5。
+    difficulty: >-
+      初步为4。难点来自预测材料边界改变后的整体形状，以及在下黏臂封路前完成上黏臂的结构次序，
+      而不只是32步长度；但当前只确认一条关键错误顺序，不支持难度5的广度或持续重构压力。
+  exact_basis:
+    - "layout:r10c1=@，r10c3=S，r10c4=B；canonical step 1-2=[right,right] 后发生 push_B/S、box_to_sticky、sticky_merge。"
+    - "layout:r3c2-r3c4=MMC，r4c4=C，r5c2-r5c4=MMC；step 2 visible_change=上下两条黏臂与中央三箱纵柱合成七格整体。"
+    - "canonical step 13-14=[left,right]；step 14 events=[pull_sticky_rigid,sticky_to_box,sticky_split]，visible_change=中央柱切回三箱、上下黏臂分裂。"
+    - "canonical step 15-18=[up,left,left,up]；step 18=pull_upper_sticky，上黏臂覆盖上目标。"
+    - "canonical step 19-25=[right,right,down,down,down,down,right]；step 25=pull_gate_crate，门箱覆盖竖井底口目标。"
+    - "canonical step 26-32=[down,down,left,left,left,up,down]；step 32=pull_lower_sticky，下黏臂覆盖下目标并胜利。"
+    - "raw_alternatives from step14=[down,down,right] 后门箱上目标且仍可离开，再走 [down,down,left,left,left,up,down] 后下黏臂上目标，但上黏臂把手不可达且完整续搜无胜。"
+
+designer_claim_effect_on_frozen_reading:
+  outcome: maintained
+  verdict_became_more_lenient: false
+  score_became_more_lenient: false
+  resolved_or_sharpened:
+    - >-
+      forced_setup_disclaimer 明确 step 1-14 只是铺垫、不申报 alternative，确认冻结初读对“前段高度受约束”的观察；
+      这避免语言把强制执行包装成玩家洞见，但也意味着前段不能承担难度4或审美4的主要加分。
+    - >-
+      RU1 补出切割态的具体可见关系：门箱位于目标左侧，门箱填入竖井底口时，另一列已经被切出箱占据；
+      两列同时封住后，上黏臂不再有从下方可达的把手。这使 frozen reading 中“封路关系是否可预判”的疑点得到足够的局面解释。
+    - >-
+      replayed_attempt 给出玩家极可能认真考虑的三步输入 [down,down,right]：它立即完成门箱目标且仍可离开；
+      再走七步还能完成下黏臂，之后才暴露上黏臂无把手。该材料确认风险是真实延迟反馈，同时也确认失败来自可定位的双列封井，而非无因果的隐藏判罚。
+  did_not_count_as_merit:
+    - >-
+      order_monitor 的 upper_before_gate_on_all_wins 与 lower_arm_order_free 是图事实；前者只核验顺序限制，
+      后者没有提供“下臂先于门箱”的具体玩家侧回放，因此不把“避免全序脚本”单独记为玩家侧优点。
+    - >-
+      graph 规模、唯一 winning configuration group、equivalent variants only 与 canonical_cost=32 都不证明洞见、审美或难度。
+  final_effect: >-
+    designer claim 使 frozen reading 中核心封路关系更具体，因此无需收紧到 revise_required；
+    它没有增加新的独立亮点，也没有消除强制铺垫与延迟反馈边界，所以最终仍维持 4/4 与 supports_with_noncore_caveats。
+
+player_facing_merits:
+  - id: MERIT_RESECTION_CHAIN
+    exact_scene: >-
+      初始上室第3、5行各为 M-M-C，第4行中央为 C；玩家在第10行推动 S/B 后，七格合并为一个 C 形刚体。
+    player_operation: >-
+      step 13-14 从上室右侧执行 left、right，横拉整个七格刚体越过材料边界。
+    concrete_board_change: >-
+      中央三格连接柱切回三个箱子，上下两条黏臂分离；其中切出箱承担已覆盖目标、占据竖井列和门箱三种具体位置责任。
+    downstream_operation_change: >-
+      玩家此后不再移动七格整体，而必须先从顶部拉上黏臂、再决定何时把下方门箱拉进竖井底口、最后从下回路拉下黏臂。
+    merit: >-
+      同一个可见整体的合并、切割与输出消费处于一条连续因果链中，避免了 RA_CAND_0032 式前后子关拼接。
+  - id: MERIT_VISIBLE_GATE_ORDER
+    exact_scene: >-
+      step 14 后，门箱只需 down、down、right 就能进入竖井底口目标；与此同时另一竖井列已被切出的箱占据，上黏臂仍未完成。
+    player_operation: >-
+      若先拉门箱，玩家仍可向下离开并继续用七步拉下黏臂；正解则先走 step 15-18，从顶部拉上黏臂。
+    concrete_board_change: >-
+      错误路线连续覆盖门箱目标与下黏臂目标，却让两列竖井都无法再提供通往上黏臂把手的路径；正解先覆盖上目标时，顶部返回路线仍开放。
+    downstream_operation_change: >-
+      玩家必须依据门箱与另一切出箱共同封井的关系，把上黏臂提前；完成上黏臂后，门箱和下黏臂才可进入收尾调度。
+    merit: >-
+      玩家问题在行动前真实存在，失败路线有可信的局部收益，而正确结论提供“为何必须先上臂”的计划理由。
+
+supported_reasoning:
+  - unit_ref: RU1_upper_before_gate_crate
+    reason: >-
+      player_question 在 step 14 切割态真实存在：三步可得分的门箱是最近且自然的 affordance；premises 指向两列封井的可见局面，
+      conclusion 明确增加“先保留竖井完成上臂”的计划理由。alternative 的三步局部收益与后续七步下臂收益均兑现，
+      最终失败也可归因到上黏臂把手失去，而不是抽象地声称无解。
+
+archive_taste_context_used:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete
+  positive_anchors:
+    - {candidate_id: RA_CAND_0022, human_aesthetic: 5, human_difficulty: 4}
+    - {candidate_id: RA_CAND_0025, human_aesthetic: 5, human_difficulty: 4}
+    - {candidate_id: RA_CAND_0001, human_aesthetic: 4, human_difficulty: 4}
+    - {candidate_id: RA_CAND_0017, human_aesthetic: 4, human_difficulty: 5}
+  lower_bound_or_negative_anchors:
+    - {candidate_id: RA_CAND_0020, human_aesthetic: 3, human_difficulty: 2}
+    - {candidate_id: RA_CAND_0023, human_aesthetic: 3, human_difficulty: 3}
+    - {candidate_id: RA_CAND_0024, human_aesthetic: 1, human_difficulty: 3}
+    - {candidate_id: RA_CAND_0027, human_aesthetic: 1, human_difficulty: 2}
+    - {candidate_id: RA_CAND_0030, human_aesthetic: 1, human_difficulty: 3}
+    - {candidate_id: RA_CAND_0032, human_aesthetic: 1, human_difficulty: 3}
+  missing_anchor_effect: none
+
+materially_influential_archive_attacks:
+  - candidate_id: RA_CAND_0022
+    attack_influence: >-
+      其人类5分来自短步骤内“先入死角再反向送箱”的高度凝练反转；Beta 的亮点清楚，但前14步为强制铺垫且换侧行走较长，故形成不支持5的上界。
+  - candidate_id: RA_CAND_0025
+    attack_influence: >-
+      其人类5分要求玩家主动构造并反复消费 L 形结构；Beta 的 C 形整体由开局两步自动合并，玩家没有选择构造形状，故不能借七格规模抬到5。
+  - candidate_id: RA_CAND_0020
+    attack_influence: >-
+      其三个切分输出本质重复，促使本评审检查 Beta 后段是否只是三次清理；Beta 的上臂、门箱与下臂分别承担保路、封井和收尾职责，未落入纯重复，但该攻击限制了分数上沿。
+  - candidate_id: RA_CAND_0023
+    attack_influence: >-
+      其逐格处理三个输出略有重复，促使本评审不把 Beta 的三段短收尾数量本身当优点；Beta 的加分只来自切割后职责与次序关系。
+  - candidate_id: RA_CAND_0024
+    attack_influence: >-
+      其高机制信号最终只兑现推拉腾挪，促使本评审核验双锚承诺；Beta 的 B/S 确实制造七格黏体，固定 P/L 确实切回三箱并分裂双臂，玩家可见几何职责得到兑现，未触发1分问题。
+  - candidate_id: RA_CAND_0027
+    attack_influence: >-
+      其可动 P/L 与黏连 affordance 没有进入解法责任，促使本评审拒绝用事件标签领功；Beta 两条边界都改变同一七格对象的后续操作，因此未触发 affordance 空转。
+  - candidate_id: RA_CAND_0030
+    attack_influence: >-
+      其大量自然、迟缓 deadend 是1分警戒；Beta 也存在持续局部收益后的失败，但当前只确认一条核心错误方向，且双列封井关系可在切割态预判，因此保留非阻塞风险而不降为1。
+  - candidate_id: RA_CAND_0032
+    attack_influence: >-
+      其前段要素退休、后段独立 witness 是1分警戒；Beta 的同一七格整体在切割后产生上臂、门箱和下臂，并由封井次序继续相互约束，故不构成无关子关拼接。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete
+  aesthetic_boundary: >-
+    支持4，不支持5。可记忆亮点是同一七格对象的合并、切割、职责分配与可预判封井次序；
+    强制铺垫、较长换侧和单一核心问题使其达不到标杆级凝练或主动构造强度。
+  difficulty_boundary: >-
+    支持4，不支持5。玩家需要理解大刚体切割后的材料/通路变化，并抵抗三步得分的自然诱惑；
+    但前14步不申报推理，核心只确认一个上臂先于门箱的偏序问题，没有难度5的持续重构或多阶段推理压力。
+
+trace_metric_interpretation:
+  calibration_status: context_missing
+  solution_execution_pressure:
+    metric_fact: calibrated_trace_metrics 字段缺失
+    allowed_reading: 不从 canonical_cost=32 或 graph 规模替代推导执行压力
+    player_facing_check: 仅把大量换侧行走视为轻微节奏边界
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: calibrated_trace_metrics 字段缺失
+    allowed_reading: 不从 winning configuration group 或 equivalent variants 推导空间复用
+    player_facing_check: 空间复用只由 exact 局面中的七格合并、切割和后续职责读取
+    verdict_effect: none
+  unmeasured_dimensions:
+    - 玩家首次见到七格合并时的读题负荷
+    - step 14 双列封井关系的识别速度
+    - 错误路线连续局部得分后的挫败感
+
+aesthetic_target_fit:
+  score: 4
+  fit: supports_role_with_ceiling
+  reason: >-
+    对 late-game dual-anchor resection 的机制承诺有真实兑现，且核心顺序关系与切割同源；
+    但体验更像单亮点的阶段挑战，不是审美5标杆。
+
+difficulty_target_fit:
+  score: 4
+  fit: supports_role_with_ceiling
+  reason: >-
+    关键困难来自切割后通路偏序，而非步数或唯一解；可作为晚期挑战，但不应包装成最高难终局。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+  grounded_terms:
+    - term: 七格 C 形整体
+      concrete_restatement: 第3、5行的两条 M-M-C 与第4行中央 C 在 step 2 合为七格刚体
+    - term: 整体切割
+      concrete_restatement: step 14 横拉后中央三格切回箱，上下两条黏臂分裂
+    - term: 门箱
+      concrete_restatement: step 14 后位于竖井底口目标左侧、三步即可拉入目标并封住通路的下方切出箱
+    - term: 上臂早于门箱
+      concrete_restatement: 先执行 step 15-18 覆盖上目标，再于 step 25 把门箱拉入竖井底口
+
+critic_items:
+  - id: CI_FORCED_SETUP_SCORE_CEILING
+    type: score_boundary
+    target_ref: forced_setup_disclaimer / claimed_highlights
+    design_relation: >-
+      玩家看见 S/B 紧邻起点和上室七个材料格；前两步推动 S/B 自动合并七格，随后沿走廊换侧并在 step 14 切割；
+      棋盘变化醒目，但在切割前没有 designer 申报的真实选择，玩家后续操作只从切割态开始形成核心问题。
+    attack: >-
+      不能把合并、绕行、切割的事件数量或七格规模重复领功为多项玩家推理；它们共同只构成一次机制铺垫与一次可记忆转场。
+    evidence_basis: forced_setup_disclaimer 明确 step 1-14 不申报 alternative
+    player_facing_effect: 亮点清楚但主动发现与构造感弱于5分标杆
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI_DELAYED_POSITIVE_FEEDBACK
+    type: nonblocking_risk
+    target_ref: RU1_upper_before_gate_crate.alternative
+    design_relation: >-
+      玩家在 step 14 看见门箱三步可上目标；实际先走 [down,down,right] 后仍能离开，再走七步还能完成下黏臂；
+      棋盘连续给出两个目标反馈，之后上黏臂把手才不可达，后续操作从“还能继续”变成无胜。
+    attack: >-
+      该路线对玩家足够自然且反馈明显迟延；虽可从门箱与另一切出箱共同封两列预判，不至于成为核心缺陷，但复玩时可能被感为一次成本偏高的顺序惩罚。
+    evidence_basis: alternative exact inputs、concrete_outcome 与两列封井 premise
+    player_facing_effect: 增加一次可归因但不即时的失败成本
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI_LOWER_ORDER_FREE_NOT_MERIT
+    type: diagnostic_note
+    target_ref: designer_claim.claimed_highlights[2] / hard_evidence.order_monitor
+    design_relation: >-
+      玩家在正解中先完成上臂，再完成门箱和下臂；packet 只用 order_monitor 声称下臂可在门箱前后调度，
+      没有给出下臂先于门箱时的具体输入、棋盘变化和新增后续操作。
+    attack: >-
+      lower_arm_order_free 可以作为图事实保留，但在缺少另一顺序的玩家侧 exact replay 时，不能把“避免全序脚本”记作独立审美优点。
+    evidence_basis: canonical trace 只展示 gate-before-lower；order_monitor 属于 graph evidence
+    player_facing_effect: 不影响核心 RU1，通过时不额外加分
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI_TRACE_METRICS_MISSING
+    type: context_gap
+    target_ref: calibrated_trace_metrics
+    design_relation: packet 未提供当前 analysis.solution.traceMetrics.calibrated 的原样副本，也未给 unavailable 原因
+    attack: 不允许用 cost=32、reachable_states 或唯一解描述替代规范解执行压力与空间复用校准
+    evidence_basis: candidate packet 字段缺失
+    player_facing_effect: 当前4/4完全依据局面与操作关系，不获得任何指标加分；缺口随 handoff 保留
+    blocks_proposal_ready: false
+    expected_designer_response: add_context_next_review
+  - id: CI_LATE_GAME_CEILING
+    type: score_boundary
+    target_ref: slot_brief.intended_role
+    design_relation: >-
+      玩家经历一次强制合并/切割铺垫后，主要解决上臂先于门箱的一个偏序问题；棋盘变化复杂，但独立推理单元不多。
+    attack: 支持晚期阶段挑战，不支持把它描述成难度5或持续多阶段重构的终局峰值
+    evidence_basis: forced_setup_disclaimer、唯一 RU1、RA_CAND_0017 人类难度5参照
+    player_facing_effect: 对机制熟悉玩家的思考集中而非持续高压
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: reachable_states=514270，legal_transitions=1058153，winning_states=3
+    neutral_meaning: 当前规则下机械枚举的可达图规模与胜态数量
+    player_facing_interpretation: 无法直接说明玩家看见多少自然选择、是否感到复杂或是否产生洞见
+    verdict_effect: none
+  - graph_fact: winning_object_configuration_groups=1，solution_uniqueness=equivalent_variants_only
+    neutral_meaning: 已枚举胜解收束到一个对象构型组，差异被归为等价变体
+    player_facing_interpretation: 不等于唯一计划更优雅，也不等于路线脚本化；没有额外玩家侧结论
+    verdict_effect: none
+  - graph_fact: upper_before_gate_on_all_wins=true，lower_arm_order_free=true
+    neutral_meaning: 所有胜解满足上臂先于门箱，而下臂与门箱之间不存在同样的全胜解顺序约束
+    player_facing_interpretation: >-
+      上臂偏序只有结合 step 14 两列封井局面才成为玩家推理；下臂自由顺序缺少具体玩家回放，不计 merit
+    verdict_effect: none
+  - graph_fact: alternative continuation_found_win=false
+    neutral_meaning: 指定门箱优先、再完成下臂的结果态在完整续搜中无胜
+    player_facing_interpretation: >-
+      自然路线连续获得两个目标反馈后失败，构成真实的延迟反馈风险；可见双列封井关系使该风险仍可归因和预判
+    verdict_effect: caveat
+  - graph_fact: solver found=true，cost=32
+    neutral_meaning: 给定规范输入合法获胜且成本为32
+    player_facing_interpretation: 只证明可审，不证明审美、难度或 role fit
+    verdict_effect: none
+
+handoff_notes:
+  - >-
+    最终结论与 frozen independent reading 完全同档：4/4、supports_with_noncore_caveats、proposal_ready_with_caveats、none；
+    designer claim 只把门箱封井的玩家侧因果说清，没有令评分或 verdict 变宽松。
+  - >-
+    保留两个非阻塞边界：前14步只算铺垫，不应在后续说明中拆成多项洞见；门箱优先路线的局部正反馈较长，
+    handoff 应持续将其描述为可预判的双列封井，而不是用完整续搜替代玩家可读性。
+  - >-
+    calibrated_trace_metrics 缺失已记录为 context_gap；除非后续另行路由，不影响本次基于玩家侧 exact 局面的结论，也不得用图规模补位。

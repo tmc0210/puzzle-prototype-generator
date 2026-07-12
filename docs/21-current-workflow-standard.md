@@ -36,7 +36,7 @@ solver / analyzer / formal_evaluator:
   证据。它们不判断好玩、优雅、教学价值或 campaign 位置。
 
 evidence_reviewer:
-  检查工具证据是否支持 designer 的 design_claim。
+  检查工具证据是否支持设计说明中的机械前提、机制范围和硬声明。
 
 puzzle_design_critic:
   攻击玩家侧体验、角色适配、重复、脚本感、审美风险和证据过度解释。
@@ -60,7 +60,7 @@ critic artifact，必须把 review_integrity 标为 `self_review_only`、`missin
     选择一个玩家侧因果链 family
     做出 candidate_version_1
     运行工具并读取证据
-    若证据或 design_claim 失败，局部修改或放弃该 family
+    若证据或玩家推理失败，局部修改或放弃该 family
 
     内层 review-modify 循环:
       candidate_version_1 -> review_1
@@ -106,7 +106,7 @@ review；这不是提交给人类的最终材料。
 
 critic 之后没有“继续下一个阶段”。`review_N` 之后只有这些动作：
 
-- 修改结构 / claim / 起点 / 机制范围，并重跑必要证据，进入 `review_N+1`；
+- 修改结构 / 玩家推理 / 起点 / 机制范围，并重跑必要证据，进入 `review_N+1`；
 - 提交具体证据异议或失败尝试给 `review_N+1` 判断；
 - 降级 / hold；
 - reject / change family；
@@ -151,11 +151,61 @@ mechanism_scope:
   forbidden_winning_path_events:
   forbidden_if_seen_anywhere:
 
-design_claim:
-  player_insight:
-  causal_chain:
-  why_not_execution:
-  falsification:
+simple_level_design: # difficulty_score_target 1-2 only
+  player_goal:
+    description:
+    state_ref:
+  canonical_operation:
+    from_state_ref:
+    exact_inputs: []
+    to_state_ref:
+  mechanism_feedback:
+    visible_change:
+    state_ref:
+  completion_feedback:
+    visible_change:
+    state_ref:
+
+player_reasoning: # difficulty_score_target 3+ only
+  canonical_trace_ref:
+  player_goal:
+    description:
+    state_ref:
+  reasoning_units:
+    - id:
+      player_question:
+      premises:
+        - statement:
+          state_ref:
+      conclusion:
+      operation_refs: []
+      alternative:
+        status: replayed_attempt | unresolved | not_claimed
+        description:
+        local_gain:
+        from_state_ref:
+        exact_inputs: []
+        result_state_ref:
+        concrete_outcome:
+      feedback:
+        - state_ref:
+          visible_change:
+  operation_segments:
+    - id:
+      step_range:
+      exact_inputs: []
+      purpose:
+      supports_reasoning_units: []
+  resolution:
+    resolves: []
+    operation_refs: []
+    final_state_ref:
+    visible_confirmation:
+  trace_partition:
+    status: complete | incomplete
+    ordered_segment_ids: []
+    uncovered_steps: []
+    overlapping_steps: []
 
 evidence:
   commands_run:
@@ -168,6 +218,10 @@ evidence:
   graph_or_counterfactual_evidence:
   evidence_limits:
 
+solution_uniqueness:
+  result: unique_complete | unique_within_budget | equivalent_variants_only
+  evidence_refs: []
+
 hard_fact_summary_for_critic:
   solver:
   required_or_forbidden_events:
@@ -175,13 +229,6 @@ hard_fact_summary_for_critic:
   calibrated_trace_metrics: # required, puzzle_critic_only
   evidence_limits:
   artifact_refs:
-
-player_facing_reading:
-  opening_read:
-  intended_solution_read:
-  commitment_points:
-  state_responsibility:
-  payoff_and_resolution:
 
 diagnostic_routing:
   activated:
@@ -192,43 +239,77 @@ attempt_log:
   serious_structural_attempts:
   local_repairs:
   abandoned_families:
+
+claim_last_review:
+  mode: sequential_single_call | not_used
+  facts_packet:
+  claim_packet:
+  read_order: facts_then_claim | not_applicable
 ```
 
-`causal_chain` 说明解法如何工作。`player_insight` 和 `why_not_execution` 说明这
-个解法为什么对目标玩家有设计价值。一个候选可以有有效 causal_chain，但仍然
-无法支撑自己的 design_claim。
+使用 brief 中预先声明的 `difficulty_score_target` 分流：目标难度 1-2 填写
+`simple_level_design`；目标难度 3+ 填写 `player_reasoning`。审美校准与难度分流独立。
+
+目标难度 3+ 在确定 layout、运行 miner 或脚本搜索前，先写可随设计更新的
+`reasoning_sketch`：`player_goal`、`intended_question`、
+`visible_premises`、`intended_conclusion`、`planned_mechanic_sequence` 和
+`intended_feedback`。取得 exact trace 后再生成正式设计字段。
+
+reasoning unit 的数量由关卡的实际逻辑决定。`operation_segments` 覆盖 canonical
+trace 的全部操作并说明每段目的。`resolution` 引用已有 operation segments，
+`trace_partition` 记录覆盖结果。
+
+`replayed_attempt` 从 `from_state_ref` 实际尝试非空的 `exact_inputs`，最后一个输入可以非法；`result_state_ref` 指向尝试结束后的游戏状态。`concrete_outcome` 简要写最后一项输入发生了什么，以及结果局面中哪项具体后续操作已经可行、不可行或失去条件。写不出可尝试序列的空间事实进入 `premises`，或使用 `not_claimed`。`premises` 使用问题发生时玩家已能看到的关系；尝试后的局面进入 `concrete_outcome`，正解后的变化进入 `feedback`。完整图与 all-win 结论继续放在 evidence。
+
+`solution_uniqueness` 是 designer 进入 evidence review 前的送审资格，不是要求
+reviewer 代为搜索解空间。`unique_complete` 表示完整搜索只留下一个玩家逻辑类；
+`unique_within_budget` 表示搜索运行到声明预算且没有发现非等价胜解；
+`equivalent_variants_only` 表示已发现的多条原始路线有证据证明差异只来自纯走位、
+完整回返环、真实对称重标号或相互独立必要步骤的换序，并保持相同对象职责、目标
+分配和因果顺序。serious candidate packet 只能填写这三个值。
 
 `hard_fact_summary_for_critic` 只给 critic 提供精简事实索引和 artifact refs；
-完整 solver / graph / probe 数据仍由 evidence reviewer 审查。critic 的主要输入
-是 `player_facing_reading`：它把当前候选声称的玩家体验落到全视野局面、正解
-关键动作、不可逆提交、状态责任和终局 payoff 中。
+完整 solver / graph / probe 数据仍由 evidence reviewer 审查。`claim_last_review`
+是与难度无关的可选 critic 路由，默认 `not_used`；启用时先读 facts packet，
+再读包含 `simple_level_design` 或 `player_reasoning` 的 claim packet。
 
 `calibrated_trace_metrics` 是送审包必填的 critic-only 区块，不属于 `evidence`，
 evidence reviewer 不审查它。designer 必须将当前 exact candidate 的
 `analysis.solution.traceMetrics.calibrated` 原样写入，不得自行重算或省略。若原型
-校准状态为 `unavailable`，该字段只含状态与原因。它不能证明 `design_claim`、玩家
+校准状态为 `unavailable`，该字段只含状态与原因。它不能证明玩家推理的设计价值、玩家
 洞见、因果依赖、反直觉或整体审美。
 
 ## Design Studio Loop
 
 lead designer 在 review 前必须自己完成设计和证据读取：
 
-1. 写一个可被攻击的 `design_claim`，不要只写事件序列。
+1. 按目标难度写工作用起始材料：1-2 记玩家目标与预期机制操作；3+ 写 `reasoning_sketch`，不要只写事件序列。
 2. 设计 layout，并声明求解实例。
 3. 运行 solver / analyzer / evaluator 中本轮允许的工具。
 4. 读 trace、事件、对象参与、图事实、反事实和工具边界。
-5. 写 `player_facing_reading`，说明玩家在关键局面看见什么、为什么做正解动作、
-   哪些提交点需要比较、状态如何被创建和消费、终局如何兑现前面的读法。
+   需要描述或模拟一段具体玩家操作、备选尝试或失败路线及其局面结果时，优先使用
+   handoff 中的输入序列 replay 工具，取得 exact inputs、逐步状态和最终局面。
+5. 取得 exact trace 后写正式设计字段；难度 3+ 用 operation segments 覆盖全部操作，
+   并用 reasoning units 写玩家问题、当时可见前提、推断、alternative、反馈与解决。
 6. 完成 diagnostic routing。
-7. 若证据不支持 claim，或 `player_facing_reading` 无法支撑核心 claim，修正、
+7. 若证据不支持设计字段中的机械前提，或玩家推理无法支撑本轮设计，修正、
    降级、放弃或换 family。若工具找到绕过设计预期的胜路，先看预期解比旁路多
    做出了什么；快速检索本轮已授权的设计语料，有结构能利用这个差异就复用或
    改造，没有则围绕这个差异自行设计。当前布局装不下时可以插入行列或平移局
    部，不能把固定尺寸内加墙失败或语料中没有现成条目当作 family 不可行。只有
    加入所需限制后核心读法被明显淹没时，才放弃或换 family。
-8. 只有 evidence-supported 且玩家侧读法可被攻击的 candidate 才进入 review loop。
+8. 取得 exact trace 后完成 `solution_uniqueness` 自查。发现任一非等价胜解，或发现
+   多条路线但不能证明只是上述等价差异时，立即留在 Design Studio 修订；一个 exact
+   反例已经足够，不需要继续枚举全部 bypass。路线更长、更难自然发现或只影响更高
+   审美目标，都不能把 bypass 降级为可送审 caveat。
+9. 只有 evidence-supported、玩家侧读法可被攻击，且 `solution_uniqueness.result`
+   为 `unique_complete`、`unique_within_budget` 或 `equivalent_variants_only` 的
+   candidate 才能组装 serious candidate packet 并进入 review loop。
 
-如果修改了 layout、起点、终点、胜利条件、核心机制使用或 design_claim，旧证据
+填写后 designer 快速判断玩家是否真的会遇到所述问题、alternative 是否具有局部收益、
+最终反馈是否值得成为主要内容。
+
+如果修改了 layout、起点、终点、胜利条件、核心机制使用或玩家推理内容，旧证据
 和旧 critic 结论不得继承。必须重跑必要证据，并把新版本送入下一轮
 `review_N+1`。
 
@@ -245,9 +326,9 @@ diagnostic_routing:
   mechanism_scope:
     status: required
     reason: central/support/winning-path/reachable-exposure event gates must be checked
-  claim_hygiene:
+  design_evidence_alignment:
     status: required
-    reason: claims must not exceed evidence
+    reason: design-field mechanical premises and hard claims must not exceed evidence
   taste_probes:
     status: routed
     selected: []
@@ -268,7 +349,7 @@ diagnostic_routing:
 
 ### Always Required Diagnostics
 
-`hard_evidence`、`mechanism_scope` 和 `claim_hygiene` 对 serious candidate 必
+`hard_evidence`、`mechanism_scope` 和 `design_evidence_alignment` 对 serious candidate 必
 跑：
 
 - solver / analyzer 是否找到声明的 player-facing win；
@@ -287,9 +368,9 @@ taste 不是 checklist。designer / critic 应按 candidate mode、role 和 brie
 
 常用 probe families：
 
-- `player_insight`: 玩家是否真的需要理解 claim，还是只是在执行下一个显然动作？
+- `player_reasoning`: 玩家问题是否在行动前真实存在，可见前提是否支持计划推断？
 - `state_consumption`: 声称的状态变化在哪里被后续消费？
-- `why_not_execution`: 难度是否来自因果关系，而不是长度、走廊、重复动作或噪声？
+- `alternative_and_feedback`: replayed attempt 是否是玩家可能采用的输入、有局部收益，并产生所述具体局面；正解反馈是否对玩家可见？
 - `repetition_coupling`: 重复操作 / 重复 causal chain 是否通过共享资源、顺序、
   路线含义、角色切换或后续消费耦合？
 - `role_fit`: 候选是否真是 application / challenge / capstone，而不是 witness
@@ -377,8 +458,10 @@ diagnostic:
 
 pre_submission_check:
   已确定候选骨架后、加入待玩列表或提交给人类查看前执行的最小布局清理或一致性检查。
-  它可以改变 layout / start / targets / objects，但一旦改变 solve instance，
-  必须产出新的 candidate_version，并重跑必要证据和 review。
+  它可以改变 layout / start / targets / objects。完成后必须重跑受影响的必要证据；
+  若核心玩家推理、胜利结构、机制依赖或 bypass 结论发生改变，则转为实质修订，
+  产出新的 candidate_version 并回到 design / review；否则保持原 review_loop_state，
+  不重复独立 review。
 
 redesign_stage:
   基于一个已经有价值的 base candidate 做二次设计、优化或变体提案。
@@ -411,7 +494,7 @@ base candidate 已经作为普通关有保留价值
 -> critic 同时评价 base 质量和 redesign 是否真正增值
 ```
 
-弱 base candidate 不能靠 redesign stage 挽救。若 base 的核心 design_claim、证
+弱 base candidate 不能靠 redesign stage 挽救。若 base 的核心玩家推理、证
 据或 role fit 已经失败，应先回到 design studio loop 或降级 / reject，而不是继
 续包装 prototype-specific 亮点。
 
@@ -466,20 +549,34 @@ calibration 生成分数。
 子派生，必须显式标记 `related_to` / `strengthened_from`，说明授权范围和新的
 player-facing meaning。
 
+所有难度都使用 evidence reviewer 和 puzzle critic。难度分流只改变设计字段的复杂度；
+`claim_last_review` 独立决定 critic 是否使用两段读取。
+
 evidence reviewer 判断：
 
-- 工具证据是否支持 `design_claim`；
+- `solution_uniqueness.result` 是否严格属于三个合法送审值；
+- 该结果是否与 packet 引用的完整图、预算搜索、换序等价证据或已知 exact bypass
+  明显冲突；reviewer 不替 designer 重跑工具、枚举解族或继续寻找更多 bypass；
+- 工具证据是否支持设计字段中的机械前提；
 - 工具证据是否支持声明的 `claimed_core_events`；
 - 是否把 winning-path gate 与 reachable exposure gate 区分清楚；
 - `forbidden_if_seen_anywhere` 是否在完整可达事件扫描中命中；若扫描未完成，结
   论是 unknown，不能 clean pass；
-- claim 是否过度解释 trace、event count、object participation 或 graph fact；
+- 设计说明或机制声明是否过度解释 trace、event count、object participation 或 graph fact；
 - 证据边界是否清楚。
+
+若 reviewer 因 `solution_uniqueness` 非法或与证据冲突而把它写入
+`unsupported_or_overclaimed`，当前 candidate version 必须回到 Design Studio，
+controller 不得继续把同一版发送给 puzzle critic。该问题不能用
+`supports_with_caveats`、`unknown`、路线长度或试玩观察豁免。
 
 puzzle critic 判断：
 
-- `player_insight` 是否真实；
-- `why_not_execution` 是否成立；
+- `player_goal` 是玩家目标还是解法命名，`player_question` 是否在行动前真实存在，还是可靠局部执行、唯一显然动作或最近 affordance 取胜；
+- `premises` 是否当时可见，`conclusion` 是否增加计划理由，operation refs、replayed attempt、具体结果局面、feedback 和 resolution 是否兑现所述逻辑；
+- 每个 reasoning unit 的 `replayed_attempt` 是否是玩家会认真考虑的路线，失败条件是否在玩家投入明显执行之前及时显现；同一决策状态若存在多条同样自然的失败方向，即使每条很短，玩家是否仍能依据共同的可见关系快速剪枝，而不是逐项尝试排除；
+- `language_drift` 是否发现新造名词没有增加具体玩家判断；
+- 难度是否来自玩家可分析的结构因果，而不是长度、重复、走廊、显然动作或噪声；
 - role fit 是否符合玩家模型和本轮 brief；
 - 是否达到 brief 的审美目标和相对难度目标；
 - routed diagnostics 的解释是否可信。
@@ -493,16 +590,39 @@ designer 修改背书。
 ```yaml
 review_iteration:
 candidate_version_reviewed:
-review_input_type: candidate_version | evidence_disagreement | revised_claim | other
+review_input_type: candidate_version | evidence_disagreement | revised_design | other
 verdict:
 review_loop_state:
 required_action:
+review_method:
+  difficulty_route: simple_level | reasoning_level
+  claim_last_used: true | false
+  read_order_ok: true | false | not_applicable
+  claim_read_after_independent_reading: true | false | not_applicable
+independent_reading:
+  status: completed | not_applicable
+  player_goal_seen:
+  salient_relations_seen:
+  unclear_or_unreadable_parts:
+  initial_quality_risks:
 player_facing_merits:
+supported_reasoning:
+  - unit_ref:
+    reason:
+language_drift:
+  obvious_overpackaging: true | false
+  examples:
+    - target_ref:
+      packaged_phrase:
+      concrete_restatement:
+      why_no_information_was_added:
+  required_action: revise_claim_and_rereview | none
 critic_items:
   - id:
     type: core_blocker | context_gap | nonblocking_risk | improvement_opportunity | score_boundary | diagnostic_note
-    target: player_insight | why_not_execution | role_fit | evidence_support | diagnostic_reading | taste_calibration | lineage
-    player_facing_reason:
+    target_ref:
+    attack:
+    player_facing_effect:
     evidence_basis:
     blocks_proposal_ready: true | false
     expected_designer_response:
@@ -517,12 +637,21 @@ critic 输出统一使用 `critic_items`。每个 item 都必须说明它是阻�
 非阻塞风险、优化机会、分数边界还是诊断记录。若存在 `blocks_proposal_ready: true`
 的 item，`required_action` 不能是 `none`。
 
-核心玩家读法、role fit 和 why-not-execution 在当前 review 中路由：当前可判断
+启用 `claim_last_review` 时，facts packet 提供布局、trace、硬事实、诊断边界和
+archive taste context；critic 先写简短 `independent_reading`，再读 claim packet
+完成主评审和最终 verdict。未启用时直接读取完整 candidate packet。
+
+如果 `language_drift.obvious_overpackaging: true`，critic 必须同时生成一个阻塞性
+`critic_item`，`language_drift.required_action` 必须为 `revise_claim_and_rereview`，顶层
+`required_action` 不能是 `none`，`review_loop_state` 不能是 `proposal_ready` 或
+`proposal_ready_with_caveats`。重写后必须进入下一轮 critic review。
+
+核心玩家推理、role fit 和玩家侧逻辑在当前 review 中路由：当前可判断
 时写当前判断；当前材料不足时写 `context_gap`；只是主观手感风险时写
 `nonblocking_risk` 或 `handoff_notes`。
 
-如果 reviewer / critic 攻击 central `player_insight`、`why_not_execution`、证
-据支持或 role fit，或 critic item 标记 `blocks_proposal_ready: true`，候选不能
+如果 reviewer / critic 攻击 central 玩家推理、证据支持或 role fit，或 critic item
+标记 `blocks_proposal_ready: true`，候选不能
 进入 `proposal_ready` 或 `proposal_ready_with_caveats`。lead designer 必须选择：
 
 - 结构修改并重跑证据；
@@ -532,8 +661,8 @@ critic 输出统一使用 `critic_items`。每个 item 都必须说明它是阻�
 - failed_search。
 
 证据异议只适用于 critic 漏看或误读已有工具证据、反事实或失败尝试。它不适用
-于未解决的 `player_insight`、`why_not_execution`、role fit、未授权变体、
-lineage/taste 失败；这些问题必须通过结构修改、claim 收窄后进入下一轮 review、
+于未解决的玩家推理、role fit、未授权变体、lineage/taste 失败；这些问题必须通过
+结构修改、设计说明收窄后进入下一轮 review、
 hold、reject 或 change family 处理。
 
 “承认核心 caveat 但仍通过”不是有效动作。designer 不必须接受 critic 的每个判断，
@@ -558,8 +687,8 @@ proposal_ready:
 
 proposal_ready_with_caveats:
   最新 review iteration 对最新 candidate version 输出 required_action: none。
-  核心 design_claim 成立，剩余 caveats 不破坏 player_insight、
-  why_not_execution、evidence support、role fit，也不是未授权变体问题。若进入
+  核心玩家推理成立，剩余 caveats 不破坏玩家侧逻辑、
+  evidence support、role fit，也不是未授权变体问题。若进入
   待玩列表，非阻塞 `critic_items` 和 handoff notes 必须随 candidate packet 保留。
 
 revise_required:
@@ -570,7 +699,7 @@ held_proposal:
   未来复用。
 
 rejected_candidate:
-  design_claim 失败、证据矛盾、role 失败、核心 critic 攻击未解决，或属于
+  玩家推理失败、证据矛盾、role 失败、核心 critic 攻击未解决，或属于
   transform / stitched / relabeled shortcut。
 
 failed_search:

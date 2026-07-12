@@ -1,0 +1,238 @@
+review_attempt_id: RA_C_HOOK_V4_CRITIC_ATTEMPT_02_20260713
+critic_instance_id: /root/critic_v4_attempt02
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4
+review_input_type: candidate_version
+verdict: hold_or_reject
+review_loop_state: held_proposal
+required_action: downgrade_or_hold
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: true
+  read_order: facts_then_claim
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家可直接看见三个目标：中心(3,3)已被七格黏块右下端覆盖，上下右侧(7,2)/(7,4)仍为空；
+    可读出的局面目标是既不能只保留中心覆盖，也不能只把上下锚点送到右侧，而要先重排七格黏块，
+    最终让其竖脊回到中心目标，同时用上下横臂把两枚横向锚点分别送上两个右侧目标。
+  salient_relations_seen:
+    - >-
+      初始七格黏块占据上臂(1,1)-(3,1)、竖脊(1,2)-(1,3)和下臂(2,3)-(3,3)，
+      其中(3,3)压住中心目标；玩家按 step 1-3 走到其下方再向下移动，实际把整个刚体下移一格，
+      棋盘因此让(3,3)重新成为空目标，同时把上下横臂分别对齐到 y=2 与 y=4，
+      后续才出现“从凹口牵引横移并同时接触两枚锚点”的操作条件。
+    - >-
+      step 4-8 中玩家从下方绕到(3,3)，越过刚腾出的中心目标并进入七格黏块凹口(2,3)；
+      这些操作不再改变对象，却把玩家放到竖脊右侧，使 step 9 的向右移动能够从身后拉动整块黏块，
+      而不是从外侧直接推臂。
+    - >-
+      step 9 向右牵引后，上下横臂右端从(3,2)/(3,4)到(4,2)/(4,4)，玩家来到(3,3)；
+      step 10 再向右时，七格黏块竖脊进入(3,3)，上下横臂同时推动 L/P 与 S/B 从 x=5-6 到 x=6-7，
+      棋盘一次同时让中心目标、(7,2)与(7,4)全部被对象覆盖，且不再需要分开处理任一目标。
+  unclear_or_unreadable_parts:
+    - >-
+      raw packet 只给出规范解，没有同一局面的自然尝试或失败回放；因此无法判断初始整体下移是不是玩家需要比较后作出的计划，
+      还是由顶墙和左墙直接排除其它方向后仅剩的显然对象操作。
+    - >-
+      step 3 之后的凹口、两条对齐横臂和右侧双目标高度可见；仅凭规范解无法确认玩家是否还存在同样自然、
+      但需要依据共同结构关系剪枝的错误方向，故不能把短轨迹本身当作推理深度。
+    - >-
+      raw-only 输入没有声明目标玩家、目标角色或目标难度；当前只能判断几何因果是否清楚，不能确认其 role fit。
+  initial_quality_risks:
+    - >-
+      十个输入中只有 step 3、9、10 改变对象，核心对象顺序为“整体下移一次、整体右移两次”；
+      中间五步只是进入已显露的凹口。若本轮要求强玩家洞见，这个选择面可能过窄，难度会主要退化为看见最近 affordance 后执行。
+    - >-
+      最后一步同时推动上下锚点并回填中心目标，具有清楚且集中可见的结算反馈；但上下两路完全对称、同一输入同步完成，
+      玩家不需要协调两个不同次序。该终局可能比实际规划过程更显得复杂。
+    - >-
+      相比人评正例强调的主动构造或反直觉承诺，本局 raw 轨迹尚未显示必须承担的早期代价；
+      不过它确实让同一七格几何先腾空中心、再提供入口、最后同时传力给两枚锚点，
+      没有出现人评低分例所警告的前后机制原地退休或无关子关拼接。因此目前保留为非核心风险，而不是直接否定设计。
+  exact_basis:
+    - "layout: 初始七格黏块位于(1,1)(2,1)(3,1)(1,2)(1,3)(2,3)(3,3)，中心目标为(3,3)，右侧目标为(7,2)/(7,4)，L/P 与 S/B 分别位于 x=5-6 的 y=2/y=4。"
+    - "step 3: 向下牵引使七格黏块整体下移，(3,3)由黏块覆盖变为空目标，上下横臂改到 y=2/y=4。"
+    - "steps 7-9: 玩家越过(3,3)进入(2,3)凹口，再向右牵引，使上下横臂右端到(4,2)/(4,4)。"
+    - "step 10: 再向右牵引，黏块竖脊覆盖(3,3)，上下横臂同步把两枚锚点推至 x=6-7，使(7,2)/(7,4)同时被 P/B 覆盖并获胜。"
+
+player_facing_merits:
+  - id: M1_complete_C_reused
+    scene_ref: layout -> step3.after -> step8.after
+    merit: >-
+      玩家初始看见完整七格 C 的右下端压住(3,3)，凹口位于 y=2；step 3 从下臂下方向下拉动整个 C，
+      棋盘同时显露(3,3)、把凹口降到 y=3 并让上下臂对齐两条锚轨；step 4-8 玩家随后穿过这个新空出的中心位置进入凹口，
+      所以“腾空目标”不是退休的开场动作，而是直接创造后续内部拉动的站位。
+  - id: M2_double_arm_payoff
+    scene_ref: step9.after -> step10.after
+    merit: >-
+      玩家在(2,3)向右拉一次后，可见上下臂同时贴到 y=2/y=4 两枚锚点左端；再向右一次，
+      棋盘让完整 C 的上下臂同步推动 P/L、S/B 至 x=6-7，同时左竖脊进入(3,3)，
+      因而一个操作同时兑现双臂、竖脊和三目标，后续无需另起一段处理任一材料。
+
+supported_reasoning:
+  - unit_ref: RU1_relocate_whole_C
+    reason: >-
+      玩家初始从(4,2)向左进入旧凹口是可认真考虑的直接路线；该输入会立刻让身后 P/L 左移，
+      第二次左移后玩家到(2,2)，再向右时被(3,2)的 L 挡住。局部收益“进入旧凹口”成立，
+      失败在六个输入内显现且锚点从第一次左移起就持续给出可见反馈。step 3 的整体下移则同时改变凹口层、目标占用和双轨对齐，
+      conclusion 增加了为何要先换层的计划理由，而不只是复述操作。
+  - unit_ref: RU2_use_notch_as_cockpit
+    reason: >-
+      step3 后玩家可见上下臂与锚点各隔一格、中心目标为空；step8 玩家位于(2,3)，前方为空、身后是左竖脊。
+      连续两次 right 分别产生“上下臂贴锚”和“同步推锚且竖脊回填”的不同棋盘结果，
+      operation_refs 完整兑现 conclusion，反馈清楚且可归因。其推理成立，但第二次 right 在第一次贴锚后近乎直接。
+
+archive_taste_context_used:
+  status: used_human_reviewed_only
+  positive_anchors:
+    - archive_id: RA_CAND_0025
+      use: >-
+        人评 5/4 强调紧凑空间中由玩家主动构造关键形状，且前置构造服务终局；用于检验本局是否同样让早期 C 下移被后续消费。
+    - archive_id: RA_CAND_0022
+      use: >-
+        人评 5/4 强调短步骤中的反直觉承诺与强洞见；用于校准本局短流程是否达到最高审美所需的认知反转。
+  lower_bound_or_negative_anchors:
+    - archive_id: RA_CAND_0024
+      use: 高机制信号若只兑现推拉腾挪、缺少几何洞见，则不能因机制覆盖而抬高审美。
+    - archive_id: RA_CAND_0027
+      use: 可动锚点或黏块能力若不承担解法责任会造成 affordance 污染。
+    - archive_id: RA_CAND_0030
+      use: 锚点早退、普通腾挪和反馈迟缓的大量自然错路属于高成本低回报。
+    - archive_id: RA_CAND_0031
+      use: 单行道开场与显然的少量重复拉动不能被事件齐全包装成高质量核心。
+    - archive_id: RA_CAND_0032
+      use: 前后要素退休、无关子关拼接不得制造机制覆盖与审美假象。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_all_clean_score_1_warnings
+  positive_anchors: [RA_CAND_0025, RA_CAND_0022]
+  lower_bound_or_negative_anchors: [RA_CAND_0024, RA_CAND_0027, RA_CAND_0030, RA_CAND_0031, RA_CAND_0032]
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: >-
+      reality_anchor_trace_metrics_v0：solutionCost=10、nonWalkEventCount=9、heavyReuseRatio=0，aggregateBand=2。
+    allowed_reading: 当前规范解不依赖高执行压力成立；该指标不测玩家洞见、因果依赖或反直觉。
+    player_facing_check: >-
+      具体轨迹中只有 step 3、9、10 改变对象，step 4-8 是进入已显露凹口的走位；
+      低执行压力与局面观察一致，但短并不自动降低单洞见关质量。
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: >-
+      revisitRate=0.36363636363636365、heavyReuseRatio=0，aggregateBand=3。
+    allowed_reading: 当前规范解存在中等空间复访，但指标不说明复访是否优雅或是否产生惊喜。
+    player_facing_check: >-
+      step3 腾出的(3,3)在 step7 被玩家穿过、step9 被玩家占据、step10 再由 C 竖脊覆盖；
+      每次回到中心都因对象状态变化获得新用途，因此不是无效 shuttle。
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: >-
+  supports_4_but_not_claimed_5。完整 C 的凹口、上下臂和左竖脊都在同一连续因果链中被消费，
+  step10 的双锚同步覆盖与中心回填形成紧凑、清楚的终局，足以越过 1 分警戒中的 affordance 污染、要素退休和无关拼接。
+  但核心对象操作只有 step3 的一次下拉与 step9-10 的连续两次右拉；RU1 的自然错路反馈很快，RU2 第一次贴锚后第二次 right 近乎显然。
+  与人评 5 分正例的主动构造深度或反直觉承诺相比，当前材料不足以支持 aesthetic_score_target=5。
+
+difficulty_target_fit: >-
+  supports_target_3_application。玩家需应用 pull side 与 sticky 刚体几何，识别旧凹口会拖走 P/L，
+  再用整体下移同时换凹口层、腾目标和对齐双轨；这是可分析的机制应用。
+  错路在少量输入内暴露且意图解也可被最近 affordance 廉价试出，进入新凹口后的 right、right 又十分直接，
+  因而支持常规 application 难度 3，不支持把它解释为更高阶洞见或搜索负担。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI1_aesthetic_target_boundary
+    type: score_boundary
+    target_ref: design_target.aesthetic_score_target
+    design_relation: >-
+      玩家看见完整 C、两枚横向锚点和三个目标；step3 下拉 C 后凹口与双臂一次完成对齐，
+      step9-10 连续右拉便贴锚并一次获胜。棋盘变化集中而整洁，但后续操作没有再次改序或重构。
+    attack: >-
+      该结构支持审美 4，却不足以支持 packet 声明的 5。RU1 错路投入短、反馈早，RU2 的第二次 right 在第一次贴锚后直接可见；
+      三次对象移动形成漂亮演示，但没有达到 5 分正例所体现的主动构造深度或反直觉承诺。
+    evidence_basis: >-
+      layout；steps 3/9/10；RU1 alternative exact_inputs 与 concrete_outcome；
+      RA_CAND_0022/0025 正向人评以及 RA_CAND_0031 的“显然少量重复拉动”负向警戒。
+    player_facing_effect: >-
+      玩家得到一个紧凑、统一、反馈强的 C 形双钩结算，但主要认知工作在第一次看懂“先下移再进凹口”后结束，
+      终局视觉复杂度高于剩余决策深度。
+    blocks_proposal_ready: true
+    expected_designer_response: downgrade_or_hold
+  - id: CI2_RU1_cheap_affordance_discovery
+    type: nonblocking_risk
+    target_ref: player_reasoning.RU1_relocate_whole_C
+    design_relation: >-
+      玩家从起点只需 left、up 站到下臂右端下方，再按 down 就会拉动完整 C；
+      棋盘立即显露中心目标并把凹口、上下臂对齐到目标走廊，后续进入凹口的路径随之开放。
+    attack: >-
+      step3 很可能由起点附近最短的可交互位置被廉价试出，而不是必须先解决完整的 RU1 问题。
+      旧凹口错路虽自然，但 P/L 从第一次 left 就可见跟随，最终阻塞也只需短投入，不能提供深搜索或强承诺。
+    evidence_basis: layout；canonical steps 1-3；RU1 alternative steps 1-6。
+    player_facing_effect: >-
+      玩家仍需应用拉侧语义理解结果，但可以通过很少的局部试探获得关键对齐；这限制上界，却不破坏难度 3 application。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI3_RU2_direct_second_pull
+    type: nonblocking_risk
+    target_ref: player_reasoning.RU2_use_notch_as_cockpit
+    design_relation: >-
+      step8 玩家已经在(2,3)凹口内，step9 向右后上下臂同时贴住两锚且玩家仍能向右；
+      step10 相同输入直接把两锚推上目标并让竖脊覆盖中心。
+    attack: >-
+      第一次 right 的可见反馈把第二次 right 几乎完全提示出来，连续同向输入之间没有新的资源冲突、改序判断或风险比较。
+    evidence_basis: steps 8-10；OS3_prime_double_hook；OS4_double_hook_finish。
+    player_facing_effect: 终局反馈强而操作判断薄；适合难度 3 的收束，不足以单独支撑最高审美或更高难度。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: complete_graph reachable_states=33, legal_transitions=55, winning_states=1；strict shortest input path/signature 唯一。
+    neutral_meaning: 当前规则下枚举图只有一个胜态，规范最短输入与非行走对象序列唯一。
+    player_facing_interpretation: 唯一性不说明玩家是否需要洞见；结合具体轨迹，它只确认 down、right、right 对象序列没有等价胜法替代。
+    verdict_effect: none
+  - graph_fact: initial_scc states=10, exit_count=3, win_exit_count=1, dead_exit_count=2, nearest_win_exit_distance=4。
+    neutral_meaning: 初始 SCC 有一个通向胜利的出口和两个死出口，最近胜出口距离为 4。
+    player_facing_interpretation: >-
+      RU1 的旧凹口路线提供一个自然错误方向，但锚点移动从首次 left 起可见、阻塞在短投入内出现；
+      SCC 数量本身不把这种快速反馈的试错升级为高难推理。
+    verdict_effect: caveat
+  - graph_fact: split_blocks、straight_bar、filled_notch、no_upper_arm、no_lower_arm 均 complete_0_win。
+    neutral_meaning: 这些身份改写在对应完整图中均无胜态，当前形状部件对可解性必要。
+    player_facing_interpretation: >-
+      玩家侧确实使用完整 C 的凹口作为站位、双臂同步接触两锚、竖脊回填中心；
+      该事实排除了“部件纯装饰”，但必要性本身不证明审美 5。
+    verdict_effect: none
+  - graph_fact: all_win_required_groups=pl_shift, bs_shift, sticky_move, dual_force；latest claimed event 在 step10。
+    neutral_meaning: 所有胜路都必须移动两锚、移动 sticky 并触发双重传力，最晚机制事件出现在结算步。
+    player_facing_interpretation: >-
+      两锚和完整 C 都一直承担到终局，没有 RA_CAND_0030/0032 所警告的早段退休，也没有 RA_CAND_0027 的未兑现可动 affordance；
+      但事件必需与晚暴露不能替代玩家决策深度。
+    verdict_effect: none
+
+handoff_notes:
+  - >-
+    本候选没有 stitched 子关、退休要素或明显 affordance pollution：step3 的腾空与换层直接创造 step8 的凹口站位，
+    两枚锚点和 C 的全部几何部件在 step10 同时结算。
+  - >-
+    若本轮硬性目标仍为 aesthetic_score_target=5，应保持 held_proposal；可选择降为审美 4 的紧凑 application 候选，
+    或另行做结构修改后交给新的 fresh critic。当前 critic 不复审修改版。

@@ -1,0 +1,54 @@
+review_iteration_answered: 2
+candidate_version_answered: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+designer_action_type: revise_claim
+evidence_reviewer_action:
+  required_action: none
+  response: 保留 evidence review_3 的 equivalent_variants_only 与机械边界；布局和 trace 不变。
+  evidence_or_attempt_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_evidence_review_3.yml
+  result: mechanical_claims_preserved
+critic_item_triage:
+  - critic_item_id: CRIT_PLAYER_GOAL_IS_SOLUTION
+    response: revise_claim
+    reason: player_goal 改为规则层目标“同时覆盖底部连续四格与上方分散四格”，删除列车、拆桥、窄口、重拼与 L 解法摘要。
+    refs: [candidate_packet.player_reasoning.player_goal]
+    produces: revised_player_goal
+    next_review_needed: true
+  - critic_item_id: CRIT_RU_PREMISE_TIMING_AND_ALTERNATIVE
+    response: revise_claim
+    reason: >-
+      RU1 只引用 step0 可见的四目标、双锚与 C 形 x4/x5 列关系；显然撞墙改为 feedback。
+      RU3 只引用 step24/30 的剩余箱、空目标和正交邻接，不再引用 steps31-34 的未来执行。
+    refs: [canonical.step_0, canonical.step_24, canonical.step_30, overshoot_attempt.step_15]
+    produces: revised_RU1_RU3
+    next_review_needed: true
+  - critic_item_id: CRIT_RU2_EQUIVALENT_ORDER_ONLY
+    response: accept_as_nonblocking
+    reason: 明确保留为等价换序的两步效率优化，不作为末期核心难度领功。
+    refs: [bottom_first_win.step_37, canonical.step_35]
+    produces: handoff_caveat
+    next_review_needed: false
+  - critic_item_id: CRIT_SCORE_BOUNDARY_FOUR_NOT_FIVE
+    response: accept_as_nonblocking
+    reason: 接受当前独立校准只支持审美4、难度4；不把 trace metric band5 当难度5。
+    refs: [puzzle_critic_1.aesthetic_target_fit, puzzle_critic_1.difficulty_target_fit]
+    produces: handoff_score_boundary
+    next_review_needed: false
+  - critic_item_id: CRIT_REBIND_REPETITION
+    response: accept_as_nonblocking
+    reason: 三次重拼消费不同目标职责，但保留相似手势会稀释审美5的新信息密度 caveat。
+    refs: [canonical.steps_20_30_34_35]
+    produces: handoff_repetition_caveat
+    next_review_needed: false
+handoff_notes:
+  - note: 当前目标是合格候选，接受审美4/难度4，不宣称5。
+    source_critic_item_id: CRIT_SCORE_BOUNDARY_FOUR_NOT_FIVE
+    claim_not_being_made: aesthetic5_or_difficulty5
+  - note: bottom-first 为37步同终局换序；普通通关不要求发现35步最短顺序。
+    source_critic_item_id: CRIT_RU2_EQUIVALENT_ORDER_ONLY
+    claim_not_being_made: hard_order_lock
+produces:
+  candidate_version: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+  evidence_disagreement_packet: null
+  revised_packet_context: player_goal_RU1_RU3_and_alternative_classification
+next_step: review_N_plus_1

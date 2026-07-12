@@ -1,0 +1,63 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9
+candidate_version: v9
+review_iteration: 2
+packet_kind: claim_last_claims
+
+design_target:
+  intended_role: late_game_dual_anchor_capstone
+  aesthetic_score_target: 5
+  difficulty_score_target: 5
+  minimum_acceptable: {aesthetic: 4, difficulty: 4}
+
+player_reasoning_claims:
+  player_goal: 把上下两条材料分别送入 (4,2) 与 (4,6)；目标在 push-side 列，但有效纵向拉把手必须先被送到 pull-side 列。
+  reasoning_units:
+    - id: RU1_bind_the_connector
+      question: 为什么先动远处 B/S，而不是直接处理两条黏臂？
+      visible_premises:
+        - 两条黏臂初始只占 x=3-4，x=4 属于 push side，目标外侧没有可用 pull 把手。
+        - x=5 的三格箱柱在 B/S 右移后会变黏，同时接触上下两臂。
+      conclusion: 先把箱柱变成黏性连接柱，主动拼成七格 C 形，才能一次把两臂共同送到后续切割位。
+      concrete_feedback: step 2 后 C/C/C 与四格 M 视觉上合成一个七格 C 形刚体。
+    - id: RU2_pull_to_cut
+      question: 合体为什么只是中间态，为什么要从右下整体拉？
+      visible_premises:
+        - C 形右下相邻格在 x=6，玩家位于 pull side，可向右拉身后整块。
+        - 右移后连接柱进入 box side，而上下臂留在 sticky side。
+      conclusion: 右拉不是普通搬运；它同时切出三箱、分离两臂，并把两臂右格送入 x=5 pull side，生成纵向拉把手。
+      concrete_feedback: step 10 后七格整体变成右侧三箱柱与上下两条独立二格黏臂。
+    - id: RU3_lower_before_upper_seal
+      question: 切开后为什么必须先下后上？
+      visible_premises:
+        - 下臂拉入目标后玩家落到仍可离开的 (5,7)，下目标已经完成。
+        - 上臂拉入目标后玩家进入 (5,1) 单格袋，完成后的黏臂封住下方。
+      conclusion: 下臂必须在上臂之前完成；上臂是封路终局，提前完成会把尚空的下目标永久留在玩家无法返回的区域。
+      concrete_feedback: 下臂完成后玩家仍可离开；上臂完成后玩家被锁进顶袋并立即胜利。
+
+role_fit_claim:
+  strengths:
+    - 两枚锚点不是并列按钮：B/S 负责远程拼接与切割停位，P/L 负责所有关键拉把手的侧别授权。
+    - 同一个七格形状先作为合体刚体被整体移动，再被切成两个独立目标件，形状与独立性都被后续消费。
+    - 目标位置、墙带、下先收与上封口共同形成可见的三段推理，不依赖路线长度解释难度。
+  risks_to_attack:
+    - B/S 第一次移动是唯一可胜承诺，可能显得过于显然或像按钮。
+    - step 15-27 的左回廊是纯走位，可能稀释短而强的核心洞见。
+    - 完整 SCC 胜利链高度固定，需判断这是紧凑因果还是脚本化执行。
+
+lineage_claim:
+  relation: fresh
+  non_reused_archive_chains:
+    - 未复用 RA_CAND_0022 的死角反推锚点链。
+    - 未复用 RA_CAND_0025 的 L 形反复活塞。
+    - 未复用 RA_CAND_0017 的目标腾挪布局或求解路线。
+  new_causal_chain: 箱柱作为暂时连接桥 -> 七格 C 整体横拉 -> 连接柱切箱且双臂获得跨侧拉把手 -> 下臂先收 -> 上臂封口。
+
+language_boundary:
+  C形: 指 step 2 后位于 rows 3-5、由上横臂(3-5,3)、右连接柱(5,3-5)、下横臂(3-5,5)组成的七格黏块。
+  下先收: 指下臂从 (4-5,5) 被向下拉到 (4-5,6)；玩家仍可离开，因此它必须在上臂封袋终局前完成。
+  上封口: 指上臂从 (4-5,3) 被向上拉到 (4-5,2)，玩家落到四面封闭的 (5,1)。
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9_facts_packet.yml
+  read_order: facts_then_claim

@@ -1,33 +1,33 @@
-# Reality Anchor 可组合局部结构词典
+# Reality Anchor 局部结构词典
 
-本文件由 mechanism curator 从局部实验 run 中整理。它只收录可复用的局部结构族，不收录完整关卡设计，也不收录一阶规则复述。
+本文件由 mechanism curator 从局部实验 run 中整理。它只收录可复用的局部摆法和动作关系，不收录完整关卡设计，也不收录一阶规则复述。
 
-本次 refresh 后的收录门槛：正式条目必须至少证明“起作用的可能性”，即结构输出被一个极小后续约束消费过。只有事件 witness 或单纯结构差异的材料，保留在 run / refresh 记录中，不作为顶层 lexicon 条目。
+本次 refresh 后的收录门槛：正式条目必须至少证明某个具体摆法会影响后续动作。只有事件 witness 或单纯结构差异的材料，保留在 run / refresh 记录中，不作为顶层 lexicon 条目。
 
 当前短索引见 `lexicon_index.md`；下一轮探索缺口见 `backlog.md`。历史 refresh / decision 文件是当时的 curator 快照，不作为当前状态入口。
 
 ## 组合矩阵
 
-| 前置结构 | 中间材料或状态 | 后续消费结构 |
+| 前一段摆法 | 中间留下的形状或空位 | 后一段怎样利用 |
 | --- | --- | --- |
-| `B/S 绑定债` | 二格 sticky 横条 | `固定 B/S 切割`；`刚体黏块 + 墙口`中的口宽、前沿与回返门 |
-| `B/S 绑定债` | sticky L 形占角件 | `刚体黏块 + 墙口`中的 L 形凸角把手与前沿门 |
-| `B/S 绑定债`中的隔行入场 / 桥格合并 | 分离 sticky 部件 / 桥接端点形成的更大连体块 | `刚体黏块 + 墙口`中的目标口宽与连体形状门 |
-| `固定 B/S 切割` | `C+M`：可分离 crate + sticky 尾债 | 同条目的单格目标袋 |
-| `固定 B/S 断桥` | 分离 sticky 端点 + crate 桥债 | 同条目的单格端点目标袋；`刚体黏块 + 墙口`反例 |
-| `刚体黏块 + 墙口` | 条形 / L 形 / 2x2 黏块的可通过、可回返或失去把手状态 | 同条目的墙口宽、前沿墙齿、凸角把手与 pull 侧墙口 |
-| `Pull 侧对象可动性` | pull 后的单箱 / 单格 sticky / 多格 sticky 状态 | 同条目的单格墙口袋、目标格墙与反向把手通路 |
-| `B/S 移动边界刷产物` | `CC` / `C+M` / `C+MM` / 2x2 / 双柱 | 同条目的门口、低墙、列间隙与目标口宽 |
-| `P/L 长轴墙廊` | 停位容量与 pull 后回返状态 | 同条目的墙廊容量、一次性开关与门闩 |
-| `P/L 横向把手` | 首步合法 / 前格阻断 / 半格目标阻断 / 移动后回返门 | 同条目的玩家前格门、锚点占格门与 carried-crate 目标门 |
-| `P/L 锚点边界重写` | 旧 L 半格新把手 / 侧边对象改到 push 侧 | 同条目的单格目标袋与侧边 crate relay |
-| `P/L pull 抽取把手` | 沿轴抽出 / 占格目标门 / 侧向扫带 | 同条目的 B/S anchor 远程抽出、口袋资源抽取与侧向 crate 扫带 |
-| `P/L 边界交接` | 单箱被拉入玩家旧格 | 同条目的目标口袋 |
-| `P/L 边界交接` | 箱链只抽近端并留下残余箱链 | `边界活塞本体谱`中的箱链残余债；链端抽取打开单格口 |
-| `P/L 边界交接` | sticky 刚体 handoff | `边界活塞本体谱`中的 sticky 形状墙口与回返门 |
-| `边界活塞本体谱`中的单箱活塞 | 推入覆盖目标、回撤撤销覆盖 | `单箱目标活塞顺序锁` |
-| `P/L L形缺角活塞` | 第一手 push 后立即保留正交 pull 接触面 | `缺角立即侧拉的门位分类`中的玩家前格门、形状目标墙与扫带目标 |
-| `P/L L形缺角活塞`中的横向 stroke | stroke 后生成或暴露正交把手 | `stroke 后正交把手`中的凸脚位置、阶段墙与 B/S anchor 扫带 |
+| `B/S 边界黏合` | 二格 sticky 横条 | `黏块过墙口的通过与回推条件`；`固定 B/S 切割` |
+| `B/S 边界黏合` | sticky L 形 | `黏块过墙口的通过与回推条件`中的凸角操作位和前沿墙 |
+| `B/S 边界黏合`中的隔行进入 / 桥格黏合 | 两个分开的 sticky 部件 / 桥接端点形成的更大连体块 | 目标口宽和连体块前沿墙 |
+| `固定 B/S 切割` | `C+M`：左边箱子可单独推动，右边留下 sticky | 左边箱子进入单格目标袋 |
+| `固定 B/S 断桥` | 两个分开的 sticky 端点 + 左侧 crate 柱 | sticky 端点进入单格目标袋；未切开的 C 形被墙口挡住 |
+| `黏块过墙口的通过与回推条件` | 条形 / L 形 / 2x2 黏块 | 墙口决定能否通过，以及通过后能否走到另一侧推回来 |
+| `Pull 侧对象可动性` | 拉动后的单箱 / 单格 sticky / 多格 sticky | 单格墙口袋、目标格墙和回推通路 |
+| `B/S 移动边界：箱组变为 CC、C+M 或黏块` | `CC` / `C+M` / `C+MM` / 2x2 / 双柱 | 门口、低墙、列间隙与目标口宽 |
+| `P/L 锚点在横廊中的可动性` | 能移动几格，以及拉动后能否返回 | 墙廊端点、一次性开关与门闩 |
+| `P/L 横向把手` | 首步合法 / 玩家前格被挡 / 锚点目标格被挡 / 移动后无法返回 | 玩家前格墙、锚点目标格墙与 carried-crate 目标墙 |
+| `P/L 锚点移位：腾出旧半格并改变推拉侧` | 旧 L 半格成为新操作位 / 侧边对象落到 push 侧 | 单格目标袋与侧边 crate 接力 |
+| `P/L pull 抽取` | 沿轴抽出 / 目标格被挡 / 侧向扫带 | B/S anchor 远程抽出、口袋箱抽取与侧向 crate 扫带 |
+| `P/L 边界交接` | 单箱被拉入玩家旧格 | 目标口袋 |
+| `P/L 边界交接` | 箱链只拉回近端箱，远端箱仍留在原处 | `边界活塞的对象差异`；拉走近端箱后打开单格口 |
+| `P/L 边界交接` | sticky 连体块被拉回 | `边界活塞的对象差异`中的形状墙口与回返门 |
+| `边界活塞的对象差异`中的单箱 | 推入时覆盖目标，拉回时目标重新空出 | `单箱目标活塞顺序锁` |
+| `P/L L形缺角活塞` | 第一手 push 后立即保留正交 pull 接触面 | `缺角立即侧拉的墙位分类`中的玩家前格墙、形状目标墙与扫带目标 |
+| `P/L L形缺角活塞`中的横向 stroke | 横推后出现正交 pull 操作位 | `横推后出现的正交操作位`中的凸脚位置、阶段墙与 B/S anchor 扫带 |
 
 证据来源：
 
@@ -50,12 +50,13 @@
 - `ra_loop_pl_l_notch_shape_spectrum_20260708_01`
 - `ra_loop_pl_single_crate_goal_piston_lock_20260708_01`
 
-## B/S 绑定债：箱资源生成黏块形状
+## B/S 边界黏合：箱组形成横条或 L 形黏块
 
-接口卡片：
-- 输入接口：两个以上 crate 可控地跨入 sticky 侧，入场邻接图可做成相邻、L 形或隔行分离。
-- 输出接口：sticky 横条、L 形占角件、分离 sticky 部件、宽塞，或桥接既有端点形成更大连体块。
-- 最小 consumer：单行走廊和目标口宽消费横条 / 连体块形状，隔行对照证明不是所有 sticky 材料都会合体。
+局面卡片：
+- 开始摆法：两个以上 crate 位于 B/S 边界附近，可以相邻、排成 L 形或隔行进入 sticky 侧。
+- 关键动作：玩家把这些箱子依次推过 B/S 边界。
+- 动后局面：相邻箱子粘成横条或 L 形连体块；隔行进入的箱子仍是两个分开的 sticky 部件；桥接既有端点时会形成更大的连体块。
+- 最小用法：单行走廊和目标口宽直接决定这些形状能否通过。
 
 局部结构谱：
 
@@ -94,55 +95,55 @@
 
 共同解释：
 
-这条不是“crate 变 sticky”。它的 designer 接口是：多个可分配箱子被 B/S 边界压成一个刚体连体块形状，designer 得到横条、L 形、独立部件或宽塞材料，同时失去分别摆放这些箱子的自由。
+这条不只是在说“crate 变 sticky”。多个箱子被推过 B/S 边界后，会按相邻位置粘成横条、L 形或更大的连体块；隔行进入则仍是几个分开的部件。箱子一旦粘住，玩家就不能再分别摆放它们。
 
-输入条件：
+开始条件：
 
 - 至少两个 crate 能跨入 sticky 侧。
 - crate 入场时的正交邻接图可控：相邻、晚接入成 L、隔行不接触。
-- 玩家有足够站位把 crate 推入边界，或者有等价 driver 让资源跨线。
-- 若要立刻起作用，需要一个极小消费约束，例如单行走廊、墙口、回返站位或后续门口。
+- 玩家有足够站位把 crate 推过边界，或者有等价 driver 让箱组跨线。
+- 动作后紧接一个单行走廊、墙口或回返站位，才能让不同黏块形状马上表现出差异。
 
-输出状态：
+动后局面：
 
 - 相邻 crate 变成 2 格横条 sticky 工具。
 - 第三个 crate 可把横条改成 L 形占角件。
 - 隔行入场会得到两个独立 sticky 部件，而不是一个刚体。
-- 单行走廊会把横条输出立刻消费成宽塞，只剩左右处理。
+- 横条进入单行走廊后会横着塞住通道，只能继续左右推动。
 
 结构旋钮：
 
 - crate 邻接图：横向相邻 / L 形 / 隔行。
 - 地形余量：开放房间 / 单行走廊 / 是否可绕到侧面。
 - 入场节奏：一次压入一排 / 先横条再接第三格。
-- 后续消费面：刚体前方、侧边、背侧是否留站位。
+- 后续站位：刚体前方、侧边、背侧是否留有玩家可站的格子。
 
 变体谱：
 
-- `bind_bar_open`：输出 2 格横条；开放房间里四向动作都可用，回返 depth 12。
-- `bind_l_corner`：第三箱接入后输出 L 形；最终 `up:force_blocked`，回返 depth 13。
-- `bind_gap_keeps_parts`：同在 sticky 侧但隔行，输出两个独立 sticky 部件；这是“材质转换不等于绑定”的边界。
+- `bind_bar_open`：最终形成 2 格横条；开放房间里四向动作都可用，回返 depth 12。
+- `bind_l_corner`：第三箱粘上后形成 L 形；最终 `up:force_blocked`，回返 depth 13。
+- `bind_gap_keeps_parts`：同在 sticky 侧但隔行，仍是两个独立 sticky 部件；这说明变成 sticky 不等于彼此粘住。
 - `bind_bar_choke`：同样 2 格横条进入单行走廊，最终只剩 `left/right`，回返搜索 complete 为 no；这是本条的 consumption probe。
 
-自然消费方式：
+可以接着怎么用：
 
 - 接到“刚体黏块 + 墙口回返谱系”：用横条、长条或 L 形去测试回返站位格。
 - 接到门口或目标口：横条可作门闩，L 形可作占角件。
-- 接到 B/S 解绑定或移动边界刷子：先生成刚体债，再切回可分配资源。
+- 接到固定 B/S 切割或移动边界：先粘成连体块，再把其中一格切回可单独推动的箱子。
 
 常见 shortcut：
 
-- 空间太宽时，绑定只是在开放房间里制造工具，不形成压力。
+- 空间太宽时，箱子粘成一块后仍能从各方向移动，不形成取舍。
 - crate 隔行入场会保留多个部件，玩家可能绕过“必须合体”的意图。
-- 如果后续墙口不消费占格形状差异，玩家只会看到事件 witness。
+- 如果后面的墙口对横条、L 形和分离部件一视同仁，玩家只会看到箱子变黏块的规则演示。
 
 审美风险：
 
-只展示箱子变黏块会像教学事件。它成为玩家洞见的时刻，是玩家意识到“我需要主动把资源压成某个占格形状，才能满足后续墙口或门口的输入要求”。
+只展示箱子变黏块会像教学事件。真正需要思考的是：玩家必须主动把箱子粘成某个形状，才能穿过或堵住后面的墙口。
 
-consumption probe：
+最小用法验证：
 
-`bind_bar_choke` 把同样的横条输出放入单行走廊，动作集合从开放房间的四向可用收窄到左右处理，并且局部回返搜索 complete 为 no。
+`bind_bar_choke` 把同样的横条放入单行走廊，动作集合从开放房间的四向可用收窄到左右处理，并且局部回返搜索 complete 为 no。
 
 桥格合并目标口补充：
 
@@ -180,19 +181,19 @@ consumption probe：
 ########
 ```
 
-这组补充把 “crate 邻接图” 旋钮扩到既有 sticky 端点：crate 跨 B/S 边界后变成桥格，若正交邻接到端点，会合并成二格或三格 sticky 连体块。目标口宽消费的是连接形状，而不是 sticky 材质本身；无端点时单格 sticky 可进同一目标口，打开三格口宽后桥接出的三格刚体也可整体推进。一个端点的反例修正了“只是三格太长”的解释，说明单格口拒绝的是任何越出口宽的 connected 连体块形状。
+这组补充把 crate 的相邻摆法扩到既有 sticky 端点：crate 跨 B/S 边界后变成桥格，若正交贴着端点，就会粘成二格或三格 sticky 连体块。目标口检查的是整块形状，而不只是 sticky 材质：没有端点时，单格 sticky 能进同一个目标口；把口宽打开到三格后，桥接出的三格连体块也能整体推进。只桥接一个端点时仍过不了单格口，说明问题不是“三格太长”，而是连体块有任何一格超出开口都会被挡住。
 
 归属边界：
 
-`ra_loop_bind_mouth_composition_20260707_01` 与 `ra_loop_bind_shape_spectrum_20260707_01` 不作为 B/S 边界证据。两组 run 中，B/S 只负责把 crate 变成 sticky 材料；关键观察点发生在后续右推 sticky 刚体进墙口时，此时差异来自 `sticky rigid movement + wall mouth`，不是来自 B/S 边界位置或跨线时机。它们应归入“刚体黏块 + 墙口”的对象行为 / consumer 谱。
+`ra_loop_bind_mouth_composition_20260707_01` 与 `ra_loop_bind_shape_spectrum_20260707_01` 不作为 B/S 边界证据。两组 run 中，B/S 只负责把 crate 变成 sticky；关键观察点发生在后续右推 sticky 连体块进墙口时，此时差异来自 `sticky rigid movement + wall mouth`，不是来自 B/S 边界位置或跨线时机。它们应归入“黏块过墙口”的对象行为。
 
-推荐 probe：
+后续可验证的接法：
 
-继续 B/S 绑定债时，关键观察点必须仍由 B/S 边界造成差异：例如同一局部需求下，跨线顺序导致粘 / 不粘，边界位置导致 C/M 身份不同，或可移动边界刷出不同产物。不要把“先把所有对象送到 sticky side，再研究 sticky 行为”的 run 写成 B/S 边界语料。
+继续研究 B/S 边界黏合时，关键差异必须仍由边界造成：例如跨线顺序决定箱子是否相邻粘住，边界位置决定某格是 C 还是 M，或移动边界后留下不同箱组。不要把“先把所有对象送到 sticky side，再研究 sticky 行为”的 run 写成 B/S 边界语料。
 
-组合例句：
+最短接法：
 
-`绑定债 -> 刚体墙口回返谱系`：玩家先把 crate 绑定成目标占格形状，再让墙口消费这个形状；少绑一个或绑成 L 形会在同一墙口给出不同回返 / 把手结果。
+`B/S 边界黏合 -> 黏块过墙口`：玩家先把 crate 粘成目标形状，再送进墙口；少粘一个箱子或粘成 L 形，会改变能否通过以及通过后能否走到另一侧推回来。
 
 证据：
 
@@ -200,12 +201,13 @@ consumption probe：
 
 `run=ra_struct_bridge_merge_mouth_01`, `cases=bridge_merge_single_mouth_block,no_endpoints_single_mouth_pass,bridge_merge_triple_mouth_pass,bridge_merge_upper_only_single_mouth_block`, `tags=runtime_observed,bounded_graph,graph_complete,consumption_probe`
 
-## 固定 B/S 切割：C+M 尾巴与单格目标袋
+## 固定 B/S 切割：二格黏块分成箱子和黏块
 
-接口卡片：
-- 输入接口：横向二格 sticky 资源，固定 B/S 边界能切在两格之间，玩家能绕到左格下方。
-- 输出接口：`C+M`：左格 crate 可分离，右格 sticky tail 留债。
-- 最小 consumer：单格目标袋消费可分离左格；双格袋口对照说明宽口会让未切开的 `MM` 也通过。
+局面卡片：
+- 开始摆法：横向二格 sticky 连体块位于固定 B/S 边界旁，边界能切在两格之间，玩家能绕到左格下方。
+- 关键动作：玩家横推二格黏块跨过边界，再从下方单独上推左格。
+- 动后局面：左格变回可单独推动的 crate，右格仍是 sticky；未切开的 `MM` 仍会一起移动。
+- 最小用法：单格目标袋只容得下左边箱子；袋口放宽到两格后，未切开的 `MM` 也能整体进入。
 
 局部结构谱：
 
@@ -245,18 +247,18 @@ consumption probe：
 
 共同解释：
 
-固定 B/S 边界可以把一个横向 sticky 二连块切成 `C+M`：左格变成可分配 crate，右格保留 sticky 尾巴。这个结构不是“sticky 变 crate”的事件 witness；它的接口是把一个共享连体块形状解成“可单独上推的左格 + 留在旁边的尾债”。单格目标袋消费这个输出：`C+M` 和 `CC` 能只把左格推进目标，未切开的 `MM` 会因为右上墙格而 `force_blocked`。把右上墙格打开成双格袋口后，未切开的 `MM` 也能整体通过。
+固定 B/S 边界可以把横向二格 sticky 切成 `C+M`：左格变回可单独推动的 crate，右格仍是 sticky。单格目标袋让这个差异马上可见：`C+M` 和 `CC` 都能只把左格向上推入目标；未切开的 `MM` 会整体上移，因此被右上墙格挡住。把右上墙格打开成双格袋口后，`MM` 也能整体通过。
 
-输入条件：
+开始条件：
 
-- 一个横向二连资源，通常来自 B/S 绑定债生成的 sticky 横条，也可以用 `CC` 作可分离对照。
+- 一个横向二格对象，通常是箱子经过 B/S 边界后粘成的 sticky 横条，也可以用 `CC` 作可分离对照。
 - 固定 B/S anchor 的边界能放在推后两格之间，或作为反例放在两格左侧 / 右侧。
 - 玩家能先横推二连块跨边界，再绕到左格下方。
 - 左上是目标袋，右上墙格控制袋口是否只容纳一格。
 
-输出状态：
+动后局面：
 
-- `C+M`：左格 crate 可被目标袋消费，右格 sticky 留作尾债。
+- `C+M`：左格 crate 可单独推入目标袋，右格 sticky 留在旁边。
 - `MM`：仍是横向刚体，单格袋口失败，双格袋口通过。
 - `CC`：本来可分离，单格袋口通过，但不能证明边界切割本身。
 
@@ -265,54 +267,55 @@ consumption probe：
 - B/S 边界位置：切在两格之间 / 两格都在 sticky side / 两格都在 box side。
 - 袋口宽度：单格 / 双格。
 - 后续施力方向：从下方推左格，而不是从水平侧继续形成 force chain。
-- 资源来源：先绑定成 sticky 横条，或直接给 `CC` 作对照。
+- 对象来源：先让箱子粘成 sticky 横条，或直接给 `CC` 作对照。
 
 变体谱：
 
-- `split_tail_single_pocket_pass`：第一步产生 `sticky_to_box:n1`，输出 `C+M`；后续 `up` 合法，crate 覆盖目标。
+- `split_tail_single_pocket_pass`：第一步产生 `sticky_to_box:n1`，动后为 `C+M`；后续 `up` 合法，crate 覆盖目标。
 - `all_sticky_single_pocket_block`：同一动作串到最后 `up:force_blocked`，因为 `MM` 的右格前方是墙。
 - `all_sticky_two_cell_pocket_pass`：打开右上格后，`MM` 整体上推并覆盖目标。
-- `all_box_single_pocket_pass`：`CC` 也能只推左格，说明目标袋消费的是“可分离左格”，不是材质名。
+- `all_box_single_pocket_pass`：`CC` 也能只推左格，说明关键是左格能否单独移动，不是对象材质。
 
-自然消费方式：
+可以接着怎么用：
 
-- 接 B/S 绑定债：先把箱资源压成 sticky 横条，再用固定边界切割出可分配左格。
-- 接目标回填：左格 crate 覆盖目标，sticky 尾巴保留为后续债。
-- 接刚体墙口：把尾巴或未切开的反例交给墙口，形成形状/资源的二段消费。
+- 接 B/S 边界黏合：先把箱子粘成 sticky 横条，再用固定边界切出可单独推动的左格。
+- 接目标回填：左格 crate 覆盖目标，右格 sticky 留在旁边，还要另找通路或目标处理。
+- 接黏块墙口：把右格 sticky 或未切开的 `MM` 送到下一处墙口，继续检查形状能否通过。
 
 常见 shortcut：
 
 - 右上墙少一格时，未切开的 `MM` 也能通过，切割差异消失。
-- 玩家如果不能绕到左格下方，只会看到 `sticky_to_box` 事件，不能消费输出。
+- 玩家如果不能绕到左格下方，只会看到 `sticky_to_box` 事件，无法实际利用左格已经能单独推动这一点。
 - 从水平侧继续推 `C+M` 时，crate 和 sticky 可能通过 force chain 同步移动，削弱“可分离左格”的差异。
 - 直接给 `CC` 的成功只是对照，不应写成固定边界切割的证据。
 
 审美风险：
 
-如果只展示跨边界变成 `C+M`，它仍像规则展示。它成为玩家洞见的时刻，是玩家需要主动把刚体送过固定边界，让单格目标袋拿到可分离左格，同时接受 sticky 尾巴作为后续债。
+如果只展示跨边界变成 `C+M`，它仍像规则展示。真正的取舍是：玩家为了把左边箱子推进单格目标袋，必须把横条切开，同时把右边 sticky 留在外面继续处理。
 
-consumption probe：
+最小用法验证：
 
-`split_tail_single_pocket_pass` 对比 `all_sticky_single_pocket_block` 证明单格目标袋消费了 `C+M` 与 `MM` 的差异；`all_sticky_two_cell_pocket_pass` 修正解释，说明不是 sticky 不能进袋，而是单格袋口拒绝完整连体块形状；`all_box_single_pocket_pass` 说明可分离资源同样通过，隔离出“可分离左格”这个输出接口。
+`split_tail_single_pocket_pass` 对比 `all_sticky_single_pocket_block` 证明单格目标袋能区分 `C+M` 与 `MM`；`all_sticky_two_cell_pocket_pass` 说明不是 sticky 不能进袋，而是单格袋口容不下完整连体块；`all_box_single_pocket_pass` 说明 `CC` 同样能只推左格，关键是左格能否单独移动。
 
-推荐 probe：
+后续可验证的接法：
 
-禁用 `box_sticky_normalize` 验证切割消失；扩展 L 形与三格横条，比较 `C+MM`、`CC+M`、`MMM` 在同一目标袋的尾债谱；再把 sticky 尾巴接到刚体墙口回返谱系，做 composition probe。
+禁用 `box_sticky_normalize` 验证切割消失；扩展 L 形与三格横条，比较 `C+MM`、`CC+M`、`MMM` 在同一目标袋外分别会留下几格 sticky；再把这些剩余 sticky 接到黏块墙口，做 composition probe。
 
-组合例句：
+最短接法：
 
-`绑定债 -> 固定边界切割 -> 单格目标袋`：玩家先生成 sticky 横条，再把它推过固定 B/S 边界切成 `C+M`；目标袋消费左格 crate，右侧 sticky 尾巴成为下一段结构的输入。
+`B/S 边界黏合 -> 固定边界切割 -> 单格目标袋`：玩家先把箱子粘成 sticky 横条，再推过固定 B/S 边界切成 `C+M`；左边 crate 进入目标袋，右边 sticky 留给下一段处理。
 
 证据：
 
 `run=ra_struct_fixed_boundary_split_pocket_01`, `cases=split_tail_single_pocket_pass,all_sticky_single_pocket_block,all_sticky_two_cell_pocket_pass,all_box_single_pocket_pass`, `tags=runtime_observed,bounded_graph,graph_complete,consumption_probe`
 
-## 固定 B/S 断桥：sticky split 端点目标袋
+## 固定 B/S 断桥：C 形黏块拆成两个端点
 
-接口卡片：
-- 输入接口：C 形 sticky 连体块，固定 B/S 边界能切过连接桥，玩家能绕到端点下方。
-- 输出接口：上 / 下 sticky 端点独立，左柱 crate 桥债保留；未切断 C 形是错误连体块。
-- 最小 consumer：上端点单格目标袋消费端点独立性；站位关闭和预分离端点作为错例 / 边界修正。
+局面卡片：
+- 开始摆法：C 形 sticky 连体块位于固定 B/S 边界旁，边界能切过左侧连接柱，玩家能绕到端点下方。
+- 关键动作：玩家把 C 形黏块横推过边界，再单独上推右上端点。
+- 动后局面：右侧上下两个 sticky 端点彼此分开，左侧连接柱变成 crate；未切断时仍是一个 C 形连体块。
+- 最小用法：上方单格目标袋只允许切开后的上端点进入；站位关闭时，即使切开也推不上去。
 
 局部结构谱：
 
@@ -344,7 +347,7 @@ C 形未切断，同动作被整体连体块形状阻断：
 #..BS..#
 ########
 
-端点预先分离，表现类似切断输出：
+端点预先分离，表现与切断后相似：
 ########
 ###.G..#
 ###.MM@#
@@ -356,76 +359,77 @@ C 形未切断，同动作被整体连体块形状阻断：
 
 共同解释：
 
-固定 B/S 边界可以把一个 C 形 sticky 刚体切断成“左侧 crate 桥 + 右侧两个独立 sticky 端点”。这不是单纯的 `sticky_split` 事件见证；它的可组合接口是端点独立性。上方单格目标袋消费这个接口：切断后或预先分离时，上端点可单独进目标；未切断时，C 形仍共享连体块形状，同一上推动作会被整体形状和玩家站位冲突阻断。
+固定 B/S 边界可以把 C 形 sticky 切成“左侧 crate 柱 + 右侧两个分开的 sticky 端点”。上方单格目标袋让切开前后的差异马上可见：切开后或一开始就分离时，上端点可以单独进目标；未切开时仍是一个 C 形连体块，同一上推动作会带动整块，并与墙或玩家站位冲突。
 
-输入条件：
+开始条件：
 
 - 一个 C 形 sticky 连体块：上端点、左柱桥、下端点正交连接。
 - 固定 B/S anchor 的边界能切过左柱，推后左柱落在 box side，右侧端点留在 sticky side。
 - 玩家先从右侧横推 C 形，再绕到上端点下方。
 - 上方目标袋只需要单格 sticky，并可用墙格控制下方站位是否可达。
 
-输出状态：
+动后局面：
 
 - `sticky_split:n1`：一个原 sticky 来源被分成两个 sticky 组件。
-- `sticky_to_box:n3`：左柱变成 crate 桥，成为后续债。
+- `sticky_to_box:n3`：左柱变成三格 crate 柱，仍留在左侧。
 - 上端点成为可单独推动的 sticky 组件，可覆盖目标。
-- 未切断时仍是一个 C 形刚体，端点目标袋不能单独消费。
+- 未切断时仍是一个 C 形刚体，上端点不能被单独推入目标袋。
 
 结构旋钮：
 
 - 边界位置：切过左柱 / 保持整体 sticky。
 - 连接桥是否存在：C 形连接 / 端点预先分离。
 - 站位门：上端点下方通路开放 / 关闭。
-- 消费口：单格目标袋是否只消费上端点。
+- 目标口：上方是否只有一格宽，只容得下一个端点。
 
 变体谱：
 
 - `split_cshape_upper_pocket_pass`：第一推产生 `sticky_to_box:n3, sticky_split:n1`；后续 `up` 合法，上端点覆盖目标。
 - `unsplit_cshape_upper_pocket_block`：保持 C 形刚体；同站位 `up:force_blocked_by_player`。
-- `split_cshape_no_stand_block`：切断成功，但下行站位门关闭，消费链停在 `destination_blocked`。
+- `split_cshape_no_stand_block`：切断成功，但通往端点下方的站位被墙封住，动作停在 `destination_blocked`。
 - `pre_split_endpoints_upper_pocket_pass`：端点本来分离，上端点目标袋通过；这是“端点独立性”而非事件名的边界。
 
-自然消费方式：
+可以接着怎么用：
 
-- 接目标回填：上端点进目标，下端点和 crate 桥保留为后续债。
-- 接双端点分配：上下端点分别进入两个消费口。
-- 接刚体墙口：未切断 C 形作为错误形状反例，切断端点作为小连体块输入。
+- 接目标回填：上端点进目标，下端点和左侧 crate 柱仍留在棋盘上。
+- 接双端点分配：上下端点分别进入两个单格目标口。
+- 接黏块墙口：未切断 C 形作为错误形状反例，切断后的端点作为单格黏块进入墙口。
 - 接固定 B/S 切割谱：从二连 `C+M` 扩展到多组件 split。
 
 常见 shortcut：
 
-- 没有下方站位时，切断只停在事件 witness，目标袋无法消费。
+- 没有下方站位时，切断只停在事件 witness，玩家仍不能把端点推进目标袋。
 - 如果 C 形一开始就断开，成功只能说明端点独立可用，不证明边界切断必要。
 - 如果目标袋放宽到能容纳整个连体块形状，未切断反例会弱化。
-- 左侧 crate 桥如果没有后续约束，玩家可能只记住“端点进目标”，忽略切断债务。
+- 左侧 crate 柱如果没有继续挡路或进入目标，玩家可能只记住“端点进目标”，忽略切开后左边还留下了什么。
 
 审美风险：
 
-这个结构容易被误写成“B/S 会 split”。它成为玩家洞见的时刻，是玩家主动把连接形状推过边界，制造可分配端点，同时接受 crate 桥债。
+这个结构容易被误写成“B/S 会 split”。真正的玩家动作是：把连接柱推过边界，让上下端点分开；这样能单独推动端点，但左边会留下三格 crate 柱。
 
-consumption probe：
+最小用法验证：
 
-`split_cshape_upper_pocket_pass` 对比 `unsplit_cshape_upper_pocket_block` 证明目标袋消费了端点是否独立；`split_cshape_no_stand_block` 说明 `sticky_split` 需要站位才能起作用；`pre_split_endpoints_upper_pocket_pass` 说明真正被消费的是端点独立性，而不是事件名。
+`split_cshape_upper_pocket_pass` 对比 `unsplit_cshape_upper_pocket_block` 证明单格目标袋要求上端点能独立移动；`split_cshape_no_stand_block` 说明发生 `sticky_split` 还不够，玩家必须能走到端点下方；`pre_split_endpoints_upper_pocket_pass` 说明关键是端点已经分开，而不是事件名本身。
 
-推荐 probe：
+后续可验证的接法：
 
-禁用 `box_sticky_normalize` 验证 split 消失；增加下端点目标袋，测试上下端点分配；把左柱 crate 桥接入单格通道或墙口，验证 crate 桥债能否成为第二段消费。
+禁用 `box_sticky_normalize` 验证 split 消失；增加下端点目标袋，测试上下端点能否分别放入两个目标；再让左侧 crate 柱进入单格通道或墙口，检查它是否会挡住或打开第二段路线。
 
-组合例句：
+最短接法：
 
-`绑定债 -> 固定边界断桥 -> 端点目标袋`：玩家先生成连接形状，再把它推过固定 B/S 边界断开；上端点被目标袋消费，crate 桥或下端点成为后续输入。
+`B/S 边界黏合 -> 固定边界断桥 -> 端点目标袋`：玩家先形成 C 形连体块，再把连接柱推过固定 B/S 边界；上端点进入目标袋，左侧 crate 柱和下端点仍留给后面的路线。
 
 证据：
 
 `run=ra_struct_sticky_split_pocket_01`, `cases=split_cshape_upper_pocket_pass,unsplit_cshape_upper_pocket_block,split_cshape_no_stand_block,pre_split_endpoints_upper_pocket_pass`, `tags=runtime_observed,bounded_graph,graph_complete,consumption_probe`
 
-## 刚体黏块 + 墙口：反向施力格谱系
+## 黏块过墙口的通过与回推条件
 
-接口卡片：
-- 输入接口：2 格条、3 格条、4 格条、2x2 或 L 形 sticky 连体块被送到墙口、窄口或把手附近。
-- 输出接口：通过 / 被前沿拒绝 / 推进后可回返 / 推进后失去反向把手的局部状态。
-- 最小 consumer：墙口宽度、前沿墙齿和反向施力格消费连体块形状。
+局面卡片：
+- 开始摆法：2 格条、3 格条、4 格条、2x2 或 L 形 sticky 连体块位于墙口或窄通道前。
+- 关键动作：玩家把整块黏块推进墙口，并尝试绕到另一侧把它推回来。
+- 动后局面：墙口可能直接挡住黏块前沿；也可能允许进入，却让玩家到不了另一侧操作位。
+- 最小用法：墙口宽度、前沿墙齿和墙后的站位共同决定能否进入、能否回推。
 
 局部结构谱：
 
@@ -466,13 +470,13 @@ L 形，把手开放 / 堵住：
 
 同一次刚体推进是否能回返，不由“黏块能不能被推”决定，也不只由玩家能否绕到附近决定。关键是推进后是否存在可达的反向施力站位格，并且整块反推目标格开放。直条通常看端点外侧余量，2x2 在本轮证据中单个右侧施力位即可整块反推，L 形可能通过侧向凸出格提供把手。
 
-输入条件：
+开始条件：
 
 - 已经有某种 sticky 刚体形状：2 格条、3 格条、4 格条、2x2 或 L 形。
 - 该连体块形状被送到墙口、单列通道、窄口或把手附近。
 - 玩家有一次推进动作，推进后是否能站到反向施力格由地形决定。
 
-输出状态：
+动后局面：
 
 - 可回返：存在可达反向施力站位格，回返搜索 found。
 - 不可回返：局部图 complete 且无回初始路径，或反向动作被 `force_blocked`。
@@ -493,9 +497,9 @@ L 形，把手开放 / 堵住：
 - 2x2 窄口：玩家能在附近移动，但没有整面反向施力格；加宽后可回返。
 - L 形把手开放：顶端无右侧站位仍可借凸出格回推；堵住凸出格把手后不可回返。
 
-自然消费方式：
+可以接着怎么用：
 
-- 消费 B/S 绑定债输出的横条、长条或 L 形。
+- 接 B/S 边界黏合形成的横条、长条或 L 形。
 - 作为“错误形状可见失败”的墙口检查器。
 - 接目标回填或通道封锁：正确占格形状通过，错误占格形状失去回返或把手。
 
@@ -507,11 +511,11 @@ L 形，把手开放 / 堵住：
 
 审美风险：
 
-如果玩家只是在推一个已经给好的块，它可能只是移动性知识点；如果前置结构要求玩家主动生成特定占格形状，它会变成“形状构造 -> 地形消费”的洞见。
+如果玩家只是在推一个已经给好的块，它可能只是移动性知识点；如果前一段要求玩家主动粘出特定形状，再用墙口检验这个形状，才会形成“先造形，再过口”的推理。
 
-consumption probe：
+最小用法验证：
 
-`sticky3_narrow_mouth_push_right` 对比 `sticky3_wide_mouth_push_right`、`sticky4_wide_for_3_not_4_push_right` 对比 `sticky4_extra_wide_push_right`、`lshape_handle_open` 对比 `lshape_handle_blocked_by_wall` 都证明墙格 / 把手约束实际消费了占格形状。
+`sticky3_narrow_mouth_push_right` 对比 `sticky3_wide_mouth_push_right`、`sticky4_wide_for_3_not_4_push_right` 对比 `sticky4_extra_wide_push_right`、`lshape_handle_open` 对比 `lshape_handle_blocked_by_wall` 都证明墙格和玩家操作位确实会区分不同黏块形状。
 
 前沿墙齿目标口补充：
 
@@ -545,18 +549,18 @@ consumption probe：
 #######
 ```
 
-这组补充把墙口消费从“推进后能否回返”扩到“推进前沿是否完整开放”。双格 sticky 是一个刚体二格条，推动下格时上格目标位也必须开放；两个 crate 或单格 sticky 没有这个连带目标位，因此能进入同一目标口。常见误用边界是：上沿墙齿少一格时双格 sticky 也能通过；对象没有 merge 时下格可以独立通过。
+这组补充不只检查推进后能否回返，也检查黏块前沿是否完整开放。双格 sticky 是一个刚体二格条，推动下格时上格的目标位也必须开放；两个 crate 或单格 sticky 没有这个连带目标位，因此能进入同一目标口。上沿墙齿少一格时，双格 sticky 也能通过；对象没有 merge 时，下格可以独立通过。
 
-黏块前沿形状谱补充（B/S 仅材料来源）：
+黏块前沿形状谱补充（B/S 仅负责把箱子变成 sticky）：
 
 机制角色：
 - active_rule：`sticky rigid movement` 与墙口前沿检查。
-- material_source：B/S 在 run 中只负责把 crate 转成 sticky 材料，让 runtime 合法地产生黏块形状。
-- consumer：右侧墙口 / 目标口消费连体块前沿。
+- material_source：B/S 在 run 中只负责把 crate 转成 sticky，让 runtime 合法地产生黏块形状。
+- consumer：右侧墙口 / 目标口检查连体块的整个前沿。
 - incidental：所有相关对象都进入 sticky side 后，B/S 边界不再参与关键观察点。
 - 关键观察点：最后一次右推 sticky 连体块进墙口，结果为 `force_blocked` 或 pass。
 
-`ra_loop_bind_mouth_composition_20260707_01` 先给出竖向二连的窄口对照；`ra_loop_bind_shape_spectrum_20260707_01` 将它补成同一对象行为谱。1 格基线可过；2 格竖条被单格口拒绝、两格口通过；3 格竖条被两格口拒绝、三格口通过；L 形缺前凸角口被拒绝、补前凸角口通过；分离部件不背负上方前沿债。这些结果说明 sticky 刚体进墙口时看整块前沿，不说明 B/S 边界本身在关键观察点发挥作用。
+`ra_loop_bind_mouth_composition_20260707_01` 先给出竖向二连的窄口对照；`ra_loop_bind_shape_spectrum_20260707_01` 将它补成同一对象行为谱。1 格基线可过；2 格竖条被单格口拒绝、两格口通过；3 格竖条被两格口拒绝、三格口通过；L 形缺少前凸角对应开口时被挡，补上该格开口后通过；分开的部件不会被上方墙齿一起挡住。这些结果说明 sticky 刚体进墙口时要检查整块前沿，不说明 B/S 边界本身在关键观察点发挥作用。
 
 前沿通过后的形状把手回位门补充：
 
@@ -653,21 +657,21 @@ consumption probe：
 - material_source：B/S anchor 只让预置 `M` 合法保持 sticky，不参与关键观察点。
 - consumer：右侧前沿口之后的一格外侧侧廊、竖条右侧施力格、L 形凸角右侧把手、2x2 右侧施力位、封闭绕行的墙。
 - incidental：孤立目标只满足 parser；目标覆盖不是本补充的关键观察点。
-- 关键观察点：首步右推都 legal，差异发生在推进后玩家能否到达连体块右侧某个实际施力格并消费它做反向 push。
+- 关键观察点：首步右推都 legal，差异发生在推进后玩家能否到达连体块右侧某个实际站位并向左推回。
 
-这组补充把“墙口消费连体块前沿”继续拆出第二层：前沿完整开放仍不保证可回返，后方路径必须连到一个实际反向施力格。竖向二连中，`side_door_open_return_found` 可回初始，`side_door_closed_no_return` 只短一格侧廊就变成 complete no；`stance_cells_walled_side_door_insufficient` 证明走到附近不够，施力格本身为墙时最终 `right:force_blocked`。
+这组补充继续拆出第二层：前沿完整开放仍不保证可回返，墙后通路必须连到一个玩家真正能站上去并反推的格子。竖向二连中，`side_door_open_return_found` 可回初始；`side_door_closed_no_return` 只少一格侧廊就变成 complete no；`stance_cells_walled_side_door_insufficient` 证明走到附近不够，反推站位本身是墙时最终为 `right:force_blocked`。
 
 3 格 L 形四种旋转确实不同。缺右上角、缺左上角、缺右下角都能用下侧路径接到右侧把手，堵住对应把手后 complete no；其中缺左上角最终 `up:destination_blocked`，缺右下角回返更短。缺左下角必须从上格驱动，除右侧把手外还需要给玩家回到左上驱动位的下方回路；修正回路后 open 为 `found depth=13`，blocked 为 complete no。这说明 L 形的“把手格位置”和“driver 回位路径”都应写成旋钮，而不能只写一个 L 形正例。
 
-2x2 中，`square2_side_face_open_return` 显示单个右侧下格施力位已足以整块反推，`square2_side_face_blocked_no_return` 只堵这个施力位即 complete no；因此“2x2 必须整面外侧余量”应收窄为“至少一个可达施力格 + 整块反推目标格开放”。`explicit_handle_consumption_probe`、`lshape_corner_explicit_handle_consumption`、`square2_explicit_face_consumption` 分别显式消费对应把手。常见 shortcut 是上方或右侧空间过宽时玩家可从其他绕行口到达把手格，`wide_side_loop_shortcut` 和 `lshape_overwide_corner_shortcut` 只作为误用边界。
+2x2 中，`square2_side_face_open_return` 显示玩家只要能站到右侧下格，就足以把整块反推；`square2_side_face_blocked_no_return` 只堵这个站位就变成 complete no。因此“2x2 必须整面外侧留空”应收窄为“至少有一个可达反推站位，而且整块向回移动的目标格都开放”。`explicit_handle_consumption_probe`、`lshape_corner_explicit_handle_consumption`、`square2_explicit_face_consumption` 分别验证了对应操作位。上方或右侧空间过宽时，玩家可能从其他绕行口到达操作位；`wide_side_loop_shortcut` 和 `lshape_overwide_corner_shortcut` 只作为误用边界。
 
-推荐 probe：
+后续可验证的接法：
 
-已补 sticky 1/2/3 格、L 形和分离部件接入前沿墙齿，也已补竖向二连、3 格 L 四旋转和 2x2 在前沿可过后的把手回位门。下一步若继续本条，应换变量：把反向施力格从墙换成 crate / sticky 尾债，比较 `force_blocked`、可推走、merge 或资源移交；不要再单独枚举同一口宽规则的镜像形状。另可把移动边界刷子产出的 `CC`、`C+M`、`C+MM`、竖向 sticky pair 接入同一前沿墙齿目标口，但必须标明移动边界只是 material_source 还是 active_rule。
+已补 sticky 1/2/3 格、L 形和分离部件接入前沿墙齿，也已补竖向二连、3 格 L 四旋转和 2x2 在前沿可过后的回推站位。下一步若继续本条，应把反推站位从墙换成 crate 或剩余 sticky，比较 `force_blocked`、可推走或 merge；不要再单独枚举同一口宽规则的镜像形状。另可把移动边界改写出的 `CC`、`C+M`、`C+MM`、竖向 sticky pair 接入同一前沿墙齿目标口，但必须标明移动边界只是 material_source 还是 active_rule。
 
-组合例句：
+最短接法：
 
-`绑定债 -> 3 格横条 -> 窄口吞掉回返站位`：玩家需要主动多绑定一个箱子，让输出从 2 格条变成 3 格条，才能让墙口产生不可回返承诺。
+`B/S 边界黏合 -> 3 格横条 -> 窄口封住回推站位`：玩家主动多粘一个箱子，把 2 格条变成 3 格条；推进窄口后，玩家走不到另一侧，因此不能再推回来。
 
 证据：
 
@@ -679,12 +683,13 @@ consumption probe：
 
 `run=ra_loop_sticky_handle_return_20260707_01`, `cases=side_door_open_return_found,side_door_closed_no_return,stance_cells_walled_side_door_insufficient,explicit_handle_consumption_probe,wide_side_loop_shortcut,lshape_corner_handle_open_return,lshape_corner_handle_blocked_no_return,lshape_corner_explicit_handle_consumption,lshape_overwide_corner_shortcut,lshape_missing_top_left_open_return,lshape_missing_top_left_blocked_no_return,lshape_missing_bottom_right_open_return,lshape_missing_bottom_right_blocked_no_return,lshape_missing_bottom_left_open_return,lshape_missing_bottom_left_blocked_no_return,square2_side_face_open_return,square2_side_face_blocked_no_return,square2_explicit_face_consumption`, `tags=runtime_observed,bounded_return,bounded_graph,graph_complete,consumption_probe`
 
-## Pull 侧对象可动性：单箱基线与刚体墙口
+## Pull 侧对象可动性：单箱与不同形状黏块
 
-接口卡片：
-- 输入接口：玩家处于 pull side，前格可控，身后一格放单箱、单格 sticky、条形 / L 形 / 2x2 sticky。
-- 输出接口：单箱被拉入玩家旧格；多格 sticky 整体平移、被目标格墙拒绝，或拉过口后留下不同回返把手状态。
-- 最小 consumer：单格墙口袋消费单箱 pull 后站位；目标格墙和把手通路消费多格 sticky 拉动后的状态。
+局面卡片：
+- 开始摆法：玩家位于 pull 侧，身后一格放单箱、单格 sticky、条形、L 形或 2x2 sticky，玩家前方和物体目标格可分别设墙。
+- 关键动作：玩家向前走一格，同时拉动身后的对象。
+- 动后局面：单箱进入玩家旧格；多格 sticky 必须整体平移，任一目标格撞墙都会失败；拉过墙口后还可能到不了反向操作位。
+- 最小用法：单格墙口袋、目标格墙和墙后的通路分别限制玩家去处、黏块去处和能否拉回。
 
 局部结构谱：
 
@@ -716,7 +721,7 @@ consumption probe：
 ###C@.##
 ########
 
-单格 sticky clear pull，作为单格材料 control：
+单格 sticky clear pull，作为单格对照：
 ##########
 #PL#....G#
 #BS#.....#
@@ -862,11 +867,11 @@ post-mouth 把手占用：box-side crate / sticky blocker：
 
 共同解释：
 
-pull 侧对象可动性先由玩家前格决定，再由被拉对象的占格形状决定。单箱的目标格就是玩家腾出的当前格，所以无法独立制造“箱目标格被墙挡”的 `force_blocked`；前格墙会先 `destination_blocked`，前格物体会先 `pull_world_front_blocked`。多格 sticky 则不同：玩家前格开放后，非接触 sticky 格仍有自己的目标格，任一目标格撞墙会让整步 `force_blocked`。拉过墙口后，直接反向输入通常被对象占住玩家前格而关闭，是否能回返取决于能不能绕到实际反向把手格。
+pull 侧对象可动性先由玩家前格决定，再由被拉对象的占格形状决定。单箱的目标格就是玩家腾出的当前格，所以无法独立制造“箱目标格被墙挡”的 `force_blocked`；前格墙会先 `destination_blocked`，前格物体会先 `pull_world_front_blocked`。多格 sticky 则不同：玩家前格开放后，非接触 sticky 格仍有自己的目标格，任一目标格撞墙会让整步 `force_blocked`。拉过墙口后，立刻反向拉通常会被对象占住玩家前格；是否能回返取决于能不能绕到另一侧操作位。
 
 机制角色：
 
-- active_rule：`pull_force`、玩家前格门、单箱目标格等于玩家旧格、多格 sticky 刚体的整体目标格检查、pull 后把手占用物的资源形态差异。
+- active_rule：`pull_force`、玩家前格门、单箱目标格等于玩家旧格、多格 sticky 刚体的整体目标格检查，以及 pull 后操作位被墙、crate 或 sticky 占住时的差异。
 - material_source：crate 是单箱基线；B/S anchor 只让预置 `M` 合法保持 sticky，不参与关键观察点；crate blocker case 中竖向 B/S 只用于让 blocker 保持 box-side crate；P/L 只提供 pull side。
 - consumer：前格墙、前格物体、单格墙口袋、sticky 非接触目标墙、L 形凸齿墙、拉过口后的反向把手通路、box-side crate / sticky blocker。
 - incidental：孤立目标只满足 parser；可达图中的 anchor 移动事件不参与本条关键观察点。
@@ -897,15 +902,15 @@ pull 侧对象可动性先由玩家前格决定，再由被拉对象的占格形
 - `hbar3_axis_pull_clear` / `hbar3_axis_pull_front_wall_blocked`：3 格横条沿轴 pull 没有侧向目标格门；失败墙是玩家前格 `destination_blocked`，clear 变体 complete no。
 - `bar2_post_pull_handle_crate_blocker` / `bar2_post_pull_handle_sticky_blocker`：box-side crate blocker 可被转换/搬运，return found depth 15；sticky blocker merge 成三格 sticky，complete no。
 
-输入 / 输出接口：
+开始摆法与动后局面：
 
-- 输入：玩家处于 pull side，方向前格可被地形或物体控制，身后一格可放单箱或 sticky 连体块。
-- 输出：单箱被抽入玩家旧格；sticky 连体块整体平移或因任一目标格撞墙保持原状；pull 后局部状态可能变成可回返、complete no、或需要绕到另一侧把手。
-- 自然消费：单格墙口袋消费单箱 pull 后站位；墙齿 / 口宽消费 sticky 连体块；墙带或资源占用物消费反向把手通路；push side 回推可作为单箱 pull 的 shortcut / 回返边界。
+- 开始摆法：玩家处于 pull side，方向前格可被地形或物体占住，身后一格可放单箱或 sticky 连体块。
+- 动后局面：单箱被拉入玩家旧格；sticky 连体块整体平移或因任一目标格撞墙保持原状；拉动后可能直接可回返、complete no，或需要绕到另一侧操作位。
+- 后续用法：单格墙口袋会困住拉箱后的玩家；墙齿和口宽会挡住 sticky 连体块；墙、crate 或 sticky 会占住反向操作位；若玩家能绕到 push side，则可能把单箱推回。
 
 设计价值：
 
-这条给后续结构一个基础接口表：什么时候 pull 只是前格门，什么时候开始变成占格门，什么时候拉过以后还需要把手回路。它适合作为 P/L 边界交接、B/S sticky 材料、目标口袋和墙口回返谱系的输入侧，而不是完整关卡骨架。
+这条列出 pull 的基础条件：什么时候只检查玩家前格，什么时候还要检查多格对象的全部目标格，什么时候拉过墙口后还必须能走到另一侧操作位。它适合接到 P/L 边界交接、B/S sticky、目标口袋和墙口回返结构，而不是单独作为完整关卡骨架。
 
 误用边界：
 
@@ -915,15 +920,15 @@ pull 侧对象可动性先由玩家前格决定，再由被拉对象的占格形
 - box-side crate blocker 不能和 sticky blocker 合并解释：crate 可转化 / 搬运后回返，sticky blocker 会 merge 成更大刚体并关闭回返。
 - `returnToInitial.status=not_applicable` 来自非法 replay，不是不可回返证明。
 - 开放大房间会绕回，不能用来证明 pull 后承诺点。
-- 本条现在覆盖了单箱基线、单格 sticky control、2/3 格竖条、3 格横条沿轴、2x2、两个 L 方向、墙 / crate / sticky 把手占用；未把这些扩展写成 backlog 债务。
+- 本条现在覆盖了单箱基线、单格 sticky control、2/3 格竖条、3 格横条沿轴、2x2、两个 L 方向，以及墙 / crate / sticky 占住操作位的情况；这些普通扩展不再写入 backlog。
 
-组合例句：
+最短接法：
 
-`单箱 pull -> 单格口袋 complete no`：玩家能把箱拉进旧站位，但自己被放进墙口袋，墙消费所有出口。
+`单箱 pull -> 单格口袋 complete no`：玩家能把箱拉进旧站位，但自己走进墙口袋，四周墙格封住所有出口。
 
 `sticky 2 格条 -> pull 侧墙口`：玩家前格开放不足以保证动作成立，非接触格目标墙会把整条刚体二格条拒绝。
 
-`post-mouth sticky blocker -> merge lock`：拉过口后的把手通路如果被 sticky 尾债占住，首步会 merge 成更大刚体，回返从 open case 的 found 变成 complete no。
+`post-mouth sticky blocker -> merge lock`：拉过口后的反向操作位如果被另一格 sticky 占住，首步会 merge 成更大刚体，回返从 open case 的 found 变成 complete no。
 
 证据：
 
@@ -933,12 +938,13 @@ pull 侧对象可动性先由玩家前格决定，再由被拉对象的占格形
 
 `run=ra_loop_pull_boundary_mobility_20260708_01_sticky_wall_pull_shape_spectrum`, `cases=bar3_side_pull_mid_wall_blocked,bar3_side_pull_open_mouth,square2_side_pull_lower_wall_blocked,square2_side_pull_open_mouth,l_upper_hook_pull_tooth_blocked,l_upper_hook_pull_notch_open,hbar3_axis_pull_clear,hbar3_axis_pull_front_wall_blocked,bar2_post_pull_handle_open_control,bar2_post_pull_handle_crate_blocker,bar2_post_pull_handle_sticky_blocker`, `tags=runtime_observed,bounded_return,bounded_graph,graph_complete,consumption_probe`
 
-## B/S 移动边界刷产物：远程生成与门口消费
+## B/S 移动边界：箱组变为 CC、C+M 或黏块
 
-接口卡片：
-- 输入接口：可移动 B/S anchor，边界线能扫过远处横条、竖条、L 形、2x2 或双柱资源。
-- 输出接口：`CC`、`C+M`、`C+MM`、2x2 sticky、双柱 sticky 等可送入同一门口的产物。
-- 最小 consumer：门口、低墙和列间隙消费不同刷产物，区分可推进、尾债、连体块封门或分柱推进。
+局面卡片：
+- 开始摆法：可移动 B/S anchor 与远处横条、竖条、L 形、2x2 或双柱箱组位于同一片区域。
+- 关键动作：玩家移动 B/S anchor，让边界扫过远处箱组。
+- 动后局面：远处箱组会变成 `CC`、`C+M`、`C+MM`、2x2 sticky 或两根分开的 sticky 柱。
+- 最小用法：同一门口、低墙或列间隙会允许某些形状通过，并挡住另一些形状；`C+M` 和 `C+MM` 还会在门外留下不同数量的 sticky。
 
 局部结构谱：
 
@@ -961,7 +967,7 @@ pull 侧对象可动性先由玩家前格决定，再由被拉对象的占格形
 #........#
 ##########
 
-边界上刷，绑定成 2x2：
+边界上移，箱组粘成 2x2：
 ##########
 #.......G#
 #.B......#
@@ -970,7 +976,7 @@ pull 侧对象可动性先由玩家前格决定，再由被拉对象的占格形
 #........#
 ##########
 
-同一产物进入门口：
+不同箱组进入同一门口：
 ##########
 #.@.....G#
 #.B......#
@@ -982,85 +988,86 @@ pull 侧对象可动性先由玩家前格决定，再由被拉对象的占格形
 
 共同解释：
 
-移动的是 B/S 边界线，不是远处对象。边界跨过远处占格区域时，远处资源被改写成 `CC`、`C+M`、`C+MM`、2x2 sticky 或双柱 sticky；这些产物进入同一个门口后，会被消费成箱链推进、单箱进门加尾债、占格门封锁或分柱推进。
+移动的是 B/S 边界线，不是远处对象。边界跨过远处箱组时，箱组会变成 `CC`、`C+M`、`C+MM`、2x2 sticky 或两根 sticky 柱。把这些形状送进同一个门口，会分别出现整条箱链推进、只有单箱进门而 sticky 留在外面、2x2 被低墙挡住，或两根柱子分批推进。
 
-输入条件：
+开始条件：
 
 - 有一个可移动 B/S anchor，边界能相对远处占格形状跨线。
 - 远处占格形状可以是横条、竖条、L 形、两行对齐或两行隔列。
-- driver 可以是 push、pull 或力链搬运；除非 driver 造成新的站位门，否则只是输入侧旋钮。
-- 若要正式起作用，需要一个门口、低墙、目标口或通道消费刷产物。
+- B/S anchor 可以由 push、pull 或力链搬运；除非带动方式额外打开或关闭站位，否则只改变边界怎样到达指定行。
+- 边界改写后需要紧接一个门口、低墙、目标口或通道，让不同箱组产生不同动作结果。
 
-输出状态：
+动后局面：
 
 - 下刷可把 sticky 横条回收为 `CC`。
-- 下刷可切出 `C+M` 或 `C+MM`，形成单箱资源加尾债。
-- 上刷可把 crate 行绑定到 sticky 行，形成 2x2 或两个分柱。
-- 门口消费后，产物表现为箱链、尾债、占格门或分批工具。
+- 边界下移可切出 `C+M` 或 `C+MM`：前面的单箱能继续推进，后面留下一格或两格 sticky。
+- 边界上移可把 crate 行粘到 sticky 行，形成 2x2 或两根分开的柱子。
+- 进入门口后，`CC` 整链推进，`C+M` / `C+MM` 留下不同长度的 sticky，2x2 被低墙挡住，双柱可以分批移动。
 
 结构旋钮：
 
 - 边界运动方向：跨线刷 / 沿边界平移。
 - 被扫占格形状：横条 / 竖条 / L 形 / 2x2 候选 / 双柱。
-- 门口消费面：开放口 / 低墙占格门 / 列间隙。
+- 门口形状：完全开放 / 带一格低墙 / 只留列间隙。
 - driver 侧：push B/S、P/L pull B/S、stroke 调位。
 
 变体谱：
 
-- `brush_down_bar_full_release`：输出 `CC`。
-- `brush_down_vertical_partial`：输出 `C+M`。
-- `brush_down_l_tail`：输出 `C+MM`。
-- `brush_parallel_preserve_bar`：沿边界平移，保留 sticky 债。
-- `brush_up_bind_square`：输出 2x2 sticky。
-- `brush_up_gap_keeps_columns`：输出两个柱状 sticky 工具。
+- `brush_down_bar_full_release`：边界下移后为 `CC`。
+- `brush_down_vertical_partial`：边界下移后为 `C+M`。
+- `brush_down_l_tail`：边界下移后为 `C+MM`。
+- `brush_parallel_preserve_bar`：沿边界平移，原 sticky 横条保持不变。
+- `brush_up_bind_square`：边界上移后形成 2x2 sticky。
+- `brush_up_gap_keeps_columns`：边界上移后仍是两个分开的柱状 sticky。
 - `door_cc_chain_push`：`CC` 在门口成为箱链推进。
-- `door_cm_tail_push` / `door_cmm_tail_push`：单箱进入门口，留下不同尾债。
+- `door_cm_tail_push` / `door_cmm_tail_push`：单箱进入门口，门外分别留下一格或两格 sticky。
 - `door_square_blocked_by_low_wall`：2x2 被低墙占格门封住。
-- `door_split_columns_one_column_passes`：分柱产物可先消耗一列。
+- `door_split_columns_one_column_passes`：两根分开的柱子可以先推进其中一列。
 
-自然消费方式：
+可以接着怎么用：
 
-- 接门口：比较 `CC`、`C+M`、`C+MM`、2x2、双柱在同一口的消费差异。
-- 接目标回填：用释放出的 crate 覆盖目标，同时留下或不留下尾债。
+- 接门口：比较 `CC`、`C+M`、`C+MM`、2x2 和双柱在同一开口中能否推进，以及会在门外留下什么。
+- 接目标回填：用变回 crate 的格子覆盖目标，同时比较门外是否还留有 sticky。
 - 接刚体墙口：把上刷生成的大占格形状再交给回返谱系。
 
 常见 shortcut：
 
-- 只移动边界但不提供消费口时，玩家只会看到资源形态变化。
-- 门口太宽会让 `C+M` 和 `C+MM` 的尾债差异不可见。
+- 只移动边界但不接墙口或目标时，玩家只会看到箱组材质和连接形状变化。
+- 门口太宽时，`C+M` 和 `C+MM` 都能轻易通过，门外剩余 sticky 长度的差异不再重要。
 - 低墙少一格时，2x2 占格门可能不再关闭。
 - 把 push 刷和 pull 刷拆成两个顶层条目会重复；它们通常只是 driver 差异。
 
 审美风险：
 
-边界刷很容易变成“远程事件按钮”。它成为玩家洞见的时刻，是玩家意识到自己在选择刷产物，并且这个产物会被下游门口以不同方式消费。
+移动边界很容易变成“远程事件按钮”。真正需要判断的是：边界停在哪一行，会把远处箱组改成什么形状；这个形状随后能不能穿过同一个门口。
 
-consumption probe：
+最小用法验证：
 
-`door_cc_chain_push`、`door_cm_tail_push`、`door_cmm_tail_push`、`door_square_blocked_by_low_wall`、`door_split_columns_one_column_passes` 证明刷产物在同一门口中被消费成不同动作对象。`door_cmm_tail_push` 的回返搜索耗尽，只作为产物状态和动作表证据。
+`door_cc_chain_push`、`door_cm_tail_push`、`door_cmm_tail_push`、`door_square_blocked_by_low_wall`、`door_split_columns_one_column_passes` 证明同一门口会让不同箱组出现不同动作结果。`door_cmm_tail_push` 的回返搜索耗尽，只作为最终摆法和动作表证据。
 
-推荐 probe：
+后续可验证的接法：
 
-补目标回填版本：比较 `CC`、`C+M`、`C+MM` 在同一目标口中是否产生“覆盖目标但留下不同尾债”的差异。
+补目标回填版本：比较 `CC`、`C+M`、`C+MM` 进入同一目标口后，能否覆盖目标，以及门外分别留下几格 sticky。
 
-组合例句：
+最短接法：
 
-`移动边界刷子 -> 门口消费谱 -> 目标回填`：玩家先移动 B/S 边界选择刷产物，再把刷产物送入同一门口；错误产物要么占格形状被墙挡住，要么留下无法处理的尾债。
+`移动 B/S 边界 -> 箱组过门 -> 目标回填`：玩家先移动边界，把远处箱组改成所需形状，再把它送入门口；形状选错时，要么整块被墙挡住，要么在门外留下无法继续推动的 sticky。
 
 证据：
 
 `run=ra_struct_boundary_pull_01,ra_struct_consumption_01`, `cases=brush_down_bar_full_release,brush_down_vertical_partial,brush_down_l_tail,brush_parallel_preserve_bar,brush_up_bind_square,brush_up_gap_keeps_columns,door_cc_chain_push,door_cm_tail_push,door_cmm_tail_push,door_square_blocked_by_low_wall,door_split_columns_one_column_passes`, `tags=runtime_observed,bounded_return,graph_complete,consumption_probe`
 
-输入侧补充：
+带动方式补充：
 
-`pull_brush_*` 与 `pull_brush_stroke_selector` 不作为独立顶层条目。它们说明同一移动边界刷子可以由 P/L pull 驱动，并能用距离 / stroke 调位；除非 driver 产生新的消费关系，否则归入本条输入侧。
+`pull_brush_*` 与 `pull_brush_stroke_selector` 不作为独立顶层条目。它们说明同一 B/S 边界可以由 P/L pull 带动，并用拉动距离决定停位；除非这种带动方式额外打开或关闭站位，否则仍归入本条的开始摆法。
 
-## P/L 长轴墙廊：L 端余量棘轮
+## P/L 锚点在横廊中的可动性
 
-接口卡片：
-- 输入接口：水平 P/L 位于一格高长轴墙廊，P 侧 push 或 L 侧 pull，端点余量可控。
-- 输出接口：首步非法、一次性停位、多次推进能力、pull 后回返门或 mixed-chain 尾墙。
-- 最小 consumer：墙廊端点余量和 pull 后出口消费 P/L anchor 的停位能力。
+局面卡片：
+- 开始摆法：水平 P/L 锚点位于一格高的横廊中，P 端或 L 端前方留有 0、1 或 2 格空位。
+- 关键动作：玩家从 P 侧推，或从 L 侧拉动锚点。
+- 动后局面：前方没有空位时不能移动；一格空位只能移动一次；两格空位可以连续移动两次。拉动后，出口墙还可能让玩家无法返回。
+- 最小用法：横廊端点和拉动后的出口决定锚点能移动几格，以及这次移动是不是一次性的。
 
 局部结构谱：
 
@@ -1091,13 +1098,13 @@ consumption probe：
 
 水平 P/L 在长轴墙廊中表现为朝 L 端消耗空间的棘轮。L 端余量决定推进次数，侧廊只增加玩家位置集合，不自动恢复反向长轴控制。
 
-输入条件：
+开始条件：
 
 - 水平 P/L anchor 位于一格高墙廊或近似墙廊中。
 - 玩家从 P 侧沿长轴 push。
 - L 端前方空格数量可控，侧廊是否开放可控。
 
-输出状态：
+动后局面：
 
 - 0 格余量：首步 illegal。
 - 1 格余量：首推合法，但动作后不能继续向前，也不能回初始。
@@ -1110,7 +1117,7 @@ consumption probe：
 - 侧廊是否开放。
 - 玩家能否绕到 L 侧但没有长轴反向 force。
 
-自然消费方式：
+可以接着怎么用：
 
 - 用作停位容量：控制 P/L 只能移动 0 次、1 次或多次。
 - 用作一次性开关或门闩：移动后占据/释放某个通道。
@@ -1124,19 +1131,19 @@ consumption probe：
 
 审美风险：
 
-如果只是让玩家推一次 P/L，它像机制教学。它成为洞见时，玩家需要估计 L 端余量，把 P/L 当作容量有限的位移资源。
+如果只是让玩家推一次 P/L，它像机制教学。真正需要判断的是 L 端还剩几格空位：前方留一格只能移动一次，留两格才能连续移动两次。
 
-consumption probe：
+最小用法验证：
 
-`long_axis_one_front_cell`、`long_axis_two_front_cells`、`long_axis_side_bypass_still_one_way` 证明墙廊和 L 端余量实际消费了 P/L 长轴位移；`side_bypass` 证明绕行不是 shortcut。
+`long_axis_one_front_cell`、`long_axis_two_front_cells`、`long_axis_side_bypass_still_one_way` 证明墙廊长度和 L 端空位数确实决定 P/L 能移动几次；`side_bypass` 证明玩家绕到侧面也不能改变锚点前方没有空位这一事实。
 
-推荐 probe：
+后续可验证的接法：
 
-把 P/L 单向位移接到 B/S 移动边界刷子，验证“棘轮位移作为 driver”是否能形成 recipe，而不是只重复刷子输入侧。
+把 P/L 单向位移接到 B/S 移动边界，验证一次性移动能否把边界准确带到某一行，而不是只重复边界改写本身。
 
-组合例句：
+最短接法：
 
-`P/L 长轴棘轮 -> B/S 边界刷产物`：P/L 的一次性位移把 B/S anchor 带到刷线位；玩家必须接受 P/L 回不去，换取正确刷产物。
+`P/L 锚点在横廊中的可动性 -> B/S 移动边界`：P/L 只能移动一次，并把 B/S anchor 带到指定行；玩家无法把 P/L 推回去，但边界会停在能改出正确箱组的位置。
 
 证据：
 
@@ -1176,12 +1183,12 @@ crate + P/L 混合链，一格尾余量只够首推：
 ########
 ```
 
-L 侧 pull 版把“余量”从 anchor 远端改写成玩家前格余量：0 格是 `destination_blocked`，1 格给一次 `pull_object:push_pull_anchor + anchor_boundary_shift:push_pull`，2 格给两次。首拉以后，侧廊开放只扩大玩家位置集合，不自动恢复初始 anchor key；回返门墙则消费首拉后的出口。混合链补谱显示 crate 参与同一 force chain 时，会把 anchor-only 的长轴容量缩短一格：`force_chain:n2 + anchor_boundary_shift:push_pull` 后，下一次同向推进被尾墙 `force_blocked`。
+L 侧 pull 版检查玩家前方还剩几格：0 格是 `destination_blocked`，1 格只能拉一次，2 格可以拉两次。第一次拉动后，侧廊开放只让玩家多走几个位置，不会自动把 anchor 送回初始位置；出口墙则会封住玩家的返回路线。若 crate 与 anchor 同时进入 force chain，它会多占一格行程：`force_chain:n2 + anchor_boundary_shift:push_pull` 后，下一次同向推进被尾墙 `force_blocked`。
 
 机制角色补充：
 
 - active_rule：`pull_force` / `push_force` 移动 P/L anchor 本体；`forceModeAt` 决定玩家当前是 push 还是 pull；混合链中 `planObjectMove` 把 crate 与 P/L 放进同一 force chain。
-- material_source：crate 只作为 mixed-chain 的链材料；目标 `G` 只满足解析。
+- material_source：crate 只用于组成 mixed chain；目标 `G` 只满足解析。
 - consumer：玩家前格墙、L 侧 pull 的前格余量、首拉后的回返门墙、mixed-chain 尾墙。
 - incidental：侧廊中的 walk 和可达图旁支只用于校准 shortcut，不参与标题归属。
 
@@ -1200,12 +1207,13 @@ L 侧 pull 版把“余量”从 anchor 远端改写成玩家前格余量：0 �
 
 `run=ra_loop_pl_anchor_wall_mobility_20260708_01_pl_anchor_mixed_force_chain_wall`, `cases=p_push_crate_into_anchor_tail_wall_after_one,p_push_anchor_into_crate_tail_wall_after_one,anchor_only_two_steps_capacity_control`, `tags=runtime_observed,bounded_graph,graph_complete,consumption_probe`
 
-## P/L 横向把手：玩家前格门与锚点占格门
+## P/L 横向把手：玩家前格与锚点目标格
 
-接口卡片：
-- 输入接口：横向或竖向 P/L anchor，P 侧 push 或 L 侧 pull 站位，各半格目标格、玩家前格和回返前格可控。
-- 输出接口：合法移动、玩家前格关闭、P/L 半格目标格关闭、移动后回返门关闭，或 carried crate 目标门。
-- 最小 consumer：相邻墙格矩阵分别消费玩家前格、锚点半格目标格和移动后回返格。
+局面卡片：
+- 开始摆法：横向或竖向 P/L anchor 位于玩家身边；玩家前格、P 半格目标格、L 半格目标格和移动后的返回格可分别设墙。
+- 关键动作：玩家从 P 侧推或从 L 侧拉锚点。
+- 动后局面：玩家前格被墙占住时无法拉；任一锚点目标格被墙占住时整块无法移动；首步成功后，返回格仍可能被墙关闭。
+- 最小用法：相邻墙格分别检验玩家要走的格子、锚点两半要去的格子和移动后的返回路线。
 
 局部结构谱：
 
@@ -1251,13 +1259,13 @@ L 侧拉出，玩家前格开放但 P 半格目标被墙挡：
 
 横向 P/L 的垂直位移有两套把手：P 侧接触推入，L 侧离开式拉出。两者都要求 P/L 两个半格的目标格同时开放；pull 还额外要求玩家前格开放。墙格因此分成玩家前格门、锚点另一半目标门、推动后的回返门。
 
-输入条件：
+开始条件：
 
 - P/L anchor 横放，玩家位于 P 侧推入或 L 侧拉出站位。
 - P/L 上下目标格和玩家 pull 前格可被墙格分别控制。
 - 有或没有绕行回返通路。
 
-输出状态：
+动后局面：
 
 - 首步合法并可回返。
 - 首步被玩家前格门关闭，`destination_blocked`。
@@ -1271,7 +1279,7 @@ L 侧拉出，玩家前格开放但 P 半格目标被墙挡：
 - 未接触的另一半 anchor 目标格是否为空。
 - 首步后的反向把手格是否开放。
 
-自然消费方式：
+可以接着怎么用：
 
 - 用作把手分类器：同样看似相邻的墙格，关闭的是玩家动作、对象占格目标，还是回返。
 - 接移动边界刷子：P/L 可以作为 driver，但要先判断前格门和占格门。
@@ -1287,15 +1295,15 @@ L 侧拉出，玩家前格开放但 P 半格目标被墙挡：
 
 如果只展示 P 侧推 / L 侧拉，是规则教学；如果玩家必须识别“哪个墙格实际关掉哪个门”，才会成为空间洞见。
 
-consumption probe：
+最小用法验证：
 
-`p_side_push_down_other_half_wall`、`l_side_pull_up_front_wall`、`l_side_pull_up_p_target_wall` 证明不同墙格消费的是不同门；`p_side_push_down_l_front_wall_after_shift` 证明首步后回返门也能被消费。
+`p_side_push_down_other_half_wall`、`l_side_pull_up_front_wall`、`l_side_pull_up_p_target_wall` 证明不同墙格分别挡住玩家前格或锚点目标格；`p_side_push_down_l_front_wall_after_shift` 证明首步成功后，返回路线仍可能被另一格墙封住。
 
-推荐 probe：
+后续可验证的接法：
 
-把该把手门接入 B/S 移动边界刷子，比较同一刷产物在 push driver 与 pull driver 下是否出现不同 shortcut。
+把这些墙位接到 B/S 移动边界，比较从 push 侧或 pull 侧带动锚点时，是否能停到同一行，或从侧路绕过原本的限制。
 
-组合例句：
+最短接法：
 
 `P/L 横向把手门 -> 移动边界刷子`：玩家需要先打开正确 pull 前格或占格门，才能把 B/S anchor 抽到刷线位。
 
@@ -1419,8 +1427,8 @@ actions: up -> force_blocked
 补充变体：
 
 - `h_p_push_down_open_return`：P 侧 push 下移 `PL`，再从旧 L 格 pull 回返，两次 `anchor_boundary_shift:push_pull`。
-- `h_p_push_down_p_target_wall` / `h_p_push_down_l_target_wall`：同为 `force_blocked`，但分别消费 P 半格目标门和 L 半格目标门。
-- `h_l_pull_down_front_wall` / `h_l_pull_down_p_target_wall`：分别消费 pull 玩家前格门和非接触 P 半格目标门。
+- `h_p_push_down_p_target_wall` / `h_p_push_down_l_target_wall`：同为 `force_blocked`，但分别是 P 半格或 L 半格的目标格撞墙。
+- `h_l_pull_down_front_wall` / `h_l_pull_down_p_target_wall`：分别是玩家前格撞墙，或非接触的 P 半格目标格撞墙。
 - `h_p_push_down_return_front_wall`：首步已移动 anchor，回返 pull 才被 `destination_blocked`。
 - `v_p_push_right_open` / `v_p_push_left_open`：竖放 `P/L` 的 P 侧左右开放 push 对称。
 - `l_pull_anchor_carries_side_crate_open` / `l_pull_anchor_front_wall_gate` / `l_pull_anchor_crate_target_wall_gate`：mixed pull 正例和两类墙门反例。
@@ -1436,12 +1444,13 @@ actions: up -> force_blocked
 
 `run=ra_loop_pl_anchor_wall_mobility_20260708_01_pl_anchor_mixed_force_chain_wall`, `cases=l_pull_anchor_carries_side_crate_open,l_pull_anchor_front_wall_gate,l_pull_anchor_crate_target_wall_gate`, `tags=runtime_observed,bounded_graph,graph_complete,consumption_probe`
 
-## P/L 锚点边界重写：旧半格把手与侧边对象改侧
+## P/L 锚点移位：腾出旧半格并改变推拉侧
 
-接口卡片：
-- 输入接口：P/L anchor 至少移动到能释放旧半格或扫过侧边对象的位置，玩家能到达新把手。
-- 输出接口：旧 L 半格变成新 push 站位；侧边 crate 从 L 侧前格阻断变成 P 侧 push 资源。
-- 最小 consumer：单格目标袋消费旧半格新把手，侧边 crate relay 消费边界重写后的对象侧别。
+局面卡片：
+- 开始摆法：P/L anchor 旁有一处被旧 L 半格占住的位置，或有一只紧邻旧边界的 crate。
+- 关键动作：玩家先移动 P/L anchor，再走到锚点原来占住的位置或侧边箱旁。
+- 动后局面：旧 L 半格腾空，成为新的 push 站位；原来位于 L 侧、挡住拉动的 crate 可能落到新边界的 P 侧，可以从另一方向推动。
+- 最小用法：新站位让玩家能把箱推进单格目标袋；侧边 crate 也能接着推动另一组对象。
 
 局部结构谱：
 
@@ -1519,27 +1528,27 @@ down 后，P/L 与下方 crate 同链下移：
 
 共同解释：
 
-P/L anchor 移动不是只改变二格物体的位置。它会同步改写 `forceModeAt` 的分界线，并释放旧占格位置。若旧 L 半格或旧 L 行旁对象正好接着一个后续 consumer，玩家可以把这个被释放 / 被重标的位置当作新 push 侧把手。墙可以消费这条链的不同段：挡住第二次 anchor shift、挡住 pull driver 的玩家前格，或让不移动锚点的对照停在 `pull_world_front_blocked`。
+P/L anchor 移动不只改变二格物体的位置，也会移动 `forceModeAt` 的分界线，并腾出旧半格。玩家可以站进这个新空格，从 push 侧继续推附近对象；原来位于 L 侧的邻箱也可能随着边界移动落到 P 侧。墙可以分别挡住第二次 anchor shift、pull 时玩家要走的前格，或让不移动锚点的对照停在 `pull_world_front_blocked`。
 
 机制角色：
 
 - active_rule：P/L anchor 本体移动导致 `forceModeAt` 边界重写；第二动作在新 push side 中触发 `push_force`。
-- material_source：crate / goal 是第二动作 consumer 材料；mixed chain 中的下方 crate 是移动 P/L 的链材料。
+- material_source：crate / goal 用于验证第二动作；mixed chain 中的下方 crate 与 P/L 一起进入力链。
 - consumer：第二停位墙、pull 前格墙、旧 L 下方目标袋、侧边 crate、玩家右侧站位和绕行通路。
 - incidental：目标覆盖胜利、可达图里的其他 force-chain 旁支不参与关键观察点。
 - 关键观察点：`anchor_boundary_shift:push_pull` 之后，后续动作从“普通 walk / L 侧 front-block”变成 `push_object:crate#1` 或 mixed push chain。
 
-输入条件：
+开始条件：
 
 - P/L anchor 沿某方向至少能移动到会释放旧半格或扫过目标行 / 列的位置。
 - 玩家能到达被释放旧 L 半格，或能到达被新边界重标的侧边对象把手。
-- 该旧格 / 侧边对象旁有一个必须由新 force side 消费的后续结构，例如目标袋、侧边 crate 或门闩。
+- 旧半格或侧边对象旁有目标袋、crate 或门闩，只有边界移动后才能从新的 push 侧操作。
 
-输出状态：
+动后局面：
 
 - 旧 L 半格从 occupied anchor cell 变成新 push side 操作站位。
 - mixed chain 下移后，旧 L 行侧边 crate 从 L 侧 pull front gate 变成 P 侧 push chain。
-- 第二动作产生普通 `push_object` 或 `force_chain:n2 + anchor_boundary_shift:push_pull`，证明新边界被实际消费。
+- 第二动作产生普通 `push_object` 或 `force_chain:n2 + anchor_boundary_shift:push_pull`，证明玩家确实利用了移动后的边界方向。
 
 结构旋钮：
 
@@ -1547,9 +1556,9 @@ P/L anchor 移动不是只改变二格物体的位置。它会同步改写 `forc
 - 移动量：一次 shift 只释放错位格，两次 shift 才生成旧 L 把手。
 - 墙位：第二停位墙、pull 玩家前格墙。
 - consumer：目标袋、侧边 crate、后续门口。
-- 绕行通路：pull driver 或 mixed rewrite 后是否能到达消费站位。
+- 绕行通路：pull driver 或 mixed rewrite 后，玩家是否能走到新的操作位。
 
-自然消费方式：
+可以接着怎么用：
 
 - 目标袋：旧 L push 站位把 crate 推入单格目标。
 - 侧边 relay：mixed downshift 后，用新 P 侧把侧边 crate 推入 / 推出 anchor 邻域。
@@ -1566,11 +1575,11 @@ P/L anchor 移动不是只改变二格物体的位置。它会同步改写 `forc
 
 如果后续对象不需要新边界就能处理，这条会退化成“推了锚点”。它成为洞见时，玩家必须主动移动 P/L anchor 来制造一个原先不存在的操作侧别。
 
-consumption probe：
+最小用法验证：
 
 `push_two_shift_old_l_push_crate_goal` 和 `pull_two_shift_old_l_push_crate_goal` 都把旧 L 半格重写为 push 站位并推箱进目标；`push_second_shift_wall_blocks_rewrite`、`pull_second_shift_front_wall_blocks_rewrite` 和 `push_one_shift_only_walks_not_consume` 校准移动量和墙门。`mixed_downshift_rewrites_side_crate_to_push` 与 `no_shift_side_crate_pull_front_gate` 证明 mixed-chain 移动 P/L 后，同一侧边 crate 触碰从 L 侧 front-block 变成 P 侧 push chain。
 
-组合例句：
+最短接法：
 
 `P/L anchor 双步位移 -> 旧 L push 站位 -> 单格目标袋`：玩家先把 P/L anchor 推/拉过目标把手位，释放旧 L 半格并把它改写成 push side，再用这个新把手把箱子推进目标。
 
@@ -1582,12 +1591,13 @@ consumption probe：
 
 `run=ra_loop_pl_anchor_wall_mobility_20260708_01_pl_anchor_mixed_force_chain_wall`, `cases=mixed_downshift_rewrites_side_crate_to_push,no_shift_side_crate_pull_front_gate`, `tags=runtime_observed,bounded_graph,graph_complete,consumption_probe`
 
-## P/L pull 抽取把手：前格门、占格目标门与扫带
+## P/L pull 抽取：玩家前格、对象目标格与侧向扫带
 
-接口卡片：
-- 输入接口：玩家在 pull 侧，身后有 crate、B/S anchor 或其他二格对象，前格和对象目标格可控。
-- 输出接口：单格抽取、沿轴二格整体抽出、垂直二格因侧向目标位开闭、侧向 crate 扫带资源。
-- 最小 consumer：玩家前格墙、对象侧向目标墙和侧向 crate 分别消费 pull 抽取的三层门。
+局面卡片：
+- 开始摆法：玩家位于 pull 侧，身后有 crate、B/S anchor 或其他二格对象；玩家前方和对象要移入的格子可分别设墙或放箱。
+- 关键动作：玩家向前走一格，把身后的对象拉出。
+- 动后局面：单箱或沿轴二格对象可以被拉出；垂直二格对象还要求侧向目标格空着；侧边若是可动 crate，它会被一起推走。
+- 最小用法：玩家前格墙、对象目标格墙和侧边 crate 分别决定拉动失败、整体抽出或连带推箱。
 
 局部结构谱：
 
@@ -1638,21 +1648,21 @@ consumption probe：
 
 共同解释：
 
-pull 抽取不是“身后有对象即可”。它拆成三层门：玩家前格门、对象占格目标门、侧向 blocker 的可移动性。单 crate 和沿轴二格物体主要消耗玩家前格；垂直二格物体还需要侧向目标位；侧向目标位放墙会封门，放 crate 会变成扫带资源。
+pull 抽取不是“身后有对象即可”。它要依次检查三处：玩家前格、对象所有目标格，以及侧边 blocker 能不能移动。单 crate 和沿轴二格物体主要检查玩家前格；垂直二格物体还需要侧向目标位；侧向目标位放墙会挡住整次拉动，放 crate 则会把 crate 一起推走。
 
-输入条件：
+开始条件：
 
 - 玩家处于 pull 侧，身后有 crate、B/S anchor 或其他可拉对象。
 - 玩家前格必须可进入。
 - 被拉对象每个占格目标格必须可用，或可由 force chain 推走。
 - 侧向 blocker 类型可控：墙、crate、sticky 或空格。
 
-输出状态：
+动后局面：
 
 - 单格对象被抽入玩家旧格。
 - 沿轴二格 anchor 被整体抽出。
 - 垂直二格 anchor 因侧向目标位开放/封闭而合法或非法。
-- 侧向 crate 被同步扫带，成为额外资源移交。
+- 侧向 crate 被同步推走，停到新的格子。
 
 结构旋钮：
 
@@ -1661,11 +1671,11 @@ pull 抽取不是“身后有对象即可”。它拆成三层门：玩家前格
 - 侧向目标位：空格 / 墙 / 可移动 crate。
 - 抽取后前格是否被新对象反向封住。
 
-自然消费方式：
+可以接着怎么用：
 
 - 用作 B/S anchor 的远程把手。
-- 用作口袋资源抽取器：把 crate 拉到玩家旧位。
-- 用作侧向扫带：把本来封闭的对象目标格变成同步移动资源。
+- 用作口袋抽箱：把 crate 拉到玩家旧位。
+- 用作侧向扫带：把原本挡在对象目标格上的 crate 一起推到旁边。
 
 常见 shortcut：
 
@@ -1677,15 +1687,15 @@ pull 抽取不是“身后有对象即可”。它拆成三层门：玩家前格
 
 单 crate 抽取本身偏基础；垂直二格对象与侧向 blocker 的比较更像可设计语料，因为玩家需要理解“拉动时对象整个占格形状都要有去处”。
 
-consumption probe：
+最小用法验证：
 
-`pull_crate_front_wall` 消费玩家前格；`pull_bs_vertical_side_wall` 消费对象占格目标格；`pull_bs_vertical_side_sweep_crate` 把封门格改成扫带资源，证明侧向 blocker 类型改变后续动作集合。
+`pull_crate_front_wall` 由玩家前格墙挡住；`pull_bs_vertical_side_wall` 由对象目标格墙挡住；`pull_bs_vertical_side_sweep_crate` 把同一格墙换成可动 crate 后，crate 会被一起推走，证明侧边 blocker 的类型会改变合法动作。
 
-推荐 probe：
+后续可验证的接法：
 
-把侧向 blocker 从 crate 换成 sticky 部件，比较扫带后是资源移交、刚体合并，还是占格关闭。
+把侧向 blocker 从 crate 换成 sticky 部件，比较它会被一起带走、与原黏块合并，还是因为目标格被占而完全拉不动。
 
-组合例句：
+最短接法：
 
 `P/L pull 抽取把手 -> B/S 移动边界刷子`：玩家先用 pull 抽出 B/S anchor，再让边界线跨过远处占格形状；如果前格或侧向目标位放错，刷子无法启动或产生扫带 shortcut。
 
@@ -1693,12 +1703,13 @@ consumption probe：
 
 `run=ra_struct_boundary_pull_01`, `cases=pull_crate_pocket_extract,pull_crate_front_wall,pull_bs_horizontal_axis,pull_bs_vertical_side_open,pull_bs_vertical_side_wall,pull_bs_vertical_side_sweep_crate`, `tags=runtime_observed,bounded_return,graph_complete,consumption_probe`
 
-## P/L 边界交接：推入、跨侧与抽取分配
+## P/L 边界交接：从 P 侧推入，再从 L 侧拉回
 
-接口卡片：
-- 输入接口：单箱、箱链或 sticky 连体块位于 P/L 边界邻域，玩家能先在 P 侧推入再跨到 L 侧把手位。
-- 输出接口：单箱被拉入玩家旧格，箱链只抽近端并留下残余链，sticky group 成功 handoff 或被前格 / 目标格门拒绝。
-- 最小 consumer：目标口袋消费单箱 handoff，链端抽取打开下方单格口，墙格分类 sticky handoff 的前格和目标格门。
+局面卡片：
+- 开始摆法：单箱、箱链或 sticky 连体块位于 P/L 边界旁，玩家能从 P 侧推到边界，再走到 L 侧操作位。
+- 关键动作：玩家先推对象跨到边界附近，再从 L 侧把身后一格的对象拉回。
+- 动后局面：单箱进入玩家旧格；箱链只拉回近端箱，远端箱仍留在原处；sticky 连体块必须整体有空位才能拉回。
+- 最小用法：单箱可以被拉进目标口袋；拉走箱链近端后会打开原来被箱占住的单格口；墙格会挡住 sticky 连体块的目标格。
 
 局部结构谱：
 
@@ -1733,7 +1744,7 @@ consumption probe：
 
 共同解释：
 
-这条不是 “P 侧能推、L 侧能拉” 的规则复述。它的接口是边界交接：玩家先在 P 侧把对象送到 P/L 边界邻域，再实际跨到 L 侧，让同一个局部状态改用 pull 语义消费。单箱会被拉入玩家旧格；箱链在 P 侧整体 `force_chain`，到 L 侧只抽身后一格近端；sticky group 在 L 侧还要检查整个连体块形状的目标格。墙、目标口袋、前格占用和下游单格口决定这次交接是成功、封门、形状失败还是资源分配。
+这条不是“P 侧能推、L 侧能拉”的规则复述。玩家先在 P 侧把对象推到边界旁，再走到 L 侧拉回同一个对象。单箱会进入玩家旧格；箱链在 P 侧整条移动，到 L 侧却只拉回身后一格的近端箱；sticky 连体块则必须整体有空位才能拉回。目标口袋、玩家前格墙、连体块目标格墙和箱链下方的单格口分别决定拉回后会发生什么。
 
 机制角色：
 
@@ -1742,16 +1753,16 @@ consumption probe：
 - consumer：L 侧玩家前格、目标口袋、下方单格口、sticky 非接触目标墙、边界跨侧通路、回返把手。
 - incidental：P/L anchor 在本条中通常被隔离，只提供边界判定；可达图中的 anchor 移动事件不参与关键观察点。若 P/L anchor 本体被移动并重写旧半格 / 侧边对象侧别，归入 `P/L 锚点边界重写`。
 
-输入条件：
+开始条件：
 
 - 对象必须位于或能被送到 P/L 边界邻域；玩家需要能从 P 侧实际跨到 L 侧把手位。
 - P 侧有合法 push 入口：单箱、箱链或 sticky 连体块能被推到边界相邻格。
 - L 侧 pull 入口必须满足玩家前格开放，且多格连体块的所有目标格可用。
 
-输出状态：
+动后局面：
 
-- 单箱：P 侧 handoff 后，L 侧 pull 把 crate 拉入玩家旧格；目标口袋可直接消费这个旧格。
-- 多箱链：P 侧整链移动；L 侧只抽近端箱，远端残余链留下，链长改变残余资源数量。
+- 单箱：P 侧推入后，L 侧 pull 把 crate 拉入玩家旧格；若旧格是目标，箱子会直接覆盖目标。
+- 多箱链：P 侧整链移动；L 侧只拉回近端箱，远端箱仍留在边界另一侧；链长决定留下几只箱子。
 - sticky group：P 侧可把连体块送到边界；L 侧可继续抽出，或被前格墙 / 占格目标墙分类拒绝。
 - 可逆 handoff：跨界 sticky 横条可用 P 侧 push 打开 L 侧把手，再由 L 侧 pull 回原状，证明这类交接不必然单向。
 
@@ -1763,10 +1774,10 @@ consumption probe：
 - 下游 consumer：目标口袋、下方单格口、回返把手。
 - 链长：二箱留下一个残余箱，三箱留下两个残余箱。
 
-自然消费方式：
+可以接着怎么用：
 
 - 目标口袋：玩家站在目标上不算覆盖，L 侧 pull 把单箱拉到目标后才覆盖。
-- 资源分配：P 侧推链打包，L 侧抽近端，把远端链留给另一个结构。
+- 箱链拆分：P 侧推动整条箱链，L 侧只拉回近端箱，把远端箱留给另一处目标或门口。
 - 口袋开门：抽走近端箱打开原本被箱占住的单格口。
 - 门控分类：同一 P-side handoff 后，L 侧前格墙给 `destination_blocked`，sticky 占格目标墙给 `force_blocked`。
 
@@ -1778,16 +1789,17 @@ consumption probe：
 - `returnToInitial.status=exhausted` 只能写 unknown；本轮二箱 / 三箱抽取正例不能声称不可回返。
 - P/L anchor mixed chain 已另有本体语料；不要把锚点移动后的边界重写塞回普通对象 handoff。
 
-consumption probe：
+最小用法验证：
 
-`plb_04_goal_pocket_shortcut` 消费单箱边界 handoff：P 侧只能把 crate 交到 L 侧边界邻域，L 侧 pull 把 crate 拉进玩家旧站位的目标口袋。`pl_chain2_pull_opens_lower_pocket` 消费多箱链端抽取：L 侧抽走近端箱后，原本被箱占住的下方单格口打开，玩家可进入口袋。sticky 变体的前格墙和 L 形占格目标墙是 handoff gate 的反例 / correction，不单独作为新顶层。
+`plb_04_goal_pocket_shortcut` 验证单箱交接：P 侧只能把 crate 推到边界旁，L 侧 pull 再把 crate 拉进玩家旧站位上的目标。`pl_chain2_pull_opens_lower_pocket` 验证箱链拆分：L 侧拉走近端箱后，原本被箱占住的下方单格口打开，玩家可以进入口袋。sticky 变体中的玩家前格墙和 L 形目标格墙只是边界修正，不单独作为新顶层。
 
-### 边界活塞本体谱：单箱退化、箱链残余债与 sticky 形状墙口
+### 边界活塞的对象差异：单箱、箱链与黏块
 
-接口卡片：
-- 输入接口：P/L anchor 提供竖向边界，玩家站在 P 侧并面向边界相邻对象；活塞本体可以是单箱、箱链、二格 sticky 横条或 L 形 sticky。
-- 输出接口：第一手 P 侧 push 把本体推出并把玩家送到 L 侧把手位；第二手 L 侧 pull 可能精确回撤、只抽近端、整体回撤，或被 sticky 目标格墙拒绝。
-- 最小 consumer：紧接的 `left` pull 消费“玩家已跨到 L 侧”的状态；侧齿和前沿墙消费 sticky 刚体目标格；箱链残余债可作为第二段目标袋、刷线停位或回返门输入。
+局面卡片：
+- 开始摆法：P/L anchor 形成竖向边界，玩家站在 P 侧；边界旁放单箱、箱链、二格 sticky 横条或 L 形 sticky。
+- 关键动作：玩家先向右推对象并跨到 L 侧，再立即向左拉回身后的对象。
+- 动后局面：单箱会回到原位；箱链只拉回近端箱，远端箱留在右侧；sticky 连体块整体回撤，任一目标格撞墙都会失败。
+- 最小用法：侧齿和前沿墙可以区分不同 sticky 形状；箱链留下的远端箱可以继续进入目标袋、挡住通路或确定边界停位。
 
 局部结构谱：
 
@@ -1847,27 +1859,27 @@ L 形宽口：移除侧齿后恢复 right,left 往复
 
 共同解释：
 
-这组不是单独新规则，而是 `P/L 边界交接` 的活塞化读法：第一手把对象送入边界邻域，同时把玩家换到 L 侧；第二手立即读出本体的对象模型。crate 链在 P 侧被整体推，在 L 侧只抽身后一格近端；sticky 连体块在 L 侧作为刚体整体回撤，且整个目标格集合会被墙消费。
+这组不是单独新规则，而是 `P/L 边界交接` 的两步活塞摆法：第一手把对象推到边界旁，同时把玩家送到 L 侧；第二手立即向回拉。crate 链在 P 侧整体移动，在 L 侧只拉回近端箱；sticky 连体块则整体回撤，任何一个目标格撞墙都会失败。
 
 对照关系：
 
-- `C` vs `CC`：单箱两步回初态；箱链两步后留下远端残余债，说明本体长度和对象可分离性改变输出。
+- `C` vs `CC`：单箱两步回到初态；箱链两步后仍有远端箱留在右侧，说明对象长度和能否拆开会改变动后摆法。
 - `CC` vs `MM`：二者第一手都能被推入，但箱链第二手只抽近端，sticky 横条第二手整体回撤。
-- `MM` vs L 形：同一侧齿对横条无效，对 L 形下凸格有效，说明墙消费的是 sticky 形状目标格。
+- `MM` vs L 形：同一侧齿不挡横条，却会挡住 L 形的下凸格，说明墙检查的是 sticky 整块的目标格。
 - L 形侧齿 vs L 形宽口：移除侧齿后 L 形恢复往复，排除“L 形不能活塞”的错误解释。
 - 横条侧齿 vs 横条前沿墙：侧齿不在目标格时无效；前沿墙落在伸出 stroke 目标格时直接 `force_blocked`。
 
-输入条件：
+开始条件：
 
 - 玩家必须能从 P 侧完成第一手 push，并在动作后进入 L 侧可拉位置。
 - 本体必须紧贴边界交接位；否则只是普通 push / pull。
 - sticky 变体需要整块目标格开放；箱链变体需要远端位置能接住第一手整链 push。
 - 墙齿必须落在实际目标格集合里；离目标格一格的墙只能作地形背景。
 
-输出状态：
+动后局面：
 
 - 单箱：可作为退化基线，证明两步活塞路径存在，但没有 downstream consumer 时不单独成语料。
-- 箱链：留下近端抽取后的残余箱链债，适合作为第二段资源分配输入。
+- 箱链：拉回近端箱后，远端箱仍留在另一侧，可继续进入第二个目标袋或挡住另一条路。
 - sticky 横条：整体伸出 / 回撤，适合作为可逆门或 B/S 刷线 driver。
 - L 形 sticky：把侧齿、口宽和凸格位置变成首步行程门。
 - 前沿墙：关闭伸出 stroke，用作“第一手不成立”的形状门反例。
@@ -1877,36 +1889,36 @@ L 形宽口：移除侧齿后恢复 right,left 往复
 - 本体类型：单箱 / 二箱链 / 二格 sticky 横条 / L 形 sticky。
 - 对象模型：可分离 crate 链 / sticky 刚体。
 - 墙位：侧齿、宽口、前沿行程墙。
-- 第二手消费：精确回撤、近端抽取、刚体回撤、首步阻断。
-- 下游接法：残余债、回返门、移动边界刷线、形状墙口。
+- 第二手结果：精确回撤、只拉近端、整块回撤或被墙挡住。
+- 后续接法：剩余箱链、回返门、移动边界停位或形状墙口。
 
-自然消费方式：
+可以接着怎么用：
 
-- 箱链残余债：近端被抽回后，远端箱可作为第二目标袋、门闩或后续推链资源。
+- 剩余箱链：近端被拉回后，远端箱可进入第二目标袋、充当门闩或继续组成推链。
 - 回返门：sticky 横条或宽口 L 形可要求玩家先伸出再撤回，控制通路开闭。
 - 形状分类器：同一墙位区分横条、L 形和前沿目标格，接入 `刚体黏块 + 墙口`。
 - driver：可往复 sticky 活塞可作为移动 B/S anchor 或其他边界结构的停位 driver。
 
 常见 shortcut：
 
-- 单箱 `right,left` 没有下游消费时只是动作 witness。
-- 只看到首步 `force_blocked` 不能写成不可回返；它只说明行程目标格被墙消费。
-- 侧齿没有落进目标格集合时，不能说墙消费了该形状。
-- 箱链残余债在有限搜索中可回初态，不能写成全局不可逆。
+- 单箱 `right,left` 后若没有目标、墙口或通道变化，就只是动作 witness。
+- 只看到首步 `force_blocked` 不能写成不可回返；它只说明前进目标格被墙挡住。
+- 侧齿没有落进连体块目标格时，不能说墙挡住了该形状。
+- 剩余箱链在有限搜索中仍可能回到初态，不能写成全局不可逆。
 
 审美风险：
 
-如果只让玩家做单箱往复，会像基础规则演示。它成为设计语料的时刻，是玩家必须选择“可分离链”还是“sticky 刚体”，并让后续结构消费残余债、回返态或形状目标格。
+如果只让玩家做单箱往复，会像基础规则演示。真正的选择是把可拆开的箱链还是 sticky 连体块送到边界：前者拉回近端后会留下远端箱，后者必须整块回撤并检查全部目标格。
 
 误用边界：
 
 - 只在开放房间里推回 sticky，不属于边界活塞；必须有 P 侧推入后 L 侧立即 pull 的跨侧交接。
 - sticky 侧齿分类的 active consumer 是刚体目标格与墙；P/L 是 driver 和站位转换来源。
-- B/S anchor 在这些 sticky 图里主要提供合法 sticky 材料，不是本子谱主语。
+- B/S anchor 在这些图里主要保证 `M` 合法存在，不是本子谱主语。
 
 机制角色与归属边界：
 - active_rule：P/L `forceModeAt` 造成第一手 push / 第二手 pull 的跨侧读法；crate 链近端抽取和 sticky 刚体目标格检查造成本体差异。
-- material_source：B/S anchor 只让 raw `M` 保持 sticky 材料。
+- material_source：B/S anchor 只让 raw `M` 保持 sticky。
 - consumer：紧接 `left` pull、侧齿、前沿行程墙、箱链远端残余位。
 - incidental：目标 `G` 在本组只保证 layout 合法。
 - 关键观察点：`cc_chain_pull_splits_debt` 的第二手从整链移动变为近端抽取；`l_shape_side_tooth_blocks_stroke` 的第一手因下凸格目标墙 `force_blocked`。
@@ -1917,10 +1929,11 @@ L 形宽口：移除侧齿后恢复 right,left 往复
 
 ### 单箱目标活塞顺序锁：推入覆盖与回撤撤销
 
-接口卡片：
-- 输入接口：P/L 边界旁一枚 crate，玩家从 P 侧推箱；箱子的伸出位正好是 goal，且通道限制玩家后续必须回撤。
-- 输出接口：第一手产生临时目标覆盖；若第二手从 L 侧回撤，`pull_object:crate#1` 会把 crate 拉出目标并撤销覆盖。
-- 最小 consumer：狭窄通道把 `left` 回撤变成唯一出口；开放侧路和目标偏位分别作为 shortcut / 错例。
+局面卡片：
+- 开始摆法：P/L 边界旁有一只 crate，玩家从 P 侧推箱；箱子向外伸出一格时正好落在 goal 上，玩家之后只能原路回撤。
+- 关键动作：玩家先把箱推上目标；若还要离开，就必须从 L 侧把箱拉回来。
+- 动后局面：第一步暂时填上目标，回撤时箱子离开目标，目标重新空出。
+- 最小用法：狭窄通道迫使玩家回撤，因此这个目标只能在最后填；开放侧路或把目标挪开都会消除顺序限制。
 
 局部结构谱：
 
@@ -1964,28 +1977,28 @@ right 后目标覆盖，若停止则达成：
 
 共同解释：
 
-单箱活塞大多时候只是退化往复：`right,left` 回到初态。但如果第一手伸出位正好是目标，单箱伸出态本身就变成可消费输出。狭窄通道把玩家的后续出口限制为 `left`，而 `left` 在 L 侧会拉回 crate，于是目标覆盖只能作为最后动作保留；如果还有必须完成的后续动作，提前覆盖会被撤销。
+单箱活塞大多时候只是退化往复：`right,left` 回到初态。但如果第一手伸出位正好是目标，向右推会暂时填上目标。狭窄通道让玩家之后只能向左回撤，而 L 侧的 `left` 会把 crate 拉出目标。因此，只要还有别的动作没做完，这个目标就不能提前填。
 
 对照关系：
 
-- `corridor_goal_last_action`：`right` 后 crate 覆盖目标，`final.isWin=true`。这证明单箱活塞伸出态可以被目标消费。
-- `corridor_goal_then_forced_retract`：同一图 `right,left` 后目标撤销，`final.isWin=false`。这证明回撤动作会消费并破坏临时覆盖。
+- `corridor_goal_last_action`：`right` 后 crate 覆盖目标，`final.isWin=true`。这证明向外推一格可以作为最后一步。
+- `corridor_goal_then_forced_retract`：同一图 `right,left` 后目标重新空出，`final.isWin=false`。这证明回撤会把箱子拉离目标。
 - `open_side_exit_preserves_goal`：打开侧向出口后，`right,down` 保持目标覆盖，说明必须回撤才形成顺序锁。
 - `corridor_goal_offset_no_temp_cover`：目标偏离伸出位时 `right` 不覆盖目标，说明目标必须放在活塞伸出位。
 
-输入条件：
+开始条件：
 
 - 单箱必须紧贴 P/L 边界交接位，第一手由 P 侧 push 把 crate 推到目标上。
 - 玩家推入后必须落在 L 侧；后续回撤方向必须触发 pull，而不是普通 walk。
 - 通道要封住侧向出口，使目标覆盖后的必要动作是 `left` 回撤。
 - goal 必须在第一手伸出位；偏一格只会变成普通推箱。
 
-输出状态：
+动后局面：
 
 - 最后动作覆盖：`right` 后渲染为 `*`，局部目标满足。
 - 回撤撤销：继续 `left` 触发 `pull_object:crate#1`，`*` 还原为 `CG`。
 - shortcut：若能 `down` / `up` 离开，则 crate 留在目标上，不再产生顺序锁。
-- 错位目标：伸出位没有目标时，没有临时覆盖产物。
+- 错位目标：伸出位没有目标时，第一步不会暂时填上任何目标。
 
 结构旋钮：
 
@@ -1994,11 +2007,11 @@ right 后目标覆盖，若停止则达成：
 - 动作终止点：`right` 作为最后动作 / `right,left` 必须回撤。
 - consumer：goal、通道出口、pull 回撤。
 
-自然消费方式：
+可以接着怎么用：
 
 - 多目标顺序：把这个目标安排成最后目标；提前完成会在回撤中被撤销。
 - 回返门：要求玩家先进入活塞通道处理别的结构，最后才推箱上目标并停止。
-- recipe 标记：用目标覆盖状态标记“此回撤之前不能最终完成”的局部承诺。
+- 最短接法：目标被暂时填上，但玩家回撤时会把箱拉走，因此该目标必须最后完成。
 
 常见 shortcut：
 
@@ -2020,25 +2033,25 @@ right 后目标覆盖，若停止则达成：
 机制角色与归属边界：
 - active_rule：P/L push 后玩家处于 L 侧，下一手 `left` 触发 `pull_object:crate#1`。
 - material_source：普通 crate 和 goal；P/L anchor 提供 push / pull 侧别。
-- consumer：goal 消费伸出位，狭窄通道消费玩家出口并迫使回撤。
+- consumer：goal 位于箱子伸出一格的位置；狭窄通道封住其他出口，迫使玩家回撤。
 - incidental：没有 B/S 或 sticky；这是单箱活塞的目标顺序用途。
 - 关键观察点：`right` 后 `after.isWin=true`，继续 `left` 后 `final.isWin=false`。
 
 退化解释：
 
-这不是普通“箱子上目标”的 witness，因为开放侧路对照中目标可以保留；也不是普通单箱活塞，因为目标偏位对照没有临时覆盖。只有“伸出位是目标 + 后续必须回撤”同时成立时，单箱活塞才从退化动作变成顺序锁材料。
+这不是普通“箱子上目标”的 witness，因为开放侧路时玩家可以从别处离开并保留目标；也不是普通单箱活塞，因为目标偏位时第一步不会填上目标。只有“箱子伸出一格正好落在目标上，而且玩家之后必须原路回撤”同时成立时，才形成顺序锁。
 
 证据：
 
 `run=ra_loop_pl_single_crate_goal_piston_lock_20260708_01`, `cases=corridor_goal_last_action,corridor_goal_then_forced_retract,open_side_exit_preserves_goal,corridor_goal_offset_no_temp_cover`, `tags=runtime_observed,bounded_return,bounded_graph,graph_complete,consumption_probe,supplement`
 
-推荐 probe：
+后续可验证的接法：
 
 把链端抽取后的残余箱接到第二段目标或回返门；把 sticky handoff 接入实际目标口，而不只是前格 / 占格门。若测试 sticky blocker 扫带，沿用 `P/L pull 抽取把手` 的 blocker gap，不要混入本条标题。
 
-组合例句：
+最短接法：
 
-`P 侧推链 -> 跨 P/L -> L 侧抽近端 -> 下方口袋打开`：玩家先把多箱作为整体送到边界，再利用 L 侧只抽近端的差异，把一个箱变成可移动资源，同时留下残余链作为债务。
+`P 侧推链 -> 跨 P/L -> L 侧拉回近端 -> 下方口袋打开`：玩家先把箱链整体推到边界，再从 L 侧只拉回近端箱；下方原先被箱占住的入口因此打开，远端箱仍留在边界另一侧。
 
 证据：
 
@@ -2048,12 +2061,13 @@ right 后目标覆盖，若停止则达成：
 
 `run=ra_loop_pull_boundary_mobility_20260708_01_pl_boundary_multi_box_force_chain`, `cases=pl_chain2_pull_extract_near_end,pl_chain3_pull_extract_near_end,pl_chain2_pull_front_gate_blocked,pl_chain2_pull_opens_lower_pocket`, `tags=runtime_observed,bounded_graph,graph_complete,consumption_probe`
 
-## P/L L形缺角活塞：一推即侧拉
+## P/L L 形缺角活塞：一推即侧拉
 
-接口卡片：
-- 输入接口：玩家初始站在 L 形 sticky 连体块缺角里，先在 P/L 场中沿一个轴向推整块一格。
-- 输出接口：推动后玩家仍贴着 L 形的正交邻接面，下一手可立即侧向拉动整块，形成短行程转向活塞。
-- 最小 consumer：第二手拉动的目标格集合被墙门、B/S anchor、目标口或邻近可动件消费。
+局面卡片：
+- 开始摆法：玩家站在 L 形 sticky 连体块的缺角中，L 形位于 P/L 边界旁。
+- 关键动作：玩家先沿一个方向推整块一格，随后立即沿垂直方向拉动整块。
+- 动后局面：第一步后玩家仍贴着 L 形的另一条边，不用绕路就能完成第二步侧拉。
+- 最小用法：第二步要移入的格子可以放墙、B/S anchor、目标或其他可动物，从而决定侧拉被挡、带动物体或覆盖目标。
 
 局部结构谱：
 
@@ -2117,7 +2131,7 @@ B/S anchor 放进侧拉扫带：
 
 共同解释：
 
-这条不是“推一下再拉回来”的单箱往复。缺角本身是接口：第一手推动时玩家与 L 形同步换位，推动后不会完全脱离刚体，而是留下一个正交拉动面。第二手侧拉因此把原本直线的 push / pull 关系转成拐弯活塞。左右 / 上下镜像由机制对称性闭包，不作为独立证据；正式变量是新增 cell 相对第二手拉动扫带的位置。
+这条不是“推一下再拉回来”的单箱往复。玩家起初站在 L 形缺角里；第一手推动时，玩家与 L 形同步换位，推动后仍贴着 L 形的另一条边，因此下一手可以沿垂直方向侧拉。左右 / 上下镜像由机制对称性闭包，不作为独立证据；正式变量是 L 形新增格相对第二手侧拉方向的位置。
 
 机制角色：
 
@@ -2127,14 +2141,14 @@ B/S anchor 放进侧拉扫带：
 - incidental：P/L anchor 本体只提供场；不讨论锚点移动导致的边界重写。
 - 关键观察点：`right` 之后的 `down` 是 `pull_object:sticky#1, move_sticky_rigid`，而无缺角横条的第二手只是 `walk`。
 
-输入条件：
+开始条件：
 
-- L 形必须有玩家可站入的缺角；无缺角横条不会保留正交拉动接口。
+- L 形必须有玩家可站入的缺角；无缺角横条在第一步后不会让玩家贴住垂直侧面。
 - 第一手推动后，玩家前格和整块 sticky 的目标格必须开放。
 - 第二手侧拉方向上的所有目标格都要可用；任何新增 cell 的目标格都可能成为墙门。
 - 若要产生 downstream effect，邻近对象必须放在第二手侧拉扫带中。
 
-输出状态：
+动后局面：
 
 - 基础 3-cell L：`right, down` 后整块转向位移，可用 `left, up` 两步回返。
 - 向前长横臂：保留一推即侧拉，但新增外侧目标格；该格放墙会让第二手 `force_blocked`。
@@ -2150,7 +2164,7 @@ B/S anchor 放进侧拉扫带：
 - 门位：向前横臂外侧目标格、竖腿低位目标格、玩家前格。
 - consumer：空扫带、墙门、B/S anchor、目标口、邻近可动件。
 
-自然消费方式：
+可以接着怎么用：
 
 - 正交墙门：第一手允许推动，第二手侧拉才被新增目标格墙门拒绝。
 - 短回返活塞：基础 L 和部分延长 L 能快速回返，可用作可逆门或计时器。
@@ -2165,16 +2179,17 @@ B/S anchor 放进侧拉扫带：
 - 墙门必须落在第二手 sticky 目标格集合中；只挡无关通路会退化成普通地形门。
 - B/S anchor 扫带如果没有目标或后续约束，只能算 event witness。
 
-consumption probe：
+最小用法验证：
 
-`base_l_triomino_success` 证明基础缺角 L 的 `right, down` 是一推即侧拉；`bar_no_notch_walk` 证明无缺角横条退化为 walk。`top_arm_right_target_wall` 和 `vertical_leg_down_low_wall` 分别消费向前长横臂与长竖腿新增的目标格；`base_target_bs_anchor_swept` 把基础 L 的侧拉扫带接到 B/S anchor 和 goal，产生目标覆盖。
+`base_l_triomino_success` 证明基础缺角 L 可以执行 `right, down`，即横推后立即侧拉；`bar_no_notch_walk` 证明无缺角横条只会退化为 walk。`top_arm_right_target_wall` 和 `vertical_leg_down_low_wall` 分别用墙挡住加长横臂或长竖腿的新目标格；`base_target_bs_anchor_swept` 则让侧拉带动 B/S anchor 覆盖目标。
 
-### 缺角立即侧拉的门位分类
+### 缺角立即侧拉的墙位分类
 
-接口卡片：
-- 输入接口：玩家初始站在 2x2 L 形 sticky 的缺角中；第一手横向 push 把 L 形和玩家一起跨过 P/L 边界。
-- 输出接口：第二手无需绕路即可正交 pull；同一两步结构可被玩家前格墙、L 形目标格墙或可移动邻物分类。
-- 最小 consumer：无缺角横条作为退化错例；玩家前格墙消费 pull destination；形状目标墙消费 sticky 目标格；B/S anchor 替代目标墙后被扫带并覆盖目标。
+局面卡片：
+- 开始摆法：玩家站在 2x2 L 形 sticky 的缺角中；玩家前格、L 形下一步要去的格子可分别设墙或放 B/S anchor。
+- 关键动作：玩家先横推 L 形跨过 P/L 边界，再立即垂直拉动。
+- 动后局面：玩家前格墙会挡住拉动；L 形任一目标格有墙会挡住整块；把这格墙换成可动 B/S anchor 时，侧拉会把 anchor 一起带走。
+- 最小用法：无缺角横条不能立即侧拉；玩家前格墙、L 形目标格墙和可动邻物分别形成三种可画出的结果。
 
 局部结构谱：
 
@@ -2234,49 +2249,49 @@ consumption probe：
 
 共同解释：
 
-这组把 L 形缺角活塞的“第二手立即成立”单独拆成门位分类。第一手 `right` 不只是移动 L 形，它还把玩家送到 L 侧；由于玩家起点在缺角里，落点正好保留正交 pull 接触面。第二手 `down` 先检查玩家前格，再检查 sticky 整块目标格；同一个目标格若不是墙而是可移动 B/S anchor，会从封门变成扫带资源。
+这组单独比较第二手侧拉会被哪一格挡住。第一手 `right` 不只移动 L 形，也把玩家送到 L 侧；由于玩家起点在缺角里，落点正好贴着 L 形的另一条边。第二手 `down` 先检查玩家前格，再检查 sticky 整块的目标格；同一个目标格若不是墙而是可移动 B/S anchor，侧拉就会把 anchor 一起带走。
 
 对照关系：
 
 - 缺角 L vs 横条：缺角 L 的第二手是 `pull_object:sticky#1`；横条没有身后对象，第二手退化为 `walk`。
 - 开放 vs 玩家前格墙：同一 L 形、同一动作，墙在玩家前格时给 `destination_blocked`。
-- 开放 vs 形状目标墙：墙在 L 形外部目标格时给 `force_blocked`，说明对象占格目标被消费。
+- 开放 vs 形状目标墙：墙在 L 形外部目标格时给 `force_blocked`，说明 L 形整块的目标格必须开放。
 - 形状目标墙 vs B/S anchor：同一目标位从墙换成 anchor 后，失败变成 `force_chain:n2 + anchor_boundary_shift:box_sticky`，并可覆盖 goal。
-- 左下、左上、右下、右上缺角：只作对称闭包 evidence；正式结构变量不是方向，而是缺角、门位和目标格材料。
+- 左下、左上、右下、右上缺角：只作对称闭包 evidence；正式结构变量不是方向，而是缺角位置、墙位以及目标格上放墙、B/S anchor 还是空地。
 
-输入条件：
+开始条件：
 
 - 玩家必须在 L 形缺角中；站在外侧再绕路拉不属于本子谱。
 - 第一手横向 push 后，玩家必须进入 pull side 且仍贴着 L 形正交邻接面。
 - 第二手方向上的玩家前格和 L 形目标格需要分别可控，才能拆开 `destination_blocked` 与 `force_blocked`。
-- 扫带 consumer 必须放在 L 形目标格集合中，不在扫带内的对象不能证明本接口。
+- 被带动的对象必须放在 L 形第二步要移入的格子里；放在扫带范围外不能证明这条关系。
 
-输出状态：
+动后局面：
 
 - 立即侧拉：两步完成折向移动，不需要额外绕行。
 - 前格封门：玩家 destination 被墙拒绝，L 形本体不移动。
 - 形状封门：玩家前格开放，但 sticky 目标格集合撞墙。
-- 扫带输出：B/S anchor 被侧拉扫带移动，目标覆盖成为最小 consumer。
+- 扫带结果：B/S anchor 被侧拉带动，并移动到目标上。
 
 结构旋钮：
 
 - 缺角：有 / 无。
 - 第二手方向：规范方向写 `down`；镜像方向只作对称来源。
 - 墙位：玩家前格 / L 形外部目标格。
-- 目标格材料：墙 / B/S anchor / 空地。
-- 输出消费：回返、封门、扫带、目标覆盖。
+- 目标格内容：墙 / B/S anchor / 空地。
+- 第二步结果：回返、被墙挡住、带动邻物或覆盖目标。
 
-自然消费方式：
+可以接着怎么用：
 
 - 门位教学：同一两步结构把玩家门和形状门分离，适合做局部分类器。
 - 二步折向活塞：把横向 push 转成纵向 pull，可接回返门或目标口。
-- 扫带资源：把目标墙位置换成 anchor、crate 或 sticky blocker，观察资源移交、合并或封门。
+- 可动邻物：把目标墙换成 anchor、crate 或 sticky blocker，观察它被一起带走、与黏块合并或完全挡住侧拉。
 - 目标覆盖：B/S anchor 被扫到 goal 上，证明不是空事件。
 
 常见 shortcut：
 
 - 横条退化成 walk，不能写成 L 形活塞。
-- 开放空间中绕到侧面再拉，不能证明“立即”接口。
+- 如果玩家是在开放空间中绕到侧面再拉，就不能证明缺角让第二手侧拉立即成立。
 - 只测镜像方向会浪费 case；镜像只收为机制对称闭包。
 - B/S anchor 没接目标或后续约束时，只是扫带 witness。
 
@@ -2292,21 +2307,22 @@ consumption probe：
 
 机制角色与归属边界：
 - active_rule：P/L 场切换第一手 push 与第二手 pull；L 形缺角保留正交接触面；sticky 刚体目标格检查和 force chain 产生门位差异。
-- material_source：B/S anchor 在非扫带 case 中只让 sticky 材料合法，在扫带 case 中是 consumer。
+- material_source：B/S anchor 在非扫带 case 中只让 sticky 合法存在，在扫带 case 中是被侧拉带动的邻物。
 - consumer：横条错例、玩家前格墙、L 形目标墙、B/S anchor 和 goal。
 - incidental：非扫带 case 的 goal 只保证 layout 合法。
-- 关键观察点：第二手正交输入从 `walk` 变成 `pull_object:sticky#1`，以及墙位从 `destination_blocked` / `force_blocked` 转为 anchor 扫带。
+- 关键观察点：第二手垂直动作从 `walk` 变成 `pull_object:sticky#1`；同一目标格放墙时为 `destination_blocked` / `force_blocked`，换成 anchor 后则会带动 anchor。
 
 证据：
 
 `run=ra_loop_pl_l_notch_immediate_pull_20260708_01`, `cases=bl_notch_push_right_pull_down,tl_notch_push_right_pull_up,br_notch_push_left_pull_down,tr_notch_push_left_pull_up,bar_notch_absent_pull_degenerates_to_walk,bl_notch_down_front_wall_blocks_pull,bl_notch_down_target_wall_blocks_shape,bl_notch_down_sweeps_bs_anchor`, `tags=runtime_observed,bounded_return,bounded_graph,graph_complete,consumption_probe,supplement`
 
-### stroke 后正交把手：凸脚位置、阶段墙与扫带
+### 横推后出现的正交操作位
 
-接口卡片：
-- 输入接口：P/L 横向边界中，玩家先把 L 形 sticky 刚体水平推出；L 形凸脚位置和侧向把手格可控。
-- 输出接口：横向 stroke 后生成或暴露一个正交 pull 把手；同一墙位可按凸脚位置消费第一手 stroke 或第二手侧拉。
-- 最小 consumer：初始把手封墙证明把手由 stroke 生成；同一墙位分类第一手 / 第二手目标格；侧向目标格换成 B/S anchor 后被扫带并覆盖目标。
+局面卡片：
+- 开始摆法：L 形 sticky 位于 P/L 横向边界旁，凸脚朝前或朝后；侧拉所需的玩家站位和 L 形目标格可分别设墙。
+- 关键动作：玩家先水平推 L 形一格，再从新露出的侧面垂直拉动。
+- 动后局面：凸脚朝前时可能第一步就撞墙；凸脚朝后时第一步可以完成，但第二步侧拉可能撞到同一格墙；把墙换成 B/S anchor 后会带动 anchor。
+- 最小用法：封住初始侧拉位置可以证明操作位由横推产生；同一墙位还能区分第一步和第二步究竟哪一步失败。
 
 局部结构谱：
 
@@ -2358,25 +2374,25 @@ consumption probe：
 
 共同解释：
 
-这组是主条目的宽松把手变体：玩家不一定从缺角里立即侧拉，但 P/L 横向 stroke 能把 L 形凸脚从无效位置移动到新的侧向把手列。L 形凸脚在 stroke 方向前侧还是后侧，决定同一墙位第一次被谁消费：前侧凸脚可能让第一手 `right` 直接撞墙；后侧凸脚允许 stroke 成立，但第二手侧向 pull 时右臂目标格撞墙。
+这组允许玩家不从缺角里立即侧拉。横向推动一格后，L 形凸脚会移动到新的列，玩家也能到达侧拉位置。凸脚在前侧还是后侧，决定同一格墙会挡住哪一步：前侧凸脚可能让第一手 `right` 直接撞墙；后侧凸脚允许第一步完成，但第二手侧拉时右臂目标格撞墙。
 
 对照关系：
 
 - 下凸左脚 vs 下凸右脚：同一墙位从第二手侧拉目标墙变成第一手行程墙。
 - 上凸左脚 vs 上凸右脚：镜像方向复现同一阶段差异，只作为对称闭包 evidence。
 - 初始把手封墙 vs stroke 后开放：排除“开放房间里 L 形本来就能侧拉”的解释，证明把手由横向 stroke 生成。
-- 侧向目标墙 vs B/S anchor：同一目标位由封门变成扫带资源，证明它是可设计 consumer。
+- 侧向目标墙 vs B/S anchor：同一格放墙时挡住侧拉，换成 B/S anchor 时会被一起带走。
 
-输入条件：
+开始条件：
 
 - L 形必须先被 P/L 横向 stroke 移位；直接站在侧面拉的开放场景不属于本子谱。
 - 凸脚位置要能相对同一墙位前 / 后切换，才能拆出第一手墙和第二手墙。
 - 玩家必须能在 stroke 后到达或已经处于侧向 pull 把手位。
 - 扫带对象必须位于第二手侧向 pull 的目标格集合中。
 
-输出状态：
+动后局面：
 
-- stroke 生成把手：横向推后，凸脚和玩家站位组合出新的正交 pull 接口。
+- 横推后出现操作位：横向推后，凸脚位置与玩家站位允许下一手正交 pull。
 - 阶段墙：同一墙位按凸脚朝向成为 first-stroke blocker 或 lateral-pull blocker。
 - 扫带邻物：侧向 pull 推动 B/S anchor 并可覆盖 goal。
 - 回返未知时只写 bounded 结论，不写全局不可回返。
@@ -2386,15 +2402,15 @@ consumption probe：
 - 凸脚位置：左脚 / 右脚，或上凸镜像。
 - 把手格：初始封闭 / stroke 后开放。
 - 墙位：第一手行程目标格 / 第二手侧向目标格。
-- 目标格材料：墙 / B/S anchor / 空地。
-- 输出消费：把手生成、阶段分类、扫带、目标覆盖。
+- 目标格内容：墙 / B/S anchor / 空地。
+- 动作结果：出现侧拉操作位、区分第一步或第二步撞墙、带动邻物或覆盖目标。
 
-自然消费方式：
+可以接着怎么用：
 
 - 把手门：要求玩家先做横向 stroke 才能获得侧向 pull。
 - 阶段分类器：同一墙位按 L 形凸脚位置区分第一手失败和第二手失败。
 - 扫带 driver：把侧向目标墙替换为 anchor 或 crate，侧拉成为移动邻物的 driver。
-- recipe 接口：`横向 stroke -> 正交把手 -> 扫带对象 / 回返门`。
+- 最短接法：`横向推一格 -> 出现侧拉操作位 -> 带动邻物 / 打开回返门`。
 
 常见 shortcut：
 
@@ -2405,7 +2421,7 @@ consumption probe：
 
 审美风险：
 
-这个变体比缺角立即侧拉更松，容易退化成“L 形可移动”。它有价值的时刻，是 stroke 前后把手可达性或同一墙位的消费阶段发生变化。
+这个变体比缺角立即侧拉更松，容易退化成“L 形可移动”。只有当横推前后玩家能否到达侧拉位置发生变化，或同一格墙明确挡住第一步而不是第二步时，它才有独立价值。
 
 误用边界：
 
@@ -2415,7 +2431,7 @@ consumption probe：
 
 机制角色与归属边界：
 - active_rule：P/L 横向 stroke 制造侧向 pull 站位；sticky L 形刚体目标格检查制造阶段墙；force chain 让侧向目标格中的 B/S anchor 被扫带。
-- material_source：B/S anchor 在非扫带 case 中只保持 sticky 材料合法；在扫带 case 中是可移动邻物 consumer。
+- material_source：B/S anchor 在非扫带 case 中只保持 sticky 合法；在扫带 case 中是会被一起带动的邻物。
 - consumer：同一墙位、初始把手封墙、B/S anchor 和 goal。
 - incidental：非扫带 case 的 goal 只保证 layout 合法。
 - 关键观察点：同一墙位在不同凸脚位置中第一次改变动作结果的位置，以及 `dl_piston_shift_opens_lateral_handle` 中 stroke 后把手可达性改变。
@@ -2424,9 +2440,9 @@ consumption probe：
 
 `run=ra_loop_pl_l_shape_lateral_handle_20260708_01`, `cases=dl_foot_side_wall_blocks_lateral_only,dr_foot_same_wall_blocks_first_stroke,ul_foot_up_pull_right_target_wall,ur_foot_same_wall_blocks_first_stroke,dl_piston_shift_opens_lateral_handle,dl_lateral_sweeps_bs_anchor_to_goal`, `tags=runtime_observed,bounded_graph,graph_complete,consumption_probe,supplement`
 
-推荐 probe：
+后续可验证的接法：
 
-如果继续探索，应优先测试新的非对称形状接口或侧拉扫带驱动不同对象的 recipe；不要补左右 / 上下镜像，也不要把普通组合写入 backlog。
+如果继续探索，应优先测试新的非对称形状，或让侧拉带动不同对象；不要补左右 / 上下镜像，也不要把普通组合写入 backlog。
 
 证据：
 

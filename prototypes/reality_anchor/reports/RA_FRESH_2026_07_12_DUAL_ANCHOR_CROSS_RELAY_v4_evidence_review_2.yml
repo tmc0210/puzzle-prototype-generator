@@ -1,0 +1,92 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+review_input_type: revised_design
+verdict: does_not_support_claim
+review_loop_state: revise_required
+required_action: evidence_disagreement_for_next_review
+supported_claims:
+  - target_ref: player_reasoning.player_goal
+    evidence_basis: >
+      修订后的目标只要求覆盖三个目标并判断两枚锚点、两个箱和右下黏格如何共享操作位；
+      它与原型 win condition 一致，且不再预先泄露 B、P 与终局切回箱的目标分工。
+  - target_ref: player_reasoning.reasoning_units.RU1_borrowed_crate_lift
+    evidence_basis: >
+      canonical step1-4 支持上箱先下移、P/L 右移、玩家到达 x4,y3 的 pull 侧后上拉 B/S；
+      step4 同时出现 pull_object:box_sticky_anchor、force_chain:n2 与
+      anchor_boundary_shift:box_sticky，状态中上箱回到 x3,y2、B/S 上移到 y3。
+      ALT1 的修订文本只陈述一手 down 后箱到 x3,y4、B/S 到 y5、尚未取得目标或末段条件，
+      已删除没有证据支持的后续可恢复性声称。
+  - target_ref: player_reasoning.reasoning_units.RU2_reposition_pl_for_second_bs
+    evidence_basis: >
+      两阶段站位与侧别 premise 和 canonical 状态一致：step4 的 x5,y3 被 L 占据；step5
+      横移 P/L 后该格释放但与 L 半格同列，仍是 pull 侧；step8 从上方下推 P/L 后 P 到
+      x6,y3 覆盖右目标，x5,y3 才成为 B/S 的 push 侧左推站位。step11 的左推随后确实移动
+      B/S 并触发 box_to_sticky:n2。ALT2 的非空输入 [down, left]、最后一手
+      pull_world_front_blocked 与该侧别和前格占用关系一致。
+  - target_ref: player_reasoning.reasoning_units.RU3_merge_then_cut_vertical_pair.operation_and_feedback
+    evidence_basis: >
+      canonical step11 后 x3,y6 与 x5,y5 是分离黏格；step14-15 将右下黏格连续左拉，
+      step15 触发 sticky_merge:n1，形成 x3,y5-x3,y6 竖条；step17 整条左拉并触发
+      sticky_to_box:n2，终态下格覆盖 x2,y6 目标且 isWin=true。ALT3 的非空输入
+      [left, down] 与最后一手前格被 x3,y6 黏格占据的失败说明机械一致。
+  - target_ref: player_reasoning.operation_segments_and_trace_partition
+    evidence_basis: >
+      SEG1=step1-4、SEG2=step5-8、SEG3=step9-11、SEG4=step12-17 与 exact 17-input
+      replay 完全连续，无遗漏或重叠；各 segment 的输入、状态变化与所列 reasoning unit 对应。
+  - target_ref: mechanic_exposure_context.latest_exposure_timing_check
+    evidence_basis: >
+      mechanic_exposure_sequence 的 dual_anchor 阶段 new_events 为空，向前派生的最后非空阶段是
+      movable_box_sticky_anchor，claimed latest exposed event 因而是
+      anchor_boundary_shift:box_sticky。完整 event probe 的 box_sticky_anchor_shift 单项探针未发现
+      缺少该事件的胜路。canonical optimal trace 中该事件的全部 occurrence 为 step4 与 step11：
+      step4 属于 SEG1/RU1，step11 属于 SEG3/RU2，因此至少一次 occurrence 落在第二个 reasoning
+      unit，结论为 later_phase_present，而非 required_but_frontloaded。暴露序列在 dual_anchor 后无
+      later stage，故没有待排除的 later event。
+  - target_ref: mechanic_exposure_context.claimed_core_events_on_canonical_trace
+    evidence_basis: >
+      exact replay 支持 canonical 路径出现全部七类核心事件；其聚合次数为 P/L shift 3、B/S shift 2、
+      pull_object 4、box_to_sticky 2、sticky_merge 1、move_sticky_rigid 3、sticky_to_box 2。
+      这里仅支持 canonical occurrence，不自动升级为每条胜路分别必经。
+  - target_ref: solution_uniqueness
+    evidence_basis: >
+      result=unique_complete 属于允许值。layout analysis 与 unique-plan artifact 都报告完整图 381
+      个 reachable states、837 条 legal transitions、1 个 winning state、最短深度 17，且最短输入序列
+      计数为 1。unique-plan 中 19 步胜路只在 canonical step4 后插入 down/up 完整回返环，未构成已知
+      非等价玩家逻辑类；因此与 packet 对 unique_complete 的限定说明无明显冲突。
+  - target_ref: hard_fact_summary_for_critic.calibrated_trace_metrics
+    evidence_basis: >
+      packet 原样保留 layout analysis 的 pilot calibration：solutionCost=17、nonWalkEventCount=21、
+      heavyReuseRatio=0、revisitRate=0.16666666666666666、solution_execution_pressure aggregateBand=4、
+      solution_space_reuse aggregateBand=2。依技能纪律，这些值只做原样性核对，不作为支持或反驳
+      机械声明、玩家价值、难度或审美的 evidence。
+unsupported_or_overclaimed:
+  - target_ref: mechanism_scope.required_winning_path_event_counts
+    issue: >
+      packet 声称所有胜路至少发生 3 次 anchor_boundary_shift:push_pull 与 2 次
+      anchor_boundary_shift:box_sticky，但四个明确允许的 v4 artifact 中没有 count-gate 结果：
+      event_probe artifact 只包含事件组的 avoid probe，不包含 packet 摘要里的 minimum=3/2 探针；
+      commands_run 也没有给出对应输出 artifact 路径。canonical 的 3/2 次 occurrence 不能证明
+      all-solution minimum count。该硬声明在当前 allowed evidence 下为 unsupported。
+  - target_ref: mechanism_scope.required_winning_path_events.box_to_sticky_and_sticky_to_box
+    issue: >
+      event_probe 把 box_to_sticky 与 sticky_to_box 合并在 material_normalization 同一组；该组的
+      patterns 是 OR 匹配。未发现“同时避开两者”的胜路，只能证明每条胜路至少出现其中一种材料
+      归一化事件，不能分别证明 box_to_sticky 与 sticky_to_box 各自在所有胜路上必经。canonical trace
+      同时出现两者也不是 all-solution gate。若要保留两个独立 required event，必须提交两个独立的
+      complete avoid-event probes；否则应收窄 required_winning_path_events 声明。
+  - target_ref: player_reasoning.reasoning_units.RU3_merge_then_cut_vertical_pair.player_question
+    issue: >
+      修订后的问题仍写成“下部两个分离黏格与右下初始黏格怎样组织成”目标对象，语义上要求三个黏格
+      共同参与，且把两枚由箱转换的黏格都称为“下部”。但 step11 的三枚分离黏格实际位于 x3,y2、
+      x3,y6、x5,y5；canonical 后段只组织 x3,y6 与 x5,y5，x3,y2 的上黏格保持分离并留在终态。
+      因此问题仍超出 exact operation 支持范围。应改为只问“下部的转换黏格与右下初始黏格”如何
+      组织，或明确允许从三枚中选择能完成底目标的子集。
+evidence_limits:
+  - 完整图、SCC、事件探针和 exact replay 只支持机械结构，不证明玩家自然发现、问题显著性、审美、实际难度或 campaign placement。
+  - runtime 未提供 instance-level object participation；本评审不把事件 pattern 或状态格变化升级为 per-object necessity。
+  - replayed_attempt 的结果仅以 packet 中的明确输入/结果摘要、canonical 起始状态和原型规则交叉核对；四个允许 artifact 中没有独立 alt replay artifact。
+  - complete graph 的单一胜态与唯一最短输入序列不表示不存在任意长度的纯走位或完整回返 detour。
+questions_for_designer:
+  - 是否删除两项 all-solution minimum count 硬声明，或把对应 3 次/2 次 complete count-probe artifact 明确加入 allowed evidence refs？
+  - 是否分别为 box_to_sticky 与 sticky_to_box 提供 complete avoid-event probe，而不是继续用 material_normalization OR 组支持两个独立必经声明？
+  - RU3 的 player_question 是否改为只指向实际参与竖条构造的 x3,y6 与 x5,y5 两枚黏格？

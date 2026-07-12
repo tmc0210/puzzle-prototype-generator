@@ -1,0 +1,60 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v13
+candidate_version: v13
+review_iteration: 1
+packet_kind: claim_last_claims
+
+design_target:
+  intended_role: late_game_dual_anchor_capstone
+  aesthetic_score_target: 5
+  difficulty_score_target: 5
+  minimum_acceptable: {aesthetic: 4, difficulty: 4}
+
+player_reasoning_claims:
+  forced_setup_not_counted:
+    - B/S 右移拼接七格 C 形是强制铺垫，不作为玩家矛盾。
+    - C 形整体右拉并切出连接柱是强制铺垫，不作为玩家矛盾。
+  reasoning_units:
+    - id: RU1_leave_cut_crate_column_untouched
+      question: 切割后是否立即把身后的下箱拉进右侧空口袋？
+      visible_premises:
+        - 玩家在 (7,5)，身后是刚切出的下箱，前方有一格视觉空位。
+        - 拉箱能清掉连接柱底格，但箱会占住口袋唯一出口。
+      conclusion: 不碰切出的箱柱，转去完成下黏臂。
+      exact_rejected_inputs: [right]
+      concrete_feedback: 误拉后玩家与箱互相封住，续搜 complete/no-win；正确下拉后下目标完成且玩家仍可离开。
+    - id: RU2_lower_before_upper_seal
+      question: 切割后的两条黏臂先完成哪条？
+      visible_premises:
+        - 先上路线实际可走通并能覆盖上目标。
+        - 上臂完成后玩家进入顶袋，下目标仍空且无法返回；下臂完成后玩家仍能离开。
+      conclusion: 先下后上；上臂是最后的封路动作。
+      exact_rejected_inputs: [down, left, left, left, down, left, left, left, up, up, up, up, up, right, right, right, right, up]
+      concrete_feedback: 先上会在已覆盖一个目标后形成 terminal no-win；先下则保留回廊，最后上拉立即胜利。
+
+role_fit_claim:
+  strengths:
+    - 双锚点形成单条连续因果：B/S 改变材质连接，P/L 授权跨界整体拉动与切后纵向把手。
+    - 七格 C 形先被构造和整体移动，再被切为两个目标件；同一形状的连接性被后续消费。
+    - 两个申报误选都真实可执行，且分别攻击局部清理冲动与目标完成顺序。
+  risks_to_attack:
+    - 前10步脚本化，核心拼接/切割可能更像演示而不是推理。
+    - 右口袋误拉是一动作自锁，可能太明显或只算廉价陷阱。
+    - 先上后下的顶袋封锁可能视觉过强；长回廊执行可能稀释决策密度。
+
+lineage_claim:
+  relation: fresh
+  non_reused_archive_chains:
+    - 未复用 RA_CAND_0022 的死角反推锚点链。
+    - 未复用 RA_CAND_0025 的 L 形反复活塞。
+    - 未复用 RA_CAND_0017 的目标腾挪布局或求解路线。
+  new_causal_chain: 临时三箱连接柱 -> 七格 C 合体 -> 跨界横拉切柱 -> 放弃右袋误拉 -> 下臂先收 -> 上臂封口。
+
+language_boundary:
+  C形: step 2 后由上下横臂和右侧连接柱组成的七格黏块。
+  右袋误拉: step 10 后输入 right，把 (6,5) 箱拉到 (7,5) 并把玩家送入 (8,5)。
+  上封口: 上臂进入目标后玩家落入 (5,1)，完成后的上臂封住下方。
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v13_facts_packet.yml
+  read_order: facts_then_claim

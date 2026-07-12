@@ -1,0 +1,127 @@
+target_code: Beta
+review_attempt_id: RA_NEW_TWIN_GATE_REVIEW_1_SCOREGATE_SKILL
+critic_instance_id: /root/scoregate_beta
+review_iteration: 1
+candidate_version_reviewed: RA_NEW_2026_07_12_TWIN_GATE_RESECTION_v1
+stage: raw_first_independent_reading
+review_input_type: candidate_version
+archive_records_read: 31
+candidate_packet_read: false
+
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+  hard_evidence_tools_run: false
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  preliminary_aesthetic_score: 4
+  preliminary_difficulty_score: 4
+  player_goal_seen: >-
+    玩家要把上室的七个材料格经一次整体合并和一次跨界切分，重新分配到四个目标；
+    真正需要预先安排的不是“依次把最近对象送上目标”，而是先处理上黏臂，再处理门箱与会封住回路的下黏臂。
+  salient_relations_seen:
+    - >-
+      玩家开局看见自己位于第10行左侧，右边紧邻可移动的横向 S/B，而上室中第3、5行各有一条 M-M-C，
+      两条横臂由第4行中央 C 连接。执行 canonical step 1-2 的两次 right 后，S/B 被向右推，
+      中央三格箱柱转为黏性并与上下两条黏臂合成七格刚体；这使玩家后续不再能逐箱处理，而必须先把整块从右侧拉回边界。
+    - >-
+      玩家沿第3列上行、绕到上室右侧后，在 canonical step 13-14 执行 left、right；第二步从右侧拉动七格整体，
+      中央竖柱切回三个箱子，上下黏臂与箱柱分离。棋盘由一个不可分的大刚体变成三个可分别操作的输出，
+      因而后续才出现“上黏臂、门箱、下黏臂”的处理次序。
+    - >-
+      玩家在 step 15-18 从上方拉动上黏臂，使其覆盖第2行上目标；随后 step 19-25 绕到右侧拉门箱，
+      使其覆盖第5行右目标；最后 step 26-32 从下方拉动下黏臂，使其覆盖第6行下目标并获胜。
+      同一轮切分产生的三个输出因此都被后段实际消费，而不是只触发事件后退休。
+    - >-
+      从 step 14 改走 down、down、right，玩家会先让门箱覆盖目标且仍能向下离开；继续
+      down、down、left、left、left、up、down，又能让下黏臂覆盖目标，但此时上黏臂把手不可达且完整续搜无胜。
+      这说明下黏臂不是独立收尾物：它落到第6行狭口后会切断回到上黏臂操作侧的机会，要求玩家在行动前读出上先下后的次序。
+  unclear_or_unreadable_parts:
+    - >-
+      raw 只给出五个 significant states 的文字变化，没有逐步坐标化棋盘；因此目前能确认错误顺序最终封死上黏臂，
+      但还不能精确判断玩家在 step 14 当下能多清楚地看见该把手与第6行狭口的封锁关系。
+    - >-
+      raw 只列出一条自然替代路线，尚不能判断同一决策状态是否还有多条同样自然且同样延迟反馈的失败方向。
+  initial_quality_risks:
+    - >-
+      开局推动 S/B 与绕行到整体右侧看起来高度受走廊约束；若第二阶段材料不能证明玩家在执行前需要预测合并后的职责，
+      前14步可能更像强制展示机制，而不是玩家作出的构造决策。
+    - >-
+      step 14 后三个输出的处理动作都很短。当前可见的主要交叉约束只有“下黏臂会封住上黏臂把手”；
+      若该约束在局面中不够清楚，后段会从有因果的次序题退化成三个目标清理任务外加一次延迟惩罚。
+    - >-
+      错误路线连续给出门箱上目标、下黏臂上目标两个局部正反馈，之后才宣告上黏臂不可达。
+      单条这种路线尚不足以等同 RA_CAND_0030 的多分支高成本搜索，但它必须在第二阶段核验为可预判的结构后果，而不能只靠试错发现。
+    - >-
+      32步规范输入中大量步数用于在狭长通道间换侧；这只是轻微节奏边界，不单独构成阻塞问题，也不作为难度加分。
+  preliminary_score_basis:
+    aesthetic: >-
+      初步为4。七格整体在同一条可见因果链中经历“合并为刚体—跨界切分—三个输出分别承担目标职责”，
+      比审美3的重复输出样本 RA_CAND_0020、RA_CAND_0023 更有可记忆的结构变化；但开局偏强制、后段是否真正耦合仍需核验，
+      尚不具备 RA_CAND_0022 的短促反转凝练度或 RA_CAND_0025 的主动构造与反复消费，因此不支持5。
+    difficulty: >-
+      初步为4。难点来自预测材料边界改变后的整体形状，以及在下黏臂封路前完成上黏臂的结构次序，
+      而不只是32步长度；但当前只确认一条关键错误顺序，不支持难度5的广度或持续重构压力。
+  exact_basis:
+    - "layout:r10c1=@，r10c3=S，r10c4=B；canonical step 1-2=[right,right] 后发生 push_B/S、box_to_sticky、sticky_merge。"
+    - "layout:r3c2-r3c4=MMC，r4c4=C，r5c2-r5c4=MMC；step 2 visible_change=上下两条黏臂与中央三箱纵柱合成七格整体。"
+    - "canonical step 13-14=[left,right]；step 14 events=[pull_sticky_rigid,sticky_to_box,sticky_split]，visible_change=中央柱切回三箱、上下黏臂分裂。"
+    - "canonical step 15-18=[up,left,left,up]；step 18=pull_upper_sticky，上黏臂覆盖上目标。"
+    - "canonical step 19-25=[right,right,down,down,down,down,right]；step 25=pull_gate_crate，门箱覆盖竖井底口目标。"
+    - "canonical step 26-32=[down,down,left,left,left,up,down]；step 32=pull_lower_sticky，下黏臂覆盖下目标并胜利。"
+    - "raw_alternatives from step14=[down,down,right] 后门箱上目标且仍可离开，再走 [down,down,left,left,left,up,down] 后下黏臂上目标，但上黏臂把手不可达且完整续搜无胜。"
+
+archive_taste_context_used:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete
+  positive_anchors:
+    - candidate_id: RA_CAND_0022
+      human_scores: {aesthetic: 5, difficulty: 4}
+      use: "短步骤中先入死角再反向送箱的凝练反转上界。"
+    - candidate_id: RA_CAND_0025
+      human_scores: {aesthetic: 5, difficulty: 4}
+      use: "主动构造 L 形、反复消费同一结构的标杆上界。"
+    - candidate_id: RA_CAND_0001
+      human_scores: {aesthetic: 4, difficulty: 4}
+      use: "双锚高密度、要素强耦合的阶段挑战参照。"
+    - candidate_id: RA_CAND_0017
+      human_scores: {aesthetic: 4, difficulty: 5}
+      use: "持续高压推理与腾挪的难度5参照。"
+  lower_bound_or_negative_anchors:
+    - candidate_id: RA_CAND_0020
+      human_scores: {aesthetic: 3, difficulty: 2}
+      use: "切分后重复消费三个输出、靠几何对称维持3分的下界。"
+    - candidate_id: RA_CAND_0023
+      human_scores: {aesthetic: 3, difficulty: 3}
+      use: "逐格处理三个输出略重复的流程关下界。"
+    - candidate_id: RA_CAND_0024
+      human_scores: {aesthetic: 1, difficulty: 3}
+      use: "高机制信号最终只兑现推拉腾挪的1分警戒。"
+    - candidate_id: RA_CAND_0027
+      human_scores: {aesthetic: 1, difficulty: 2}
+      use: "可见 affordance 未转化为几何职责的1分警戒。"
+    - candidate_id: RA_CAND_0030
+      human_scores: {aesthetic: 1, difficulty: 3}
+      use: "多条自然且反馈迟缓 deadend 的高成本分支警戒。"
+    - candidate_id: RA_CAND_0032
+      human_scores: {aesthetic: 1, difficulty: 3}
+      use: "前后子关割裂、前段要素退休的1分警戒。"
+  missing_anchor_effect: none
+
+stage1_boundary:
+  candidate_claim_not_seen: true
+  designer_action_not_seen: true
+  target_score_not_seen: true
+  prior_review_not_seen: true
+  final_verdict_deferred: true
+  note: >-
+    以上 initial verdict、state、action 与初步分数只依据 raw packet 和31份固定人类归档快照；
+    第二阶段不得覆写这些初判，只能维持或收紧最终结论。

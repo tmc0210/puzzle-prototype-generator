@@ -1,0 +1,123 @@
+review_attempt_id: BETA_SINGLE_R1
+critic_instance_id: "/root/single_beta_r1"
+candidate_version_reviewed: RA_NEW_2026_07_12_TWIN_GATE_RESECTION_v1
+stage: claim_last_final
+archive_records_read:
+  - RA_CAND_0001
+  - RA_CAND_0002
+  - RA_CAND_0003
+  - RA_CAND_0004
+  - RA_CAND_0005
+  - RA_CAND_0006
+  - RA_CAND_0007
+  - RA_CAND_0008
+  - RA_CAND_0009
+  - RA_CAND_0010
+  - RA_CAND_0011
+  - RA_CAND_0012
+  - RA_CAND_0013
+  - RA_CAND_0014
+  - RA_CAND_0015
+  - RA_CAND_0016
+  - RA_CAND_0017
+  - RA_CAND_0018
+  - RA_CAND_0019
+  - RA_CAND_0020
+  - RA_CAND_0021
+  - RA_CAND_0022
+  - RA_CAND_0023
+  - RA_CAND_0024
+  - RA_CAND_0025
+  - RA_CAND_0026
+  - RA_CAND_0027
+  - RA_CAND_0028
+  - RA_CAND_0029
+  - RA_CAND_0030
+  - RA_CAND_0032
+candidate_packet_read: true
+review_method:
+  raw_first_used: true
+  claim_last_used: true
+  claim_read_after_independent_reading: true
+
+frozen_raw_reading:
+  player_reading:
+    core_visible_relation: >-
+      开局右推 B/S 会把三箱纵柱送入黏侧，使其与上下两条二格黏臂合成七格整体；
+      随后从右侧把整体拉回箱侧，又会把连接柱切回三个箱并释放上下黏臂。
+    core_player_operation: >-
+      玩家先用可移动 B/S 制造七格刚体，再借固定 P/L 提供的拉侧把它整体右拉并拆分，
+      最后必须依次处理上黏臂、竖井门箱和下黏臂。
+    core_board_change: >-
+      一个由上下黏臂和三格连接柱组成的七格整体，在 step 14 被重切为上下两个独立黏臂与中线三个箱；
+      之后三个输出分别覆盖上目标、竖井底口目标和下目标。
+    core_planning_effect: >-
+      玩家要把“合成后再切开”理解为一次输出制造，并进一步看出这些输出并非可任意排序：
+      上黏臂的可达性必须在门箱和下黏臂收束前先兑现。
+  confirmed_aesthetic_problem:
+    status: present
+    exact_scene: >-
+      step 14 刚完成整体右拉与拆分时，上下黏臂和三个中线箱都已成为可处理输出，
+      但棋盘没有在玩家选择门箱优先时及时暴露上黏臂的访问债务。
+    player_operation: >-
+      玩家从 step 14 输入 [down, down, right]，先让门箱覆盖竖井底口目标且仍能向下离开；
+      再输入 [down, down, left, left, left, up, down]，让下黏臂也覆盖下目标。
+    board_change: >-
+      两个目标先后被正确外观的独立输出覆盖，但这一收束同时令上黏臂把手不可达，
+      该状态已无法完成剩余上目标。
+    player_visible_harm: >-
+      玩家在连续取得两次清楚、可归因的目标进展后才看到上黏臂失去把手；
+      错误顺序因此不能从首次局部收益处及时剪枝，迫使玩家撤销一整段已被棋盘正向确认的收尾流程。
+    raw_facts_sufficient: true
+  pending_fact:
+    status: none
+    exact_missing_fact: none
+    why_it_changes_problem_existence: none
+  provisional_aesthetic: 1
+  exact_basis:
+    - raw step 2：右推 B/S 后，三箱纵柱与上下二格黏臂合成七格整体。
+    - raw step 14：整体右拉后连接柱切回三箱，上下黏臂分裂。
+    - raw canonical：step 18 先覆盖上目标，step 25 再覆盖竖井底口目标，step 32 覆盖下目标并胜利。
+    - raw alternative：门箱优先后玩家仍可向下离开，继续覆盖下目标后上黏臂把手不可达，且该状态无胜。
+    - 人评校准 RA_CAND_0009：前期局部收益不足以抵消过长、无意义错误路线的玩家伤害。
+    - 人评校准 RA_CAND_0030：多个看似可推进的处理方向若直到较晚才验证为 deadend，是明确的负向分支成本。
+
+problem_resolution:
+  status: survives
+  exact_basis:
+    - designer claim 明确把门箱早填后仍可离开、继续完成下臂以及持续局部收益作为 claimed highlight，确认而非反驳 raw 场景。
+    - RU1 与 hard_evidence 共同确认门箱优先路线可执行、下臂可继续完成、结果无胜且上臂把手不可达。
+    - order_monitor 只证明所有胜解都要求上臂先于门箱，以及下臂次序自由；它不证明错误路线的反馈后置对玩家无害。
+    - graph 规模只表示可达状态与转移数量，不提供能关闭玩家侧伤害的解释，verdict_effect 为 none。
+  why_degree_reduction_or_compensation_was_not_used: >-
+    claim 没有用 exact fact 证明 raw 对局面理解错误，也没有证明完成下臂后才揭示失败是该顺序洞见不可分割且无独立伤害的组成；
+    相反，“持续局部收益”正是 raw 指出的误导。整体切割、职责分配、唯一解与其他亮点不能补偿这一问题。
+
+decisive_aesthetic_problem:
+  status: present
+  exact_scene: >-
+    step 14 拆分完成后，玩家可以先封门箱目标，并在仍能自由离开的表象下继续处理下黏臂。
+  player_operation: >-
+    输入 [down, down, right] 完成门箱，再输入 [down, down, left, left, left, up, down] 完成下黏臂。
+  board_change: >-
+    门箱和下黏臂先后覆盖两个目标，但门箱封住竖井底口，配合另一列切出箱令未完成上黏臂再无可达把手。
+  player_visible_harm: >-
+    棋盘连续奖励两次目标进展后才确认顺序失败；玩家必须撤销整段收尾，
+    而第二次局部奖励没有增加新的顺序洞见，只延迟了对第一次错误的验证。
+
+validated_highlight:
+  status: none
+  exact_scene: none
+  player_operation: none
+  board_change: none
+  player_value: none
+
+final_aesthetic: 1
+final_difficulty: 4
+final_role_fit: >-
+  当前版本不符合 late_game_dual_anchor_resection_challenge：合成、整体切割和输出分工本身适配后期玩家，
+  但核心门顺序主要依靠两次正向目标反馈后的长撤销来成立。
+verdict: revise_required
+required_action: structural_revision
+one_sentence_reason: >-
+  门箱优先路线在连续兑现门箱与下臂两个目标后才暴露上臂把手不可达，claim 将这段反馈后置误导包装成亮点，却没有事实关闭其独立玩家伤害。

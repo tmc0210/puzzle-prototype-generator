@@ -1,0 +1,77 @@
+candidate_id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+title: 双锚桥剪·回织成列 v7
+submitted_at: 2026-07-11
+submission_target: playable_queue
+status: submitted_pending_playtest
+
+review_loop:
+  review_integrity: independent_review
+  review_loop_state: proposal_ready_with_caveats
+  archive_eligibility: human_pending
+  latest_evidence_review:
+    iteration: 3
+    verdict: supports_claim
+    review_loop_state: proposal_ready
+    required_action: none
+    artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_evidence_review_3.yml
+  latest_puzzle_critic:
+    iteration: 3
+    verdict: supports_with_noncore_caveats
+    review_loop_state: proposal_ready_with_caveats
+    required_action: none
+    aesthetic_target_fit: "支持4分下界，不主张5"
+    difficulty_target_fit: "支持至少4，不主张5"
+    artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_puzzle_critic_3.yml
+
+exact_candidate:
+  layout_ref: prototypes/reality_anchor/levels.yml#RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+  shortest_cost: 21
+  canonical_inputs: [up, up, up, up, right, right, down, down, down, left, left, down, right, right, up, left, up, left, up, right, right]
+  package_solve: {found: true, cost: 21, explored: 2612}
+  all_solution_required_events:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - pull_object
+    - sticky_to_box
+    - sticky_split
+    - move_sticky_rigid
+  optimal_route_required_not_all_wins: [box_to_sticky, sticky_merge]
+  graph: {status: exhausted, budget: 300000}
+
+prototype_specific_pre_submission_workflows:
+  fixed_order_executed: [invalid_goal_prune, opening_comfort_check, redundant_element_prune]
+  invalid_goal_prune:
+    status: kept_with_unknown
+    result: "六目标单删版本均 cost=21 且规范 trace 胜利，但完整图在100000预算耗尽；按原型 authority doc 全部保留。"
+    artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_goal_prune_check.yml
+  opening_comfort_check:
+    status: complete_with_graph_caveat
+    result: "完整 walk-only 观察区10状态；完整 initial SCC 因主图耗尽保持 unknown；当前起点保留。"
+    artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_opening_comfort_check.yml
+  redundant_element_prune:
+    status: pruned
+    result: "v6 裁去左二右一三列纯外墙形成坐标平移同构 v7；exact v7 只剩单层闭合外框。"
+    artifact: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_redundant_element_prune.yml
+
+lexicon_used:
+  - entry: 固定_BS_断桥_C形黏块拆成两个端点
+    reused_relation: "边界切过连接柱后，连接柱三格变箱，上下黏端点彼此分开。"
+    candidate_specific_extension: "先整体右移 C 形制造 P/L 下拉槽；切出的中箱再由 P/L 推回两个端点之间。"
+  - entry: PL_pull_抽取
+    reused_relation: "拉侧动作要求玩家前格开放，可整体抽动二格锚点。"
+    candidate_specific_extension: "被抽动的是 P/L 自身；它连续穿过 C 形旧连接柱腾出的三格竖槽。"
+  - entry: BS_移动边界_箱组形状改写
+    reused_relation: "B/S 停位把远处占格改写为分离箱/黏块组合。"
+    candidate_specific_extension: "B/S 把右移后的 C 形切成三箱两端点，P/L 再把中箱推回黏侧重织为竖条。"
+
+nonblocking_caveats:
+  - "存在64步逐件无重拼胜路；它比规范21步路线更直白但调度更笨重，试玩需观察玩家是否被该路线吸引。"
+  - "主图耗尽；不主张唯一解、完整 SCC 或完整分支质量。"
+  - "审美支持4分下界、难度支持至少4；均不主张5。"
+
+delivery:
+  levels_yml_updated: true
+  playable_queue_updated: true
+  playable_exported: true
+  playable_data_verified: true
+  typescript_check_passed: true

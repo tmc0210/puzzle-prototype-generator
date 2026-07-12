@@ -1,0 +1,54 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27
+candidate_version: v27
+review_iteration: 1
+packet_kind: claim_last_claims
+
+design_target:
+  intended_role: late_game_dual_anchor_capstone
+  aesthetic_score_target: 5
+  difficulty_score_target: 5
+  minimum_acceptable: {aesthetic: 4, difficulty: 4}
+
+player_reasoning_claims:
+  forced_setup_not_counted:
+    - B/S 拼接七格 C 形是强制铺垫。
+    - C 形整体右拉并切出连接柱是强制铺垫。
+  reasoning_units:
+    - id: RU1_defer_aligned_crate_goal_until_both_arms
+      question: 切割后是否立即用两次右拉完成已经对齐的近目标？
+      visible_premises:
+        - 上、中切箱已经落在两个 holding goals；下箱在 (6,5)，右目标在 (8,5)，玩家正位于箱右侧。
+        - 两次 right 确实能完成右目标，但完成箱会堵住 pocket 左出口；两条黏臂目标仍在 pocket 外。
+        - 横切把两臂从 x=3-4 送到 x=4-5，同时让出 x=3 中轴，玩家可先用该通道处理两臂再返回。
+      conclusion: 拒绝即时目标收益；先完成两条黏臂，最后才把下箱拉上右目标并封口。
+      exact_rejected_inputs: [right, right]
+      concrete_feedback: 错误分支目标真实覆盖但 complete/no-win；正确终局在五个目标都已就绪时才以相同两步封口并胜利。
+
+role_fit_claim:
+  strengths:
+    - 同一次横切同时改变材质、连通性、目标覆盖与交通：两箱落位、两臂分裂、x=3 中轴开放、终箱与诱饵目标对齐。
+    - 错误选择不是“不行动”或不可执行尝试，而是两次合法对象操作和即时目标完成。
+    - holding goals 锁定多余切箱，完整图因此收束为唯一最终对象配置。
+  risks_to_attack:
+    - 前12步依然脚本化；主要洞见只有“死端目标最后做”，可能不够末期难度4。
+    - 42步包含较多往返，可能接近 RA_CAND_0017 的腾挪负担，却没有同等高耦合推理。
+    - 两个自动完成的 holding goals 可能只是锁件工程，视觉上抬高目标数量但不增加洞见。
+    - 右 pocket 的封口关系可能过于显眼，削弱误导强度。
+
+lineage_claim:
+  relation: fresh
+  non_reused_archive_chains:
+    - 未复用 RA_CAND_0022 的死角反推锚点链。
+    - 未复用 RA_CAND_0025 的 L 形活塞。
+    - 未复用 RA_CAND_0017 的目标腾挪布局或路线。
+  new_causal_chain: 三箱桥拼 C -> 横切并让两箱落 holding goals -> 切割让出中轴 -> 延迟近目标 -> 双臂完成 -> 下箱最终封口。
+
+language_boundary:
+  holding_goals: 位于 (6,3)/(6,4) 的两个目标；横切后上、中连接箱直接覆盖它们并被窄槽锁住。
+  中轴: x=3、rows 1-7 的竖向回程；初始被上下黏臂占住，横切后开放。
+  右侧封口: 下箱从 (6,5) 连续右拉到 (8,5) 后，玩家进入 (9,5) pocket 且无法返回左侧。
+
+claim_last_review:
+  mode: sequential_single_call
+  facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27_facts_packet.yml
+  read_order: facts_then_claim

@@ -1,0 +1,24 @@
+designer_action_iteration: 2
+candidate_id_before: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v9
+candidate_id_after: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v13
+review_loop_state_before: revise_required
+action: revise_structure
+layout_changed: true
+trigger: human_designer_feedback
+reason: v9 的前两项 reasoning unit 用空 exact_inputs 包装不存在的 alternative，属于虚假矛盾；仅改文案仍不足以支持难度4。
+critic_item_triage:
+  - item: v9_RU1_false_alternative
+    response: 删除整项；不再声称初始有“直接处理黏臂”的可执行路径。
+  - item: v9_RU2_false_alternative
+    response: 删除整项；B/S 合体和 C 形切割降为不评分的规范操作段。
+  - item: missing_exact_alternative
+    response: v13 新增真实箱袋分支 [right]，并保留上臂先行18步分支；两者都完整重放且 continuation search complete/no-win。
+structural_delta:
+  - 将 row 5 的 (8,5) 从墙改为空地；切割后玩家可把 x=6 下箱向右拉到 x=7，自身进入 (8,5) 封闭袋。
+  - 该单格变化不改变规范解，但把“处理切出箱”从不可执行想象改成真实、可见、会失败的玩家选择。
+evidence_rerun:
+  solver_cost: 28
+  complete_graph: {reachable_states: 78, legal_transitions: 152, winning_states: 1}
+  solution_uniqueness: unique_complete
+  alternative_report: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v13_alternative_report.yml
+next_step: build_v13_packet_and_restart_review_iteration_1

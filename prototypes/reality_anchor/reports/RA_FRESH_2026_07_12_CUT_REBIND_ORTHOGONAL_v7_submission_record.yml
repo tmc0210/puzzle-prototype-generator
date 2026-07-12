@@ -1,0 +1,51 @@
+candidate_version: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+title: 双锚列车·切柱回织 v7
+prototype: prototypes/Reality_Anchor
+task_scope: specific_prototype_level_design
+submission_status: added_to_pending_playtest
+review_loop_state: proposal_ready_with_caveats
+review_integrity: independent_review
+archive_eligibility: human_pending
+
+target_fit:
+  aesthetic: "支持 4；不主张 5"
+  difficulty: "支持至少 4；不主张 5"
+  campaign_role: game_late_capstone
+
+key_changes:
+  - 四格双锚列车的目标停位与远端 C 形黏块切线合为同一动作。
+  - 一次切割产出三箱柱与两个黏端点，随后分别重拼为屋顶横条、中部覆盖和最终三格 L。
+  - 将玩家目标改为纯规则目标；推理前提只引用当下可见状态，不泄露未来步骤。
+  - 将 35 步规范解与 37 步同终局路线归类为 equivalent_variants_only，不再主张完整唯一解。
+  - 删除无效的 stickyMergeDisabled 诊断结论，证据只保留运行时实际支持的事件与预算边界。
+
+hard_evidence:
+  canonical_solution_cost: 35
+  shortest_layer_path_count: 1
+  shortest_layer_win_state_count: 1
+  known_equivalent_variant_cost: 37
+  equivalent_variant_same_final_state: true
+  required_complete_no_bypass_events:
+    - anchor_boundary_shift:push_pull
+    - sticky_to_box
+    - sticky_split
+  graph_limit: reachable graph exhausted at 500001 states; no complete SCC or all-solutions claim
+
+review_artifacts:
+  candidate_packet: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_candidate_packet.yml
+  final_evidence_review: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_evidence_review_4.yml
+  final_critic_feedback: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_puzzle_critic_2.yml
+  critic_independent_reading: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_critic_independent_reading_2.yml
+  corpus_usage: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_corpus_usage.yml
+  goal_prune_check: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_goal_prune_check.yml
+  opening_comfort_check: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_opening_comfort_check.yml
+  redundant_element_prune: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_redundant_element_prune.yml
+
+nonblocking_caveats:
+  - 35 步中仍有一定绕位与三次“箱入黏侧”的表面重复，因此审美 5 缺少玩家侧依据。
+  - 37 步 bottom-first 与规范解同终局，顺序差只构成两步优化，不能作为核心难度来源。
+  - 完整可达图与部分裁剪扫描在预算内未完备，相关结论保持 unknown，不扩张为全解族声明。
+
+queue:
+  file: prototypes/reality_anchor/playable_queue.yml
+  status: pending_playtest

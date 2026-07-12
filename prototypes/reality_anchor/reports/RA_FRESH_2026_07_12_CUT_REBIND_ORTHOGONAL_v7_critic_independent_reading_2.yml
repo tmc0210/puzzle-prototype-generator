@@ -1,0 +1,48 @@
+review_attempt_id: RA_CRO_V7_CRITIC_ATTEMPT_02
+critic_instance_id: /root/critic_v7_a2
+review_iteration: not_provided_in_raw_packet
+candidate_version_reviewed: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+review_input_type: candidate_version
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家先把底行的 P/L 向右拉开，再把上一行的 B/S 下推到同一横廊并从左侧推动两组锚点；第二次推动使四个锚点格同时落到四个底部目标上，并把上方 C 形黏块切成可分别加工的三箱柱与两个黏端点。随后玩家需要把上箱与上端点做成二格横条送上屋顶双目标，把下箱与下端点合并覆盖中部目标，再把最后一箱送入黏侧并接成顶部三格 L，完成剩余目标。
+  salient_relations_seen:
+    - >-
+      初始可见 P/L 位于底行 x2-x3、B/S 位于其上一行 x2-x3，P/L 右侧是 x4-x7 四个连续目标；第 2、3 步向右输入把 P/L 拉到 x4-x5，第 9 步向下输入把 B/S 推到底行，第 13、14 步从左向右推动 B/S，使其与 P/L 组成的四格列车依次右移，最终覆盖 x4-x7，因此后续不再需要逐格处理这四个底部目标。
+    - >-
+      初始上方可见五格 C 形黏块；第 14 步推动四格锚点列车后，棋盘同时出现 x4 的三箱柱和 x5 的上下两个分离黏端点，因此玩家后续获得了三次“箱进入黏侧后再移动”的材料，而不是只完成锚点归位。
+    - >-
+      第 20 步上箱推动上端点后合并为二格横条，第 21、24 步把该横条右移再上推，屋顶两个目标同时被覆盖；这会消耗上端点并留下 x6,y2 顶部目标，迫使剩余材料承担不同的收尾职责。
+    - >-
+      第 30 步最下箱与下端点合并并覆盖中部 x6,y4 目标；第 34 步最后箱进入黏侧成为单格黏块，第 35 步再右推使其进入 x6,y2 并与屋顶横条合成三格 L，因此最后一箱的操作会改变屋顶横条的形状并直接触发胜利。
+  unclear_or_unreadable_parts:
+    - >-
+      原始布局与规则足以显示锚点边界变化会切分旧黏块，但 raw trace 没有呈现玩家在第 14 步前能否仅凭当前画面准确预判“x4 三箱柱加 x5 两个分离端点”这一具体结果；若该结果只能靠执行后观察，核心转折的计划感会弱于其视觉变化。
+    - >-
+      从第 14 步出发的 bottom-first 重放表明先处理下箱也是合法的，并能先覆盖中部目标，但材料没有给出该路线的后续可解性或失败反馈；目前无法判断上、中、末三段是否存在玩家可见的稳定改序理由，还是允许通过局部试走逐项排除。
+  initial_quality_risks:
+    - >-
+      第 2、3、9、13 步的锚点准备动作本身较直接；其质量取决于玩家是否能在行动前把它们与第 14 步的远端切分结果建立因果，而不是事后才把一串腾挪理解为机关启动。
+    - >-
+      切分后的三次加工都含有“箱推向黏端点并合并”的表面重复。屋顶二格横条、中部覆盖、最终三格 L 的结果确实不同，但 raw-only 阶段尚不能确认这些差异是否产生足够强的顺序推理，还是主要增加执行段长度。
+    - >-
+      overshoot 重放在第 14 步后继续向右会立刻撞外墙且状态不变，这个错误方向反馈清楚但过于廉价，不能单独支撑难度；真正的难度边界取决于 bottom-first 等合法局部收益路线能否由共同的可见关系提前剪枝。
+  exact_basis:
+    - "layout.step_0: P/L 在底行 x2-x3，B/S 在 y6 的 x2-x3，底行 x4-x7 为连续四目标，上方为五格 C 形黏块"
+    - "canonical.step_2-step_3: 两次 right 将 P/L 从 x2-x3 依次移到 x4-x5"
+    - "canonical.step_9,step_13-step_14: B/S 下推到底行后推动相邻 P/L；第二次右推同时覆盖底部 x4-x7 并把 C 形黏块切成 x4 三箱柱与 x5 两个分离黏端点"
+    - "canonical.step_20-step_24: 上箱与上端点合成二格横条，右移并上推后同时覆盖屋顶两个目标，x6,y2 仍空"
+    - "canonical.step_30,step_34-step_35: 下箱与下端点合并覆盖 x6,y4；最后箱进入黏侧后右推，与屋顶横条合成三格 L 并获胜"
+    - "alternative.bottom_first from canonical.step_14: [up, up, up, right] 合法且先覆盖中部目标，但未提供后续结果"
+    - "alternative.overshoot from canonical.step_14: [right] 因最右锚点将进入外墙而立即失败，状态不变"

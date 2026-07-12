@@ -1,0 +1,89 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+review_input_type: evidence_disagreement
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: evidence_disagreement.ruleCounterfactuals.stickyMergeDisabled
+    evidence_basis: >-
+      争议成立：mechanics.ts:755 只查询 disabled rule id
+      box_sticky_normalize；若未关闭该规则，mechanics.ts:794 仍按黏格邻接计算
+      connectedStickyComponents，并在 mechanics.ts:807 对多来源连通分量发出
+      sticky_merge。代码中不存在对 disabledRules:sticky_merge 的语义分支。因此旧
+      bounded stdout 虽把同一 35 步胜解记在 stickyMergeDisabled 下，却没有证明
+      sticky merge runtime 语义被关闭；该字段不是 exact no-merge bypass，不能继续用来
+      反驳候选的重拼声明。
+  - target_ref: mechanism_scope.central[2]
+    evidence_basis: >-
+      revised central 已明确限定为“规范唯一最短解中”。bounded stdout 的
+      shortestSolutionEnumeration 完整枚举至首个胜利深度 35，记录
+      shortestPathCount=1、shortestWinStateCount=1；唯一示例与 canonical replay 的
+      35 步输入一致，并含三次 sticky_merge:n1。canonical steps 20、30、35 的逐步状态
+      分别显示箱转黏后与端点/既有黏块重新连通，step 35 最终形成覆盖顶部三目标的 L 形
+      连通黏块并胜利。该声明没有再声称完整图上的 merge 必经性。
+  - target_ref: solution_uniqueness
+    evidence_basis: >-
+      result 为合法枚举值 unique_within_budget。首胜深度层枚举为
+      complete_through_first_win_depth，最短深度 35 且 shortestPathCount=1；同时 layout
+      analysis 明确完整图在 500000 状态预算处 exhausted。packet 如实保留预算限定，未把
+      结果写成 unique_complete，与提交证据无明显冲突。
+  - target_ref: evidence.winning_path_event_checks
+    evidence_basis: >-
+      bounded stdout 与 packet 一致地区分完整避事件扫描和预算耗尽扫描：
+      anchor_boundary_shift:box_sticky、sticky_to_box、sticky_split 为
+      complete_no_bypass；anchor_boundary_shift:push_pull、box_to_sticky、
+      sticky_merge、move_sticky_rigid 均在 750000 状态附近 exhausted。后四项仅列入
+      bounded_no_bypass_events_not_claimed_complete，未被写成 all-solution required gate。
+  - target_ref: mechanic_scope.required_winning_path_events
+    evidence_basis: >-
+      anchor_boundary_shift:box_sticky、sticky_to_box、sticky_split 均出现在 canonical
+      胜利 trace，且相应避事件子图完整并无胜路，支持这三个事件的 winning-path required
+      声明；该结论不依赖已耗尽的完整状态图。
+  - target_ref: mechanic_exposure_context
+    evidence_basis: >-
+      mechanic_exposure_sequence.yml 将 dual_anchor 列为当前暴露序列末端，初态确有 P/L
+      与 B/S 共存；claimed_core_events 均属于该阶段或更早阶段。不存在 dual_anchor 之后
+      需要完整 reachable scan 排除的 later event/configuration，packet 也未声明
+      forbidden_if_seen_anywhere。
+  - target_ref: player_reasoning.operation_segments_and_trace_partition
+    evidence_basis: >-
+      SEG1-SEG6 的 step_range 连续覆盖 canonical steps 1-35，exact_inputs 与 replay
+      一致且无重叠或遗漏；canonical replay completed=true、legalThroughStep=35、
+      final.isWin=true，各段所述机械状态变化与逐步 trace 相符。
+  - target_ref: player_reasoning.RU1_four_cell_anchor_train
+    evidence_basis: >-
+      canonical steps 2-3 将 P/L 向右 pull 两格，step 9 下推 B/S，steps 13-14 以
+      force_chain:n2 同行移动两锚点；step 14 后 B/S/P/L 覆盖底部 x4-x7，并发生
+      sticky_to_box:n3 与 sticky_split:n1。overshoot replay 的 step 15 因
+      force_blocked 非法且状态不变，支持所述局部反例结果。
+  - target_ref: player_reasoning.RU2_split_output_order
+    evidence_basis: >-
+      revised concrete_outcome 只陈述 replay 可见状态：bottom-first 的非空后缀
+      [up, up, up, right] 全部合法，step 18 后下端形成 x5-x6,y4 二格黏块、玩家位于
+      x4,y4，上端点仍与其间两格箱柱分隔，且 final.isWin=false。上一轮无证据支持的
+      “最短层不再能保持规范顺序”已删除，不再存在 returned trace 到最短层结论的过度解释。
+  - target_ref: player_reasoning.RU3_rebuild_final_l
+    evidence_basis: >-
+      canonical step 30 后下端为二格黏块；steps 31、34、35 依次上推剩余箱、触发
+      box_to_sticky，再推动黏格并触发第三次 sticky_merge。step 35 后顶部
+      x6,y1、x7,y1、x6,y2 属于同一连通黏块且 final.isWin=true，支持终局机械说明。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >-
+    layout graph 在 reachableStateCount=500001 时因 maxStates=500000 耗尽；不能推出
+    完整图唯一性、完整 SCC、所有深度解族或完整图上的 merge 必经性。
+  - >-
+    anchor_boundary_shift:push_pull、box_to_sticky、sticky_merge、move_sticky_rigid 的
+    避事件扫描均 exhausted，只能支持声明预算内未见旁路，不能支持 all-solution necessity。
+  - >-
+    旧 bounded stdout 的 ruleCounterfactuals.stickyMergeDisabled 没有关闭 runtime 合并
+    语义，因此既不能作为 exact no-merge bypass，也不能作为关闭 sticky merge 后仍可获胜的
+    反事实证据；仅其独立的避事件扫描与最短层枚举部分可按各自边界使用。
+  - >-
+    objectParticipation 为空；证据支持事件 pattern、逐步状态和规范最短 trace 中的三次
+    重拼，不支持 per-object necessity 或未记录的实例级身份归因。
+  - >-
+    calibrated_trace_metrics 不属于 evidence；本审查不评价审美、难度、好玩程度、玩家问题
+    显著性或 campaign placement。
+questions_for_designer: []

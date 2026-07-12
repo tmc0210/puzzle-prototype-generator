@@ -1,0 +1,40 @@
+review_attempt_id: RA_NEW_CROSS_RELAY_REVIEW_1
+candidate_version: RA_NEW_2026_07_12_CROSS_ANCHOR_RELAY_v1
+prototype_rules:
+  rules:
+    - P/L 与 B/S 都是可平移二格锚点；P/L 定义 push/pull 侧，B/S 定义箱/黏材料边界。
+    - pull 拉动玩家身后一格的完整对象；推拉可形成 force chain；相邻黏格自动合并。
+  win_condition: 所有目标由对象覆盖。
+solve_instance:
+  layout: |-
+    ########
+    ##.@#..#
+    ###CP..#
+    ##G.L.G#
+    ###BS#.#
+    ##...M##
+    #.GC####
+    ########
+  canonical_exact_inputs: [down, right, down, up, right, up, right, down, left, down, left, down, down, left, left, down, left]
+mechanically_derived_trace:
+  completed: true
+  legal_through_step: 17
+  final_win: true
+  significant_states:
+    - {step: 1, events: [push_crate], visible_change: 上箱下推一格}
+    - {step: 2, events: [push_P/L], visible_change: P/L 右移，释放 L 侧站位}
+    - {step: 4, events: [pull_B/S, force_chain], visible_change: B/S 上提，B 半格把上箱顶回原行}
+    - {step: 5, events: [push_P/L], visible_change: P/L 右移，L 覆盖右目标}
+    - {step: 8, events: [push_P/L], visible_change: P/L 下移，右目标改由 P 覆盖}
+    - {step: 11, events: [push_B/S, box_to_sticky], visible_change: B/S 左移覆盖左目标，上下两箱同时转为分离黏格}
+    - {step: 15, events: [move_sticky_rigid, sticky_merge], visible_change: 初始黏格与下黏格合并成竖条}
+    - {step: 17, events: [move_sticky_rigid, sticky_to_box], visible_change: 竖条左拉跨界切回两箱，下格覆盖底目标并胜利}
+raw_alternatives:
+  - {from: step5, exact_inputs: [down, left], result: 第二步因仍在 pull 侧且前格被 B/S 占据而失败，状态不变}
+  - {from: step13, exact_inputs: [left, down], result: 第二步因下方已有未合并黏格而失败，状态不变}
+archive_taste_context_refs:
+  - positive_compact_reversal.yml
+  - positive_active_constructor.yml
+  - negative_high_cost_branching.yml
+  - negative_forced_order_show.yml
+

@@ -1,0 +1,104 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27
+candidate_version: v27
+review_iteration: 1
+packet_kind: claim_last_facts
+
+prototype_rules:
+  win_condition: all_targets_covered_by_objects
+  push_pull_boundary: P=(4,12), L=(5,12); x<=4 push, x>=5 pull
+  box_sticky_boundary_initial: S=(4,10), B=(5,10); x<=4 sticky, x>=5 box
+  normalization: 每次合法移动后按 B/S 半平面归一化；相邻 sticky 自动合并，跨 box side 的 sticky 格变箱，剩余 sticky 按连通块分裂。
+
+layout: |-
+  ############
+  ###...######
+  ###.G.######
+  ###MMCG#####
+  ###.#CG##.##
+  ###MMC..G.##
+  ###.G.#.#.##
+  ###.....####
+  ####.#######
+  ####.#######
+  ##@.SB.#####
+  ############
+  ####PL######
+  ############
+
+exact_solution:
+  cost: 42
+  inputs: [right, right, up, up, up, right, right, right, up, up, left, right, down, down, left, left, up, left, left, up, up, up, up, right, right, up, left, left, down, down, down, down, down, right, right, down, right, right, up, up, right, right]
+  non_walk_steps:
+    - {step: 2, input: right, events: [push_object:box_sticky_anchor, anchor_boundary_shift:box_sticky, box_to_sticky:n3, sticky_merge:n1]}
+    - {step: 12, input: right, events: [pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n3, sticky_split:n1]}
+    - {step: 26, input: up, events: [pull_object:sticky#1, move_sticky_rigid]}
+    - {step: 36, input: down, events: [pull_object:sticky#2, move_sticky_rigid]}
+    - {step: 41, input: right, events: [pull_object:crate#3]}
+    - {step: 42, input: right, events: [pull_object:crate#3]}
+
+verified_alternative:
+  id: ALT1_fill_near_crate_goal_immediately
+  from: canonical state after step 12
+  exact_inputs: [right, right]
+  legal: true
+  immediate_effect: 下箱从 (6,5) 经 (7,5) 到 (8,5)，右目标被覆盖，玩家进入 (9,5)。
+  continuation: {status: complete, found: false, explored_states: 3}
+
+hard_evidence:
+  solver: {found: true, status: found, cost: 42, explored_states: 1518}
+  graph: {status: complete, reachable_states: 94204, legal_transitions: 221725, winning_states: 1}
+  solution_uniqueness: {result: unique_complete, exact_optimal_input_paths: 3, optimal_winning_states: 1, distinct_optimal_non_walk_signatures: 1, winning_object_configuration_groups: 1}
+  all_winning_path_events:
+    status: complete
+    missing_required_winning_path: false
+    required: [anchor_boundary_shift:box_sticky, box_to_sticky, sticky_merge, sticky_to_box, sticky_split, pull_object, move_sticky_rigid]
+  all_winning_path_sequence:
+    status: complete
+    violating_winning_path: false
+    obligations:
+      - 同一步 B/S 位移 + box_to_sticky + sticky_merge
+      - 其后同一步 pull + move_sticky_rigid + sticky_to_box + sticky_split
+      - 切割后至少两次独立 sticky rigid move
+      - 不得在两条黏臂目标都完成前覆盖 (8,5) 右箱目标
+
+calibrated_trace_metrics:
+  calibration: reality_anchor_trace_metrics_v0
+  status: pilot
+  solution_execution_pressure:
+    status: enabled
+    components:
+      solutionCost: {raw: 42, band: 5, weight: 0.35}
+      nonWalkEventCount: {raw: 14, band: 3, weight: 0.45}
+      heavyReuseRatio: {raw: 0.125, band: 4, weight: 0.2}
+    aggregateBand: 4
+  solution_space_reuse:
+    status: enabled
+    components:
+      revisitRate: {raw: 0.3953488372093023, band: 4, weight: 0.55}
+      heavyReuseRatio: {raw: 0.125, band: 4, weight: 0.45}
+    aggregateBand: 4
+
+routed_diagnostics:
+  - 前12步为强制铺垫，不作为 reasoning unit。
+  - 切割后主区域有真实 dead commitments；早填右目标是两步合法、完成目标后 terminal no-win 的 exact 分支。
+  - 完整图唯一胜态；所有胜路必须先完成两臂，再覆盖右目标。
+  - 42步、aggregate band4 与唯一性不证明困难4或审美4。
+
+archive_taste_context:
+  - {candidate_id: RA_CAND_0017, human_reviewed: true, human_scores: {aesthetic: 4, difficulty: 5}, human_comment: 很精彩的末期挑战，推拉与黏块拼接切割要求高，精巧、高密度、高耦合；但腾挪负担很高。}
+  - {candidate_id: RA_CAND_0022, human_reviewed: true, human_scores: {aesthetic: 5, difficulty: 4}, human_comment: 反直觉操作、空间利用率高、结构精巧，短步骤中要求强洞见，是优秀范例。}
+  - {candidate_id: RA_CAND_0025, human_reviewed: true, human_scores: {aesthetic: 4, difficulty: 4}, human_comment: 紧凑空间内主动构造 L 形，前段构造不喧宾夺主，终局提示恰当，达到强4。}
+  - {candidate_id: RA_CAND_0024, human_reviewed: true, human_scores: {aesthetic: 1, difficulty: 3}, human_comment: 双锚点与三个黏块抬高切割拼接期待，实际几乎只是推拉腾挪；不要迷信指标和探针。}
+
+evidence_limits:
+  - exact early-goal branch 不证明诱惑强度；holding goals 也可能被玩家读成自动反馈而非推理。
+  - 工具不证明42步回程是否紧凑、疲劳或具有审美价值。
+  - 上下黏臂先后不作排他主张；唯一顺序主张是两臂均先于右目标。
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27_event_gate_report.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27_alternative_report.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27_candidate_packet.yml
+
+read_next: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27_claim_packet.yml

@@ -1,0 +1,39 @@
+opening_comfort_check:
+  candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31
+  status: clean
+  initial_player: [1, 10]
+  exact_graph:
+    status: complete
+    reachable_states: 514270
+    initial_scc_size: 2
+    initial_scc_outgoing_count: 1
+    initial_scc_dead_outgoing_count: 0
+    initial_region_commitments: 1
+    initial_region_viable_commitments: 1
+    initial_region_dead_commitments: 0
+  opening_read:
+    reversible_observation_steps: 1
+    first_legal_input: right
+    first_legal_events: [walk]
+    first_irreversible_input: right
+    first_irreversible_step: 2
+    first_irreversible_events:
+      - push_object:box_sticky_anchor
+      - anchor_boundary_shift:box_sticky
+      - box_to_sticky:n3
+      - sticky_merge:n1
+    dead_exits_before_first_viable_exit: 0
+  alternate_initial_scc_starts:
+    - position: [1, 10]
+      disposition: selected
+      distance_to_commitment_source: 1
+      reason: 保留一步可逆观察，让玩家先看清 B/S 的推侧关系。
+    - position: [2, 10]
+      disposition: rejected
+      distance_to_commitment_source: 0
+      reason: 会把玩家直接放在唯一不可逆拼接动作前，开局舒适度更差。
+  core_chain_preserved: true
+  conclusion: 当前起点提供一步可逆观察，无前置死出口；不移动起点。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_event_gate_report.yml

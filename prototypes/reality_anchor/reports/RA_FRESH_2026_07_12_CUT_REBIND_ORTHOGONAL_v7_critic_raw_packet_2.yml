@@ -1,0 +1,99 @@
+review_attempt_id: RA_CRO_V7_CRITIC_ATTEMPT_02
+candidate_version: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+prototype_context:
+  rules:
+    - P/L 是可平移二格锚点；玩家在 P 侧输入为 push，在 L 侧输入为 pull。
+    - B/S 是可平移二格锚点；动作后箱/黏按 B/S 新边界归一化，相邻黏格合并，旧黏块可被切开。
+    - 黏连通块是刚体；推拉会沿方向形成 force chain；任一目标格撞墙则整次动作失败。
+  win_condition: 所有目标由箱、黏格或锚点格覆盖；玩家不算覆盖。
+  tool_boundary: 下列 trace 由同一 exact inputs 运行时 replay；完整图在 500000 状态耗尽。
+solve_instance:
+  layout: |
+    ##########
+    ######GG##
+    ###.MMG.##
+    ###.M...##
+    ###.MMG.##
+    ###...#.##
+    #.BS@...##
+    #.PLGGGG##
+    ##########
+  player_start: [4, 6]
+  canonical_exact_inputs: [down, right, right, up, left, left, up, left, down, left, left, down, right, right, up, up, up, up, up, right, right, down, right, up, left, left, left, down, down, right, up, left, up, right, right]
+mechanically_derived_trace:
+  source: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_canonical.json
+  completed: true
+  legal_through_step: 35
+  final_win: true
+  significant_states:
+    - step: 0
+      inputs_so_far: []
+      events: []
+      visible_state: 初始 P/L 在底行 x2-x3，底行 x4-x7 是四连续目标；B/S 在上一行 x2-x3；上方是五格 C 形黏块与四个材料目标。
+    - step: 2
+      input: right
+      events: [pull_object:push_pull_anchor, anchor_boundary_shift:push_pull]
+      visible_change: P/L 从 x2-x3 向右到 x3-x4，玩家到 x5,y7。
+    - step: 3
+      input: right
+      events: [pull_object:push_pull_anchor, anchor_boundary_shift:push_pull]
+      visible_change: P/L 再右移到 x4-x5，玩家到 x6,y7。
+    - step: 9
+      input: down
+      events: [push_object:box_sticky_anchor, anchor_boundary_shift:box_sticky]
+      visible_change: B/S 从 y6 下推到 y7，落在 P/L 左侧同一横廊。
+    - step: 13
+      input: right
+      events: [push_object:box_sticky_anchor, force_chain:n2, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky]
+      visible_change: B/S 推动相邻 P/L，两个锚点作为四格列车一起右移一格。
+    - step: 14
+      input: right
+      events: [push_object:box_sticky_anchor, force_chain:n2, anchor_boundary_shift:push_pull, anchor_boundary_shift:box_sticky, sticky_to_box:n3, sticky_split:n1]
+      visible_change: 四格列车落在底部 x4-x7 四目标；C 形黏块变成 x4 的三箱柱与 x5 的上下两个分离黏端点。
+    - step: 20
+      input: right
+      events: [push_object:crate, force_chain:n2, move_sticky_rigid, box_to_sticky:n1, sticky_merge:n1]
+      visible_change: 上箱推动上端点，跨入黏侧后形成二格横条。
+    - step: 21
+      input: right
+      events: [push_object:sticky, move_sticky_rigid]
+      visible_change: 上端二格横条整体右移到屋顶入口下方。
+    - step: 24
+      input: up
+      events: [push_object:sticky, move_sticky_rigid]
+      visible_change: 二格横条整体上移，屋顶两个目标同时被覆盖；x6,y2 的第三个顶部目标仍空。
+    - step: 30
+      input: right
+      events: [push_object:crate, force_chain:n2, move_sticky_rigid, box_to_sticky:n1, sticky_merge:n1]
+      visible_change: 最下箱与下端点形成二格横条，中部 x6,y4 目标被覆盖。
+    - step: 34
+      input: right
+      events: [push_object:crate, box_to_sticky:n1]
+      visible_change: 最后箱进入黏侧成为单格黏块，位于顶部 L 目标左侧。
+    - step: 35
+      input: right
+      events: [push_object:sticky, move_sticky_rigid, sticky_merge:n1]
+      visible_change: 单格黏块进入 x6,y2，与 x6,y1-x7,y1 屋顶横条连成三格 L；所有目标覆盖并胜利。
+raw_alternative_replays:
+  - source: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_overshoot_attempt.json
+    from_state: canonical.step_14
+    exact_inputs: [right]
+    result: illegal_force_blocked; state unchanged because the rightmost anchor cell would enter the outer wall.
+  - source: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_bottom_first_attempt.json
+    from_state: canonical.step_14
+    exact_inputs: [up, up, up, right]
+    result: legal; lower crate and endpoint merge and cover the middle target while the player remains below the two upper crates.
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0017
+      human_scores: {aesthetic: 4, difficulty: 5}
+      human_comment: 很精彩；推拉和黏块拼接切割要求极高，有大量反直觉操作；精巧、高机制密度、高要素耦合值得学习。
+    - candidate_id: RA_CAND_0022
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: 先送箱进似死角再反向送目标；空间利用率高、结构精巧、短步骤要求强洞见。
+    - candidate_id: RA_CAND_0025
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: 狭小空间主动构造 L 形，前段不抢戏，终局双目标提示恰到好处，结构紧凑逻辑清晰。
+    - candidate_id: RA_CAND_0024
+      human_scores: {aesthetic: 1, difficulty: 3}
+      human_comment: 双锚点与三黏块抬高精彩构造预期，实际只剩推拉腾挪；不要迷信指标与探针。

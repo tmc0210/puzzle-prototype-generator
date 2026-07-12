@@ -1,0 +1,68 @@
+redundant_element_prune:
+  candidate_version: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+  status: clean
+  sequence:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+  candidates_checked:
+    - element: {kind: object, id_or_cell: "upper_crate@[3,2]"}
+      action_tested: eligibility_scan
+      result: keep
+      semantic_role: structural
+      reason: canonical step1 移动、step4 被 B 半格回送、step11 转黏；不是静态 blocker 或未参与对象。
+    - element: {kind: object, id_or_cell: "lower_crate@[3,6]"}
+      action_tested: eligibility_scan
+      result: keep
+      semantic_role: structural
+      reason: step11 转黏、step15 与初始黏格合并、step17 切回箱覆盖底目标。
+    - element: {kind: object, id_or_cell: "initial_sticky@[5,5]"}
+      action_tested: eligibility_scan
+      result: keep
+      semantic_role: structural
+      reason: steps14-15 左拉并与下黏格合并，是终局竖条上半。
+    - element: {kind: object, id_or_cell: push_pull_anchor}
+      action_tested: eligibility_scan
+      result: keep
+      semantic_role: structural
+      reason: canonical 移动3次，完整 count gate 证明所有胜路至少移动3次。
+    - element: {kind: object, id_or_cell: box_sticky_anchor}
+      action_tested: eligibility_scan
+      result: keep
+      semantic_role: structural
+      reason: canonical 移动2次，完整 count gate 证明所有胜路至少移动2次。
+    - element: {kind: space, id_or_cell: [2, 1]}
+      action_tested: wall_prune
+      result: keep
+      semantic_role: opening_comfort
+      reason: >
+        它是唯一不在 canonical 占格集合中的地面，但支持 [left,right] 无事件可逆观察。
+        实际墙化反事实保持17步、规范解胜、完整图349状态且核心事件无旁路，却把 initial SCC 从2降为1并取消 left 观察，
+        触发 opening comfort 变坏硬门槛，因此保留。
+      hard_facts:
+        cost_delta: 17->17
+        graph_status: complete
+        graph_states: 349
+        expected_trace_win: true
+        core_event_bypass: none
+        opening_delta: initial_scc_2_to_1_and_left_observation_removed
+        target_obligation_bypass: none
+    - element: {kind: wall_outline, id_or_cell: outer_boundary}
+      action_tested: trim
+      result: keep
+      semantic_role: structural
+      reason: 外框仅一层且所有外沿非墙格均不存在，没有可裁的 wall-only 厚边或空行列。
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline: []
+  retained_elements:
+    - {kind: objects, id_or_cell: all_initial_objects, reason: all move_or_transform_in_canonical_and_have_all_win_event_gates}
+    - {kind: space, id_or_cell: [2, 1], reason: reversible_opening_observation}
+  evidence_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_goal_prune_check.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_pre_submission_evidence.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4.json
+    - prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4.json

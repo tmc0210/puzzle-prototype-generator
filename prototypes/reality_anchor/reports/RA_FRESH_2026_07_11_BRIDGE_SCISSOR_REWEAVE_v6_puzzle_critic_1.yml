@@ -1,0 +1,151 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+review_input_type: candidate_version
+verdict: revise_required
+review_loop_state: revise_required
+required_action: revise_claim_and_rereview
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: "把右侧四个 G 全部用对象覆盖；棋面把顶部 P/L 双锚区、底部 B/S 转换区与中间黏块几何同时放进达成目标的操作空间。"
+  salient_relations_seen:
+    - "玩家看见中列三格纵向 M 及其右上、右下两格 m，右侧四个 G 与上下两个锚区；规范操作先移动黏刚体，再跨 P/L 与 B/S 边界，棋盘由黏体发生 n3 黏转箱并切出 n1、随后 n1 箱转黏并重拼 n1，因此后续目标覆盖必须利用切后对象角色与重拼后的几何继续改序。"
+    - "玩家若开局立即向右，眼前 B/S 边界会立刻造成 n3 黏转箱与 n1 切割；棋盘过早获得分离件，但从该局面到胜利最短还需 36 步、总计 37 步，因此规范 21 步路线要求先用向上四步及后续锚区操作改变局面，再消费切割结果。"
+    - "规范路线中箱转黏与黏重拼各发生一次；完成这些操作后棋盘能在 21 步获胜，跳过任一事件仍存在 64 步胜路，因此重拼明确改变后续路线效率与操作责任，却不是所有胜路的硬门。"
+  unclear_or_unreadable_parts:
+    - "facts packet 未展示逐步棋面，尚不能仅凭事件表确认每次切割与重拼发生时玩家可见的具体局部形状、哪一目标/通道因此新增或失去可达操作。"
+    - "完整图预算耗尽，unique、完整 SCC 与所有胜路顺序未知；该图事实本身不提供玩家侧质量结论。"
+  initial_quality_risks:
+    - "64 步无箱转黏/无重拼胜路可能是非阻塞长绕路，也可能削弱‘拼接是核心洞见’的承诺；必须由 claim 中的玩家问题、alternative 与可归因反馈说明为何 21 步因果链而非路线税成立。"
+    - "规范解 21 步、非行走事件 25 个且执行压力 band 4，只说明状态操作密集；若额外事件没有被后续具体消费，困难度可能来自执行与改序负担而非至少 4 分的结构推理。"
+    - "紧凑、近对称的黏块与双锚布局具有清晰视觉骨架，但若 claim 不能把切割、分件、重拼逐项连到可预测的后续操作，仍可能重演 RA_CAND_0024 的机制外观强而玩家洞见弱。"
+
+player_facing_merits:
+  - id: MERIT_REUSED_COLUMN
+    exact_scene: "开局玩家在 (3,6)，完整 C 形位于 x=5..6、P/L 位于其上方；玩家先沿左侧空列上行并向右推动完整 C 形一格，旧 x=5 连接柱位置成为 P/L 下方连续竖槽，随后三次 down 能把 P/L 拉过刚腾出的同一列，使后续 P/L 可从下方回推中箱。"
+    player_facing_value: "同一列先承担黏体占位、再承担锚点通道、最后承担回推准备，前一步的空间让渡被后一步直接消费，形成紧凑而可归因的空间复用。"
+  - id: MERIT_CUT_ASSIGNMENT
+    exact_scene: "C 形右移后连接柱落在 x=6、上下端点落在 x=7；玩家把 B/S 右推到 B=x6、S=x7，棋盘把 x=6 三格转换成箱并把 x=7 上下黏端点分开，于是上下箱留在左列目标，中箱获得被 P/L 回推的独立角色。"
+    player_facing_value: "切割不是装饰性事件：切后同一原物被分配为两个已覆盖件、一个待回织中箱和两个黏端点，直接改变后续每个对象能执行的操作。"
+  - id: MERIT_REBIND_PAYOFF
+    exact_scene: "切后 x=7 上下端点之间留出中间缺口；玩家把 P/L 从下方带回中线并推动 x=6 中箱进入缺口，第20步出现三格竖直黏条，第21步再将整条刚体右送至 x=8 的三目标，同时 P/L 留在 x=6 中央目标。"
+    player_facing_value: "中箱先作为切割产物、再作为连接件改变两个端点的刚体关系，最后新刚体一次承担三目标覆盖；拼接结果立即产生新的整体移动能力和清晰终局回报。"
+  - id: MERIT_EARLY_CUT_TEMPTATION
+    exact_scene: "开局向右会立即使 B/S 触发 n3 黏转箱与 n1 切割，看似先获得分件；但该局面最短仍需 36 步，而先上行移动完整 C 形后规范路线总计 21 步。"
+    player_facing_value: "最邻近的机制动作给出真实局部收益却破坏高效顺序，要求玩家在切之前先判断完整几何还需承担的通道让渡责任。"
+
+supported_reasoning:
+  - unit_ref: RU1_make_anchor_chute_before_cut
+    reason: "行动前能看见 P/L 下方被连接柱占据；先整体右移会具体空出连续竖槽，且开局立即切割虽合法并有反馈却把最短总成本提高到 37，因此问题不是唯一显然动作。"
+  - unit_ref: RU2_pull_pl_through_reused_column
+    reason: "C 形右移后玩家位于 L 侧、继续向右被刚体占位阻止，而向下能把身后的 P/L 拉入新槽；锚点下移被 RU4 回推中箱继续消费。"
+  - unit_ref: RU3_cut_old_bridge_and_assign_outputs
+    reason: "B/S 的箱侧与黏侧分别对准 x=6 连接柱、x=7 端点时，操作会把一个 C 形拆成角色不同的三箱与两端点，切后对象分工可从棋盘结果直接观察。"
+  - unit_ref: RU4_reweave_middle_then_move_as_rigid_bar
+    reason: "中箱与上下端点的缺口同轴，P/L 已被前序移动到可回推位置；把中箱推入缺口后新竖条才可作为整体右移并同时覆盖右列三目标，兑现了前序让槽、拉锚与切割分工。"
+
+archive_taste_context_used:
+  status: used_human_reviewed_only
+  anchors:
+    - "RA_CAND_0017：人评审美4、难度5；以推拉、黏块拼接切割、反直觉操作作为高难正锚。"
+    - "RA_CAND_0022：人评审美5、难度4；以看似死局操作、反向输送和高空间利用作为5分审美正锚。"
+    - "RA_CAND_0025：人评审美4、难度4；以紧凑空间、主动构造和复用结构作为强4分下界锚。"
+    - "RA_CAND_0024：人评审美1、难度3；以承诺切割拼接却实际主要推拉腾挪、缺少玩家洞见作为失败警戒。"
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_negative
+  positive_anchors: [RA_CAND_0017, RA_CAND_0022, RA_CAND_0025]
+  lower_bound_or_negative_anchors: [RA_CAND_0024]
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: "aggregateBand=4；solutionCost=21/band4，nonWalkEventCount=25/band5，heavyReuseRatio=0/band1。"
+    allowed_reading: "规范解具有较高的动作与状态管理密度，但该指标不测量洞见、因果依赖或审美。"
+    player_facing_check: "主要非行走变化具有后续消费：完整黏体右移让出 P/L 槽，锚点下拉为回推中箱准备，切出的中箱被回织，回织竖条随即整体入目标；因此当前未见纯粹为拉长解长而重复的机制段。"
+    verdict_effect: merit
+  solution_space_reuse:
+    metric_fact: "aggregateBand=2；revisitRate=0.3181818181818182/band3，heavyReuseRatio=0/band1。"
+    allowed_reading: "规范解不主要依赖高频回访；该低值不能否定一次具有新用途的列空间复用。"
+    player_facing_check: "x=5 旧连接柱列先被腾空、再供 P/L 下拉，确有状态变化后的新用途，但整体轨迹没有高强度重复工作区证据。"
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: "规范21步体验可支持人评审美4分下界：紧凑棋面中完整几何让槽、定点切割、对象分工、回织新刚体与终局三目标覆盖连续兑现，明显强于 RA_CAND_0024 的机制承诺落空；但当前不足以支持追求5分，因为无重拼胜路对实际玩家体验的概念吸引力尚未说明，不能只凭64步长度把它视为无害绕路。"
+difficulty_target_fit: "规范路线支持难度至少4：玩家需在立即切割的真实诱惑前保留完整 C 形，预见同一列将转为锚点通道，再把切割输出分配为覆盖件、连接件与端点，最后消费 P/L 位置完成回织；难度来源是跨阶段因果和角色改写而非21步路线税。未由当前人评锚或玩家侧材料支持难度5的明确结论。"
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI_PLAYER_GOAL_NAMES_SOLUTION
+    type: core_blocker
+    target_ref: player_goal
+    design_relation: "玩家看见六个目标与可覆盖它们的对象；真实目标是覆盖全部目标，但字段直接要求‘用同一根重拼竖直黏条’与指定 P/L/箱分工，预先写入了规范解。"
+    attack: "该表述不是玩家在行动前拥有的目标，而是解法命名；它把 RU1-RU4 本应产生的问题提前回答，削弱 player_question 的评审可读性。"
+    evidence_basis: "facts packet 的 win_condition 是 all_targets_covered_by_objects；claim 的 player_goal 额外指定重拼竖条、上下箱和 P/L 各自覆盖哪一列。"
+    player_facing_effect: "无法从该字段区分玩家自然形成的目标、设计者期望路线和事后规范解摘要。"
+    blocks_proposal_ready: true
+    expected_designer_response: revise_claim
+  - id: CI_NO_MERGE_ROUTE_UNRESOLVED
+    type: context_gap
+    target_ref: RU4_reweave_middle_then_move_as_rigid_bar.alternative
+    design_relation: "规范路线把中箱推入 x=7 两端点之间并形成竖条，随后整体右送；但另有64步胜路完全跳过 box_to_sticky 与 sticky_merge。"
+    attack: "64 对 21 的长度差只能说明执行成本，不说明无重拼路线在玩家概念上更难、更隐蔽或只是笨重绕路。若它以更直接的逐件腾挪获胜，实际玩家可能避开回织洞见，仍会部分重演 RA_CAND_0024 的机制承诺落空。"
+    evidence_basis: "event gate 只证明 avoiding win first cost=64；claim 未给出该路线的可见入口、核心对象角色、关键局面或与规范路线的玩家问题对比。"
+    player_facing_effect: "当前不能判断‘重拼是游戏末期挑战的核心体验’还是‘重拼仅是优化路线’，因此审美5追求和 target role 尚不能完全放行。"
+    blocks_proposal_ready: true
+    expected_designer_response: add_context_next_review
+  - id: CI_RU3_ALTERNATIVE_THIN
+    type: nonblocking_risk
+    target_ref: RU3_cut_old_bridge_and_assign_outputs
+    design_relation: "玩家把 B/S 移到 B=x6、S=x7 后得到三箱与两端点，并在后续使用中箱回织。"
+    attack: "该单元说明了正确停位的结果，却没有展示另一个合法停位的局部收益、具体矛盾与可见反馈；单独看 RU3，可能更接近坐标对齐执行而非独立推理。"
+    evidence_basis: "RU3 提供 premises、conclusion 与 feedback，但没有 alternative；其价值目前主要由 RU1 的早切反例及 RU4 的后续消费支撑。"
+    player_facing_effect: "不推翻整体至少4的跨阶段难度，但限制把每个单元都计为强推理，也限制难度5主张。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI_AESTHETIC_FOUR_NOT_FIVE
+    type: score_boundary
+    target_ref: target_scores.aesthetic
+    design_relation: "规范解在小棋面完成让槽、切割、对象改职、回织和整条入目标；无重拼路线仍可获胜。"
+    attack: "当前结构足以守住4分下界，但在无重拼路线的玩家侧性质未说明前，不支持5分审美主张。"
+    evidence_basis: "相较 RA_CAND_0025，规范路线具有同等级紧凑构造与更明确的几何角色改写；相较 RA_CAND_0022，尚缺少能排除概念性逃课路线并确认唯一强烈终局重读的玩家侧材料。"
+    player_facing_effect: "试玩若自然发现回织路线，回报清晰；若更自然地逐件绕行，则核心惊喜和凝练度会下降。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI_GRAPH_BUDGET_LIMIT
+    type: diagnostic_note
+    target_ref: graph_facts
+    design_relation: "图搜索达到约300001状态、650484转移与13个胜态后耗尽预算。"
+    attack: "该事实不能用于宣称 unique、完整 SCC、完整分支质量或更高审美。"
+    evidence_basis: "facts packet 已明确完整图预算耗尽及上述结论 unknown。"
+    player_facing_effect: "没有新增可由玩家感知的局面关系，仅限制评审结论边界。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: "reachable_states_seen=300001，transitions_seen=650484，winning_states_seen=13，budget=300000，status=exhausted。"
+    neutral_meaning: "搜索耗尽预算；unique、完整 SCC 与完整分支质量均 unknown。"
+    player_facing_interpretation: "没有足够图事实说明玩家只会遇到单一胜利结构，也没有足够图事实否定当前规范路线的玩家侧因果链。"
+    verdict_effect: none
+
+handoff_notes:
+  - "下一轮先把 player_goal 改写为玩家可见的胜利目标，例如‘让六个目标全部被对象覆盖’，把重拼竖条与对象分工留在 reasoning conclusion/resolution。"
+  - "下一轮需从现有64步无重拼路线提供玩家侧摘要：入口局面、主要对象操作、棋盘具体变化、为何它是非阻塞长绕路或为何它构成概念逃课；不得只重复 cost=64。"
+  - "若无重拼路线只是高执行成本但概念更直接，建议结构修订以让回织成为所有合理胜路责任；若它本身需要更深的因果链且不稀释回织的自然可发现性，可作为非阻塞风险保留。"
+  - "本评审不授予 accepted/mainline/reference，也不替代最终 judge。"

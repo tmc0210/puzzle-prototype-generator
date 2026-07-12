@@ -1,0 +1,78 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+review_input_type: revised_design
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: player_reasoning.player_goal
+    evidence_basis: >-
+      修订后的 description 仅要求六个目标全部由箱、黏块或锚点格覆盖，与 prototype_context.win_condition
+      及 solve_instance.win_condition=all_targets_covered_by_objects 一致；canonical trace step 21
+      的 final win=true，终局布局显示左列 x=6 三目标由上下箱与 P 格覆盖，右列 x=8 三目标由
+      三格黏条覆盖。该字段不再把规范解的对象分工误写成玩家初始目标。
+  - target_ref: player_reasoning.RU4_reweave_middle_then_move_as_rigid_bar.alternative
+    evidence_basis: >-
+      trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_NO_MERGE_BYPASS.json
+      与 alternative 的 64 个 exact_inputs 完全一致。trace step 4 先右移 C 形、step 10 在未先
+      下拉 P/L 的情况下切桥；steps 17、23、26 分别抽出三只箱；后续逐个移动上下黏端点，
+      使其最终覆盖 x=8 上下目标，并使 P/L 的一格覆盖 x=8 中目标；steps 50、58、61、64
+      完成三只箱向 x=6 三目标的回填，step 64 win=true。全 trace 的 box_to_sticky 与
+      sticky_merge 事件计数均为 0，支持该路线以五个分件与 P/L 分别占位替代重织的机械摘要。
+  - target_ref: mechanic_exposure_context.claimed_core_events.all_solution_required
+    evidence_basis: >-
+      RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_event_gate.json 对
+      anchor_boundary_shift:push_pull、anchor_boundary_shift:box_sticky、pull_object、
+      sticky_to_box、sticky_split、move_sticky_rigid 分别给出 status=complete 且
+      bypassFound=false，支持这些事件 pattern 在所有胜路上至少出现一次。packet 提供的等价
+      exposure 摘要说明 dual_anchor 是线性序列末端，不存在需要完整 reachable scan 排除的更晚事件；
+      双锚配置由初始状态直接给出，两种锚点边界移动又分别通过 all-solution gate。
+  - target_ref: mechanic_exposure_context.claimed_core_events.canonical_optimal_required_but_not_all_wins
+    evidence_basis: >-
+      event_gate 的 canonical 最短成本为 21；分别避免 box_to_sticky 与 sticky_merge 的 BFS
+      都找到第一条成本 64 的胜路，因此两种事件 pattern 对成本 21 的所有最优解均为必需，
+      但并非所有任意长度胜路必需。64 步 NO_MERGE_BYPASS exact trace 又直接给出无这两个事件的
+      胜利实例，修订后的 claim 仍保持了这一边界。
+  - target_ref: mechanism_scope.central
+    evidence_basis: >-
+      canonical trace step 6 记录 C 形整体右移并触发 move_sticky_rigid；steps 7-9 连续记录
+      P/L 下拉及 anchor_boundary_shift:push_pull；step 14 记录 B/S 第二次右移并同时触发
+      sticky_to_box:n3 与 sticky_split:n1；step 20 记录中箱进入黏侧、box_to_sticky:n1 与
+      sticky_merge:n1；step 21 记录三格黏条刚体右移且 win=true。layout、起点、目标、胜利条件与
+      central mechanics 在 designer_action_1 中均明确未改变。
+  - target_ref: player_reasoning.reasoning_units
+    evidence_basis: >-
+      RU1 的 EARLY_CUT exact prefix 在初态输入 right 即触发切割，后缀最短成本 36、总成本 37；
+      RU2 的 C_SHIFT artifact 在 canonical step 6 状态记录 right 为 legal=false、
+      reason=pull_world_front_blocked，down 为 legal=true 且触发 P/L 拉动；RU3 的 canonical
+      steps 13-14 分别显示一次 B/S 移动尚未切割与第二次移动完成三箱/两端点分离；RU4 的
+      canonical steps 19-21 显示 P/L 就位、中箱重织、刚体入目标列与最终胜利。修订没有改变这些
+      state/input/feedback 引用。
+  - target_ref: player_reasoning.trace_partition
+    evidence_basis: >-
+      SEG1=1-6、SEG2=7-9、SEG3=10-14、SEG4=15-17、SEG5=18-21，按序完整覆盖
+      canonical 21 个输入；每段 exact_inputs 与对应 trace steps 一致，段间无重叠且无未覆盖步骤。
+      designer_action_1 仅改写 player_goal 与既有 64 步 trace 的摘要，没有改变 operation segments。
+  - target_ref: evidence.graph_or_counterfactual_evidence.main_graph
+    evidence_basis: >-
+      layout_analysis artifact 记录 graph.status=exhausted、reachableStateCount=300001、
+      budget.maxStates=300000 与 reason=state budget exceeded。修订 packet 仍仅报告预算耗尽，
+      明确不主张完整 SCC、唯一解、所有胜路顺序或完整分支质量；graph-dependent verdict effect 为 none。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >-
+    64 步 trace 能支持五个分件、P/L 泊位、反复让位和三箱回填等机械事实；“玩家概念更直白”、
+    “穷举型玩家可能发现”及“审美5边界”属于玩家体验或审美判断，不由工具证据支持，也不纳入本 verdict。
+  - >-
+    all-solution gate 只支持事件 pattern 至少出现一次，不支持特定 event instance、特定对象参与
+    或 per-object necessity；packet 未提出不可区分箱子的身份必要性。
+  - >-
+    box_to_sticky 与 sticky_merge 的证据只建立最优成本 21 与首个 avoiding-win 成本 64 的边界，
+    不能提升为所有任意长度胜路必经；修订 packet 已明确接受该非硬门风险。
+  - >-
+    主图在状态预算处耗尽，任何依赖完整 reachable graph 或完整 SCC 的结论均为 unknown；本次
+    verdict 未使用这类结论。
+  - >-
+    本审查不评价好玩、审美、难度、玩家问题显著性或 campaign placement，并忽略
+    calibrated_trace_metrics。
+questions_for_designer: []

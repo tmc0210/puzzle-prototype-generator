@@ -1,0 +1,54 @@
+packet_kind: anonymous_fact_pair
+prototype_rules:
+  symbols: {wall: '#', floor: '.', player: '@', crate: C, sticky: M, goal: G, push_pull_anchor: P/L, material_anchor: B/S}
+  rules:
+    - P/L 定义 push/pull 侧；B/S 定义箱/黏材料边界。
+    - 箱跨入 S 侧转为黏格；黏格跨回 B 侧切回箱。
+    - 相邻黏格自动合并为刚体；推拉可以形成 force chain。
+  win_condition: 所有目标由对象覆盖。
+
+case_A:
+  layout: |-
+    ########
+    ##.@#..#
+    ###CP..#
+    ##G.L.G#
+    ###BS#.#
+    ##...M##
+    #.GC####
+    ########
+  canonical_inputs: [down, right, down, up, right, up, right, down, left, down, left, down, down, left, left, down, left]
+  event_steps:
+    - {step: 1, input: down, events: [push_object]}
+    - {step: 2, input: right, events: [push_object, anchor_boundary_shift]}
+    - {step: 4, input: up, events: [pull_object, force_chain, anchor_boundary_shift]}
+    - {step: 5, input: right, events: [push_object, anchor_boundary_shift]}
+    - {step: 8, input: down, events: [push_object, anchor_boundary_shift]}
+    - {step: 11, input: left, events: [push_object, anchor_boundary_shift, box_to_sticky]}
+    - {step: 14, input: left, events: [pull_object, move_sticky_rigid]}
+    - {step: 15, input: left, events: [pull_object, move_sticky_rigid, sticky_merge]}
+    - {step: 17, input: left, events: [pull_object, move_sticky_rigid, sticky_to_box]}
+  final_win: true
+
+case_B:
+  layout: |-
+    ##########
+    #.##MG.###
+    #.....P###
+    #@CBSMLG##
+    ###..M..##
+    #####G####
+    ##########
+  canonical_inputs: [up, right, right, down, right, up, right, up, right, down, left, down, right, up, left, left, down, left, left, up, right, right]
+  event_steps:
+    - {step: 4, input: down, events: [push_object, anchor_boundary_shift]}
+    - {step: 5, input: right, events: [pull_object]}
+    - {step: 6, input: up, events: [pull_object, force_chain, anchor_boundary_shift]}
+    - {step: 10, input: down, events: [push_object, anchor_boundary_shift]}
+    - {step: 12, input: down, events: [push_object, move_sticky_rigid]}
+    - {step: 13, input: right, events: [push_object, anchor_boundary_shift]}
+    - {step: 17, input: down, events: [push_object, anchor_boundary_shift]}
+    - {step: 21, input: right, events: [push_object, box_to_sticky, sticky_merge]}
+    - {step: 22, input: right, events: [push_object, move_sticky_rigid]}
+  final_win: true
+

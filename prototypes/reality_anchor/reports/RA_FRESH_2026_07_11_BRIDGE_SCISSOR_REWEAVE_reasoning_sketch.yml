@@ -1,0 +1,78 @@
+candidate_family: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE
+prototype: reality_anchor
+archive_lineage_policy:
+  default: fresh_required
+  candidate_relation: fresh
+  authorized_archive_variant_work:
+    enabled: false
+
+design_target:
+  intended_role: game_late_dual_anchor_challenge
+  difficulty_score_target: "4_or_higher"
+  aesthetic_score_target: "4_floor_seek_5"
+  allowed_exposure_through: dual_anchor
+  required_mechanic_scope:
+    - push_pull_anchor_and_box_sticky_anchor_coexist
+    - sticky_split_or_equivalent_cutting
+    - sticky_merge_after_repositioned_material
+    - both_anchor_types_have_player_facing_responsibility
+
+reasoning_sketch:
+  player_goal: >-
+    让右侧三目标由一根重拼后的竖直黏条同时覆盖，并让左侧三目标由切割后留下的
+    两个箱端与回推到中线的 P/L 覆盖；玩家必须先让目标暂时被原 C 形占住，再主动拆开重分工。
+  intended_question: >-
+    眼前的 C 形黏块横推后只能让两端碰到右目标，中间仍空；怎样利用它让出的竖槽
+    抽出 P/L，再用 B/S 剪断连接柱，最后把 P/L 作为推杆把中间箱重新黏回两个端点之间？
+  visible_premises:
+    - >-
+      C 形黏块的上下端点被同一侧连接柱粘住；整体移动时任一凸格撞墙都会让动作失败。
+    - >-
+      B/S 边界扫过连接柱后，连接柱会变成可分离箱子，上下端点仍留在黏侧并彼此断开。
+    - >-
+      玩家能在 P/L 的拉侧接触箱柱近端；拉动只带走相邻单箱，不会像黏块那样整形移动。
+    - >-
+      左、右各有一列三目标：右列需要三格竖条，左列上、下目标可由切出的箱端保留，
+      左列中目标恰好对应 P/L 回推后的终点。
+  intended_conclusion: >-
+    先把整块 C 形右推一格，让旧连接柱占住左目标列并在 P/L 下方留下空槽；沿空槽
+    连续下拉 P/L；再右推 B/S 把连接柱切成三个箱。最后把 P/L 上推回中线并向右推进，
+    中箱跨入黏侧桥接上下端点成为三格竖条，再由同一推杆把竖条整体送入右目标列。
+  planned_mechanic_sequence:
+    - "横推初始 C 形一格；原连接柱移入左目标列，旧列成为贯穿三行的 P/L 下拉槽。"
+    - "玩家站在 L 侧连续向下走三格，把 P/L 从顶端拉到 C 形下沿。"
+    - "右推 B/S 两格，使右移后的连接柱跨入箱侧并发生 sticky_to_box:n3 + sticky_split:n1。"
+    - "从下方把 P/L 上推回中线，再从左侧向右推动 P/L 与中箱力链。"
+    - "中箱跨入黏侧，与上下端点发生 box_to_sticky + sticky_merge，形成竖直三格条。"
+    - "继续右推 P/L；三格条作为刚体整体移动到右目标列，P/L 同时覆盖左列中目标。"
+  intended_feedback:
+    - "C 形右移后，玩家能直接看到 P/L 下方出现一条与连接柱等高的空槽。"
+    - "B/S 第二次右推后，左列显示三个独立箱，上下端点仍是两个分离黏块。"
+    - "P/L 推动中箱跨界时，两个端点与中箱在右侧重新连成完整竖条。"
+    - "最后一推让整条竖直刚体同时覆盖右列三目标，而 P/L 留在左列中目标上。"
+
+tool_questions:
+  - "是否存在不发生切割也能覆盖窄口目标的胜路？"
+  - "是否存在不发生第二次拼接，或只靠锚点/独立箱覆盖全部目标的胜路？"
+  - "两种锚点是否都必须移动或承担不可替代的侧别/边界责任？"
+  - "完整图能否确认核心事件组必经，并排除机制承诺落空？"
+
+lexicon_parts_selected:
+  - name: 固定_BS_断桥_C形黏块拆成两个端点
+    reused_local_relation: "边界切过连接柱后，上下端点独立，连接柱成为箱柱。"
+    new_relation: "先整体横移 C 形制造锚点下拉槽，再在新列切桥；切出的中箱被另一锚点推回端点之间。"
+  - name: PL_pull_抽取
+    reused_local_relation: "拉侧动作需要玩家前格开放，并可整体抽动二格锚点。"
+    new_relation: "被抽取的是 P/L 自身；C 形整体右移留下的三格竖槽决定它能连续下拉到切割后的推杆位置。"
+  - name: BS_移动边界_箱组形状改写
+    reused_local_relation: "移动边界把远处占格改写为分离箱/黏块组合。"
+    new_relation: "B/S 的停位把右移后的连接柱改写成三个箱；随后 P/L 将中箱推回黏侧，重建为竖条而非旧 C。"
+
+archive_duplicate_guard:
+  disallowed_causal_chains:
+    - "不采用 RA_CAND_0017 的高密度腾挪链作为布局或解序起点。"
+    - "不采用 RA_CAND_0022 的死角双箱反向送目标链。"
+    - "不采用 RA_CAND_0025 的三格横条主动构造并反复活塞 L 形链。"
+  negative_calibration:
+    - "避免 RA_CAND_0024/0027 式可见机制多、实际只做推拉走位或标签触发。"
+    - "避免 RA_CAND_0006 式依靠目标位置和路线税制造高难。"

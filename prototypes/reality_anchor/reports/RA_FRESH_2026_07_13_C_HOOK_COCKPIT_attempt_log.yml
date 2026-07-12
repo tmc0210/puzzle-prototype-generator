@@ -1,0 +1,191 @@
+family: c_hook_cockpit_dual_jaw
+fresh_required: true
+allowed_corpus_usage:
+  source: prototypes/reality_anchor/mechanism_lab/lexicon.md
+  used_as_negative_boundary:
+    - >-
+      固定 B/S 断桥中的 C 形只用于确认“拆成独立端点会把整体几何替换掉”；
+      本轮不使用切割、端点消费或其布局骨架。
+  new_relation: >-
+    玩家位于完整 C 形凹腔内，从开口方向拉动左竖脊；上下钩臂因同属一个 sticky
+    刚体而在一次平移中同时接触两个不同锚点刚体。
+
+versions:
+  - version: v1
+    layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v1.layout.txt
+    structural_intent:
+      - 完整 C 形由 7 格 sticky 组成，开口向右，凹腔宽两格。
+      - 中间目标初始由右下钩臂覆盖；向下拉整个 C 后腾空，最终由左竖脊重新覆盖。
+      - C 下移后，上下臂分别与横向 L/P、S/B 锚点隔一格对齐。
+      - 玩家进入凹腔后连续右拉两次；第二次应同时推动两个锚点向右覆盖目标。
+    expected_inputs:
+      - left
+      - left
+      - up
+      - down
+      - right
+      - right
+      - up
+      - up
+      - left
+      - left
+      - right
+      - right
+    notes:
+      - 前四步只用于从有观察空间的起点到达 C 下方并把完整 C 下拉对齐。
+      - 中段绕入凹腔；末两次 right 是整体 C 的开口方向拉动，第二次为双钩臂关键动作。
+    runtime_result:
+      expected_trace_win: true
+      key_step: 12
+      key_events:
+        - pull_object:sticky#1
+        - force_chain:n3
+        - anchor_boundary_shift:push_pull
+        - anchor_boundary_shift:box_sticky
+        - move_sticky_rigid
+      c_shape_after_key: complete_7_cell_connected_component
+    solver_result:
+      shortest_cost: 10
+      shortest_inputs: [left, up, down, right, up, up, left, left, right, right]
+      graph_status: exhausted
+      graph_budget: 300000
+    status: revised_for_readability_and_graph_size
+    revision_reason: >-
+      双钩核心成立，但开放房间产生无责任空地和大量锚点游走状态；初始横拉错误也缺少
+      立即可见的形状墙反馈。保留 v1，另建 v2 紧凑墙口版本。
+
+  - version: v2
+    layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v2.layout.txt
+    substantive_revision_from: v1
+    changes:
+      - 从 7x13 裁成 7x9，删除 canonical 路线与 C 形作用不需要的左右空地。
+      - C 初始上臂右侧设置墙；C 未先下移时，凹腔右拉会由上臂目标格立即 force_blocked。
+      - 下移一格后，上臂进入墙下缺口、下臂对准 B/S，凹腔右拉重新合法。
+      - P/L 与 B/S 上下均由墙限制，只保留被 C 双臂同步向右推动的一格行程。
+    expected_inputs: [left, up, down, right, up, up, left, left, right, right]
+    runtime_result:
+      expected_trace_win: true
+      key_step: 10
+      key_events:
+        - pull_object:sticky#1
+        - force_chain:n3
+        - anchor_boundary_shift:push_pull
+        - anchor_boundary_shift:box_sticky
+        - move_sticky_rigid
+      c_shape_after_key: complete_7_cell_connected_component
+    solver_result:
+      shortest_cost: 10
+      shortest_inputs: [left, up, down, right, up, up, left, left, right, right]
+      graph_status: complete
+      reachable_states: 33
+      winning_states: 1
+    uniqueness:
+      result: unique_complete
+      exact_shortest_input_paths: 1
+      distinct_non_walk_signatures: 1
+      all_loop_erased_simple_win_paths_same_object_sequence: true
+      artifact_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v2_strict_unique_audit_agent.json
+    identity_counterfactuals:
+      split_blocks: { graph_status: complete, winning_states: 0 }
+      straight_bar: { graph_status: complete, winning_states: 0 }
+      filled_notch: { graph_status: complete, winning_states: 0 }
+      no_upper_arm: { graph_status: complete, winning_states: 0 }
+      no_lower_arm: { graph_status: complete, winning_states: 0 }
+    event_gate_result:
+      artifact_ref: prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v2.json
+      note: all-win groups completed without bypass; version still revised for player-facing purity
+    discovered_player_side_issue: >-
+      玩家尝试从开局进入凹腔时，会先在 pull side 把紧邻入口的 P/L 向左拉动；
+      错误反馈因此由锚点干扰主导，未直接兑现“上钩臂撞墙，必须整体下移”的读图问题。
+    issue_artifact_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v2_ALT_PREMATURE_CAVITY_PULL.md
+    status: revised_for_core_feedback_purity
+
+  - version: v3
+    layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v3.layout.txt
+    substantive_revision_from: v2
+    changes:
+      - P/L、B/S 与各自目标整体右移一格，入口与锚点间保留一格空隙。
+      - 中间目标从初始 C 下臂覆盖位移到三次右拉后左竖脊覆盖的位置。
+      - 开局可真实进入凹腔；过早 right 应因上臂目标格是墙而 force_blocked。
+      - 正解仍先把完整 C 下移，再从凹腔沿开口方向拉动；末次仍同步推动两个锚点。
+    expected_inputs: [left, left, up, down, right, right, up, up, left, left, left, right, right, right]
+    runtime_result:
+      expected_trace_win: true
+      shortest_cost: 12
+      graph_status: complete
+      reachable_states: 166
+      winning_states: 1
+    uniqueness:
+      strict_status: reject
+      exact_shortest_input_paths: 4
+      distinct_shortest_non_walk_signatures: 1
+      all_loop_erased_simple_win_paths_same_object_sequence: false
+      bypass_summary: >-
+        非最短胜路可先单独拉动 P/L 或 B/S，再由 C 以 force_chain:n2 / n3 分阶段接管；
+        锚点单独操作取代了双钩同步的唯一职责。
+      artifact_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v3_strict_unique_audit_agent.json
+    status: rejected_for_non_equivalent_winning_plans
+
+  - version: v4
+    layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.layout.txt
+    uniqueness_repair_from: v3
+    exact_layout_relation: restores_v2_tight_dual_rail_geometry
+    repair:
+      - 把 P/L、B/S 及目标恢复到紧邻双钩臂的一格行程，删除可单独拉动锚点再接管的间隙。
+      - 中间目标恢复到初始右下臂覆盖、下移后腾空、终局由左竖脊重新覆盖的位置。
+      - 修正玩家说明：过早进入凹腔的真实失败是 P/L 被拖入开口并封住动作；不再声称玩家会直接操作出上臂撞墙。
+      - C 下移后，凹腔落入中间隔离通道，末段两次右拉仍由完整 C 双臂同步推动两锚。
+    expected_inputs: [left, up, down, right, up, up, left, left, right, right]
+    runtime_result:
+      expected_trace_win: true
+      shortest_cost: 10
+      graph_status: complete
+      reachable_states: 33
+      winning_states: 1
+    uniqueness:
+      result: unique_complete
+      strict_status: pass
+      exact_shortest_input_paths: 1
+      distinct_non_walk_signatures: 1
+      all_loop_erased_simple_win_paths_same_object_sequence: true
+      artifact_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_strict_unique_audit_agent.json
+    all_win_event_gates:
+      status: complete_no_bypass
+      required_groups: [pl_shift, bs_shift, sticky_move, dual_force]
+      artifact_ref: prototypes/reality_anchor/reports/event_probe_RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4.json
+    identity_counterfactuals_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v4_identity_counterfactuals.yml
+    status: serious_candidate_ready_for_packet
+
+  - version: v5
+    layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_13_C_HOOK_COCKPIT_v5.layout.txt
+    pre_submission_revision_from: v4
+    trigger: redundant_element_prune
+    changes:
+      - 把起点行(1,5)、(2,5)两个无责任空格墙化；其余格、对象、目标、起点与 C 形完全不变。
+    precheck_probe:
+      shortest_cost: 10
+      expected_inputs_unchanged: true
+      graph_status: complete
+      reachable_states: 24
+      winning_states: 1
+      initial_scc_states: 8
+      initial_scc_outgoing: 3
+      initial_scc_win_outgoing: 1
+      initial_scc_dead_outgoing: 2
+      initial_scc_distance_to_win: 4
+      all_win_event_gates: complete_no_bypass
+    full_revalidation:
+      exact_trace_win: true
+      graph_status: complete
+      reachable_states: 24
+      legal_transitions: 36
+      winning_states: 1
+      strict_uniqueness: PASS
+      exact_shortest_input_paths: 1
+      all_win_event_gates: complete_no_bypass
+      identity_counterfactuals: all_five_complete_zero_win
+    player_side_reassessment: >-
+      (1,5)/(2,5)虽不在 canonical trace，但分别是从 C 下臂左格/中格下方向下拉完整 C 所需的
+      玩家前方落脚格；与(3,5)共同表达“三个接触点都移动同一刚体”。墙化会把开局收窄成唯一右端把手，
+      加重 cheap-affordance 引导。它们不是 leaf/pocket，应保留为 read_graph/opening choice。
+    status: rejected_pre_submission_overprune

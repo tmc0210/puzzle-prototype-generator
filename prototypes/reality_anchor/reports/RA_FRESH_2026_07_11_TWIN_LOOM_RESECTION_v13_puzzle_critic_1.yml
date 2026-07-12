@@ -1,0 +1,257 @@
+review_iteration: 1
+candidate_version_reviewed: v13
+review_input_type: candidate_version
+verdict: revise_required
+review_loop_state: revise_required
+required_action: structural_revision
+
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: >-
+    玩家看见上下两个目标、两条横向二格黏臂、位于两臂右端的三箱竖柱，以及开局下方的 B/S；
+    实际目标是先把这些材料合成一个整体、再切回两条黏臂，并让两臂分别覆盖上下目标。
+  salient_relations_seen:
+    - >-
+      玩家先右推 B/S，三箱竖柱变黏并把上下横臂接成七格整体；随后从右下把手右拉，竖柱切回三箱、
+      两条横臂重新独立，后续才可分别纵向拉入目标。
+    - >-
+      切割后玩家位于 (7,5)，身后是 (6,5) 的箱、前方是 (8,5) 的单格袋；输入 right 会把箱拉到
+      (7,5) 并把玩家送入 (8,5)，立即失去全部后续操作。
+    - >-
+      两臂独立后，先上拉会覆盖上目标并把玩家封在 (5,1)，下目标仍空；先下拉则覆盖下目标且玩家
+      可离开，随后沿左侧回廊去上方完成终局。
+  unclear_or_unreadable_parts:
+    - >-
+      事实包足以读出动作与结果；不清楚的不是证据，而是单格右袋是否会在真实玩家读题中产生任何
+      有分量的误判，因为它的入口、出口与身后箱在同一局部同时可见。
+  initial_quality_risks:
+    - >-
+      前十步中的 B/S 拼接与整体右拉切割均是胜路强制铺垫，玩家没有在核心形状变化上作计划选择；
+      机制最强的视觉事件因此更像脚本化展示。
+    - >-
+      切割后的第一个误选只需一次输入就自锁，第二个误选是可见顶袋中的终局顺序错误；真正的规划
+      关系可能只有一个浅的二选一，难以承担末期困难角色。
+    - >-
+      下臂完成后到上臂前有十三步纯走位；棋盘状态没有在这段回廊中获得新用途，存在节奏稀释风险。
+
+player_facing_merits:
+  - exact_situation: canonical step 1-10
+    relation: >-
+      初始上下二格黏臂位于 x=3-4，三箱竖柱位于 x=5；玩家右推 B/S 后竖柱变黏并接住两臂，
+      再从右下把手把七格整体右拉一格。
+    concrete_change: >-
+      同一批材料先成为七格连体形状，右拉后 x=6 的连接柱切成三箱，x=4-5 的上下两臂分裂。
+    later_operation_change: >-
+      分裂后的两臂才可以各自纵向移动并覆盖两个目标；黏块连接性确实被构造、移动、切割并消费，
+      不是只触发材质标签。
+  - exact_situation: canonical step 10 and the two goal-order continuations
+    relation: >-
+      切割后上下两臂都可到达；玩家若沿左回廊先上拉，上臂覆盖上目标后把玩家封进 (5,1)，
+      若先从近处下拉，下臂覆盖下目标后玩家落在 (5,7) 并仍可离开。
+    concrete_change: >-
+      同样的目标覆盖动作在不同顺序下分别产生 terminal no-win 与即时胜利收束。
+    later_operation_change: >-
+      玩家必须把上臂保留为最后动作；这是成立的顺序依赖，但其可见性和二元性只支持有限强度。
+
+supported_reasoning:
+  - unit_ref: RU1_leave_cut_crate_column_untouched
+    reason: >-
+      该 alternative 现在是真实输入而非虚假矛盾：玩家从切割态输入 right，箱与玩家的具体位置变化
+      会立即封死出口。但局部后果同屏可见、失败只花一拍，因此只支持“存在合法误操作”，不支持
+      把它计为末期难题的主要推理单元。
+  - unit_ref: RU2_lower_before_upper_seal
+    reason: >-
+      两种顺序均能合法到达一次目标覆盖，且上先会留下空的下目标、下先会保留返程，故问题、结论
+      与 feedback 均成立；不过上方单格袋和正确下臂的近距离 affordance 都很强，关系深度止于一次
+      可预见的终局封口。
+
+archive_taste_context_used:
+  - >-
+    RA_CAND_0017（人评审美4、难度5）：以高耦合拼接/切割和高要求推拉作为末期正锚；本候选的
+    核心变形为强制前缀，切后依赖明显更少。
+  - >-
+    RA_CAND_0022（人评审美5、难度4）：以短流程中的强反直觉洞见、空间利用和精巧结构作为
+    审美上界；本候选的单格自锁和可见封袋均达不到这种重读强度。
+  - >-
+    RA_CAND_0025（人评审美4、难度4）：以前段不喧宾夺主、主动构造形状及紧凑终局作为强4下界；
+    本候选虽真实消费 C 形，却让构造/切割成为唯一动作，并用长回廊连接两个浅终局动作。
+  - >-
+    RA_CAND_0024（人评审美1、难度3）：警示双锚和黏块抬高期待后只兑现推拉腾挪；本候选真实
+    构造并切割形状，已越过“完全未兑现”，但玩家仍未在拼接/切割上作选择，警戒仍部分命中。
+  - >-
+    RA_CAND_0027（人评审美1、难度2；已按技能要求完整读取）：警示事件标签不能替代几何责任；
+    本候选的形状责任真实存在，因此仅作下界警戒，不作为主要正负分锚。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_with_all_aesthetic_1_warnings_read
+  positive_anchors:
+    - {candidate_id: RA_CAND_0017, aesthetic: 4, difficulty: 5}
+    - {candidate_id: RA_CAND_0022, aesthetic: 5, difficulty: 4}
+    - {candidate_id: RA_CAND_0025, aesthetic: 4, difficulty: 4}
+  lower_bound_or_negative_anchors:
+    - {candidate_id: RA_CAND_0024, aesthetic: 1, difficulty: 3}
+    - {candidate_id: RA_CAND_0027, aesthetic: 1, difficulty: 2, use: warning_only}
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: >-
+      reality_anchor_trace_metrics_v0 的 aggregateBand 为 3；cost=28 属 band 5，nonWalkEventCount=12
+      属 band 3，heavyReuseRatio=0 属 band 1。
+    allowed_reading: >-
+      规范解有中等执行压力，但指标只描述长度、非走位事件与高频空间调度，不证明洞见或因果深度。
+    player_facing_check: >-
+      前十步对象操作是强制铺垫，step 15-27 又是十三步纯走位；这些额外输入没有逐段产生被后续
+      消费的新状态，故高 cost 主要表现为到位和返程，不构成困难 merit。
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: >-
+      aggregateBand 为 2；revisitRate=0.10344827586206896 属 band 2，heavyReuseRatio=0 属 band 1。
+    allowed_reading: 当前规范解不依赖反复调度同一工作区成立，不能据此推出空间是否精巧。
+    player_facing_check: >-
+      玩家完成下臂后沿左回廊去上方，但回访没有因新局面获得共享资源或新操作责任；它更像单次
+      转场，不能补强两个切后选择的深度。
+    verdict_effect: caveat
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: >-
+  保守评为 3，不达到最低审美4。七格 C 形的合体、整体移动和切成双臂具有清楚且真实的几何回报，
+  因而高于 RA_CAND_0024/0027 的机制空转；但最漂亮的形状变化完全脚本化，右侧单格袋像为制造一次
+  误输入而加的显式机关，十三步回廊又稀释切后收束。它尚未达到 RA_CAND_0025 的紧凑强4，更不支持5。
+
+difficulty_target_fit: >-
+  保守评为 3，不达到最低难度4。核心拼接与切割没有可比较的玩家方案；切割后仅有一次同屏可见、
+  可一拍枚举的箱袋自锁，以及一次由顶袋几何直接提示的上下顺序。后者是真实依赖，却不足以单独承担
+  末期困难关；28步、唯一胜态、强制事件与 complete/no-win 均不能抬高该判断。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI1_core_merge_cut_is_scripted
+    type: core_blocker
+    target_ref: mechanism_scope.central + player_reasoning.forced_setup_disclaimer
+    design_relation: >-
+      玩家看见 B/S、三箱竖柱和上下黏臂；右推 B/S 后材料自动合成七格整体，再走到右侧把手右拉，
+      整体自动切成三箱与两臂；所有胜路都要求这两个对象操作，且候选没有任何其他可执行承诺。
+    attack: >-
+      候选诚实承认前十步不算推理，但这也意味着 brief 最核心的“拼接/切割”没有成为玩家必须比较、
+      预留或重读的计划，只是通往真正二选一之前的机械演示。末期双锚角色不能主要靠强制事件兑现。
+    evidence_basis: >-
+      facts packet 的 forced setup、all-winning-path obligations 与 candidate 的 SEG1/SEG2；证据审查仅
+      支持机械必需性，并明确不支持难度或洞见。
+    player_facing_effect: >-
+      玩家无需理解“为何现在合、为何在此切、切法如何改变后续选择”，只需执行唯一对象动作；机制
+      信号显著高于决策责任，部分重现 RA_CAND_0024 的期待落差。
+    blocks_proposal_ready: true
+    expected_designer_response: revise_now
+  - id: CI2_right_pocket_is_one_input_reset
+    type: core_blocker
+    target_ref: player_reasoning.RU1_leave_cut_crate_column_untouched
+    design_relation: >-
+      切割后玩家、身后箱和前方单格袋同时出现在一条横线上；输入 right 把箱拉到唯一出口、玩家进入
+      封闭格，棋盘立刻无任何后续动作。
+    attack: >-
+      这是成立的 exact alternative，却不是有分量的计划冲突：入口、箱和出口同屏可读，失败立即且
+      只损失一次输入，玩家可廉价枚举。所谓“清连接柱底格”的局部收益也没有打开路线或改善另一对象，
+      不足以形成与正确方案竞争的理由。
+    evidence_basis: >-
+      ALT1 exact_inputs=[right]、result state 和 continuation explored_states=1；claim 对局部收益的描述。
+    player_facing_effect: >-
+      该分支最多提供一次即时重开或操作警告，不能作为末期困难的独立推理单元，也让新增右袋显得
+      为陷阱服务而非为多个阶段共享的空间。
+    blocks_proposal_ready: true
+    expected_designer_response: revise_now
+  - id: CI3_goal_order_dependency_too_shallow_for_role
+    type: core_blocker
+    target_ref: player_reasoning.RU2_lower_before_upper_seal
+    design_relation: >-
+      切割后下臂只需四步即可从近处完成并保留出口；先上则要先走十七步到顶端，最后上拉把玩家
+      送入三面墙、下方被黏臂封住的单格袋，同时下目标仍空。
+    attack: >-
+      先下后上的因果真实，但正确下臂既更近，上方终点又是可见封袋；玩家只需识别一次常见的
+      “封路目标最后做”。没有中间对象状态、共享通道或切割结果需要跨阶段权衡，因此深度不足以
+      达到困难4，更无法补偿脚本化的合体/切割。
+    evidence_basis: >-
+      ALT2 的十八步合法路线与 terminal result、canonical SEG3/SEG4/SEG5，以及目标顺序 complete monitor。
+    player_facing_effect: >-
+      玩家若读出顶袋便直接得到全局顺序；若没读出也只是在长走位后获得一次明确失败，谜题没有
+      形成第二层重构或需要修正的中间计划。
+    blocks_proposal_ready: true
+    expected_designer_response: revise_now
+  - id: CI4_return_corridor_dilutes_payoff
+    type: nonblocking_risk
+    target_ref: player_reasoning.SEG4_return_corridor
+    design_relation: >-
+      下臂覆盖下目标后，玩家沿左侧单通道连续走十三步到上臂外侧；期间没有对象移动或棋盘状态变化，
+      抵达后只需一次 up 完成上目标。
+    attack: >-
+      这段长度没有承载新选择，也没有让旧空间在新状态下获得不同用途；它把已经确定的“最后做上臂”
+      延后兑现，削弱节奏和紧凑感。
+    evidence_basis: SEG4 exact_inputs 与 non-walk steps 仅在 2、10、14、28 出现。
+    player_facing_effect: >-
+      玩家在作出唯一重要顺序判断后主要执行转场，体感更长但不更难；该项本身是节奏风险，结构阻塞
+      来自前三项。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI5_score_boundary_below_double_four
+    type: score_boundary
+    target_ref: design_target.minimum_acceptable
+    design_relation: >-
+      候选以真实 C 形合切取得一定审美结构，但玩家决策只剩单步自锁与一次显眼终局顺序。
+    attack: >-
+      对照人评强4锚点，本轮不支持审美4或难度4；更不能因唯一解、事件覆盖、28步或 pilot 指标抬分。
+    evidence_basis: >-
+      RA_CAND_0017/0022/0025 正锚、RA_CAND_0024/0027 负锚，以及前三个玩家侧攻击。
+    player_facing_effect: >-
+      试玩者会看到一次漂亮但必然的机制动画，随后解决一个浅顺序题；这不符合末期双锚困难关预期。
+    blocks_proposal_ready: true
+    expected_designer_response: downgrade_or_hold
+
+diagnostic_interpretations:
+  - graph_fact: complete graph 为 78 个可达状态、152 条合法转移、1 个 winning state。
+    neutral_meaning: 在当前规则与状态边界内，枚举只找到一个获胜状态。
+    player_facing_interpretation: >-
+      这能排除未记录胜路，却不说明唯一方案需要多少洞见；当前唯一方案仍可由强制前缀和浅终局顺序构成。
+    verdict_effect: none
+  - graph_fact: >-
+      所有胜路都要求 B/S 位移、box_to_sticky、sticky_merge、整体黏块移动、sticky_to_box 与 sticky_split。
+    neutral_meaning: 胜利不能绕开合体、整体右拉和切割事件链。
+    player_facing_interpretation: >-
+      机制责任真实，但因为前两个对象操作在胜路上没有替代承诺，玩家只是在执行必经展示；必需性不等于
+      推理性。
+    verdict_effect: caveat
+  - graph_fact: ALT1 与 ALT2 的续搜均 complete/no-win，且 explored_states=1。
+    neutral_meaning: 两个 exact result state 都是终端失败，不存在从该状态恢复的胜路。
+    player_facing_interpretation: >-
+      失败反馈明确，却也说明错误一旦落子便立即结束；它们没有产生可探索的中间后果或较深恢复判断。
+    verdict_effect: core_blocker
+  - graph_fact: solution_uniqueness.result=unique_complete，最短输入有两条但非走位签名只有一种。
+    neutral_meaning: 最短走位换序被压缩后只剩一种对象操作计划，且完整图没有另一获胜对象配置。
+    player_facing_interpretation: 唯一对象计划不自动增加计划深度；本候选的对象计划大部分由局部唯一动作给出。
+    verdict_effect: none
+
+handoff_notes:
+  - >-
+    不建议通过继续润色 RU1/RU2 或补充指标解决；exact alternative 已经成立，问题是玩家侧关系太浅。
+  - >-
+    结构修订应让玩家在合体或切割前拥有至少一个有局部收益、能推进多步且与后续对象责任冲突的真实
+    方案，并让切后两臂或三箱柱共享通道/把手/中间状态，而不是依赖一拍自锁口袋。
+  - >-
+    修订后仍需保持所有 alternative.exact_inputs 非空并重新执行 evidence review 与独立 critic；当前
+    候选不应加入待玩列表。

@@ -1,0 +1,64 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31
+search:
+  status: complete
+  explored_states: 514270
+  max_states: 1200000
+winning_object_groups: 1
+groups:
+  - object_key: C:5,3;5,4;6,5|M:3,2;4,2|3,6;4,6|BS:4,10-5,10
+    winning_player_states: 3
+    winning_non_walk_traces:
+      - - action: right
+          events: &a1
+            - push_object:box_sticky_anchor
+            - anchor_boundary_shift:box_sticky
+            - box_to_sticky:n3
+            - sticky_merge:n1
+        - action: right
+          events: &a2
+            - pull_object:sticky#1
+            - move_sticky_rigid
+            - sticky_to_box:n3
+            - sticky_split:n1
+        - action: up
+          events: &a3
+            - pull_object:sticky#1
+            - move_sticky_rigid
+        - action: right
+          events: &a4
+            - pull_object:crate#3
+        - action: down
+          events:
+            - pull_object:sticky#2
+            - move_sticky_rigid
+      - - action: right
+          events: *a1
+        - action: right
+          events: *a2
+        - action: up
+          events: *a3
+        - action: down
+          events:
+            - pull_object:sticky#2
+            - move_sticky_rigid
+        - action: right
+          events:
+            - pull_object:crate#3
+      - - action: right
+          events: *a1
+        - action: right
+          events: *a2
+        - action: up
+          events: *a3
+        - action: right
+          events: *a4
+        - action: down
+          events:
+            - pull_object:crate#3
+        - action: down
+          events:
+            - pull_object:sticky#2
+            - move_sticky_rigid
+        - action: up
+          events:
+            - pull_object:crate#3

@@ -1,0 +1,153 @@
+review_iteration: 3
+candidate_version_reviewed: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+review_input_type: revised_design
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: "玩家在收紧后的 8 列棋面中看见 x=4 与 x=6 各三个目标；真实目标仍是让六个目标全部被对象覆盖，不预选对象分工或解法。"
+  salient_relations_seen:
+    - "玩家看见顶部 x=2..3 的 P/L、底部 x=2..3 的 B/S、中央 x=3..4 的完整 C 形与 x=4/x=6 两列目标；裁边只移除 v6 的三列纯外墙，所有可操作格与对象相对位置保持不变，因此玩家执行同一21步输入时棋盘仍依次发生完整黏体右移、P/L 下拉、B/S 切割、中箱回织和竖条入目标。"
+    - "规范路线先把 x=3 连接柱列腾空供 P/L 下拉，再用 B/S 将 x=4 连接柱切成三箱并保留 x=5 上下黏端点；玩家把中箱推入端点缺口后形成三格竖条，随后整体送入 x=6 三目标，左右列对象分工与 v6 相同。"
+    - "无重拼路线仍在 P/L 尚未拉到底时提前切桥；棋盘得到三箱与两端点后，玩家分别搬运两端点、P/L 和三箱并回填两列，64步获胜，因此逐件分配仍是概念更直白但调度、让位与回填更笨重的非阻塞路线。"
+  unclear_or_unreadable_parts:
+    - "graph 仍为 exhausted，完整图、unique、完整 SCC 与完整分支质量未知；该事实不产生玩家侧优点。"
+    - "archive taste context 通过 v6 facts 引用并列出四个人评 anchor id；当前 v7 facts 未重复人类原评语，但坐标裁边不改变其校准主题。"
+  initial_quality_risks:
+    - "claim 若仍使用 v6 的 x=5/x=6/x=7/x=8 坐标描述，将无法对应 v7 exact layout，并构成 language drift；所有具体位置应统一 x-2。"
+    - "64步无重拼路线仍可能吸引偏穷举的玩家，继续限制审美5分主张，但现有摘要显示它不是短而干净的替代洞见，不应自动破坏4分下界。"
+    - "pre_submission stage completed 只说明 exact v7 阶段检查完成；goal prune、opening comfort 与 redundant element prune 均不能计作 merit、难度或审美评分依据。"
+
+player_facing_merits:
+  - id: MERIT_V7_REUSED_COLUMN
+    exact_scene: "v7 开局 P/L 位于 x=2..3 顶部、完整 C 形位于 x=3..4；玩家沿左侧空列上行并把完整 C 形右推一格，旧 x=3 连接柱列成为 P/L 下方竖槽，随后三次 down 把 P/L 拉过该槽，使其在切割后能从下方回推中箱。"
+    player_facing_value: "同一列从黏体占位改作锚点通道，前一步让出的空间被后续拉锚与回推直接消费；裁边没有改变这一跨阶段关系。"
+  - id: MERIT_V7_CUT_ASSIGNMENT
+    exact_scene: "C 形右移后连接柱位于 x=4、上下端点位于 x=5；玩家把 B/S 推至 B=x4、S=x5，棋盘把 x=4 三格切成三箱并留下 x=5 上下黏端点，于是上下箱保留左列覆盖责任，中箱获得回织连接件角色。"
+    player_facing_value: "切割将完整刚体改写为覆盖件、连接件和端点，切后对象材质与连通关系直接改变后续操作；这一机制承诺在 v7 仍被具体消费。"
+  - id: MERIT_V7_REBIND_PAYOFF
+    exact_scene: "切后 x=5 两黏端点之间留有中间缺口；玩家让 P/L 回到中线并把 x=4 中箱推入缺口，形成三格竖直黏条，再把整条右移到 x=6 三目标，同时 P/L 留在 x=4 中目标。"
+    player_facing_value: "中箱回填立即新增整体移动三格的刚体能力，并在终局同时结算左右两列分工；裁边只缩小画布，没有改变回织的可见反馈和回报。"
+  - id: MERIT_V7_EARLY_CUT_ALTERNATIVE
+    exact_scene: "玩家开局向右会立即让 B/S 切开 C 形并获得分件反馈，但该入口最短总计37步；先保留完整 C 形、让出 x=3 槽并下拉 P/L 的规范路线为21步。"
+    player_facing_value: "最近的切割动作合法且有局部收益，却牺牲完整几何承担通道让渡的时序，要求玩家在行动前比较先切与先移动整体。"
+
+supported_reasoning:
+  - unit_ref: player_goal
+    reason: "只陈述六目标全部被对象覆盖，与 exact v7 的 x=4/x=6 目标列和 win_condition 一致，不预先泄露对象分工。"
+  - unit_ref: RU1_make_anchor_chute_before_cut
+    reason: "claim 将 C 形、空槽和 P/L 全部迁移为 x=3..4/x=3 的 exact v7 坐标；开局立即切桥仍是合法且有局部收益的37步替代，问题在行动前真实存在。"
+  - unit_ref: RU2_pull_pl_through_reused_column
+    reason: "C 形右移后继续 right 被挡，三次 down 把 P/L 拉入新槽；该锚点位置在 RU4 被消费为回推中箱的准备，不是走位复述。"
+  - unit_ref: RU3_cut_old_bridge_and_assign_outputs
+    reason: "B=x4/S=x5 的停位把 x=4 三格变箱并留下 x=5 端点，切后对象分别承担左列覆盖、中箱回织与右列端点责任；v7 坐标与 layout 对齐。"
+  - unit_ref: RU4_reweave_middle_then_move_as_rigid_bar
+    reason: "P/L、中箱和 x=5 端点缺口构成同轴关系；中箱回填后形成的新竖条才能整体送入 x=6 三目标，兑现前序让槽、拉锚和切割分工。"
+
+archive_taste_context_used:
+  status: used_human_reviewed_only_via_base_context_ref
+  anchors:
+    - "RA_CAND_0017：人评审美4、难度5；推拉与黏块拼接切割的高要求、反直觉操作作为高难正锚。"
+    - "RA_CAND_0022：人评审美5、难度4；看似死局操作、反向输送与高空间利用作为5分正锚。"
+    - "RA_CAND_0025：人评审美4、难度4；紧凑空间、主动构造与结构复用作为强4分下界锚。"
+    - "RA_CAND_0024：人评审美1、难度3；承诺切割拼接却实际主要为推拉腾挪、缺少玩家洞见作为失败警戒。"
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_negative
+  positive_anchors: [RA_CAND_0017, RA_CAND_0022, RA_CAND_0025]
+  lower_bound_or_negative_anchors: [RA_CAND_0024]
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: "aggregateBand=4；solutionCost=21/band4，nonWalkEventCount=25/band5，heavyReuseRatio=0/band1；与 v6 相同。"
+    allowed_reading: "规范解具有较高动作与状态管理密度；该指标不测量玩家洞见、因果依赖、反直觉或审美。"
+    player_facing_check: "C 形右移让出 P/L 槽、P/L 下拉准备回推、切出的中箱用于回织、重拼竖条随即整体入目标；主要状态变化继续被后续消费，裁墙未新增 padding。"
+    verdict_effect: none
+  solution_space_reuse:
+    metric_fact: "aggregateBand=2；revisitRate=0.3181818181818182/band3，heavyReuseRatio=0/band1；与 v6 相同。"
+    allowed_reading: "规范解不主要依赖高频工作区回访；低值不否定一次状态改变后的列空间新用途。"
+    player_facing_check: "x=3 旧连接柱列被腾空后改供 P/L 下拉，存在一次有新责任的空间复用；裁掉纯外墙不改变可行走空间或回访结构。"
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: "支持审美4分下界，不直接支持5分。裁掉三列纯外墙把画布从11列收紧为8列，减少无作用边框占比并保留全部局部邻接、对象角色和21步回织回报；这种视觉紧缩改善呈现但不单独抬分。规范路线仍连续兑现让槽、双锚点换位、切割分工、回织新刚体和终局三目标覆盖，明显避开 RA_CAND_0024 的机制承诺落空；64步逐件路线仍是审美5边界。"
+difficulty_target_fit: "支持难度至少4，不主张5。裁边没有改变任何可操作格或事件链；玩家仍须在立即切割的合法诱惑前保留完整 C 形，预见 x=3 列将改作 P/L 通道，再选择 B/S 停位分配切割产物并消费锚点位置完成回织。难度仍来自跨阶段因果与对象角色改写，而非21步长度、外墙数量或提交检查。"
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI3_NO_MERGE_ROUTE_CAVEAT
+    type: nonblocking_risk
+    target_ref: RU4_reweave_middle_then_move_as_rigid_bar.alternative
+    design_relation: "玩家在 P/L 尚未拉到底时提前切桥，会得到 x=4 三箱与 x=5 两端点；随后不回织，而是分别送两端点、P/L 和三箱到 x=6/x=4 六目标，64步获胜。"
+    attack: "该路线仍以六对象逐件分配为更直白的概念，穷举型玩家可能绕过重拼；因此不能声称 merge 是所有胜路硬门，也不能据当前材料主张审美5。"
+    evidence_basis: "v7 facts、claim 与 submission delta 均保留同构64步路线，并明确其对象调度、让位和回填显著更笨重。"
+    player_facing_effect: "替代路线不是短而干净的洞见路线，不推翻规范路线的核心因果或审美4下界，但应在试玩中观察自然发现率。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI3_RU3_ALTERNATIVE_THIN
+    type: nonblocking_risk
+    target_ref: RU3_cut_old_bridge_and_assign_outputs
+    design_relation: "玩家把 B/S 停在 B=x4、S=x5 后得到三箱与两端点，后续让中箱回织、上下箱保留左列覆盖。"
+    attack: "RU3 仍未单独给出另一个合法停位的局部收益与具体失败；该段独立看更接近精确对位，其推理价值主要由 RU1 早切反例与 RU4 后续消费承担。"
+    evidence_basis: "v7 claim 沿用 v6 reasoning 并压缩为 relation；submission delta 明确 player_reasoning 语义未变，因此 v6 的该非阻塞边界也应保留。"
+    player_facing_effect: "不破坏整体至少4的跨阶段难度，但限制难度5主张。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI3_AESTHETIC_FIVE_BOUNDARY
+    type: score_boundary
+    target_ref: target_scores.aesthetic
+    design_relation: "规范路线将 x=4 中箱回织进 x=5 两端点并整体覆盖 x=6 三目标；逐件路线仍可避开回织获胜。"
+    attack: "视觉紧缩与规范回织体验支持4分下界；在试玩确认玩家自然选择回织且逐件路线不稀释终局惊喜前，不支持5分。"
+    evidence_basis: "RA_CAND_0025 提供强4紧凑构造下界，RA_CAND_0022 提供5分精巧构造正锚，RA_CAND_0024 提供机制承诺落空警戒；裁边不改变当前候选的核心分数边界。"
+    player_facing_effect: "更紧凑画布减少视觉空耗，但玩家最终选择哪条路线仍决定回织惊喜是否成为主要体验。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI3_PRE_SUBMISSION_STAGE_ONLY
+    type: diagnostic_note
+    target_ref: pre_submission_stage
+    design_relation: "exact v7 已按固定顺序完成 goal_prune、opening_comfort_check 与 redundant_element_prune，后者裁去三列纯外墙。"
+    attack: "这些检查只记录提交阶段状态；不得把检查完成、目标保留或外墙裁剪流程本身当作玩家推理、审美或难度证据。"
+    evidence_basis: "v7 facts 明确 quality_evidence=false，submission delta 也将 checks 与 exact version 完整性分开记录。"
+    player_facing_effect: "只有裁边后的实际棋面呈现可被玩家感知；流程通过本身没有玩家侧效果。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI3_GRAPH_BUDGET_LIMIT
+    type: diagnostic_note
+    target_ref: graph_fact
+    design_relation: "v7 图搜索保持 exhausted，完整图相关结论 unknown。"
+    attack: "该事实不能用于宣称 unique、完整 SCC、完整分支质量或任何玩家侧优点。"
+    evidence_basis: "facts 与 submission delta 均保留 graph exhausted 及 complete-graph claims unknown。"
+    player_facing_effect: "不新增可感知关系，只限制最终结论范围。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: "status=exhausted；submission delta 记录 states_seen=300001、transitions_seen=650484、wins_seen=13、budget=300000。"
+    neutral_meaning: "搜索耗尽预算；unique、完整 SCC 与完整分支质量均 unknown。"
+    player_facing_interpretation: "图事实既不能证明玩家只有回织胜路，也不能否定 exact v7 规范路线已展示的玩家侧因果；已知64步路线单独作为非阻塞 caveat 处理。"
+    verdict_effect: none
+
+handoff_notes:
+  - "exact v7 的坐标迁移完整：x=3 让槽、x=4 切箱列、x=5 黏端点、x=6 右目标；未发现 language drift。"
+  - "三列纯外墙裁剪保留 v6 全部玩家侧 merits 与 caveats；视觉更紧凑，但不因 pre_submission checks 或同构事实提高评分。"
+  - "进入试玩列表时继续观察玩家是否自然形成‘保留完整 C 形—让槽—拉 P/L—切割—回织’计划，还是被概念更直白的64步逐件路线吸引。"
+  - "当前 critic 支持 exact v7 的目标 role、审美4分下界和难度至少4；不授予 accepted/mainline/reference，也不替代最终 judge。"

@@ -1,0 +1,345 @@
+prototype_context:
+  confirmed_rules:
+    - P/L 锚点按玩家所在侧决定 push 或 pull；锚点是不可旋转的二格可动刚体。
+    - B/S 锚点移动后全图按新边界把箱/黏重新归一化；相邻黏格自动合并，跨箱侧会切割。
+    - 推拉可形成同向 force chain；任一刚体目标格撞墙时整次动作失败。
+  win_condition: 所有目标在结算后由箱、黏块或任一锚点格覆盖。
+  object_and_event_semantics:
+    sticky_split: 同一旧黏块归一化后留下多个黏连通分量。
+    sticky_merge: 来自不同对象来源的黏格归一化后进入同一连通块。
+    anchor_boundary_shift: 锚点本体实际平移。
+  tool_boundary: runtime/solver/replay 可用；curated miner 与 PuzzleScript exporter 不可用。
+
+slot_brief:
+  intended_role: game_late_capstone
+  target: 双锚点共存下的黏块切割、三次重拼与终局 L 形收束
+  difficulty_expectation: 至少4，追求5
+
+mechanic_exposure_context:
+  mechanic_window: all_current_reality_anchor_runtime_rules
+  allowed_exposure_through: dual_anchor
+  claimed_core_events:
+    - anchor_boundary_shift:push_pull
+    - anchor_boundary_shift:box_sticky
+    - sticky_to_box
+    - sticky_split
+    - box_to_sticky
+    - sticky_merge
+    - move_sticky_rigid
+
+design_target:
+  aesthetic_score_target: "4_floor_prefer_5"
+  difficulty_score_target: "4_or_higher_prefer_5"
+  target_role_notes: >-
+    四个连续底部目标提示 B/S/P/L 四格列车的最终停位；顶部三格 L 目标与中部单目标
+    分别消费切割后的上端重拼链与下端重拼链。难度来自对象身份随边界改变后的顺序重读。
+
+solve_instance:
+  layout: |
+    ##########
+    ######GG##
+    ###.MMG.##
+    ###.M...##
+    ###.MMG.##
+    ###...#.##
+    #.BS@...##
+    #.PLGGGG##
+    ##########
+  player_start: [4, 6]
+  player_goal: null
+  win_condition: all_targets_covered_by_objects
+
+mechanism_scope:
+  central:
+    - 双锚点同行 force-chain 停位
+    - B/S 切断五格 C 形黏桥为三箱柱与两个黏端点
+    - 规范唯一最短解中，箱与端点三次重新拼接，最后形成覆盖顶部 L 目标的连通黏块
+  allowed_support:
+    - 普通走位与单箱上推
+    - 锚点自身覆盖底部目标
+  incidental_allowed: []
+  required_winning_path_events:
+    - anchor_boundary_shift:box_sticky
+    - sticky_to_box
+    - sticky_split
+  bounded_no_bypass_events_not_claimed_complete:
+    - {event: anchor_boundary_shift:push_pull, budget_states: 750000}
+    - {event: box_to_sticky, budget_states: 750000}
+    - {event: sticky_merge, budget_states: 750000}
+    - {event: move_sticky_rigid, budget_states: 750000}
+  forbidden_winning_path_events: []
+  forbidden_if_seen_anywhere: []
+
+player_reasoning:
+  canonical_trace_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_canonical.json
+  player_goal:
+    description: 让底部连续四格目标与上方分散的四格目标同时被物体覆盖。
+    state_ref: canonical.step_0
+  reasoning_units:
+    - id: RU1_four_cell_anchor_train
+      player_question: 两个二格锚点怎样同时停在底部连续四目标，并让 B/S 的切割线正好穿过黏桥连接柱？
+      premises:
+        - statement: 初始 P/L 占底部左端，B/S 在上一行；四目标从 x4 连续到 x7，右端外侧是墙。
+          state_ref: canonical.step_0
+        - statement: >-
+            初始 C 形黏块的连接柱在 x4、两个端点在 x5；按已知 B/S 规则，若 B/S 最终停为 B:x4/S:x5，
+            x4 三格会变箱而 x5 上下端仍为黏，正好切断连接柱。
+          state_ref: canonical.step_0
+      conclusion: 先抽 P/L 两格，再把 B/S 下压并从最左端连续右推两次，形成 B/S/P/L 四格列车。
+      operation_refs: [SEG1, SEG2, SEG3]
+      alternative:
+        status: not_claimed
+        description: 不把列车抵墙后的额外右推包装成竞争路线；右墙在行动前显然可见。
+        local_gain: null
+        from_state_ref: canonical.step_0
+        exact_inputs: []
+        result_state_ref: null
+        concrete_outcome: null
+      feedback:
+        - state_ref: canonical.step_14
+          visible_change: B/S/P/L 正好覆盖底部四目标；黏桥同时变成 x4 三箱柱与 x5 上下两个分离黏端点。
+        - state_ref: overshoot_attempt.step_15
+          visible_change: 若在切割停位后继续右推，外墙立即拒绝整条列车且状态不变；这是停位边界反馈，不是解题 alternative。
+    - id: RU2_split_output_order
+      player_question: 切开后的上下端点都可先处理时，哪一顺序能最短地保留通向另一端的操作位？
+      premises:
+        - statement: 切后玩家位于底部，三箱柱占 x4 的 y2-y4；上端点在 x5,y2，下端点在 x5,y4。
+          state_ref: canonical.step_14
+        - statement: 下端点可先与最下箱重拼并覆盖中部目标，但会把玩家留在箱柱下侧。
+          state_ref: bottom_first_attempt.step_18
+      conclusion: 两端职责可换序；先沿 x3 竖通道完成上端，再返回处理下端，是少两步换位的规范最短顺序。
+      operation_refs: [SEG4]
+      alternative:
+        status: replayed_attempt
+        description: 先右推最下箱，与下端点拼接并覆盖中部目标。
+        local_gain: 中部目标立即被二格黏块覆盖。
+        from_state_ref: canonical.step_14
+        exact_inputs: [up, up, up, right]
+        result_state_ref: bottom_first_attempt.step_18
+        concrete_outcome: >-
+          下目标已完成，玩家停在箱柱下方；续搜用19步完成上端与最终 L，总长37，
+          到达与35步规范解完全相同的 final state。它是同对象职责的等价换序变体，不是旁路。
+      feedback:
+        - state_ref: canonical.step_24
+          visible_change: 上端二格黏条被整体上推，屋顶两个目标同时变为 covered，x6,y2 的第三个 L 目标仍空着。
+    - id: RU3_rebuild_final_l
+      player_question: 屋顶双目标已经覆盖后，怎样让剩余材料同时完成中部目标与屋顶下方第三目标？
+      premises:
+        - statement: >-
+            step24 时屋顶 x6-x7,y1 已被二格黏条覆盖，x6,y2 的第三个顶部目标仍空；
+            棋盘还剩 x4,y3-y4 两箱与 x5,y4 下端点。
+          state_ref: canonical.step_24
+        - statement: >-
+            step30 时下端二格条已覆盖中部目标，只剩 x4,y3 一箱；x4,y2 到 x6,y2 的横向通路开放，
+            且空目标 x6,y2 与屋顶黏格 x6,y1 正交相邻。
+          state_ref: canonical.step_30
+      conclusion: 先完成下端二格条，再把最后箱右推成黏格并继续右推到 x6,y2；它与屋顶 x6,y1 黏格相邻，结算后拼成最终 L。
+      operation_refs: [SEG5, SEG6]
+      alternative:
+        status: not_claimed
+        description: 不主张其它长重排路线在完整图中不存在；按 solution_uniqueness 的预算边界处理。
+        local_gain: null
+        from_state_ref: canonical.step_30
+        exact_inputs: []
+        result_state_ref: null
+        concrete_outcome: null
+      feedback:
+        - state_ref: canonical.step_35
+          visible_change: x6-y1/y2 与 x7,y1 成为连通三格 L 黏块，顶部三个目标同时覆盖并立即胜利。
+  operation_segments:
+    - id: SEG1
+      step_range: 1-3
+      exact_inputs: [down, right, right]
+      purpose: 进入 pull 侧并把 P/L 向右抽两格，为四目标列车留出左侧 B/S 位。
+      supports_reasoning_units: [RU1_four_cell_anchor_train]
+    - id: SEG2
+      step_range: 4-9
+      exact_inputs: [up, left, left, up, left, down]
+      purpose: 绕到 B/S 上方并把它下推到 P/L 左侧同一行。
+      supports_reasoning_units: [RU1_four_cell_anchor_train]
+    - id: SEG3
+      step_range: 10-14
+      exact_inputs: [left, left, down, right, right]
+      purpose: 从横廊左端两次推动 B/S→P/L 力链；第二推完成切割与四目标停位。
+      supports_reasoning_units: [RU1_four_cell_anchor_train]
+    - id: SEG4
+      step_range: 15-24
+      exact_inputs: [up, up, up, up, up, right, right, down, right, up]
+      purpose: 先重拼并抬升上端二格黏条，覆盖屋顶双目标。
+      supports_reasoning_units: [RU2_split_output_order]
+    - id: SEG5
+      step_range: 25-30
+      exact_inputs: [left, left, left, down, down, right]
+      purpose: 返回下端并将最下箱与下端点重拼，覆盖中部目标。
+      supports_reasoning_units: [RU3_rebuild_final_l]
+    - id: SEG6
+      step_range: 31-35
+      exact_inputs: [up, left, up, right, right]
+      purpose: 抬起最后箱，向右转黏并与屋顶黏条拼成最终 L。
+      supports_reasoning_units: [RU3_rebuild_final_l]
+  resolution:
+    resolves: [RU1_four_cell_anchor_train, RU2_split_output_order, RU3_rebuild_final_l]
+    operation_refs: [SEG1, SEG2, SEG3, SEG4, SEG5, SEG6]
+    final_state_ref: canonical.step_35
+    visible_confirmation: 底部 B/S/P/L 四格全覆盖；顶部三格 L 与中部二格条覆盖剩余四目标，立即胜利。
+  trace_partition:
+    status: complete
+    ordered_segment_ids: [SEG1, SEG2, SEG3, SEG4, SEG5, SEG6]
+    uncovered_steps: []
+    overlapping_steps: []
+
+evidence:
+  commands_run:
+    - npx tsx src/cli.ts explain-layout prototypes/reality_anchor ...layout_v7.txt --max-states 500000 --graph-max-states 500000 --write
+    - npx tsx src/cli.ts try-inputs prototypes/reality_anchor ...layout_v7.txt --inputs <35 canonical inputs> --write
+    - npx tsx prototypes/reality_anchor/reports/probe_cut_rebind_orthogonal_v7_bounded.ts
+  solver_result:
+    found: true
+    cost: 35
+    explored_states: 401621
+    search_status: found
+  trace_summary:
+    exact_inputs: [down, right, right, up, left, left, up, left, down, left, left, down, right, right, up, up, up, up, up, right, right, down, right, up, left, left, left, down, down, right, up, left, up, right, right]
+    final_win: true
+  target_events:
+    sticky_to_box: 1
+    sticky_split: 1
+    box_to_sticky: 3
+    sticky_merge: 3
+    move_sticky_rigid: 5
+    anchor_boundary_shift_push_pull: 4
+    anchor_boundary_shift_box_sticky: 3
+  object_or_instance_evidence: 当前 runtime objectParticipation 未提供实例级归因；玩家说明只使用可 replay 的局面与事件，不声称 per-object necessity。
+  winning_path_event_checks:
+    status: mixed_complete_and_bounded
+    budget: 750000_states_per_avoided_event_subgraph
+    complete_no_bypass:
+      - {event: anchor_boundary_shift:box_sticky, explored_states: 669}
+      - {event: sticky_to_box, explored_states: 6777}
+      - {event: sticky_split, explored_states: 6777}
+    exhausted_no_bypass_found:
+      - {event: anchor_boundary_shift:push_pull, explored_states: 750002, max_depth_reached: 186}
+      - {event: box_to_sticky, explored_states: 750002, max_depth_reached: 41}
+      - {event: sticky_merge, explored_states: 750002, max_depth_reached: 39}
+      - {event: move_sticky_rigid, explored_states: 750003, max_depth_reached: 43}
+  reachable_event_exposure: 未声明 later-event forbidden；dual_anchor 已是暴露序列末端配置。
+  graph_or_counterfactual_evidence:
+    graph_status: exhausted
+    graph_states: 500001
+    graph_budget: 500000
+    shortest_layer_enumeration:
+      status: complete_through_first_win_depth
+      shortest_depth: 35
+      shortest_path_count: 1
+      shortest_win_state_count: 1
+  evidence_limits:
+    - 完整状态图在 500000 状态预算耗尽，不能写完整 SCC 或全图唯一。
+    - 完整图未穷尽；equivalent_variants_only 只涵盖已枚举最短层与定向找到的上下换序族，不声称 unique_complete。
+
+solution_uniqueness:
+  result: equivalent_variants_only
+  evidence_refs:
+    - prototypes/reality_anchor/reports/probe_cut_rebind_orthogonal_v7_bounded.stdout.log
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_bottom_first_win.json
+
+hard_fact_summary_for_critic:
+  solver: cost35; exact trace replay wins; shortest solver explored 401621 states.
+  required_or_forbidden_events: >-
+    B/S shift、sticky_to_box、sticky_split 的 avoid-event 子图完整且无胜路；P/L shift、box_to_sticky、
+    sticky_merge、move_sticky_rigid 在 750000 状态预算内未见旁路但扫描耗尽，不声称完整必经。
+  routed_diagnostic_facts:
+    - full_graph_status: exhausted_at_500001
+    - shortest_trace_contains_three_sticky_merges_and_one_split
+  calibrated_trace_metrics:
+    calibration: reality_anchor_trace_metrics_v0
+    status: pilot
+    solution_execution_pressure:
+      status: enabled
+      components:
+        solutionCost: {raw: 35, band: 5, weight: 0.35}
+        nonWalkEventCount: {raw: 36, band: 5, weight: 0.45}
+        heavyReuseRatio: {raw: 0.11428571428571428, band: 4, weight: 0.2}
+      aggregateBand: 5
+    solution_space_reuse:
+      status: enabled
+      components:
+        revisitRate: {raw: 0.3333333333333333, band: 4, weight: 0.55}
+        heavyReuseRatio: {raw: 0.11428571428571428, band: 4, weight: 0.45}
+      aggregateBand: 4
+  evidence_limits:
+    - 指标只描述规范解执行压力与空间复用，不证明洞见或审美。
+    - 完整图未穷尽；不得输出完整 SCC 结论。
+  artifact_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_canonical.json
+
+diagnostic_routing:
+  hard_evidence: solver_trace_replay_bounded_uniqueness_and_event_avoidance
+  mechanism_scope: dual_anchor_plus_join_cut_capstone
+  design_evidence_alignment: reviewer_must_check_bounded_claim_language
+  taste_probes: archive_taste_context
+  scc_graph: not_routed_graph_exhausted
+  variant_family: fresh_v7_after_bypass_repairs
+  start_position: application_capstone_opening_check_before_submission
+  prototype_specific_work:
+    - invalid_goal_prune_pre_submission
+    - opening_comfort_check_pre_submission
+    - redundant_element_prune_pre_submission
+
+prototype_specific_contracts:
+  interface_pair_policy:
+    declared_interface_points: []
+    target_pairs: []
+    ignored_pair_classes: []
+    risky_pair_classes: []
+  pair_diagnostics:
+    ignored_pairs: []
+    risky_pairs: []
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: null
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: 布局、目标分工、双锚点同行力链、切割停位与三次重拼链均为本轮 reasoning sketch 后新构造。
+
+attempt_log:
+  serious_structural_attempts:
+    - v1: 整块黏桥与 P/L 直接覆盖目标，淘汰。
+    - v3-v5: 分别发现 27 步与 118 步无拼接旁路，淘汰。
+    - v6-v7: 增加顶部 L 目标与底部四目标，锁定材料/双锚点职责。
+  local_repairs:
+    - 中段墙齿阻止闭合桥平移旁路。
+    - 屋顶目标要求二格黏条整体上推。
+    - 底部四连续目标提示并消费 B/S/P/L 四格列车。
+  abandoned_families: []
+
+archive_taste_context:
+  examples:
+    - candidate_id: RA_CAND_0017
+      human_scores: {aesthetic: 4, difficulty: 5}
+      human_comment: 很精彩；推拉和黏块拼接切割要求极高，有大量反直觉操作；精巧、高机制密度、高要素耦合值得学习。
+      use: closest_positive_late_game_dual_anchor
+    - candidate_id: RA_CAND_0022
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: 先送箱进似死角再反向送目标；空间利用率高、结构精巧、短步骤要求强洞见。
+      use: positive_compact_counterintuitive_chain
+    - candidate_id: RA_CAND_0025
+      human_scores: {aesthetic: 5, difficulty: 4}
+      human_comment: 狭小空间主动构造 L 形，前段不抢戏，终局双目标提示恰到好处，结构紧凑逻辑清晰。
+      use: positive_constructor_and_target_hint
+    - candidate_id: RA_CAND_0024
+      human_scores: {aesthetic: 1, difficulty: 3}
+      human_comment: 双锚点与三黏块抬高精彩构造预期，实际只剩推拉腾挪；不要迷信指标与探针。
+      use: negative_affordance_and_route_tax_guard
+  none_found_reason: null
+
+claim_last_review:
+  mode: not_used
+  facts_packet: null
+  claim_packet: null
+  read_order: not_applicable

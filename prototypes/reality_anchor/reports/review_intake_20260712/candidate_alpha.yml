@@ -1,0 +1,103 @@
+candidate_id: RA_NEW_2026_07_12_COLUMN_REWEAVE
+candidate_version: v1
+packet_kind: candidate_packet
+prototype: reality_anchor
+
+prototype_rules:
+  win_condition: all_targets_covered_by_objects
+  push_pull_anchor: P/L 是可移动二格刚体；玩家所在侧决定 push 或 pull，锚点只平移不旋转。
+  box_sticky_anchor: B/S 移动后重写材料边界；箱可转黏、相邻黏格自动合并，跨回 B 侧会切回箱并分裂。
+
+slot_brief:
+  intended_role: late_game_dual_anchor_material_reconstruction
+  target: 双锚停位、C 形切柱、三路材料重拼与终局 L 形收束。
+
+designer_claim:
+  summary: >-
+    两枚锚点先组成四格列车覆盖底部连续目标，同时让 B/S 的切割线精确穿过五格 C 形黏桥；
+    切割产出的三箱柱与两个黏端点随后分别重拼为屋顶横条、中部覆盖和最终三格 L。
+  claimed_highlights:
+    - 同一次列车停位同时消费双锚目标责任和远端黏桥切割位置。
+    - 切割产物不是废料；上下端点与三箱被分配到三个后续结构中。
+    - 上下端可换序，但规范路线用更少换位完成屋顶，再回到底部构造终局 L。
+
+solve_instance:
+  layout: |-
+    ##########
+    ######GG##
+    ###.MMG.##
+    ###.M...##
+    ###.MMG.##
+    ###...#.##
+    #.BS@...##
+    #.PLGGGG##
+    ##########
+  canonical_exact_inputs: [down, right, right, up, left, left, up, left, down, left, left, down, right, right, up, up, up, up, up, right, right, down, right, up, left, left, left, down, down, right, up, left, up, right, right]
+  canonical_cost: 35
+  final_win: true
+
+player_reasoning:
+  player_goal:
+    description: 让底部连续四目标与上方分散四目标同时被物体覆盖。
+    state_ref: canonical.step_0
+  reasoning_units:
+    - id: RU1_four_cell_anchor_train
+      player_question: 两个二格锚点怎样同时停在底部连续四目标，并让 B/S 切割线穿过黏桥连接柱？
+      premises:
+        - 初始 P/L 占底部左端，B/S 在上一行；四目标从 x4 连续到 x7，右端外侧是墙。
+        - C 形连接柱在 x4、两个端点在 x5；B/S 停为 B:x4/S:x5 时，x4 三格变箱而 x5 端点保黏。
+      conclusion: 先抽 P/L 两格，再把 B/S 下压并从左端连续右推两次，形成 B/S/P/L 四格列车。
+      operation_steps: 1-14
+      alternative:
+        status: not_claimed
+      feedback: step14 时列车覆盖底部四目标，黏桥同时变为三箱柱和两个分离端点。
+    - id: RU2_split_output_order
+      player_question: 切开后的上下端点都可先处理时，哪一顺序能最短地保留通向另一端的操作位？
+      premises:
+        - 切后玩家位于底部，三箱柱占 x4；上下端点分别在 x5,y2 与 x5,y4。
+        - 下端点可先重拼并覆盖中部目标，但玩家会停在箱柱下侧。
+      conclusion: 两端职责可换序；先完成上端再返回下端，少两步换位。
+      operation_steps: 15-24
+      alternative:
+        status: replayed_attempt
+        exact_inputs: [up, up, up, right]
+        local_gain: 下端点与最下箱立即重拼并覆盖中部目标。
+        concrete_outcome: 该路线仍可用总长37步到达与规范35步完全相同的终局，是等价换序而非旁路。
+      feedback: step24 时屋顶二格横条覆盖两个目标。
+    - id: RU3_rebuild_final_l
+      player_question: 屋顶双目标完成后，怎样让剩余材料同时完成中部目标与屋顶下方第三目标？
+      premises:
+        - step24 时屋顶横条已覆盖两目标，第三目标仍空；还剩两箱与下端点。
+        - step30 时下端二格条已覆盖中部目标，只剩一箱；该箱可沿横廊送到屋顶黏格下方。
+      conclusion: 先完成下端条，再把最后箱转黏并送到屋顶下方，与横条拼成最终 L。
+      operation_steps: 25-35
+      alternative:
+        status: not_claimed
+      feedback: step35 形成三格 L，顶部三目标同时覆盖并立即胜利。
+  trace_partition:
+    status: complete
+    segments:
+      - {steps: 1-14, purpose: 双锚列车停位并切断 C 形连接柱}
+      - {steps: 15-24, purpose: 重拼上端横条并覆盖屋顶双目标}
+      - {steps: 25-30, purpose: 重拼下端横条并覆盖中部目标}
+      - {steps: 31-35, purpose: 最后一箱转黏并构成终局 L}
+
+hard_evidence:
+  solver: {found: true, cost: 35, explored_states: 401621}
+  graph: {status: exhausted, explored_states: 500001}
+  shortest_layer: {status: complete_through_first_win_depth, path_count: 1, win_state_count: 1}
+  known_equivalent_variant: {cost: 37, same_final_state: true}
+  target_events: {sticky_to_box: 1, sticky_split: 1, box_to_sticky: 3, sticky_merge: 3, move_sticky_rigid: 5, push_pull_anchor_shift: 4, box_sticky_anchor_shift: 3}
+  evidence_limits:
+    - 完整图未穷尽，不声明完整 SCC 或全图唯一。
+    - 事件与图规模只证明机械结构，不证明玩家审美或难度。
+
+archive_taste_context_refs:
+  - positive_compact_reversal.yml
+  - positive_active_constructor.yml
+  - negative_forced_order_show.yml
+  - negative_disconnected_subpuzzles.yml
+
+claim_last_review:
+  mode: not_used
+

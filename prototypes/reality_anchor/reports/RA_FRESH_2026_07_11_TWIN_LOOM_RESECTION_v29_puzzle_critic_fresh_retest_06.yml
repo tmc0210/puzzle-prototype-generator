@@ -1,0 +1,216 @@
+review_iteration: 1
+candidate_version_reviewed: v29
+review_input_type: revised_design
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: |-
+    玩家要让全部目标被对象覆盖。初始可见的主要可操作关系是：玩家位于下方窄道，
+    B/S 边界对象在其右侧，上方工作区通过 x=5 的竖向通道与下方相连。
+  salient_relations_seen:
+    - |-
+      玩家先在下方看见相邻的 sticky 与 box；第 2 步向右推动 B/S 锚点后，棋盘发生
+      box_to_sticky:n3 与 sticky_merge:n1，随后玩家才能沿通道进入上方工作区。
+      routed diagnostic 明确前 14 步均为强制，因此这段变化是铺垫而不是玩家选择层。
+    - |-
+      第 14 步向右拉动 sticky 后发生 sticky_to_box:n3 与 sticky_split:n1；此后规范路线
+      在第 18 步拉上方 sticky、第 25 步拉 crate、第 32 步拉下方 sticky。可见的主要问题
+      因而不是“怎么完成强制切割”，而是切割后这些对象应以什么次序处理。
+    - |-
+      在第 14 步后的 exact state，玩家可以输入 down, down, right，把下箱送到 (7,5)，
+      并站在 (8,5) 向下离开；之后还可合法完成下方 sticky 目标。该分支的局部进展并不
+      立即报错，但完整续搜没有胜解。全部胜路均要求上目标早于门箱目标，下方 sticky
+      则可在门箱前后完成。
+  unclear_or_unreadable_parts:
+    - facts packet 没有给出第 14 步后各对象的完整局面图，单靠 facts 无法判断玩家初见该状态时能否迅速读出上方把手的唯一回访路线。
+    - 512051 状态的无胜续搜只能说明错误分支确实无解，不能说明玩家会把后续失败归因于早填 (7,5)。
+  initial_quality_risks:
+    - 前 14 步强制，核心难度可能集中成一个顺序判断，无法支撑多层 capstone 难度。
+    - 早填 (7,5) 后仍可完成下方目标，反馈可能在玩家投入明显执行后才出现。
+    - 下方 sticky 与门箱次序自由，所谓“双臂”可能只有上方一臂参与核心约束。
+
+player_facing_merits:
+  - id: merit_cut_reassigns_objects
+    exact_scene: canonical state immediately before and after step 14
+    visible_layout_and_operation: |-
+      玩家在上方工作区面对跨 B/S 半平面的连续 sticky，并在第 14 步输入 right 拉动它。
+    concrete_board_change: |-
+      该次操作触发 sticky_to_box:n3 与 sticky_split:n1；设计说明把其中两个落位箱明确定位为
+      (6,3) 与 (6,4) 的 holding goals，剩余部分分成之后可分别拉动的上、下 sticky。
+    followup_operation_change: |-
+      玩家随后不再处理一个整体：上 sticky 在第 18 步被拉动，下 sticky 在第 32 步被拉动，
+      而 (6,3)/(6,4) 的落位箱还参与限制回访通路。一次切割同时改变对象身份、连接关系与
+      后续操作责任，属于真实的结构压缩；自动覆盖 holding goals 本身不另计推理优点。
+  - id: merit_gate_goal_is_route_commitment
+    exact_scene: canonical state after step 14 and ALT1_fill_gate_goal_before_upper_arm
+    visible_layout_and_operation: |-
+      门箱目标位于 (7,5)，从切割态输入 down, down, right 即可把下箱覆盖到该目标，且玩家
+      位于 (8,5) 仍能向下离开。
+    concrete_board_change: |-
+      下箱覆盖目标的同时占住 x=7 竖井底口；(6,3)/(6,4) 的 holding crate 占住 x=6 一侧，
+      上 sticky 的把手因此不能再从下方抵达。
+    followup_operation_change: |-
+      覆盖门箱目标不是单纯加一分，而是消耗返回上方的路线；玩家必须先拉上 sticky，之后
+      才能安全封住 (7,5)。下 sticky 在此动作前后均可完成，因此约束清楚地集中在一项资源
+      提交，而没有虚构额外的固定次序。
+
+supported_reasoning:
+  - unit_ref: RU1_upper_before_gate_crate
+    reason: |-
+      该问题在行动前真实存在：门箱只差三次合法输入即可完成，玩家完成后还能离开并继续
+      推进下 sticky，因此“现在先填目标”是会被认真考虑的路线。结论也增加了计划理由：
+      (7,5) 的占位会封住 x=7 回访口，而 x=6 已被 holding crate 限制，所以必须先取得上
+      sticky 把手；全部胜路的顺序事实与该具体空间关系一致。支持的是这个顺序因果，不支持
+      把 512051 状态续搜本身称为玩家反馈，也不支持把下 sticky 计成第二个必解次序层。
+
+archive_taste_context_used:
+  - candidate_id: RA_CAND_0022
+    use: |-
+      人类 aesthetic 5 / difficulty 4 正例强调短步骤中的强洞见、反直觉操作与高空间利用率；
+      本候选有目标即路线提交的洞见，但有 14 步强制铺垫和更长执行，故不足以类推 aesthetic 5。
+  - candidate_id: RA_CAND_0025
+    use: |-
+      人类 aesthetic 4 / difficulty 4 正例强调紧凑、主动构造且前段不喧宾夺主；用于校准本候选
+      的真实切割压缩和单一顺序洞见可以触及 4，但强制前段使它不是更高一档。
+  - candidate_id: RA_CAND_0017
+    use: |-
+      人类 aesthetic 4 / difficulty 5 正例具有高密度、高耦合的拼接切割，同时仍因腾挪负担被
+      明确扣分；本候选的执行压力相似地不能自动转化成审美或难度，而且核心耦合层数更少。
+  - candidate_id: RA_CAND_0024
+    use: |-
+      这是 packet 内全部 aesthetic 1 人类警戒例。其评语警告双锚点、切割和拼接的表面复杂度
+      可能落成推拉腾挪。本候选凭 (7,5) 封井的真实顺序因果避开了同等失败，但强制铺垫与
+      32 步操作仍保留相邻风险。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_for_packet
+  positive_anchors:
+    - RA_CAND_0022: aesthetic 5, difficulty 4
+    - RA_CAND_0025: aesthetic 4, difficulty 4
+    - RA_CAND_0017: aesthetic 4, difficulty 5
+  lower_bound_or_negative_anchors:
+    - RA_CAND_0024: aesthetic 1, difficulty 3
+  missing_anchor_effect: none; 送审 packet 同时提供了高分正例与全部所提供的 aesthetic 1 人类警戒例。
+
+aesthetic_target_fit: |-
+  支持 aesthetic 4 的最低可接受边界，不支持目标 5。第 14 步切割确实把对象身份变化、两处
+  holding 落位和双 sticky 后续责任压进同一次棋盘变化，(7,5) 又把目标完成变成路线提交，
+  已明显强于 RA_CAND_0024 所警告的纯切割腾挪；但 14 步强制铺垫、单一核心顺序洞见和较长
+  走位，使其达不到 RA_CAND_0022 的短促反直觉与整体惊喜密度。
+
+difficulty_target_fit: |-
+  支持 difficulty 4 的最低可接受边界，不支持目标 5。实际可分析的核心是“先取得上 sticky
+  把手，再让门箱占住 (7,5)”这一项顺序约束；下 sticky 与门箱可交换，holding goals 自动
+  完成，前 14 步又明确不计推理。错误路线具有可信诱因且失败较深，会增加搜索负担，但深搜
+  规模与执行长度不能补成第二个洞见，因此不足以成为 difficulty 5 capstone。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI_SCORE_5_NOT_SUPPORTED
+    type: score_boundary
+    target_ref: design_target.aesthetic_score_target + design_target.difficulty_score_target + role_fit_claim
+    design_relation: |-
+      玩家完成 14 步强制铺垫后，主要需判断是否先把门箱送到 (7,5)；该动作会封 x=7 竖井，
+      从而取消之后取得上 sticky 把手的操作。解决这项关系后，下 sticky 与门箱可交换。
+    attack: |-
+      当前 exact candidate 只有一个必需顺序洞见，且大量步骤承担铺垫、回位或执行。双臂并未
+      形成两个相互制约的推理层，pilot 执行压力也不测量洞见。由此支持最低 4/4，但不支持
+      aesthetic 5、difficulty 5 或把高执行量称为 5 分 capstone 难度。
+    evidence_basis: |-
+      前 14 步强制；all winning paths 要求上目标先于门箱；order monitor 明确下 sticky 可在
+      门箱前后完成；holding goals 自动完成；exact solution cost 32；人类 archive 正负锚点。
+    player_facing_effect: |-
+      玩家体验是一项有价值的路线提交判断，外加较长的状态执行，而不是多层洞见持续互锁。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI_DELAYED_FAILURE_ATTRIBUTION
+    type: nonblocking_risk
+    target_ref: RU1_upper_before_gate_crate.concrete_feedback
+    design_relation: |-
+      玩家可用 down, down, right 先完成 (7,5) 门箱目标，仍能离开，并可再用给定七次输入完成
+      下 sticky 目标；直到需要返回上 sticky 把手时，早先封井的后果才兑现。
+    attack: |-
+      “512051 状态无胜续解”不是玩家可见反馈。设计的公平性只来自玩家能否把 x=7 封口与
+      上把手失联联系起来；由于错误分支还奖励另一个目标，未提前读出关系的玩家会在明显
+      执行投入后才发现失败。当前关系本身可见、错误方向又只有一条主要自然路线，所以这是
+      手感 caveat，而非结构 blocker。
+    evidence_basis: verified_alternative + evidence_limits + language_boundary
+    player_facing_effect: 可能把一次清晰的路线资源判断体验成晚到的撤销惩罚。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI_EXECUTION_RHYTHM
+    type: nonblocking_risk
+    target_ref: exact_solution + calibrated_trace_metrics.solution_execution_pressure
+    design_relation: |-
+      规范解为 32 步；玩家在第 2、14、18、25、32 步触发对象操作，其中前 14 步整体被声明
+      为强制铺垫。第 14 步后的对象操作分别兑现切割、上 sticky、门箱和下 sticky 的状态变化。
+    attack: |-
+      pilot 执行压力 aggregateBand 4 只说明规范解的操作与状态管理较密，不证明困难或优雅。
+      关键对象操作有后续用途，因此不是纯 padding；但强制前段和对象操作之间的走位仍可能
+      让单一洞见被执行长度稀释。
+    evidence_basis: exact_solution + routed_diagnostics + calibrated_trace_metrics
+    player_facing_effect: 晚期玩家可能感到结构清楚但收束偏长，审美上限因此受限。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: all_winning_path_events 与 order_monitor 均显示没有“门箱先于上目标”的胜路；下 sticky 次序自由。
+    neutral_meaning: 在完整可达图中，上目标早于门箱是胜利必要条件，但下 sticky 不构成同样的必要顺序。
+    player_facing_interpretation: |-
+      玩家必须在 (7,5) 仍空着、x=7 竖井尚可从下方进入时先取得上 sticky 把手；这构成一项
+      真实顺序洞见，同时限制了所谓双臂耦合的数量。
+    verdict_effect: merit
+  - graph_fact: ALT1 在先填 (7,5) 后仍可完成下 sticky，但 complete continuation explored 512051 states and found no win。
+    neutral_meaning: 该 exact 输入不是即时死路，却位于没有任何胜利续解的可达子空间。
+    player_facing_interpretation: |-
+      玩家会收到目标完成和下方继续进展的正反馈，真正矛盾到返回上方时才暴露；这让诱因可信，
+      也让失败归因存在延迟风险。状态数量本身对玩家不可见。
+    verdict_effect: caveat
+  - graph_fact: graph has 3 winning states, 1 winning object configuration group, and only equivalent optimal variants。
+    neutral_meaning: 胜利输入存在可逆绕动与末段交换，但最终对象配置相同。
+    player_facing_interpretation: 输入不唯一不会增加或降低玩家必须理解的 (7,5) 封井关系。
+    verdict_effect: none
+  - graph_fact: complete graph contains 514270 reachable states and 1058153 legal transitions。
+    neutral_meaning: 完整状态图规模较大。
+    player_facing_interpretation: 图规模不告诉玩家哪些分支自然、反馈是否公平，也不证明难度或审美。
+    verdict_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: aggregateBand 4; solutionCost band 5, nonWalkEventCount band 3, heavyReuseRatio band 3。
+    allowed_reading: 规范解具有较高执行与状态管理压力，但该指标不测量洞见、因果依赖或反直觉。
+    player_facing_check: |-
+      第 14 步切割产生之后分别被处理的上、下 sticky 和门箱，关键对象变化有后续消费；不过前
+      14 步强制，且较长走位没有增加第二项推理，因此执行压力只形成节奏 caveat。
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: aggregateBand 3; revisitRate band 3, heavyReuseRatio band 4。
+    allowed_reading: 规范解对工作区有中等程度复用；该数值不说明复用是否优雅或惊喜。
+    player_facing_check: packet 没有逐次回访局面，无法确认每次回访是否获得新用途；不据此增减审美或难度。
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+handoff_notes:
+  - exact v29 可按最低 aesthetic 4 / difficulty 4 边界移交，但不得以 aesthetic 5、difficulty 5 或“多层双臂 capstone”措辞移交。
+  - 人类体验侧最值得保留观察的是：玩家在切割态是否会从 (7,5) 封井直接推断上 sticky 必须先做；若未推断，完成下 sticky 后的失败是否仍能明确归因于早填门箱。
+  - 该观察是随 handoff 保留的主观 caveat，不是要求 solver、analyzer 或额外硬证据补审。

@@ -28,7 +28,7 @@ Archive pass 权限只限 formatting_and_integrity。它不是新的 designer、
 
 - 补写 critic 或 evidence reviewer。
 - 把 self-review 当成 independent review。
-- 修改 designer claim 让候选显得更好。
+- 修改 designer 的设计说明让候选显得更好。
 - 根据自己的审美提升 status。
 - 用派生摘要覆盖人类评语。
 - 把缺失证据、浅搜索、缺 review 的候选包装成 positive reference。

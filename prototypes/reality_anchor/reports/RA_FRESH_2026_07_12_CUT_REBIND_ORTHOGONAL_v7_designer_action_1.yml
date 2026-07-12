@@ -1,0 +1,44 @@
+review_iteration_answered: 1
+candidate_version_answered: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+designer_action_type: evidence_disagreement_for_next_review
+evidence_reviewer_action:
+  required_action: structural_revision
+  response: >-
+    不接受“stickyMergeDisabled 同输入胜利”作为结构旁路。该字段来自 controller probe 中无效的临时诊断：
+    runtime 只在 mechanics.ts:755 检查 box_sticky_normalize disabled；随后仍在 :794 计算黏连通分量，
+    并在 :807 发出 sticky_merge。disabledRules:sticky_merge 没有关闭合并语义。因此该结果不能证明无 merge 胜路。
+    已从 probe 与 allowed evidence 中删除这项诊断，并把 central 声明收窄为“规范唯一最短解发生三次重拼”，
+    不声称完整图上 sticky_merge 全胜路必经。
+  evidence_or_attempt_refs:
+    - src/prototypes/reality_anchor/mechanics.ts:755
+    - src/prototypes/reality_anchor/mechanics.ts:794
+    - src/prototypes/reality_anchor/mechanics.ts:807
+    - prototypes/reality_anchor/reports/probe_cut_rebind_orthogonal_v7_bounded_r2.stdout.log
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_candidate_packet.yml
+  result: evidence_disagreement_and_claim_narrowing_for_review_2
+critic_item_triage:
+  - critic_item_id: ER1_mechanism_scope_central_merge_counterfactual
+    response: reject_with_reason
+    reason: 临时 disabledRules 参数没有改变 sticky merge runtime 语义；已删除无效诊断，并明确 central 只描述唯一最短规范解。
+    refs:
+      - src/prototypes/reality_anchor/mechanics.ts:755
+      - src/prototypes/reality_anchor/mechanics.ts:794
+      - src/prototypes/reality_anchor/mechanics.ts:807
+    produces: revised_probe_log_and_narrowed_claim
+    next_review_needed: true
+  - critic_item_id: ER1_RU2_minimal_layer_overclaim
+    response: revise_claim
+    reason: 删除“最短层不再能保持规范顺序”，只保留 replay 可见的目标覆盖、玩家位置与箱柱阻隔。
+    refs:
+      - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_bottom_first_attempt.json
+    produces: revised_RU2_concrete_outcome
+    next_review_needed: true
+handoff_notes:
+  - note: 完整图仍在 500000 状态耗尽；unique_within_budget 与四项 exhausted avoid-event 边界继续保留。
+    source_critic_item_id: ER1_evidence_limits
+    claim_not_being_made: unique_complete_or_all_win_merge_necessity
+produces:
+  candidate_version: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+  evidence_disagreement_packet: this_file
+  revised_packet_context: revised_central_and_RU2_plus_clean_probe_log
+next_step: review_N_plus_1

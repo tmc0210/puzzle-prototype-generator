@@ -1,0 +1,10752 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v14
+command: npx tsx prototypes/reality_anchor/reports/probe_twin_loom_resection.ts
+  RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v14
+budgets:
+  max_states: 1200000
+  max_depth: 200
+solver:
+  found: true
+  status: found
+  cost: 25
+  explored_states: 1470
+  inputs:
+    - right
+    - right
+    - up
+    - up
+    - up
+    - up
+    - right
+    - right
+    - up
+    - right
+    - down
+    - left
+    - left
+    - down
+    - left
+    - left
+    - left
+    - left
+    - up
+    - up
+    - right
+    - right
+    - right
+    - up
+    - up
+  events:
+    - walk
+    - push_object:box_sticky_anchor
+    - anchor_boundary_shift:box_sticky
+    - box_to_sticky:n3
+    - sticky_merge:n1
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - pull_object:sticky#1
+    - move_sticky_rigid
+    - sticky_to_box:n3
+    - sticky_split:n1
+    - walk
+    - walk
+    - walk
+    - pull_object:sticky#2
+    - move_sticky_rigid
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - push_object:sticky#1
+    - move_sticky_rigid
+complete_graph:
+  status: complete
+  reachable_states: 126278
+  legal_transitions: 292496
+  winning_states: 215
+  shortest_win_depth: 25
+  reachable_event_types:
+    - anchor_boundary_shift
+    - box_to_sticky
+    - force_chain
+    - move_sticky_rigid
+    - pull_object
+    - push_object
+    - sticky_merge
+    - sticky_split
+    - sticky_to_box
+    - walk
+solution_uniqueness:
+  result: equivalent_variants_only
+  exact_optimal_input_path_count: "2"
+  optimal_winning_state_count: 1
+  distinct_optimal_non_walk_signatures: 1
+  optimal_non_walk_signatures:
+    - anchor_boundary_shift:box_sticky+box_to_sticky:n+push_object:box_sticky_anchor+sticky_merge:n
+      > move_sticky_rigid+pull_object:object+sticky_split:n+sticky_to_box:n >
+      move_sticky_rigid+pull_object:object >
+      move_sticky_rigid+push_object:object
+  interpretation: 完整图只含一个 winning object configuration；全部最短输入路径压缩为同一非走位操作序列，且
+    all-winning-path sequence gate 未发现偏离规定拼接、切割和双臂收束责任的胜路。
+all_winning_path_event_gates:
+  - pattern: anchor_boundary_shift:box_sticky
+    status: complete
+    missing_required_winning_path: false
+    states: 126278
+  - pattern: box_to_sticky
+    status: complete
+    missing_required_winning_path: false
+    states: 126278
+  - pattern: sticky_merge
+    status: complete
+    missing_required_winning_path: false
+    states: 126278
+  - pattern: sticky_to_box
+    status: complete
+    missing_required_winning_path: false
+    states: 126278
+  - pattern: sticky_split
+    status: complete
+    missing_required_winning_path: false
+    states: 126278
+  - pattern: pull_object
+    status: complete
+    missing_required_winning_path: false
+    states: 126933
+  - pattern: move_sticky_rigid
+    status: complete
+    missing_required_winning_path: false
+    states: 126278
+all_winning_path_sequence_gate:
+  status: complete
+  violating_winning_path: true
+  states: 11001
+  obligations:
+    - 同一步 B/S 位移 + box_to_sticky + sticky_merge
+    - 其后同一步 pull + sticky rigid move + sticky_to_box + sticky_split
+    - 切割步之后至少两次独立 sticky rigid move
+    - 任一胜路中不得在下目标尚未覆盖时先覆盖上目标
+winning_object_configuration_groups:
+  - count: 3
+    minDepth: 25
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@.C###
+      #.##..C###
+      #.....C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: &a1
+          - push_object:box_sticky_anchor
+          - anchor_boundary_shift:box_sticky
+          - box_to_sticky:n3
+          - sticky_merge:n1
+      - input: right
+        events: &a2
+          - pull_object:sticky#1
+          - move_sticky_rigid
+          - sticky_to_box:n3
+          - sticky_split:n1
+      - input: down
+        events: &a3
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 27
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@MC###
+      #.##...###
+      #.....C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - up
+      - right
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 27
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@.C###
+      #.##..C###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - right
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: left
+        events: &a6
+          - pull_object:crate#3
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 34
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #.....C###
+      #.##.M.###
+      #....@C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: &a4
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a5
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a9
+          - pull_object:crate#2
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 34
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##..C###
+      #....@C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - right
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: &a8
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 35
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##.@C###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - right
+      - left
+      - down
+      - up
+      - up
+      - up
+      - right
+      - left
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: left
+        events: *a6
+      - input: down
+        events: &a7
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 35
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....MC###
+      #.##.@.###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - right
+      - left
+      - down
+      - up
+      - up
+      - right
+      - left
+      - up
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: left
+        events: *a6
+      - input: down
+        events: *a7
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 36
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##.M.###
+      #....@C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - right
+      - left
+      - down
+      - right
+      - left
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a8
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 36
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....MC###
+      #.##..C###
+      #....@...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - right
+      - down
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: down
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#3
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 36
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....MC###
+      #.##.M.###
+      #....@...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - up
+      - right
+      - left
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: &a10
+          - pull_object:crate#3
+          - box_to_sticky:n1
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 5
+    minDepth: 38
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #.....C###
+      #.##...###
+      #....@CC.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - down
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: &a14
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: right
+        events: &a15
+          - push_object:sticky#3
+          - force_chain:n2
+          - move_sticky_rigid
+          - sticky_to_box:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 38
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##.MC###
+      #....@...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - up
+      - up
+      - down
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 39
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #...@..###
+      #.##..C###
+      #.....C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: &a11
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a12
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events: &a13
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 41
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #...@M.###
+      #.##...###
+      #.....C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - right
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 41
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@.C###
+      #.##...###
+      #....M.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: &a16
+          - pull_object:crate#2
+      - input: right
+        events: &a17
+          - push_object:sticky#3
+          - force_chain:n2
+          - move_sticky_rigid
+          - sticky_to_box:n1
+      - input: up
+        events: &a18
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a19
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 43
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #...@..###
+      #.##..C###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - right
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: left
+        events: &a31
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 44
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##...###
+      #....@CC.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - up
+      - up
+      - right
+      - left
+      - down
+      - down
+      - right
+      - down
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: right
+        events:
+          - push_object:sticky#3
+          - force_chain:n2
+          - move_sticky_rigid
+          - sticky_to_box:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 46
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##.M.###
+      #....@.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: &a21
+          - pull_object:crate#2
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 46
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##..C###
+      #....@CC.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: left
+        events: &a27
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events: &a28
+          - pull_object:crate#1
+      - input: down
+        events: &a29
+          - pull_object:crate#1
+      - input: right
+        events: &a38
+          - push_object:sticky#3
+          - force_chain:n2
+          - move_sticky_rigid
+          - sticky_to_box:n2
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 46
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....MC###
+      #.##...###
+      #....@.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - down
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: down
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 47
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@.C###
+      #.##...###
+      #....MC..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - right
+      - right
+      - left
+      - up
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: left
+        events: *a19
+      - input: down
+        events: &a22
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a30
+          - pull_object:crate#2
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 48
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##.M.###
+      #....@C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: down
+        events: &a20
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events: &a33
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a34
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a35
+          - pull_object:crate#1
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 48
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #....M.###
+      #.##..C###
+      #....@...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: down
+        events: *a20
+      - input: left
+        events: &a24
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events: &a25
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a26
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 5
+    minDepth: 48
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##...###
+      #....@CCC#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: &a39
+          - pull_object:crate#1
+      - input: down
+        events: &a40
+          - pull_object:crate#1
+      - input: right
+        events: &a41
+          - push_object:sticky#3
+          - force_chain:n3
+          - move_sticky_rigid
+          - sticky_to_box:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 49
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##.@C###
+      #....MC..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - right
+      - down
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: left
+        events: *a19
+      - input: down
+        events: *a22
+      - input: up
+        events: &a23
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events: &a36
+          - pull_object:crate#1
+      - input: left
+        events: &a37
+          - pull_object:crate#2
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 49
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##.@.###
+      #....M.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - up
+      - up
+      - right
+      - left
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: left
+        events: *a19
+      - input: down
+        events: *a22
+      - input: up
+        events: *a23
+      - input: left
+        events: &a32
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 50
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #....M.###
+      #.##.M.###
+      #....@...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: down
+        events: *a20
+      - input: left
+        events: *a24
+      - input: up
+        events: *a25
+      - input: up
+        events: *a26
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 50
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##.M.###
+      #....@CC.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - left
+      - up
+      - up
+      - right
+      - left
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: left
+        events: *a27
+      - input: down
+        events: *a28
+      - input: down
+        events: *a29
+      - input: right
+        events: &a42
+          - push_object:sticky#3
+          - force_chain:n2
+          - move_sticky_rigid
+          - sticky_to_box:n2
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 50
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....@C###
+      #.##.M.###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - right
+      - right
+      - left
+      - left
+      - up
+      - up
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: left
+        events: *a19
+      - input: down
+        events: *a22
+      - input: left
+        events: *a30
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 51
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #....M.###
+      #.##.@.###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - right
+      - left
+      - down
+      - up
+      - up
+      - right
+      - left
+      - up
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: left
+        events: *a31
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 51
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##.@.###
+      #....MC..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - up
+      - up
+      - right
+      - left
+      - down
+      - down
+      - right
+      - right
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: left
+        events: *a19
+      - input: down
+        events: *a22
+      - input: up
+        events: *a23
+      - input: left
+        events: *a32
+      - input: left
+        events:
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 51
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@M.###
+      #.##.M.###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - up
+      - right
+      - right
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: left
+        events: *a19
+      - input: down
+        events: *a22
+      - input: down
+        events:
+          - pull_object:crate#1
+      - input: left
+        events:
+          - pull_object:crate#2
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 5
+    minDepth: 51
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@..###
+      #.##...###
+      #....M.CC#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: &a43
+          - pull_object:crate#2
+          - box_to_sticky:n1
+      - input: down
+        events: &a44
+          - pull_object:crate#1
+      - input: down
+        events: &a45
+          - pull_object:crate#1
+      - input: right
+        events: &a46
+          - push_object:sticky#3
+          - force_chain:n3
+          - move_sticky_rigid
+          - sticky_to_box:n1
+      - input: up
+        events: &a49
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a50
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 52
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##...###
+      #....@CC.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - down
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: down
+        events: *a20
+      - input: up
+        events: *a33
+      - input: up
+        events: *a34
+      - input: left
+        events: *a35
+      - input: down
+        events: &a63
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: right
+        events: &a64
+          - push_object:sticky#3
+          - force_chain:n2
+          - move_sticky_rigid
+          - sticky_to_box:n1
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 52
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....@.###
+      #.##.MC###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - right
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: left
+        events: *a19
+      - input: down
+        events: *a22
+      - input: up
+        events: *a23
+      - input: down
+        events: *a36
+      - input: left
+        events: *a37
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 54
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##.MC###
+      #....@...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - up
+      - up
+      - down
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: &a47
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a48
+          - pull_object:crate#2
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 54
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##.MC###
+      #....@.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: left
+        events: *a27
+      - input: down
+        events: *a28
+      - input: down
+        events: *a29
+      - input: right
+        events: *a38
+      - input: left
+        events: &a76
+          - pull_object:crate#2
+          - box_to_sticky:n1
+      - input: up
+        events: &a77
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 5
+    minDepth: 56
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##..C###
+      #....@.CC#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: &a51
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 56
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##.M.###
+      #....@.CC#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 56
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##..C###
+      #....@.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - left
+      - up
+      - up
+      - right
+      - up
+      - down
+      - down
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: left
+        events: *a27
+      - input: down
+        events: *a28
+      - input: down
+        events: *a29
+      - input: right
+        events: *a42
+      - input: down
+        events: &a56
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events: &a57
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 56
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##...###
+      #....@.CC#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - down
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: down
+        events: &a52
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a53
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events: &a54
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events: &a55
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 57
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #...@..###
+      #.##...###
+      #....M.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: *a47
+      - input: left
+        events: *a48
+      - input: down
+        events: &a67
+          - pull_object:crate#1
+      - input: right
+        events: &a68
+          - push_object:sticky#3
+          - force_chain:n2
+          - move_sticky_rigid
+          - sticky_to_box:n1
+      - input: up
+        events: &a70
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a71
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 5
+    minDepth: 57
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@..###
+      #.##...###
+      #....MC.C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - right
+      - right
+      - left
+      - up
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: up
+        events: *a49
+      - input: left
+        events: *a50
+      - input: down
+        events: &a65
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a66
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 58
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##..C###
+      #....@C.C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - left
+      - down
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: left
+        events: &a69
+          - pull_object:crate#2
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 58
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #.....C###
+      #.##...###
+      #....@C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: down
+        events: &a58
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events: &a59
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a60
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events: &a61
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a62
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 58
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##...###
+      #....@C.C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - down
+      - left
+      - up
+      - up
+      - down
+      - down
+      - right
+      - right
+      - left
+      - down
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: down
+        events: *a52
+      - input: left
+        events: *a53
+      - input: up
+        events: *a54
+      - input: up
+        events: *a55
+      - input: left
+        events:
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 5
+    minDepth: 59
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@..###
+      #.##..C###
+      #....M.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - left
+      - up
+      - up
+      - right
+      - up
+      - down
+      - down
+      - down
+      - left
+      - up
+      - up
+      - down
+      - down
+      - right
+      - up
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: left
+        events: *a27
+      - input: down
+        events: *a28
+      - input: down
+        events: *a29
+      - input: right
+        events: *a42
+      - input: down
+        events: *a56
+      - input: down
+        events: *a57
+      - input: down
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 59
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #...@.C###
+      #.##...###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - right
+      - up
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: down
+        events: *a58
+      - input: down
+        events: *a59
+      - input: left
+        events: *a60
+      - input: up
+        events: *a61
+      - input: up
+        events: *a62
+      - input: up
+        events: &a102
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 60
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##..C###
+      #....@.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: down
+        events: *a20
+      - input: up
+        events: *a33
+      - input: up
+        events: *a34
+      - input: left
+        events: *a35
+      - input: down
+        events: *a63
+      - input: right
+        events: *a64
+      - input: up
+        events:
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 60
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##.M.###
+      #....@.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: down
+        events: *a20
+      - input: up
+        events: *a33
+      - input: up
+        events: *a34
+      - input: left
+        events: *a35
+      - input: down
+        events: *a63
+      - input: right
+        events: *a64
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 60
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #....MC###
+      #.##...###
+      #....@...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: down
+        events: *a58
+      - input: down
+        events: *a59
+      - input: left
+        events: *a60
+      - input: up
+        events: *a61
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 60
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....@.###
+      #.##.M.###
+      #....M..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - right
+      - right
+      - left
+      - left
+      - up
+      - up
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: up
+        events: *a49
+      - input: left
+        events: *a50
+      - input: down
+        events: *a65
+      - input: left
+        events: *a66
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 62
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #....M.###
+      #.##...###
+      #....@.C.#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - down
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: *a47
+      - input: left
+        events: *a48
+      - input: down
+        events: *a67
+      - input: right
+        events: *a68
+      - input: down
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 62
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##..C###
+      #....@..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - right
+      - left
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: &a72
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events: &a73
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#2
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 62
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##.M.###
+      #....@C.C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - left
+      - up
+      - left
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: left
+        events: *a69
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 62
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##.M.###
+      #....@..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - down
+      - left
+      - up
+      - down
+      - right
+      - right
+      - left
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: down
+        events: *a52
+      - input: left
+        events: *a53
+      - input: up
+        events: *a54
+      - input: left
+        events:
+          - pull_object:crate#1
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 63
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #...@..###
+      #.##...###
+      #....MC..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - right
+      - right
+      - left
+      - up
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: *a47
+      - input: left
+        events: *a48
+      - input: down
+        events: *a67
+      - input: right
+        events: *a68
+      - input: up
+        events: *a70
+      - input: left
+        events: *a71
+      - input: down
+        events: &a74
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a75
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 5
+    minDepth: 63
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@..###
+      #.##..C###
+      #....M..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - up
+      - down
+      - down
+      - right
+      - up
+      - right
+      - left
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: up
+        events: &a83
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events: &a84
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a85
+          - pull_object:crate#2
+      - input: left
+        events: &a86
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 65
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #.....C###
+      #.##...###
+      #...@..C.#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: &a78
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a79
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events: &a80
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a81
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events: &a82
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 66
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #....@.###
+      #.##.M.###
+      #....M...#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - left
+      - down
+      - up
+      - right
+      - right
+      - left
+      - left
+      - up
+      - up
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: *a47
+      - input: left
+        events: *a48
+      - input: down
+        events: *a67
+      - input: right
+        events: *a68
+      - input: up
+        events: *a70
+      - input: left
+        events: *a71
+      - input: down
+        events: *a74
+      - input: left
+        events: *a75
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 66
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##.MC###
+      #....@..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - left
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: left
+        events: *a69
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 66
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##.MC###
+      #....@C..#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - right
+      - right
+      - left
+      - down
+      - left
+      - up
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: left
+        events: *a27
+      - input: down
+        events: *a28
+      - input: down
+        events: *a29
+      - input: right
+        events: *a38
+      - input: left
+        events: *a76
+      - input: up
+        events: *a77
+      - input: left
+        events:
+          - pull_object:crate#2
+      - input: down
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 69
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##...###
+      #...@..C.#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: *a78
+      - input: up
+        events: *a79
+      - input: up
+        events: *a80
+      - input: left
+        events: *a81
+      - input: down
+        events: *a82
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 71
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##.@.###
+      #....M..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - up
+      - down
+      - down
+      - right
+      - up
+      - right
+      - left
+      - left
+      - down
+      - up
+      - up
+      - right
+      - left
+      - up
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: up
+        events: *a83
+      - input: up
+        events: *a84
+      - input: left
+        events: *a85
+      - input: left
+        events: *a86
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 75
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##...###
+      #...@.CC.#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - left
+      - up
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: *a78
+      - input: up
+        events: *a79
+      - input: up
+        events: *a80
+      - input: left
+        events: *a81
+      - input: down
+        events: &a92
+          - pull_object:crate#1
+      - input: down
+        events: &a93
+          - pull_object:crate#1
+      - input: down
+        events: &a94
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 75
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@.C###
+      #.##...###
+      #....M...#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - down
+      - left
+      - down
+      - right
+      - right
+      - left
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: *a78
+      - input: up
+        events: *a79
+      - input: up
+        events: *a80
+      - input: left
+        events: *a81
+      - input: down
+        events: *a82
+      - input: down
+        events: &a87
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events: &a88
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a89
+          - pull_object:crate#2
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 75
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##...###
+      #...@..CC#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+      - left
+      - left
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: up
+        events: *a49
+      - input: up
+        events: &a95
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a96
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events: &a97
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a115
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events: &a116
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 77
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@..###
+      #.##..C###
+      #....M...#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - down
+      - left
+      - down
+      - up
+      - right
+      - right
+      - down
+      - left
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: *a78
+      - input: up
+        events: *a79
+      - input: up
+        events: *a80
+      - input: left
+        events: *a81
+      - input: down
+        events: *a82
+      - input: down
+        events: *a87
+      - input: down
+        events: *a88
+      - input: down
+        events:
+          - pull_object:crate#1
+      - input: left
+        events:
+          - pull_object:crate#2
+      - input: left
+        events:
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 77
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #.....C###
+      #.##...###
+      #...@.C..#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - down
+      - left
+      - down
+      - right
+      - right
+      - left
+      - up
+      - left
+      - up
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: *a78
+      - input: up
+        events: *a79
+      - input: up
+        events: *a80
+      - input: left
+        events: *a81
+      - input: down
+        events: *a82
+      - input: down
+        events: *a87
+      - input: down
+        events: *a88
+      - input: left
+        events: *a89
+      - input: up
+        events: &a90
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a91
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 79
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #...@..###
+      #.##...###
+      #......CC#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - down
+      - left
+      - left
+      - up
+      - down
+      - right
+      - up
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: down
+        events: &a98
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a99
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events: &a100
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 79
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #....M.###
+      #.##...###
+      #...@.C..#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - down
+      - left
+      - down
+      - right
+      - right
+      - left
+      - up
+      - left
+      - up
+      - right
+      - left
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: *a78
+      - input: up
+        events: *a79
+      - input: up
+        events: *a80
+      - input: left
+        events: *a81
+      - input: down
+        events: *a82
+      - input: down
+        events: *a87
+      - input: down
+        events: *a88
+      - input: left
+        events: *a89
+      - input: up
+        events: *a90
+      - input: up
+        events: *a91
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 81
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##...###
+      #...@..C.#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+      - left
+      - left
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: *a47
+      - input: left
+        events: *a48
+      - input: down
+        events: *a67
+      - input: right
+        events: *a68
+      - input: up
+        events: *a70
+      - input: up
+        events: &a107
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events: &a108
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a109
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a123
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events: &a124
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 81
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##..C###
+      #...@..C.#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - left
+      - up
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - right
+      - up
+      - left
+      - left
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: *a78
+      - input: up
+        events: *a79
+      - input: up
+        events: *a80
+      - input: left
+        events: *a81
+      - input: down
+        events: *a92
+      - input: down
+        events: *a93
+      - input: down
+        events: *a94
+      - input: up
+        events:
+          - pull_object:crate#1
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 81
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##..C###
+      #...@...C#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - right
+      - left
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: up
+        events: *a49
+      - input: up
+        events: *a95
+      - input: up
+        events: *a96
+      - input: up
+        events: *a97
+      - input: up
+        events: &a103
+          - pull_object:crate#1
+      - input: left
+        events: &a104
+          - pull_object:crate#2
+      - input: left
+        events: &a105
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events: &a106
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 82
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##...###
+      #....@C.C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - down
+      - left
+      - left
+      - up
+      - up
+      - up
+      - down
+      - down
+      - right
+      - right
+      - left
+      - down
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: down
+        events: *a98
+      - input: left
+        events: *a99
+      - input: up
+        events: *a100
+      - input: up
+        events: &a101
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a121
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a122
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 83
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #...@..###
+      #.##...###
+      #....M..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - down
+      - left
+      - left
+      - up
+      - up
+      - down
+      - down
+      - right
+      - up
+      - right
+      - left
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: down
+        events: *a98
+      - input: left
+        events: *a99
+      - input: up
+        events: *a100
+      - input: up
+        events: *a101
+      - input: up
+        events: &a125
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 83
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #.....C###
+      #.##...###
+      #...@....#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - right
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: down
+        events: *a58
+      - input: down
+        events: *a59
+      - input: left
+        events: *a60
+      - input: up
+        events: *a61
+      - input: up
+        events: *a62
+      - input: up
+        events: *a102
+      - input: up
+        events: &a110
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events: &a111
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events: &a112
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events: &a113
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events: &a114
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 83
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@..###
+      #.##...###
+      #....M.C.#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - down
+      - down
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - right
+      - down
+      - left
+      - down
+      - right
+      - left
+      - up
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: up
+        events: *a18
+      - input: up
+        events: *a78
+      - input: up
+        events: *a79
+      - input: up
+        events: *a80
+      - input: left
+        events: *a81
+      - input: down
+        events: *a92
+      - input: down
+        events: *a93
+      - input: down
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 83
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##...###
+      #...@M..C#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - right
+      - left
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: up
+        events: *a49
+      - input: up
+        events: *a95
+      - input: up
+        events: *a96
+      - input: up
+        events: *a97
+      - input: up
+        events: *a103
+      - input: left
+        events: *a104
+      - input: left
+        events: *a105
+      - input: down
+        events: *a106
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 84
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #....M.###
+      #.##...###
+      #....@..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - right
+      - left
+      - left
+      - up
+      - up
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: down
+        events: *a98
+      - input: left
+        events: *a99
+      - input: up
+        events: *a100
+      - input: left
+        events:
+          - pull_object:crate#1
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 87
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##..C###
+      #...@....#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - right
+      - left
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: *a47
+      - input: left
+        events: *a48
+      - input: down
+        events: *a67
+      - input: right
+        events: *a68
+      - input: up
+        events: *a70
+      - input: up
+        events: *a107
+      - input: up
+        events: *a108
+      - input: up
+        events: *a109
+      - input: up
+        events: &a117
+          - pull_object:crate#1
+      - input: left
+        events: &a118
+          - pull_object:crate#2
+      - input: left
+        events: &a119
+          - pull_object:crate#2
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events: &a120
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 87
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #....M.###
+      #.##...###
+      #...@....#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - down
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - right
+      - up
+      - up
+      - left
+      - up
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - up
+      - right
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: down
+        events: *a58
+      - input: down
+        events: *a59
+      - input: left
+        events: *a60
+      - input: up
+        events: *a61
+      - input: up
+        events: *a62
+      - input: up
+        events: *a102
+      - input: up
+        events: *a110
+      - input: up
+        events: *a111
+      - input: up
+        events: *a112
+      - input: left
+        events: *a113
+      - input: down
+        events: *a114
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 3
+    minDepth: 87
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##...###
+      #...@.C.C#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+      - left
+      - left
+      - down
+      - up
+      - right
+      - down
+      - left
+      - down
+      - right
+      - right
+      - left
+      - up
+      - left
+      - up
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: up
+        events: *a49
+      - input: up
+        events: *a95
+      - input: up
+        events: *a96
+      - input: up
+        events: *a97
+      - input: left
+        events: *a115
+      - input: down
+        events: *a116
+      - input: down
+        events: &a126
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events: &a127
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events: &a128
+          - pull_object:crate#1
+      - input: up
+        events: &a129
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 89
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##...###
+      #...@M...#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - right
+      - left
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: *a47
+      - input: left
+        events: *a48
+      - input: down
+        events: *a67
+      - input: right
+        events: *a68
+      - input: up
+        events: *a70
+      - input: up
+        events: *a107
+      - input: up
+        events: *a108
+      - input: up
+        events: *a109
+      - input: up
+        events: *a117
+      - input: left
+        events: *a118
+      - input: left
+        events: *a119
+      - input: down
+        events: *a120
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+  - count: 4
+    minDepth: 90
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##..C###
+      #....@..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - down
+      - left
+      - left
+      - up
+      - up
+      - up
+      - down
+      - down
+      - right
+      - right
+      - left
+      - up
+      - right
+      - up
+      - left
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: down
+        events: *a98
+      - input: left
+        events: *a99
+      - input: up
+        events: *a100
+      - input: up
+        events: *a101
+      - input: up
+        events: *a121
+      - input: left
+        events: *a122
+      - input: up
+        events:
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 1
+    minDepth: 90
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##.M.###
+      #....@..C#
+      #.##mM..##
+      #.....####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - down
+      - left
+      - left
+      - up
+      - up
+      - up
+      - down
+      - down
+      - right
+      - right
+      - left
+      - left
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - down
+      - right
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: down
+        events: *a98
+      - input: left
+        events: *a99
+      - input: up
+        events: *a100
+      - input: up
+        events: *a101
+      - input: up
+        events: *a121
+      - input: left
+        events: *a122
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+      - input: up
+        events:
+          - pull_object:sticky#3
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 93
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##...###
+      #...@.C..#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - down
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+      - left
+      - left
+      - down
+      - up
+      - right
+      - down
+      - left
+      - down
+      - right
+      - right
+      - left
+      - up
+      - left
+      - up
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a11
+      - input: left
+        events: *a12
+      - input: up
+        events: *a13
+      - input: down
+        events: *a47
+      - input: left
+        events: *a48
+      - input: down
+        events: *a67
+      - input: right
+        events: *a68
+      - input: up
+        events: *a70
+      - input: up
+        events: *a107
+      - input: up
+        events: *a108
+      - input: up
+        events: *a109
+      - input: left
+        events: *a123
+      - input: down
+        events: *a124
+      - input: down
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 99
+    example: |-
+      ##########
+      #####M####
+      #...mM####
+      #......###
+      #.##...###
+      #...@...C#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - up
+      - up
+      - down
+      - right
+      - left
+      - down
+      - right
+      - down
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - up
+      - right
+      - up
+      - left
+      - down
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - down
+      - left
+      - left
+      - up
+      - up
+      - down
+      - down
+      - right
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - right
+      - down
+      - down
+      - left
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+      - left
+      - left
+      - down
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: up
+        events: *a5
+      - input: left
+        events: *a9
+      - input: down
+        events: *a14
+      - input: right
+        events: *a15
+      - input: left
+        events: *a21
+      - input: down
+        events: *a39
+      - input: down
+        events: *a40
+      - input: right
+        events: *a41
+      - input: up
+        events: *a51
+      - input: down
+        events: *a72
+      - input: down
+        events: *a73
+      - input: down
+        events: *a98
+      - input: left
+        events: *a99
+      - input: up
+        events: *a100
+      - input: up
+        events: *a101
+      - input: up
+        events: *a125
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 110
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #......###
+      #.##...###
+      #....MCC.#
+      #.##mM..##
+      #....@####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - right
+      - left
+      - down
+      - left
+      - up
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - right
+      - right
+      - right
+      - up
+      - left
+      - down
+      - left
+      - down
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: up
+        events: *a49
+      - input: up
+        events: *a95
+      - input: up
+        events: *a96
+      - input: up
+        events: *a97
+      - input: up
+        events: *a103
+      - input: left
+        events: *a104
+      - input: down
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: up
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - pull_object:crate#1
+      - input: left
+        events:
+          - pull_object:crate#2
+      - input: down
+        events:
+          - pull_object:crate#1
+      - input: down
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+  - count: 2
+    minDepth: 113
+    example: |-
+      ##########
+      #####.####
+      #...mM####
+      #...@M.###
+      #.##...###
+      #.......C#
+      #.##mM..##
+      #....M####
+      ####.#####
+      ####.#####
+      ##...SB###
+      ##########
+      ####PL####
+      ##########
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - right
+      - down
+      - left
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - up
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - down
+      - left
+      - left
+      - up
+      - right
+      - left
+      - up
+      - right
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - right
+      - down
+      - up
+      - up
+      - left
+      - up
+      - down
+      - right
+      - up
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+      - left
+      - left
+      - down
+      - up
+      - right
+      - down
+      - left
+      - down
+      - right
+      - right
+      - left
+      - up
+      - left
+      - down
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - right
+      - down
+      - up
+      - left
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - up
+      - right
+      - left
+      - up
+    exampleNonWalkSteps:
+      - input: right
+        events: *a1
+      - input: right
+        events: *a2
+      - input: down
+        events: *a3
+      - input: down
+        events: *a4
+      - input: left
+        events: *a10
+      - input: down
+        events: *a16
+      - input: right
+        events: *a17
+      - input: left
+        events: *a43
+      - input: down
+        events: *a44
+      - input: down
+        events: *a45
+      - input: right
+        events: *a46
+      - input: up
+        events: *a49
+      - input: up
+        events: *a95
+      - input: up
+        events: *a96
+      - input: up
+        events: *a97
+      - input: left
+        events: *a115
+      - input: down
+        events: *a116
+      - input: down
+        events: *a126
+      - input: down
+        events: *a127
+      - input: left
+        events: *a128
+      - input: up
+        events: *a129
+      - input: down
+        events:
+          - push_object:sticky#2
+          - move_sticky_rigid
+      - input: down
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: up
+        events:
+          - pull_object:crate#1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid
+      - input: left
+        events:
+          - pull_object:crate#1
+          - box_to_sticky:n1
+          - sticky_merge:n1
+      - input: up
+        events:
+          - push_object:sticky#1
+          - move_sticky_rigid

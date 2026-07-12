@@ -1,0 +1,79 @@
+redundant_element_prune:
+  status: pruned
+  exact_candidate: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+  source_candidate: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+  sequence:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+  candidates_checked:
+    - element:
+        kind: goal
+        id_or_cell: all_six
+      action_tested: remove_each
+      result: keep
+      reason: 见 exact v7 goal_prune_check；没有目标满足删除硬门。
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: initial_C_shape
+      action_tested: remove_or_wallify_not_applicable
+      result: keep
+      reason: 规范解先整体移动、再切出三箱与两端点、再重织；所有格参与核心形状变化。
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: P/L_anchor
+      action_tested: remove_or_wallify_not_applicable
+      result: keep
+      reason: all-solution gate 要求 P/L shift 与 pull；规范解还用它回推中箱并覆盖左中目标。
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: B/S_anchor
+      action_tested: remove_or_wallify_not_applicable
+      result: keep
+      reason: all-solution gate 要求 B/S shift、sticky_to_box 与 sticky_split。
+      semantic_role: structural
+    - element:
+        kind: space
+        id_or_cell: all_non_goal_floor
+      action_tested: wall_prune_visual_and_trace_audit
+      result: keep
+      reason: 所有非目标空格属于玩家规范路径、P/L 三格下拉槽、B/S 横移轨道、P/L 回推站位或 opening observation region；主图不完整，不做额外 wall-prune。
+      semantic_role: read_graph
+    - element:
+        kind: wall_outline
+        id_or_cell: v6_left_2_columns_and_right_1_column
+      action_tested: trim
+      result: trim
+      reason: 三列均为纯外墙；裁剪后 v7 是坐标平移同构，最短解、事件序列、事件门与 graph 前缀计数完全一致。
+      semantic_role: none
+    - element:
+        kind: wall_outline
+        id_or_cell: v7_outer_frame
+      action_tested: trim
+      result: keep
+      reason: v7 四边只剩一层闭合外框；继续裁剪会使可走格或对象直接接触版面边界。
+      semantic_role: structural
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline:
+    - from v6 trim two all-wall left columns and one all-wall right column
+  retained_elements:
+    - kind: goal
+      id_or_cell: six targets
+      reason: goal prune retained
+    - kind: object
+      id_or_cell: C shape, P/L, B/S
+      reason: core chain responsibility
+    - kind: space
+      id_or_cell: all remaining floor
+      reason: trace, anchor track, stand position, or opening role
+  evidence_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7.json
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_event_gate.json
+    - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_CANONICAL.json

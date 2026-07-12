@@ -1,0 +1,244 @@
+review_iteration: 1
+candidate_version_reviewed: v29
+review_input_type: revised_design
+verdict: hold_or_reject
+review_loop_state: held_proposal
+required_action: downgrade_or_hold
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: >-
+    玩家需要在上方狭窄工作区把分裂后的两条黏臂与普通箱分别送到目标；其中位于
+    (7,5) 的目标同时处在上方竖井底口，因此覆盖目标也会改变玩家之后返回上部的路线。
+  salient_relations_seen:
+    - >-
+      开局玩家从 (2,10) 接近相邻的 S(4,10) 与 B(5,10)，第 2 步向右推动锚点后发生
+      box_to_sticky 与 sticky_merge；到第 14 步再向右拉动黏块时发生 sticky_to_box 与
+      sticky_split。玩家实际执行的是先拼合再横切，棋盘因此从单一黏连体改成可分别操作的
+      上、下黏臂和普通箱，后续才出现各对象的送目标顺序。
+    - >-
+      第 14 步后的局面允许玩家用 [down, down, right] 把下箱放到 (7,5)，玩家仍能向下
+      离开，之后还可用 [down, down, left, left, left, up, down] 完成下黏臂目标；但
+      (7,5) 被箱占住后封住 x=7 竖井底口，后续无法再完成上黏臂。这个目标因而不是单纯
+      收集点，而是一次消耗上方通路的操作。
+    - >-
+      规范路线在切割后先于第 18 步向上拉动上黏臂，再于第 25 步向右拉门箱，最后于
+      第 32 步向下拉下黏臂；先处理上黏臂保留了竖井用途，门箱落位后才可安全放弃该通路，
+      下黏臂则可在门箱前后调整次序。
+  unclear_or_unreadable_parts:
+    - >-
+      facts 能证明早填门箱后无胜，却没有显示玩家在完成下黏臂之前会得到哪一个局部、可见、
+      可归因的失败信号；现有事实反而显示该分支持续给出合法移动和目标完成反馈。
+  initial_quality_risks:
+    - 前 14 步被明确标为强制铺垫，机制事件密集却不构成玩家决策。
+    - 核心选择可能只有一次“先用竖井还是先封竖井”，压轴关的推理密度不足。
+    - 早填门箱分支允许继续完成下目标，失败发现过晚，可能把结构推理变成长分支试错。
+
+player_facing_merits:
+  - >-
+    第 14 步切割后，玩家看见门箱目标位于 (7,5) 且正好是 x=7 竖井底口；玩家若先向上
+    拉动上黏臂，就能在通路尚未被占用时完成上方操作，随后把普通箱拉到 (7,5) 会具体封住
+    竖井，但此时已经不再需要返回上臂把手，最后仍可处理下黏臂。目标落位同时改变通路责任，
+    是一个真实且可定位的顺序因果，而不只是任意规定次序。
+  - >-
+    玩家先在 (4,10)/(5,10) 一侧通过向右推动触发黏合，再在第 14 步向右拉动触发切割；
+    棋盘从一个整体变成两个可分别拉动的黏臂与普通箱，同时 (6,3)/(6,4) 的 holding goals
+    被覆盖。后续操作对象和可用方向随同一次切割一起改变，形成了紧凑的机制转场；但这段是
+    强制铺垫，只能算呈现上的优点，不能计为独立难度。
+
+supported_reasoning:
+  - unit_ref: RU1_upper_before_gate_crate
+    reason: >-
+      部分支持。门箱位于 (7,5)、覆盖后封住 x=7 竖井、上黏臂必须先完成，这一结论有
+      exact 局面、操作与全胜路顺序事实支持；“门箱与下臂在上臂之后可交换”也与胜态事实一致。
+      但所称 concrete_feedback 不是玩家侧反馈：512051 状态无胜是图事实，玩家实际先得到门箱
+      与下臂目标完成的正反馈，直到尝试返回上臂才发现失败。
+
+archive_taste_context_used:
+  - candidate_id: RA_CAND_0017
+    use: >-
+      以人类 4 美学/5 难度的高耦合末期挑战作为压轴密度上界，同时保留其腾挪负担警告。
+  - candidate_id: RA_CAND_0022
+    use: >-
+      以人类 5 美学/4 难度的短步骤强洞见作为审美 5 校准；当前候选没有同等清晰而集中的反直觉回报。
+  - candidate_id: RA_CAND_0025
+    use: >-
+      以人类强 4 的紧凑构造与不喧宾夺主的前段作为最低目标参照；当前 14 步强制铺垫占比更高。
+  - candidate_id: RA_CAND_0024
+    use: >-
+      以人类 1 美学的“双锚点/多黏块期待很高、实际只是推拉腾挪”作为失败警戒，避免把机制数量、
+      图规模和探针结果当成设计质量。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_lower_bound
+  positive_anchors:
+    - RA_CAND_0017
+    - RA_CAND_0022
+    - RA_CAND_0025
+  lower_bound_or_negative_anchors:
+    - RA_CAND_0024
+  missing_anchor_effect: none
+
+aesthetic_target_fit: >-
+  约 3，未达到最低 4，更不支持目标 5。门箱兼作竖井封口是一个干净的局部因果，拼合后切割也有
+  机制转场；但 14 步强制铺垫、两个自动完成的 holding goals 与一条迟到失败分支使整体回报集中在
+  单一顺序门槛上。相较人类 5 分正例的短而强洞见，也相较强 4 正例中“不喧宾夺主”的前段，本关的
+  复杂外观与实际玩家决策不相称，并触及 RA_CAND_0024 所警告的多对象推拉工程感。
+difficulty_target_fit: >-
+  4 的边界判断，不支持目标 5。若玩家从切割态直接读出 (7,5) 会封死竖井，核心只是一次顺序判断；
+  若没有读出，难度主要来自先完成门箱、甚至再完成下黏臂后才发现无胜的长分支试错。前者不足以构成
+  5 分压轴密度，后者又不是值得奖励的结构难度。32 步与 pilot 执行压力不能补足这一差距。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI1_delayed_failure_is_not_feedback
+    type: core_blocker
+    target_ref: player_reasoning_claims.reasoning_units.RU1_upper_before_gate_crate.concrete_feedback
+    design_relation: >-
+      玩家在第 14 步后看见 (7,5) 门箱目标，执行 [down, down, right] 后门箱合法落位且自己仍可离开；
+      继续执行七步还能完成下黏臂，棋盘连续给出两个目标进展，但上黏臂的返回通路已经不可恢复。
+    attack: >-
+      “512051 状态无胜”证明错误，不构成反馈。这个分支先奖励自然且短的目标动作，再允许玩家投入
+      一整段有效操作，直到返回上臂时才揭示旧决定有误。失败虽然由封井因果产生，却没有在玩家承诺
+      门箱或完成下臂前给出及时信号，容易被体验成需要枚举整条路线的迟到惩罚。
+    evidence_basis: >-
+      verified_alternative 证明门箱落位合法、玩家可离开且下目标仍可完成；完整续搜证明无胜；
+      evidence_limits 明确这些事实不证明误导成立或反馈公平。
+    player_facing_effect: >-
+      玩家可能在获得持续正反馈后才被迫回退到切割态，难以把失败准确归因于最初的门箱选择；
+      核心洞见由可分析的顺序约束退化为成本很高的分支排除。
+    blocks_proposal_ready: true
+    expected_designer_response: downgrade_or_hold
+
+  - id: CI2_capstone_density_below_role
+    type: core_blocker
+    target_ref: design_target.intended_role
+    design_relation: >-
+      玩家先完成 14 步强制拼合与切割，两个 holding goals 在切割时自动覆盖；切割后唯一被声明的
+      推理是先拉上黏臂、再把门箱放到 (7,5)，而下黏臂与门箱在上臂完成后可交换。
+    attack: >-
+      双锚、多黏块和 32 步制造了压轴外观，但玩家实际需要形成的计划理由只有“封井前先用井”。
+      自动完成的 holding goals 与可交换的收尾不能增加推理层，强制机制展示也不能替代决策。
+    evidence_basis: >-
+      routed diagnostics 明确前 14 步不计推理层；evidence_limits 明确 holding goals 不计独立推理层；
+      order_monitor 仅要求上目标早于门箱，下臂次序自由。
+    player_facing_effect: >-
+      能看懂封井的玩家会在一次判断后进入较长执行；看不懂的玩家则承受 CI1 的迟到试错。
+      两种体验都不符合 late_game_dual_anchor_capstone 的 5/5 目标。
+    blocks_proposal_ready: true
+    expected_designer_response: downgrade_or_hold
+
+  - id: CI3_forced_setup_execution_weight
+    type: nonblocking_risk
+    target_ref: player_reasoning_claims.forced_setup_not_counted
+    design_relation: >-
+      玩家从开局到第 14 步沿强制路线完成拼 C 与横切，之后才开始上黏臂、门箱和下黏臂的次序处理。
+    attack: >-
+      这段机制变化会被后续使用，但其长度相对唯一决策过重；若不改变核心结构，会让玩家记住走位与
+      对象调度，而不是门箱封井的洞见。
+    evidence_basis: >-
+      exact_solution 共 32 步，routed diagnostics 将前 14 步标为强制；pilot execution pressure 为 band 4，
+      但指标本身不证明洞见或审美。
+    player_facing_effect: >-
+      重试错误分支时必须重复较长铺垫，进一步放大迟到失败的成本。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+  - id: CI4_score_ceiling
+    type: score_boundary
+    target_ref: design_target
+    design_relation: >-
+      正确路线由“先上黏臂、后封 (7,5) 竖井、再收下黏臂”构成，前置拼切强制、holding goals 自动、
+      收尾局部可换序。
+    attack: >-
+      当前结构不支持审美 5 或难度 5；审美约 3，难度至多处于 4 边界。若维持现结构，应降低定位，
+      而不是以图规模、胜路约束或执行指标补写为压轴。
+    evidence_basis: >-
+      当前 exact 局面与顺序事实，以及 RA_CAND_0017/0022/0025 的正向人评和 RA_CAND_0024 的 1 分警戒。
+    player_facing_effect: >-
+      关卡有一个可辨认的门/目标复用点，但整体复杂度没有转化为同等密度的玩家洞见与公平回报。
+    blocks_proposal_ready: false
+    expected_designer_response: downgrade_or_hold
+
+diagnostic_interpretations:
+  - graph_fact: >-
+      complete graph 有 514270 个 reachable states、1058153 条 legal transitions、3 个 winning states。
+    neutral_meaning: >-
+      在当前规则与枚举边界内，可达状态空间较大且胜态数量有限。
+    player_facing_interpretation: >-
+      状态数量本身不告诉玩家该看哪一处关系，也不说明失败是否及时、公平或有趣。
+    verdict_effect: none
+
+  - graph_fact: >-
+      order_monitor 完整检查 545240 个状态；没有任何胜路在上黏臂目标之前完成门箱目标，而下黏臂可在门箱前后完成。
+    neutral_meaning: >-
+      “上黏臂先于门箱”是所有胜路共有的顺序义务；下黏臂不构成同等级的顺序义务。
+    player_facing_interpretation: >-
+      玩家在 (7,5) 放箱会封住 x=7 竖井，因此确有一个可解释的资源消耗关系；但图事实不证明玩家能在
+      承诺错误路线前读出它，也不提供及时反馈。
+    verdict_effect: caveat
+
+  - graph_fact: >-
+      早填门箱的 exact alternative 合法并可继续完成下目标，但从该错误结果态完整探索 512051 状态仍无胜。
+    neutral_meaning: >-
+      该选择产生一个规模很大的无胜可达区域，而不是立即死锁。
+    player_facing_interpretation: >-
+      玩家先获得门箱与下臂的目标进展，失败要到再次需要上部通路时才暴露；这增加了分支排除成本，
+      并削弱反馈归因。
+    verdict_effect: core_blocker
+
+  - graph_fact: >-
+      6 条最优输入路径只有 1 个 optimal winning state、1 个 non-walk signature 和 1 个最终对象配置组。
+    neutral_meaning: >-
+      最优解仅有走位或可逆绕动差异，没有不同的对象级最优方案。
+    player_facing_interpretation: >-
+      这些等价变体不会为玩家增加新的计划理由，也不能提高难度或审美判断。
+    verdict_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: >-
+      reality_anchor_trace_metrics_v0 在 v29 规范解上给出 aggregateBand 4；solutionCost=32、
+      nonWalkEventCount=13、heavyReuseRatio=0.05128205128205128。
+    allowed_reading: >-
+      规范解具有较高的执行与状态管理压力；该指标不测量洞见、因果依赖或反直觉性。
+    player_facing_check: >-
+      拼合、切割、上臂先行和门箱封井确实产生后续被消费的状态变化，但前 14 步明确强制，且整关只有
+      一个核心顺序判断，因此较高执行压力主要提示铺垫与重试成本，不能成为难度或审美 merit。
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: >-
+      同一校准在 v29 规范解上给出 aggregateBand 3；revisitRate=0.2727272727272727、
+      heavyReuseRatio=0.05128205128205128。
+    allowed_reading: >-
+      规范解有中等程度的工作区回访；指标不判断复用是否优雅或是否产生惊喜。
+    player_facing_check: >-
+      上部竖井在门箱落位前后确实改变用途，但仅凭 band 3 不能说明每次回访都承担新的共享资源责任。
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+handoff_notes:
+  - >-
+    当前 exact candidate 有一个成立的局部因果：先使用上方竖井，再用门箱覆盖 (7,5) 永久放弃它。
+    问题不是顺序义务不存在，而是错误路线的反馈迟到且核心密度不足以承担 5/5 压轴定位。
+  - >-
+    若不改结构，应将候选降级或 hold；若坚持 late_game_dual_anchor_capstone，应增加第二个可分析且相互
+    作用的玩家决策，并让早填门箱的错误在大量后续投入前通过局部棋盘变化清楚暴露，而不是依靠无胜搜图。
+  - >-
+    lineage_claim 在当前 archive 人类评语层面没有显现对既有正例因果链的继承，但 fresh 声明本身不计 merit。

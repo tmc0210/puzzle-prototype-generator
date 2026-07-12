@@ -1,0 +1,52 @@
+packet_kind: anonymous_fact_pair
+prototype_rules:
+  symbols: {wall: '#', floor: '.', player: '@', crate: C, sticky: M, goal: G, push_pull_anchor: P/L, material_anchor: B/S}
+  rules:
+    - P/L 定义 push/pull 侧；B/S 定义箱/黏材料边界。
+    - 箱跨入 S 侧转为黏格；黏格跨回 B 侧切回箱。
+    - 相邻黏格自动合并为刚体；推拉可以形成 force chain。
+  win_condition: 所有目标由对象覆盖。
+
+case_A:
+  layout: |-
+    ########
+    ####G###
+    ###.MM@#
+    ##G.M..#
+    ###.MM##
+    ####G###
+    ###BS###
+    ########
+  canonical_inputs: [down, left, left, up, down, down, up, left]
+  event_steps:
+    - {step: 3, input: left, events: [push_object, move_sticky_rigid, sticky_to_box, sticky_split]}
+    - {step: 4, input: up, events: [push_object, move_sticky_rigid]}
+    - {step: 6, input: down, events: [push_object, move_sticky_rigid]}
+    - {step: 8, input: left, events: [push_object]}
+  final_win: true
+
+case_B:
+  layout: |-
+    #########
+    ####...##
+    ###G...##
+    ##MMCG.##
+    ####C..##
+    ##MMC.G.#
+    ###G.#..#
+    ###.....#
+    ###.#####
+    ###.#####
+    #@.SB.###
+    #########
+    ###PL####
+    #########
+  canonical_inputs: [right, right, up, up, up, right, right, right, up, up, up, up, left, right, up, left, left, up, right, right, down, down, down, down, right, down, down, left, left, left, up, down]
+  event_steps:
+    - {step: 2, input: right, events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]}
+    - {step: 14, input: right, events: [pull_object, move_sticky_rigid, sticky_to_box, sticky_split]}
+    - {step: 18, input: up, events: [pull_object, move_sticky_rigid]}
+    - {step: 25, input: right, events: [pull_object]}
+    - {step: 32, input: down, events: [pull_object, move_sticky_rigid]}
+  final_win: true
+

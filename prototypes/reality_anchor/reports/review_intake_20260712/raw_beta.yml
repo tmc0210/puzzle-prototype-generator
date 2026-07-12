@@ -1,0 +1,46 @@
+review_attempt_id: RA_NEW_TWIN_GATE_REVIEW_1
+candidate_version: RA_NEW_2026_07_12_TWIN_GATE_RESECTION_v1
+prototype_rules:
+  rules:
+    - 固定 P/L 提供拉侧；可移动 B/S 改写箱/黏边界。
+    - 相邻黏格合并为刚体；跨回 B 侧切回箱并分裂。
+  win_condition: 所有目标由对象覆盖。
+solve_instance:
+  layout: |-
+    #########
+    ####...##
+    ###G...##
+    ##MMCG.##
+    ####C..##
+    ##MMC.G.#
+    ###G.#..#
+    ###.....#
+    ###.#####
+    ###.#####
+    #@.SB.###
+    #########
+    ###PL####
+    #########
+  canonical_exact_inputs: [right, right, up, up, up, right, right, right, up, up, up, up, left, right, up, left, left, up, right, right, down, down, down, down, right, down, down, left, left, left, up, down]
+mechanically_derived_trace:
+  completed: true
+  legal_through_step: 32
+  final_win: true
+  significant_states:
+    - {step: 2, events: [push_B/S, box_to_sticky, sticky_merge], visible_change: 三箱纵柱与上下二格黏臂合成七格整体}
+    - {step: 14, events: [pull_sticky_rigid, sticky_to_box, sticky_split], visible_change: 整体右拉后连接柱切回三箱，上下黏臂分裂，切出箱分别停在中线}
+    - {step: 18, events: [pull_upper_sticky], visible_change: 上黏臂覆盖上目标}
+    - {step: 25, events: [pull_gate_crate], visible_change: 中央箱覆盖竖井底口目标}
+    - {step: 32, events: [pull_lower_sticky], visible_change: 下黏臂覆盖下目标并胜利}
+raw_alternatives:
+  - from: step14
+    exact_inputs: [down, down, right]
+    immediate_result: 门箱覆盖竖井底口目标，玩家仍可向下离开。
+    delayed_inputs: [down, down, left, left, left, up, down]
+    delayed_result: 下黏臂目标也被覆盖；从该状态完整续搜无胜，上黏臂把手不可达。
+archive_taste_context_refs:
+  - positive_compact_reversal.yml
+  - positive_active_constructor.yml
+  - negative_high_cost_branching.yml
+  - negative_disconnected_subpuzzles.yml
+

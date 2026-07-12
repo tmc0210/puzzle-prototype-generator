@@ -1,0 +1,44 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31
+reviewed_candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29
+change_scope: reality_anchor_pre_submission_only
+review_inheritance:
+  allowed: true
+  reason: v29 已获独立 evidence reviewer 与 puzzle critic 的 required_action:none；后续仅执行固定的目标裁剪、开局舒适度与冗余裁剪流程。
+  score_floor_inherited:
+    aesthetic: 4
+    difficulty: 4
+  score_ceiling_claimed: 4
+key_changes:
+  - version: v29_to_v30
+    type: pure_outline_trim
+    detail: 裁去三列纯外墙，所有内部坐标左移一格；完整图与最短解保持同构。
+  - version: v30_to_v31
+    type: redundant_goal_removal
+    detail: 删除 [5,4] 中连接箱目标；最终从两个自动 holding goals 收敛为一个，减少工程化目标膨胀。
+    regression:
+      solution_cost: 32
+      complete_graph_states: 514270
+      legal_transitions: 1058153
+      winning_states: 3
+      winning_object_configuration_groups: 1
+      core_event_bypass: none
+  - version: v31_exact
+    type: alternative_and_order_revalidation
+    detail: 早封门替代路线与延迟下锚进展均用非空 exact_inputs 重放；续搜与顺序监视器完整。
+final_layout_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31.layout.txt
+review_packet_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29_candidate_packet.yml
+critic_feedback_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29_puzzle_critic_1.yml
+evidence_review_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v29_evidence_review_1.yml
+pre_submission_refs:
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_goal_prune_check.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_opening_comfort_check.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_redundant_element_prune.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_event_gate_report.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_alternative_report.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_sequence_report.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_equivalence_report.yml
+remaining_nonblocking_caveats:
+  - 前14步为强制拼接与横切铺垫。
+  - 32步中对象操作集中在5个时点，存在通勤感风险。
+  - 核心困难集中于“上锚先于门箱”的一条延迟偏序；不支持难度5。
+  - 唯一 holding goal 仍主要承担切割反馈；不支持审美5。

@@ -1,0 +1,259 @@
+target_code: Alpha
+stage: raw_first_independent_reading
+stage_status: completed_waiting_for_same_session_stage2
+source_review_attempt_id: RA_NEW_COLUMN_REWEAVE_REVIEW_1
+review_attempt_id: RA_NEW_COLUMN_REWEAVE_REVIEW_1_SCOREGATE_SKILL
+critic_instance_id: "/root/scoregate_alpha"
+review_iteration: 1
+candidate_version_reviewed: RA_NEW_2026_07_12_COLUMN_REWEAVE_v1
+review_input_type: raw_first_stage1
+archive_records_read: 31
+candidate_packet_read: false
+designer_claim_read: false
+solver_analyzer_graph_run: false
+
+read_scope:
+  critic_raw_packet: raw_alpha.yml
+  archive_snapshot_directory: claim_last_archive_prior_ab_run_20260712/snapshots/alpha
+  archive_record_ids_read:
+    - RA_CAND_0001
+    - RA_CAND_0002
+    - RA_CAND_0003
+    - RA_CAND_0004
+    - RA_CAND_0005
+    - RA_CAND_0006
+    - RA_CAND_0007
+    - RA_CAND_0008
+    - RA_CAND_0009
+    - RA_CAND_0010
+    - RA_CAND_0011
+    - RA_CAND_0012
+    - RA_CAND_0013
+    - RA_CAND_0014
+    - RA_CAND_0015
+    - RA_CAND_0016
+    - RA_CAND_0017
+    - RA_CAND_0018
+    - RA_CAND_0019
+    - RA_CAND_0020
+    - RA_CAND_0021
+    - RA_CAND_0022
+    - RA_CAND_0023
+    - RA_CAND_0024
+    - RA_CAND_0025
+    - RA_CAND_0026
+    - RA_CAND_0027
+    - RA_CAND_0028
+    - RA_CAND_0029
+    - RA_CAND_0031
+    - RA_CAND_0032
+  prohibited_material_read: false
+
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家首先需要把底部同排的 P/L 与 B/S 整理成四格列车并整体右移，使其覆盖底部四个连续目标；
+    这次右移同时让上方 C 形五格黏体跨越 B/S 材料边界，切成三箱柱与上下两个黏端点。
+    随后玩家要把这些输出重新配对成可移动刚体，分别覆盖屋顶双目标和中部目标，最后让剩余一格与屋顶横条合成三格 L 并完成覆盖。
+  visible_objects_and_positions: >-
+    初始棋盘上方是一个占据第3至第5行、第5至第6列的 C 形五格 M；屋顶有相邻双目标，
+    C 形右侧上下各有一个中部目标。底部第7行的 B/S 位于 P/L 上方，
+    第8行 P/L 右侧紧接四个连续目标，形成很强的“把两副二格锚点排成四格横条”的可见提示。
+  actual_operations: >-
+    canonical 输入先在 step2、step3 连续右拉 P/L，再于 step9 把 B/S 下推到 P/L 左侧同一横廊；
+    step13、step14 连续推动 B/S，借 force chain 带动 P/L，使四格列车整体右移。
+    之后 step20 与 step30 各把一格箱推回黏侧并与一个端点合并，step24 移动上方二格横条，
+    step35 再移动并合并最后材料。
+  board_changes: >-
+    step14 是中央可见转折：四格列车恰好覆盖底部四目标，C 形五格黏体同时变成三箱柱和上下黏端点。
+    step20 生成上方二格横条，step24 让它覆盖屋顶双目标；step30 生成下方二格条并覆盖中部目标；
+    step35 让最后一格与屋顶横条合成三格 L，全部目标被覆盖。
+  downstream_operation_changes: >-
+    step14 以前，玩家面对的是如何把两副锚点排成可推动的四格列车，并让 B/S 的位移同时服务底部目标与材料切割；
+    step14 以后，原本不能分别消费的 C 形整体变成可重组输出，后续任务转为决定先处理哪个端点、
+    如何让箱重新进入黏侧形成刚体，以及何时把屋顶横条扩成最终 L。raw alternative 表明玩家可在 step14 后先处理下端，
+    仍能以 37 步到达同一终局，因此后半段不是只有一种展示性顺序。
+  salient_relations_seen:
+    - relation_id: anchor_train_and_material_cut
+      objects_and_positions: >-
+        底部 B/S 与 P/L 都是水平二格锚点，右侧有四个连续目标；上方 C 形五格 M 横跨 B/S 后续扫过的列。
+      player_operation: >-
+        step2、step3 右拉 P/L，step9 下推 B/S，step13、step14 推 B/S 并以 force chain 带动 P/L。
+      concrete_board_change: >-
+        四格列车右移并覆盖底部四目标；同一 step14 中，C 形被切为三箱柱和上下黏端点。
+      later_operation_change: >-
+        玩家不再移动完整 C 形，而可把切出的箱分别推回黏侧，与端点重组为覆盖屋顶和中部目标的刚体。
+    - relation_id: upper_rebind
+      objects_and_positions: 上方端点、三箱柱中的一格以及屋顶相邻双目标。
+      player_operation: step20 推箱跨回黏侧并合并，step24 移动合并后的二格横条。
+      concrete_board_change: 上箱与上端点变成二格横条，随后覆盖屋顶双目标。
+      later_operation_change: 屋顶横条先承担双目标覆盖，并在 step35 成为最后一格可并入的固定接收结构。
+    - relation_id: lower_rebind_and_final_merge
+      objects_and_positions: 下方端点、剩余箱以及 C 形右侧的中部目标。
+      player_operation: step30 推箱跨回黏侧并与下端点合并；step35 移动剩余刚体并触发最终合并。
+      concrete_board_change: 下方二格条覆盖中部目标，最后一格与屋顶横条合成三格 L，终局全覆盖。
+      later_operation_change: 后续操作从分别安置切割输出，收束为把最后材料接回已就位的屋顶结构；不需要另起一个无关子谜题。
+  unclear_or_unreadable_parts:
+    - >-
+      raw 只列出 significant_states，没有给出 35 步每一步的完整局面图；因此仅凭第一阶段材料，
+      不能精确判断 step4至step12、step15至step19、step21至step23 等区间中有多少是有选择意义的站位，多少只是必要走位。
+    - >-
+      raw alternative 证明 step14 后至少存在一条可交换的下端优先路线，但没有展示同一决策局面下其他自然失败方向，
+      因而暂不能精确量化玩家的枚举负担。
+  initial_quality_risks:
+    - >-
+      step20 与 step30 都是“把一格箱推回黏侧并与端点合成二格条”，上下支路存在玩家可感知的同构重复；
+      当前可见差异主要是目标位置与最终屋顶合并责任，足以形成完整收束，但不足以支持 5 分所需的不可替代凝练度。
+    - >-
+      底部四目标连续铺开，对四格锚点列车的停靠位置提示很强；这提高了中央转折的可读性，
+      也可能压低“如何使用双锚”的发现难度。其实际影响需在第二阶段结合预声明 role 与玩家模型判断。
+    - >-
+      P/L 在 step14 后从当前 raw 可见信息中主要承担永久覆盖，而 B/S 继续承担材料重组边界；
+      这不是已成立的设计缺陷，但若 designer 把后半段包装成持续双锚耦合，会高于 raw 所支持的玩家体验。
+  exact_basis:
+    - "layout: 第8行第3至4列为 P/L，第8行第5至8列为四个连续 G；第7行第3至4列为 B/S。"
+    - "layout: 第3至5行、第5至6列形成五格 C 形 M；屋顶第2行第7至8列为双 G，中部第3行第7列和第5行第7列各有 G。"
+    - "canonical step2-step3: pull_P/L，P/L 连续向右移动两格。"
+    - "canonical step9: push_B/S，B/S 下推到 P/L 左侧同一横廊。"
+    - "canonical step13: push_B/S + force_chain + shift_P/L，四格列车右移。"
+    - "canonical step14: push_B/S + force_chain + shift_P/L + sticky_to_box + sticky_split；列车覆盖底部四目标，C 形切成三箱柱与上下黏端点。"
+    - "canonical step20-step24: 上箱与上端点合成二格横条，随后覆盖屋顶双目标。"
+    - "canonical step30-step35: 下箱与下端点形成二格条并覆盖中部目标；最后一格与屋顶横条合成三格 L，final_win=true。"
+    - "raw alternative from step14: [up, up, up, right] 可先处理下端，并以37步到达同一终局。"
+
+preliminary_aesthetic:
+  score: 4
+  confidence: medium
+  target_fit: target_not_supplied_in_raw
+  basis: >-
+    step14 把“底部四目标停靠”“双锚 force chain”“C 形切割”压缩成同一个玩家可见转折，
+    且切出的材料随后被屋顶双目标、中部目标与最终 L 形合并持续消费；这比事件齐全但彼此退休的反例更集中，
+    具备清晰、可记忆的玩家侧亮点。暂不支持 5 分，因为上下两次箱转黏合并明显同构，
+    raw 也尚未显示每一段都达到不可替代的高度凝练。
+  upper_boundary: 4
+  boundary_reason: 上下支路同构重复，且四格目标带对中央停靠提示很强。
+
+preliminary_difficulty:
+  score: 4
+  confidence: medium
+  target_fit: target_not_supplied_in_raw
+  basis: >-
+    难度来自可分析的多阶段因果：先重排两副二格锚点，借 force chain 同时完成停靠与材料切割，
+    再把切割输出跨边界重组，并保留屋顶横条以接受最终一格。它不是由35步长度本身得出。
+    不评为5，因为底部连续四目标对列车位置给出强提示，且 raw alternative 显示切割后的两个处理顺序有一定宽容度。
+
+player_facing_merits:
+  - id: merit_step14_compound_hinge
+    exact_scene: >-
+      初始下方两副水平二格锚点与四个连续底部目标、上方 C 形五格 M 同时可见。
+    operation: step2、step3 拉 P/L，step9 下推 B/S，step13、step14 推 B/S 并带动 P/L。
+    concrete_change: 四格列车覆盖底部四目标，同时 C 形切成三箱柱与两个黏端点。
+    downstream_change: 玩家获得可分别重组的材料输出，后续可把箱与端点配成目标所需刚体。
+    merit: 一个动作结果同时兑现目标停靠与材料结构改变，是当前 raw 中最清晰、最独特的亮点。
+  - id: merit_outputs_rejoin_final_structure
+    exact_scene: step24 后屋顶双目标已由二格横条覆盖，仍有下方输出和最后材料未收束。
+    operation: step30 形成下方二格条，step35 移动最后材料并与屋顶横条合并。
+    concrete_change: 中部目标被覆盖，屋顶横条扩成三格 L，最终全部目标覆盖。
+    downstream_change: 切割输出不是完成各自小任务后全部退休；屋顶结构在终局再次成为合并接收体。
+    merit: 后半段至少有一次跨阶段回收，减弱了“切成多个互不相关子关卡”的割裂风险。
+
+archive_taste_context_used:
+  raw_named_positive_anchors:
+    - raw_ref: positive_compact_reversal.yml
+      matched_human_archive_record: RA_CAND_0022
+      human_boundary_used: 5分要求短步骤中的强反直觉洞见、精巧结构与高空间利用率同时成立。
+    - raw_ref: positive_active_constructor.yml
+      matched_human_archive_record: RA_CAND_0025
+      human_boundary_used: 5分构造关要求玩家主动构造亮点形状，且前段包装不喧宾夺主、终局提示恰当。
+  raw_named_negative_anchors:
+    - raw_ref: negative_forced_order_show.yml
+      matched_human_archive_record: RA_CAND_0031
+      human_boundary_used: 单行道机制演出若不复用空间或要素，最终只剩显然重复顺序锁，应判为1分反例。
+    - raw_ref: negative_disconnected_subpuzzles.yml
+      matched_human_archive_record: RA_CAND_0032
+      human_boundary_used: 前段要素退休、后段另起独立 witness 的拼接结构，应判为1分反例。
+  all_human_aesthetic_1_warning_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0031
+    - RA_CAND_0032
+  additional_lower_and_middle_calibration_used:
+    - record: RA_CAND_0020
+      boundary: 三个重复行动即使几何对称清楚，也只支持3分审美、2分难度。
+    - record: RA_CAND_0023
+      boundary: 紧凑几何和轻度混淆可以托住重复处理流程到3分，但不能自动进入4分。
+    - record: RA_CAND_0006
+      boundary: 目标位置只增加腾挪复杂度而削弱机制美感时，高难不能补偿低审美。
+  usage_boundary: 只采用 snapshots 中 human_comments 与其人类分数，不采用 retrieval summary、标签、归档状态或工具结论作为正向依据。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_lower_bound_anchors
+  positive_anchors:
+    - RA_CAND_0022
+    - RA_CAND_0025
+  lower_bound_or_negative_anchors:
+    - RA_CAND_0006
+    - RA_CAND_0020
+    - RA_CAND_0023
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0031
+    - RA_CAND_0032
+  missing_anchor_effect: none
+
+critic_items:
+  - id: score_boundary_not_5
+    type: score_boundary
+    target_ref: preliminary_aesthetic
+    design_relation: step20 与 step30 的上下端点重组
+    attack: >-
+      两段都呈现“单箱跨回黏侧并与端点组成二格条”，当前 raw 所示差异不足以证明两次需要不同的核心洞见。
+    evidence_basis: mechanically_derived_trace step20、step30；RA_CAND_0020 与 RA_CAND_0023 的重复分支人类下界。
+    player_facing_effect: 玩家可能在识别第一次配对后，把第二次视为同构执行而非新的结构理解。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: bottom_goal_carpet_readability_tradeoff
+    type: nonblocking_risk
+    target_ref: initial layout bottom row and step14
+    design_relation: P/L、B/S 与底部四个连续目标的四格列车停靠
+    attack: >-
+      四个连续目标几乎直接标出两副二格锚点最终应排成的长度与停靠位置，可能让中央构造更像强提示下的执行。
+    evidence_basis: layout 第8行 P/L 后紧邻四个连续 G；step14 恰由四格列车覆盖它们。
+    player_facing_effect: 降低双锚列车用途的发现压力，但提高材料切割转折的可读性。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: dual_anchor_claim_boundary
+    type: diagnostic_note
+    target_ref: post_step14 anchor roles
+    design_relation: P/L 与 B/S 在中央转折后的持续责任
+    attack: >-
+      当前 raw 明确显示 B/S 后续继续参与 box_to_sticky 与 sticky_merge；未明确显示 P/L 在 step14 后还有除覆盖目标外的新操作责任。
+    evidence_basis: significant_states step14、step20、step30、step35。
+    player_facing_effect: 若第二阶段 claim 声称全程持续双锚耦合，应收窄为“前半双锚列车转折，后半 B/S 材料重组”。
+    blocks_proposal_ready: false
+    expected_designer_response: answer_from_packet
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+initial_verdict: supports_with_noncore_caveats
+initial_review_loop_state: proposal_ready_with_caveats
+initial_required_action: none
+stage2_guardrail: >-
+  第二阶段不得覆写本 independent_reading；最终 verdict、review_loop_state、required_action 只能维持或严于上述初判，
+  不得因 designer claim 变得更宽松。
+

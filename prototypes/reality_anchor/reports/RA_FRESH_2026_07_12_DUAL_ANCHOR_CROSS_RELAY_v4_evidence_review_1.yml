@@ -1,0 +1,91 @@
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+review_input_type: candidate_version
+verdict: supports_with_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+supported_claims:
+  - target_ref: solve_instance、evidence.solver_result、evidence.trace_summary
+    evidence_basis: >
+      layout_analysis 与 canonical input_replay 对同一 v4 layout 给出一致的 17-input 序列；
+      replay 完整执行 17 步、legalThroughStep=17，canonical.step_17 的 final.isWin=true。
+      最终状态中 B 位于 (2,3) 左目标、P 位于 (6,3) 右目标、切回箱位于 (2,6) 底目标，
+      与目标状态和完成反馈一致。
+  - target_ref: mechanic_exposure_context.claimed_core_events、mechanism_scope.required_winning_path_events
+    evidence_basis: >
+      canonical exact trace 出现 anchor_boundary_shift:push_pull 3 次（steps 2、5、8）、
+      anchor_boundary_shift:box_sticky 2 次（steps 4、11）、pull_object 4 次、
+      box_to_sticky:n2 1 次（两格，step 11）、sticky_merge:n1 1 次（step 15）、
+      move_sticky_rigid 3 次（steps 14、15、17）及 sticky_to_box:n2 1 次（两格，step 17）。
+      event_probe 的六个 individual probes 均 status=complete 且未找到缺少对应事件组的胜路；
+      material_normalization 组证明 box_to_sticky/sticky_to_box 事件模式在胜路上不可整体绕过，
+      不将该组证据误写为逐实例或逐对象必要性。
+  - target_ref: mechanism_scope.required_winning_path_event_counts
+    evidence_basis: >
+      两个独立 event-count artifacts 均在 maxStates=100000、maxDepth=100 下 status=complete：
+      未找到少于 2 次 anchor_boundary_shift:box_sticky 的胜路（exploredStates=578），
+      也未找到少于 3 次 anchor_boundary_shift:push_pull 的胜路（exploredStates=498）。
+      canonical trace 的对应计数恰为 2 和 3。
+  - target_ref: mechanic_exposure_context.latest_exposure_timing_check
+    evidence_basis: >
+      依据 mechanic_exposure_sequence 独立派生：allowed_exposure_through=dual_anchor，
+      该末端 stage 的 new_events 为空，向前最后一个 new_events 非空的 stage 是
+      movable_box_sticky_anchor，其唯一新增事件为 anchor_boundary_shift:box_sticky。
+      complete all-solution event probe 证明所有胜路均需要该事件，count probe 进一步证明至少发生 2 次。
+      canonical exact trace 的全部 occurrence 为 step 4 与 step 11；step 4 落入
+      SEG1_lift_bs_with_crate（RU1_borrowed_crate_lift），step 11 落入
+      SEG3_late_bs_material_rewrite（RU2_reposition_pl_for_second_bs）。
+      因第二次 occurrence 落在第二个 reasoning unit，独立复核结论为 later_phase_present，
+      不是 required_but_frontloaded。dual_anchor 已是序列末端，故不存在需要额外排除的 later stage event。
+  - target_ref: mechanism_scope.central、player_reasoning.reasoning_units、player_reasoning.resolution
+    evidence_basis: >
+      exact states/events 支持四段机械链：step 4 上拉 B/S、force_chain:n2 将上箱送回 (3,2)，
+      此时 B/S 到达左目标所在行但 B 尚在 (3,3)；step 8 下推 P/L 后 P 覆盖 (6,3) 且释放 (5,3)；
+      step 11 左推 B/S 后 B 才覆盖 (2,3)，上下两箱同时归一化为分离黏块；
+      steps 14-15 将右下黏块左拉并在 (3,5)-(3,6) 合并，step 17 整条左拉并以
+      sticky_to_box:n2 完成底目标。packet 当前对 step 4/step 11 的覆盖时点与 replay 一致。
+  - target_ref: player_reasoning.operation_segments、player_reasoning.trace_partition
+    evidence_basis: >
+      SEG1=steps 1-4、SEG2=5-8、SEG3=9-11、SEG4=12-17；四段 exact_inputs 依次拼接后
+      与 canonical 17-input replay 完全相同，覆盖 steps 1-17，无空洞、无重叠，且各段事件与所映射 RU 一致。
+  - target_ref: player_reasoning.reasoning_units[RU1].alternative（结果状态部分）
+    evidence_basis: >
+      ALT1 从 canonical.step_1 追加 down；完整 replay 输入为 [down, down]，第二步合法并产生
+      push_object:crate#1、force_chain:n2、anchor_boundary_shift:box_sticky。
+      alt1.step_2 中箱在 (3,4)，B/S 下移至 y=5，三个目标均未被覆盖，未形成末段竖条。
+  - target_ref: player_reasoning.reasoning_units[RU2].alternative
+    evidence_basis: >
+      ALT2 的 canonical 前缀至 step 5 后追加 [down, left]；第一手到达 (5,3)，第二手在 step 7
+      以 pull_world_front_blocked 失败且状态不变，final.isWin=false，与 concrete_outcome 一致。
+  - target_ref: player_reasoning.reasoning_units[RU3].alternative
+    evidence_basis: >
+      ALT3 的 canonical 前缀至 step 13 后追加 [left, down]；step 14 左拉单格黏块合法，
+      step 15 的 down 以 pull_world_front_blocked 失败且状态不变。
+      final state 仍有 (4,5) 与 (3,6) 两个分离黏块，支持其不能以该尝试直接形成终手竖条的具体结果。
+  - target_ref: solution_uniqueness
+    evidence_basis: >
+      result=unique_complete 属于允许值。layout_analysis 的 graph.status=complete，给出 381 个可达状态、
+      837 条合法转移和 1 个胜态；cross_relay_unique_plan 同样给出 complete graph、
+      shortest_win_distance=17、shortest_winning_states=1、shortest_input_sequence_count=1，
+      且 sampled shortest inputs 与 canonical trace 相同。
+      structural_sequence_probe 给出的 19-input 胜路只在规范序列中插入可逆 down/up detour，
+      与 packet 已限定的“唯一胜态且最短输入序列唯一、不排除任意长度可逆 detour”不冲突。
+  - target_ref: hard_fact_summary_for_critic.calibrated_trace_metrics
+    evidence_basis: >
+      仅核对原样性：calibration/status、solutionCost=17、nonWalkEventCount=21、heavyReuseRatio=0、
+      revisitRate=0.16666666666666666、各 band/weight 与 aggregateBand 均与 layout_analysis.solution.traceMetrics.calibrated
+      完全一致。依技能纪律，该字段不作为支持或反驳机制、玩家推理价值、难度或审美的 evidence。
+unsupported_or_overclaimed:
+  - target_ref: player_reasoning.reasoning_units[RU1].alternative.concrete_outcome
+    issue: >
+      “当前局面虽可通过长绕行恢复”超出 ALT1 exact replay 所证明的范围。
+      ALT1 artifact 只执行到 alt1.step_2 且 final.isWin=false；所列完整图摘要未提供该具体状态到胜态的续行证明，
+      cross_relay_unique_plan 的 19-input detour 也不是 [down, down] 前缀。
+      因而仅此恢复性子句证据不足；ALT1 的坐标、事件、目标未覆盖及未形成竖条等机械结果仍受支持。
+evidence_limits:
+  - 完整图、exact replay、事件门和计数门只支持机械可达性、胜路必经事件、计数下界及最短层唯一性；不证明玩家会自然发现、问题显著、实际难度、审美质量或 campaign placement。
+  - runtime 未提供 instance-level objectParticipation；本评审不把 event pattern、n2 cell count 或 exact cell 状态提升为 per-object identity necessity。
+  - material_normalization avoid-group 只证明 box_to_sticky 与 sticky_to_box 组成的事件组不可整体绕过；逐事件必要性在本候选中由其他 core event gate/终局 exact trace 支持，但不推导逐实例必要性。
+  - forbidden_if_seen_anywhere 为空；dual_anchor 是机制暴露序列末端配置，因此本候选没有 later-event 排除项。
+  - calibrated_trace_metrics 仅完成与 analyzer 输出的逐值核对，未被用于 verdict。
+questions_for_designer: []

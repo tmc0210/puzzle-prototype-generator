@@ -1,0 +1,245 @@
+target_code: Gamma
+review_attempt_id: RA_NEW_CROSS_RELAY_REVIEW_1_SCOREGATE_SKILL
+source_review_attempt_id: RA_NEW_CROSS_RELAY_REVIEW_1
+critic_instance_id: /root/scoregate_gamma
+review_iteration: 1
+candidate_version_reviewed: RA_NEW_2026_07_12_CROSS_ANCHOR_RELAY_v1
+stage: raw_first_independent_reading
+stage_status: completed_awaiting_same_session_stage2
+archive_records_read: 31
+candidate_packet_read: false
+forbidden_material_read: false
+hard_evidence_tools_run: false
+
+review_method:
+  difficulty_route: simple_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+  material_boundary: >-
+    本阶段只读取 raw_gamma.yml、Gamma snapshot 目录下 31 份 RA_CAND_*.md，
+    以及指定 skill 明确要求的 puzzle-critic-template、archive-boundary、source-map。
+
+initial_verdict: supports_with_noncore_caveats
+initial_review_loop_state: proposal_ready_with_caveats
+initial_required_action: none
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家要让对象覆盖三个可见目标：第 4 行第 3 列的左目标、第 4 行第 7 列的右目标、
+    第 7 行第 3 列的底目标。raw 没有给出解法命名式 player_goal，因此此处只按胜利条件读取。
+  objects_and_positions_seen:
+    - >-
+      初始玩家位于第 2 行第 4 列；上箱位于第 3 行第 4 列，下箱位于第 7 行第 4 列，
+      初始黏格位于第 6 行第 6 列。
+    - >-
+      P/L 是第 3 至第 4 行、第 5 列的竖向二格锚点；B/S 是第 5 行第 4 至第 5 列的横向二格锚点。
+      三个目标分别在第 4 行第 3、7 列和第 7 行第 3 列。
+  actual_operations_seen:
+    - >-
+      第 1 步 down 先把上箱下推一格；第 2 步 right 横移 P/L，释放原 L 格的站位；
+      第 4 步 up 再从该站位上拉 B/S，并由 B 半格通过 force chain 把上箱顶回原行。
+    - >-
+      第 5 步 right 继续右移 P/L，使 L 覆盖右目标；第 8 步 down 又把 P/L 下移，
+      让同一右目标改由 P 覆盖，而不是把第一次覆盖当成终局静止状态。
+    - >-
+      第 11 步 left 左移 B/S，使 B 覆盖左目标，并让上下两个箱同时跨入黏性侧、成为分离黏格。
+    - >-
+      第 15 步 left 移动黏性刚体，让初始黏格与下黏格合并为竖条；
+      第 17 步 left 再拉动竖条跨界切回两个箱，下格覆盖底目标并获胜。
+  board_changes_and_later_operation_effect:
+    - >-
+      第 1 步把上箱送到 B/S 上方，随后第 2 步释放 L 侧站位，因此第 4 步才能同时移动 B/S 与把上箱顶回；
+      这不是孤立推箱，而是为后续锚点上拉建立站位和受力关系。
+    - >-
+      第 5 步让 L 暂时覆盖右目标后，第 8 步改变锚点纵向位置并把覆盖责任交给 P；
+      右目标因此同时约束 P/L 的横移与下移顺序，且为玩家继续处理左侧 B/S 留出不同站位。
+    - >-
+      第 11 步既完成左目标，又改变两个箱的材料身份；后续不再是分别推两个普通箱，
+      而必须先在第 15 步把分离黏格与初始黏格拼成竖向刚体，再在第 17 步整体拉动并跨界切割。
+    - >-
+      第 15 步合并不是胜利终态；它新增了可被整体左拉的竖条，并使第 17 步一次操作同时完成跨界切割与底目标覆盖。
+  salient_relations_seen:
+    - 上箱的先下推、后由 B/S force chain 顶回，构成短而可见的位移回返。
+    - 右目标从 L 到 P、左目标由 B 覆盖、底目标由切回后的下箱覆盖，三个目标分别消费不同阶段的对象责任。
+    - B/S 的位移同时承担目标覆盖和材料换相，换相后的两个箱又必须与初始黏格发生合并、刚体移动和最终切回。
+  unclear_or_unreadable_parts:
+    - >-
+      raw 只列出 significant_states，没有每一步完整局面；本阶段能够确认事件链和可见变化，
+      但不能从材料中穷尽同一决策状态下所有自然分支，也不会自行运行 solver、analyzer 或 graph 补证。
+    - >-
+      raw 未提供本轮 brief 的目标角色、目标难度和课程暴露窗口；因此这里只判断关卡本体的初步质量，
+      role fit 留待同会话第二阶段按 candidate packet 核对。
+  initial_quality_merits:
+    - >-
+      8x8 紧凑题面内，两种可移动锚点、两个箱、一个初始黏格和三个目标都进入同一条可追踪的责任接力；
+      没有从 raw 看见大地图或大量对象只换来普通腾挪的失衡。
+    - >-
+      第 1/4 步的箱体回返、第 5/8 步的目标换手、第 11/15/17 步的分离黏格到竖条再切回箱体，
+      都会改变下一步可做的操作，不只是事件标签齐全。
+    - >-
+      两个给定失败尝试都在第二个输入立即失败且状态不变，反馈及时、损失低，不像延迟很久才暴露的高成本 deadend。
+  initial_quality_risks:
+    - >-
+      两个 raw alternative 都是两步内的局部非法动作；它们证明反馈干净，却不证明玩家需要在多个可信计划间做深层剪枝。
+      如果其余路径同样被墙和局部阻挡强制，体验可能从“跨锚点推理”退化为顺着唯一 affordance 播放机制演出。
+    - >-
+      canonical 17 步中有 8 个显著事件，密度高但本身不加分；第二阶段仍需检查 designer 是否把事件数量、force chain
+      或材料标签包装成超出玩家实际洞见的信息。
+    - >-
+      第 5 步 L 覆盖右目标后第 8 步改由 P 覆盖很清楚，但 raw 尚不足以说明玩家为何在行动前会把“必须换手”读成计划问题，
+      而不是走廊和站位自然导出的唯一动作。
+  preliminary_aesthetic:
+    score: 4
+    fit: supports_4_not_5
+    basis: >-
+      紧凑布局里存在清晰而独特的跨锚点责任接力：上箱回返、同一目标由 L/P 换手、B/S 同时完成左目标与双箱换相，
+      再把分离材料拼成竖条并切回箱体收尾。它达到“没有已见实质问题且有可记忆亮点”的 4 分门槛；
+      raw 尚未显示足以支持 5 分的不可替代性或高度凝练的单一核心洞见。
+  preliminary_difficulty:
+    score: 3
+    fit: conventional_challenge_pending_role_check
+    basis: >-
+      玩家需要连续维护站位、锚点覆盖责任和材料身份，明显高于机制 witness；但给出的失败分支都短且立即无效，
+      暂不能证明达到人类 4 分阶段挑战中常见的强反直觉重构或多阶段计划负担。
+  exact_basis:
+    - "layout:r2c4=@; r3c4=C; r3c5=P; r4c5=L; r5c4=B; r5c5=S; r6c6=M; r7c4=C; goals=r4c3/r4c7/r7c3"
+    - "canonical_exact_inputs:step1=down -> push_crate，上箱下推一格"
+    - "canonical_exact_inputs:step2=right -> push_P/L，P/L 右移并释放 L 侧站位"
+    - "canonical_exact_inputs:step4=up -> pull_B/S + force_chain，B/S 上提且 B 半格把上箱顶回原行"
+    - "canonical_exact_inputs:step5=right -> L 覆盖 r4c7 右目标"
+    - "canonical_exact_inputs:step8=down -> 右目标改由 P 覆盖"
+    - "canonical_exact_inputs:step11=left -> B/S 左移覆盖 r4c3 左目标，上下两箱转为分离黏格"
+    - "canonical_exact_inputs:step15=left -> sticky rigid 移动并合并成竖条"
+    - "canonical_exact_inputs:step17=left -> 竖条跨界切回两箱，下格覆盖 r7c3 底目标并 final_win=true"
+    - "raw_alternatives:from_step5 [down,left] 第二步失败且状态不变；from_step13 [left,down] 第二步失败且状态不变"
+
+player_facing_merits:
+  - id: merit_upper_cross_anchor_return
+    exact_scene: "初始上箱 r3c4；P/L 位于 r3c5-r4c5；B/S 位于 r5c4-r5c5"
+    visible_arrangement: 上箱紧邻 P/L 左侧，B/S 位于其下一行，L 格后的站位起初被 P/L 占据。
+    player_operation: 第 1 步下推上箱，第 2 步右移 P/L，第 4 步从释放的 L 侧站位上拉 B/S。
+    concrete_board_change: B/S 上提，B 半格通过 force chain 把刚下推的上箱顶回原行。
+    later_operation_change: 释放的站位和回返后的箱位允许玩家继续在第 5 步右移 P/L，并进入右目标换手流程。
+  - id: merit_right_goal_handoff
+    exact_scene: "r4c7 是右目标；第 5 步 L 覆盖它，第 8 步同一目标改由 P 覆盖"
+    visible_arrangement: 竖向 P/L 被移到右侧目标列，P 在 L 上方。
+    player_operation: 先在第 5 步向右推 P/L，再绕到上方于第 8 步向下推 P/L。
+    concrete_board_change: 右目标的覆盖者从 L 换成 P，锚点整体纵向位置随之改变。
+    later_operation_change: 玩家不能把第 5 步的目标覆盖当作停止点；换手后才能离开右侧并继续操作左侧 B/S。
+  - id: merit_material_relay_finish
+    exact_scene: "第 11 步 B/S 左移；第 15 步竖条合并；第 17 步切回两箱并胜利"
+    visible_arrangement: 两个普通箱分处上、下区域，另有 r6c6 初始黏格；左目标和底目标仍需被消费。
+    player_operation: 左推 B/S，使两个箱换为分离黏格；随后移动黏性刚体把其中一格与初始黏格合并，再整体左拉跨界。
+    concrete_board_change: B 先覆盖左目标；分离黏格合成竖条；竖条最终切回两个箱且下格覆盖底目标。
+    later_operation_change: 第 11 步后普通箱的独立推法消失，必须先拼成可整体拉动的竖条；第 15 步后新增一次拉动即可同时切割和完成底目标的收尾方式。
+
+archive_taste_context_used:
+  status: used_human_comments_only
+  records_available: 31
+  positive_anchors:
+    - candidate_id: RA_CAND_0022
+      human_score: {aesthetic: 5, difficulty: 4}
+      use: 短步骤中由可见死角承诺并兑现强反直觉反向送箱，用作 5 分不可替代洞见上界。
+    - candidate_id: RA_CAND_0025
+      human_score: {aesthetic: 5, difficulty: 4}
+      use: 紧凑空间中主动构造并反复使用 L 形活塞，用作构造型 5 分上界。
+    - candidate_id: RA_CAND_0015
+      human_score: {aesthetic: 4, difficulty: 3}
+      use: 简洁结构、充分机制覆盖与清晰逻辑链，用作前期综合应用的 4/3 参照。
+  lower_bound_or_negative_anchors:
+    - candidate_id: RA_CAND_0024
+      human_score: {aesthetic: 1, difficulty: 3}
+      use: 双锚与三黏格抬高构造预期、实际只兑现推拉腾挪的警戒。
+    - candidate_id: RA_CAND_0030
+      human_score: {aesthetic: 1, difficulty: 3}
+      use: 大题面高 affordance、开局后锚点被动且自然 deadend 反馈迟缓的警戒。
+    - candidate_id: RA_CAND_0031
+      human_score: {aesthetic: 1, difficulty: 2}
+      use: 事件齐全但开场为无复用单行道演出、核心只剩显然重复顺序锁的警戒。
+  archive_attack_calibration: complete_positive_and_negative_human_anchors
+  score_claim_allowed: true
+  boundary_note: 未使用 snapshot 中的 Retrieval Summary、状态、标签或工具性字段作为评分依据。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete
+  positive_anchors: [RA_CAND_0022, RA_CAND_0025, RA_CAND_0015]
+  lower_bound_or_negative_anchors: [RA_CAND_0024, RA_CAND_0030, RA_CAND_0031]
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: context_missing
+  solution_execution_pressure:
+    metric_fact: null
+    allowed_reading: 本阶段没有 calibrated_trace_metrics，不从 17 步长度或 8 个显著事件推出审美与洞见。
+    player_facing_check: 只使用 raw 中可定位的对象、操作、棋盘变化和后续操作变化。
+    verdict_effect: none
+  solution_space_reuse:
+    metric_fact: null
+    allowed_reading: 无校准指标，不作量化空间复用结论。
+    player_facing_check: 仅初步观察同一上箱、两锚点和三个目标是否在多个阶段承担不同责任。
+    verdict_effect: none
+  unmeasured_dimensions:
+    - 同一决策局面中自然备选路线的数量与可剪枝性
+    - 首次游玩时换手与材料接力是否在行动前可读
+
+aesthetic_target_fit:
+  preliminary_score: 4
+  boundary: supports_4_not_5
+  target_fit: target_not_yet_provided
+difficulty_target_fit:
+  preliminary_score: 3
+  boundary: conventional_challenge_not_yet_stage_challenge
+  target_fit: target_not_yet_provided
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+  note: raw 阶段未读取 designer claim；只检查 raw 自身，没有发现以结构名替代具体局面的情况。
+
+critic_items:
+  - id: gamma_stage1_forced_show_risk
+    type: nonblocking_risk
+    target_ref: canonical_exact_inputs_and_raw_alternatives
+    design_relation: >-
+      两个失败尝试都在第二个输入因局部占位直接失败且状态不变；canonical 虽有多次对象责任变化，
+      但 raw 没有展示同一决策状态的多条可信计划。
+    attack: >-
+      如果墙体和局部阻挡让 17 步大多只剩唯一显然输入，高事件密度可能只是机制演出，
+      实际难度与玩家洞见会低于题面承诺。
+    evidence_basis:
+      - "from step5: [down,left]，第二步失败、状态不变"
+      - "from step13: [left,down]，第二步失败、状态不变"
+      - "RA_CAND_0031 人评警戒：事件齐全的无复用单行道演出不能靠机制数量抬分"
+    player_facing_effect: 玩家可能只需顺着即时合法动作前进，而非提前理解跨锚点接力。
+    blocks_proposal_ready: false
+    expected_designer_response: answer_from_packet
+  - id: gamma_stage1_score_boundary
+    type: score_boundary
+    target_ref: preliminary_aesthetic_and_difficulty
+    design_relation: >-
+      紧凑跨锚点责任接力足以支持审美 4；现有 raw 尚未显示 5 分所需的不可替代洞见，
+      也未显示难度 4 所需的强重构或可分析的多阶段计划压力。
+    attack: 不得用事件数、机制覆盖率或 canonical 长度把 4/3 自动抬为 5/4。
+    evidence_basis:
+      - "steps 1/2/4: 上箱下推后由 B/S force chain 顶回"
+      - "steps 5/8: 右目标从 L 换手给 P"
+      - "steps 11/15/17: 双箱换相、黏格合并、跨界切回并胜利"
+      - "RA_CAND_0022 与 RA_CAND_0025 的人类 5/4 上界都具有更明确的单一强洞见或主动构造"
+    player_facing_effect: 当前亮点可记忆，但玩家究竟是提前推导还是按局部合法性执行仍未完全可见。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations: []
+handoff_notes:
+  - 同会话第二阶段必须保留以上 independent_reading 与 initial_*，不得覆写或放宽。
+  - 第二阶段核对目标角色、目标难度、课程暴露窗口，以及 designer 对第 5/8 步换手和第 11/15/17 步材料接力的玩家问题表述。
+  - 第二阶段若 claim 只复述 force_chain、box_to_sticky、sticky_merge 等事件名，或把短局部非法动作包装成深层 alternative，应使最终结论更严格。

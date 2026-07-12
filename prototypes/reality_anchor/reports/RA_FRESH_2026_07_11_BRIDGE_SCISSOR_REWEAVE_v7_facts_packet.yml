@@ -1,0 +1,92 @@
+candidate_id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+candidate_version: v7
+packet_kind: claim_last_facts
+base_context_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_facts_packet.yml
+
+layout: |-
+  ########
+  ##PL####
+  #..Mm.G#
+  #..MG.G#
+  #..Mm.G#
+  #...####
+  #@BS..##
+  ########
+player_start: [1, 6]
+target_coordinates:
+  left_column: [[4, 2], [4, 3], [4, 4]]
+  right_column: [[6, 2], [6, 3], [6, 4]]
+win_condition: all_targets_covered_by_objects
+allowed_exposure_through: dual_anchor
+
+version_delta:
+  from: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+  change: "trim two all-wall left columns and one all-wall right column"
+  coordinate_transform: "x_v7=x_v6-2; y unchanged"
+  semantic_change: none
+
+canonical_solution:
+  cost: 21
+  inputs: [up, up, up, up, right, right, down, down, down, left, left, down, right, right, up, left, up, left, up, right, right]
+  event_sequence_identical_to_v6: true
+  final_win: true
+
+event_gates:
+  all_solution_required_complete:
+    anchor_boundary_shift_push_pull: {bypass: false, status: complete, states: 429428}
+    anchor_boundary_shift_box_sticky: {bypass: false, status: complete, states: 158}
+    pull_object: {bypass: false, status: complete, states: 81}
+    sticky_to_box: {bypass: false, status: complete, states: 615}
+    sticky_split: {bypass: false, status: complete, states: 615}
+    move_sticky_rigid: {bypass: false, status: complete, states: 9480}
+  optimal_route_only:
+    box_to_sticky: {first_avoiding_win_cost: 64, states: 179636}
+    sticky_merge: {first_avoiding_win_cost: 64, states: 200504}
+
+no_merge_route_summary:
+  total_cost: 64
+  entry: "C 形右移后，在 P/L 尚未拉到底前提前切桥。"
+  operations: "分别抽走三箱；上下端点逐个送到右列上下目标；P/L 泊入右列中目标；三箱逐个回填左列。"
+  risk: "概念更直白但对象调度、让位和回填显著更笨重；保留为非阻塞试玩 caveat 与审美5边界。"
+
+calibrated_trace_metrics:
+  calibration: reality_anchor_trace_metrics_v0
+  status: pilot
+  solution_execution_pressure:
+    status: enabled
+    components:
+      solutionCost: {raw: 21, band: 4, weight: 0.35}
+      nonWalkEventCount: {raw: 25, band: 5, weight: 0.45}
+      heavyReuseRatio: {raw: 0, band: 1, weight: 0.2}
+    aggregateBand: 4
+  solution_space_reuse:
+    status: enabled
+    components:
+      revisitRate: {raw: 0.3181818181818182, band: 3, weight: 0.55}
+      heavyReuseRatio: {raw: 0, band: 1, weight: 0.45}
+    aggregateBand: 2
+
+graph_fact:
+  status: exhausted
+  neutral_meaning: "完整图相关结论 unknown；verdict_effect none。"
+
+archive_taste_context_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_facts_packet.yml
+archive_taste_context_ids: [RA_CAND_0017, RA_CAND_0022, RA_CAND_0025, RA_CAND_0024]
+
+pre_submission_stage:
+  status: completed
+  quality_evidence: false
+  checks: [goal_prune, opening_comfort_check, redundant_element_prune]
+  note: "这些检查仅确认 exact v7 提交完整性，不作为玩家侧 merit 或分数依据。"
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7.json
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_CANONICAL.json
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_NO_MERGE_BYPASS.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_event_gate.json
+
+evidence_limits:
+  - "graph exhausted；不主张 unique、完整 SCC 或完整分支质量。"
+  - "merge 只对所有最优解必需，不对所有任意长胜路必需。"
+  - "pre_submission checks 不是设计质量证据。"
+

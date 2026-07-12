@@ -1,0 +1,32 @@
+redundant_element_prune:
+  status: kept_with_unknown
+  fixed_order_executed:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+  object_remove_prune:
+    action: keep_all
+    reason: canonical trace moves both anchors and transforms/moves all five initial sticky cells; no trace-nonparticipating object candidate exists.
+  object_wallify_prune:
+    action: not_applicable
+    reason: no unmoved/untransformed object candidate.
+  space_prune:
+    candidates:
+      - {cell: [7,3], action: keep_unknown}
+      - {cell: [7,4], action: keep_unknown}
+      - {cell: [7,5], action: keep_unknown}
+      - {cell: [7,6], action: keep_unknown}
+    reason: >-
+      这些右侧格不在 canonical 玩家路径中，但可能限制或容纳更长锚点/材料换序；base graph 在500001状态耗尽。
+      authority doc 禁止在图或核心事件 probe 不完整时 clean prune。
+  wall_outline_prune:
+    action: keep
+    reason: 当前为单层外框；无纯墙外列可安全裁剪。
+  opening_comfort_regression: none_layout_unchanged
+  layout_mutated: false
+  evidence_refs:
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_goal_prune_check.yml
+    - prototypes/reality_anchor/reports/RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7.json

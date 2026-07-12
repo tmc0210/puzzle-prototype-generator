@@ -1,0 +1,80 @@
+review_attempt_id: GAMMA_SINGLE_R1
+critic_instance_id: /root/single_gamma_r1
+candidate_version_reviewed: RA_NEW_2026_07_12_CROSS_ANCHOR_RELAY_v1
+stage: raw_first
+archive_records_read:
+  - RA_CAND_0001
+  - RA_CAND_0002
+  - RA_CAND_0003
+  - RA_CAND_0004
+  - RA_CAND_0005
+  - RA_CAND_0006
+  - RA_CAND_0007
+  - RA_CAND_0008
+  - RA_CAND_0009
+  - RA_CAND_0010
+  - RA_CAND_0011
+  - RA_CAND_0012
+  - RA_CAND_0013
+  - RA_CAND_0014
+  - RA_CAND_0015
+  - RA_CAND_0016
+  - RA_CAND_0017
+  - RA_CAND_0018
+  - RA_CAND_0019
+  - RA_CAND_0020
+  - RA_CAND_0021
+  - RA_CAND_0022
+  - RA_CAND_0023
+  - RA_CAND_0024
+  - RA_CAND_0025
+  - RA_CAND_0026
+  - RA_CAND_0027
+  - RA_CAND_0028
+  - RA_CAND_0029
+  - RA_CAND_0030
+  - RA_CAND_0031
+candidate_packet_read: false
+designer_claim_read: false
+hard_evidence_tools_run: false
+
+player_reading:
+  core_visible_relation: >-
+    P/L 先右移，释放 L 侧站位，使玩家能上拉 B/S；B/S 上提时又以 B 半格把刚被推开的上箱顶回原行，形成双锚接力。
+  core_player_operation: >-
+    玩家先下推上箱、右推 P/L，再从释放出的站位上拉 B/S；随后继续移动 P/L 保住右目标，左推 B/S 覆盖左目标并换相两只箱子，最后拉动黏格完成合并与跨界切回。
+  core_board_change: >-
+    三个目标依次由 P/L、B/S 和末段切回的下箱覆盖；第 11 步两只箱子同时变为分离黏格，但第 15 至 17 步只让初始黏格与下黏格合并、左拉和切回。
+  core_planning_effect: >-
+    玩家需要预先把两组锚点的站位释放、目标接力和材料边界移动串成同一计划；然而上箱在被顶回并换相后不再承担任何后继责任。
+
+confirmed_aesthetic_problem:
+  status: present
+  exact_scene: >-
+    第 11 步，初始上箱已经历第 1 步下推和第 4 步被 B/S 顶回原行；玩家此时左推 B/S，使上、下两箱同时变为两个彼此分离的黏格。
+  player_operation: >-
+    玩家从 B/S 右侧向左推一格，令 B 半格覆盖左目标并触发两只箱子的远程材料换相；之后按第 12 至 17 步只向下、向左移动并拉动下方黏格组。
+  board_change: >-
+    上箱在第 11 步变成上黏格后留在原处；余下可见变化只有初始黏格与下黏格于第 15 步合并成竖条，并在第 17 步跨界切回两箱后由下格覆盖底目标胜利。
+  player_visible_harm: >-
+    上箱的“强制推开—自动顶回—远程换相”制造了一个显眼的第二黏格责任，玩家会自然把它纳入合并、几何或收尾规划；实际它从换相到胜利完全没有后继作用，因而这段高信号变化只增加无效状态追踪并让双锚接力带有机制演出的拼接感。
+  raw_facts_sufficient: true
+
+pending_fact:
+  status: none
+  exact_missing_fact: none
+  why_it_changes_problem_existence: none
+
+provisional_aesthetic: 1
+initial_difficulty: >-
+  4；双锚站位接力、目标接力和末段黏格合并再切回要求跨阶段规划，属于已公开全部机制后的阶段挑战。
+initial_role_fit: >-
+  部分匹配后期双锚综合关；核心接力具备挑战性，但上黏格的无后继换相不适合作为高密度综合应用中的有效玩家责任。
+exact_basis:
+  - raw_gamma.yml：layout、canonical_exact_inputs 与 mechanically_derived_trace.step 1/2/4/5/8/11/15/17
+  - raw_gamma.yml：第 11 步明确两箱同时变为分离黏格；第 15、17 步仅记录初始黏格与下黏格的合并、移动和切回，并于第 17 步胜利
+  - HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001：可见机制可能性未转化为必要结构时构成 1 分 affordance 反例
+  - HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001：高机制信号抬高玩家期待、实际责任未兑现时构成 1 分反例
+  - HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001：锚点开局活跃、后续退为被动且高设计信号无相称回报时构成 1 分反例
+  - HP_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_001：短步骤中的反直觉操作只有转化为核心且精巧的玩家洞见时才支持 5 分
+  - HP_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_001：主动构造的形状被后段反复使用并由目标消费，才形成 5 分构造关正例

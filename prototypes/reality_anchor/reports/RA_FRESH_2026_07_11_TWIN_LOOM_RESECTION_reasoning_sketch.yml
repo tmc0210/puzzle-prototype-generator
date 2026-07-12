@@ -1,0 +1,86 @@
+candidate_family: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION
+scope: prototype_specific_level_design
+archive_lineage_policy:
+  default: fresh_required
+  candidate_relation: fresh
+  forbidden_as_design_base:
+    - archived_layouts
+    - archived_solution_routes
+    - existing_reports_or_packets_from_other_threads
+
+design_target:
+  intended_role: late_game_dual_anchor_capstone
+  allowed_exposure_through: dual_anchor
+  difficulty_score_target: 5
+  aesthetic_score_target: 5
+  minimum_acceptable:
+    difficulty: 4
+    aesthetic: 4
+  required_mechanic_scope:
+    - push_pull_anchor_and_box_sticky_anchor_coexist
+    - both_anchors_have_player_visible_structural_responsibility
+    - sticky_merge_is_consumed_as_shape_or_rigidity
+    - sticky_split_or_sticky_to_box_cut_is_consumed_as_new_independence
+
+reasoning_sketch:
+  player_goal: >-
+    玩家要让分散材料覆盖多个目标；开局可见的窄口不允许独立小块直接完成全部目标，
+    而两枚可动锚点同时占据关键操作线。
+  intended_question: >-
+    哪些材料必须先在 B/S 的黏侧拼成能传力或跨口的刚体，什么时候又必须移动 B/S
+    把其中一部分切回独立箱子；P/L 应在何时改写推拉操作面，才能既移动 B/S 又保留
+    后续处理切割产物的站位？
+  visible_premises:
+    - >-
+      两个或更多箱子能在 B/S 黏侧正交接触；拼接后形成的多格刚体占格明显不同于独立箱子。
+    - >-
+      一个后续窄口或受墙齿限制的动作只能由拼接后的完整形状传力或定位，少拼一格无法完成。
+    - >-
+      另一个单格目标袋或回返操作位不容完整黏块；需要 B/S 边界扫过连接格，产生可独立处理的箱子/端点。
+    - >-
+      P/L 的位置决定玩家能否以拉的方式移动 B/S 或复合刚体；过早移动会丢失拼接站位，过晚移动会封死切割产物。
+  intended_conclusion: >-
+    先在保留推入站位的情况下完成黏块拼接并用其刚体形状完成一次跨口/传力；随后用 P/L
+    提供的拉侧移动 B/S，让边界切过连接格；最后利用切后独立部件完成单格目标，并把剩余黏块重新定位收束。
+  planned_mechanic_sequence:
+    - prepare_material_without_committing_anchor_order
+    - box_to_sticky_and_sticky_merge
+    - move_merged_sticky_as_rigid_body_or_use_it_in_force_chain
+    - move_push_pull_anchor_or_cross_its_boundary_to_obtain_pull_handle
+    - move_box_sticky_anchor_through_a_required_stop
+    - sticky_to_box_and_sticky_split
+    - consume_cut_output_in_single_cell_goal_or_handle
+    - finish_with_remaining_sticky_shape_and_second_anchor_state
+  intended_feedback:
+    - >-
+      拼接时，独立箱子视觉上收束成一个占格更大的刚体，并立即获得原先没有的传力/跨口能力。
+    - >-
+      切割时，连接格变箱或连通块分裂，原先同时移动的部分可被分别推动；单格目标袋明确显示独立性变化。
+    - >-
+      两枚锚点的最终停位和目标覆盖共同确认顺序，而不是仅以事件标签确认。
+  questions_for_tools:
+    - 是否存在不发生 sticky_merge 的胜路？
+    - 是否存在不发生 sticky_to_box 或 sticky_split 的胜路？
+    - 两枚锚点是否都在所有胜路中移动，且移动发生在设计要求的相对顺序窗口？
+    - 是否存在非等价胜解，尤其是先切后拼、绕过刚体消费或把锚点直接当目标覆盖物？
+    - 完整图能否证明所有 later-than-dual-anchor 暴露项不适用，并给出 exact canonical trace？
+
+design_corpus_usage_intent:
+  source: prototypes/reality_anchor/mechanism_lab/lexicon.md
+  selected_local_parts:
+    - B/S 边界黏合中的“相邻箱子拼成多格刚体，后续墙口消费形状”
+    - 固定 B/S 切割/断桥中的“连接格跨界后产生独立部件，单格目标袋消费独立性”
+    - P/L pull 抽取中的“玩家前格与二格锚点目标格共同决定拉动合法性”
+  new_relation_to_construct: >-
+    不直接串联教学片段；让拼成的刚体先成为移动 B/S 或穿过 P/L 操作面的 driver，
+    而 B/S 的切割停位又反过来决定 P/L 后续是否有处理独立端点的站位，使两枚锚点和材料形状形成闭环责任。
+
+archive_calibration_notes:
+  positive_boundaries:
+    - RA_CAND_0017: 高难终局允许高密度，但价值来自高机制耦合与反直觉操作，不能只复制其腾挪负担。
+    - RA_CAND_0022: 5分标杆依靠短步骤中的强洞见、空间利用率与反直觉因果，本轮不复用其死角反推链。
+    - RA_CAND_0025: 构造形状必须被终局提示和消费；本轮不复用 L 形反复活塞。
+  negative_boundaries:
+    - RA_CAND_0006: 不用目标位置和路线长度制造虚高难度。
+    - RA_CAND_0024: 双锚点与黏块不能只提供高机制信号，实际却退化为推拉腾挪。
+    - RA_CAND_0027: 可动锚点必须真的移动，sticky_merge 必须真的使用几何性质。

@@ -1,0 +1,370 @@
+target_code: Alpha
+stage: claim_last_final_review
+stage_status: completed
+source_review_attempt_id: RA_NEW_COLUMN_REWEAVE_REVIEW_1
+review_attempt_id: RA_NEW_COLUMN_REWEAVE_REVIEW_1_SCOREGATE_SKILL
+critic_instance_id: "/root/scoregate_alpha"
+review_iteration: 1
+candidate_version_reviewed: RA_NEW_2026_07_12_COLUMN_REWEAVE_v1
+review_input_type: candidate_version
+archive_records_read: 31
+candidate_packet_read: true
+designer_claim_read: true
+solver_analyzer_graph_run: false
+
+verdict: revise_required
+review_loop_state: revise_required
+required_action: revise_claim_and_rereview
+
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+  packet_declared_claim_last_mode: not_used
+  actual_controller_route: raw_first_then_candidate_claim
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家首先需要把底部同排的 P/L 与 B/S 整理成四格列车并整体右移，使其覆盖底部四个连续目标；
+    这次右移同时让上方 C 形五格黏体跨越 B/S 材料边界，切成三箱柱与上下两个黏端点。
+    随后玩家要把这些输出重新配对成可移动刚体，分别覆盖屋顶双目标和中部目标，最后让剩余一格与屋顶横条合成三格 L 并完成覆盖。
+  visible_objects_and_positions: >-
+    初始棋盘上方是一个占据第3至第5行、第5至第6列的 C 形五格 M；屋顶有相邻双目标，
+    C 形右侧上下各有一个中部目标。底部第7行的 B/S 位于 P/L 上方，
+    第8行 P/L 右侧紧接四个连续目标，形成很强的“把两副二格锚点排成四格横条”的可见提示。
+  actual_operations: >-
+    canonical 输入先在 step2、step3 连续右拉 P/L，再于 step9 把 B/S 下推到 P/L 左侧同一横廊；
+    step13、step14 连续推动 B/S，借 force chain 带动 P/L，使四格列车整体右移。
+    之后 step20 与 step30 各把一格箱推回黏侧并与一个端点合并，step24 移动上方二格横条，
+    step35 再移动并合并最后材料。
+  board_changes: >-
+    step14 是中央可见转折：四格列车恰好覆盖底部四目标，C 形五格黏体同时变成三箱柱和上下黏端点。
+    step20 生成上方二格横条，step24 让它覆盖屋顶双目标；step30 生成下方二格条并覆盖中部目标；
+    step35 让最后一格与屋顶横条合成三格 L，全部目标被覆盖。
+  downstream_operation_changes: >-
+    step14 以前，玩家面对的是如何把两副锚点排成可推动的四格列车，并让 B/S 的位移同时服务底部目标与材料切割；
+    step14 以后，原本不能分别消费的 C 形整体变成可重组输出，后续任务转为决定先处理哪个端点、
+    如何让箱重新进入黏侧形成刚体，以及何时把屋顶横条扩成最终 L。raw alternative 表明玩家可在 step14 后先处理下端，
+    仍能以 37 步到达同一终局，因此后半段不是只有一种展示性顺序。
+  salient_relations_seen:
+    - relation_id: anchor_train_and_material_cut
+      objects_and_positions: >-
+        底部 B/S 与 P/L 都是水平二格锚点，右侧有四个连续目标；上方 C 形五格 M 横跨 B/S 后续扫过的列。
+      player_operation: >-
+        step2、step3 右拉 P/L，step9 下推 B/S，step13、step14 推 B/S 并以 force chain 带动 P/L。
+      concrete_board_change: >-
+        四格列车右移并覆盖底部四目标；同一 step14 中，C 形被切为三箱柱和上下黏端点。
+      later_operation_change: >-
+        玩家不再移动完整 C 形，而可把切出的箱分别推回黏侧，与端点重组为覆盖屋顶和中部目标的刚体。
+    - relation_id: upper_rebind
+      objects_and_positions: 上方端点、三箱柱中的一格以及屋顶相邻双目标。
+      player_operation: step20 推箱跨回黏侧并合并，step24 移动合并后的二格横条。
+      concrete_board_change: 上箱与上端点变成二格横条，随后覆盖屋顶双目标。
+      later_operation_change: 屋顶横条先承担双目标覆盖，并在 step35 成为最后一格可并入的固定接收结构。
+    - relation_id: lower_rebind_and_final_merge
+      objects_and_positions: 下方端点、剩余箱以及 C 形右侧的中部目标。
+      player_operation: step30 推箱跨回黏侧并与下端点合并；step35 移动剩余刚体并触发最终合并。
+      concrete_board_change: 下方二格条覆盖中部目标，最后一格与屋顶横条合成三格 L，终局全覆盖。
+      later_operation_change: 后续操作从分别安置切割输出，收束为把最后材料接回已就位的屋顶结构；不需要另起一个无关子谜题。
+  unclear_or_unreadable_parts:
+    - >-
+      raw 只列出 significant_states，没有给出 35 步每一步的完整局面图；因此仅凭第一阶段材料，
+      不能精确判断 step4至step12、step15至step19、step21至step23 等区间中有多少是有选择意义的站位，多少只是必要走位。
+    - >-
+      raw alternative 证明 step14 后至少存在一条可交换的下端优先路线，但没有展示同一决策局面下其他自然失败方向，
+      因而暂不能精确量化玩家的枚举负担。
+  initial_quality_risks:
+    - >-
+      step20 与 step30 都是“把一格箱推回黏侧并与端点合成二格条”，上下支路存在玩家可感知的同构重复；
+      当前可见差异主要是目标位置与最终屋顶合并责任，足以形成完整收束，但不足以支持 5 分所需的不可替代凝练度。
+    - >-
+      底部四目标连续铺开，对四格锚点列车的停靠位置提示很强；这提高了中央转折的可读性，
+      也可能压低“如何使用双锚”的发现难度。其实际影响需在第二阶段结合预声明 role 与玩家模型判断。
+    - >-
+      P/L 在 step14 后从当前 raw 可见信息中主要承担永久覆盖，而 B/S 继续承担材料重组边界；
+      这不是已成立的设计缺陷，但若 designer 把后半段包装成持续双锚耦合，会高于 raw 所支持的玩家体验。
+  exact_basis:
+    - "layout: 第8行第3至4列为 P/L，第8行第5至8列为四个连续 G；第7行第3至4列为 B/S。"
+    - "layout: 第3至5行、第5至6列形成五格 C 形 M；屋顶第2行第7至8列为双 G，中部第3行第7列和第5行第7列各有 G。"
+    - "canonical step2-step3: pull_P/L，P/L 连续向右移动两格。"
+    - "canonical step9: push_B/S，B/S 下推到 P/L 左侧同一横廊。"
+    - "canonical step13: push_B/S + force_chain + shift_P/L，四格列车右移。"
+    - "canonical step14: push_B/S + force_chain + shift_P/L + sticky_to_box + sticky_split；列车覆盖底部四目标，C 形切成三箱柱与上下黏端点。"
+    - "canonical step20-step24: 上箱与上端点合成二格横条，随后覆盖屋顶双目标。"
+    - "canonical step30-step35: 下箱与下端点形成二格条并覆盖中部目标；最后一格与屋顶横条合成三格 L，final_win=true。"
+    - "raw alternative from step14: [up, up, up, right] 可先处理下端，并以37步到达同一终局。"
+
+designer_claim_effect_on_frozen_judgment:
+  frozen_reading_changed: false
+  score_change: none
+  verdict_change: tightened
+  from: supports_with_noncore_caveats
+  to: revise_required
+  confirmed_by_claim:
+    - >-
+      RU1 明确把四格列车停位与 B/S 切开 C 形连接柱绑定在同一玩家问题中，确认 step14 是关卡主亮点，
+      与 frozen reading 一致。
+    - >-
+      RU2 的 replayed_attempt 确认下端优先仍能到达同一终局，支持 frozen reading 对后半段非展示性唯一顺序的判断。
+    - >-
+      RU3 确认屋顶横条在 step35 接收最后一格，支持 frozen reading 对“输出重新汇合而非完全割裂”的有限优点。
+  stricter_after_claim:
+    - >-
+      RU3 在 step24 提问，却把“step30 时下端二格条已覆盖中部目标”列为 premise；这是未来操作结果，
+      不能作为玩家在 step24 制定计划时已经可见的前提。
+    - >-
+      RU2 的下端优先路线同样能胜，仅比规范路线多两步；所以“选最短顺序”是效率优化，不是必须解决的结构矛盾，
+      不能给核心难度重复领功。
+    - >-
+      candidate packet 完全缺少 calibrated_trace_metrics；按 critic 合同必须记为 context_gap，不能从 hard_evidence 的事件数或图规模替代。
+  designer_claim_did_not_relax_initial_boundary: true
+
+player_facing_merits:
+  - id: merit_step14_compound_hinge
+    exact_scene: 初始下方两副水平二格锚点、其右侧四个连续目标，以及上方横跨未来 B/S 切线的 C 形五格 M。
+    operation: step2、step3 拉 P/L；step9 下推 B/S；step13、step14 推 B/S 并 force-chain 带动 P/L。
+    concrete_change: 四格列车覆盖底部四目标，C 形在同一步切成三箱柱与上下黏端点。
+    downstream_change: 后续不再搬运完整 C 形，而是把切出的箱与端点分别配成可覆盖上方目标的刚体。
+    merit: 同一可见操作同时兑现锚点停位和材料结构改变，支持审美4的清晰独特亮点。
+  - id: merit_outputs_rejoin_final_structure
+    exact_scene: step24 屋顶横条已经覆盖双目标，下端材料和最后一箱仍未收束。
+    operation: step30 完成下端条，step35 将最后箱转黏并送至屋顶横条下方。
+    concrete_change: 中部目标被下端条覆盖，最后一格与屋顶横条合成三格 L 并立即胜利。
+    downstream_change: 屋顶横条跨阶段再次接收最后材料，避免所有切割输出各自完成后完全退休。
+    merit: 支持“重拼最终回合”这一有限整体性，但终局 L 没有再被操作，不能作为主动构造工具额外加分。
+
+supported_reasoning:
+  - unit_ref: RU1_four_cell_anchor_train
+    status: supported_with_wording_boundary
+    reason: >-
+      初始四个连续底部目标、两副二格锚点以及 C 形在材料边界两侧的形状均可见；
+      先抽 P/L、再把 B/S 下压并连续推两次，会同时改变底部覆盖与上方材料结构，结论增加了计划理由。
+      但玩家问题中的坐标化最终切割结果不应被当成玩家天然已有的命名，只能由可见边界语义推导。
+  - unit_ref: RU2_split_output_order
+    status: supported_as_efficiency_choice_not_core_reasoning
+    reason: >-
+      replayed_attempt 有非空 exact_inputs、明确局部收益与同终局37步结果，足以证明换序成立；
+      但两条路线都成功，差别只是两步换位，因此它不能证明一个必须排除的错误路线，也不能抬高核心难度。
+  - unit_ref: RU3_rebuild_final_l
+    status: unsupported_as_written
+    reason: >-
+      该 unit 的问题从 step24 开始，premise 却直接使用 step30 已形成下端条的未来结果；
+      这使 conclusion 的前半段被自身后续反馈预先证明。应把 step24 可见的剩余材料、目标和通路限制写成 premise，
+      把 step30 局面移到 feedback，或拆成“先为何完成下端条”与“再为何把最后箱送到屋顶”两个 unit。
+
+archive_taste_context_used:
+  human_only_boundary_observed: true
+  positive_anchors:
+    - record: RA_CAND_0022
+      substantive_effect: >-
+        人评5分边界强调短步骤内的强反直觉动作、精巧空间与强洞见。本候选虽有 step14 复合转折，
+        但35步流程含上下同构重组，未达到同等不可替代凝练度，因此只支持4不支持5。
+    - record: RA_CAND_0025
+      substantive_effect: >-
+        人评5分构造关要求主动构造的 L 形继续作为反复活塞被使用。本候选的 L 在 step35 形成后立即胜利，
+        只能作为终局材料汇合，不能借“L形”名称获得同等级构造亮点。
+  lower_bound_or_negative_anchors:
+    - record: RA_CAND_0020
+      substantive_effect: 上下重组的同构重复构成5分上界攻击；本候选因 step14 复合转折和最终回收强于该3分重复分支样本。
+    - record: RA_CAND_0023
+      substantive_effect: 紧凑几何不能自动把重复依次处理抬到4以上；本候选的4分必须来自 step14 复合因果，而非三路输出数量。
+    - record: RA_CAND_0024
+      substantive_effect: 可见双锚与大黏块会抬高机制预期；本候选实际兑现了切割与重组，因此避开“只剩腾挪”的1分反例，但不能用事件标签领功。
+    - record: RA_CAND_0027
+      substantive_effect: P/L 在后半段退休限制“持续双锚耦合”措辞；幸而 P/L 在 step14 的列车停位与 force-chain 中有真实责任，不构成无用 affordance。
+    - record: RA_CAND_0031
+      substantive_effect: opening 的锚点移动直接产生永久目标覆盖和后续材料输出，B/S 还被后半重用，故不是无效单行道机制演出。
+    - record: RA_CAND_0032
+      substantive_effect: 三路材料同源于一次 C 形切割，并通过屋顶横条在终局重新汇合，故不属于拼接无关子关卡；但 RU2 的可换序也不应包装成强顺序锁。
+  archive_records_with_substantive_verdict_impact:
+    - RA_CAND_0022
+    - RA_CAND_0025
+    - RA_CAND_0020
+    - RA_CAND_0023
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0031
+    - RA_CAND_0032
+  all_human_aesthetic_1_warning_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0031
+    - RA_CAND_0032
+  usage_boundary: 仅使用 snapshot 中 human_comments 与人类分数进行 taste 校准；未把标签、归档状态、retrieval summary 或 hard evidence 当作审美优点。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_lower_bound_anchors
+  positive_anchors:
+    - RA_CAND_0022
+    - RA_CAND_0025
+  lower_bound_or_negative_anchors:
+    - RA_CAND_0020
+    - RA_CAND_0023
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0031
+    - RA_CAND_0032
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: context_missing
+  solution_execution_pressure:
+    metric_fact: calibrated_trace_metrics 字段缺失。
+    allowed_reading: 不得用 canonical_cost=35、event counts 或 explored_states 代替校准指标。
+    player_facing_check: 当前只能直接检查 raw 中的具体操作与局面变化，不能据缺失指标推断执行压力分数。
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: calibrated_trace_metrics 字段缺失。
+    allowed_reading: 不得从 graph explored_states、shortest path_count 或 known 37步 variant 推导空间复用审美。
+    player_facing_check: 空间复用只按 step14 后 B/S 复用、屋顶横条终局回收等具体局面判断。
+    verdict_effect: caveat
+  unmeasured_dimensions:
+    - 玩家洞见
+    - 因果依赖
+    - 反直觉重构
+    - 惊喜
+    - 整体审美
+
+aesthetic_target_fit:
+  final_score: 4
+  confidence: medium
+  slot_numeric_target: not_supplied
+  role_fit: supports_with_caveats
+  basis: >-
+    step14 的复合转折清晰、独特、值得记住，且材料输出在后半继续被重组，支持4分。
+    上下端点重组同构，终局 L 形成后立即胜利而不再承担结构操作，故不支持5分。
+    这不是流程字段缺失导致的降分；缺失指标只阻塞 packet 就绪，不改变关卡本体审美判断。
+
+difficulty_target_fit:
+  final_score: 4
+  confidence: medium
+  slot_numeric_target: not_supplied
+  role_fit: supports_late_game_stage_challenge_not_highest_endgame
+  basis: >-
+    玩家需要从可见目标与材料边界推导双锚列车停位、C 形切柱、两次材料重组与最终回收，
+    难度来自多阶段结构因果而非35步长度。底部四目标强提示列车位置，RU2 两种顺序都能胜，
+    因此支持常规后期阶段挑战的4分，不支持最高难终局或把换序效率重复计入难度。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+  boundary_notes:
+    - >-
+      “四格列车”对应 step13-step14 中相邻的 B/S/P/L 四格刚体链；“C形切柱”对应 x4 三格转箱、x5 上下端点保黏；
+      “终局L”对应 step35 的三格实际形状，均可由具体局面与操作复原。
+    - >-
+      尽管术语可定位，“终局L”形成后立即胜利，不应被解释为与 RA_CAND_0025 那类主动构造并反复使用的 L 形活塞同等级亮点。
+
+critic_items:
+  - id: RU3_future_premise
+    type: core_blocker
+    target_ref: player_reasoning.RU3_rebuild_final_l.premises[1]
+    design_relation: step24 后制定下端重组与最终屋顶合并计划
+    attack: >-
+      RU3 在 step24 提问，却以 step30 已完成下端条的局面作为 premise；玩家在执行25至30步之前看不到这个结果，
+      因而该 premise 偷用了未来反馈，conclusion 没有被当时可见关系独立支持。
+    evidence_basis: >-
+      RU3 operation_steps=25-35；premise 明写“step30 时下端二格条已覆盖中部目标”；canonical trace 把 step30 记录为后续 box_to_sticky/sticky_merge 结果。
+    player_facing_effect: 说明没有展示玩家为何应先完成下端条、再保留最后箱去屋顶的当时可见计划理由。
+    blocks_proposal_ready: true
+    expected_designer_response: revise_claim
+  - id: missing_calibrated_trace_metrics
+    type: context_gap
+    target_ref: calibrated_trace_metrics
+    design_relation: 当前规范解的执行压力与空间复用辅助语境
+    attack: candidate packet 完全缺失必需的 calibrated_trace_metrics 原样副本，也没有 unavailable 状态与原因。
+    evidence_basis: candidate_alpha.yml 无 calibrated_trace_metrics 字段；hard_evidence 只有 solver、graph、shortest_layer 与 event counts。
+    player_facing_effect: 不能按启用中的校准边界检查规范解的执行压力或空间复用；不得拿35步、事件数或图规模补位。
+    blocks_proposal_ready: true
+    expected_designer_response: add_context_next_review
+  - id: RU2_efficiency_not_core_dilemma
+    type: score_boundary
+    target_ref: player_reasoning.RU2_split_output_order
+    design_relation: step14 后上下端点的处理顺序
+    attack: 下端优先的 replayed attempt 同样到达完全相同终局，只多两步；这证明顺序宽容与效率差，不证明错误路线矛盾。
+    evidence_basis: RU2 alternative exact_inputs=[up,up,up,right]、concrete_outcome=37步同终局；canonical_cost=35。
+    player_facing_effect: 玩家无需通过结构推理排除下端优先，只需在追求最短路时优化换位；该 unit 不能额外抬高核心难度。
+    blocks_proposal_ready: false
+    expected_designer_response: revise_claim
+  - id: final_l_is_terminal_not_active_tool
+    type: score_boundary
+    target_ref: designer_claim.summary / RU3_rebuild_final_l
+    design_relation: step35 的三格 L
+    attack: L 形在最后一步形成并立即触发胜利，没有后续操作利用其几何或刚体性质。
+    evidence_basis: RU3 feedback=step35形成三格L并立即胜利；trace_partition 最后一段31-35结束于该状态。
+    player_facing_effect: 它可作为材料回收与终局视觉收束，但不能按主动构造工具或新洞见重复加分。
+    blocks_proposal_ready: false
+    expected_designer_response: revise_claim
+  - id: repeated_endpoint_rebinds_cap_five
+    type: score_boundary
+    target_ref: steps20_and30
+    design_relation: 上下端点分别与箱合成二格条
+    attack: 两段都由单箱跨回黏侧并与端点合并，第二次主要是同构执行。
+    evidence_basis: mechanically derived trace step20、step30；人评下界 RA_CAND_0020、RA_CAND_0023。
+    player_facing_effect: 识别第一次配对后，第二次新增的结构推理有限，故审美支持4不支持5。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: bottom_goal_carpet_readability_tradeoff
+    type: nonblocking_risk
+    target_ref: solve_instance.layout bottom row
+    design_relation: 四格列车停位
+    attack: P/L 右侧四个连续目标直接提示两副二格锚点的总长度和停靠位置。
+    evidence_basis: layout 第8行 P/LGGGG；step14 四格列车覆盖这四目标。
+    player_facing_effect: 增强读题清晰度，同时降低双锚用途的发现压力，是难度4而非更高难度的边界。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: post_step14_dual_anchor_role_boundary
+    type: nonblocking_risk
+    target_ref: slot_brief.intended_role
+    design_relation: late_game_dual_anchor_material_reconstruction
+    attack: P/L 在 step14 后主要永久覆盖底部目标，后半材料重组持续依赖的是 B/S；因此“双锚”责任集中在前半复合转折。
+    evidence_basis: significant trace step14 后的 step20、step30、step35 只列 B/S 材料转换与 sticky 操作，没有新的 P/L 位移。
+    player_facing_effect: 角色可称双锚停位加材料重构，但不应声称全程持续双锚交织。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: packet_claim_last_flag_mismatch
+    type: diagnostic_note
+    target_ref: claim_last_review.mode
+    design_relation: 实际评审读取顺序
+    attack: packet 声明 not_used，但 controller 实际在 frozen independent_reading 落盘后才提供该 candidate claim。
+    evidence_basis: alpha_stage1.yml 已先完成；candidate_alpha.yml 后读；当前 controller 明确要求 claim-last 第二阶段。
+    player_facing_effect: 不影响关卡审美或难度，只应在后续 packet 中纠正路由元数据。
+    blocks_proposal_ready: false
+    expected_designer_response: revise_claim
+
+diagnostic_interpretations:
+  - graph_fact: "graph.status=exhausted, explored_states=500001；evidence_limits 明确完整图未穷尽。"
+    neutral_meaning: 当前图探索在约50万状态处停止，不能据此声明完整 SCC、全图唯一或全局穷尽。
+    player_facing_interpretation: 没有给出具体可见局面、操作差异或反馈时机，无法从该图规模判断玩家洞见、搜索负担或审美。
+    verdict_effect: none
+  - graph_fact: "shortest_layer.status=complete_through_first_win_depth, path_count=1, win_state_count=1。"
+    neutral_meaning: 在首个胜利深度层内记录到一条最短路径和一个胜利状态；它不排除更长等价路线，packet 也明示37步同终局变体。
+    player_facing_interpretation: 最短层唯一不等于玩家只有一个自然计划，也不证明计划的因果可读性。
+    verdict_effect: none
+  - graph_fact: "target_events 列出多类材料与锚点事件。"
+    neutral_meaning: 规范轨迹机械触发了这些事件次数。
+    player_facing_interpretation: 只有 step14 复合转折、step20/30 重组、step35 回收这些具体局面改变进入玩家侧判断；事件数量本身不是优点。
+    verdict_effect: none
+
+handoff_notes:
+  - >-
+    下一版 claim 应保持 player_goal 不变；RU1 可保留但用可见材料边界关系表达，不把精确切割结果伪装成玩家天然命名。
+  - >-
+    RU2 应降格为非核心的效率/换位说明，不得作为必须排错的难度单元。
+  - >-
+    RU3 应拆分或重写：用 step24 当时可见的剩余两箱、下端点、空目标、通路与屋顶横条关系支持计划；
+    step30 只能作为 feedback 或下一 reasoning unit 的起点，不能反向成为 step24 premise。
+  - >-
+    下一 packet 必须提供当前 analysis.solution.traceMetrics.calibrated 原样副本；若不可用，至少提供 status=unavailable 与明确原因。
+  - >-
+    修改说明后必须交给新的 fresh critic 重新送审；本 critic 不得看修改版后再次判断。
+

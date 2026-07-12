@@ -1,0 +1,88 @@
+review_iteration: 1
+candidate_version_reviewed: v9
+review_input_type: candidate_version
+verdict: does_not_support_claim
+review_loop_state: revise_required
+required_action: structural_revision
+supported_claims:
+  - target_ref: mechanic_exposure_context.claimed_core_events
+    evidence_basis:
+      - >-
+        修复后的 event_gate_report.yml 给出 complete graph（76 个可达状态、149 条合法转移）以及完整可达事件类型扫描；七个 claimed_core_events 均出现在扫描结果中。
+      - >-
+        all_winning_path_event_gates 对 anchor_boundary_shift:box_sticky、box_to_sticky、sticky_merge、sticky_to_box、sticky_split、pull_object、move_sticky_rigid 均为 complete 且 missing_required_winning_path=false。
+      - >-
+        docs/mechanic_exposure_sequence.yml 将 dual_anchor 定义为当前线性序列的最后阶段；布局初态同时含 P/L 与 B/S，完整可达扫描没有任何晚于该阶段的事件或配置需要排除。
+  - target_ref: mechanism_scope.central[0]
+    evidence_basis:
+      - >-
+        layout_analysis JSON 的 keySnapshots step=2 显示 B/S 右移，事件为 push_object:box_sticky_anchor、anchor_boundary_shift:box_sticky、box_to_sticky:n3、sticky_merge:n1；after 状态中原三箱柱与上下两条黏臂形成七格连通刚体。
+      - >-
+        all_winning_path_sequence_gate 为 complete、violating_winning_path=false，并要求同一步 B/S 位移、box_to_sticky 与 sticky_merge。
+  - target_ref: mechanism_scope.central[1]
+    evidence_basis:
+      - >-
+        keySnapshots step=10 的 before/after 与 exact trace 显示玩家从右侧输入 right，触发 pull_object:sticky#1、move_sticky_rigid、sticky_to_box:n3、sticky_split:n1；七格刚体切为 x=6 的三箱柱和上下两个二格黏块。
+      - >-
+        all_winning_path_sequence_gate 完整排除了缺少“整体 pull + rigid move + sticky_to_box + sticky_split 同一步责任”的胜路。
+  - target_ref: mechanism_scope.allowed_support[1]
+    evidence_basis:
+      - >-
+        mechanic.yml 明确规定 pull_force 由玩家输入时所在 P/L 区域触发；所有关键快照均显示固定 P/L 位于 x=4/5，step=10、14、28 的 canonical 操作均记录为 pull_object。
+      - >-
+        all-winning-path gate 只证明 pull_object 事件模式在所有胜路必经；候选已正确声明 P/L 固定不移动，未把 box_sticky 的 anchor shift 误作 P/L 移动证据。
+  - target_ref: player_reasoning.RU1_bind_the_connector
+    evidence_basis:
+      - >-
+        initialState、step=2 before/after、SEG1 的 [right,right] 与 canonical solution inputs 的第 1-2 步一致；完整事件门证明不存在缺少 B/S 位移、box_to_sticky 或 sticky_merge 的胜路。
+      - >-
+        alternative 使用 structural_block 而非伪造返回 trace；其胜路层面的 concrete_outcome 与完整 all-winning-path gates 一致。
+  - target_ref: player_reasoning.RU2_pull_to_cut
+    evidence_basis:
+      - >-
+        step=10 before/after、SEG2 的第 3-10 步输入和 canonical trace 完全一致；同一步事件与形状变化支持“整体右拉后切开”的结论。
+      - >-
+        alternative 的胜路层面结论由 complete all-winning-path sequence gate 支持，但该 gate 只证明规定事件模式，不证明玩家侧价值。
+  - target_ref: player_reasoning.operation_segments_and_trace_partition
+    evidence_basis:
+      - >-
+        SEG1 至 SEG5 的 step_range 连续覆盖 1-28；各 exact_inputs 顺序拼接后与 solution.inputs 完全一致，且没有 uncovered_steps 或 overlapping_steps。
+      - >-
+        step=2、10、14、28 的 operation 边界分别与四个 keySnapshots 的非 walk 事件相符；SEG4 第 15-27 步仅为 walk。
+  - target_ref: player_reasoning.resolution
+    evidence_basis:
+      - >-
+        keySnapshots step=28 after 与 winning_object_configuration_groups 的唯一胜利对象配置一致：两个目标由上下二格黏臂覆盖、三箱柱留在 x=6、玩家位于 (5,1)，并满足 mechanic.yml 的 all_targets_covered_by_objects 胜利规则。
+  - target_ref: solution_uniqueness
+    evidence_basis:
+      - >-
+        result=unique_complete 严格属于允许枚举值，且 candidate packet 提供了 event_gate_report.yml#/solution_uniqueness 与 layout_analysis JSON#/graph 两个引用。
+      - >-
+        complete graph 有 1 个 winning state；event gate 报告虽记录 2 条最短输入路径，但只有 1 个最短胜利对象配置和 1 种最短非走位签名。该换位等价说明与 unique_complete 不存在明显冲突，不能仅因 walk 输入有两个变体而判为非法。
+unsupported_or_overclaimed:
+  - target_ref: mechanism_scope.central[2]
+    issue: >-
+      “下臂先向下拉入目标，腾出通往左侧回廊的出口”与 exact state 冲突。keySnapshots step=14 before 中下臂尚在 y=5，玩家已在 (5,6)；依据 mechanic.yml，此时输入 left 可走到空的 (4,6)，再输入 down 可走到空的 (4,7)，已经能够进入左回廊。下臂完成并不是该回廊从关闭变为打开的原因。该条属于 central mechanism，不能用 caveat 保留。
+  - target_ref: player_reasoning.RU3_lower_opens_return_upper_closes.premises[1]
+    issue: >-
+      step=14 after 确实显示 canonical trace 在下臂完成后到达 (5,7)，但它只证明这条规范路线，不证明“左侧回廊因此才打开”；step=14 before 已提供不移动下臂也能进入回廊的相邻空格路径。
+  - target_ref: player_reasoning.RU3_lower_opens_return_upper_closes.alternative.blocked_operation
+    issue: >-
+      “唯一回到左侧上回廊的出口要在下臂完成后从 (5,7) 向左通过”是错误的结构性阻塞说明。允许证据支持的真正不可逆约束是：若先把上臂拉入 (4,2)，玩家会落入 (5,1) 封袋且下目标仍未覆盖；因此上臂必须最后完成。应以该终局封袋因果改写 RU3，而不是声称下臂打开原本关闭的回廊。
+  - target_ref: player_reasoning.RU3_lower_opens_return_upper_closes.alternative.result_state_ref
+    issue: >-
+      `agency.scc.solutionPath` 不是 layout_analysis JSON 中存在的字段；实际字段为 `agency.scc.solutionSccPath`。而 SCC 路径从 step=10 的 s2 直接到 step=28 的胜利 s3，step=14 的下臂移动留在同一 SCC 内，不能由该 SCC 路径单独证明“下臂开启回廊”。若保留 all-winning-path 的上下臂实例顺序声明，需要修正引用并明确区分 canonical instance、SCC 责任与 event-pattern gate；当前 sequence gate 只要求切割后至少两次独立 sticky rigid move，没有编码上下实例次序。
+evidence_limits:
+  - >-
+    complete graph 与 all-winning-path gates 只支持当前 exact layout 的机械可达性、必经事件模式和规定序列责任；不支持审美、难度、玩家问题显著性、自然性或 campaign role。
+  - >-
+    solution.objectParticipation 为空；step=14/28 的下臂与上臂身份可由 canonical 快照位置读取，但 all-winning-path event gate 不能升级为 per-object necessity 或实例次序证明。
+  - >-
+    P/L 固定且没有自身 anchor shift 事件；其责任边界是 mechanic.yml 的区域规则、关键动作位置与必经 pull_object 模式，不能表述为 P/L 被移动或逐个对象在所有胜路中的必要性。
+  - >-
+    `calibrated_trace_metrics` 为 pilot 校准材料，本审查未将其作为任何支持或反驳证据。
+questions_for_designer:
+  - >-
+    是否将 RU3 与 central[2] 直接改写为“下臂可先完成且必须在上臂封袋终局前完成；上臂拉入后玩家被锁入 (5,1)，因此固定下先上后”，并删除“下臂打开左回廊”的错误因果？
+  - >-
+    若继续声明所有胜路的上下臂实例次序，是否补充或引用明确编码 lower-before-upper 的 all-winning-path instance/order gate；否则应把声明收窄到现有 complete graph、终局封袋和 canonical trace 能直接支持的范围？

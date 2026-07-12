@@ -1,0 +1,261 @@
+candidate_id: RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27
+command: npx tsx prototypes/reality_anchor/reports/probe_twin_loom_resection.ts
+  RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v27
+budgets:
+  max_states: 1200000
+  max_depth: 200
+solver:
+  found: true
+  status: found
+  cost: 42
+  explored_states: 1518
+  inputs:
+    - right
+    - right
+    - up
+    - up
+    - up
+    - right
+    - right
+    - right
+    - up
+    - up
+    - left
+    - right
+    - down
+    - down
+    - left
+    - left
+    - up
+    - left
+    - left
+    - up
+    - up
+    - up
+    - up
+    - right
+    - right
+    - up
+    - left
+    - left
+    - down
+    - down
+    - down
+    - down
+    - down
+    - right
+    - right
+    - down
+    - right
+    - right
+    - up
+    - up
+    - right
+    - right
+  events:
+    - walk
+    - push_object:box_sticky_anchor
+    - anchor_boundary_shift:box_sticky
+    - box_to_sticky:n3
+    - sticky_merge:n1
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - pull_object:sticky#1
+    - move_sticky_rigid
+    - sticky_to_box:n3
+    - sticky_split:n1
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - pull_object:sticky#1
+    - move_sticky_rigid
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - walk
+    - pull_object:sticky#2
+    - move_sticky_rigid
+    - walk
+    - walk
+    - walk
+    - walk
+    - pull_object:crate#3
+    - pull_object:crate#3
+complete_graph:
+  status: complete
+  reachable_states: 94204
+  legal_transitions: 221725
+  winning_states: 1
+  shortest_win_depth: 42
+  reachable_event_types:
+    - anchor_boundary_shift
+    - box_to_sticky
+    - force_chain
+    - move_sticky_rigid
+    - pull_object
+    - push_object
+    - sticky_merge
+    - sticky_split
+    - sticky_to_box
+    - walk
+solution_uniqueness:
+  result: unique_complete
+  exact_optimal_input_path_count: "3"
+  optimal_winning_state_count: 1
+  distinct_optimal_non_walk_signatures: 1
+  optimal_non_walk_signatures:
+    - anchor_boundary_shift:box_sticky+box_to_sticky:n+push_object:box_sticky_anchor+sticky_merge:n
+      > move_sticky_rigid+pull_object:object+sticky_split:n+sticky_to_box:n >
+      move_sticky_rigid+pull_object:object >
+      move_sticky_rigid+pull_object:object > pull_object:object >
+      pull_object:object
+  interpretation: 完整图只含一个 winning object configuration；全部最短输入路径压缩为同一非走位操作序列，且
+    all-winning-path sequence gate 未发现偏离规定拼接、切割和双臂收束责任的胜路。
+all_winning_path_event_gates:
+  - pattern: anchor_boundary_shift:box_sticky
+    status: complete
+    missing_required_winning_path: false
+    states: 94204
+  - pattern: box_to_sticky
+    status: complete
+    missing_required_winning_path: false
+    states: 94204
+  - pattern: sticky_merge
+    status: complete
+    missing_required_winning_path: false
+    states: 94204
+  - pattern: sticky_to_box
+    status: complete
+    missing_required_winning_path: false
+    states: 94204
+  - pattern: sticky_split
+    status: complete
+    missing_required_winning_path: false
+    states: 94204
+  - pattern: pull_object
+    status: complete
+    missing_required_winning_path: false
+    states: 94204
+  - pattern: move_sticky_rigid
+    status: complete
+    missing_required_winning_path: false
+    states: 94204
+all_winning_path_sequence_gate:
+  status: complete
+  violating_winning_path: false
+  states: 136493
+  obligations:
+    - 同一步 B/S 位移 + box_to_sticky + sticky_merge
+    - 其后同一步 pull + sticky rigid move + sticky_to_box + sticky_split
+    - 切割步之后至少两次独立 sticky rigid move
+    - 任一胜路中不得在两条黏臂目标都完成前覆盖右侧切出箱目标
+winning_object_configuration_groups:
+  - count: 1
+    minDepth: 42
+    example: |-
+      ############
+      ###...######
+      ###.mM######
+      ###...*#####
+      ###.#.*##.##
+      ###.....*@##
+      ###.mM#.#.##
+      ###.....####
+      ####.#######
+      ####.#######
+      ##...SB#####
+      ############
+      ####PL######
+      ############
+    exampleInputs:
+      - right
+      - right
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - up
+      - up
+      - left
+      - right
+      - down
+      - down
+      - left
+      - left
+      - up
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - up
+      - left
+      - left
+      - down
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - down
+      - right
+      - right
+      - up
+      - up
+      - right
+      - right
+    exampleNonWalkSteps:
+      - input: right
+        events:
+          - push_object:box_sticky_anchor
+          - anchor_boundary_shift:box_sticky
+          - box_to_sticky:n3
+          - sticky_merge:n1
+      - input: right
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+          - sticky_to_box:n3
+          - sticky_split:n1
+      - input: up
+        events:
+          - pull_object:sticky#1
+          - move_sticky_rigid
+      - input: down
+        events:
+          - pull_object:sticky#2
+          - move_sticky_rigid
+      - input: right
+        events:
+          - pull_object:crate#3
+      - input: right
+        events:
+          - pull_object:crate#3

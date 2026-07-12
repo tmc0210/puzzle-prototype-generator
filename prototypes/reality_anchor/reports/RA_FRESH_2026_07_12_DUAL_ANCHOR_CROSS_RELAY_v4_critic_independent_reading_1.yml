@@ -1,0 +1,67 @@
+review_attempt_id: RA_CROSS_RELAY_V4_CRITIC_ATTEMPT_01
+critic_instance_id: /root/critic_attempt01
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+review_input_type: candidate_version
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    玩家需要让对象覆盖左、右、底三个目标。盘面直接给出两根可平移锚点、上下两个箱和右下黏格；
+    可见的实际任务不是把最近对象逐个送进目标，而是先改变两根锚点的位置与边界，再让底部对象形成能横移到目标的形状。
+  salient_relations_seen:
+    - >-
+      开局玩家在上箱正上方，右侧被墙隔断；先把箱从 (3,2) 推到 (3,3)，再把 P/L 从 x4 推到 x5，
+      玩家才能站到 B/S 下方把它上拉。该次上拉令 B/S 从 y4 到 y3，同时把 (3,3) 的箱顶回 (3,2)，
+      因而后续既获得横向 B/S 的操作位，又保留上箱等待边界变化。
+    - >-
+      P/L 先从 x5 推到 x6，使 L 覆盖右目标 (6,3)，随后从上方再向下推一格，使覆盖者由 L 变为 P；
+      这次换位空出 (5,3)，玩家之后才能由右向左推动 B/S，而右目标仍持续被锚点覆盖。
+    - >-
+      玩家从 (5,3) 向左推动 B/S，使它从 x3-x4 移到 x2-x3；B 随即覆盖左目标 (2,3)，
+      而 (3,2) 与 (3,6) 两箱同时变为分离黏格。该变化把上方锚点就位、左目标覆盖和底部造形所需的下黏格放在同一步里。
+    - >-
+      右下初始黏格从 (5,5) 连续左拉到 (3,5)，与 (3,6) 的新黏格合并为竖向二格刚体；
+      玩家再站到底目标 (2,6) 并向左拉，竖条从 x3 到 x2、两格同时变箱，下格覆盖底目标，
+      因而最终操作依赖先前的边界就位、箱转黏和黏合顺序，不能用单个箱的直接推送替代。
+  unclear_or_unreadable_parts:
+    - >-
+      raw packet 未给出本轮 brief 中预先声明的目标角色、目标难度与玩家机制熟悉度；因此这里只能判断盘面呈现出的结构质量，
+      不能在第一阶段确认它是否精确匹配某个指定难度槽位或机制暴露窗口。
+  initial_quality_risks:
+    - >-
+      (3,2) 的上箱在 step 11 同步变黏后没有继续参与目标覆盖或终局造形；玩家实际操作是先将它下推、再由 B 半格顶回原位，
+      棋盘随后只利用它来呈现同步归一化。相比下箱转黏并参与竖条合并的完整回收，上箱的后续操作变化较弱，
+      可能让前段的一部分体验被读成锚点就位编排，而非第二条同等强度的对象因果链。
+    - >-
+      canonical step 12-16 中三次走位夹着两次连续左拉，局部执行本身较直接；主要难度应来自行动前读懂 step 11 的远隔同步变化
+      以及为何必须先造出竖条，而不应把这段移动长度当成额外洞见。
+    - >-
+      人类 archive anchors 同时包含正例和低分警戒：本盘的底部黏合与跨边界变箱确实产生可见的形状利用，未落入
+      RA_CAND_0024 所批评的纯推拉腾挪；但两根锚点的多次平移是否像 RA_CAND_0022/0025 那样服务于单一突出亮点，
+      仍需第二阶段结合目标角色与设计 claim 攻击，且 RA_CAND_0028 对纯锚点扫带家族的饱和警告不能被忽略。
+  exact_basis:
+    - solve_instance.layout: 玩家 (3,1)、箱 (3,2)、P/L 位于 (4,2)-(4,3)、B/S 位于 (3,4)-(4,4)、黏格 (5,5)、箱 (3,6)，目标位于 (2,3)、(6,3)、(2,6)
+    - canonical_solution.mechanically_derived_trace.step_1
+    - canonical_solution.mechanically_derived_trace.step_2
+    - canonical_solution.mechanically_derived_trace.step_4
+    - canonical_solution.mechanically_derived_trace.step_5
+    - canonical_solution.mechanically_derived_trace.step_8
+    - canonical_solution.mechanically_derived_trace.step_11
+    - canonical_solution.mechanically_derived_trace.step_14
+    - canonical_solution.mechanically_derived_trace.step_15
+    - canonical_solution.mechanically_derived_trace.step_16
+    - canonical_solution.mechanically_derived_trace.step_17
+    - archive_taste_calibration.examples[archive_id=RA_CAND_0022]
+    - archive_taste_calibration.examples[archive_id=RA_CAND_0025]
+    - archive_taste_calibration.examples[archive_id=RA_CAND_0024]
+    - archive_taste_calibration.examples[archive_id=RA_CAND_0028]

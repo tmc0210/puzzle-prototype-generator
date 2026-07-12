@@ -1,0 +1,180 @@
+experiment_id: RA_REVERSAL_SUBJECT_ECONOMY_PILOT_20260712
+scope: anonymous_aesthetic_judgment
+target_claim: 每个案例都作为审美4候选接受测试
+
+mechanic_rules:
+  symbols:
+    "#": wall
+    ".": floor
+    "@": player
+    G: target
+    C: crate
+    M: sticky_cell
+    P: push-side endpoint of P/L anchor
+    L: pull-side endpoint of P/L anchor
+    S: sticky-side endpoint of B/S anchor
+    B: box-side endpoint of B/S anchor
+  movement: 玩家推动或拉动物体；相连 sticky 按刚体移动。
+  push_pull_boundary: P/L 两格锚点划分推侧与拉侧，锚点本身在合法受力时也可移动。
+  material_boundary: 对象跨 B/S 边界后在 sticky/box 间归一化；相邻 sticky 合并，跨回 box 侧会切成箱并按连通性分裂。
+  win: 全部目标必须由 crate、sticky 或 anchor 覆盖。
+
+human_calibration_anchors:
+  - band: aesthetic_4
+    human_comment: 机制使用多样、关卡设计密度高、各要素强耦合，玩家视角矛盾明显，综合质量较高。
+  - band: aesthetic_4
+    human_comment: 箱子需要被推进目标再拉出，需要较强反直觉洞见；在较小空间做出了紧凑的强逻辑关卡。
+  - band: aesthetic_2
+    human_comment: 用较小的目标位置改动极大弱化机制美感并增加腾挪难度；这种增加难度的方式是较差反例。
+
+cases:
+  - anonymous_id: CASE_A
+    layout: |-
+      ########
+      ##MG.M.#
+      #.M.M..#
+      #BSLP#@#
+      #.G..###
+      ########
+    solution_steps: 27
+    canonical_inputs: [up, left, left, down, left, right, up, up, left, right, down, right, right, up, left, left, down, down, left, up, right, down, up, left, down, right, up]
+    nonwalk_steps:
+      - "3:left push sticky rigid + merge"
+      - "4:down move P/L"
+      - "6:right pull B/S + cut two sticky cells to boxes"
+      - "10:right pull crate + rebind sticky"
+      - "15-16:left push/reform sticky, then force-chain and cut"
+      - "19:left move B/S + rebind; 20:up move P/L"
+      - "21:right pull sticky; 22:down move P/L"
+      - "24-27:left/down/right/up move and reorient sticky to finish"
+    longest_pure_walk_span: 4
+
+  - anonymous_id: CASE_B
+    layout: |-
+      #########
+      #..G#...#
+      #...MM@P#
+      #.....#L#
+      ###BS####
+      #########
+    solution_steps: 12
+    canonical_inputs: [left, left, left, up, left, left, down, right, down, right, right, up]
+    nonwalk_steps:
+      - "1-2:left push sticky left across boundary, cutting it into two crates"
+      - "3:left force-chain both crates farther left"
+      - "7-8:down/right separate and reposition first crate"
+      - "10-11:right pull second crate into the vertical line"
+      - "12:up pull B/S upward through a three-object force chain; target is covered"
+    longest_pure_walk_span: 3
+
+  - anonymous_id: CASE_C
+    layout: |-
+      ########
+      ##.G####
+      #@C.MM##
+      #.....G#
+      #...G###
+      #.BS..##
+      ########
+    solution_steps: 17
+    canonical_inputs: [right, up, right, down, left, down, down, left, down, right, right, up, up, up, right, down, right]
+    nonwalk_steps:
+      - "1:right push crate into two sticky cells, forming a three-cell sticky bar"
+      - "4:down move the three-cell sticky bar"
+      - "10-11:right move B/S twice, cutting two cells into crates"
+      - "13-14:up push first crate onto top target"
+      - "16:down push second crate onto lower target"
+      - "17:right push remaining sticky onto right target"
+    longest_pure_walk_span: 5
+
+  - anonymous_id: CASE_D
+    layout: |-
+      #########
+      ####P####
+      ####L####
+      #...MM.G#
+      #@S.M...#
+      ##B...G##
+      ####...##
+      #########
+    solution_steps: 34
+    canonical_inputs: [up, right, right, down, down, right, right, right, down, left, left, up, up, left, left, left, up, right, right, right, down, right, left, down, right, down, left, up, left, up, up, right, right, right]
+    nonwalk_steps:
+      - "6-8:right pull B/S three times, repeatedly carrying sticky material"
+      - "9:down pull sticky and cut one cell to a crate on target"
+      - "14-16:left pull B/S three times back to its original side"
+      - "21:down pull P/L; 23:left pull sticky; 24:down pull P/L again"
+      - "26:down pull sticky through force chain and cut two boxes"
+      - "27/29:left pull two crates"
+      - "32-34:right push P/L three times to finish"
+    longest_pure_walk_span: 4
+
+  - anonymous_id: CASE_E
+    layout: |-
+      #######
+      ##PL###
+      #######
+      ##..G##
+      #MMM.G#
+      #..#..#
+      ##...@#
+      #######
+      ###SB##
+      #######
+    solution_steps: 30
+    canonical_inputs: [up, up, left, right, down, down, left, left, left, up, up, right, left, right, left, down, down, right, right, up, up, down, right, down, left, left, left, up, up, right]
+    nonwalk_steps:
+      - "4:right pull three-cell sticky bar across B/S, cutting the right cell into a crate"
+      - "11:up push remaining two-cell sticky bar"
+      - "13:left pull crate back across boundary and merge it into an L-shaped sticky"
+      - "14:right push L through boundary, cutting two cells while covering a target"
+      - "15:left pull crate back and rebind the L"
+      - "22:down pull a crate"
+      - "30:right force-chain the rebuilt sticky and cut two cells to cover both targets"
+    longest_pure_walk_span: 7
+
+  - anonymous_id: CASE_F
+    layout: |-
+      #######
+      #...G.#
+      #L.BS.#
+      #P.CM##
+      #..CG@#
+      #######
+    solution_steps: 10
+    canonical_inputs: [left, up, down, left, left, up, right, up, down, up]
+    nonwalk_steps:
+      - "2:up push sticky through a force chain, moving B/S"
+      - "4-5:left push lower crate twice"
+      - "7:right push upper crate across boundary and merge sticky"
+      - "9:down pull B/S through sticky force chain"
+      - "10:up push B/S back; level finishes"
+    longest_pure_walk_span: 1
+
+  - anonymous_id: CASE_G
+    layout: |-
+      ############
+      #####...####
+      ####G...####
+      ###MMCG.####
+      #####CG.####
+      ###MMC.G.###
+      ####G.#..###
+      ####.....###
+      ####.#######
+      ####.#######
+      ##@.SB.#####
+      ############
+      ####PL######
+      ############
+    solution_steps: 32
+    canonical_inputs: [right, right, up, up, up, right, right, right, up, up, up, up, left, right, up, left, left, up, right, right, down, down, down, down, right, down, down, left, left, left, up, down]
+    nonwalk_steps:
+      - "2:right push B/S, converting three crates and merging them with both sticky arms into one seven-cell C-shaped sticky"
+      - "14:right pull the C-shaped sticky, cutting its three connector cells into crates and splitting the two sticky arms"
+      - "18:up pull upper sticky arm onto its target"
+      - "25:right pull lower cut crate onto the right target"
+      - "32:down pull lower sticky arm onto its target"
+    longest_pure_walk_span: 11
+    neutral_branch_fact: 切割后先用 [down,down,right] 完成右侧箱目标仍可离开，并能继续完成下黏臂，但之后无法返回上黏臂；所有胜路都要求上黏臂早于该目标箱。
+

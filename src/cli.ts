@@ -46,6 +46,11 @@ import {
   parseLocalExperimentCasesDoc,
   runLocalExperimentCases,
 } from "./workflows/localExperimentRunner.js";
+import {
+  buildInputSequenceReplayReport,
+  formatInputSequenceReplayMarkdown,
+  replayInputSequence,
+} from "./workflows/inputSequenceReplay.js";
 import type { LevelDoc, WinCondition } from "./core/types.js";
 import { randomInt } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -70,6 +75,7 @@ async function main(): Promise<void> {
       "calibration-report",
       "explain-level",
       "explain-layout",
+      "try-inputs",
       "compare-starts-layout",
       "archive-remove-candidate",
       "audit",
@@ -299,6 +305,75 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (command === "try-inputs") {
+    const layoutPath = maybeLevelId;
+    if (!layoutPath || layoutPath.startsWith("--")) {
+      throw new Error("try-inputs requires a layout file path, or '-' for stdin");
+    }
+    const optionArgs = args.slice(3);
+    assertAllowedOptions(
+      optionArgs,
+      new Set([
+        "--inputs",
+        "--id",
+        "--win",
+        "--player-start",
+        "--start",
+        "--player-goal",
+        "--goal",
+        "--write",
+      ]),
+    );
+    const inputs = parseCsvOption(optionArgs, "--inputs");
+    if (inputs.length === 0) {
+      throw new Error("try-inputs requires at least one input via --inputs");
+    }
+    const id = getOption(optionArgs, "--id") ?? "try_inputs";
+    const winCondition = parseLayoutWinCondition(
+      pkg.mechanic.id,
+      parseWinCondition(getOption(optionArgs, "--win"), pkg.mechanic.win),
+      optionArgs,
+      "try-inputs",
+    );
+    const layout = await readLayoutInput(layoutPath);
+    const level: LevelDoc = { id, title: id, layout, win: winCondition };
+    const adapter = getRuntimeAdapter(pkg.mechanic);
+    const runtime = adapter.createRuntime(pkg.mechanic);
+    const initial = adapter.parseLevel(level);
+    const execution = replayInputSequence(
+      adapter,
+      runtime,
+      initial,
+      inputs,
+      { winCondition },
+      winCondition,
+    );
+    const report = buildInputSequenceReplayReport(
+      {
+        id,
+        prototype: pkg.mechanic.id,
+        layoutSource: layoutPath,
+        layout,
+        winCondition,
+      },
+      execution,
+    );
+    const markdown = formatInputSequenceReplayMarkdown(report);
+    console.log(markdown.trimEnd());
+
+    if (writeReports) {
+      const safeId = id.replace(/[^a-zA-Z0-9_-]/g, "_");
+      const markdownPath = path.join(pkg.root, "reports", `input_replay_${safeId}.md`);
+      const jsonPath = path.join(pkg.root, "reports", `input_replay_${safeId}.json`);
+      await mkdir(path.dirname(markdownPath), { recursive: true });
+      await writeFile(markdownPath, markdown, "utf8");
+      await writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+      console.log(`\nWrote ${markdownPath}`);
+      console.log(`Wrote ${jsonPath}`);
+    }
+    return;
+  }
+
   if (command === "solve") {
     const adapter = getRuntimeAdapter(pkg.mechanic);
     const runtime = adapter.createRuntime(pkg.mechanic);
@@ -369,10 +444,11 @@ async function main(): Promise<void> {
     const positionalOptions = optionArgs.some((arg) => arg.startsWith("--")) ? [] : optionArgs;
     const id = getOption(optionArgs, "--id") ?? positionalOptions[0] ?? "scratch_layout";
     const title = getOption(optionArgs, "--title") ?? id;
-    const winCondition = parseExplainLayoutWinCondition(
+    const winCondition = parseLayoutWinCondition(
       pkg.mechanic.id,
       parseWinCondition(getOption(optionArgs, "--win"), pkg.mechanic.win),
       optionArgs,
+      "explain-layout",
     );
     const layout = await readLayoutInput(layoutPath);
     const level: LevelDoc = {
@@ -504,6 +580,7 @@ function printUsage(): void {
   console.log("  tsx src/cli.ts solve <prototype-path> [level-id]");
   console.log("  tsx src/cli.ts explain-level <prototype-path> <level-id> [--write]");
   console.log("  tsx src/cli.ts explain-layout <prototype-path> <layout-file|-> [--id id] [--win player_on_goal|event_occurs:event] [--player-start x,y] [--player-goal x,y] [--max-states n] [--graph-max-states n] [--write]");
+  console.log("  tsx src/cli.ts try-inputs <prototype-path> <layout-file|-> --inputs input1,input2,... [--id id] [--win player_on_goal|event_occurs:event] [--player-start x,y] [--player-goal x,y] [--write]");
   console.log("  tsx src/cli.ts compare-starts-layout <prototype-path> <layout-file|-> --player-goal x,y [--starts x1,y1 x2,y2] [--required-winning-events E1,E2] [--forbidden-winning-events E1,E2] [--forbidden-reachable-events E1,E2] [--write]");
   console.log("  tsx src/cli.ts archive-remove-candidate <prototype-path> <candidate-id> [--apply] [--keep-file]");
   console.log("  tsx src/cli.ts evaluate <prototype-path>");
@@ -720,10 +797,11 @@ function parseWinCondition(raw: string | undefined, fallback: WinCondition): Win
   return { type: raw };
 }
 
-function parseExplainLayoutWinCondition(
+function parseLayoutWinCondition(
   mechanicId: string,
   base: WinCondition,
   args: string[],
+  commandName: string,
 ): WinCondition {
   const playerStart = parsePointOption(args, "--player-start") ?? parsePointOption(args, "--start");
   const playerGoal = parsePointOption(args, "--player-goal") ?? parsePointOption(args, "--goal");
@@ -731,7 +809,7 @@ function parseExplainLayoutWinCondition(
   if (mechanicId === "ice_slide_escape") {
     if (!playerStart || !playerGoal) {
       throw new Error(
-        "ice_slide_escape explain-layout requires explicit --player-start x,y and --player-goal x,y. " +
+        `ice_slide_escape ${commandName} requires explicit --player-start x,y and --player-goal x,y. ` +
           "Each start/goal pair is a separate solve instance.",
       );
     }

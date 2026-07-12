@@ -1,0 +1,86 @@
+review_iteration: 3
+candidate_version_reviewed: RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7
+review_input_type: revised_design
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: solution_uniqueness
+    evidence_basis: >-
+      result 使用合法枚举值 equivalent_variants_only，且与当前已知 exact 解不冲突。
+      shortestSolutionEnumeration 已完整枚举至首胜深度 35，得到
+      shortestPathCount=1、shortestWinStateCount=1；canonical replay 的 35 步输入与该
+      唯一最短示例一致。新增 bottom-first replay 的 37 步输入全部合法并获胜，最终 key
+      与 canonical 完全相同：
+      Ply:5,2|C:|M:5,4;6,4|6,1;7,1;6,2|PL:P:6,7;L:7,7|BS:B:4,7;S:5,7。
+      两条路径因此不是不同终局状态的 exact bypass，而是当前证据中同终局的换序变体。
+  - target_ref: solution_uniqueness.equivalent_variant_mechanics
+    evidence_basis: >-
+      两条 exact 胜路在 step 14 到达相同切割态，随后只是交换上下端处理次序。两者终局均由
+      B/S/P/L 覆盖底部 x4-x7 四目标，下端二格黏条占 x5-x6,y4，顶部黏块占
+      x6,y1、x7,y1、x6,y2；全部箱均已消费。两条 trace 都包含同一核心事件族及相同计数：
+      anchor_boundary_shift:push_pull 四次、anchor_boundary_shift:box_sticky 三次、
+      sticky_to_box 一次、sticky_split 一次、box_to_sticky 三次、sticky_merge 三次、
+      move_sticky_rigid 五次。对象职责、目标覆盖和切割后三次重拼结构均相同。
+  - target_ref: player_reasoning.RU2_split_output_order.conclusion
+    evidence_basis: >-
+      canonical 在共同 step 14 切割态后先处理上端，再处理下端，共用 21 步到达胜利，整条
+      路径长 35；bottom-first 在同一状态先于 step 18 将最下箱与下端点重拼，再返回上端，
+      共用 23 步到达同一胜利状态，整条路径长 37。完整首胜层枚举证明 35 是最短且该层只有
+      一条输入路径；两条后缀的直接比较显示 bottom-first 多出一次 right 后再 left 的换位，
+      支持“职责可换序”及“上端优先的规范路径少两步”这一机械结论。
+  - target_ref: player_reasoning.RU2_split_output_order.alternative.concrete_outcome
+    evidence_basis: >-
+      bottom-first replay 的前 18 步非空输入全部合法。step 18 后玩家位于 x4,y4，剩余箱柱
+      位于 x4,y2-y3，下端点与最下箱已经重拼为 x5-x6,y4 二格黏条并覆盖中部目标，状态尚未
+      获胜；probe_bottom_first_v7.ts 从该精确前缀求得 19 步 continuation，完整 37 步 replay
+      completed=true、legalThroughStep=37、final.isWin=true，并到达与 canonical 相同的
+      final key。concrete_outcome 的位置、续解长度、终局和等价换序判断均机械成立。
+  - target_ref: mechanism_scope.central
+    evidence_basis: >-
+      canonical steps 13-14 以 force_chain:n2 同行推动 B/S 与 P/L，并在 step 14 触发
+      sticky_to_box:n3、sticky_split:n1，形成三箱柱与上下两个黏端点；steps 20、30、35
+      三次触发 sticky_merge:n1，最终形成覆盖顶部三目标的连通 L 黏块。35 步首胜层只有
+      一条路径，支持 central 对“规范唯一最短解中三次重新拼接”的限定表述。
+  - target_ref: mechanism_scope.required_winning_path_events
+    evidence_basis: >-
+      anchor_boundary_shift:box_sticky、sticky_to_box、sticky_split 均出现在两条已知 exact
+      胜路中；各自 avoid-event 子图分别以 669、6777、6777 个 explored states 完整结束且
+      无胜路，支持这三个事件的 all-solution required 声明。
+  - target_ref: evidence.winning_path_event_checks
+    evidence_basis: >-
+      packet 如实区分完整扫描和预算耗尽扫描：anchor_boundary_shift:box_sticky、
+      sticky_to_box、sticky_split 为 complete_no_bypass；anchor_boundary_shift:push_pull、
+      box_to_sticky、sticky_merge、move_sticky_rigid 均约在 750000 状态预算耗尽，只列为
+      bounded_no_bypass_events_not_claimed_complete，没有被提升为 all-solution necessity。
+  - target_ref: simple_level_design.goal_and_completion_feedback
+    evidence_basis: >-
+      两条 exact replay 的 final.isWin 均为 true，且相同 final key 显示底部四目标由双锚点
+      覆盖、中部目标由下端二格黏条覆盖、顶部三目标由连通 L 黏块覆盖。canonical step 35
+      的 visible_confirmation 与实际结算状态一致。
+  - target_ref: mechanic_exposure_context
+    evidence_basis: >-
+      mechanic_exposure_sequence.yml 将 dual_anchor 列为当前线性暴露序列末端，初态确有
+      P/L 与 B/S 共存；claimed_core_events 均属于该阶段或更早阶段。序列中不存在
+      dual_anchor 之后需要由完整 reachable scan 排除的 later event/configuration，packet
+      也未声明 forbidden_if_seen_anywhere。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >-
+    layout graph 在 reachableStateCount=500001 时因 maxStates=500000 耗尽；该图事实的
+    中性含义是完整可达图未闭合，对玩家路径声明的影响是不能排除更深处存在不同终局或不同
+    职责的其它长解。因此 equivalent_variants_only 仅能按 packet 已写边界理解为“完整最短层
+    加定向发现的上下换序族中，已知变体等价”，不能扩张为完整图全部解族的普遍结论。
+  - >-
+    anchor_boundary_shift:push_pull、box_to_sticky、sticky_merge、move_sticky_rigid 的
+    avoid-event 扫描均 exhausted；它们只支持预算内未见旁路，不支持 all-solution necessity。
+  - >-
+    objectParticipation 为空；对象职责相同的判断来自两条 exact trace 的状态 key、逐步状态和
+    最终占位比较，不支持未记录的实例身份谱系或 per-object necessity。
+  - >-
+    37 步 bottom-first 是定向前缀加求解 continuation 得到的一个 exact 变体，不是对全部
+    bottom-first 输入路径或全部非最短解的完整枚举。
+  - >-
+    calibrated_trace_metrics 不属于 evidence；本审查不评价审美、难度、好玩程度、玩家问题
+    显著性或 campaign placement。
+questions_for_designer: []

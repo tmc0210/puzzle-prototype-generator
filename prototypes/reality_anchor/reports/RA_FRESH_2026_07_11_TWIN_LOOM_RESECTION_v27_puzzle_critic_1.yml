@@ -1,0 +1,280 @@
+review_iteration: 1
+candidate_version_reviewed: v27
+review_input_type: candidate_version
+verdict: revise_required
+review_loop_state: revise_required
+required_action: structural_revision
+
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: >-
+    玩家看见五个目标：上下各一个黏臂目标，连接柱右侧上下相邻的两个目标，以及更右侧与下连接箱同排的
+    一个目标。初始材料是上下二格黏臂、三格箱柱、下方 B/S 与固定 P/L；玩家要让五个目标最终同时被覆盖。
+  salient_relations_seen:
+    - >-
+      玩家右推 B/S 后，三格箱柱变黏并接成连接上下横臂的七格整体；从右侧把整个形状右拉一格后，
+      连接柱切成三箱，上下臂分开，且原先被两臂占住的 x=3 竖向通道腾空。
+    - >-
+      同一次右拉让上、中两只切箱直接落在 (6,3)/(6,4) 两个目标，让下箱停在 (6,5) 并与
+      (8,5) 的目标对齐；玩家此时正站在下箱右侧。
+    - >-
+      切割后立即连续两次 right 会真实完成右目标，却把玩家封在 (9,5) 右侧三格区，两条黏臂目标仍空；
+      正确路线是先使用新开放的 x=3 通道处理两臂，再回到同一把手执行相同两次 right 并获胜。
+  unclear_or_unreadable_parts:
+    - >-
+      事实足以判断所有动作和后果；唯一仍属玩家手感的问题是，右侧目标与 pocket 的死端关系如此直观，
+      玩家是否会把“先做两臂”当作需要推理的洞见，还是一眼读成常见的封口目标最后做。
+  initial_quality_risks:
+    - >-
+      前十二步的合体与切割仍是唯一胜路铺垫，玩家没有在最强的双锚拼接/切割事件上比较方案。
+    - >-
+      两个连接箱目标在切割时自动完成且之后不再操作，可能是清楚的切割落点反馈，也可能只是用目标
+      标记锁件、抬高“五目标”外观；它们不能自动算作两层推理。
+    - >-
+      规范解共四十二步，却只有六个出现对象操作的步骤；若中轴往返只是执行已知顺序，长度会稀释而非
+      增加末期难度。
+
+player_facing_merits:
+  - exact_situation: initial state through canonical step 12
+    relation: >-
+      初始上下二格黏臂位于 x=3-4、三箱柱位于 x=5，两个相邻目标位于 x=6；玩家先右推 B/S 合成
+      七格整体，再从右侧把整体横拉一格。
+    concrete_change: >-
+      上、中连接格切成箱并正好覆盖 (6,3)/(6,4)，上下黏臂分裂到 x=4-5，x=3 的两处占格同时
+      被让出形成连续中轴，下连接箱则停在 (6,5) 并对齐 (8,5) 目标。
+    later_operation_change: >-
+      玩家由此获得到达上下黏臂拉侧的通路、两件已安全收束的切箱和一件必须延迟处理的终箱；同一切割
+      的材质、连通、交通与目标落点四项后果都被后续局面消费，足以构成真实的形状重构 merit。
+  - exact_situation: canonical step 12 versus ALT1 and canonical steps 41-42
+    relation: >-
+      切割后玩家在 (7,5)、箱在 (6,5)、目标在 (8,5)；同样的 [right,right] 在两臂未完成时和
+      两臂已完成时都能把箱送上目标。
+    concrete_change: >-
+      提前执行会让目标箱堵住左出口、玩家困在右 pocket 且两臂目标仍空；先完成两臂再返回执行，则
+      五个目标同时覆盖并立即胜利。
+    later_operation_change: >-
+      一个开局即显眼可用的两步动作被延迟到终局，前后局面赋予同一把手相反后果；这提供了清楚的
+      收束回报，但它仍只是一层“封口目标最后做”的顺序关系。
+  - exact_situation: canonical steps 13-36
+    relation: >-
+      横切前上下黏臂占住 x=3 的两格，横切后两臂移到 x=4-5；玩家先沿腾空的 x=3 竖向通路到上臂
+      拉侧，再沿同一通路返回下臂拉侧。
+    concrete_change: >-
+      step 26 与 step 36 分别把两臂拉入上下目标，连接箱的 holding goals 始终保持覆盖。
+    later_operation_change: >-
+      两臂完成后玩家无需再保留中轴，可转回右侧终箱把手并允许 pocket 封口；切割释放的空间不是装饰，
+      而是双臂处理所需的实际交通资源。
+
+supported_reasoning:
+  - unit_ref: RU1_defer_aligned_crate_goal_until_both_arms
+    reason: >-
+      问题在动作前真实存在：右箱与目标同排、玩家已经位于拉侧，两次合法 pull 会立即增加一个已覆盖目标；
+      alternative.exact_inputs 非空且确实产生 complete/no-win。结论也增加了计划理由——保留出口、使用切割
+      打开的中轴完成两臂、再返回封口。不过局部几何同时清楚显示目标箱会堵死唯一左出口，失败只需两步
+      即可枚举，因此该单元成立但洞见强度有限。
+
+archive_taste_context_used:
+  - >-
+    RA_CAND_0017（人评审美4、难度5）：末期正锚要求高耦合拼接/切割与推拉规划；v27 的切割后果多用，
+    但玩家只需维持一条目标顺序，未达到其困难密度。
+  - >-
+    RA_CAND_0022（人评审美5、难度4）：以短流程强反直觉和精巧空间利用为上界；v27 有同一把手前后重读，
+    但四十二步与显眼死端使其不支持5。
+  - >-
+    RA_CAND_0025（人评审美4、难度4）：以紧凑主动构形、前段不喧宾夺主和清楚终局作为强4校准；v27 的
+    四重切割消费可达到审美4下界，但单一封口顺序不足以达到其难度4。
+  - >-
+    RA_CAND_0024（人评审美1、难度3）：警示双锚和黏块高信号最后只剩腾挪；v27 已真实使用合体形状、
+    切割落点和让出的中轴，故不属于同等机制空转，但前十二步脚本化与长往返仍让该警戒部分命中难度侧。
+  - >-
+    RA_CAND_0027（人评审美1、难度2；已按技能要求完整读取）：警示可见锚点与 sticky 标签没有几何责任；
+    v27 的 B/S 位移、整体横拉、切箱和双臂分工均有具体后果，因此仅作为已越过的最低警戒。
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_with_all_aesthetic_1_warnings_read
+  positive_anchors:
+    - {candidate_id: RA_CAND_0017, aesthetic: 4, difficulty: 5}
+    - {candidate_id: RA_CAND_0022, aesthetic: 5, difficulty: 4}
+    - {candidate_id: RA_CAND_0025, aesthetic: 4, difficulty: 4}
+  lower_bound_or_negative_anchors:
+    - {candidate_id: RA_CAND_0024, aesthetic: 1, difficulty: 3}
+    - {candidate_id: RA_CAND_0027, aesthetic: 1, difficulty: 2, use: warning_only}
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: >-
+      reality_anchor_trace_metrics_v0 中 solutionCost=42 为 band 5、nonWalkEventCount=14 为 band 3、
+      heavyReuseRatio=0.125 为 band 4，aggregateBand=4。
+    allowed_reading: >-
+      规范解具有较高执行压力；该指标只描述长度、非走位事件与高频空间调度，不证明洞见、审美或末期难度。
+    player_facing_check: >-
+      四十二步中对象操作集中在 step 2、12、26、36、41、42；前十二步是强制铺垫，两个双臂操作之间
+      主要是沿中轴到位和返回。额外输入没有逐段创造新的对象责任，故 band 4 不能抬高难度，并保留节奏风险。
+    verdict_effect: caveat
+  solution_space_reuse:
+    metric_fact: >-
+      revisitRate=0.3953488372093023 与 heavyReuseRatio=0.125 均为 band 4，aggregateBand=4。
+    allowed_reading: >-
+      规范解反复经过部分工作区；指标不判断这种回访是精巧重用还是单纯往返。
+    player_facing_check: >-
+      x=3 中轴被用于到达上臂再返回下臂，右箱把手则在切割后被暂时放弃、两臂完成后重新使用；其中
+      “同一两步 pull 从致死变为获胜”确有状态变化消费，但中轴本身主要承担通勤而非新操作责任。
+    verdict_effect: merit
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: >-
+  保守支持审美4下界，不支持5。同一次横切让两箱落位、两臂分裂、x=3 中轴开放并把终箱与目标对齐，
+  后续又真实使用中轴、两条独立黏臂和延迟终箱；这种结构经济明显越过 RA_CAND_0024/0027 的机制空转。
+  两个 holding goals 虽是自动反馈而非推理层，但位置在切割落点上清楚可预见，并为上、中切箱提供稳定归宿，
+  因此尚可视为可读的切割回报。四十二步往返和单一洞见阻止其达到审美5，也使4分需试玩关注节奏。
+
+difficulty_target_fit: >-
+  保守评为3，不达到最低难度4。唯一申报的玩家矛盾是：是否立即完成会封住唯一出口的近目标；它具有真实
+  局部收益和精确失败分支，但本质仍是常见“死端目标最后做”，而 pocket 左出口、目标箱和玩家位置同屏可见，
+  两步即可廉价验证。前十二步合体/切割没有玩家方案比较，上下臂也不要求相互排序；42步、唯一胜态、事件覆盖
+  和 pilot band 4 都不能补成第二层因果计划。作为末期双锚关仍低一档。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI1_single_dead_end_goal_insight_below_late_game_threshold
+    type: core_blocker
+    target_ref: player_reasoning.RU1_defer_aligned_crate_goal_until_both_arms
+    design_relation: >-
+      切割后玩家在 (7,5)、下箱在 (6,5)、目标在 (8,5)，箱的最终位置正是 pocket 唯一左出口；玩家
+      可连续两次 right 完成目标，也可先离开右区沿新开的 x=3 通道完成两臂。
+    attack: >-
+      alternative 合法、局部收益真实，但冲突只要求识别一个在同屏直线上可见的死端封口。目标箱一旦到位
+      就把玩家留在右侧三格区，失败两步可枚举；没有第二个对象中间态、可逆承诺或双臂顺序与它耦合。
+      这能成立为常规顺序题，不能单独支撑末期困难4。
+    evidence_basis: >-
+      ALT1 exact_inputs=[right,right]、complete/3-state/no-win，canonical goal-order monitor，以及 candidate
+      明确不主张上下双臂顺序。
+    player_facing_effect: >-
+      读出 pocket 的玩家会直接把右目标标成最后；未读出的玩家也在两步后得到终端反馈。之后剩余规划
+      只是沿唯一通路分别拉两臂再回来，没有新的推理修正。
+    blocks_proposal_ready: true
+    expected_designer_response: revise_now
+  - id: CI2_scripted_core_mechanism_limits_role_fit
+    type: core_blocker
+    target_ref: player_reasoning.forced_setup_disclaimer + mechanism_scope.central
+    design_relation: >-
+      玩家看见 B/S、三箱柱和上下黏臂；先右推 B/S 自动合成七格整体，再沿唯一胜路到右把手把整体横拉，
+      自动产生两箱落目标、双臂分离、中轴开放与终箱对齐。
+    attack: >-
+      四重结果很经济，但玩家没有决定是否合、何时切、从何处切或如何分配切出物；最强的双锚拼接/切割
+      关系仍是十二步脚本。它可以抬高审美，却不能与单一死端顺序题合算为困难4。
+    evidence_basis: >-
+      forced setup disclaimer、SEG1/SEG2 supports_reasoning_units=[]、complete agency 的 forced commitment prefix，
+      以及 evidence reviewer 明确不授予洞见或难度。
+    player_facing_effect: >-
+      熟悉机制的末期玩家执行一次确定的合体和一次确定的切割，随后只需保留右目标；双锚的认知负荷高于
+      它提供的方案比较，仍部分触发 RA_CAND_0024 的期待落差。
+    blocks_proposal_ready: true
+    expected_designer_response: revise_now
+  - id: CI3_holding_goals_are_feedback_not_reasoning
+    type: nonblocking_risk
+    target_ref: mechanism_scope.central[1] + role_fit_claim.strengths[2]
+    design_relation: >-
+      两个目标预先放在 (6,3)/(6,4)，横切后上、中连接箱自动落上去并被窄槽锁住；玩家之后不再移动
+      这两箱，只需保持覆盖到终局。
+    attack: >-
+      这两个目标清楚标示切割落点并给废余切箱一个归宿，能作为审美反馈；但它们没有产生选择、资源共享
+      或后续操作，完整图因此收束为唯一配置也不是玩家侧优点。若把“五目标”或唯一配置当复杂度，会变成
+      锁件工程与目标膨胀。
+    evidence_basis: >-
+      step 12 后两处目标自动覆盖并保持到 step 42；candidate 对 holding crates 的作用说明；evidence limits。
+    player_facing_effect: >-
+      玩家收到一次明确的“切对了”视觉反馈，但随后可把两箱完全忽略；试玩时若目标数量制造的期待高于
+      实际责任，审美4下界会显得工程化。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI4_long_transit_dilutes_single_decision
+    type: nonblocking_risk
+    target_ref: player_reasoning.operation_segments SEG3-SEG5
+    design_relation: >-
+      切割后玩家沿 x=3 通道到上臂，拉一次；再沿通道回到下臂，拉一次；再回右箱把手。step 13-40
+      之间只有 step 26 与 step 36 是对象操作。
+    attack: >-
+      中轴确实由切割开放，往返不是无关地图；但两次长到位没有在途中改变共享对象或产生新判断，主要
+      执行一个在切割态已经决定的“先两臂、后右箱”。长度会放大疲劳，不会增加因果深度。
+    evidence_basis: exact operation segments 与 non_walk_steps。
+    player_facing_effect: >-
+      玩家作出唯一关键判断后，需要较长时间才得到上臂、下臂和终箱的三个稀疏操作回报；节奏接近
+      RA_CAND_0017 的腾挪负担，却没有其人评所称高密度、高耦合推理。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI5_score_boundary_aesthetic_four_difficulty_three
+    type: score_boundary
+    target_ref: design_target.minimum_acceptable
+    design_relation: >-
+      v27 的横切在一个动作中真实改变四项棋盘责任，但玩家规划仍只围绕一个显眼的终局封口。
+    attack: >-
+      人评锚点允许把结构经济校准到审美4下界，却不支持把常见死端顺序、42步或 pilot band 4校准成难度4。
+    evidence_basis: >-
+      RA_CAND_0017/0022/0025 正锚、RA_CAND_0024/0027 负锚，以及 CI1-CI4 的玩家侧关系。
+    player_facing_effect: >-
+      玩家会得到一个漂亮且可读的切割 set-piece，但其后解决的是一层常规顺序题；候选未同时满足双4门槛。
+    blocks_proposal_ready: true
+    expected_designer_response: downgrade_or_hold
+
+diagnostic_interpretations:
+  - graph_fact: complete graph 为 94204 个可达状态、221725 条合法转移、1 个 winning state。
+    neutral_meaning: 在当前 exact version 与规则边界内，枚举只找到一个获胜状态。
+    player_facing_interpretation: >-
+      大状态空间和唯一胜态只排除未记录胜路；它们不说明玩家必须形成几层计划，当前仍可由脚本前缀加单一
+      封口顺序构成。
+    verdict_effect: none
+  - graph_fact: >-
+      所有胜路必须经历合体、整体横拉与切割，并且必须在覆盖 (8,5) 前先覆盖两条黏臂目标。
+    neutral_meaning: 核心事件不能被绕过，且终箱目标具有全胜路顺序约束。
+    player_facing_interpretation: >-
+      这证明四重切割结果与延迟终箱是实际责任；但合体/切割是强制操作，终箱顺序又由可见死端直接提示，
+      所以必需性只形成审美 merit 与难度 caveat，不能自动通过末期门槛。
+    verdict_effect: caveat
+  - graph_fact: ALT1 的两步 replay 合法，目标覆盖后 continuation complete、3 states、no-win。
+    neutral_meaning: 立即完成右目标是确切的终端失败分支，不存在从该结果态恢复的胜路。
+    player_facing_interpretation: >-
+      alternative 不再是虚假矛盾，并有真实目标收益；但错误两步即可验证，终态仅三格可走，也显示它没有
+      延伸成需要追踪多对象后果的深分支。
+    verdict_effect: caveat
+  - graph_fact: >-
+      solution_uniqueness=unique_complete；3 条最短输入路径压缩为 1 种非走位签名和 1 个最终对象配置。
+    neutral_meaning: 等价走位换序之外，完整图只保留一种获胜对象计划与配置。
+    player_facing_interpretation: >-
+      唯一对象计划不等于高难；此处玩家只需识别最终封口，剩余对象操作由窄槽和单通道收束。
+    verdict_effect: none
+  - graph_fact: 切割后主区域有 4 个 commitments，其中 2 viable、2 dead。
+    neutral_meaning: 从该区域存在多于一个对象承诺，部分能继续获胜、部分会失败。
+    player_facing_interpretation: >-
+      packet 只具体申报并复现了早填右目标这一条玩家矛盾，其他 commitment 的玩家可见局面与局部收益
+      未作为 reasoning unit 提供；不能用分支数量补算额外难度。
+    verdict_effect: none
+
+handoff_notes:
+  - >-
+    v27 不沿用 v13 分数：它通过四重切割消费把审美从机制展示提升到保守4下界；本次 revise_required
+    只因难度仍为3，未达到 brief 的双4门槛。
+  - >-
+    结构修订应保留“两箱落位、双臂分离、中轴开放、终箱对齐”的经济核心，同时让玩家在切割前后承担
+    至少第二层可分析责任，例如终箱暂留状态改变一条黏臂把手、双臂之一必须先改变共享通道，或切割时机
+    存在能推进多步但与后续冲突的真实方案；不要再增加只自动完成的目标或只延长回廊。
+  - >-
+    修订后须保持 alternative.exact_inputs 非空并重新做 evidence review 与独立 critic；当前 v27 不应加入待玩列表。

@@ -1,0 +1,37 @@
+candidate_id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+candidate_version: v7
+packet_kind: claim_last_design_claim
+base_claim_ref: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_claim_packet.yml
+target_role: game_late_dual_anchor_sticky_cut_and_rebind_challenge
+target_scores: {aesthetic: "4_floor_not_5_claim", difficulty: "4_or_higher_not_5_claim"}
+
+player_goal: "让棋盘上的六个目标全部被箱、黏块或锚点格覆盖。"
+
+reasoning_units:
+  - id: RU1_make_anchor_chute_before_cut
+    relation: "先把 x=3..4 的完整 C 形右移一格，空出的 x=3 三格竖槽随后供 P/L 下拉。"
+    alternative: "开局立即推 B/S 切桥有局部收益，但总最短37步；规范21步。"
+  - id: RU2_pull_pl_through_reused_column
+    relation: "C 形右移后玩家在 L 侧，继续 right 被挡；连续 down 三次把 P/L 拉过新槽。"
+  - id: RU3_cut_old_bridge_and_assign_outputs
+    relation: "B/S 到 B=x4/S=x5 后把 x=4 三格切成箱，留下 x=5 上下端点。"
+  - id: RU4_reweave_middle_then_move_as_rigid_bar
+    relation: "P/L 回到中线，把 x=4 中箱推入 x=5 两端点间形成竖条，再把整条送到 x=6 三目标。"
+    alternative: "64步逐件路线分别调度三箱、两端点和 P/L；作为非阻塞试玩 caveat 保留。"
+
+operation_segments:
+  - {id: SEG1, steps: "1-6", inputs: [up, up, up, up, right, right]}
+  - {id: SEG2, steps: "7-9", inputs: [down, down, down]}
+  - {id: SEG3, steps: "10-14", inputs: [left, left, down, right, right]}
+  - {id: SEG4, steps: "15-17", inputs: [up, left, up]}
+  - {id: SEG5, steps: "18-21", inputs: [left, up, right, right]}
+trace_partition: {status: complete, uncovered_steps: [], overlapping_steps: []}
+
+lineage_claim:
+  default: fresh_required
+  candidate_relation: refined_from_current_round_v6_outline_trim
+  archive_variant: false
+
+claim_last_review:
+  mode: sequential_single_call
+  read_order: facts_then_claim

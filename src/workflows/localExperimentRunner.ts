@@ -2,6 +2,12 @@ import { enumerateRuntimeGraph } from "../core/runtimeGraph.js";
 import type { RuntimeSearchOptions } from "../core/puzzleRuntime.js";
 import type { LevelDoc, PrototypePackage, WinCondition } from "../core/types.js";
 import { getRuntimeAdapter, type CurrentRuntimeAdapter } from "../prototypes/runtimeAdapter.js";
+import {
+  replayInputSequence,
+  type InputChangedCell,
+  type InputReplayStep,
+  type InputStateSnapshot,
+} from "./inputSequenceReplay.js";
 
 export type LocalExperimentDefaults = {
   maxExploreDepth?: number;
@@ -53,22 +59,9 @@ export type LocalExperimentBudgets = {
   maxTransitions?: number;
 };
 
-export type LocalStateSnapshot = {
-  key: string;
-  render: string;
-  isWin: boolean;
-};
+export type LocalStateSnapshot = InputStateSnapshot;
 
-export type LocalReplayStep = {
-  step: number;
-  action: string;
-  legal: boolean;
-  reason?: string;
-  events: string[];
-  eventWin: boolean;
-  before: LocalStateSnapshot;
-  after: LocalStateSnapshot;
-};
+export type LocalReplayStep = InputReplayStep;
 
 export type LocalActionTableEntry = {
   action: string;
@@ -101,12 +94,7 @@ export type LocalReachableSummary = {
   eventCounts: Record<string, number>;
 };
 
-export type LocalChangedCell = {
-  x: number;
-  y: number;
-  before: string;
-  after: string;
-};
+export type LocalChangedCell = InputChangedCell;
 
 export type LocalExperimentCaseResult = {
   id: string;
@@ -343,34 +331,15 @@ function runCase(
   const budgets = buildBudgets(defaults, caseDoc);
   const level = caseToLevel(caseDoc, winCondition);
   const initial = adapter.parseLevel(level);
-  let current = initial;
-  const steps: LocalReplayStep[] = [];
-  let stoppedAtIllegalAction = false;
-
-  for (const [index, rawAction] of (caseDoc.actions ?? []).entries()) {
-    const before = snapshot(adapter, runtime, current, winCondition);
-    const transition = runtime.step(current, rawAction, options);
-    const afterState = transition.legal ? transition.state : current;
-    const after = snapshot(adapter, runtime, afterState, winCondition);
-    steps.push({
-      step: index + 1,
-      action: rawAction,
-      legal: transition.legal,
-      reason: transition.reason,
-      events: transition.events,
-      eventWin: adapter.isEventWin(transition.events, winCondition),
-      before,
-      after,
-    });
-    current = afterState;
-    if (!transition.legal) {
-      stoppedAtIllegalAction = true;
-      break;
-    }
-  }
-
-  const initialSnapshot = snapshot(adapter, runtime, initial, winCondition);
-  const finalSnapshot = snapshot(adapter, runtime, current, winCondition);
+  const replay = replayInputSequence(
+    adapter,
+    runtime,
+    initial,
+    caseDoc.actions ?? [],
+    options,
+    winCondition,
+  );
+  const current = replay.finalState;
   const graph = enumerateRuntimeGraph(runtime, initial, winCondition, options, {
     maxStates: budgets.maxStates,
     maxTransitions: budgets.maxTransitions,
@@ -389,20 +358,20 @@ function runCase(
     notes: caseDoc.notes,
     layout: caseDoc.layout,
     actions: caseDoc.actions ?? [],
-    stoppedAtIllegalAction,
+    stoppedAtIllegalAction: replay.stoppedAtIllegalAction,
     winCondition,
     counterfactual,
     budgets,
-    initial: initialSnapshot,
-    final: finalSnapshot,
-    steps,
+    initial: replay.initial,
+    final: replay.final,
+    steps: replay.steps,
     finalActionTable: buildActionTable(adapter, runtime, current, options, winCondition),
-    returnToInitial: stoppedAtIllegalAction
+    returnToInitial: replay.stoppedAtIllegalAction
       ? notApplicableReturnSearch(
           budgets.maxReturnDepth,
           "replay stopped at illegal action; return search skipped",
         )
-      : searchReturnToKey(runtime, current, initialSnapshot.key, options, {
+      : searchReturnToKey(runtime, current, replay.initial.key, options, {
           maxDepth: budgets.maxReturnDepth,
           maxStates: budgets.maxStates,
         }),
@@ -416,7 +385,7 @@ function runCase(
       eventTypes: Object.keys(eventCounts).sort(),
       eventCounts,
     },
-    changedCells: diffRenderedStates(initialSnapshot.render, finalSnapshot.render),
+    changedCells: replay.changedCells,
   };
 }
 
@@ -533,19 +502,6 @@ function caseToLevel(caseDoc: LocalExperimentCaseDoc, winCondition: WinCondition
     title: caseDoc.title ?? caseDoc.id,
     layout: caseDoc.layout,
     win: winCondition,
-  };
-}
-
-function snapshot(
-  adapter: CurrentRuntimeAdapter,
-  runtime: ReturnType<CurrentRuntimeAdapter["createRuntime"]>,
-  state: unknown,
-  winCondition: WinCondition,
-): LocalStateSnapshot {
-  return {
-    key: runtime.key(state),
-    render: adapter.renderState(state),
-    isWin: runtime.isWin(state, winCondition),
   };
 }
 
@@ -670,32 +626,6 @@ function countGraphEvents(edges: Array<{ events: string[] }>): Record<string, nu
     }
   }
   return counts;
-}
-
-function diffRenderedStates(before: string, after: string): LocalChangedCell[] {
-  const beforeRows = before.split("\n");
-  const afterRows = after.split("\n");
-  const height = Math.max(beforeRows.length, afterRows.length);
-  const width = Math.max(
-    ...beforeRows.map((row) => row.length),
-    ...afterRows.map((row) => row.length),
-    0,
-  );
-  const changed: LocalChangedCell[] = [];
-
-  for (let y = 0; y < height; y += 1) {
-    const beforeRow = beforeRows[y] ?? "";
-    const afterRow = afterRows[y] ?? "";
-    for (let x = 0; x < width; x += 1) {
-      const beforeGlyph = beforeRow[x] ?? " ";
-      const afterGlyph = afterRow[x] ?? " ";
-      if (beforeGlyph !== afterGlyph) {
-        changed.push({ x, y, before: beforeGlyph, after: afterGlyph });
-      }
-    }
-  }
-
-  return changed;
 }
 
 function parseDefaults(raw: unknown, source: string): LocalExperimentDefaults {

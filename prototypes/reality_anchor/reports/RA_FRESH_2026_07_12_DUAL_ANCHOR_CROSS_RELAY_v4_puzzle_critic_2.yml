@@ -1,0 +1,241 @@
+review_attempt_id: RA_CROSS_RELAY_V4_CRITIC_ATTEMPT_02
+critic_instance_id: /root/critic_attempt02
+review_iteration: 1
+candidate_version_reviewed: RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4
+review_input_type: candidate_version
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+review_method:
+  difficulty_route: reasoning_level
+  raw_first_used: true
+  claim_last_used: false
+  read_order_ok: true
+  claim_read_after_independent_reading: not_applicable
+
+independent_reading:
+  status: completed
+  initial_verdict: supports_with_noncore_caveats
+  initial_review_loop_state: proposal_ready_with_caveats
+  initial_required_action: none
+  player_goal_seen: >-
+    三个目标分别位于 (2,3)、(6,3)、(2,6)。玩家起初能看到上方箱 (3,2)、下方箱
+    (3,6)、初始黏格 (5,5)，以及 P/L 竖锚与 B/S 横锚。可读出的计划问题不是把最近对象直送目标，
+    而是如何让两个锚点先后接管上方定位与跨区归一化：P/L 需要占住右目标，B/S 需要占住左目标并把
+    两个分处上下的箱同时变成黏格，之后初始黏格才能与下方黏格合并并被拉过边界覆盖底目标。
+  salient_relations_seen:
+    - >-
+      玩家看到箱 (3,2) 紧邻其下方通道、B/S 在 y4。step 1 先把箱推到 (3,3)，step 4 再向上拉动
+      B/S，B 半格把该箱反向顶回 (3,2)，同时 B/S 上移到 y3；这不是净位移搬运，而是用暂时下推
+      换取锚点穿入中层并建立之后左移的站位，后续才能执行 step 11。
+    - >-
+      玩家看到 P/L 初始在 x4、右目标在 (6,3)。step 2 先把 P/L 推到 x5，step 5 再推到 x6，
+      此时 L 覆盖右目标；step 8 从上方把整根锚下推一格，覆盖目标的半格由 L 换成 P。棋盘仍保持
+      右目标覆盖，但玩家获得从 (5,2) 下行并在 step 11 从右侧推动 B/S 的通路，因此目标覆盖与中层
+      操作空间发生了真实交换。
+    - >-
+      step 11 中，玩家从 (5,3) 向左推动位于 x3-x4 的 B/S 到 x2-x3；B 覆盖左目标 (2,3)，同时
+      (3,2) 与 (3,6) 两个相隔较远的箱都越过 B 侧边界变成分离黏格。这个一次动作同时完成左目标定位，
+      并为下方合并准备材料，使此前对上方箱的反向复位和下方箱的保留在此处汇合。
+    - >-
+      玩家随后在 step 14-15 把初始黏格从 (5,5) 连拉到 (3,5)，它与 step 11 生成在 (3,6) 的黏格
+      合并成竖向二格刚体；step 17 再把该竖条从 x3 拉到 x2，两格同时越过边界变回箱，下格覆盖
+      (2,6) 并获胜。合并改变了最后一次拉动的对象规模与归一化结果，终局不是重复的单格搬运。
+  unclear_or_unreadable_parts:
+    - >-
+      step 11 对 (3,2) 与 (3,6) 的同步转换是跨越多行的可见变化。规则虽说明边界归一化，但仅凭静态
+      初局，玩家是否能在动作前清楚预测“锚点左移一次会同时处理两个远端箱”，仍存在界面表达风险；
+      若边界范围没有明确视觉延伸，这个关键因果可能被体验为规则猜测。
+  initial_quality_risks:
+    - >-
+      高价值转折集中在 step 4、8、11；step 12-17 的主体在 step 11 成功后较接近沿开放通道完成两次拉动、
+      合并和一次终拉。终局有结构兑现，但后半段的剩余决策压力可能明显低于前半段。
+    - >-
+      P/L 在 step 5 已用 L 覆盖右目标，step 8 又以 P 覆盖同一目标。这个换半格动作确实释放后续站位，
+      但如果玩家很容易从唯一可走通路得到它，其推理价值会弱于它在状态轨迹中的事件数量所显示的复杂度。
+    - >-
+      与低分警戒例 RA_CAND_0024 相比，本候选确有箱的反向复位、双锚分工、远端同步转换和黏块合并，
+      并非只靠锚点腾挪；但与高分例 RA_CAND_0022、RA_CAND_0025 所强调的强反直觉洞见或主动构造相比，
+      step 11 的可预测性和前半段是否存在有意义的竞争计划仍是后续 claim 审查时应攻击的边界。
+  exact_basis:
+    - layout: targets@(2,3),(6,3),(2,6); crate@(3,2),(3,6); sticky@(5,5); P/L@(4,2)-(4,3); B/S@(3,4)-(4,4)
+    - canonical.step_1: crate (3,2)->(3,3)
+    - canonical.step_4: B/S y4->y3 and crate (3,3)->(3,2)
+    - canonical.step_5: P/L x5->x6; L covers target (6,3)
+    - canonical.step_8: P/L y2-y3->y3-y4; target (6,3) changes from L coverage to P coverage
+    - canonical.step_11: B/S x3-x4->x2-x3; crates at (3,2) and (3,6) both become separate sticky cells
+    - canonical.step_14: initial sticky (5,5)->(4,5)
+    - canonical.step_15: sticky (4,5)->(3,5) and merges with sticky (3,6)
+    - canonical.step_17: vertical sticky rigid body x3->x2; both cells become crates and lower cell covers target (2,6)
+
+player_facing_merits:
+  - id: M1_reversible_crate_force_handoff
+    exact_situation: canonical.step_0 through canonical.step_4
+    visible_setup: 上箱在 (3,2)，B/S 横锚在 y4，P/L 竖锚封住中层右侧。
+    player_operation: step 1 下推上箱，step 2 右推 P/L，step 4 从 (4,3) 向上拉 B/S。
+    concrete_board_change: 上箱先到 (3,3) 再被 B 半格顶回 (3,2)，B/S 同时从 y4 上移到 y3。
+    changed_followup: 玩家没有永久牺牲上箱，却让 B/S 获得后续在 step 11 左移覆盖左目标并改写材料的行位。
+  - id: M2_goal_coverage_exchanges_for_push_access
+    exact_situation: canonical.step_5 through canonical.step_11
+    visible_setup: step 5 的 L 已覆盖右目标，但 (5,3) 仍属于不能向左推动 B/S 的 L 侧。
+    player_operation: 玩家绕到 P/L 上方，在 step 8 下推整根锚，再于 step 11 从 (5,3) 左推 B/S。
+    concrete_board_change: 右目标由 L 覆盖改为 P 覆盖，(5,3) 成为推位；B/S 左移后 B 覆盖左目标，两箱同步转黏。
+    changed_followup: 同一目标持续被覆盖，但锚点侧别和站位责任发生交换，末段合并材料由此出现。
+  - id: M3_material_rewrite_payoff
+    exact_situation: canonical.step_11 through canonical.step_17
+    visible_setup: 下黏格在 (3,6)，初始黏格在 (5,5)，底目标在 (2,6)。
+    player_operation: step 14-15 连续左拉初始黏格使其与下黏格合并，step 17 左拉竖条越过 B/S 边界。
+    concrete_board_change: 两个分离黏格成为 (3,5)-(3,6) 竖向刚体，随后整体移到 x2 并同时切回箱。
+    changed_followup: 下格覆盖底目标并立即胜利；终局确实消费了合并与刚体移动，而非只播放材料事件。
+
+supported_reasoning:
+  - unit_ref: RU1_borrowed_crate_lift
+    reason: >-
+      问题在 step 1 后真实存在：直接继续向下会把箱和 B/S 带离左目标行，而 canonical step 4 让先前下推
+      的箱被可见地顶回并把 B/S 提到 y3。premises 都在对应状态可见，conclusion 增加了“借箱传力且回收”
+      的计划理由；但 alternative 只证明一手直接方案没有即时收益，没有证明其不可恢复，因此只支持局部取舍，
+      不单独支撑高难度。
+  - unit_ref: RU2_reposition_pl_for_second_bs
+    reason: >-
+      step 4-5 的 P/L 位置、右目标覆盖和 (5,3) 是否可作为 push 侧均可见；step 8 把覆盖半格从 L 换成 P，
+      step 11 兑现了释放推位、覆盖左目标和双箱转黏。结论有真实的计划因果。不过 replayed alternative 在一次走位
+      后立刻以 front_blocked 失败，玩家可廉价枚举，所以它证明规则侧别而非一项强搜索或重构洞见。
+  - unit_ref: RU3_merge_then_cut_vertical_pair
+    reason: >-
+      两黏格位置和底目标在 step 11 后可见，step 15 的合并反馈明确，step 17 兑现整条切回与胜利。
+      但 alternative 同样在一次合法拉动后的下一输入立即失败；而上半黏格切回后的箱不覆盖目标、也无后续责任，
+      所以该 RU 支持一个清楚终局闭环，不足以把“竖条构造”抬升为 5 分级主动构造。
+
+archive_taste_context_used:
+  - RA_CAND_0022
+  - RA_CAND_0025
+  - RA_CAND_0024
+  - RA_CAND_0028
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete
+  positive_anchors:
+    - RA_CAND_0022: aesthetic 5 / difficulty 4，短链中的反直觉送箱与反向回收。
+    - RA_CAND_0025: aesthetic 5 / difficulty 4，主动构造且终局提示与责任完整。
+    - RA_CAND_0028: aesthetic 4 / difficulty 4，短小锚点腾挪的饱和边界。
+  lower_bound_or_negative_anchors:
+    - RA_CAND_0024: aesthetic 1 / difficulty 3，复杂对象预期最终只兑现为推拉腾挪。
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: aggregateBand 4；solutionCost 17、nonWalkEventCount 21、heavyReuseRatio 0。
+    allowed_reading: 规范解具有较密集的机制事件与状态管理，但该指标不测洞见、因果依赖或反直觉性。
+    player_facing_check: >-
+      step 1 的箱位被 step 4 回收，step 2/4 建立 B/S 行位，step 5/8 建立 step 11 推位，step 11 建立
+      step 15 合并材料，step 15 又被 step 17 消费；多数非走位变化有后续责任。它仍不能修补 RU2、RU3
+      alternatives 只需一到两手即可排除的问题。
+    verdict_effect: none
+  solution_space_reuse:
+    metric_fact: aggregateBand 2；revisitRate 0.16666666666666666、heavyReuseRatio 0。
+    allowed_reading: 规范解不依赖高强度工作区回访，主要是一次性穿过上、中、下区域。
+    player_facing_check: 低复用与本关的顺序交接相符；它既不证明紧凑，也不削弱已由具体步骤验证的前后因果。
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: >-
+  支持审美 4 保底，不支持当前 packet 的 5 分追求。相较 RA_CAND_0024，本关不止是锚点腾挪：step 4 的箱位
+  反向回收、step 8 的覆盖半格交换、step 11 的双箱同步转黏和 step 15-17 的合并切回形成了可见闭环。
+  但相较 RA_CAND_0022 与 RA_CAND_0025 的强反直觉计划和主动构造，RU2、RU3 的失败方向几乎立刻暴露，
+  且合并竖条的上半格在终局只被随带切回而不承担目标或后续操作责任，因此尚不足以支持 5。
+difficulty_target_fit: >-
+  支持难度 4，不支持高于 4。玩家必须跨越 step 1-11 预见两个锚点对站位、侧别和材料的连续交接，不能只追逐
+  最近目标；这高于单纯路线执行。另一方面，initial SCC 只有 size 2 且一个 viable exit，三个 replayed alternatives
+  都在一至两次输入内显示无收益或直接失败，后段在 step 11 后也接近强制收束，未显示足以支持更高档的选择面或剪枝负担。
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI1_aesthetic_ceiling_4
+    type: score_boundary
+    target_ref: design_target.aesthetic_score_target
+    design_relation: >-
+      上箱经 step 1/4 下推再回送，P/L 经 step 5/8 交换右目标覆盖半格，B/S 在 step 11 同步改写两箱，
+      下部黏格在 step 15/17 合并并切回。
+    attack: >-
+      这些关系足以越过“只有推拉腾挪”的低分警戒，但 RU2、RU3 的错误方向都只需极短试探即可排除，
+      没有达到 5 分正例中的强反直觉重构或主动构造密度。
+    evidence_basis: canonical.step_1,4,5,8,11,15,17；RU2/RU3 replayed_attempt；RA_CAND_0022/0025/0024/0028 人评。
+    player_facing_effect: 玩家能获得紧凑、连贯的双锚闭环，但惊喜更集中在单一正确链，解前选择与终局再解释不足以支撑 5。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI2_difficulty_ceiling_4
+    type: score_boundary
+    target_ref: design_target.difficulty_score_target
+    design_relation: 三个 RU 分别对应 step 1-4、5-11、12-17 的顺序链。
+    attack: >-
+      RU1 alternative 只声称一手后无即时收益而不声称不可恢复；RU2、RU3 alternative 均在第二输入即 front_blocked。
+      加上 opening 只有一个 forced viable exit，当前材料支持跨段规划，但不支持高于 4 的搜索或剪枝难度。
+    evidence_basis: hard_fact_summary_for_critic.initial_scc_size_2_with_one_forced_viable_exit；三个 replayed_attempt 的 exact inputs/outcomes。
+    player_facing_effect: 玩家主要需要理解侧别并沿反馈修正，错误成本低，强竞争方向有限。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI3_upper_sticky_consumption_boundary
+    type: nonblocking_risk
+    target_ref: RU3_merge_then_cut_vertical_pair; mechanism_scope.central[3]
+    design_relation: >-
+      初始黏格从 (5,5) 被拉到 (3,5)，与 (3,6) 黏格合并；终手整条左移后，上格变箱停在 (2,5)，
+      下格变箱覆盖 (2,6) 目标。
+    attack: >-
+      上半黏格确实参与 merge、rigid move 和 sticky_to_box，但其切回后的箱不覆盖目标，也没有后续责任。
+      从玩家侧看，它更像沿必经 pull 路线被强制携带并自动并入下格，而非玩家为双格终局主动分配的第二项用途。
+    evidence_basis: canonical.step_14-17；RU3 alternative [left, down] 在第二手立即失败；resolution.final_state_ref。
+    player_facing_effect: 终局闭环清楚，但“构造竖条”的设计价值低于事件列表所暗示的双格责任，限制审美上探。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI4_player_goal_is_partly_solution_language
+    type: improvement_opportunity
+    target_ref: player_reasoning.player_goal
+    design_relation: 玩家起点看到三目标、双锚、两箱和右下黏格，但尚未经历侧别交换与同步转黏。
+    attack: >-
+      “判断两枚锚点、两个箱与右下黏格怎样共享有限的操作位”是设计者对完整解的概括，不完全是玩家在 step 0
+      能形成的单一目标。更贴近玩家的问题应是：怎样在不丢失右侧通路与目标覆盖的前提下，把 B/S 送到左目标行并让底目标材料可拉取。
+    evidence_basis: canonical.step_0 layout；player_goal.state_ref；RU1/RU2 的 later-state premises。
+    player_facing_effect: 不影响关卡本身成立，但当前措辞把三个阶段压成抽象“共享操作位”，弱化了玩家逐步发现的问题边界。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI5_lineage_boundary
+    type: diagnostic_note
+    target_ref: archive_lineage_policy
+    design_relation: packet 声称 fresh，且未授权 archive variant；可见链为上箱回送、P/L 侧别换位、双箱转黏和竖条切回。
+    attack: >-
+      提供的人类 archive 摘要只显示主题层相似，未显示当前布局、对象角色或完整因果链继承；因此没有依据判定未授权 variant。
+      “先写 reasoning sketch”仍只是来源声明，不能被用作审美加分。
+    evidence_basis: archive_lineage_policy.candidate_relation/why_not_archive_variant；四条 human archive comments。
+    player_facing_effect: lineage 对当前玩家侧 verdict 无正负效果。
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: complete graph has 381 reachable states, 837 legal transitions, 1 winning state, and one shortest 17-input sequence.
+    neutral_meaning: 在声明预算内，机械图完整且胜态与最短输入序列唯一。
+    player_facing_interpretation: 这排除机械旁路，但不说明玩家能否预见关键动作，也不把唯一链自动变成洞见或审美价值。
+    verdict_effect: none
+  - graph_fact: initial SCC size is 2 with one forced viable exit.
+    neutral_meaning: 起点附近可逆状态很少，通往胜解的有效离开方向单一。
+    player_facing_interpretation: 开局更像受控导入；RU1 的真正选择在 step 1 后出现，不能把起点动作本身计为高难推理。
+    verdict_effect: caveat
+  - graph_fact: all winning paths require at least 3 P/L shifts, 2 B/S shifts, material normalization, sticky merge, and sticky rigid movement.
+    neutral_meaning: 声明的机制事件没有机械胜路旁路。
+    player_facing_interpretation: 事件门保证这些操作发生，却不保证每个对象都获得独立玩家目标责任；上半黏格的终局责任仍需按具体局面判断。
+    verdict_effect: none
+
+handoff_notes:
+  - final verdict 与 raw-only 初判相同，没有因 designer claim 变得更宽松。
+  - proposal 可带 caveats 继续；审美按 4、难度按 4 交接，不应宣称当前材料支持审美 5 或难度高于 4。
+  - 上黏格后段责任、RU2/RU3 廉价失败方向以及 step 11 跨区转换的界面可读性应保留为玩家侧风险。
+  - 没有读取 critic attempt01、designer actions、修改说明、controller 对话或其它 reports，也没有运行 hard-evidence 工具。

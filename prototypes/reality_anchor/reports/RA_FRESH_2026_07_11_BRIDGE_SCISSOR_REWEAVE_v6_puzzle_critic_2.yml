@@ -1,0 +1,144 @@
+review_iteration: 2
+candidate_version_reviewed: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+review_input_type: revised_design
+verdict: supports_with_noncore_caveats
+review_loop_state: proposal_ready_with_caveats
+required_action: none
+review_method:
+  difficulty_route: reasoning_level
+  claim_last_used: true
+  read_order_ok: true
+  claim_read_after_independent_reading: true
+
+independent_reading:
+  status: completed
+  player_goal_seen: "玩家看见左列 x=6 与右列 x=8 各三个目标；真实胜利目标是让这六格全部被箱、黏格或锚点格覆盖，不预先指定对象分工或重拼路线。"
+  salient_relations_seen:
+    - "玩家看见顶部 P/L、底部 B/S 与中央完整 C 形黏体；规范操作先把 C 形右移空出旧 x=5 连接柱列，再把 P/L 拉入该槽，棋盘保留完整黏体直到锚点获得下方推杆位置，因此后续切割出的中箱能被 P/L 回推。"
+    - "玩家随后把 B/S 推到连接柱和端点分属箱侧/黏侧的位置，棋盘把 x=6 三格切成箱并留下 x=7 上下黏端点；规范操作把中箱推回两端点缺口，第20步形成三格竖直黏条，第21步整条右移覆盖 x=8 三目标，而上下箱与 P/L 覆盖 x=6 三目标。"
+    - "无重拼路线在尚未把 P/L 拉到底前提前切桥，棋盘同样得到 x=6 三箱与 x=7 两端点，却失去共享 P/L 推杆时序；后续需把三箱、两端点和 P/L 分别调度，反复腾站位、撤销并回填目标，64步后才完成六目标覆盖。"
+  unclear_or_unreadable_parts:
+    - "完整图预算仍耗尽，unique、完整 SCC 与所有胜路顺序未知；该图事实不提高玩家侧评价。"
+    - "facts 给出了无重拼路线的入口、三阶段操作与终局分工，但未提供人类试玩中的自然发现率；其概念更直白是否会吸引玩家放弃回织仍需试玩观察。"
+  initial_quality_risks:
+    - "无重拼路线不是短而干净的替代洞见，但它以更直白的逐件分配概念获胜；这不会自动破坏审美4分下界，却应作为试玩 caveat 和审美5分边界保留。"
+    - "规范解执行压力 band4 与25个非行走事件只说明操作密集；最终难度判断仍须依赖 claim 是否把让槽、拉锚、切割分工和回织终局连成行动前可见的因果问题。"
+    - "若修订 claim 仍把重拼分工写进 player_goal，而非放在 reasoning conclusion/resolution，上轮解法命名问题仍未关闭。"
+
+player_facing_merits:
+  - id: MERIT_REUSED_COLUMN
+    exact_scene: "开局 P/L 位于顶部、完整 C 形位于其下方 x=5..6；玩家沿左侧空列上行并向右推动完整 C 形一格，旧 x=5 连接柱列变成 P/L 下方竖槽，随后三次 down 把 P/L 拉过该槽，使其能在切割后从下方回推中箱。"
+    player_facing_value: "同一列从黏体占位改为锚点通道，前一步让出的空间被后续拉锚和回推直接消费，形成可见的跨阶段因果。"
+  - id: MERIT_CUT_ASSIGNMENT
+    exact_scene: "C 形右移后连接柱位于 x=6、上下端点位于 x=7；玩家把 B/S 推至 B=x6、S=x7，棋盘将 x=6 三格切成三箱并留下 x=7 上下黏端点，于是上下箱继续覆盖左列上下目标，中箱成为可回推连接件。"
+    player_facing_value: "切割把一个完整刚体改写成覆盖件、连接件和端点三类角色，后续操作因对象材质与连通关系而具体改变，不是机制展示。"
+  - id: MERIT_REBIND_PAYOFF
+    exact_scene: "切后 x=7 两个黏端点之间留有中间缺口；玩家让 P/L 回到中线并把 x=6 中箱推入缺口，第20步形成三格竖直黏条，第21步将整条右移覆盖 x=8 三目标，同时 P/L 覆盖 x=6 中目标。"
+    player_facing_value: "中箱回填立即改变端点的刚体连通性并新增一次整体移动三格的能力，终局同时结算两列对象分工，回织洞见有明确可归因回报。"
+  - id: MERIT_EARLY_CUT_ALTERNATIVE
+    exact_scene: "玩家开局向右会立即让 B/S 把连接部分转为三箱并切开黏体，获得真实分件反馈；但该入口到胜利还需36步、总计37步，而先移动完整 C 形并让槽的规范路线共21步。"
+    player_facing_value: "最近的切割 affordance 合法且有局部收益，却牺牲完整几何承担通道让渡的时序，玩家需在行动前比较‘先切’与‘先保留整体’。"
+
+supported_reasoning:
+  - unit_ref: player_goal
+    reason: "修订后只要求六目标全部被箱、黏块或锚点覆盖，与 win_condition 和目标坐标一致；对象分工与重拼路线已移回推理结论，不再提前命名解法。"
+  - unit_ref: RU1_make_anchor_chute_before_cut
+    reason: "P/L 下方连接柱的占位与右移后出现的三格竖槽均在行动前可见；开局立即切割又是合法、有局部收益的37步替代，因此保留完整 C 形不是唯一显然执行。"
+  - unit_ref: RU2_pull_pl_through_reused_column
+    reason: "C 形右移后继续向右被占位阻止，而向下能把身后 P/L 拉入新槽；下移后的 P/L 在 RU4 成为回推中箱的同轴推杆，结论增加了跨阶段计划理由。"
+  - unit_ref: RU3_cut_old_bridge_and_assign_outputs
+    reason: "B/S 的箱侧对准 x=6 连接柱、黏侧对准 x=7 端点时，操作会得到三箱与两端点；切后对象分别承担左列覆盖、中箱回织和右列端点，反馈可见且被后续消费。"
+  - unit_ref: RU4_reweave_middle_then_move_as_rigid_bar
+    reason: "中箱、端点缺口与已下移 P/L 构成可见同轴关系；推入中箱后产生的新竖条才能一次整体送入右列三目标，兑现 RU1-RU3 的空间让渡、锚点准备与切割分工。"
+
+archive_taste_context_used:
+  status: used_human_reviewed_only
+  anchors:
+    - "RA_CAND_0017：人评审美4、难度5；推拉与黏块拼接切割的高要求、反直觉操作作为高难正锚。"
+    - "RA_CAND_0022：人评审美5、难度4；看似死局操作、反向输送与高空间利用作为5分正锚。"
+    - "RA_CAND_0025：人评审美4、难度4；紧凑空间、主动构造与结构复用作为强4分下界锚。"
+    - "RA_CAND_0024：人评审美1、难度3；承诺切割拼接却主要只剩推拉腾挪、缺少玩家洞见作为失败警戒。"
+
+score_calibration:
+  human_archive_anchors_present: true
+  score_claim_allowed: true
+  archive_attack_calibration: complete_positive_and_negative
+  positive_anchors: [RA_CAND_0017, RA_CAND_0022, RA_CAND_0025]
+  lower_bound_or_negative_anchors: [RA_CAND_0024]
+  missing_anchor_effect: none
+
+trace_metric_interpretation:
+  calibration_status: pilot
+  solution_execution_pressure:
+    metric_fact: "aggregateBand=4；solutionCost=21/band4，nonWalkEventCount=25/band5，heavyReuseRatio=0/band1。"
+    allowed_reading: "规范解具有较高动作与状态管理密度；该指标不测量玩家洞见、因果依赖、反直觉或审美。"
+    player_facing_check: "规范路线的主要状态变化均有后续消费：C 形右移让出 P/L 槽，P/L 下拉准备回推，切出的中箱用于回织，重拼竖条随即整体入目标；未见只为拉长解长而存在的机制段。"
+    verdict_effect: none
+  solution_space_reuse:
+    metric_fact: "aggregateBand=2；revisitRate=0.3181818181818182/band3，heavyReuseRatio=0/band1。"
+    allowed_reading: "规范解不主要依赖高频工作区回访；低值不否定一次状态改变后的列空间新用途。"
+    player_facing_check: "旧 x=5 连接柱列被腾空后改供 P/L 下拉，存在一次有新责任的空间复用，但整体解法不靠高强度往返成立。"
+    verdict_effect: none
+  unmeasured_dimensions:
+    - causal_dependency
+    - player_reasoning
+    - counterintuitive_reframe
+    - surprise_and_payoff
+
+aesthetic_target_fit: "支持审美4分下界，不支持当前直接主张5分。规范21步路线在紧凑棋面连续兑现完整几何让槽、双锚点换位、定点切割、切后角色分工、中箱回织和新刚体终局覆盖，明显避开 RA_CAND_0024 的机制承诺落空；64步无重拼路线虽概念更直白，但需逐件调度五个切割产物与 P/L、反复让位和回填目标，不是短而干净的替代洞见，因此降为审美5边界而不破坏4分下界。"
+difficulty_target_fit: "支持难度至少4。玩家必须在立即切割的合法诱惑前保留完整 C 形，预见同一列将改作 P/L 通道，再选择 B/S 停位分配切割产物，并消费锚点位置把中箱回织为可整体移动的三格条；这是跨阶段因果、对象角色改写与顺序承诺，不是由21步长度或局部走位单独产生。当前材料不据此主张难度5。"
+
+language_drift:
+  obvious_overpackaging: false
+  examples: []
+  required_action: none
+
+critic_items:
+  - id: CI2_NO_MERGE_ROUTE_CAVEAT
+    type: nonblocking_risk
+    target_ref: RU4_reweave_middle_then_move_as_rigid_bar.alternative
+    design_relation: "玩家若在 P/L 尚未拉到底时提前切桥，会得到 x=6 三箱与 x=7 两端点；随后不回织，而是把两端点分别送入右列上下目标、P/L 泊入右列中目标，再把三箱逐个回填左列，64步获胜。"
+    attack: "该路线以‘六对象逐件分配’为更直白的概念，穷举型玩家仍可能绕过重拼，因此不能声称重拼是所有胜路硬门，也限制凝练度与审美5分。"
+    evidence_basis: "修订 facts 提供入口关系、steps15-30 抽取三箱、steps38-48 分送端点、steps45-64 泊 P/L 与回填三箱，以及反复让位、撤销/回填目标的风险边界。"
+    player_facing_effect: "替代路线要求维护更多独立对象并承担显著更长的执行与站位负担，不是另一条短而干净的洞见路线；它可能稀释最强体验，但不足以推翻规范路线的核心因果或审美4下界。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI2_RU3_ALTERNATIVE_THIN
+    type: nonblocking_risk
+    target_ref: RU3_cut_old_bridge_and_assign_outputs
+    design_relation: "玩家把 B/S 停在 B=x6、S=x7 后得到三箱与两黏端点，后续以中箱回织并让上下箱留作左列覆盖。"
+    attack: "RU3 仍未单独给出另一个合法停位的局部收益与具体失败；该段本身更像精确对位，其推理价值主要依赖 RU1 早切反例及 RU4 后续消费。"
+    evidence_basis: "claim 中 RU3 有 premises、conclusion、operations 与 feedback，但没有独立 alternative；designer_action 明确接受该边界且不主张每个单元均为强谜题。"
+    player_facing_effect: "不破坏整体至少4的跨阶段难度，但继续限制难度5主张。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI2_AESTHETIC_FIVE_BOUNDARY
+    type: score_boundary
+    target_ref: target_scores.aesthetic
+    design_relation: "规范路线把切割产物重新拼成三格竖条并立即整体覆盖右列；无重拼路线可通过逐件调度完成同一六目标。"
+    attack: "规范体验足以支持4分下界；在实际试玩确认玩家自然选择回织、逐件路线不稀释终局惊喜之前，不支持5分。"
+    evidence_basis: "RA_CAND_0025 提供强4紧凑构造下界，RA_CAND_0022 提供5分精巧反向构造正锚，RA_CAND_0024 提供机制承诺落空警戒；当前候选介于强4与待试玩确认的5之间。"
+    player_facing_effect: "回织路线提供清晰几何回报，但概念更直白的长绕路仍可能让部分玩家以较差节奏完成关卡。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+  - id: CI2_GRAPH_BUDGET_LIMIT
+    type: diagnostic_note
+    target_ref: graph_facts
+    design_relation: "图搜索达到约300001状态、650484转移与13个胜态后耗尽预算。"
+    attack: "该事实不能用于宣称 unique、完整 SCC、完整分支质量或额外玩家侧优点。"
+    evidence_basis: "facts 明确 budget=300000、status=exhausted，且 evidence_limits 保留 unknown 边界。"
+    player_facing_effect: "不新增可感知关系，只限制最终结论范围。"
+    blocks_proposal_ready: false
+    expected_designer_response: accept_as_nonblocking
+
+diagnostic_interpretations:
+  - graph_fact: "reachable_states_seen=300001，transitions_seen=650484，winning_states_seen=13，budget=300000，status=exhausted。"
+    neutral_meaning: "搜索耗尽预算；unique、完整 SCC 与完整分支质量均 unknown。"
+    player_facing_interpretation: "图事实既不能证明玩家只有回织胜路，也不能否定规范路线已展示的玩家侧因果；无重拼路线按单独的现成 trace 摘要作为 caveat 处理。"
+    verdict_effect: none
+
+handoff_notes:
+  - "iteration1 的 CI_PLAYER_GOAL_NAMES_SOLUTION 已关闭：player_goal 与六目标覆盖真实胜利条件一致。"
+  - "iteration1 的 CI_NO_MERGE_ROUTE_UNRESOLVED 已关闭：修订 facts 已给出入口、三阶段具体操作、终局对象分工和风险边界；逐件路线保留为非阻塞试玩 caveat。"
+  - "进入试玩列表时必须保留 caveat：观察玩家是否自然形成‘先保留完整 C 形—让槽—拉 P/L—切割—回织’的计划，还是因逐件分配概念更直白而走向64步路线。"
+  - "当前 critic 支持目标 role 与审美4/难度至少4，但不授予 accepted/mainline/reference，也不替代最终 judge。"

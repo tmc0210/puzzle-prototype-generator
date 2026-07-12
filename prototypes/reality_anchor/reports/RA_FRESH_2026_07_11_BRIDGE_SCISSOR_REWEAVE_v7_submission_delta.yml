@@ -1,0 +1,120 @@
+candidate_id: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+candidate_version: v7
+packet_kind: exact_submission_delta
+base_candidate_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6_candidate_packet.yml
+source_candidate_version: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v6
+
+change:
+  kind: wall_outline_trim_coordinate_isomorphism
+  reason: "Reality Anchor redundant_element_prune 按固定顺序裁去 v6 左侧两列、右侧一列纯外墙。"
+  layout_changed: true
+  start_changed_semantically: false
+  goals_changed_semantically: false
+  objects_changed_semantically: false
+  win_condition_changed: false
+  player_reasoning_changed_semantically: false
+  coordinate_transform: "x_v7 = x_v6 - 2; y_v7 = y_v6"
+
+solve_instance:
+  layout: |-
+    ########
+    ##PL####
+    #..Mm.G#
+    #..MG.G#
+    #..Mm.G#
+    #...####
+    #@BS..##
+    ########
+  player_start: [1, 6]
+  target_coordinates:
+    left_column: [[4, 2], [4, 3], [4, 4]]
+    right_column: [[6, 2], [6, 3], [6, 4]]
+  win_condition: all_targets_covered_by_objects
+
+canonical_solution:
+  cost: 21
+  explored_states: 2612
+  inputs: [up, up, up, up, right, right, down, down, down, left, left, down, right, right, up, left, up, left, up, right, right]
+  event_sequence_identical_to_v6: true
+  final_win: true
+
+mechanic_claims_exact_v7:
+  all_solution_required_complete:
+    anchor_boundary_shift_push_pull: {bypass: false, status: complete, states: 429428}
+    anchor_boundary_shift_box_sticky: {bypass: false, status: complete, states: 158}
+    pull_object: {bypass: false, status: complete, states: 81}
+    sticky_to_box: {bypass: false, status: complete, states: 615}
+    sticky_split: {bypass: false, status: complete, states: 615}
+    move_sticky_rigid: {bypass: false, status: complete, states: 9480}
+  optimal_route_only:
+    box_to_sticky: {first_avoiding_win_cost: 64, status: found, states: 179636}
+    sticky_merge: {first_avoiding_win_cost: 64, status: found, states: 200504}
+  no_merge_route: "同构后的64步 exact trace 仍合法并胜利；同一非阻塞试玩 caveat 保留。"
+
+calibrated_trace_metrics:
+  calibration: reality_anchor_trace_metrics_v0
+  status: pilot
+  solution_execution_pressure:
+    status: enabled
+    components:
+      solutionCost: {raw: 21, band: 4, weight: 0.35}
+      nonWalkEventCount: {raw: 25, band: 5, weight: 0.45}
+      heavyReuseRatio: {raw: 0, band: 1, weight: 0.2}
+    aggregateBand: 4
+  solution_space_reuse:
+    status: enabled
+    components:
+      revisitRate: {raw: 0.3181818181818182, band: 3, weight: 0.55}
+      heavyReuseRatio: {raw: 0, band: 1, weight: 0.45}
+    aggregateBand: 2
+
+graph_fact:
+  status: exhausted
+  states_seen: 300001
+  transitions_seen: 650484
+  wins_seen: 13
+  budget: 300000
+  effect: "complete-graph claims remain unknown"
+
+pre_submission_checks:
+  fixed_order_executed: [goal_prune, opening_comfort_check, redundant_element_prune]
+  goal_prune:
+    status: kept_with_unknown
+    note: "六个单删版本 shortest cost 均仍为21且规范 trace 仍胜，但 graph 均在100000预算耗尽；按 authority doc 全部保留。"
+  opening_comfort:
+    status: complete_with_graph_caveat
+    note: "完整 walk-only observation region=10；完整 initial SCC 因主图耗尽保持 unknown；起点保留。"
+  redundant_element_prune:
+    status: pruned
+    note: "v6 三列纯外墙裁成 v7；exact v7 只剩一层闭合外框，其余对象/空地均保留结构或读图责任。"
+
+unchanged_from_v6:
+  - prototype_context
+  - slot_brief_and_targets
+  - allowed_exposure_through_dual_anchor
+  - archive_lineage_fresh_required
+  - archive_taste_context
+  - player_goal_as_true_six_target_win_condition
+  - reasoning_units_and_operation_segments_after_coordinate_transform
+  - 64_step_no_merge_nonblocking_caveat
+  - score_target_claim_4_floor_not_5
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7.json
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_CANONICAL.json
+  - prototypes/reality_anchor/reports/trace_RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_NO_MERGE_BYPASS.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_event_gate.json
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_goal_prune_check.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_opening_comfort_check.yml
+  - prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_redundant_element_prune.yml
+
+review_contract:
+  latest_candidate_version: RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7
+  prior_v6_reviews_are_context_only: true
+  requires_new_independent_review: true
+  claim_last_review:
+    mode: sequential_single_call
+    facts_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_facts_packet.yml
+    claim_packet: prototypes/reality_anchor/reports/RA_FRESH_2026_07_11_BRIDGE_SCISSOR_REWEAVE_v7_claim_packet.yml
+    read_order: facts_then_claim
+
