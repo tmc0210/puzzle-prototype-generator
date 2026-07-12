@@ -1,10 +1,8 @@
 # 关卡设计工作室模板
 
-状态：[关卡设计工作室执行标准](21-level-design-studio-standard.md)的当前执行模板。
+状态：[关卡设计工作室执行标准](21-level-design-studio-standard.md)的当前材料合同。
 
-这些模板服务于玩家体验核心驱动的基线与分支作品集。审美选择由人类试玩完成，模板只保存创作承诺、相对探索意图和硬证据边界。
-
-## 体验简报
+## Experience brief
 
 ```yaml
 prototype_context:
@@ -17,6 +15,13 @@ curriculum_context:
   player_prior: []
   intended_game_position: unknown
   duplicate_boundary: []
+
+archive_calibration:
+  full_index_read: false
+  all_aesthetic_1_records_read: []
+  positive_or_high_anchors_read: []
+  lower_bound_or_negative_anchors_read: []
+  human_comment_ids_read: []
 
 experience_core:
   experience_statement: ""
@@ -31,180 +36,156 @@ experience_core:
 work_identity:
   conditions: []
   counterfactuals: []
-
-baseline_brief:
-  packaging_intent: direct_complete_realization
-  expected_scale: ""
-  expected_player_load: ""
-  non_goals: []
-
-allowed_design_sources: []
-prototype_specific_routing: []
 ```
 
-## 基线记录
+## Designer 送审包
+
+每个 exact version 强制填写，但永远不提供给 independent level reviewer。
 
 ```yaml
-kind: baseline
+submission_id: ""
 portfolio_id: ""
-version: ""
-design_state: working | hard_validated | frozen
-playtest_status: not_queued | pending_playtest | defer | needs_revision | ready_for_archive | reject
-
-layout_ref: ""
-canonical_trace_ref: ""
-
-identity_reading:
-  player_visible_sequence: []
-  payoff_state_ref: ""
-  identity_conditions_checked: []
-
-hard_evidence:
-  solvability: ""
-  solution_uniqueness: ""
-  graph_status: ""
-  bypass_checks: []
-  identity_counterfactuals: []
-  evidence_limits: []
-  artifact_refs: []
-
-packaging_reading:
+candidate_id: ""
+exact_version: ""
+slot: baseline | application | combination | challenge
+designer_claim:
+  player_experience_core: ""
+  player_action: ""
+  visible_payoff: ""
+  why_this_level_exists: ""
+  work_identity_conditions: []
+packaging_account:
   opening: ""
   preparation: ""
   reveal_or_use: ""
   ending: ""
-  known_same_work_defects: []
-
-attempt_log_ref: ""
+  every_major_element_role: []
+  known_perceptible_defects: []
+slot_account:
+  concrete_delta_from_baseline: ""
+  application_added_authorship: ""
+  combination_supporting_mechanism: ""
+  combination_not_base_rule_or_prerequisite: ""
+  combination_consumption_relation: ""
+  challenge_ceiling_dimension: ""
+  non_equivalence_to_other_submissions: []
+hard_evidence:
+  solve_instance_ref: ""
+  canonical_replay_ref: ""
+  graph_or_uniqueness_ref: ""
+  bypass_refs: []
+  identity_counterfactual_refs: []
+  evidence_limits: []
+designer_self_verdict: submit_for_independent_review | withdraw
 ```
 
-## 分支计划
+## Independent reviewer raw packet
 
-在确定布局或运行搜索前填写。
-
-```yaml
-kind: branch_plan
-portfolio_id: ""
-branch_id: ""
-baseline_ref: ""
-search_intent: application | combination | challenge
-
-delta_from_baseline:
-  player_authorship: ""
-  supporting_mechanism: ""
-  payoff_change: ""
-  ambition_dimensions: []
-
-reduction_test:
-  remove_or_presatisfy_delta: ""
-  expected_relation_to_baseline: returns_to_baseline | returns_to_another_branch | becomes_different_core
-
-identity_commitment:
-  preserved_conditions: []
-  new_risks: []
-```
-
-## 分支记录
+只从实际产物重新组装。
 
 ```yaml
-kind: branch
-portfolio_id: ""
-branch_id: ""
-baseline_ref: ""
-search_intent: application | combination | challenge
-design_state: working | rejected_branch | hard_validated
-playtest_status: not_queued | pending_playtest | defer | needs_revision | ready_for_archive | reject
-
-delta_realized:
-  player_authorship: ""
-  supporting_mechanism: ""
-  payoff_change: ""
-  ambition_dimensions: []
-
-relation_to_baseline:
-  concrete_difference: ""
-  reduction_test_result: ""
-  non_equivalence_to_other_survivors: ""
-
-layout_ref: ""
-canonical_trace_ref: ""
-identity_reading: {}
-hard_evidence: {}
-packaging_reading: {}
-rejection_reason: ""
+review_attempt_id: ""
+prototype_id: ""
+prototype_rules:
+  confirmed_rules: []
+  win_condition: ""
+  object_and_event_semantics: []
+  player_prior: []
+portfolio:
+  - slot: baseline | application | combination | challenge
+    candidate_id: ""
+    exact_version: ""
+    solve_instance:
+      layout: ""
+      player_start: null
+      win_condition: {}
+    canonical_solution:
+      exact_inputs: []
+      mechanically_derived_trace: []
 artifact_refs: []
 ```
 
-## 尝试日志
+禁止加入 designer claim、experience brief、branch plan、submission packet、指标、旧审查或修改说明。
+
+## Independent level review
 
 ```yaml
-portfolio_id: ""
-attempts:
-  - attempt_id: ""
-    search_intent: baseline | application | combination | challenge
-    family: ""
-    structural_hypothesis: ""
-    result: ""
-    status: revised | rejected_mechanical | rejected_identity | rejected_no_delta | survivor
-    artifact_refs: []
+review_attempt_id: ""
+reviewer_instance_id: ""
+review_integrity: independent | contaminated | incomplete
+archive_calibration:
+  full_index_read: true | false
+  all_aesthetic_1_records_read: []
+  positive_or_high_anchors_read: []
+  lower_bound_or_negative_anchors_read: []
+  human_comment_ids_read: []
+independent_readings:
+  - candidate_id: ""
+    exact_version: ""
+    slot: baseline | application | combination | challenge
+    opening_read: ""
+    player_actually_does: ""
+    visible_payoff: ""
+    ending_read: ""
+    exact_basis: []
+    perceptible_defects: []
+    verdict: survive_to_pre_submission_checks | revise_and_rereview | reject_branch
+portfolio_comparison:
+  baseline_complete_direct_read: ""
+  application_real_delta: ""
+  combination_non_prerequisite_mechanism: ""
+  combination_consumption_relation: ""
+  challenge_real_ceiling_attempt: ""
+  pairwise_player_experience_differences: []
+  slot_or_redundancy_blockers: []
+overall_verdict: survive_to_pre_submission_checks | revise_and_rereview | reject_portfolio
+required_action: none | structural_revision | remove_survivor | rebuild_portfolio
 ```
 
-## 人类待玩作品集交接
+## Submission admission audit
+
+```yaml
+audit_mode: submission_admission
+candidate_id: ""
+exact_version: ""
+review_gate:
+  latest_review_ref: ""
+  status: survived | missing | stale | contradicted
+hard_evidence: []
+prototype_workflows:
+  - workflow_id: ""
+    triggered: true | false
+    authority_docs_read: []
+    required_operations: []
+    artifact_refs: []
+    exact_version_match: true | false
+    status: supported | contradicted | incomplete | not_applicable
+queue_admission: eligible_for_queue | blocked
+blocking_reasons: []
+```
+
+## 人类待玩交接
 
 ```yaml
 portfolio_id: ""
-experience_core_summary: ""
-work_identity_summary: ""
-
-baseline:
-  version: ""
-  player_experience: ""
-  evidence_status: ""
-  known_risks: []
-  playtest_status: pending_playtest
-
-branches:
-  application: []
-  combination: []
-  challenge: []
-
+entries:
+  - slot: baseline | application | combination | challenge
+    candidate_id: ""
+    exact_version: ""
+    player_experience: ""
+    known_risks: []
+    submission_packet_ref: ""
+    independent_review_ref: ""
+    pre_submission_check_refs: []
+    admission_audit_ref: ""
+    admission_state: eligible
+    playtest_status: pending_playtest
 playable_delivery:
   level_source: studio/levels.yml | levels.yml
   playable_queue: playable_queue.yml
-  queue_entries:
-    - source: studio | package
-      level_id: ""
-      title: ""
-      added_at: ""
-      status: pending_playtest
-      notes: ""
+  queue_entries: []
   playable_build_status: built | failed
   playable_ref: ""
-
-handoff_policy:
-  llm_ranking: forbidden
-  llm_aesthetic_scores: forbidden
-  max_survivors_per_search_intent: 2
-  human_playtest_statuses: [defer, needs_revision, ready_for_archive, reject]
-
-prototype_specific_checks: []
+empty_slots: []
 archive_status: not_archived_waiting_for_playtest
-```
-
-## 可选硬证据核验请求
-
-独立 evidence reviewer 只在需要核对复杂硬声明、用户明确要求或交付契约要求时调用。它不评价包装、审美、角色或版本优先级。
-
-```yaml
-review_scope: hard_evidence_only
-candidate_id: ""
-candidate_version: ""
-claims: []
-allowed_evidence_sources: []
-graph_completeness: complete | budget_limited | not_applicable | unknown
-required_output:
-  - per_claim_status
-  - hard_failures
-  - evidence_gaps
-  - overall_hard_status
 ```

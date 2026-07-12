@@ -14,6 +14,13 @@ curriculum_context:
   intended_game_position: unknown
   duplicate_boundary: []
 
+archive_calibration:
+  full_index_read: false
+  all_aesthetic_1_records_read: []
+  positive_or_high_anchors_read: []
+  lower_bound_or_negative_anchors_read: []
+  human_comment_ids_read: []
+
 experience_core:
   experience_statement: ""
   visible_setup: ""
@@ -41,6 +48,7 @@ prototype_specific_routing: []
 
 填写后检查：
 
+- `archive_calibration` 是否包含完整 index、全部 1 分人评以及相关正反原评语；
 - `experience_statement` 是否描述玩家体验而非事件标签；
 - `player_action` 是否是玩家主动行为而非被动动画；
 - `visible_payoff` 是否能从棋盘直接观察；

@@ -1,38 +1,68 @@
-# 硬证据核验模板
+# 硬证据与准入审计模板
 
-## 任务
-
-逐条判断 exact candidate 的机械声明是否被允许的证据支持。不要评价玩家体验、审美、难度、排名或 campaign 位置。
-
-## 输出
+## 普通硬声明审计
 
 ```yaml
-candidate_id:
-candidate_version:
+audit_mode: hard_claim_audit
+candidate_id: ""
+exact_version: ""
 evidence_scope:
   allowed_sources: []
   graph_completeness: complete | budget_limited | not_applicable | unknown
 claims:
-  - claim_id:
-    claim:
+  - claim_id: ""
+    claim: ""
     status: supported | contradicted | unknown | not_applicable
     evidence_basis: []
-    limits:
-hard_failures:
-  - claim_id:
-    reason:
-evidence_gaps:
-  - claim_id:
-    needed:
+    limits: []
+hard_failures: []
+evidence_gaps: []
 overall_hard_status: supported | contradicted | incomplete
+```
+
+## Submission admission
+
+```yaml
+audit_mode: submission_admission
+candidate_id: ""
+exact_version: ""
+
+review_gate:
+  latest_review_ref: ""
+  reviewer_instance_id: ""
+  reviewed_exact_version: ""
+  review_integrity: independent | contaminated | incomplete
+  review_verdict: survive_to_pre_submission_checks | revise_and_rereview | reject_branch | missing
+  status: survived | missing | stale | contradicted
+
+hard_evidence:
+  - claim_id: ""
+    status: supported | contradicted | unknown | not_applicable
+    evidence_basis: []
+    limits: []
+
+prototype_workflows:
+  - workflow_id: ""
+    trigger_evaluation: triggered | not_triggered | unknown
+    authority_docs_read: []
+    required_operations:
+      - operation: ""
+        artifact_refs: []
+        status: supported | contradicted | incomplete | not_applicable
+    exact_version_match: true | false
+    conclusion_within_evidence: true | false
+    status: supported | contradicted | incomplete | not_applicable
+
+stale_or_substituted_evidence: []
+blocking_reasons: []
+queue_admission: eligible_for_queue | blocked
 ```
 
 ## 判定规则
 
-- `supported`：证据种类和完备性足以支持该声明。
-- `contradicted`：存在与声明直接冲突的 exact trace、reachable state 或 bypass。
-- `unknown`：证据缺失、预算不足或声明不可由当前工具判定。
-- `not_applicable`：该声明不需要或不能进行机械核验。
-- `overall_hard_status` 只汇总硬事实：有任一 `contradicted` 为 `contradicted`；无冲突但有关键 `unknown` 为 `incomplete`；其余为 `supported`。
-
-不要把 `supported` 写成 quality pass，也不要给出设计修改、审美裁决或版本选择。
+- `supported`：所需证据种类、操作和完备性足够。
+- `contradicted`：存在直接冲突的 exact trace、reachable state、bypass 或版本事实。
+- `unknown` / `incomplete`：证据缺失、预算不足、工具不可用、操作没执行或只给结论。
+- `not_applicable`：handoff 或声明明确不触发。
+- 任一关键 `contradicted`、`unknown`、`incomplete`、stale review 或 stale evidence 都使 `queue_admission: blocked`。
+- 不把 designer 自报状态、文件名、controller 简报或 generic evidence 替代专用 workflow。

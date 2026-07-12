@@ -13,20 +13,14 @@ tool_commands:
 prototype_specific_workflows:
   - id: WORKFLOW_ID
     kind: diagnostic | redesign_stage | paired_design_mode | pre_submission_check | post_handoff_feedback_routing | not_applicable
-    default_status: routed | disabled_unless_brief_enabled | run_after_proposal_ready | run_before_submission | run_before_submission_or_when_feedback_flags_* | run_when_feedback_flags_* | not_applicable
+    default_status: routed | disabled_unless_brief_enabled | run_after_level_review_survive | run_before_submission | run_before_submission_or_when_feedback_flags_* | run_when_feedback_flags_* | not_applicable
     trigger:
       - "When this workflow should be considered."
     authority_docs:
       - prototypes/MECHANIC_ID/docs/designer_contract.md
-    packet_extension:
-      - field_name
-      - optional.interface_pair_policy
-    reviewer_focus:
-      - "Evidence-specific checks."
-      - "If this workflow declares ignored pair classes, evidence about those pairs is recorded with no verdict effect."
-    critic_focus:
-      - "Player-facing design checks."
-      - "If this workflow declares risky pair classes, only those classes may become pair-policy caveats or attacks."
+    level_review_visibility: actual_artifacts_only | not_visible
+    admission_requirements:
+      - "Required operation and artifact expected by the independent evidence reviewer."
     forbidden_unless:
       - "Condition required before this workflow may be used."
       - "If this workflow derives from an archive candidate, the brief must explicitly authorize the candidate id and allowed operations."

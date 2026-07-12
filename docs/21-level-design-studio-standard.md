@@ -1,242 +1,169 @@
 # 关卡设计工作室执行标准
 
-状态：当前单关作品集执行合同。
+状态：当前特定原型单关作品集执行合同。
 
-本文档定义当前可执行的 Sokoban-like 单关设计流程。设计本体见 [玩家体验核心与关卡包装方法论](17-experience-core-level-design.md)，材料格式见 [Level Design Studio Templates](20-level-design-studio-templates.md)。
+设计本体见 [玩家体验核心与关卡包装方法论](17-experience-core-level-design.md)，材料格式见 [关卡设计工作室模板](20-level-design-studio-templates.md)。
+
+## 第一性原则
+
+LLM designer 对自己的产物存在结构性维护倾向：会为填满档位降低定义、把形式差异解释成体验差异、把相邻工具证据解释成已完成检查。因此创作、玩家侧审查、硬证据准入必须由不同角色承担；任何角色都不能自行授予下一阶段资格。
+
+```text
+designer 创作并写送审包
+-> fresh level reviewer 只读实际关卡
+-> designer 执行提交前检查
+-> independent evidence reviewer 审计准入
+-> controller 写入待玩列表
+-> 人类试玩
+```
 
 ## 适用范围
 
-使用本流程前，必须明确任务是在特定原型上设计关卡，而不是实现原型或修改泛化能力。必须确认：
+本流程只处理特定原型的关卡设计。开始前确认规则、胜利条件、对象语义、玩家先验、允许机制、工具边界、design handoff、原型专属 workflow 和本轮 lineage。影响 runtime 或胜利条件的问题必须先解决，不能在关卡设计中猜测。
 
-- 原型规则、对象语义、胜利条件和求解实例语义；
-- 可用 runtime、solver、replay、graph、counterfactual 与 archive 工具；
-- 玩家此前已知内容和本轮允许机制；
-- 原型自己的 design handoff 与 prototype-specific workflows；
-- 本轮体验核心由用户给出、从课程计划选出，还是由 designer 提议。
+## 角色与权限
 
-影响 runtime 或胜利条件的问题不能靠关卡设计过程猜测。
+### Designer / controller
 
-## 角色
+定义体验核心与作品身份，制作 baseline，探索分支，运行工具，填写 designer 送审包，执行提交前检查并组装交付。它不能审查自己、不能产生 `survived` 或 `eligible`、不能绕过独立 artifact 写入待玩列表。
 
-```text
-level_design_studio:
-  定义体验核心与作品身份，制作基线，冻结基线，探索分支，读取工具证据，
-  维护 attempt log，并组装人类作品集。
+### Independent level reviewer
 
-solver / analyzer / replay / graph / counterfactual:
-  验证可解性、操作、状态变化、旁路、唯一逻辑类和身份机械条件。
-  不判断审美、好玩度或版本优先级。
+使用未参与设计的 fresh context，独立读取规则、实际布局、机械回放和同批版本。它自己读取 human-reviewed archive 校准审美，不读取 designer 的 experience brief、submission packet、branch plan、档位理由、亮点说明、修改历史或设计对话。
 
-evidence_reviewer:
-  按需独立核对复杂硬声明与证据引用。不是默认审美门，也不排名候选。
+它只判断玩家侧包装缺陷、作品完成质量、版本实质差异和档位是否成立；不运行硬证据工具，不读指标，不给审美分或候选排名。它具有否决权。
 
-human_designer / curator:
-  试玩存活版本，判断可感缺点、作品完成度与最终选择。拥有审美与归档权威。
+### Independent evidence reviewer
 
-archive_pass:
-  只记录人类已经作出的选择，不修改布局或升级状态。
-```
+独立核验可解性、旁路、身份条件及提交前 workflow 是否按 authority docs 实际完成。它不评价审美，但可因证据或流程不完整机械地阻止 queue admission。
 
-LLM 不输出审美分数，也不以“逻辑完整”“事件覆盖”替代玩家体验判断；存活版本的取舍由人类试玩完成。
+### Human designer / curator
 
-## 核心循环
+试玩已准入版本，判断可感缺点、作品完成度和最终取舍。只有人类可以产生 `defer`、`needs_revision`、`ready_for_archive` 或 `reject`。
 
-```text
-确认原型与课程上下文
--> 写 experience brief
--> 设计并验证 baseline
--> 冻结 baseline
--> application / combination / challenge 独立搜索
--> 每个分支硬验证与身份检查
--> 运行原型专属提交前检查
--> 组装平级 human portfolio
--> 写入 level source 与 playable_queue
--> 重建 playable
--> 人类试玩并写入 playtest_reviews
--> archive pass
-```
+## 强制归档校准
 
-## 体验简报
+Designer 和 independent level reviewer 必须各自独立校准，不能共用 designer 选择的唯一 anchors。
 
-在确定布局、运行 miner 或脚本搜索前，写明：
+每个角色开始工作前都必须：
 
-- 玩家体验核心；
-- 玩家具体操作与可见回报；
-- 作品身份条件与反事实；
-- 核心边界：哪些对象和机制属于核心，哪些只是包装支持；
-- 玩家此前知识与重复边界；
-- baseline 的预期体量和非目标。
+1. 读取当前原型 clean human-reviewed archive 的完整 index；
+2. 读取所有审美 1 分 candidate record 与人类原评语；
+3. 读取 1–3 个与本轮核心、包装或档位相关的正例原评语；
+4. 读取 1–3 个相关下界、失败或边界例原评语；
+5. 记录读取的 archive ids 与 human comment ids。
 
-如果 designer 自主提出体验核心，先检查它是否只是规则事件、局部结构或已有归档关的换皮。说不清“为什么值得独立成为一关”时，不进入地图阶段。
+Index 的 retrieval summary 只用于检索，不能替代人类原评语。未归档 report、旧 critic、designer 自评和 tool-only 质量结论不能作为审美依据。
 
-## 归档与设计语料读取
+## 设计循环
 
-设计前定位当前原型的 clean human-reviewed archive：
+### 1. Experience brief
 
-- 先读 index，再读取 1–2 个与体验核心相关的正例原评语；
-- 读取覆盖当前包装风险的 2–4 个审美低分或人类明确拒绝反例原评语；优先覆盖不同失败模式，不按数量堆上下文；
-- 检查新体验核心是否与已有作品重复或已饱和；
-- 未归档 report、designer 自评和 tool-only 质量结论不能作为正向审美依据。
+在画布局或运行搜索前写明玩家体验核心、玩家操作、可见回报、作品身份、核心边界、玩家先验、重复边界、baseline 体量和归档校准记录。
 
-Archive 只校准完成度、失败模式和重复边界，不授权复用旧布局、对象职责或解题路线。只有用户明确授权某个版本作为 baseline 时，才能从该版本建立分支。
+### 2. Baseline
 
-Design corpus、lexicon 和 mechanism lab 只按 handoff 白名单读取，并只作为局部材料来源。
+制作最小、完整、低风险的作品实现。使用 exact replay 从玩家侧读取实际体验，再用 solver、graph、bypass、uniqueness 和 identity counterfactual 修复硬问题。唯一解修订若淹没核心，应放弃结构，不追加无关子题。
 
-## 基线工作室
+Baseline 在独立审查前最多为 `hard_validated`；不能由 designer 自行冻结。
 
-Baseline 目标是以最小完整包装兑现作品身份，而不是追求最低步数或最小地图。
+### 3. 分支搜索
 
-设计顺序：
+每个分支在布局前声明搜索意图，但声明只约束 designer：
 
-1. 选择清楚的开局呈现；
-2. 只加入核心所需的准备、进入、操作与结束；
-3. 运行 exact replay，确认玩家实际完成的是 brief 中的体验；
-4. 验证可解性、旁路、唯一逻辑类和身份反事实；
-5. 修订时优先保护体验核心，不为唯一解添加无关子题；
-6. 运行适用的原型专属清理；
-7. 没有明确同题缺点且硬证据成立后，将 exact version 标记为 `frozen`。
+- `application`：相对 baseline 增加玩家主动建立或使用核心条件的责任；
+- `combination`：引入一个非核心、非基础规则、非核心前序知识的不同机制，并让其产物被核心消费；
+- `challenge`：在作品身份不变时真实探索难度、空间、构造、复用、反直觉或形式完成度上限。
 
-冻结后禁止覆盖 baseline。任何提高玩家作者性、增加支持机制或挑战上限的想法进入独立分支。
+基础规则、理解核心不可避免的前序机制、核心自身组成部分和同一机制的原子操作不能充当 combination 的“另一机制”。更多步骤、地图、对象、事件、显然操作或走位不能单独构成 challenge。
 
-## 分支工作室
+每种搜索意图允许为空。为了填满档位保留弱版本属于流程失败。
 
-每个分支在确定布局前声明 `search_intent` 和 `delta_from_baseline`。
+### 4. Designer 送审包
 
-### Application 搜索
+Designer 为每个拟提交 exact version 强制填写送审包，固定：
 
-声明相对于 baseline 新增的玩家责任。若预先满足这项责任后仍只是 baseline，应在 reduction test 中明确记录。
+- 自己认为的体验核心、作品身份与包装；
+- 档位理由及相对 baseline 的实际增量；
+- combination 非前序性和消费关系；
+- 与同批版本的非等价性；
+- 已知可感问题、硬证据与边界。
 
-### Combination 搜索
+送审包只作为 designer 的正式承诺、controller 状态依据和事后诊断材料。Independent level reviewer 永远不读取它。
 
-声明新增的非核心支持机制，以及它如何创造并被核心消费的条件。前置机制完成后整体退休、后段独立运行 baseline 的方案直接拒绝。
+### 5. Fresh 独立交叉审查
 
-### Challenge 搜索
+Controller 只从实际产物组装 raw packet：规则、玩家先验、slot 名、布局、solve instance、非空 exact inputs 和由同一 inputs 机械 replay 得到的逐步状态变化。
 
-声明本轮要挑战的一个或多个维度。Challenge 可以同时具有 application 或 combination 特征，但不能事后因成品复杂而重贴标签。
+Raw packet 禁止包含 designer 声明、目标亮点、档位理由、设计成本、旧审查、指标或 controller 总结。
 
-### 分支纪律
+Fresh reviewer 必须先独立读取归档，再：
 
-- `search_intent` 在布局前确定，不能事后改写；
-- 发现另一个好作品时另开 branch 或 experience core；
-- 机械失败、身份死亡、没有相对增量或只增加流程的尝试直接拒绝；
-- 失败 branch 不回灌 baseline；
-- 每种 search intent 默认最多保留两个玩家体验不同的 hard-validated survivor；
-- 不要求每种 search intent 都有存活版本。
+1. 逐关重建玩家实际看见和完成的主要关系；
+2. 按审美非补偿原则寻找任何具体同题缺点；
+3. 比较 baseline 与各分支的玩家体验差异；
+4. 否决伪 application、用前序知识冒充的 combination、流程型 challenge 和同质版本；
+5. 对每个 exact version 给出 survive、revise 或 reject。
 
-## 修订规则
+任何修改都形成新 exact version、重新填写送审包，并交给从未审过该版本的新 reviewer。Designer 的解释不能覆盖审查结论。
 
-每次改变 layout、start、goal、对象、核心操作或胜利实例后，重跑相关硬证据。
+### 6. 原型专属提交前检查
 
-遇到旁路或多解时：
+只对 level reviewer survive 的版本读取 `prototypes/<mechanic_id>/docs/design_handoff.yml`，运行所有适用 `kind: pre_submission_check`。
 
-1. 比较预期方案与旁路在玩家体验核心上的差异；
-2. 优先修复让作品身份失效的旁路；
-3. 如果唯一解限制会明显淹没核心，拒绝该 branch，而不是继续追加结构；
-4. 局部可交换步骤若保持相同对象责任、核心关系和可见回报，可以保留；
-5. 修改后重新检查作品身份，不允许整体形状退化为材料、主动使用退化为过场动画。
+“运行”意味着执行 authority doc 规定的实际反事实、回放、比较或探测，并保存逐项证据。以下不算完成：
 
-## 硬证据验证
+- 只填写一份 `complete` YAML；
+- 用 generic solver / complete graph 代替专门 workflow；
+- 从一个删除或墙化样本外推全部要素；
+- 在未证明 event-path necessity 时从 win state 数量推断必要性；
+- 缺工具时写成 clean 或 pass。
 
-进入 human portfolio 的版本至少具备：
+检查改变 layout、start、goal、对象或 solve instance 时，生成新 exact version，重跑硬证据并重新进入 fresh level review；不得直接沿用旧 survive。
 
-- confirmed solve instance；
-- exact winning replay；
-- 完整或明确预算边界的 graph / uniqueness 结果；
-- 已检查的非等价胜解与旁路；
-- 作品身份机械条件的直接证据；
-- 适用时的 identity counterfactuals；
-- evidence limits 与 artifact refs。
+### 7. 独立准入审计
 
-独立 evidence reviewer 只在以下情况触发：
+Independent evidence reviewer 使用 `submission_admission` 模式直接读取：
 
-- 硬声明复杂且 controller 无法从 artifact 直接核对；
-- 用户或交付契约要求独立审查；
-- 多实例对象、复杂 graph 结论或反事实是交付结论的关键。
+- design handoff 与触发条件；
+- exact version 和硬证据；
+- 每个适用 workflow 的 authority docs；
+- 实际命令、逐项结果和原始 artifact refs；
+- 最新 independent level review artifact。
 
-Evidence reviewer 的通过不提高审美，也不替代人类试玩。
+它不读取 designer 送审声明。只有所有硬声明成立、所有适用 workflow 实际完成、artifact 与 exact version 一致时，输出 `eligible_for_queue`。缺失、未知、预算不足、版本不一致或证据替代一律 `blocked`。
 
-## 原型专属检查
+### 8. 待玩列表
 
-读取 `prototypes/<mechanic_id>/docs/design_handoff.yml`。只有 handoff 声明的 workflow 可以触发；未声明时不得泛化。
-
-`kind: pre_submission_check` 在版本进入人类待玩列表前运行。检查若改变 solve instance，形成新版本并重跑必要硬证据；不能在 archive pass 中静默修改。
-
-## 人类待玩作品集
-
-作品集按下面顺序平级呈现：
-
-1. frozen baseline；
-2. application survivors；
-3. combination survivors；
-4. challenge survivors。
-
-每个版本只提供：
-
-- 玩家体验摘要；
-- 相对 baseline 的具体增量；
-- layout 与 exact trace / replay；
-- 已知风险和证据边界；
-- prototype-specific check 状态。
-
-禁止：
-
-- LLM 给版本作审美或难度分数；
-- 把某版标为审美意义上的 primary / best；
-- 用事件数量、图规模、唯一解或逻辑链长度排名；
-- 因为高野心 branch 存在而贬低无缺点 baseline。
-
-人类对每个版本分别记录 `defer`、`needs_revision`、`ready_for_archive` 或 `reject`。
-
-### 待玩列表交付
-
-Human portfolio 简报不是终点。每个交付版本必须：
-
-1. 以 exact version 写入原型支持的 `studio/levels.yml` 或 `levels.yml`；
-2. 加入 `playable_queue.yml`，新条目使用 `status: pending_playtest`；
-3. 重建 playable，并确认 queue 中的 source / level id 能解析到实际布局；
-4. 在最终回复中同时给出简报、queue 条目和 playable 路径。
-
-若版本未进入待玩列表，任务仍处于 `not_queued`，不能报告作品集已交付。
-
-## 人类反馈路由
+Queue admission 必须同时满足：
 
 ```text
-pending_playtest:
-  已在 playable_queue 中，但尚无对应人类试玩记录。
-
-defer:
-  暂不决定；保留试玩记录，不升级、不归档。
-
-needs_revision:
-  从该 exact version 建立新 version；若反馈改变主要体验，建立新 branch 或 core。
-
-ready_for_archive:
-  该 exact version 可以进入 archive pass。
-
-reject:
-  关闭该 exact version；是否作为人类负例归档由人类另行决定。
+submission_packet = complete
+independent_level_review = survive_to_pre_submission_checks
+hard_evidence = supported
+pre_submission_checks = actually_completed
+independent_admission_audit = eligible_for_queue
 ```
 
-## 状态
+满足后才能写入 `studio/levels.yml` 或 `levels.yml`、加入 `playable_queue.yml`、设置 `status: pending_playtest` 并重建 playable。简报、自报状态或文件存在本身不能准入。
 
-设计状态只使用：
+## 审查判断边界
+
+审美问题是非补偿的：任何明确可感且同题可修的问题都阻塞 survive。唯一解、逻辑完整、事件覆盖、机制数量、难度或其它亮点不能补偿。
+
+同时，保守不等于有缺点。把一个完整直接作品另作成更复杂的 application 或 challenge，不是对原版本的同题修订要求。高野心分支可以失败，baseline 不因其保守而降级。
+
+## 状态机
 
 ```text
-working
-rejected_branch
-hard_validated
-frozen
+design_state: working | hard_validated | frozen | rejected_branch
+review_state: not_submitted | awaiting_independent_review | revise_required | rejected | survived
+admission_state: not_started | checks_incomplete | audit_required | blocked | eligible
+playtest_status: not_queued | pending_playtest | defer | needs_revision | ready_for_archive | reject
 ```
 
-待玩状态只使用：
-
-```text
-not_queued
-pending_playtest
-defer
-needs_revision
-ready_for_archive
-reject
-```
-
-设计状态与待玩状态分栏保存，不互相替代，也都不表达审美评分。
+- Designer 只能写 design state 和 `awaiting_independent_review`。
+- Level reviewer 只能写 review verdict。
+- Evidence reviewer 只能写 admission verdict。
+- Controller 只有在 `eligible` 后才能写 `pending_playtest`。
+- Human 试玩状态不由 LLM 预填。

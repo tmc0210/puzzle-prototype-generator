@@ -17,6 +17,7 @@ Challenge 预声明维度：<challenge_dimensions>
 禁止读取或复用：<forbidden_sources>
 新产物 ID 前缀：<artifact_prefix>
 
-按 skill 完成硬验证、原型专属检查、level source 写入、playable_queue 接入和
-playable 重建。最终同时交付简报与实际待玩路径；未经人类试玩，不进入 archive pass。
+按 skill 强制填写 designer 送审包，使用不读取这些声明的 fresh reviewer 交叉审查，
+再完成原型专属检查、独立准入审计、playable_queue 接入和 playable 重建。
+最终同时交付简报与实际待玩路径；未经人类试玩，不进入 archive pass。
 ```

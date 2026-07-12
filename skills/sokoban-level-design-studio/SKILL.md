@@ -1,116 +1,117 @@
 ---
 name: sokoban-level-design-studio
-description: 围绕一个明确的玩家体验核心，为类推箱子特定原型设计、验证并把关卡作品集接入待玩列表。适用于定义作品身份、制作并冻结基线、相对基线探索 application/combination/challenge 分支、在求解修订中保护核心，以及交付不排名的人类待玩作品集；不用于原型实现、通用机制挖掘、纯归档排版或给既有关卡打审美分。
+description: 围绕明确玩家体验核心，为类推箱子特定原型设计、验证并提交关卡作品集。适用于制作 baseline、探索 application/combination/challenge、强制填写 designer 送审包、组织不读取设计声明的 fresh 独立交叉审查、完成原型专属提交前检查与独立准入审计，并将合格 exact versions 接入待玩列表；不用于原型实现、通用机制挖掘或纯归档排版。
 ---
 
 # Sokoban Level Design Studio
 
 ## 核心职责
 
-将“这关为什么值得存在”落实为可玩的基线和少量独立探索分支。以玩家体验核心和作品身份约束设计，不以因果链、事件覆盖或图指标替代创作判断。
+将一个玩家体验核心做成 baseline 和少量实质不同的探索版本。Designer 负责创作与送审说明，但无权审查自己、宣布通过或直接写入待玩列表。
 
 ## 必读材料
 
-开始设计前完整读取：
+开始前完整读取：
 
 - `docs/17-experience-core-level-design.md`
 - `docs/21-level-design-studio-standard.md`
-- 当前原型的 `docs/design_handoff.yml` 及其 required docs
-- 当前原型 clean human-reviewed archive 的 index、1–2 个相关正例原评语，以及覆盖当前风险的 2–4 个低分或明确拒绝反例原评语
+- 当前原型 `docs/design_handoff.yml` 及 required docs
+- `references/experience-brief-template.md`
+- `references/submission-packet-template.md`
+- `references/portfolio-template.md`
+- `references/human-handoff-template.md`
 
-按任务读取本 skill references：
+需要独立玩家侧审查时调用 `$sokoban-level-reviewer`；需要硬证据和提交前检查审计时调用 `$sokoban-evidence-reviewer`。两者都是强制门，不是可选辅助。
 
-- 写设计起始材料时读 `references/experience-brief-template.md`；
-- 建立基线和分支记录时读 `references/portfolio-template.md`；
-- 提交人类试玩时读 `references/human-handoff-template.md`。
+## 强制归档校准
 
-## 边界
+画布局或运行设计搜索前：
 
-- 只处理特定原型的关卡设计；原型实现或泛化能力改动另立任务。
-- 工具只提供硬事实，不评价审美、好玩度或版本优先级。
-- 审美取舍留给人类试玩；本 skill 不产生审美分数或候选排名。
-- Evidence reviewer 仅按 `docs/21` 的硬证据路由按需调用。
-- 未经用户授权，不从旧 candidate、run 或 layout 建立变体。
-- Archive 只校准人类偏好、失败模式和重复边界，不授权复制旧题。
+1. 读取当前原型 clean human-reviewed archive 的完整 index；
+2. 读取所有审美 1 分 candidate record 及人类原评语；
+3. 读取 1–3 个与当前核心或包装相关的正例原评语；
+4. 读取 1–3 个相关下界、失败或边界例原评语；
+5. 在 experience brief 中记录 archive ids 和 human comment ids。
+
+没有人类原评语的 report、designer 自评、旧 critic 结论和工具指标不能校准审美。Archive 只校准偏好、失败模式和重复边界，不授权复用旧题。
 
 ## 工作流
 
-### 1. 确认上下文
+### 1. 确认上下文与体验核心
 
-确认规则、胜利条件、对象语义、玩家先验、允许机制、工具边界、design corpus 和 prototype-specific checks。未知但不影响 runtime 的内容标记 assumption；影响语义的问题先停止设计。
+确认规则、胜利条件、对象语义、玩家先验、允许机制、工具边界和原型专属检查。然后写 experience brief：玩家见证什么、亲自做什么、哪里发生可见变化、为什么值得单独成关、作品身份如何被反事实证伪。
 
-### 2. 定义玩家体验核心
+### 2. 制作 Baseline
 
-在画布局或搜索前写 experience brief：
+制作当前作品身份最小、完整、低风险的实现。读取 exact replay，从玩家侧检查开局、准备、回报与收束；使用 solver、graph、bypass、uniqueness 和 identity counterfactual 修硬问题。唯一解修订若淹没核心，放弃结构，不追加无关子题。
 
-- 玩家具体见证或完成什么；
-- 玩家必须亲自执行什么；
-- 关键操作后棋盘哪里发生可见变化；
-- 为什么值得独立成为一关；
-- 哪些对象和机制属于核心，哪些只是支持；
-- 哪些关系改变后已不是同一作品。
+Baseline 硬验证后只可标记 `hard_validated`，在独立审查和准入审计前不得自行标记 `frozen`。
 
-若只写出机制事件、局部结构、规则命题或完整因果链，尚未形成体验核心。
+### 3. 预声明并探索分支
 
-### 3. 制作 Baseline
+每个分支在布局前选择 `application`、`combination` 或 `challenge`，填写 branch plan。声明仅约束 designer，不提供给 reviewer。
 
-先做当前作品身份最小、完整、低风险的实现。Baseline 可以有主动操作或多个机制；不要事后根据特征把它重贴为 application、combination 或 challenge。
+- application：相对 baseline 增加玩家主动建立或使用核心条件的责任；
+- combination：增加一个非核心、非基础规则、非核心前序知识的不同机制，其产物被核心实际消费；
+- challenge：在作品身份不变时探索明确上限，不能只增加流程。
 
-读取 exact replay，检查实际玩家体验。使用 solver、graph、bypass、uniqueness 与 identity counterfactuals 修复硬问题。若唯一解修复淹没核心，放弃当前结构，不追加无关子题。
+每种意图允许没有存活版本。不得为了填满作品集降低定义。
 
-Baseline 没有明确同题缺点且硬证据成立后，冻结 exact version。冻结后不得覆盖。
+### 4. Designer 强制送审包
 
-### 4. 预声明分支搜索
+对每个拟提交 exact version 填写 `references/submission-packet-template.md`。未填写完整送审包，版本仍是 working material。
 
-每个分支在布局前选择一个 `search_intent`：
+送审包用于迫使 designer 固定自己的创作承诺、档位理由、已知问题和证据边界。它不发送给独立 reviewer，也不能作为 reviewer 输入的摘要来源。
 
-- `application`：相对 baseline 增加玩家作者性；
-- `combination`：相对 baseline 增加被核心消费的非核心支持机制；
-- `challenge`：按预声明维度探索上限。
+### 5. 强制独立交叉审查
 
-同时写 `delta_from_baseline` 和 reduction test。完成后不能改写 search intent 来为结果辩护。
+Controller 从实际规则、布局和同一 exact inputs 的机械回放单独组装 reviewer raw packet。使用从未参与本批设计的 fresh reviewer 调用 `$sokoban-level-reviewer`：
 
-### 5. 探索并淘汰
+- reviewer 自己读取并选择归档校准材料；
+- reviewer 不读取任何 designer 送审字段；
+- reviewer 同时审查逐关包装和作品集内实质差异；
+- reviewer 有否决权，designer 不能用解释覆盖 verdict。
 
-可以尝试多个结构 family。以下情况直接关闭当前 attempt：
+只有 `survive_to_pre_submission_checks` 可以继续。修改后的 exact version 必须填写新送审包，并交给新的 reviewer attempt。
 
-- 机械不可行或图搜索无法支持关键结论；
-- 核心由开局自动完成，预声明的玩家责任消失；
-- 支持机制完成后退休，与核心只是串联；
-- 修订后作品身份死亡；
-- 相对 baseline 只增加走位、对象、事件或流程；
-- 发现的是另一种体验核心却仍修改原声明。
+### 6. 提交前检查与独立准入审计
 
-好的意外结果另开 branch 或 core。失败 attempt 不回灌 baseline。
+只对交叉审查存活版本运行 handoff 路由的全部 `kind: pre_submission_check`。必须执行 authority doc 的实际操作并保存原始证据；填写一份结论或复用相近 solver 结果不算执行。
 
-### 6. 验证存活版本
+随后由独立 `$sokoban-evidence-reviewer` 使用 `submission_admission` 模式直接读取 handoff、exact version、硬证据和检查产物。它不读取 designer 送审声明。
 
-进入作品集前至少保存：solve instance、exact replay、graph/uniqueness、bypass checks、身份条件证据、evidence limits 和 artifact refs。按 handoff 运行 prototype-specific pre-submission checks。
-
-每种 search intent 默认最多保留两个玩家体验不同的存活版本。没有自然方案时允许为空。
+任一适用 workflow 缺步骤、缺证据、结论越过证据边界或检查改变 solve instance 后未重跑，`admission_state` 必须为 `blocked`。Designer 不得自行设置 `eligible`。
 
 ### 7. 接入待玩列表
 
-按 baseline、application、combination、challenge 组装平级 human portfolio。只描述体验、相对增量、已知风险和证据边界。
+仅当以下条件同时满足时，才能写入 `studio/levels.yml` 或 `levels.yml` 并加入 `playable_queue.yml`：
 
-文字简报不是完成。必须同时：
+- designer submission packet 完整；
+- 最新 fresh level review 对 exact version 给出 survive；
+- 硬证据成立；
+- 全部适用 pre-submission checks 已执行；
+- 独立 admission audit 给出 `eligible_for_queue`。
 
-1. 将每个 exact survivor 写入当前原型支持的 `studio/levels.yml` 或 `levels.yml`；
-2. 将对应条目写入 `playable_queue.yml`，初始 `status: pending_playtest`；
-3. 重建 playable，并确认待玩列表实际能解析这些版本；
-4. 在交付摘要中给出 level id、queue 条目和 playable 路径。
-
-不要：
-
-- 排名或标记 primary / best；
-- 给审美、难度或“完成度”打分；
-- 用工具指标暗示版本更好；
-- 因激进分支存在而贬低 baseline。
-
-人类试玩结果服从 `playtest_reviews.yml`：`defer`、`needs_revision`、`ready_for_archive`、`reject`。只有 `ready_for_archive` 的 exact version 可以进入 archive pass。
+写入后使用 `status: pending_playtest`，重建 playable 并确认 source/id 可解析。文字简报不算完成。
 
 ## 状态纪律
 
-设计状态只使用：`working`、`rejected_branch`、`hard_validated`、`frozen`。待玩状态单独使用：`not_queued`、`pending_playtest`、`defer`、`needs_revision`、`ready_for_archive`、`reject`。
+分别维护：
 
-任何版本状态都不表达审美等级。
+```text
+design_state: working | hard_validated | frozen | rejected_branch
+review_state: not_submitted | awaiting_independent_review | revise_required | rejected | survived
+admission_state: not_started | checks_incomplete | audit_required | blocked | eligible
+playtest_status: not_queued | pending_playtest | defer | needs_revision | ready_for_archive | reject
+```
+
+只有 admission auditor 可以产生 `eligible`；只有人类试玩可以产生 `defer`、`needs_revision`、`ready_for_archive` 或 `reject`。任何状态都不表达审美分。
+
+## 禁止
+
+- 同一 agent 同时设计和独立审查；
+- reviewer 读取 designer 送审包或设计对话；
+- 用工具指标、逻辑完整或事件覆盖补偿可感缺点；
+- 为填档保留弱 application、伪 combination、流程型 challenge 或同质 witness；
+- 缺交叉审查、缺实际提交前检查或缺准入审计时进入待玩列表；
+- 将简报、YAML 自报状态或 controller 总结当作审查 artifact。

@@ -9,7 +9,7 @@
 玩家体验核心、作品身份、baseline、探索分支与人类作品集：
   以 docs/17-experience-core-level-design.md 和 docs/21-level-design-studio-standard.md 为准。
 
-工作室材料与可选硬证据核验形状：
+工作室材料、独立关卡审查与硬证据准入形状：
   以 docs/20-level-design-studio-templates.md 为准。
 
 归档层：
@@ -62,14 +62,17 @@ designer 需要归档校准时，默认先读 archive index 的检索摘要，�
 读取少量候选短卡。不要默认全量读取所有 layout、旧 reports 或 mechanism lab
 runs。
 
-普通设计校准建议：
+当前关卡设计与独立审查的校准入口：
 
 ```text
-- 先读 index。
-- 选 1-2 个相关高分 / 正例候选。
-- 选 1-2 个相关低分 / 失败 / 下界候选。
+- 先读完整 index。
+- 读取所有审美 1 分候选的人类原评语。
+- 选 1-3 个相关高分 / 正例候选，读取人类原评语。
+- 选 1-3 个相关低分 / 失败 / 下界候选，读取人类原评语。
 - 只有需要防重复或判断人评边界时，才读候选卡里的完整 layout。
 ```
+
+Designer 与 independent level reviewer 分别完成校准；reviewer 不接受 designer 代选的唯一 anchors，也不读取 designer 送审包。
 
 ## Candidate Record 最小内容
 

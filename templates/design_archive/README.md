@@ -10,10 +10,11 @@
 1. 编写或选择一个 experiment brief。
 2. 用 `EXPERIMENT_RUN_PROMPT.template.md` 提供本轮特有信息，并调用 `$sokoban-level-design-studio`。
 3. 按 docs/17、docs/21 和 docs/20 制作 baseline 与相对探索分支。
-4. 运行硬证据与原型专属检查，把 exact versions 加入待玩列表并重建 playable。
-5. 收集人类设计师的试玩状态与自由评语。
-6. 只有 `ready_for_archive` 版本按 `docs/29-design-archive-contract.md` 运行 archive pass。
-7. 保存或更新 candidate record 和 archive index。
+4. Designer 为拟提交 exact versions 填写送审包；fresh reviewer 只读实际关卡和机械回放作独立交叉审查。
+5. 对审查存活版本运行硬证据、原型专属检查和独立准入审计；只有 `eligible` 才加入待玩列表并重建 playable。
+6. 收集人类设计师的试玩状态与自由评语。
+7. 只有 `ready_for_archive` 版本按 `docs/29-design-archive-contract.md` 运行 archive pass。
+8. 保存或更新 candidate record 和 archive index。
 ```
 
 候选记录是短审美校准卡；index 只是检索层。工具命令、完整设计循环、SCC

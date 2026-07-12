@@ -47,6 +47,8 @@ docs/17-experience-core-level-design.md
 docs/21-level-design-studio-standard.md
 docs/20-level-design-studio-templates.md
 skills/sokoban-level-design-studio/SKILL.md
+skills/sokoban-level-reviewer/SKILL.md
+skills/sokoban-evidence-reviewer/SKILL.md
 ```
 
 如果本轮目标是让人类设计师参与筛选规则事实、观察 LLM designer
@@ -115,8 +117,8 @@ prototypes/pull_portal_fallback/reports/*
 | `docs/16-candidate-generation-v2.md` | 第一版 seed factory / candidates_v2 工具切片。 | archive / extract | 保留 candidates_v2 契约价值；pull-portal seed 结构归档。 |
 | `docs/17-experience-core-level-design.md` | 玩家体验核心、作品身份、包装、基线与相对探索方法论。 | generalized capability standard | 保留；关卡创作本体的首要入口。 |
 | `docs/19-multi-instance-object-model.md` | 多实例对象模型。 | generalized capability standard | 保留；新机制 adapter 和 analyzer 设计必读。 |
-| `docs/20-level-design-studio-templates.md` | experience brief、baseline、branch 与 human portfolio 模板。 | active validation standard | 保留；与工作室 skill 同步。 |
-| `docs/21-level-design-studio-standard.md` | 当前基线—分支关卡设计工作室执行流程。 | active validation standard | 保留；特定原型关卡设计入口。 |
+| `docs/20-level-design-studio-templates.md` | experience brief、designer 送审包、独立盲审、准入审计与 human portfolio 模板。 | active validation standard | 保留；与工作室和 reviewer skills 同步。 |
+| `docs/21-level-design-studio-standard.md` | 当前基线—分支设计、强制交叉审查与准入流程。 | active validation standard | 保留；特定原型关卡设计入口。 |
 | `docs/22-ruleset-to-seeds-and-slots-draft.md` | ruleset -> initial design plan 的盲测草案。 | draft / incubation | 暂不作为标准；需要用新机制 blind test 验证后再晋升。 |
 | `docs/23-pull-portal-casebook-and-tool-notes.md` | pull-portal 专用 casebook 和工具路径。 | archive / casebook | 归档；明确排除 blind tests。 |
 | `docs/24-runtime-adapter-boundary.md` | 当前 runtime adapter 工程边界。 | generalized capability standard | 保留；新机制实现必读。 |
