@@ -23,7 +23,7 @@ description: 探索 Sokoban-like 原型 runtime 的局部结构，并整理成 d
 
 - 不设计完整关卡。
 - 不组装 candidate packet。
-- 不调用 `$sokoban-design-review-loop`、`$sokoban-evidence-reviewer` 或 `$sokoban-puzzle-critic`。
+- 不调用 `$sokoban-level-design-studio` 或 `$sokoban-evidence-reviewer`；本 skill 只发现和记录局部机制材料。
 - 不读取 design archive、人类评价、历史候选、sampler profile 或 hardcoded layout template，除非用户明确把当前任务改成别的流程。
 - 不把“规则会发生”“工具能跑”“某动作 legal/illegal”当成果；这些最多是语料的证据。
 - 不把“实验中出现过某机制”写成“该机制在被研究”。若某机制只生成材料，它只能写作材料来源；标题和归属必须落在真正制造设计差异的结构层。

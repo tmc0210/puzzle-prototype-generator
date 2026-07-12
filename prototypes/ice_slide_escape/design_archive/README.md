@@ -6,16 +6,16 @@ This archive follows the design workflow and archive contract in:
 
 ```text
 docs/29-design-archive-contract.md
-docs/21-current-workflow-standard.md
+docs/17-experience-core-level-design.md
+docs/21-level-design-studio-standard.md
 ```
 
 Purpose:
 
 ```text
-- preserve LLM designer candidates, critic attacks, designer defenses, tool evidence,
-  and human designer comments;
+- preserve human-selected candidates and human designer comments;
 - keep human comments attached to the candidate record;
-- provide retrieval metadata for future designer / critic prompts;
+- provide retrieval metadata for future designer prompts;
 - avoid treating the unverified player_model -> curriculum_v2 -> level_specs_v2
   chain as authoritative.
 ```

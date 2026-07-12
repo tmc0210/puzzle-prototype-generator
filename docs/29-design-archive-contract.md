@@ -1,29 +1,29 @@
 # Design Archive Contract
 
 状态：当前 clean archive 合约。本文只定义归档入口、候选短卡、人类评语和
-检索索引；不定义单关设计、证据审查或 review loop。
+检索索引；不定义单关创作或作品集流程。
 
 ## 权威边界
 
 ```text
-单关设计、证据读取、编号 review loop、critic 攻击和 designer action：
-  以 docs/21-current-workflow-standard.md 为准。
+玩家体验核心、作品身份、baseline、探索分支与人类作品集：
+  以 docs/17-experience-core-level-design.md 和 docs/21-level-design-studio-standard.md 为准。
 
-multi-agent / reviewer prompt 形状：
-  以 docs/20-multi-agent-prompt-templates.md 为准。
+工作室材料与可选硬证据核验形状：
+  以 docs/20-level-design-studio-templates.md 为准。
 
 归档层：
   本文只决定哪些材料能进入 clean archive，以及如何用短卡保存人评和检索信息。
 ```
 
-archive pass 不是新的 designer、evidence reviewer、puzzle critic 或 judge。它
-不能补写缺失流程，不能把工具事实改写成审美裁决，也不能替人类打分。
+archive pass 只记录人类已经作出的选择。它不能补写缺失流程，不能把工具事实
+改写成审美裁决，也不能替人类打分。
 
 ## Clean Archive 与 Raw Run
 
 ```text
 clean archive:
-  可被未来 designer / critic 当作正例、反例、审美校准或批评校准的候选库。
+  可被未来 designer 当作正例、反例、审美校准或重复边界的候选库。
   其中可以有设计差的关卡，但不能有流程错产物。
 
 raw run:
@@ -54,7 +54,7 @@ prototypes/*/mechanism_lab/runs/**
 
 ## 默认读取路径
 
-designer / critic 需要归档校准时，默认先读 archive index 的检索摘要，再按目标
+designer 需要归档校准时，默认先读 archive index 的检索摘要，再按目标
 读取少量候选短卡。不要默认全量读取所有 layout、旧 reports 或 mechanism lab
 runs。
 
@@ -105,7 +105,7 @@ Retrieval Summary
 除上述最小字段和五个 section 外，过程材料默认不进入 candidate record：
 
 ```text
-- review loop 全文
+- 设计循环全文
 - designer_action 流水账
 - tool commands
 - SCC / graph 表

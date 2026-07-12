@@ -2,8 +2,7 @@
 
 你正在执行 archive pass。权限只限 `formatting_and_integrity`。
 
-archive pass 不是新的 designer、evidence reviewer、puzzle critic 或 judge。
-不要补写缺失的 review，不要把 self-review 当成独立 critic，不要把工具事实或
+archive pass 只记录人类已经作出的选择。不要补写设计过程，不要把工具事实或
 人类评语改写成新的审美裁决。
 
 ## 必读

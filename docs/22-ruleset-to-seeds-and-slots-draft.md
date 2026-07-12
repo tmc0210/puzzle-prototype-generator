@@ -43,7 +43,7 @@ declared user focus, if any
 known open questions
 runtime / solver / analyzer tools, if implemented
 random or enumerative miner tools, if implemented
-docs/21-current-workflow-standard.md, only when a selected plan item enters single-level design
+docs/21-level-design-studio-standard.md, only when a selected plan item enters single-level design
 ```
 
 Do not infer unresolved interaction semantics. If an open rule interaction affects a proposed probe or plan item, mark it blocked.
@@ -325,11 +325,11 @@ Rules:
 
 - The queue should contain a few targeted experiments, not a campaign plan.
 - A queue item may call for a scratch probe, miner run, or real single-level design attempt.
-- If it enters real single-level design, use `docs/21-current-workflow-standard.md` as the downstream designer loop.
+- If it enters real single-level design, use `docs/21-level-design-studio-standard.md` as the downstream design studio.
 
 ## Step 6: Calling The Downstream Designer Loop
 
-`docs/21-current-workflow-standard.md` is the downstream single-candidate design and review process. It can be used after this document selects one plan item and writes the three-part experiment note.
+`docs/21-level-design-studio-standard.md` is the downstream baseline-and-branch design process. It can be used after this document selects one plan item and writes the three-part experiment note.
 
 When using `docs/21` from this upstream phase:
 
@@ -483,7 +483,7 @@ Recommended allowed inputs:
 ```text
 docs/09-agent-preflight.md
 docs/22-ruleset-to-seeds-and-slots-draft.md
-docs/21-current-workflow-standard.md only if a selected plan item enters single-level design
+docs/21-level-design-studio-standard.md only if a selected plan item enters single-level design
 path/to/target_prototype/mechanic.yml or ruleset source
 package / CLI entry points needed to run target-prototype tools
 runtime source for the target prototype

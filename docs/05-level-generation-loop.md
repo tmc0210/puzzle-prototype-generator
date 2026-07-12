@@ -1,10 +1,10 @@
 # 关卡生成循环
 
-Status: historical generator-frame document. The current level-design standard is [Current Level Design And Review Standard](21-current-workflow-standard.md). This file remains useful for generation-loop vocabulary and cost intuition, but it is not the current acceptance workflow.
+Status: historical generator-frame document. The current level-design standard is [Level Design Studio Standard](21-level-design-studio-standard.md). This file remains useful for generation-loop vocabulary and cost intuition, but it is not the current design workflow.
 
 关卡生成器不应该依赖 LLM 自由出题，也不应该假设 basic structure 可以自动扩展成好关卡。LLM 的主要价值是设计和解释因果链；生成器、runtime、solver 和 graph analyzer 负责把这些设计变成可验证候选。
 
-最新的关卡设计与审查流程见 [Current Level Design And Review Standard](21-current-workflow-standard.md)。本文保留生成器视角的执行框架。
+最新关卡设计流程见 [Level Design Studio Standard](21-level-design-studio-standard.md)。本文只保留生成器视角的历史执行框架。
 
 ## 基本循环
 

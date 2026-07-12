@@ -1,6 +1,6 @@
 # Candidate Generation V2
 
-Status: tool-slice / seed-factory document. The current level-design standard is [Current Level Design And Review Standard](21-current-workflow-standard.md). This file documents the first engineering slice for candidate serialization and seed generation; it is not a complete automatic level designer.
+Status: tool-slice / seed-factory document. The current level-design standard is [Level Design Studio Standard](21-level-design-studio-standard.md). This file documents the first engineering slice for candidate serialization and seed generation; it is not a complete automatic level designer.
 
 本文档记录第一版候选地图生成 vertical slice。它不是完整自动出题器，而是验证以下链路：
 
@@ -15,7 +15,7 @@ level_specs_v2.yml
 
 ## 核心边界
 
-后续泛化方向已经调整：候选生成器不再被视为主出题器。主线应是 `因果链设计 -> 地图实现 -> solver/graph 验证 -> LLM 精修 -> review -> campaign placement`。本文件中的 seed factory 只提供局部结构和机制 witness，不能自动承担 application / combination / challenge 的设计职责。详见 [Current Level Design And Review Standard](21-current-workflow-standard.md)。
+候选生成器不承担完整创作判断。当前主线是 `玩家体验核心 -> 作品身份 -> baseline -> 相对探索分支 -> 硬证据 -> 人类试玩`。本文件中的 seed factory 只提供局部结构和机制材料，不能自动承担 application / combination / challenge 的设计职责。详见 [Level Design Studio Standard](21-level-design-studio-standard.md)。
 
 候选生成器当前分为两部分：
 

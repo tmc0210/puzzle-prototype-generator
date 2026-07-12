@@ -116,7 +116,7 @@ meta_first_design:
 - 它是否让同一结构在重访时被重新理解？
 ```
 
-如果潜伏元素只制造噪声、没有 meta payoff，critic 仍应攻击它。
+如果潜伏元素只制造噪声、没有 meta payoff，应在提交前清理。
 
 ## Meta Reinterpretation Redesign
 
@@ -131,7 +131,7 @@ A->B 作为普通关扎实成立，或至少是 promising base candidate
 -> 主动改造结构来构造 C->D 新逻辑链，例如开墙、加冰、加入潜伏障碍、
    改变入口出口读法，或让 base 中弱作用元素在 C->D 中获得角色
 -> 分别验证 A->B 和 C->D
--> critic 判断 redesign 是否真正增值
+-> 平级交给人类试玩，判断 redesign 是否真正增值
 ```
 
 这里的重点是主动构造，而不是从工具结果中寻找巧合。Designer 应先提出 C->D
@@ -292,11 +292,10 @@ meta_reinterpretation:
 - 候选复用已有 archive candidate 的结构家族、主因果链或入口出口关系。
 ```
 
-Meta-first review 必须把 base + meta 一起提交给 evidence reviewer 和 critic。
-evidence reviewer 必须分别检查 base / meta 的 trace、claimed_core_events、接口
-合法性、D-wall / 多接口可达性，以及 base 窗口的 forbidden-if-seen-anywhere
-暴露。critic 必须分别评价 `base_quality`、`meta_quality`、`cross_visit_reuse`。
-任何一段存在核心攻击，都不能用“整体 meta 感不错”关闭 review loop。
+Meta-first 作品必须把 base + meta 一起提交给人类试玩。硬证据分别检查两者的
+trace、claimed_core_events、接口合法性、D-wall / 多接口可达性，以及 base 窗口
+的 forbidden-if-seen-anywhere 暴露。人类分别判断两段体验与跨访问复用；任一段
+存在明确可修问题，都不能用“整体 meta 感不错”补偿。
 
 ## Interface Pair Policy
 
@@ -319,7 +318,7 @@ interface_pair_policy:
 
 `C/D -> A/B` 是已去过 base 区域的反向内部 pair。默认情况下，它不参与
 `C->D` 审美审核，不比较 cost / salience / route naturalness，不生成 caveat 或
-core attack。若工具枚举到了这些 pair，只能记录为 ignored evidence，critic 的
+core attack。若工具枚举到了这些 pair，只能记录为 ignored evidence，
 `verdict_effect` 必须是 `none`，除非 experiment brief 明确改写本政策。不要为了
 填充 packet 专门检查 `C/D->A/B`。
 
@@ -371,7 +370,7 @@ solve_instances:
 chain_delta_from_base，start/goal pair 结果通常只能说明连通性、原解克隆或风
 险，不能单独支持 meaningful_reinterpretation。
 
-Reviewer / critic 应重点检查：
+人类试玩与硬证据核验分别关注：
 
 ```text
 - A->B 是否仍是扎实普通关？

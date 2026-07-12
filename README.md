@@ -2,7 +2,7 @@
 
 本项目的目标不是制作某一款推箱子游戏，而是构建一个可复用的逻辑解谜原型生成系统。
 
-设计者可以用自然语言描述一组机制，例如“玩家只能拉箱子，关卡中有成组传送门，传送门出口被堵时会推动入口传送门”。系统应辅助 Codex 将其转化为可玩的 PuzzleScript Next 原型、结构化机制说明、玩家模型、循序渐进关卡组、求解报告和评分报告。
+设计者可以用自然语言描述一组机制，例如“玩家只能拉箱子，关卡中有成组传送门，传送门出口被堵时会推动入口传送门”。系统应辅助 Codex 将其转化为可玩的 PuzzleScript Next 原型、结构化机制说明、玩家模型、循序渐进关卡组、硬证据报告和待玩作品集。
 
 ## 核心循环
 
@@ -11,10 +11,10 @@
 -> 机制 IR
 -> 玩家模型
 -> 学习目标排序
--> 课程规划
--> 关卡候选
--> 求解器验证
--> 评分器筛选
+-> 课程规划 / 玩家体验核心
+-> 基线与探索分支
+-> 硬证据验证
+-> 人类试玩取舍
 -> PuzzleScript Next 导出
 ```
 
@@ -26,14 +26,14 @@
 2. 基于机制 IR 的 step runtime 和求解器。
 3. 基于机制分支、事件和反事实模型的玩家模型生成。
 4. 基于学习目标排序的关卡规划和候选生成。
-5. 使用求解器和评分器筛选出递进关卡组。
+5. 使用求解器核验硬事实，由人类试玩选择递进关卡组。
 
 ## 基本原则
 
 - 机制 IR 是机制真相，PuzzleScript Next 是试玩和分享输出。
 - Codex/LLM 负责提出机制、命名知识、生成草案和解释报告。
 - 求解器负责证明可解性、目标知识必要性和核心解结构。
-- 评分器只基于明确分析范围内的证据工作，不把启发式结果伪装成证明。
+- 工具只核验明确分析范围内的硬事实，不把指标或启发式结果伪装成审美判断。
 - 第一阶段优先生成小而紧凑、可以完整分析的教学关和应用关。
 
 ## 文档索引
@@ -45,7 +45,7 @@
 三类边界：
 
 - 通用能力规范：未来可抽象进 skill/plugin 的稳定规则。
-- 当前验证标准：实际可执行、仍需继续测试优化的设计 / 审查 / 工具验证流程。
+- 当前验证标准：实际可执行、仍需继续测试优化的创作 / 硬证据 / 人类试玩流程。
 - 归档 / casebook：MVP、`pull_portal_fallback`、旧尝试和中间实验记录。
 
 不要把一次性迁移脚手架、旧格式兼容信息或错误尝试写进通用能力规范；只有已经收敛成 guardrail 的经验才进入通用文档。
@@ -53,7 +53,7 @@
 常用入口：
 
 - 新机制 runtime + tools bring-up: [Agent Preflight](docs/09-agent-preflight.md), [机制语义确认与 ASCII Probe](docs/28-mechanic-disambiguation-and-ascii-probes.md), [Runtime Adapter 边界](docs/24-runtime-adapter-boundary.md), [新机制实现 Playbook](docs/25-new-mechanic-implementation-playbook.md), [工具契约与 Conformance](docs/26-tool-contracts-and-conformance.md), [新机制 Prompt + 代码模板](templates/new_mechanic/README.md)
-- 当前 designer 验证流程: [Current Level Design And Review Standard](docs/21-current-workflow-standard.md), [Multi-Agent Prompt Templates](docs/20-multi-agent-prompt-templates.md), [Validated Level Design Loop](docs/18-validated-level-design-loop.md)
+- 当前关卡设计工作室: [玩家体验核心与关卡包装方法论](docs/17-experience-core-level-design.md), [关卡设计工作室执行标准](docs/21-level-design-studio-standard.md), [执行模板](docs/20-level-design-studio-templates.md), [`$sokoban-level-design-studio`](skills/sokoban-level-design-studio/SKILL.md)
 - 人类设计师参与的候选归档实验: [Design Archive Contract](docs/29-design-archive-contract.md), [Design Archive Templates](templates/design_archive/README.md)
 - 未来 knowledge / curriculum skill 化: [机制 IR](docs/02-mechanic-ir.md), [多实例对象模型](docs/19-multi-instance-object-model.md), [玩家模型轻量本体](docs/12-player-model-ontology.md), [玩家模型推导流程](docs/13-player-model-derivation.md), [课程排序规范](docs/14-curriculum-ordering.md), [关卡规格契约](docs/15-level-spec-contract.md)
 - pull-portal 归档 / casebook: [实现记录](docs/07-implementation-notes.md), [Pull Portal Casebook](docs/23-pull-portal-casebook-and-tool-notes.md), [reports index](prototypes/pull_portal_fallback/reports/README.md)

@@ -1,6 +1,6 @@
 # 设计归档模板
 
-这些模板在 `docs/21` 的单关设计流程外增加一层人类引导的归档记录合约。
+这些模板连接 `docs/21` 的单关设计工作室与人类引导的归档记录合约。
 
 使用条件：某个原型已经具备基本 runtime / solver / analyzer 支持，人类设计师希望探索哪些规则事实、motif、能力或模式值得继续设计。
 
@@ -8,14 +8,15 @@
 
 ```text
 1. 编写或选择一个 experiment brief。
-2. 给 LLM designer 使用 designer prompt addendum。
-3. 按 docs/21 和 docs/20 运行设计 / analyzer / reviewer / critic 循环。
-4. 收集人类设计师的自由评语。
-5. 按 `docs/29-design-archive-contract.md` 运行 archive pass。
-6. 保存或更新 candidate record 和 archive index。
+2. 给 LLM designer 使用 `$sokoban-level-design-studio` 与 prompt addendum。
+3. 按 docs/17、docs/21 和 docs/20 制作 baseline 与相对探索分支。
+4. 运行硬证据与原型专属检查，组装不排名的 human portfolio。
+5. 收集人类设计师的试玩选择与自由评语。
+6. 按 `docs/29-design-archive-contract.md` 运行 archive pass。
+7. 保存或更新 candidate record 和 archive index。
 ```
 
-候选记录是短审美校准卡；index 只是检索层。工具命令、完整 review loop、SCC
+候选记录是短审美校准卡；index 只是检索层。工具命令、完整设计循环、SCC
 表和探索流水账不粘进候选记录主体。生成式 reports 和 mechanism lab runs 默认
 不是归档读取路径；需要时重新运行或读取当前任务明确指定的 ledger。
 

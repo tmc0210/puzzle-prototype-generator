@@ -1,58 +1,38 @@
-# Pre-Human Polish Checklist
+# 提交人类试玩前清理清单
 
-状态：提交给人类查看前的轻量优化清单草稿。它不是 critic 标准，不是 evidence
-gate，也不是 reject / failed_search 理由。
+状态：`ice_slide_escape` 原型专属的提交前清理。
 
-## 何时使用
+只在版本准备进入 human portfolio 时运行。它处理明确的呈现与冗余问题，不决定
+审美等级，也不替代硬证据。
 
-只在候选已经达到 `proposal_ready` / `proposal_ready_with_caveats`，或人类要求
-查看当前最好版本前使用。若候选仍在结构设计、证据审查或 critic 打回阶段，不要运行这个清单。
+## 边界
 
-## 总边界
+- 不为清理偏好破坏已经成立的玩家体验核心、作品身份或 base/meta 共享结构。
+- 如果修改 layout、start、goal、win condition 或核心机制使用，建立新版本并重跑证据。
+- 如果微调会伤害核心结构，保留原版本，把风险准确写给人类。
 
-- 不为 polish 偏好破坏已经成立的 base / meta causal chain。
-- 不因 polish alone 改变 `review_loop_state`。
-- 不把 polish 失败写成 `failed_search`。
-- 不把这份清单当成 critic gate 或 evidence reviewer 输入。
-- 如果修改 layout、start、goal、win condition 或核心机制使用，必须重跑必要证据。
-- 如果微调会伤害核心结构，保留原版本，把该项写给人类。
+## 检查
 
-## 审美优化
+- 大片无职责的墙或空地；
+- 有效结构在整体构图中无理由地偏置；
+- 任何没有职责的对象，尤其仅充当普通障碍的冰；
+- 几何引导是否过早暴露中后期机制解法；
+- 没有准备、阅读、反馈或收束作用的纯走路；
+- A/B/C/D 是否使用清楚、尽量不相邻的 edge cells；
+- 解题完成后的玩家动线是否需要无意义折返；
+- base 视角中的 meta 潜伏元素是否过早泄露后期知识；
+- 其它一眼可见、保持同一作品即可改善的问题。
 
-对于以下情况尝试优化：
-
-+ 大片墙、过多的大片空地
-+ 关卡整体有效结构在整个关卡中偏置
-+ 任何冗余要素，典型的是仅作为障碍物的冰
-+ 难度目标3及以上时几何结构对于关卡解法过于明显的引导。例如长直道引导d5或d6+
-+ 无必要性的纯走路
-+ 其他可见的审美问题
-
-## Interface Polish
-
-- 最基本的，A/B/C/D 使用互不重合、互不相邻的 edge cells。
-- 进一步，同一组 起点终点 尽量不要在同一侧，最好能ABCD分别不同侧，但不强求。如果有同侧，最好稍远一些。
-- 更进一步，可以进行一些更激进的尝试（例如微调局部结构而非简单删墙加墙）以实现更合理的玩家动线，例如避免“先去中间区域做题，然后再返回起点附近的终点赶路“，尽量让玩家在解题完成后顺带离开，如果尝试未果可以说明。
-- 如果微调接口位置会破坏 shared structure、chain_delta 或核心证据，跳过。
-
-## Meta Readability Polish
-
-- base流程中看到的meta的涉及后期知识的关键元素可以稍微藏一点，避免玩家提前猜到后期知识。例如：base流程声明知识限制在d5前，而meta流程中用到的一个长直道死胡同里有一个d5/d6，即使base流程触发不了、不可达，玩家也可能会看到这个显眼结构而提前猜到长距离推动可能可以破墙/穿墙。
-
-## 输出形状
+## 输出
 
 ```yaml
 pre_human_polish_pass:
-  status: clean | improved | deferred_to_human | returned_to_review
+  status: clean | improved | deferred_to_human | new_version_required
   attempted_tweaks:
     - item:
       action:
       result: kept | reverted | skipped
       reason:
       evidence_rerun_required: true | false
-  deferred_notes_for_human:
-    - ""
+  deferred_notes_for_human: []
 ```
-
-`returned_to_review` 只在 polish 尝试实际修改了 layout / start / goal / claim 并需
-重新审查时使用；不是因为 polish 偏好本身打回候选。

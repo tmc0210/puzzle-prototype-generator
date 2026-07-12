@@ -30,9 +30,9 @@ solution_space_reuse:
 
 # 解法轨迹指标校准
 
-这是锚点原型的 critic 辅助阅读试点，不是 evidence reviewer 的检查项，也不是
-自动通过、拒绝或整体审美评分器。数值来自已有的人类评分候选；难度保留 1–5，
-空间复用只比较审美 2–5。
+这是锚点原型的轨迹统计试点，只描述规范解的执行与空间使用，不进入关卡设计
+工作室的审美选择。数值来自已有的人类评分候选；难度保留 1–5，空间复用只比较
+审美 2–5。
 
 `solution_execution_pressure` 是规范解的执行压力：解长、非行走事件与高频空间调度。
 它可以辅助界定难度，但不说明洞见、因果依赖或反直觉。
@@ -43,6 +43,6 @@ solution_space_reuse:
 当前只达到 `pilot`：5 分样本覆盖仍弱，禁止把这组权重写成正式五档评分公式。每个
 solve instance 单独出指标；配对或多阶段设计不得在本版把多个 instance 压成一个分数。
 
-critic 只在 packet 明确引用本 calibration id，且规范解、candidate version 与参考
-范围一致时读取。与目标相差两档以上时，只记录非阻塞 `score_boundary`，并按
-`skills/sokoban-puzzle-critic/references/trace-metric-reading.md` 完成玩家侧检查。
+只有在分析任务明确引用本 calibration id，且规范解、candidate version 与参考
+范围一致时才读取。它只能作为描述性元数据；不得用于 baseline / branch 排名、
+审美打分或作品集取舍。

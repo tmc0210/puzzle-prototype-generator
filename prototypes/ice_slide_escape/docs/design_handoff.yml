@@ -18,114 +18,50 @@ tool_commands:
 prototype_specific_workflows:
   - id: meta_redesign
     kind: redesign_stage
-    default_status: routed
     trigger:
-      - "A current-run base candidate is solid, promising, or thin_but_valid enough to inspect for same-layout reinterpretation."
-      - "If the base candidate comes from archive, the human brief or experiment brief explicitly authorizes that candidate id and allowed redesign scope."
-      - "The experiment brief does not disable meta routing."
-      - "The experiment brief has not explicitly enabled meta_first_design."
+      - "本轮 baseline 或 branch 已值得保留，并具有同布局重读潜力。"
+      - "若来源是归档关卡，human brief 已明确授权该关卡和再设计范围。"
+      - "brief 未禁用 meta routing，也未启用 meta_first_design。"
     authority_docs:
-      - prototypes/ice_slide_escape/docs/designer_contract.md
       - prototypes/ice_slide_escape/docs/meta_interfaces.md
       - prototypes/ice_slide_escape/docs/design_directives.md
-    packet_extension:
-      - meta_reinterpretation_variant.meta_design_mode
-      - meta_reinterpretation_variant.base_candidate_status
-      - meta_reinterpretation_variant.redesign_decision
-      - meta_reinterpretation_variant.edits
-      - meta_reinterpretation_variant.base_instance
-      - meta_reinterpretation_variant.meta_instance
-      - meta_reinterpretation_variant.shared_structure
-      - meta_reinterpretation_variant.latent_elements_from_base
-      - meta_reinterpretation_variant.interface_pair_policy
-      - meta_reinterpretation_variant.edge_pair_diagnostics.external_edge_escape_checks
-      - meta_reinterpretation_variant.edge_pair_diagnostics.risky_internal_non_target_pairs
-      - meta_reinterpretation_variant.edge_pair_diagnostics.ignored_internal_reverse_pairs
-      - meta_reinterpretation_variant.preserves_base_solution
-      - meta_reinterpretation_variant.creates_base_bypass
-      - meta_reinterpretation_variant.classification
-    reviewer_focus:
-      - "A->B and C->D are separate solve instances with explicit edge start and edge goal."
-      - "Base evidence is rerun after any redesign edit that affects layout, claim, start, goal, win condition, or mechanism use."
-      - "A/B/C/D starts that can solve to edge goals outside A/B/C/D are recorded as external edge escape risks."
-      - "C/D->A/B reverse internal pairs are ignored by default; record only as verdict_effect: none unless the brief explicitly overrides this policy."
-      - "Classify pair facts with design_directives terminology; C/D->A/B is not external_edge_escape."
-      - "Claims stay within single-level evidence; future world-map value remains design potential."
-    critic_focus:
-      - "Base quality remains solid enough; weak base candidates cannot be rescued by meta payoff."
-      - "C->D creates a different causal chain, reading order, state consumption, or object role from A->B."
-      - "Latent or lure elements do not seriously pollute base reading unless they receive clear meta payoff."
-      - "Do not use C/D->A/B cost, salience, or route naturalness as a caveat or core attack."
-      - "Do not treat C/D->A/B as external_edge_escape or a pair-policy caveat."
-      - "Classify the result as meaningful_reinterpretation, interface_clone, connectivity_note_only, or bypass_risk."
-    forbidden_unless:
-      - "Do not use an archive candidate as the base unless the brief explicitly authorizes that candidate id and allowed operations."
-      - "Archive taste examples are calibration only and are not reusable bases."
-      - "Do not treat this as mechanical edge-pair enumeration."
-      - "Do not reward a new entrance or exit if the logic chain is only a route shortcut or clone."
+    required_records:
+      - base_instance
+      - meta_instance
+      - edits
+      - shared_structure
+      - changed_state_consumption
+      - interface_pair_policy
+      - preserves_base_identity
+      - creates_base_bypass
+      - classification
+    hard_checks:
+      - "A->B 与 C->D 使用显式边缘起终点并分别求解。"
+      - "任何影响其中一个实例的再设计改动都重跑对应证据。"
+      - "记录外部边缘逃逸；C/D->A/B 反向内部 pair 的 verdict_effect 为 none。"
+    human_questions:
+      - "C->D 是否对共享结构产生了不同且值得存在的读法？"
+      - "潜伏元素对 A->B 的损害是否超过其在 C->D 中的回报？"
 
   - id: meta_first_design
     kind: paired_design_mode
-    default_status: disabled_unless_brief_enabled
     trigger:
-      - "The human brief explicitly asks for direct meta + base design."
-      - "The experiment brief writes meta_design_mode: meta_first_design."
+      - "human brief 明确设置 meta_design_mode: meta_first_design。"
     authority_docs:
-      - prototypes/ice_slide_escape/docs/designer_contract.md
       - prototypes/ice_slide_escape/docs/meta_interfaces.md
       - prototypes/ice_slide_escape/docs/design_directives.md
-    packet_extension:
-      - meta_reinterpretation.meta_design_mode
-      - meta_reinterpretation.base_instance
-      - meta_reinterpretation.meta_instance
-      - meta_reinterpretation.shared_structure
-      - meta_reinterpretation.chain_delta_from_base
-      - meta_reinterpretation.cross_visit_payoff
-      - meta_reinterpretation.base_time_masking
-      - meta_reinterpretation.latent_or_lure_elements
-      - meta_reinterpretation.interface_legality
-      - meta_reinterpretation.interface_pair_policy
-      - meta_reinterpretation.edge_pair_diagnostics.external_edge_escape_checks
-      - meta_reinterpretation.edge_pair_diagnostics.risky_internal_non_target_pairs
-      - meta_reinterpretation.edge_pair_diagnostics.ignored_internal_reverse_pairs
-      - meta_reinterpretation.design_target
-    reviewer_focus:
-      - "Base and meta traces are checked separately."
-      - "Future-knowledge exposure in base is checked against the brief."
-      - "Starts, goals, target coverage, and edge legality are explicit for both instances."
-      - "A/B/C/D starts that can solve to edge goals outside A/B/C/D are evidence-backed risks."
-      - "C/D->A/B reverse internal pairs are ignored by default and must have verdict_effect: none."
-      - "Classify pair facts with design_directives terminology; C/D->A/B is not external_edge_escape."
-    critic_focus:
-      - "Evaluate base_quality, meta_quality, and cross_visit_reuse separately."
-      - "Reject two independent mini-puzzles stitched into one layout."
-      - "Reject meta routes that only replay the base logic from a new entrance or shorter exit."
-      - "Do not treat C/D->A/B as stealing C->D, even when it is shorter or cheaper."
-      - "Do not treat C/D->A/B as external_edge_escape or a pair-policy caveat."
-      - "Reward only meaningful reuse of shared structure, latent elements, or different state consumption."
-    forbidden_unless:
-      - "Do not enable this mode from generic design-review-loop routing alone."
-      - "Do not submit only base or only meta to review; the packet must include both instances."
+    hard_checks:
+      - "分别检查 base 与 meta 的轨迹、机制暴露、起点、终点和边缘合法性。"
+      - "记录外部边缘逃逸；C/D->A/B 反向内部 pair 的 verdict_effect 为 none。"
+    human_questions:
+      - "两次访问是否都值得存在且具有实质差异？"
+      - "共享结构是否产生跨访问回报，而不是把两个小题拼在一起？"
 
   - id: pre_human_polish_pass
-    kind: pre_human_submission_pass
-    default_status: run_after_proposal_ready
+    kind: pre_submission_check
     trigger:
-      - "The candidate is proposal_ready or proposal_ready_with_caveats."
-      - "The human asks to inspect the current best candidate."
+      - "某个版本即将进入人类待玩作品集。"
     authority_docs:
       - prototypes/ice_slide_escape/docs/pre_human_polish_checklist.md
-    packet_extension:
-      - pre_human_polish_pass.status
-      - pre_human_polish_pass.attempted_tweaks
-      - pre_human_polish_pass.deferred_notes_for_human
-    reviewer_focus:
-      - "This pass is not evidence review and cannot repair missing evidence."
-      - "If a polish attempt changes layout, start, goal, win condition, or core mechanism use, rerun required evidence before submission."
-    critic_focus:
-      - "This pass is not a critic gate and cannot add core attacks for polish alone."
-      - "Keep, revert, or defer small presentation tweaks without damaging base/meta causal chains."
-    forbidden_unless:
-      - "Do not run before the candidate is already proposal_ready / proposal_ready_with_caveats unless the human explicitly asks to inspect the current best version."
-      - "Do not change review_loop_state because of polish alone."
-      - "Do not use polish failure as failed_search evidence."
+    hard_checks:
+      - "若清理改变布局、起点、终点、胜利条件或核心机制用法，建立新版本并重跑证据。"

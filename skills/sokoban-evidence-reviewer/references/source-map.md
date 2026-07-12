@@ -1,10 +1,11 @@
-# Source Map
+# 来源定位
 
-| 迁移内容 | 来源 |
+| 核验内容 | 当前来源 |
 | --- | --- |
-| Evidence reviewer 角色边界 | `docs/21-current-workflow-standard.md` `## Roles`; `docs/20-multi-agent-prompt-templates.md` `## Evidence Reviewer Template` |
-| 输出枚举 | `docs/20-multi-agent-prompt-templates.md` `## Evidence Reviewer Template` |
-| graph exhausted 处理 | `docs/21-current-workflow-standard.md` `### SCC / Graph Diagnostic`; `docs/30-scc-graph-diagnostic-reading.md` |
-| 机制暴露 sequence 与 `allowed_exposure_through` 硬证据门 | `prototypes/ice_slide_escape/docs/mechanic_exposure_sequence.yml`; `templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md`; `new_glue_rule`: exposure claim 必须由 all-solution required gate 和完整 reachable scan 支持 |
+| 工具只验证硬事实 | `docs/17-experience-core-level-design.md` `## 工具与结构材料` |
+| 作品集硬证据边界 | `docs/21-level-design-studio-standard.md` `## 硬证据验证` |
+| 输出形状 | `docs/20-level-design-studio-templates.md` `## 可选硬证据核验请求` |
+| SCC / graph 解释 | `docs/30-scc-graph-diagnostic-reading.md` |
+| 原型专用验证 | 当前原型 `docs/design_handoff.yml` 及其 required docs |
 
-不要引入新 `review_loop_state`、不要评价审美、不要把工具 evidence 写成质量 pass、不要用 `supports_with_caveats` 保留不被证据支持的 central mechanism / exposure claim。
+任何工具证据都不能产生审美、难度、排名或 campaign placement 结论。

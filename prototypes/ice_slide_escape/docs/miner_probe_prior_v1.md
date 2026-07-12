@@ -249,4 +249,4 @@ Forbidden reachable hits: none
 ```
 
 正式候选仍然必须按具体 experiment brief 运行 explain、start comparison、
-required / forbidden event 检查、prefix probe、critic loop 和人工审美判断。
+required / forbidden event 检查、prefix probe、作品身份检查和人类试玩判断。

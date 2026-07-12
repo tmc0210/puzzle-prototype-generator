@@ -23,7 +23,8 @@ Read first:
 - docs/09-agent-preflight.md
 - docs/28-mechanic-disambiguation-and-ascii-probes.md
 - docs/10-generic-solver-evaluator-contract.md
-- docs/21-current-workflow-standard.md
+- docs/17-experience-core-level-design.md
+- docs/21-level-design-studio-standard.md
 - docs/24-runtime-adapter-boundary.md
 - docs/25-new-mechanic-implementation-playbook.md
 - docs/26-tool-contracts-and-conformance.md

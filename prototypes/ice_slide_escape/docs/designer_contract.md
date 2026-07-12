@@ -124,7 +124,7 @@ meta_reinterpretation:
 
 base 解中看似无用、弱作用、甚至当前不可推动的元素不自动扣分。若它不严重污染
 base 阅读，并在 meta 解中获得明确 payoff，它可以是正向潜伏结构。若没有 payoff，
-critic 仍应把它当作噪声攻击。
+它就是应在提交前清理的噪声。
 
 非目标 pair 必须按 `interface_pair_policy` 分类。A/B/C/D 起点通向 A/B/C/D
 之外其它边缘目标，或未被忽略的内部非目标 pair，可以成为风险；`C/D->A/B` 是
