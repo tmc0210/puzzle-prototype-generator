@@ -1,6 +1,6 @@
 ---
 name: sokoban-level-design-studio
-description: 围绕一个明确的玩家体验核心，为类推箱子特定原型设计、验证和交付关卡作品集。适用于定义作品身份、制作并冻结基线、相对基线探索 application/combination/challenge 分支、在求解修订中保护核心，以及准备不排名的人类待玩作品集；不用于原型实现、通用机制挖掘、纯归档排版或给既有关卡打审美分。
+description: 围绕一个明确的玩家体验核心，为类推箱子特定原型设计、验证并把关卡作品集接入待玩列表。适用于定义作品身份、制作并冻结基线、相对基线探索 application/combination/challenge 分支、在求解修订中保护核心，以及交付不排名的人类待玩作品集；不用于原型实现、通用机制挖掘、纯归档排版或给既有关卡打审美分。
 ---
 
 # Sokoban Level Design Studio
@@ -89,9 +89,16 @@ Baseline 没有明确同题缺点且硬证据成立后，冻结 exact version。
 
 每种 search intent 默认最多保留两个玩家体验不同的存活版本。没有自然方案时允许为空。
 
-### 7. 交付 Human Portfolio
+### 7. 接入待玩列表
 
-按 baseline、application、combination、challenge 分组平级呈现。只描述体验、相对增量、已知风险和证据边界。
+按 baseline、application、combination、challenge 组装平级 human portfolio。只描述体验、相对增量、已知风险和证据边界。
+
+文字简报不是完成。必须同时：
+
+1. 将每个 exact survivor 写入当前原型支持的 `studio/levels.yml` 或 `levels.yml`；
+2. 将对应条目写入 `playable_queue.yml`，初始 `status: pending_playtest`；
+3. 重建 playable，并确认待玩列表实际能解析这些版本；
+4. 在交付摘要中给出 level id、queue 条目和 playable 路径。
 
 不要：
 
@@ -100,10 +107,10 @@ Baseline 没有明确同题缺点且硬证据成立后，冻结 exact version。
 - 用工具指标暗示版本更好；
 - 因激进分支存在而贬低 baseline。
 
-人类试玩后，精确记录 select、revision、reject 或 hold。只有 human-selected exact version 可以进入 archive pass。
+人类试玩结果服从 `playtest_reviews.yml`：`defer`、`needs_revision`、`ready_for_archive`、`reject`。只有 `ready_for_archive` 的 exact version 可以进入 archive pass。
 
 ## 状态纪律
 
-版本只使用：`working`、`rejected_branch`、`hard_validated`、`frozen`、`human_pending`、`human_selected`、`human_rejected`。
+设计状态只使用：`working`、`rejected_branch`、`hard_validated`、`frozen`。待玩状态单独使用：`not_queued`、`pending_playtest`、`defer`、`needs_revision`、`ready_for_archive`、`reject`。
 
 任何版本状态都不表达审美等级。

@@ -6,7 +6,8 @@
 kind: baseline
 portfolio_id: ""
 version: ""
-status: working | hard_validated | frozen | human_pending | human_selected | human_rejected
+design_state: working | hard_validated | frozen
+playtest_status: not_queued | pending_playtest | defer | needs_revision | ready_for_archive | reject
 layout_ref: ""
 canonical_trace_ref: ""
 identity_reading:
@@ -61,7 +62,8 @@ portfolio_id: ""
 branch_id: ""
 baseline_ref: ""
 search_intent: application | combination | challenge
-status: working | rejected_branch | hard_validated | human_pending | human_selected | human_rejected
+design_state: working | rejected_branch | hard_validated
+playtest_status: not_queued | pending_playtest | defer | needs_revision | ready_for_archive | reject
 delta_realized:
   player_authorship: ""
   supporting_mechanism: ""

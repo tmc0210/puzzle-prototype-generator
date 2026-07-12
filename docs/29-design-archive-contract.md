@@ -19,6 +19,10 @@
 archive pass 只记录人类已经作出的选择。它不能补写缺失流程，不能把工具事实
 改写成审美裁决，也不能替人类打分。
 
+人类试玩状态以 `playtest_reviews.yml` 为准：普通 archive pass 只接收
+`ready_for_archive` 的 exact version。`defer` 与 `needs_revision` 不入档；`reject`
+只有在人类明确要求保存为负向反例时才可入档，不能由 LLM 自行升级为归档材料。
+
 ## Clean Archive 与 Raw Run
 
 ```text

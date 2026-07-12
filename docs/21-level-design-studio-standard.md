@@ -50,7 +50,9 @@ LLM 不输出审美分数，也不以“逻辑完整”“事件覆盖”替代�
 -> 每个分支硬验证与身份检查
 -> 运行原型专属提交前检查
 -> 组装平级 human portfolio
--> 人类试玩、选择、要求修订或拒绝
+-> 写入 level source 与 playable_queue
+-> 重建 playable
+-> 人类试玩并写入 playtest_reviews
 -> archive pass
 ```
 
@@ -183,45 +185,58 @@ Evidence reviewer 的通过不提高审美，也不替代人类试玩。
 - 用事件数量、图规模、唯一解或逻辑链长度排名；
 - 因为高野心 branch 存在而贬低无缺点 baseline。
 
-人类可以选择多个版本、要求某个分支修订、全部拒绝或只保留 baseline。
+人类对每个版本分别记录 `defer`、`needs_revision`、`ready_for_archive` 或 `reject`。
+
+### 待玩列表交付
+
+Human portfolio 简报不是终点。每个交付版本必须：
+
+1. 以 exact version 写入原型支持的 `studio/levels.yml` 或 `levels.yml`；
+2. 加入 `playable_queue.yml`，新条目使用 `status: pending_playtest`；
+3. 重建 playable，并确认 queue 中的 source / level id 能解析到实际布局；
+4. 在最终回复中同时给出简报、queue 条目和 playable 路径。
+
+若版本未进入待玩列表，任务仍处于 `not_queued`，不能报告作品集已交付。
 
 ## 人类反馈路由
 
 ```text
-human_selected:
-  exact version 进入 archive pass。
+pending_playtest:
+  已在 playable_queue 中，但尚无对应人类试玩记录。
 
-request_revision:
-  从被点名版本建立新 version；如果反馈改变主要体验，建立新 branch 或 core。
+defer:
+  暂不决定；保留试玩记录，不升级、不归档。
 
-human_rejected:
-  关闭该 exact version，不影响 baseline 或其它分支。
+needs_revision:
+  从该 exact version 建立新 version；若反馈改变主要体验，建立新 branch 或 core。
 
-hold:
-  保留为 human_pending，不升级、不归档。
+ready_for_archive:
+  该 exact version 可以进入 archive pass。
+
+reject:
+  关闭该 exact version；是否作为人类负例归档由人类另行决定。
 ```
 
 ## 状态
 
-单版本只使用：
+设计状态只使用：
 
 ```text
 working
 rejected_branch
 hard_validated
 frozen
-human_pending
-human_selected
-human_rejected
 ```
 
-Portfolio 只使用：
+待玩状态只使用：
 
 ```text
-baseline_working
-baseline_frozen
-human_pending
-closed
+not_queued
+pending_playtest
+defer
+needs_revision
+ready_for_archive
+reject
 ```
 
-这些状态不表达审美评分。
+设计状态与待玩状态分栏保存，不互相替代，也都不表达审美评分。

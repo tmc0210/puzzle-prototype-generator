@@ -143,7 +143,6 @@ templates/new_mechanic/conformance.template.md
 
 ```text
 templates/design_archive/README.md
-templates/design_archive/DESIGNER_PROMPT_ADDENDUM.md
 templates/design_archive/ARCHIVE_PASS_PROMPT.md
 templates/design_archive/CANDIDATE_RECORD.template.md
 ```

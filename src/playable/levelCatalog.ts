@@ -24,6 +24,8 @@ export type PlayableQueueEntry = {
   candidate_id?: string;
   title?: string;
   added_at?: string;
+  status?: "pending_playtest";
+  notes?: string;
 };
 
 export type PlayableQueueDoc = {
@@ -187,6 +189,7 @@ export async function saveEditorLevel(
       level_id: level.id,
       title: level.title,
       added_at: new Date().toISOString(),
+      status: "pending_playtest",
     },
     existingLevel && existingLevel.id !== level.id ? sourceKey("studio", existingLevel.id) : undefined,
   );

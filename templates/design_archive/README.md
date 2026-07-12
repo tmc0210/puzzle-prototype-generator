@@ -8,11 +8,11 @@
 
 ```text
 1. 编写或选择一个 experiment brief。
-2. 给 LLM designer 使用 `$sokoban-level-design-studio` 与 prompt addendum。
+2. 用 `EXPERIMENT_RUN_PROMPT.template.md` 提供本轮特有信息，并调用 `$sokoban-level-design-studio`。
 3. 按 docs/17、docs/21 和 docs/20 制作 baseline 与相对探索分支。
-4. 运行硬证据与原型专属检查，组装不排名的 human portfolio。
-5. 收集人类设计师的试玩选择与自由评语。
-6. 按 `docs/29-design-archive-contract.md` 运行 archive pass。
+4. 运行硬证据与原型专属检查，把 exact versions 加入待玩列表并重建 playable。
+5. 收集人类设计师的试玩状态与自由评语。
+6. 只有 `ready_for_archive` 版本按 `docs/29-design-archive-contract.md` 运行 archive pass。
 7. 保存或更新 candidate record 和 archive index。
 ```
 
@@ -34,7 +34,6 @@ npx tsx src/cli.ts archive-remove-candidate <prototype-path> <candidate-id> --ap
 模板：
 
 ```text
-DESIGNER_PROMPT_ADDENDUM.md
 ARCHIVE_PASS_PROMPT.md
 CANDIDATE_RECORD.template.md
 EXPERIMENT_RUN_PROMPT.template.md

@@ -17,6 +17,7 @@ templates/design_archive/CANDIDATE_RECORD.template.md
 ```text
 - candidate layout / solve instance
 - candidate claim or core logic summary
+- `playtest_reviews.yml` 中该 exact version 的人类试玩状态
 - human comments if they exist
 - current archive index if updating index
 - ledger_ref only if a stable ledger already exists
@@ -37,6 +38,7 @@ mechanism_lab/runs。
 
 ```text
 - Candidate record 是短审美校准卡，不是流程流水账或证据包。
+- 普通入档要求试玩状态为 `ready_for_archive`；`reject` 仅在人类明确要求保存为负例时入档，`defer` / `needs_revision` 不入档。
 - 顶层 metadata 只保留 docs/29 规定的最小字段。
 - 保留 human comments 原文；没有人类评语时标记 pending。
 - `human_reviewed`、`aesthetic_score`、`difficulty_score` 只能来自人类评语或人类明确评分；archive pass 不替人类打分。
