@@ -1,0 +1,117 @@
+runId: ra_exp_giant_sticky_batch_02_boundary_construct_touchset
+title: "B/S 三段扫线构造巨大双钩，随后同步收束双目标"
+notes: >-
+  回答 REQ-002 的构造方向。左侧 15 格 sticky 厚脊与右侧错层 crate 构件最初不是一个刚体。
+  玩家把水平 S/B 锚向右推动三格，使三列构件依次变为 sticky；最后一列同时补出上下两个竖钩指尖。
+  玩家绕回厚脊左端后，构造完成的 23 格完整刚体以一个 right 同时推动两个目标活塞。
+  两次扫线、缺指尖和缺首桥格分别校准相位、触点与动作开始时连通责任。
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 18
+  maxStates: 40000
+  maxTransitions: 160000
+cases:
+  - id: "construct_three_sweeps_then_sync_final"
+    family: "boundary_constructed_giant_touchset"
+    variant: "three_column_complete_double_hook"
+    changed_variable: "S/B 从 4|5 右移到 7|8，三列错层构件全部黏入厚脊"
+    contrast_with: "cf_only_two_sweeps_then_attempt,cf_missing_upper_tip_after_construction,cf_missing_first_bridge_cells"
+    notes: "前三个 right 构造；绕回后最后一个 right 应由完整 23 格刚体同时推两箱上目标并胜利。"
+    layout: |
+      #############
+      #......PL...#
+      #..@SB......#
+      #...........#
+      #...........#
+      #.MMM..CCG..#
+      #.MMMCCC....#
+      #.MMM.......#
+      #.MMMCCC....#
+      #.MMM..CCG..#
+      #...........#
+      #############
+    actions: ["right", "right", "right", "left", "left", "left", "left", "left", "down", "down", "down", "down", "down", "right"]
+
+  - id: "cf_only_two_sweeps_then_attempt"
+    family: "boundary_constructed_giant_touchset"
+    variant: "last_column_not_converted"
+    changed_variable: "只把 S/B 右移两格到 6|7，第三列竖钩仍是 crate"
+    contrast_with: "construct_three_sweeps_then_sync_final"
+    notes: "同样绕回推动厚脊；未转换的竖钩不应在同一动作中把两个活塞送上目标。"
+    layout: |
+      #############
+      #......PL...#
+      #..@SB......#
+      #...........#
+      #...........#
+      #.MMM..CCG..#
+      #.MMMCCC....#
+      #.MMM.......#
+      #.MMMCCC....#
+      #.MMM..CCG..#
+      #...........#
+      #############
+    actions: ["right", "right", "left", "left", "left", "left", "down", "down", "down", "down", "down", "right"]
+
+  - id: "cf_missing_upper_tip_after_construction"
+    family: "boundary_constructed_giant_touchset"
+    variant: "upper_contact_cell_absent"
+    changed_variable: "只删除待转换的上竖钩格 `(7,5)`；三段扫线与其它构件不变"
+    contrast_with: "construct_three_sweeps_then_sync_final"
+    notes: "构造后的整体仍很大且连通，但最后 right 只应完成下目标。"
+    layout: |
+      #############
+      #......PL...#
+      #..@SB......#
+      #...........#
+      #...........#
+      #.MMM...CG..#
+      #.MMMCCC....#
+      #.MMM.......#
+      #.MMMCCC....#
+      #.MMM..CCG..#
+      #...........#
+      #############
+    actions: ["right", "right", "right", "left", "left", "left", "left", "left", "down", "down", "down", "down", "down", "right"]
+
+  - id: "cf_missing_first_bridge_cells"
+    family: "boundary_constructed_giant_touchset"
+    variant: "converted_hooks_not_connected_at_action_start"
+    changed_variable: "删除上下构造轨的首桥格 `(5,6)`、`(5,8)`，其余三列构件与指尖不变"
+    contrast_with: "construct_three_sweeps_then_sync_final"
+    notes: "三段扫线会形成右侧双钩 sticky 部件，但它们未在终局动作开始时连入左厚脊；左厚脊移动后即便 settle 再合并，也不应推动目标活塞。"
+    layout: |
+      #############
+      #......PL...#
+      #..@SB......#
+      #...........#
+      #...........#
+      #.MMM..CCG..#
+      #.MMM.CC....#
+      #.MMM.......#
+      #.MMM.CC....#
+      #.MMM..CCG..#
+      #...........#
+      #############
+    actions: ["right", "right", "right", "left", "left", "left", "left", "left", "down", "down", "down", "down", "down", "right"]
+
+  - id: "missing_bridge_merges_then_second_stroke_sync"
+    family: "boundary_constructed_giant_touchset"
+    variant: "one_stroke_late_after_settle_merge"
+    changed_variable: "与缺首桥格反事实相同，但在厚脊动后合并完成后追加第二个 right"
+    contrast_with: "cf_missing_first_bridge_cells,construct_three_sweeps_then_sync_final"
+    notes: "第一拍只把厚脊移到双钩旁并触发 sticky_merge；第二拍才应由新完整刚体同时推动两箱上目标。"
+    layout: |
+      #############
+      #......PL...#
+      #..@SB......#
+      #...........#
+      #...........#
+      #.MMM..CCG..#
+      #.MMM.CC....#
+      #.MMM.......#
+      #.MMM.CC....#
+      #.MMM..CCG..#
+      #...........#
+      #############
+    actions: ["right", "right", "right", "left", "left", "left", "left", "left", "down", "down", "down", "down", "down", "right", "right"]

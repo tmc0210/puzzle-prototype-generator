@@ -9,7 +9,7 @@
 玩家体验核心、作品身份、baseline、探索分支与人类作品集：
   以 docs/17-experience-core-level-design.md 和 docs/21-level-design-studio-standard.md 为准。
 
-工作室材料、独立关卡审查与硬证据准入形状：
+工作室材料、独立硬证据审查、玩家侧审查与提交前工作流记录形状：
   以 docs/20-level-design-studio-templates.md 为准。
 
 归档层：
@@ -27,7 +27,7 @@ archive pass 只记录人类已经作出的选择。它不能补写缺失流程�
 
 ```text
 clean archive:
-  可被未来 designer 当作正例、反例、审美校准或重复边界的候选库。
+  可被未来 designer 当作正例、反例、审美校准或防重复参考的候选库。
   其中可以有设计差的关卡，但不能有流程错产物。
 
 raw run:
@@ -58,21 +58,22 @@ prototypes/*/mechanism_lab/runs/**
 
 ## 默认读取路径
 
-designer 需要归档校准时，默认先读 archive index 的检索摘要，再按目标
-读取少量候选短卡。不要默认全量读取所有 layout、旧 reports 或 mechanism lab
-runs。
+归档校准从 archive index / retrieval summaries 开始，不默认全量读取所有 layout、
+旧 reports 或 mechanism lab runs。Designer 和 independent level reviewer 的读取广度
+不同，分别按下述入口执行。
 
-当前关卡设计与独立审查的校准入口：
+Designer 的校准入口：
 
 ```text
-- 先读完整 index。
+- 读完整 index / retrieval summaries。
 - 读取所有审美 1 分候选的人类原评语。
 - 选 1-3 个相关高分 / 正例候选，读取人类原评语。
 - 选 1-3 个相关低分 / 失败 / 下界候选，读取人类原评语。
+- 等待 explorer 首批材料时可以继续扩读其它 human-reviewed 候选。
 - 只有需要防重复或判断人评边界时，才读候选卡里的完整 layout。
 ```
 
-Designer 与 independent level reviewer 分别完成校准；reviewer 不接受 designer 代选的唯一 anchors，也不读取 designer 送审包。
+Independent level reviewer 使用更小的独立校准集：先读 index / retrieval summaries，再自行选择至少一个相关正例和一个明确负例或边界例，读取人类原评语，必要时追加。Reviewer 不需要全量读取归档，不接受 designer 代选的唯一 anchors，也不读取 designer 送审包。
 
 ## Candidate Record 最小内容
 

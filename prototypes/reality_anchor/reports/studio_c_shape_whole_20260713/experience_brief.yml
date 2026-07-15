@@ -1,0 +1,105 @@
+portfolio_id: RA_STUDIO_2026_07_13_C_SHAPE_WHOLE
+
+prototype_context:
+  confirmed_rules:
+    - 玩家每次输入一个正交方向，空格可行走。
+    - P/L 锚点按输入时玩家所在侧选择 push 或 pull；锚点本身是可移动的两格对象。
+    - B/S 锚点在每个合法动作后全局归一化箱与黏块；正交相邻黏格合并为同一刚体。
+    - 黏块连通分量作为完整刚体移动，任一目标格受阻都会阻止整体移动。
+    - 推力或拉力可沿移动方向传播到其它可动物体。
+  win_condition: 所有目标格在 settle 后被箱、黏块格或锚点格覆盖；玩家不计入覆盖。
+  object_and_event_semantics:
+    - C 是可推拉普通箱，M 是按当前连通形状整体移动的黏块。
+    - P/L 与 B/S 都是可移动、可覆盖目标的两格锚点。
+    - 关键可见事实以逐步棋盘变化为准；事件标签只作硬事实索引，不证明体验价值。
+  tool_boundary:
+    - solver、完整图、replay、bypass 与 counterfactual 只验证机械事实。
+    - 原型 raw miner 与历史 runs 不作为设计来源；本轮不读取 mechanism_lab/runs。
+    - 独立 reviewer 决定玩家侧 survive，独立 evidence reviewer 决定 queue admission。
+
+curriculum_context:
+  player_prior:
+    - 已知普通推箱、目标覆盖、固定与可移动 P/L。
+    - 已知 B/S 归一化、黏块拼接/切割和黏块刚体移动。
+    - 已知锚点本身可以被推拉。
+  intended_game_position: 黏块刚体与形状应用已建立后的中后期作品集
+  duplicate_boundary:
+    - 不复用归档关卡题面、canonical trace 或局部布局。
+    - 不把 RA_CAND_0020 的 C 形切割三输出当作素材；本轮要求 C 形在关键阶段保持完整并以整体形状工作。
+    - 不把 L 形活塞、纯锚点腾挪或黏块形状的被动动画改名为本核心。
+
+archive_calibration:
+  full_index_read: true
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  positive_or_high_anchors_read:
+    - RA_CAND_0025
+    - RA_CAND_0029
+  lower_bound_or_negative_anchors_read:
+    - RA_CAND_0020
+    - RA_CAND_0024
+    - RA_CAND_0027
+  role_only_slot_calibration_read:
+    baseline: RA_CAND_0010
+    application: RA_CAND_0015
+    challenge: RA_CAND_0011
+  human_comment_ids_read:
+    - HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001
+    - HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001
+    - HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001
+    - HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001
+    - HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001
+    - HP_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_001
+    - HP_STUDIO_L_1_001
+    - HP_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_001
+    - HP_RA_CURR_2026_07_05_L04_MOVABLE_PL_TIMING_v1_001
+    - HP_RA_CURR_2026_07_05_L05_LONG_EDGE_PL_v4_001
+    - HP_RA_CURR_2026_07_05_L06_MULTI_AXIS_PL_v2_001
+
+experience_core:
+  experience_statement: 玩家先读出一块完整、连通且缺口清楚的 C 形大黏块；在关键阶段亲自移动它，并发现只有保留完整 C 形时，其脊、上下臂与凹口才能在同一整体动作中共同解决局面。
+  visible_setup: 开局或短准备后，C 形轮廓、凹口和将被它同时影响的局部结构都能直接从棋盘读出。
+  player_action: 玩家选择并建立 C 形的正确整体运动方向或操作面，再亲手推动或拉动整块；分支可以增加建立入口、制造材料或多阶段复用的责任。
+  visible_payoff: 一次关键刚体位移中，C 形至少两个彼此分离的部位和/或凹口同时产生可见作用，随后迅速收束。
+  why_level_exists: 让玩家把黏块从“多个粘住的格子”重新理解为具有凹口、双臂和整体前沿的几何工具。
+  core_boundary:
+    central_objects:
+      - 完整连通 C 形黏块及其凹口、脊和上下臂
+      - 让 C 形整体位移并同时消费多个部位的关键关系
+    supporting_objects:
+      - 用于保持 sticky 语义的 B/S 锚点
+      - 用于承接整体作用的目标、普通箱、墙口或非核心锚点
+
+work_identity:
+  conditions:
+    - 关键动作前 C 形保持单一连通刚体，轮廓可辨，不能先被切成独立材料。
+    - 关键动作中脊、上下臂、凹口至少有两个空间上分离的部分共同承担责任。
+    - 玩家必须主动使完整 C 形发生决定性整体位移，而非只观看归一化动画。
+    - 关键回报集中发生，高潮后不追加独立子题或长清理。
+  counterfactuals:
+    - 若删除任一臂或把 C 形换成条形，至少一个关键承接关系应失败或作品主要体验改变。
+    - 若把凹口填满为实心矩形，玩家操作位、容纳关系或关键运动应失败或失去同一意义。
+    - 若预先切开 C 形，局面即使仍可通关也不再是本作品身份。
+
+baseline_brief:
+  packaging_intent: direct_complete_realization
+  expected_scale: 一眼可读的紧凑房间；短准备、一次集中整体作用、立即收束
+  expected_player_load: 只要求识别 C 形完整刚体、凹口操作位与同时作用，不叠加独立前置谜题
+  non_goals:
+    - 不追求事件覆盖或对象数量
+    - 不把切割 C 形作为高潮
+    - 不用多目标重复处理填充流程
+
+archive_lineage_policy: fresh_required
+allowed_design_sources:
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+prototype_specific_routing:
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - invalid_goal_prune
+  - opening_comfort_check
+  - redundant_element_prune
+

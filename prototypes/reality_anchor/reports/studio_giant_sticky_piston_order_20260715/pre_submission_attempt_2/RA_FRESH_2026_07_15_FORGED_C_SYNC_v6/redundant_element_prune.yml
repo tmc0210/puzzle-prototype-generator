@@ -1,0 +1,213 @@
+redundant_element_prune:
+  status: clean
+  execution_status: completed_no_change
+  candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+  exact_version: v6_sha256_31debfe814fda7a58cc198234445f2b0d58d8aba063fc8b473e3364bded03879
+  slot: application
+  authority_doc: prototypes/reality_anchor/docs/redundant_element_prune.md
+  sequence: [goal_prune, object_remove_prune, object_wallify_prune, space_prune, wall_outline_prune]
+  base_hard_facts:
+    cost: 12
+    graph_status: complete
+    reachable_states: 143
+    legal_transitions: 338
+    raw_win_states: 7
+    expected_trace_win: true
+    core_event_probe_status: complete
+    core_product_states: 206
+    winning_core_masks: [15]
+    core_event_bypass: none
+    opening:
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 5, 6, 7, 8, 9, 10, 11]
+      initial_win_exit_source_distances: [0]
+      dead_exits_before_first_win_exit: 0
+  predecessor_cleanup_verification:
+    predecessor_exact_version: v5
+    predecessor_trim_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/outline_variants/TRIM_RIGHT_2.txt
+    predecessor_trim_equals_current_v6: true
+    current_v6_sha256: 31debfe814fda7a58cc198234445f2b0d58d8aba063fc8b473e3364bded03879
+    dimensions: 11x13
+    note: v6 已实现首轮要求的右侧两列纯墙裁除；本轮重新从 current exact 执行全部检查。
+  candidates_checked:
+    - element:
+        kind: goal
+        id_or_cell: [[9, 5], [9, 11]]
+      action_tested: remove
+      result: keep
+      reason: 两目标分别是双端同拍可见回报的一半；当前 v6 单删反事实完整且无旁路，但作品身份要求保留。
+      hard_facts:
+        cost_delta: 12->12
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: none
+      semantic_role: read_graph
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/goal_prune_check.yml
+    - element:
+        kind: object
+        id_or_cell: BOX_STICKY_ANCHOR
+      action_tested: remove_and_wallify
+      result: keep
+      reason: 两个版本都留下无 B/S 锚点的 M，解析无效；B/S 是三段边界构造工具。
+      hard_facts:
+        graph_status: not_run_parse_invalid
+        expected_trace_win: false
+        core_event_bypass: none
+        opening_delta: unknown
+        target_obligation_bypass: canonical_trace_no_longer_wins
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: MATERIAL_OCTET
+      action_tested: remove_and_wallify_group_and_each_cell
+      result: keep
+      reason: >-
+        八格整体 remove/wallify 与八个单格各自 remove/wallify 均为 complete zero-win；
+        它们承担 n2、n2、n4 三列材料转换与双钩连通前缘。
+      hard_facts:
+        graph_status: complete
+        expected_trace_win: false
+        core_event_bypass: none
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: TARGET_BOX_PAIR
+      action_tested: remove_and_wallify_each
+      result: keep
+      reason: 四个反事实均为 complete zero-win；两箱是目标载荷，不是 blocker。
+      hard_facts:
+        graph_status: complete
+        expected_trace_win: false
+        core_event_bypass: none
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: THICK_SPINE_3X7
+      action_tested: remove_and_wallify
+      result: keep
+      reason: >-
+        remove 会打开另一套箱搬运胜路并缺少四个核心段；wallify 为 complete zero-win。
+        21 格厚脊必须作为可移动基底接收材料并承担终拍受力。
+      hard_facts:
+        remove_cost_delta: 12->21
+        remove_graph_status: exhausted_at_300001
+        observed_remove_win_states: 1697
+        remove_core_event_bypass: all_four_groups_missing
+        wallify_graph_status: complete
+        wallify_win_state_count: 0
+        expected_trace_win: false
+      semantic_role: structural
+    - element:
+        kind: object
+        id_or_cell: PUSH_PULL_ANCHOR
+      action_tested: remove_and_wallify
+      result: keep
+      reason: >-
+        两个反事实的硬图都与 base 相同，故不声明机械必要；P/L 是两个闭合目标袋“向 P 侧推入、从 L 侧回撤”的唯一规则标记，
+        当前 v6 四步代表 probe 实际显示同箱推入后可被 L 侧拉回。
+      hard_facts:
+        cost_delta: 12->12
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass: none
+        mechanical_graph_delta: none
+        semantic_gate: fails_read_graph_responsibility
+      semantic_role: read_graph
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/results.json#probe_upper_lock_alcove_retracts
+    - element:
+        kind: space
+        id_or_cell: LEFT_CHANNEL_CANONICAL_SEGMENT_[1,2..5]
+      action_tested: wall_prune_each
+      result: keep
+      reason: 四格分别墙化均为 complete zero-win，并截断规范回返路径。
+      hard_facts:
+        graph_statuses: [complete, complete, complete, complete]
+        win_state_counts: [0, 0, 0, 0]
+        expected_trace_win: false
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+    - element:
+        kind: space
+        id_or_cell: LEFT_CHANNEL_OPTIONAL_SEGMENT_[1,6..11]
+      action_tested: wall_prune_each
+      result: keep
+      reason: >-
+        六格虽不进最短回放，但逐格墙化把 initial SCC 从 12 缩到 6..11，并把七个等价终拍接触位缩到 1..6；
+        该段承担 opening comfort 与“可停下试用主体”的操作表面。
+      hard_facts:
+        cost_deltas: [12->12, 12->12, 12->12, 12->12, 12->12, 12->12]
+        graph_statuses: [complete, complete, complete, complete, complete, complete]
+        win_state_counts: [1, 2, 3, 4, 5, 6]
+        base_initial_scc_size: 12
+        variant_initial_scc_sizes: [6, 7, 8, 9, 10, 11]
+        core_event_bypass: none
+      semantic_role: opening_comfort
+    - element:
+        kind: space
+        id_or_cell: CLOSED_POCKET_PAIR_[[8,6],[8,10]]
+      action_tested: wall_prune_each_and_pair
+      result: keep
+      reason: 三个版本均为 complete 54 states / zero-win；两格既是终拍支撑末格目的地，也画出锁箱回撤侧别。
+      hard_facts:
+        graph_statuses: [complete, complete, complete]
+        reachable_states: [54, 54, 54]
+        win_state_counts: [0, 0, 0]
+        expected_trace_win: false
+      semantic_role: structural
+    - element:
+        kind: wall_outline
+        id_or_cell: current_11x13_single_layer_frame
+      action_tested: trim_all_sides
+      result: keep
+      reason: >-
+        当前 v6 上、下、左、右最大合法裁剪数均为 0；右侧再裁会暴露 x=9 目标，无法保持最外圈全墙。
+        v5 的两列纯墙已经不在 current exact 中。
+      hard_facts:
+        original_dimensions: 11x13
+        maximal_legal_trim_by_side:
+          top: 0
+          bottom: 0
+          left: 0
+          right: 0
+      semantic_role: structural
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline: []
+  retained_elements:
+    - {kind: goal, id_or_cell: [[9, 5], [9, 11]], reason: 双端同拍回报与镜像终局}
+    - {kind: object, id_or_cell: BOX_STICKY_ANCHOR, reason: 三段材料边界与玩家构造工具}
+    - {kind: object, id_or_cell: MATERIAL_OCTET, reason: n2、n2、n4 构造材料与双钩连通前缘}
+    - {kind: object, id_or_cell: TARGET_BOX_PAIR, reason: 两个目标载荷}
+    - {kind: object, id_or_cell: THICK_SPINE_3X7, reason: 21 格可移动基底、黏接主体与终拍受力把手}
+    - {kind: object, id_or_cell: PUSH_PULL_ANCHOR, reason: P/L 侧别 read-graph 责任}
+    - {kind: space, id_or_cell: LEFT_CHANNEL, reason: 规范回返、opening、提前试用与七个接触位}
+    - {kind: space, id_or_cell: CLOSED_POCKET_PAIR, reason: 终拍目的地及回撤可读性}
+    - {kind: wall_outline, id_or_cell: remaining_single_layer_frame, reason: 闭合矩形与机制边界}
+  prunable_elements: []
+  revision_required_before_admission: false
+  rereview_required:
+    because_v6_is_new_successor: true
+    caused_by_this_check: false
+  version_effect:
+    exact_v6_mutated: false
+    exact_v6_status: unchanged_and_pre_submission_clean
+    required_layout_change: none
+    new_candidate_version_required: false
+  review_effect:
+    predecessor_v5_review_carries_forward: false
+    fresh_v6_evidence_and_full_batch_rereview_required: true
+    additional_rereview_caused_by_this_check: false
+    note: 本轮没有发现 v6 的新改动；current exact fresh review 存活后可直接进入交付工作流。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/raw_evidence.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/goal_prune_check.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/identity_verification.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness_v6/results.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json

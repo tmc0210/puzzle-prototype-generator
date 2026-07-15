@@ -1,4 +1,4 @@
-# 独立关卡审查模板
+# 独立整批关卡审查模板
 
 ```yaml
 review_attempt_id: ""
@@ -6,18 +6,21 @@ reviewer_instance_id: ""
 review_integrity: independent | contaminated | incomplete
 
 archive_calibration:
-  full_index_read: true | false
-  all_aesthetic_1_records_read: []
-  positive_or_high_anchors_read: []
-  lower_bound_or_negative_anchors_read: []
-  human_comment_ids_read: []
+  index_or_summary_ref: ""
+  selected_anchors:
+    - candidate_id: ""
+      calibration_role: positive | negative_or_boundary
+      human_comment_refs: []
+      selection_reason: ""
+  missing_anchor_note: none | ""
 
 independent_readings:
-  - candidate_id: ""
+  - slot: baseline | application | combination | challenge
+    candidate_id: ""
     exact_version: ""
-    slot: baseline | application | combination | challenge
     opening_read: ""
     player_actually_does: ""
+    key_visible_changes: []
     visible_payoff: ""
     ending_read: ""
     exact_basis: []
@@ -27,25 +30,29 @@ independent_readings:
         player_effect: ""
         same_work_improvement_direction: ""
         blocking: true
-    verdict: survive_to_pre_submission_checks | revise_and_rereview | reject_branch
+    verdict: survive_to_pre_submission_checks | revise_and_rereview | reject_candidate
 
-portfolio_comparison:
-  baseline_complete_direct_read: ""
-  application_real_delta: ""
-  combination_non_prerequisite_mechanism: ""
-  combination_consumption_relation: ""
+slot_and_portfolio_reading:
+  baseline_complete_not_minimal_witness: ""
+  application_real_delta_from_baseline: ""
+  combination_other_non_prerequisite_mechanism: ""
+  combination_player_visible_relation: ""
   challenge_real_ceiling_attempt: ""
+  common_core_still_recognizable: ""
   pairwise_player_experience_differences: []
-  slot_or_redundancy_blockers: []
+  blockers:
+    - candidate_id: ""
+      blocker_type: single_level_defect | slot_not_established | redundant_with_candidate | common_core_lost
+      exact_basis: ""
+      required_action: revise_candidate | replace_candidate
 
-overall_verdict: survive_to_pre_submission_checks | revise_and_rereview | reject_portfolio
-required_action: none | structural_revision | remove_survivor | rebuild_portfolio
+overall_verdict: survive_to_pre_submission_checks | revise_and_rereview
+required_actions: []
 ```
 
 规则：
 
 - `review_integrity` 不是 `independent` 时，本次审查无效。
-- 任一版本存在 blocking defect 时，该版本不得 survive。
-- 档位不成立、版本没有实质差异或为填档保留弱版本时，必须形成 blocker。
-- 不输出审美分、难度分、推荐排序或工具质量结论。
-- 不提出把当前完整保守作品另作成更复杂作品，来冒充同题缺点。
+- 任一 blocking defect 或 `slot_and_portfolio_reading.blockers` 都阻止整批 survive。
+- `reject_candidate` 只关闭当前候选，不关闭 slot。
+- 不输出设计空间覆盖、段落完成度、审美分、难度分、排名或工具质量结论。

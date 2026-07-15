@@ -1,0 +1,310 @@
+redundant_element_prune:
+  status: pruned
+  decision_status: successor_cleanup_required
+  application_status: not_applied_to_exact_v4
+  candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+  exact_version: v4_sha256_39839eef5d8c118500a0e4f3a48bfb9e38819fbb8a3cf06f6210f1e6ae58772b
+  authority_doc: prototypes/reality_anchor/docs/redundant_element_prune.md
+  version_effect: changed
+  review_effect: rereview_required
+  exact_version_guard:
+    layout_mutated: false
+    levels_yml_mutated: false
+    playable_queue_mutated: false
+    canonical_replay_mutated: false
+    note: >-
+      本检查证明存在应裁的空地与后续外框，但 review 绑定 exact v4。按任务约束只记录 successor 变更要求并停止，
+      不把任何反事实覆盖回候选，不静默继承既有 review。
+
+  sequence:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+
+  exact_baseline:
+    layout_dimensions: {width: 14, height: 19}
+    shortest_cost: 14
+    graph_status: complete
+    reachable_states: 957
+    legal_transitions: 2997
+    winning_states: 9
+    expected_trace_legal: true
+    expected_trace_win: true
+    core_event_probe:
+      status: complete
+      explored_product_states: 1066
+      winning_bypass: none
+    opening:
+      initial_scc_size: 327
+      nearest_irreversible_exit_distance: 4
+      nearest_win_reaching_exit_distance: 12
+      dead_exits_before_first_win_exit: 9
+      first_step_legal_events: {up: [walk], down: [walk], left: [walk], right: [walk]}
+
+  stage_results:
+    goal_prune:
+      status: clean
+      delegated_artifact: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/goal_prune_check.yml
+      retained_targets:
+        - [11, 7]
+        - [11, 11]
+        - [11, 15]
+      removed_targets: []
+
+    object_remove_prune:
+      status: clean
+      candidates_checked:
+        - id: BOX_STICKY_ANCHOR
+          cells: [[9, 1], [10, 1]]
+          result: keep
+          reason: 删除 B/S 后 parser 明确拒绝仍含 M 的实例；它不是可删装饰，而是巨大黏体材料规则所必需的 B/S 边界合同。
+          hard_facts:
+            parse_status: invalid
+            parse_error: Level REMOVE_BOX_STICKY_ANCHOR has sticky M cells but no B/S anchor
+            cost_delta: "14->unavailable"
+            graph_status: not_run_parse_invalid
+            expected_trace_win: false
+            core_event_bypass: not_run_parse_invalid
+          semantic_role: material_rule_boundary
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/object_variants/REMOVE_BOX_STICKY_ANCHOR.json
+
+        - id: PUSH_PULL_ANCHOR
+          cells: [[9, 3], [10, 3]]
+          result: keep
+          reason: 删除 P/L 虽保留规范解与 14 步成本，却产生 15 步逐箱胜路，绕过完整三叉、n4 力链和三触点同拍切箱；P/L 承担三只一格活塞不能逐个累积的核心规则责任。
+          hard_facts:
+            parse_status: valid
+            cost_delta: "14->14"
+            graph_status: complete
+            reachable_states: 6573
+            legal_transitions: 20883
+            winning_states: 33
+            expected_trace_win: true
+            core_event_probe_status: found
+            core_event_bypass: [完整三叉刚体受力, 四对象同拍力链, 三触点同拍切箱]
+            bypass_depth: 15
+          semantic_role: structural_rule_boundary
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/object_variants/REMOVE_PUSH_PULL_ANCHOR.json
+
+      screened_non_candidates:
+        - id: STICKY_COMPONENT_1
+          result: keep
+          reason: 21 格连通黏体在规范 step 13/14 整体右移，并在胜利步产生 move_sticky_rigid、force_chain:n4、sticky_to_box:n3；不满足 remove 候选前提。
+          semantic_role: core_driver_and_visible_subject
+        - id: CRATE_TOP
+          cell: [10, 7]
+          result: keep
+          reason: 胜利步被完整黏体推至 [11,7] 覆盖上目标，参与 n4 力链。
+          semantic_role: target_piston
+        - id: CRATE_MIDDLE
+          cell: [10, 11]
+          result: keep
+          reason: 胜利步被完整黏体推至 [11,11] 覆盖中目标，参与 n4 力链。
+          semantic_role: target_piston
+        - id: CRATE_BOTTOM
+          cell: [10, 15]
+          result: keep
+          reason: 胜利步被完整黏体推至 [11,15] 覆盖下目标，参与 n4 力链。
+          semantic_role: target_piston
+
+    object_wallify_prune:
+      status: clean
+      candidates_checked:
+        - id: BOX_STICKY_ANCHOR
+          cells: [[9, 1], [10, 1]]
+          result: keep
+          reason: 墙化同样移除 B/S 规则边界，parser 明确拒绝仍含 M 的实例；它不能被普通墙替代。
+          hard_facts:
+            parse_status: invalid
+            parse_error: Level WALLIFY_BOX_STICKY_ANCHOR has sticky M cells but no B/S anchor
+            cost_delta: "14->unavailable"
+            graph_status: not_run_parse_invalid
+            expected_trace_win: false
+            core_event_bypass: not_run_parse_invalid
+          semantic_role: material_rule_boundary
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/object_variants/WALLIFY_BOX_STICKY_ANCHOR.json
+
+        - id: PUSH_PULL_ANCHOR
+          cells: [[9, 3], [10, 3]]
+          result: keep
+          reason: 墙化版本与删除版本一样出现逐箱胜路并绕过全部三叉同步事件组，证明 P/L 不是只承担墙的静态 blocker。
+          hard_facts:
+            parse_status: valid
+            cost_delta: "14->14"
+            graph_status: complete
+            reachable_states: 6573
+            legal_transitions: 20883
+            winning_states: 33
+            expected_trace_win: true
+            core_event_probe_status: found
+            core_event_bypass: [完整三叉刚体受力, 四对象同拍力链, 三触点同拍切箱]
+            bypass_depth: 15
+          semantic_role: structural_rule_boundary
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/object_variants/WALLIFY_PUSH_PULL_ANCHOR.json
+
+      screened_non_candidates:
+        - STICKY_COMPONENT_1
+        - CRATE_TOP
+        - CRATE_MIDDLE
+        - CRATE_BOTTOM
+      screened_reason: 这些对象在规范 trace 中移动、转换或直接参与核心胜利事件，不满足 wallify 的静态 blocker 前提。
+
+    space_prune:
+      status: pruned
+      discovery:
+        ordinary_floor_cells_checked: 105
+        degree_le_1_candidates:
+          - [12, 5]
+          - [12, 9]
+          - [12, 13]
+          - [12, 17]
+        single_entry_branches:
+          - {cells: [[10, 5], [11, 5], [12, 5]], entrance: [9, 5]}
+          - {cells: [[10, 9], [11, 9], [12, 9]], entrance: [9, 9]}
+          - {cells: [[10, 13], [11, 13], [12, 13]], entrance: [9, 13]}
+          - {cells: [[10, 17], [11, 17], [12, 17]], entrance: [9, 17]}
+        canonical_trace_uses_candidate_cells: false
+
+      removable_leaf_tips:
+        - cell: [12, 5]
+          result: remove
+          reason: degree=1，规范玩家/对象路径均不用；单删不改变成本、回放、核心链或 opening 承诺，且没有独立读图、站位或审美责任。
+          hard_facts: {cost_delta: "14->14", graph_status: complete, reachable_states: 948, legal_transitions: 2979, winning_states: 9, expected_trace_unchanged: true, core_event_bypass: none, initial_scc_delta: "327->324", nearest_irreversible_delta: "4->4", nearest_win_delta: "12->12", dead_exit_delta: "9->9"}
+          semantic_role: none
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/space_variants/WALL_LEAF_12_5.json
+        - cell: [12, 9]
+          result: remove
+          reason: degree=1，规范玩家/对象路径均不用；删去末端后 current start 仍可向右纯 walk 两格，观察缓冲不依赖第三格。
+          hard_facts: {cost_delta: "14->14", graph_status: complete, reachable_states: 949, legal_transitions: 2981, winning_states: 9, expected_trace_unchanged: true, core_event_bypass: none, initial_scc_delta: "327->324", nearest_irreversible_delta: "4->4", nearest_win_delta: "12->12", dead_exit_delta: "9->9"}
+          semantic_role: none
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/space_variants/WALL_LEAF_12_9.json
+        - cell: [12, 13]
+          result: remove
+          reason: degree=1，规范玩家/对象路径均不用；删去末端仍保留与 y=9 对称的两格呼吸支路，没有独立责任。
+          hard_facts: {cost_delta: "14->14", graph_status: complete, reachable_states: 949, legal_transitions: 2981, winning_states: 9, expected_trace_unchanged: true, core_event_bypass: none, initial_scc_delta: "327->324", nearest_irreversible_delta: "4->4", nearest_win_delta: "12->12", dead_exit_delta: "9->9"}
+          semantic_role: none
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/space_variants/WALL_LEAF_12_13.json
+        - cell: [12, 17]
+          result: remove
+          reason: degree=1，规范玩家/对象路径均不用；单删不改变成本、回放、核心链或 opening 承诺，且没有独立读图、站位或审美责任。
+          hard_facts: {cost_delta: "14->14", graph_status: complete, reachable_states: 948, legal_transitions: 2979, winning_states: 9, expected_trace_unchanged: true, core_event_bypass: none, initial_scc_delta: "327->324", nearest_irreversible_delta: "4->4", nearest_win_delta: "12->12", dead_exit_delta: "9->9"}
+          semantic_role: none
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/space_variants/WALL_LEAF_12_17.json
+
+      combination_check:
+        cells: [[12, 5], [12, 9], [12, 13], [12, 17]]
+        result: remove
+        reason: 四个末端组合墙化仍完全通过；current start 保留上、下、左、右四个纯 walk 首步，右侧仍有 x=10..11 两格观察缓冲。
+        hard_facts:
+          cost_delta: "14->14"
+          graph_status: complete
+          reachable_states: 923
+          legal_transitions: 2929
+          winning_states: 9
+          expected_trace_unchanged: true
+          core_event_probe_status: complete
+          core_event_bypass: none
+          initial_scc_delta: "327->315"
+          nearest_irreversible_delta: "4->4"
+          nearest_win_delta: "12->12"
+          dead_exit_delta: "9->9"
+          first_step_legal_events: {up: [walk], down: [walk], left: [walk], right: [walk]}
+        evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/space_variants/WALL_ALL_LEAF_TIPS.json
+
+      retained_branch_cores:
+        - cells: [[10, 5], [11, 5]]
+          result: keep
+          reason: 保留两格上绕行呼吸端，使顶部通道不过早在 x=9 突兀截断，并与底部通道形成上下对称的结构读图；第三格 leaf 不需要。
+          semantic_role: read_graph_and_aesthetic
+        - cells: [[10, 9], [11, 9]]
+          result: keep
+          reason: current start [9,9] 的右向纯 walk 观察位；整支路墙化会把四向首步减为三向。两格足够承担缓冲，第三格 leaf 不需要。
+          semantic_role: opening_comfort
+        - cells: [[10, 13], [11, 13]]
+          result: keep
+          reason: 与 y=9 支路镜像，保持三只活塞之间负空间节奏和读图对称；第三格 leaf 不需要。
+          semantic_role: read_graph_and_aesthetic
+        - cells: [[10, 17], [11, 17]]
+          result: keep
+          reason: 保留两格下绕行呼吸端，与顶部通道形成上下对称的结构读图；第三格 leaf 不需要。
+          semantic_role: read_graph_and_aesthetic
+        - scope: all_four_complete_branches
+          result: keep
+          reason: 全墙化虽机械门槛通过，但 current start 会失去 right 纯 walk 首步并贴近右墙；流程不能因 solver success alone 删除有明确 opening/read-graph 责任的两格支路核心。
+          hard_facts: {cost_delta: "14->14", graph_status: complete, reachable_states: 855, legal_transitions: 2793, winning_states: 9, expected_trace_unchanged: true, core_event_bypass: none, initial_scc_delta: "327->291", nearest_irreversible_delta: "4->4", nearest_win_delta: "12->12", dead_exit_delta: "9->9", first_step_legal_events_after: {up: [walk], down: [walk], left: [walk]}}
+          semantic_role: opening_comfort_and_read_graph
+          evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/space_variants/WALL_ALL_RIGHT_BRANCHES.json
+
+    wall_outline_prune:
+      status: pruned
+      original_scan:
+        trim_candidates: []
+        reason: exact v4 的四个 leaf 仍占 x=12，因此原始最右 x=13 是维持闭合边界所需的单层外墙；其它三侧也无可裁行列。
+      after_selected_space_prune:
+        action: trim_right_outer_column
+        result: trim
+        reason: 四个 x=12 leaf 墙化后，x=12 成为完整新外墙，旧 x=13 成为全高第二层墙；裁掉 x=13 不改变任何对象、目标、玩家坐标或机制边界。
+        hard_facts:
+          dimensions_delta: "14x19->13x19"
+          cost_delta: "14->14"
+          graph_status: complete
+          reachable_states: 923
+          legal_transitions: 2929
+          winning_states: 9
+          expected_trace_unchanged: true
+          core_event_probe_status: complete
+          core_event_bypass: none
+          initial_scc_delta: "327->315"
+          nearest_irreversible_delta: "4->4"
+          nearest_win_delta: "12->12"
+          dead_exit_delta: "9->9"
+          new_outer_ring_all_walls: true
+        semantic_role: none
+        evidence_refs:
+          - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/outline_variants/TRIM_RIGHT_AFTER_ALL_LEAF_TIPS.txt
+          - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/outline_variants/TRIM_RIGHT_AFTER_ALL_LEAF_TIPS.json
+
+  candidates_checked_summary:
+    goals: {checked: 3, remove: 0, keep: 3, unknown: 0}
+    objects: {remove_candidates: 2, wallify_candidates: 2, remove: 0, wallify: 0, keep: 4, unknown: 0}
+    spaces: {leaf_candidates: 4, remove: 4, retained_branch_cores: 4, unknown: 0}
+    wall_outline: {original_trim_candidates: 0, conditional_trim_required: 1, unknown: 0}
+
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline: []
+  required_successor_changes:
+    - kind: space
+      action: wall_prune
+      cells: [[12, 5], [12, 9], [12, 13], [12, 17]]
+    - kind: wall_outline
+      action: trim
+      description: 在上述四格墙化后裁掉最右 x=13 全墙列，使 x=12 成为新外墙。
+  successor_counterfactual_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/outline_variants/TRIM_RIGHT_AFTER_ALL_LEAF_TIPS.txt
+  revision_required_before_admission: true
+
+  retained_elements:
+    - {kind: goal, id_or_cell: [11, 7], reason: 三重同步可见身份}
+    - {kind: goal, id_or_cell: [11, 11], reason: 三重同步可见身份}
+    - {kind: goal, id_or_cell: [11, 15], reason: 三重同步可见身份}
+    - {kind: object, id_or_cell: BOX_STICKY_ANCHOR, reason: B/S 材料规则边界}
+    - {kind: object, id_or_cell: PUSH_PULL_ANCHOR, reason: P/L 三活塞顺序矛盾边界}
+    - {kind: object, id_or_cell: STICKY_COMPONENT_1, reason: 终局完整三叉 driver}
+    - {kind: object, id_or_cell: three_target_crates, reason: 三只目标活塞}
+    - {kind: space, id_or_cell: right_branch_cores_x10_x11, reason: opening comfort、读图和上下对称}
+
+  artifact_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/analyze.ts
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/raw_evidence.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/goal_prune_check.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/review/designer_action_1.yml
+
+  final_conclusion: >-
+    fixed-order 审计在 space_prune 命中四个确定冗余 leaf：[12,5]、[12,9]、[12,13]、[12,17]；组合墙化仍保持 14 步规范解、完整图、全部核心事件和 opening 承诺，
+    且保留 x=10..11 的两格支路核心来承担观察、读图与对称责任。墙化后旧右外墙 x=13 成为可裁的第二层全墙列，裁边反事实同样全部通过。
+    这要求产生 successor 版本；exact v4 与其 review 在本目录中均未被改写，当前结论为 rereview_required。

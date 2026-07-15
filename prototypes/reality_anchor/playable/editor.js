@@ -1415,28 +1415,7 @@ function stepPush(state, input, dir, options) {
   }
   const targetObject = objectIdAt(state, destination);
   if (targetObject) {
-    if (isRuleDisabled3("push_force", options)) {
-      return illegal3(state, input, "push_force_disabled");
-    }
-    const plan = planObjectMove(state, targetObject, dir, {
-      playerBlocks: /* @__PURE__ */ new Set([pointKey3(state.player)])
-    });
-    if (!plan.legal) {
-      return illegal3(state, input, plan.reason);
-    }
-    const moved2 = translatePlannedObjects(state, plan.objectIds, dir);
-    moved2.player = destination;
-    const normalized2 = normalizeState(moved2, { emitEvents: true, options });
-    return {
-      legal: true,
-      input,
-      state: normalized2.state,
-      events: [
-        `push_object:${describeObject(targetObject)}`,
-        ...forceEvents(state, plan.objectIds),
-        ...normalized2.events
-      ]
-    };
+    return stepForce(state, input, dir, destination, targetObject, "push", options);
   }
   if (!isFreeForPlayer(state, destination)) {
     return illegal3(state, input, "destination_occupied");
@@ -1451,34 +1430,10 @@ function stepPull(state, input, dir, options) {
   if (isWallOrBounds(state, destination)) {
     return illegal3(state, input, "destination_blocked");
   }
-  if (objectIdAt(state, destination)) {
-    return illegal3(state, input, "pull_world_front_blocked");
-  }
   const behind = subtract2(state.player, dir);
   const targetObject = objectIdAt(state, behind);
   if (targetObject) {
-    if (isRuleDisabled3("pull_force", options)) {
-      return illegal3(state, input, "pull_force_disabled");
-    }
-    const plan = planObjectMove(state, targetObject, dir, {
-      playerBlocks: /* @__PURE__ */ new Set([pointKey3(destination)])
-    });
-    if (!plan.legal) {
-      return illegal3(state, input, plan.reason);
-    }
-    const moved2 = translatePlannedObjects(state, plan.objectIds, dir);
-    moved2.player = destination;
-    const normalized2 = normalizeState(moved2, { emitEvents: true, options });
-    return {
-      legal: true,
-      input,
-      state: normalized2.state,
-      events: [
-        `pull_object:${describeObject(targetObject)}`,
-        ...forceEvents(state, plan.objectIds),
-        ...normalized2.events
-      ]
-    };
+    return stepForce(state, input, dir, destination, targetObject, "pull", options);
   }
   if (!isFreeForPlayer(state, destination)) {
     return illegal3(state, input, "destination_occupied");
@@ -1488,7 +1443,33 @@ function stepPull(state, input, dir, options) {
   const normalized = normalizeState(moved, { emitEvents: true, options });
   return { legal: true, input, state: normalized.state, events: ["walk", ...normalized.events] };
 }
-function planObjectMove(state, startObject, dir, context) {
+function stepForce(state, input, dir, playerDestination, targetObject, force, options) {
+  const ruleId = force === "push" ? "push_force" : "pull_force";
+  if (isRuleDisabled3(ruleId, options)) {
+    return illegal3(state, input, `${ruleId}_disabled`);
+  }
+  const plan = planObjectMove(state, targetObject, dir);
+  if (!plan.legal) {
+    return illegal3(state, input, plan.reason);
+  }
+  const moved = translatePlannedObjects(state, plan.objectIds, dir);
+  if (objectIdAt(moved, playerDestination)) {
+    return illegal3(state, input, "player_destination_occupied");
+  }
+  moved.player = playerDestination;
+  const normalized = normalizeState(moved, { emitEvents: true, options });
+  return {
+    legal: true,
+    input,
+    state: normalized.state,
+    events: [
+      `${force}_object:${describeObject(targetObject)}`,
+      ...forceEvents(state, plan.objectIds),
+      ...normalized.events
+    ]
+  };
+}
+function planObjectMove(state, startObject, dir) {
   const moving = /* @__PURE__ */ new Set();
   const occupancy = objectOccupancy(state);
   const visit = (objectId) => {
@@ -1501,9 +1482,6 @@ function planObjectMove(state, startObject, dir, context) {
       const targetKey = pointKey3(target);
       if (!inBounds3(state, target) || state.walls.has(targetKey)) {
         return "force_blocked";
-      }
-      if (context.playerBlocks.has(targetKey)) {
-        return "force_blocked_by_player";
       }
       const blocker = occupancy.get(targetKey);
       if (blocker && blocker !== objectId) {
@@ -2204,6 +2182,58 @@ var puzzleScript16Sprites = {
   "ra.anchor.sticky_end.join_down": sprite("ra_anchor_sticky_end_join_down.png", "sticky anchor end joined down", "object")
 };
 
+// src/web/fitBoard.ts
+var tileSizeProperty = "--tile-size";
+var tileSizeCapProperty = "--tile-size-cap";
+var BoardFitController = class {
+  observer = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      fitBoard(entry.target);
+    }
+  });
+  observe(container) {
+    this.observer.disconnect();
+    if (!container) {
+      return;
+    }
+    fitBoard(container);
+    this.observer.observe(container);
+  }
+};
+function fitBoard(container) {
+  const board = container.querySelector("[data-fit-board]");
+  if (!board) {
+    return;
+  }
+  const width = positiveNumber(board.dataset.boardWidth);
+  const height = positiveNumber(board.dataset.boardHeight);
+  if (!width || !height) {
+    return;
+  }
+  const containerStyle = window.getComputedStyle(container);
+  const availableWidth = container.clientWidth - cssPixels(containerStyle.paddingLeft) - cssPixels(containerStyle.paddingRight);
+  const availableHeight = container.clientHeight - cssPixels(containerStyle.paddingTop) - cssPixels(containerStyle.paddingBottom);
+  const cap = cssPixels(window.getComputedStyle(board).getPropertyValue(tileSizeCapProperty));
+  const fittedSize = Math.min(
+    cap > 0 ? cap : Number.POSITIVE_INFINITY,
+    availableWidth / width,
+    availableHeight / height
+  );
+  if (!Number.isFinite(fittedSize) || fittedSize <= 0) {
+    return;
+  }
+  const safeSize = Math.floor(fittedSize * 1e3) / 1e3;
+  board.style.setProperty(tileSizeProperty, `${safeSize}px`);
+}
+function positiveNumber(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : void 0;
+}
+function cssPixels(value) {
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 // src/web/editor.ts
 var inputByKey = {
   ArrowUp: "up",
@@ -2241,7 +2271,8 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mri85cu8" : String(Date.now());
+var boardFitController = new BoardFitController();
+var buildId = true ? "mrlf0bnl" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);
@@ -2339,6 +2370,7 @@ function render() {
   bindEvents();
   restoreViewState(previousView);
   restoreSourceSearchInputFocus();
+  boardFitController.observe(app.querySelector(".editor-board-wrap"));
   if (pendingScrollSelected) {
     pendingScrollSelected = false;
     scrollSelectedSourceIntoView();
@@ -2629,7 +2661,10 @@ function renderVisualBoard(board, className, editable = false) {
   return `
     <div
       class="board ${className}"
-      style="grid-template-columns: repeat(${board.width}, minmax(0, 1fr));"
+      data-fit-board
+      data-board-width="${board.width}"
+      data-board-height="${board.height}"
+      style="grid-template-columns: repeat(${board.width}, var(--tile-size));"
     >
       ${tiles.map((tile) => renderTile(tile, editable)).join("")}
     </div>

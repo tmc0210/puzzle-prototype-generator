@@ -1,0 +1,539 @@
+redundant_element_prune:
+  status: pruned
+  status_meaning: audit_found_prunable_outline_but_did_not_mutate_reviewed_exact_version
+  execution_status: change_required_not_applied
+  candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+  exact_version: v5_sha256_9bfae9c5c1160d4088fc59c317c2bfef33bd77b7066bca23e19850fd867cb590
+  slot: application
+  authority_doc: prototypes/reality_anchor/docs/redundant_element_prune.md
+  sequence:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+  base_hard_facts: &base_hard_facts
+    cost: 12
+    graph_status: complete
+    reachable_states: 143
+    legal_transitions: 338
+    raw_win_states: 7
+    expected_trace_win: true
+    core_event_probe_status: complete
+    core_product_states: 206
+    winning_core_masks: [15]
+    core_event_bypass: none
+    opening:
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 5, 6, 7, 8, 9, 10, 11]
+      initial_win_exit_source_distances: [0]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 0
+      dead_exits_before_first_win_exit: 0
+  candidates_checked:
+    - element:
+        kind: goal
+        id_or_cell:
+          - [9, 5]
+          - [9, 11]
+      action_tested: remove
+      result: keep
+      reason: >-
+        已先按目标流程逐一删除。两项反事实虽保持全部硬事实，但每一目标都是“双端同拍”可见回报和上下镜像终局的一半，不是顺路引导目标。
+      hard_facts:
+        cost_delta: 12->12
+        graph_status: complete
+        expected_trace_win: true
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: none
+      semantic_role: read_graph
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/goal_prune_check.yml
+
+    - element:
+        kind: object
+        id_or_cell:
+          id: BOX_STICKY_ANCHOR
+          cells: [[4, 2], [5, 2]]
+      action_tested: remove
+      result: keep
+      reason: 删除 B/S 后仍有 M，反事实 layout 按原型规则无效；规范构造链也无从定义。
+      hard_facts:
+        parse_status: invalid
+        parse_error: sticky M cells but no B/S anchor
+        cost_delta: 12->unavailable
+        graph_status: not_run_parse_invalid
+        expected_trace_win: false
+        core_event_probe_status: not_run_parse_invalid
+        core_event_bypass: none
+        opening_delta: unknown
+        target_obligation_bypass: canonical_trace_no_longer_wins
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/REMOVE_BOX_STICKY_ANCHOR.json
+    - element:
+        kind: object
+        id_or_cell:
+          id: BOX_STICKY_ANCHOR
+          cells: [[4, 2], [5, 2]]
+      action_tested: wallify
+      result: keep
+      reason: 墙化 B/S 同样留下无锚 M，反事实 layout 无效；它不是伪装成材料的静态 blocker。
+      hard_facts:
+        parse_status: invalid
+        parse_error: sticky M cells but no B/S anchor
+        cost_delta: 12->unavailable
+        graph_status: not_run_parse_invalid
+        expected_trace_win: false
+        core_event_probe_status: not_run_parse_invalid
+        core_event_bypass: none
+        opening_delta: unknown
+        target_obligation_bypass: canonical_trace_no_longer_wins
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/WALLIFY_BOX_STICKY_ANCHOR.json
+
+    - element:
+        kind: object
+        id_or_cell:
+          id: MATERIAL_OCTET
+          cells: &material_octet [[7, 5], [5, 6], [6, 6], [7, 6], [5, 10], [6, 10], [7, 10], [7, 11]]
+      action_tested: remove
+      result: keep
+      reason: >-
+        八格整体删除后 complete 图无胜态、规范回放不胜；逐格删除八个构件也各自 complete 且均无胜态。
+        它们依次承担 n2、n2、n4 三列锻造，最后形成两钩尖与两条支撑的连通前缘，不是装饰箱材。
+      hard_facts:
+        parse_status: valid
+        cost_delta: 12->unavailable
+        graph_status: complete
+        reachable_states: 136
+        legal_transitions: 338
+        win_state_count: 0
+        expected_trace_win: false
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: no_winning_state
+        individual_cell_audit: all_8_remove_variants_complete_with_zero_wins
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/REMOVE_MATERIAL_OCTET.json
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+    - element:
+        kind: object
+        id_or_cell:
+          id: MATERIAL_OCTET
+          cells: *material_octet
+      action_tested: wallify
+      result: keep
+      reason: >-
+        八格整体墙化后 complete 图无胜态、规范回放不胜；逐格墙化八个构件也各自 complete 且均无胜态。
+        因而八格不只是静态阻挡，它们必须经历材料转换并进入完整主体。
+      hard_facts:
+        parse_status: valid
+        cost_delta: 12->unavailable
+        graph_status: complete
+        reachable_states: 54
+        legal_transitions: 103
+        win_state_count: 0
+        expected_trace_win: false
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: no_winning_state
+        individual_cell_audit: all_8_wallify_variants_complete_with_zero_wins
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/WALLIFY_MATERIAL_OCTET.json
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+
+    - element:
+        kind: object
+        id_or_cell:
+          id: TARGET_BOX_UPPER
+          cells: [[8, 5]]
+      action_tested: remove
+      result: keep
+      reason: complete 图无胜态；上箱是上目标的实际载荷与同拍回报之一。
+      hard_facts: &upper_target_remove
+        cost_delta: 12->unavailable
+        graph_status: complete
+        reachable_states: 158
+        win_state_count: 0
+        expected_trace_win: false
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/REMOVE_TARGET_BOX_UPPER.json
+    - element:
+        kind: object
+        id_or_cell:
+          id: TARGET_BOX_UPPER
+          cells: [[8, 5]]
+      action_tested: wallify
+      result: keep
+      reason: complete 图无胜态；上箱不是只承担墙职责。
+      hard_facts:
+        cost_delta: 12->unavailable
+        graph_status: complete
+        reachable_states: 136
+        win_state_count: 0
+        expected_trace_win: false
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/WALLIFY_TARGET_BOX_UPPER.json
+    - element:
+        kind: object
+        id_or_cell:
+          id: TARGET_BOX_LOWER
+          cells: [[8, 11]]
+      action_tested: remove
+      result: keep
+      reason: complete 图无胜态；下箱是下目标的实际载荷与同拍回报之一。
+      hard_facts: *upper_target_remove
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/REMOVE_TARGET_BOX_LOWER.json
+    - element:
+        kind: object
+        id_or_cell:
+          id: TARGET_BOX_LOWER
+          cells: [[8, 11]]
+      action_tested: wallify
+      result: keep
+      reason: complete 图无胜态；下箱不是只承担墙职责。
+      hard_facts:
+        cost_delta: 12->unavailable
+        graph_status: complete
+        reachable_states: 136
+        win_state_count: 0
+        expected_trace_win: false
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/WALLIFY_TARGET_BOX_LOWER.json
+
+    - element:
+        kind: object
+        id_or_cell:
+          id: THICK_SPINE_3X7
+          cells: 3x7_rectangle_x2_to_4_y5_to_11
+      action_tested: remove
+      result: keep
+      reason: >-
+        规范回放立即失效；搜索在 300001 states 超预算前已找到缺少全部四个核心段的胜路。
+        这说明厚脊删除不是简化同一作品，而是放开另一套十箱搬运题；不能 clean prune。
+      hard_facts:
+        cost_delta: 12->21
+        graph_status: exhausted
+        reachable_states: 300001
+        legal_transitions: 639192
+        observed_win_states: 1697
+        expected_trace_win: false
+        core_event_probe_status: found
+        core_event_bypass:
+          - B/S 第一段 n2
+          - B/S 第二段 n2
+          - B/S 第三段 n4
+          - 29 格完整主体终拍
+        opening_delta: unknown_due_incomplete_graph
+        target_obligation_bypass: winning_bypass_found
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/REMOVE_THICK_SPINE_3X7.json
+    - element:
+        kind: object
+        id_or_cell:
+          id: THICK_SPINE_3X7
+          cells: 3x7_rectangle_x2_to_4_y5_to_11
+      action_tested: wallify
+      result: keep
+      reason: complete 图无胜态且规范回放不胜；厚脊必须作为可移动 21 格基底接受八格材料并承担终拍受力，不能替换成墙。
+      hard_facts:
+        cost_delta: 12->unavailable
+        graph_status: complete
+        reachable_states: 54
+        legal_transitions: 103
+        win_state_count: 0
+        expected_trace_win: false
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/WALLIFY_THICK_SPINE_3X7.json
+
+    - element:
+        kind: object
+        id_or_cell:
+          id: PUSH_PULL_ANCHOR
+          cells: [[7, 1], [8, 1]]
+      action_tested: remove
+      result: keep
+      reason: >-
+        删除后硬图完全不变，故不虚构机械必要性；但 main solve 从不进入两个目标袋，P/L 是玩家读出“向 P 侧推入、只能从 L 侧回撤”规则的唯一可见侧别标记。
+        reviewer 也实际从开局 P/L 读取推侧。删去它会让两个闭合口袋只剩无规则标注的 C-G 图案，损失关卡已声明的锁箱可读性。
+      hard_facts: &pl_pass_facts
+        cost_delta: 12->12
+        graph_status: complete
+        reachable_states: 143
+        legal_transitions: 338
+        win_state_count: 7
+        expected_trace_win: true
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: unchanged
+        target_obligation_bypass: none
+        mechanical_graph_delta: none
+        semantic_gate: fails_read_graph_responsibility
+      semantic_role: read_graph
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/REMOVE_PUSH_PULL_ANCHOR.json
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/results.json#probe_upper_lock_alcove_retracts
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/review/independent_level_review_attempt_1.yml
+    - element:
+        kind: object
+        id_or_cell:
+          id: PUSH_PULL_ANCHOR
+          cells: [[7, 1], [8, 1]]
+      action_tested: wallify
+      result: keep
+      reason: 墙化后硬图同样完全不变，但会删除 P/L 侧别标记；它承担的是明确的 read-graph 责任，不是静态 blocker。
+      hard_facts: *pl_pass_facts
+      semantic_role: read_graph
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/object_variants/WALLIFY_PUSH_PULL_ANCHOR.json
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/results.json#probe_upper_lock_alcove_retracts
+
+    - element:
+        kind: space
+        id_or_cell:
+          id: LEFT_CHANNEL_CANONICAL_SEGMENT
+          cells: [[1, 2], [1, 3], [1, 4], [1, 5]]
+      action_tested: wall_prune
+      result: keep
+      reason: >-
+        四格分别墙化都会截断规范玩家路径，complete 图均无胜态。该段让玩家从 B/S 返回厚脊背面并在 y=5 终拍，承担直接动作责任。
+      hard_facts:
+        individual_graph_statuses: [complete, complete, complete, complete]
+        individual_reachable_states: [14, 18, 22, 26]
+        individual_win_state_counts: [0, 0, 0, 0]
+        expected_trace_win: false
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: no_winning_opening
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+    - element:
+        kind: space
+        id_or_cell:
+          id: LEFT_CHANNEL_OPTIONAL_SEGMENT
+          cells: [[1, 6], [1, 7], [1, 8], [1, 9], [1, 10], [1, 11]]
+      action_tested: wall_prune
+      result: keep
+      reason: >-
+        六格虽不进最短回放，但逐格墙化都会把 initial SCC 从 12 缩到 6..11，并把七个等价终拍接触位缩到 1..6；
+        它们允许玩家在 y=5..11 任一厚脊行提前试用或终拍，使“可停下来试主体”是可见选择而非只剩单点走廊解。
+      hard_facts:
+        individual_cost_deltas: [12->12, 12->12, 12->12, 12->12, 12->12, 12->12]
+        individual_graph_statuses: [complete, complete, complete, complete, complete, complete]
+        individual_reachable_states: [109, 114, 119, 124, 129, 134]
+        individual_win_state_counts: [1, 2, 3, 4, 5, 6]
+        expected_trace_win: true
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta:
+          status: regressed
+          base_initial_scc_size: 12
+          variant_initial_scc_sizes: [6, 7, 8, 9, 10, 11]
+        target_obligation_bypass: none
+      semantic_role: opening_comfort
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+
+    - element:
+        kind: space
+        id_or_cell:
+          id: CLOSED_POCKET_PAIR
+          cells: [[8, 6], [8, 10]]
+      action_tested: wall_prune
+      result: keep
+      reason: >-
+        上、下 pocket 单格分别墙化以及两格同时墙化，complete 图都只剩 54 states 且无胜态；
+        终拍的支撑末格必须进入 (8,6)/(8,10) 并在 B/S 边界切成箱，这两格同时还把目标箱回撤侧别画成闭合口袋。
+      hard_facts:
+        individual_and_pair_graph_statuses: [complete, complete, complete]
+        individual_and_pair_reachable_states: [54, 54, 54]
+        individual_and_pair_win_state_counts: [0, 0, 0]
+        expected_trace_win: false
+        core_event_probe_status: complete
+        core_event_bypass: none
+        opening_delta: no_winning_opening
+        target_obligation_bypass: no_winning_state
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/space_variants/WALL_UPPER_CLOSED_POCKET.json
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/space_variants/WALL_LOWER_CLOSED_POCKET.json
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/space_variants/WALL_BOTH_CLOSED_POCKETS.json
+
+    - element:
+        kind: wall_outline
+        id_or_cell:
+          id: RIGHT_OUTER_WALL_COLUMNS
+          cells: x11_and_x12_all_rows
+      action_tested: trim
+      result: trim
+      reason: >-
+        内容最右到 x=9，x=10 已是完整单层闭合边墙；x=11、x=12 只是额外纯墙列。连续裁右两列后布局由 13×13 变为 11×13，
+        x=10 仍全墙，所有对象相对坐标、force/destination 边界、规范回放、完整图、核心链与 opening 完全不变，且画面更直接。
+      hard_facts:
+        trim_one:
+          dimensions: 12x13
+          cost_delta: 12->12
+          graph_status: complete
+          reachable_states: 143
+          legal_transitions: 338
+          win_state_count: 7
+          expected_trace_win: true
+          core_event_probe_status: complete
+          core_product_states: 206
+          core_event_bypass: none
+          opening_delta: unchanged
+        trim_two:
+          dimensions: 11x13
+          cost_delta: 12->12
+          graph_status: complete
+          reachable_states: 143
+          legal_transitions: 338
+          win_state_count: 7
+          expected_trace_win: true
+          core_event_probe_status: complete
+          core_product_states: 206
+          core_event_bypass: none
+          opening_delta: unchanged
+          new_right_edge_all_wall: true
+        target_obligation_bypass: none
+      semantic_role: none
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/outline_variants/TRIM_RIGHT_1.txt
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/outline_variants/TRIM_RIGHT_1.json
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/outline_variants/TRIM_RIGHT_2.txt
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/outline_variants/TRIM_RIGHT_2.json
+    - element:
+        kind: wall_outline
+        id_or_cell: required_single_layer_frame_after_right_trim_2
+      action_tested: trim
+      result: keep
+      reason: >-
+        上、下、左从原版起即不能裁；右裁两列后再裁会暴露 x=9 的目标格，不能保持最外圈全墙。剩余 x=10 单层边墙承担闭合与 destination/force 边界责任。
+      hard_facts:
+        maximal_legal_trim_by_side:
+          top: 0
+          bottom: 0
+          left: 0
+          right: 2
+      semantic_role: structural
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+
+  candidate_discovery:
+    object_order_note: 先对每个 runtime object 做 remove，再做 wallify；另把八格箱材作为一个玩家可见材料组整体复核。
+    material_octet_cells: *material_octet
+    material_octet_individual_audit:
+      cells_checked: 8
+      actions_per_cell: [remove, wallify]
+      total_variants: 16
+      all_graphs_complete: true
+      all_win_state_counts_zero: true
+      all_expected_traces_fail: true
+      evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+    space_rule: >-
+      除静态 degree<=1 普通地面外，按任务显式加入整条左通道与两个单入口闭合 pocket；凸包式房间补完不主动列候选。
+    degree_one_floor_candidates: []
+    outline_audit:
+      original_dimensions: 13x13
+      maximal_legal_trim_by_side:
+        top: 0
+        bottom: 0
+        left: 0
+        right: 2
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline: []
+  proposed_outline_trim:
+    description: 裁掉原布局最右 x=11、x=12 两列纯墙，保留 x=10 为单层闭合外框。
+    variant_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/outline_variants/TRIM_RIGHT_2.txt
+    applied_to_candidate: false
+  retained_elements:
+    - kind: goal
+      id_or_cell: [[9, 5], [9, 11]]
+      reason: 双端同拍回报与镜像终局。
+    - kind: object
+      id_or_cell: BOX_STICKY_ANCHOR
+      reason: 三段材料边界与玩家构造工具。
+    - kind: object
+      id_or_cell: MATERIAL_OCTET
+      reason: n2、n2、n4 构造材料与双钩连通前缘。
+    - kind: object
+      id_or_cell: TARGET_BOX_PAIR
+      reason: 两个目标载荷。
+    - kind: object
+      id_or_cell: THICK_SPINE_3X7
+      reason: 21 格可移动基底、黏接主体与终拍受力把手。
+    - kind: object
+      id_or_cell: PUSH_PULL_ANCHOR
+      reason: 无可达图机械增量，但承担目标袋 P/L 侧别的唯一可见 read-graph 责任。
+    - kind: space
+      id_or_cell: LEFT_CHANNEL
+      reason: 规范回返路径、initial SCC、提前试用与七个等价终拍接触位。
+    - kind: space
+      id_or_cell: CLOSED_POCKET_PAIR
+      reason: 终拍支撑末格目的地及锁箱回撤可读性。
+    - kind: wall_outline
+      id_or_cell: remaining_single_layer_frame
+      reason: 闭合矩形与机制边界。
+  prunable_elements:
+    - kind: wall_outline
+      id_or_cell: right_outer_columns_x11_x12
+      required_action: trim
+  revision_required_before_admission: true
+  rereview_required: true
+  version_effect:
+    exact_v5_mutated: false
+    exact_v5_status: unchanged_but_not_pre_submission_clean
+    required_layout_change: trim_right_outer_columns_x11_x12
+    required_new_dimensions: 11x13
+    new_candidate_version_required: true
+    note: >-
+      本任务没有权限静默改已评审 exact v5；只生成反事实。若 lead 采纳裁边，必须形成新版候选并重跑相应证据。
+  review_effect:
+    reviewed_version_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/review/independent_level_review_attempt_1.yml
+    existing_v5_review_status: remains_valid_only_for_unchanged_exact_v5
+    carries_forward_to_trimmed_version: false
+    rereview_required: true
+    authority_read: >-
+      redundant_element_prune.md 允许并要求在硬门槛通过时裁剪多余外框，但同时明确：人类 review 后的布局改动不能静默写回，必须形成新版并重新进入待玩/评审流程；
+      文档没有授权把 exact v5 的既有 review 继承给裁边版。因此此处停止在 rereview_required，不修改候选、levels.yml 或 playable_queue。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/goal_prune_check.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness/results.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json

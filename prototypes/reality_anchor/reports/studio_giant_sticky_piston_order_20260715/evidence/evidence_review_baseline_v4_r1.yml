@@ -1,0 +1,176 @@
+review_attempt_id: EVREV_RA_TRIDENT_SYNC_FINAL_V4_R1
+reviewer_instance_id: EVIDREV_FRESH_RA_TRIDENT_SYNC_FINAL_V4_R1
+candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+exact_version: v4
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.md
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness/report.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity/cases.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity/cases.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity/report.md
+    - prototypes/reality_anchor/mechanic.yml
+    - prototypes/reality_anchor/mechanism_lab/lexicon.md
+    - docs/21-level-design-studio-standard.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "stateIndex=543, player=(5,7), depth=14"
+    - "stateIndex=605, player=(5,8), depth=15"
+    - "stateIndex=679, player=(5,9), depth=16"
+    - "stateIndex=742, player=(5,10), depth=17"
+    - "stateIndex=809, player=(5,11), depth=18"
+    - "stateIndex=858, player=(5,12), depth=19"
+    - "stateIndex=901, player=(5,13), depth=20"
+    - "stateIndex=875, player=(5,14), depth=19"
+    - "stateIndex=832, player=(5,15), depth=18"
+  equivalence_evidence_basis:
+    - >-
+      baseline_uniqueness/results.json 标识 candidateId=RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL、
+      exactVersion=v4、layoutPath 指向 v4 exact layout；graph.status=complete，
+      terminalizeWins=true，957 个 reachable states、2997 条 transitions、9 个 winning states。
+    - >-
+      九个 win record 去除玩家坐标后共用同一个 objectKey；
+      equivalenceSummary.winningObjectStateClasses=1，且每个终态都覆盖同一组三个目标。
+    - >-
+      九条 non-win -> win 入边共用同一个 beforeObjectKey、after objectKey、right 动作及
+      push_object:sticky#1、force_chain:n4、move_sticky_rigid、sticky_to_box:n3 事件；
+      finalTransitionClassesIncludingObjectStates=1。
+    - >-
+      九条实际 shortestInputs 都只以走位抵达同一完整竖脊的不同接触格，再执行 right、right；
+      玩家侧含义是对象职责、三个目标分配和“整块先对齐、再同拍推三箱”的因果先后不变，
+      仅接触格与纯走位不同。
+    - >-
+      layout_analysis 的完整 SCC 胜路子图含 11 个 win-reachable SCC，其中 9 个为终止胜态；
+      s0 只有一个 win-reachable outgoing SCC，之后在 s1 分到九个胜态。
+      玩家侧解释是所有胜路共享同一两段不可逆对象推进骨架，末段九分支只对应等价接触格。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 结论是玩家逻辑类等价，不是 raw input、玩家路径或 raw state 唯一。
+    - 主版本完整图只以 957 states / 2997 transitions 的 uniqueness 与 layout-analysis artifact 为依据；identity run 的 depth=20 局部图不用于证明主版本全图完备性。
+
+claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 全部合法，终态覆盖三个目标并胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json 标识 exact id 与 v4 layoutSource，
+        replay.completed=true、executedSteps=14、legalThroughStep=14，inputs 与 Controller canonical inputs 逐项一致。
+      - >-
+        同一 replay 的 step 14 after.isWin=true、final.isWin=true；终态在 (11,7)、(11,11)、(11,15)
+        三个 G 位置均渲染为 *。layout_analysis 另报 solution.found=true、cost=14、相同 inputs。
+      - >-
+        mechanic.yml 的 target_cover_win 规定 settle 后所有目标由 crate、sticky 或 anchor 覆盖即胜；
+        replay 终态满足该条件。
+    limits: []
+
+  - claim_id: atomic_three_lock_final
+    claim: >-
+      canonical 最后一拍由同一个动作前已连通的 21 格 sticky#1 发力，产生 force_chain:n4、
+      move_sticky_rigid、sticky_to_box:n3，并把三只目标箱同时从 x=10 推到 x=11 的三个目标。
+    status: supported
+    evidence_basis:
+      - >-
+        replay step 14 before.key 中 sticky#1 是单一正交连通的 21 格集合：y=7、11、15 各 5 格，
+        x=5 的三段竖脊合计另 6 格；同一 key 的三箱位于 (10,7)、(10,11)、(10,15)。
+      - >-
+        step 14 是单个 right 合法动作，事件为 push_object:sticky#1、force_chain:n4、
+        move_sticky_rigid、sticky_to_box:n3；after.key 新增三箱 (11,7)、(11,11)、(11,15)，
+        三处目标同时由空 G 变为 *。
+      - >-
+        mechanic.yml 把 sticky_block 定义为 rigid_group，并规定 push_force 让玩家与前方受力对象闭包
+        同时前移一格；这与同拍三箱 x=10 -> x=11 的 before/after 状态一致。
+    limits:
+      - 该结论只陈述 canonical step 14 的事件实例和对象转移，不从事件名推导审美或难度。
+
+  - claim_id: individual_lock_cannot_accumulate
+    claim: >-
+      代表性的上活塞单独 right 推入目标后尚未胜利；该一格口袋唯一退出动作 left 会 pull 同一箱并撤销覆盖。
+      三个口袋在布局中仅作 y 方向平移，具有同一墙与 P/L 侧关系。
+    status: supported
+    evidence_basis:
+      - >-
+        identity case single_top_lock_retracts 的 step 3 right 合法并触发 push_object:crate#1，
+        箱从 (10,7) 到 (11,7) 覆盖上目标，但 after.isWin=false；step 4 left 触发
+        pull_object:crate#1，使箱回到 (10,7) 并撤销覆盖。
+      - >-
+        exact layout 中三个 C/G 口袋分别位于 y=7、11、15；每处玩家推后位置 x=10 的上下格均为墙，
+        右侧是目标箱及其后墙，唯一可离开格为左侧 x=9。P/L 边界的 x 关系在三处相同。
+      - >-
+        mechanic.yml 的 pull_force 及 lexicon.md“单箱目标活塞顺序锁：推入覆盖与回撤撤销”均给出
+        P 侧 right 推入后、L 侧 left 拉回同箱的机械关系。
+    limits:
+      - 实际 trace 直接探测上口袋；中、下口袋的同结论来自 exact layout 的严格 y 平移与同一全局 P/L 边界关系。
+
+  - claim_id: three_tip_identity_necessary
+    claim: >-
+      删除下臂最右触点后，相同 canonical input 只产生 force_chain:n3 与 sticky_to_box:n2，
+      只覆盖上、中目标；该反事实完整局部图无胜态。
+    status: supported
+    evidence_basis:
+      - >-
+        identity case cf_missing_lower_tip 只删除下臂最右触点；相同 14 步全部合法，末步事件为
+        push_object:sticky#1、force_chain:n3、move_sticky_rigid、sticky_to_box:n2。
+      - >-
+        该 case 终态只有 (11,7)、(11,11) 两个目标被覆盖，(11,15) 仍为空，final.isWin=false。
+      - >-
+        results.json 的该 case reachableFromInitial.status=complete，局部 scope 为 maxExploreDepth=20，
+        共 1215 states、3766 transitions、winStates=0。
+    limits:
+      - 无胜态结论严格限于 artifact 定义的 depth=20 局部图；不把它扩张为无限深度或其它反事实的全局无解声明。
+
+  - claim_id: connected_structure_identity_necessary_for_same_stroke
+    claim: >-
+      删除竖脊连接格后，相同 canonical input 只移动上部 sticky#2 并覆盖上、中目标，下部不在同拍受力闭包；
+      不声明该反事实全局无解。
+    status: supported
+    evidence_basis:
+      - >-
+        identity case cf_cut_lower_bridge 的 initial.key 将 M 明确分为上部与下部两个实例；
+        相同 canonical step 13、14 只记录 push_object:sticky#2 与 move_sticky_rigid，
+        末步另有 force_chain:n3、sticky_to_box:n2。
+      - >-
+        before/after key 显示下部 M 仍在 (4,14) 及 y=15 的 x=4..8，未随上部同拍右移；
+        终态只覆盖 y=7、11 两目标，y=15 目标为空。
+      - >-
+        该反事实局部图实际记录 winStates=4，因而证据只支持“相同 stroke 的连通受力闭包必要”，
+        并与 Controller 明确不声明全局无解相一致。
+    limits:
+      - 不支持该删桥反事实全局无解，也不支持下部对象 per-object 全局必要；只支持给定 canonical stroke 的同步关系。
+
+  - claim_id: lock_exits_create_contradiction
+    claim: >-
+      打开三个目标口袋的侧向出口后，给定 trace 可逐个保留上、中目标并单独完成下目标，
+      说明原版狭廊出口承担顺序矛盾。
+    status: supported
+    evidence_basis:
+      - >-
+        identity case cf_open_all_side_exits 只在三个口袋的 L 侧玩家位打开向下出口；给定 15 步 trace
+        全部合法，step 3、9、15 依次触发 push_object:crate#1、#2、#3。
+      - >-
+        step 4 通过上口袋新增出口 down 离开时上箱保持在 (11,7)，step 10 同样保留中箱 (11,11)；
+        step 15 单独把下箱推到 (11,15)，after.isWin=true、final.isWin=true。
+      - >-
+        该 trace 与原版 single_top_lock_retracts 中无侧出口时必须 left 并 pull 回同箱形成直接对照，
+        支持“出口封闭制造不能逐个保留目标”的机械关系。
+    limits:
+      - identity counterfactual 只证明出口封闭与顺序矛盾的机械关系，不产生审美、难度或作品价值结论。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

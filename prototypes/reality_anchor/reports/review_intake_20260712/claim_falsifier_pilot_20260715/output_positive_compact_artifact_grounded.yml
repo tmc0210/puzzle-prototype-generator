@@ -1,0 +1,154 @@
+falsification_attempt_id: CF_POSITIVE_COMPACT_ARTIFACT_GROUNDED_20260715
+critic_instance_id: fresh_claim_falsifier_positive_compact_artifact_grounded
+base_packet_ref: base_positive_compact_reversal.yml
+claim_replacement_ref: case_positive_compact_artifact_grounded.yml
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: PCAG-01
+    claim_type: mechanical_fact
+    normalized_proposition: "steps1-3 把这一批对象形成的双箱横链向左推到左端。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_trace step0 state：对象是相邻的 MM，而非两个箱。"
+        - "base packet mechanically_derived_trace step1 events/state：发生 sticky_to_box:n1，状态为 CM，仍非双箱。"
+        - "base packet mechanically_derived_trace step2 events/state：再次发生 sticky_to_box:n1，状态首次成为横向相邻的 CC。"
+        - "base packet mechanically_derived_trace step3 events/state：push_object:crate#2 与 force_chain:n2 后，状态为左墙旁的 #CC@...P#。"
+      countercase: "若把声明读成 steps1-3 的每一步都在推动一个已经存在的双箱链，step0 与 step1 会直接反驳；但声明描述的是这三步合起来形成并推至左端的阶段结果，step2 与 step3 的状态支持该较窄命题。"
+    status: survived_attack
+    status_reason: "最强的逐步字面反例只击中一个声明未作出的扩张解释；指定阶段确实以左端双箱横链结束。"
+    surviving_scope: "仅成立于 canonical trace 的 steps1-3 整体阶段；不表示输入 step1 前已经有两个箱。"
+
+  - claim_id: PCAG-02
+    claim_type: mechanical_fact
+    normalized_proposition: "step3 到 step12 持续承担关卡责任的是同一批两个箱体对象。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "base packet mechanically_derived_trace step3 state：场上恰有两个箱，位于同一横行。"
+        - "base packet mechanically_derived_trace steps7-8 events：连续操作 crate#1；states 中箱总数仍为两个。"
+        - "base packet mechanically_derived_trace steps10-11 events：连续操作 crate#2；states 中箱总数仍为两个。"
+        - "base packet mechanically_derived_trace step12 events/state：force_chain:n3 后仍是这两个箱，其中上箱覆盖目标。"
+      countercase: "包没有单独的持久对象 UUID 字段，因而可以攻击其身份记录形式；但 step3 后没有生成、销毁或替换箱体的事件，逐状态连续性也没有给出第三个候选对象。"
+    status: survived_attack
+    status_reason: "现有回放足以在本实例内追踪两箱的连续存在和分别受力，没有包内事实支持对象被替换。"
+    surviving_scope: "同一批责任对象指本 canonical trace 中 step3 后连续存在的两箱，不扩张为运行时 UUID 级证明。"
+
+  - claim_id: PCAG-03
+    claim_type: mechanical_fact
+    normalized_proposition: "steps7-11 通过分别 push 与 pull 两箱，真实把横向邻接改成 B/S 上方的纵向邻接，而非仅靠走位。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_trace step7 events/state：push_object:crate#1，把左箱向下推到下一行。"
+        - "base packet mechanically_derived_trace step8 events/state：push_object:crate#1，把另一箱向右推到目标列。"
+        - "base packet mechanically_derived_trace step9 events：[walk]，该步本身不改变箱位。"
+        - "base packet mechanically_derived_trace steps10-11 events/states：两次 pull_object:crate#2，把下方箱拉到上箱正下方。"
+        - "base packet mechanically_derived_trace step11 state：两个 C 纵向相邻，且下箱位于 step11 状态中 B 的正上方。"
+      countercase: "step9 是纯走位，可反驳“7 至 11 每一步都在 push/pull”的过强读法；但原声明把 steps7-11 作为重排阶段，实际箱位变化由 steps7、8、10、11 完成，阶段结果仍是纵列。"
+    status: survived_attack
+    status_reason: "包内事件与前后状态直接显示两箱分别被 push/pull，step9 的走位没有替代或虚构重排。"
+    surviving_scope: "成立于 steps7-11 作为一个含必要走位的重排阶段；不声称其中每个输入都是箱体操作。"
+
+  - claim_id: PCAG-04
+    claim_type: mechanical_fact
+    normalized_proposition: "step12 由 B/S 位移与 force chain 消费 step11 的两箱竖列，使竖列整体上移并获胜。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "base packet mechanically_derived_trace step11 state：同列两个 C 位于 B 上方，形成 C/C/B 的竖向关系。"
+        - "base packet mechanically_derived_trace step12 events：[pull_object:box_sticky_anchor, force_chain:n3, anchor_boundary_shift:box_sticky]。"
+        - "base packet mechanically_derived_trace step12 state：两个 C 都比 step11 上移一格，B/S 也上移一格，上箱变为目标上的 *。"
+        - "base packet mechanically_derived_trace step12 win_after_step：true。"
+        - "base packet hard_evidence fixed_pl_scan：no_reachable_push_pull_anchor_shift。"
+      countercase: "可尝试用 P/L 位移或只移动单箱来替代作者所述因果链，但指定包明确没有可达 P/L 位移，step11/12 状态也显示两箱与 B/S 同步上移。"
+    status: survived_attack
+    status_reason: "事件、状态差分和胜利标记共同具体支持 B/S force chain 消费竖列并完成胜利，没有包内反例。"
+    surviving_scope: "只断言 canonical step12 的实际机械因果，不断言这是玩家唯一可能形成的语言解释。"
+
+  - claim_id: PCAG-05
+    claim_type: mechanical_fact
+    normalized_proposition: "step3、step11、step12 分别呈现左端横链、B/S 上方竖列、上箱覆盖目标这三个不同可见构型。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_trace step3 state：#CC@...P#，两箱在左端横向相邻。"
+        - "base packet mechanically_derived_trace step11 state：两行同列各有一个 C，下一行同列为 B。"
+        - "base packet mechanically_derived_trace step12 state：顶行目标位置为 *，其下仍有 C，再下为 B/S。"
+      countercase: "若三处只发生不可见的内部标记变化，visible payoff 会被直接反驳；但 ASCII 状态中的对象位置、邻接方向和目标覆盖字符均发生显式变化。"
+    status: survived_attack
+    status_reason: "三个状态在指定包的布局表示中可直接区分，且差异正对应声明列出的三种构型。"
+    surviving_scope: "“清楚不同”仅指送审包中可见状态的具体区分，不推导所有玩家的主观显著性。"
+
+  - claim_id: PCAG-06
+    claim_type: design_value
+    normalized_proposition: "作品的核心反转是同批两箱从左向横链到逐箱重排的竖列，再到向上入目标的可见运动方向与对象关系改写。"
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "base packet mechanically_derived_trace steps4-6 events：三步均为 walk，可在检验对象关系时压缩。"
+        - "base packet mechanically_derived_trace step9 events：[walk]，同样可在关系变化摘要中压缩。"
+        - "base packet mechanically_derived_trace step3 state：两箱横向相邻于左端。"
+        - "base packet mechanically_derived_trace steps7-8、10-11 events/states：对象经 down/right push 与 right pull 被分别重排为纵列。"
+        - "base packet mechanically_derived_trace step12 events/state：竖向 force_chain:n3 使两箱向上并由上箱覆盖目标。"
+      countercase: "压缩 steps4-6 与 step9 的走位劳动后，若只剩同构重复操作，核心反转会被削弱；实际保留下来的状态序列仍包含横向邻接、拆分重排、纵向邻接和整体上移四种不同关系。"
+    status: survived_attack
+    status_reason: "压缩非对象操作没有消除作者所指的方向与邻接改写；该声明又明确不要求玩家必然感到意外，因此缺少惊讶证据不构成攻击。"
+    surviving_scope: "“核心反转”成立为 canonical trace 中可见关系变化的设计概括，不扩张为普遍玩家惊讶或唯一玩家读法。"
+
+  - claim_id: PCAG-07
+    claim_type: design_value
+    normalized_proposition: "左侧狭小区域在同一条 12 步解中依次承担横链停放、逐箱拆分重排以及终局竖向传力的前置准备。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "base packet canonical_exact_inputs/canonical_cost：canonical 解共 12 步。"
+        - "base packet mechanically_derived_trace step3 state：两箱停在左墙旁。"
+        - "base packet mechanically_derived_trace steps7-11 states：两箱始终在左侧活动区内被拆开并重排到同列。"
+        - "base packet mechanically_derived_trace step11 state：C/C/B 已形成终局 force chain 的前置竖列。"
+        - "base packet mechanically_derived_trace step12 events：force_chain:n3 与 anchor_boundary_shift:box_sticky。"
+      countercase: "横链在 step7 后不再保持，可以攻击“停放关系持续承担终局作用”；但声明主张的是同一区域依次承担三种职责，且被拆开的正是此前停放的两箱，step11 又在该区域形成终局传力前置态。"
+    status: survived_attack
+    status_reason: "对象与空间责任没有在关键变化后退休：早期停放态被后续重排直接接手，重排结果又成为 step12 的 force chain 输入。"
+    surviving_scope: "成立为 canonical 12 步回放中的区域复用与连续准备关系，不证明该区域在所有解中都具有同样玩家意义。"
+
+  - claim_id: PCAG-08
+    claim_type: design_value
+    normalized_proposition: "最终 B/S 位移在 canonical 解的因果链中回收此前全部箱体操作的责任。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "base packet mechanically_derived_trace step3 state：早期产物是左端横链；该横向邻接在 step7 后被拆除。"
+        - "base packet mechanically_derived_trace steps7-8 events/states：push 操作分别建立两箱后续所需的行列位置。"
+        - "base packet mechanically_derived_trace steps10-11 events/states：pull 操作把下箱送到上箱与 B 的同列。"
+        - "base packet mechanically_derived_trace step12 events/state：B/S 位移通过 force_chain:n3 同时推动两箱，并以目标覆盖结束。"
+        - "base packet hard_evidence：shortest_cost 12、graph_status complete、winning_states 1；evidence_limits 同时说明这些机械事实不直接证明玩家会把它认作亮点。"
+      countercase: "最强攻击是：step12 直接消费的只是 step11 当前竖列，step3 的横向关系已经消失，因而早期责任可能退休。可是 steps7-11 操作的对象与起点正来自 step3，且每次箱位变化都汇入 step11 的 C/C/B 前置态；包内没有某次箱体操作被旁路的 alternative。"
+    status: survived_attack
+    status_reason: "在作者限定的 canonical 因果叙述中，早期横链不是独立装饰，而是逐箱重排的输入；全部箱体操作的状态结果汇合到最终 B/S force chain。"
+    surviving_scope: "“回收责任”仅作为这条 12 步回放的因果与设计概括；不表示包已证明每次操作在所有可行解中形式必要，也不表示玩家必然如此评价。"
+
+  - claim_id: PCAG-09
+    claim_type: player_model
+    normalized_proposition: "该声明只要求玩家可见运动方向和对象关系的改变，不要求所有玩家必然感到意外。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "replacement designer_claim player_experience_core：明确限定“核心反转指可见运动方向和对象关系的改变，不声称所有玩家必然感到意外”。"
+        - "base packet hard_evidence evidence_limits：机械回放不直接证明玩家会自然发现、感到反直觉或认为它是亮点。"
+        - "base packet mechanically_derived_trace steps3、11、12 states：分别直接呈现横链、竖列与向上入目标。"
+      countercase: "包内没有玩家过程记录，不能证明玩家会形成“意外”或“洞见”；但作者明确排除了这一较强玩家心理命题，余下的可见变化有状态事实支撑。"
+    status: survived_attack
+    status_reason: "证据缺口与作者主动限定一致，而非反驳实际声明；声明没有越过材料去断言普遍心理反应。"
+    surviving_scope: "只保留可见状态变化这一最低玩家侧命题，不推出注意、理解、惊讶或价值认同。"
+
+overall:
+  decisive_refutations: []
+  claims_falsified: 0
+  claims_undercut: 0
+  claims_not_established: 0
+  claims_survived: 9
+  strongest_surviving_claim: "PCAG-04：step11 的 C/C/B 竖列在 step12 被 B/S force chain 整体上移并获胜，事件与状态差分直接一致。"
+  experiment_reading: all_claims_survived

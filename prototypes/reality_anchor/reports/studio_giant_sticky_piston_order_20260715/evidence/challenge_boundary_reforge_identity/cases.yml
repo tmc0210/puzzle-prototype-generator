@@ -1,0 +1,209 @@
+runId: challenge_boundary_reforge_identity_v1
+title: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1 锁箱、P/L 侧别与隔离走廊逐版本实验
+notes: >-
+  所有 full-board probe 均由 exact v1 的机械状态逐格导出。锁箱 probe 只把玩家放到代表锁的局部操作位，
+  保留 exact v1 墙、目标、箱、终态 P/L 与同阶段对象；P/L 三组 probe 仅改变 P/L 的横向停位；
+  漏回黏错误态逐格等于 exact 初始关 113-input 回放的 final render。
+defaults:
+  maxExploreDepth: 1
+  maxReturnDepth: 2
+  maxStates: 2000
+  maxTransitions: 8000
+cases:
+  - id: representative_lock_push_cover_then_l_pull_retract
+    family: boundary_reforge_lock
+    variant: exact_v1_final_pl_representative_top_lock
+    changed_variable: 玩家仅被放到上锁箱 P 侧的局部操作位
+    contrast_with: tip_push_with_pl_final_three
+    notes: left 将 x5,y4 箱推上 x4,y4 目标；玩家随即位于 L 侧，right 必须以 pull_object 把箱拉回。
+    layout: |
+      ###################
+      #....#............#
+      #...#.CMMMMMMMM...#
+      #...##.##.MMMMM...#
+      #..#GC@#.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #....###.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #...####.MMMMMM...#
+      #..#GCCMMMMMMMM...#
+      #...####.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #....###.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...##.##.MMMMM...#
+      #...#.CMMMMMMMM...#
+      #....#............#
+      #..............####
+      #..............####
+      #..#..BS.#.....####
+      ####.##############
+      #..#.LP...........#
+      ###################
+    actions: [left, right]
+
+  - id: tip_push_with_pl_unmoved
+    family: boundary_reforge_phase_side
+    variant: exact_v1_after_cut_pl_l8_p9
+    changed_variable: P/L 未左移
+    contrast_with: tip_push_with_pl_final_three
+    notes: 与 final-three 对照使用同一上端 cut crate 和同一操作位；down 因 x6 仍在 L 侧而不能推动。
+    layout: |
+      ###################
+      #....#@...........#
+      #...#.CMMMMMMMM...#
+      #...##.##.MMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #....###.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #...####.MMMMMM...#
+      #..#GCCMMMMMMMM...#
+      #...####.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #....###.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...##.##.MMMMM...#
+      #...#.CMMMMMMMM...#
+      #....#............#
+      #..............####
+      #..............####
+      #..#..BS.#.....####
+      ####.##############
+      #..#....LP........#
+      ###################
+    actions: [down]
+
+  - id: tip_push_with_pl_short_two
+    family: boundary_reforge_phase_side
+    variant: exact_v1_after_cut_pl_l6_p7
+    changed_variable: P/L 只左移两格
+    contrast_with: tip_push_with_pl_final_three
+    notes: 与 final-three 只差 P/L 最后一格；x6 仍是 L 边界格，down 不能推动上端 cut crate。
+    layout: |
+      ###################
+      #....#@...........#
+      #...#.CMMMMMMMM...#
+      #...##.##.MMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #....###.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #...####.MMMMMM...#
+      #..#GCCMMMMMMMM...#
+      #...####.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #....###.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...##.##.MMMMM...#
+      #...#.CMMMMMMMM...#
+      #....#............#
+      #..............####
+      #..............####
+      #..#..BS.#.....####
+      ####.##############
+      #..#..LP..........#
+      ###################
+    actions: [down]
+
+  - id: tip_push_with_pl_final_three
+    family: boundary_reforge_phase_side
+    variant: exact_v1_after_cut_pl_l5_p6
+    changed_variable: P/L 完成第三格左移
+    contrast_with: [tip_push_with_pl_unmoved, tip_push_with_pl_short_two]
+    notes: x6 成为 P 边界格；同一 down 合法并产生 push_object:crate#1。
+    layout: |
+      ###################
+      #....#@...........#
+      #...#.CMMMMMMMM...#
+      #...##.##.MMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #....###.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #...####.MMMMMM...#
+      #..#GCCMMMMMMMM...#
+      #...####.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #....###.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...##.##.MMMMM...#
+      #...#.CMMMMMMMM...#
+      #....#............#
+      #..............####
+      #..............####
+      #..#..BS.#.....####
+      ####.##############
+      #..#.LP...........#
+      ###################
+    actions: [down]
+
+  - id: bs_down_blocked_by_isolation_wall
+    family: boundary_reforge_isolation
+    variant: exact_v1_after_cut_pl_final
+    changed_variable: 从 exact 可达站位 x7,y19 尝试将 B/S 下移
+    contrast_with: tip_push_with_pl_final_three
+    notes: down 精确返回 force_blocked；B 与 S 的两个下方格 x6,y21、x7,y21 均为墙。
+    layout: |
+      ###################
+      #....#............#
+      #...#.CMMMMMMMM...#
+      #...##.##.MMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #....###.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #...####.MMMMMM...#
+      #..#GCCMMMMMMMM...#
+      #...####.MMMMMM...#
+      #....#.MMMMMMMM...#
+      #....###.MMMMMM...#
+      #...#.CMMMMMMMM...#
+      #..#GC.#.MMMMMM...#
+      #...##.##.MMMMM...#
+      #...#.CMMMMMMMM...#
+      #....#............#
+      #..............####
+      #......@.......####
+      #..#..BS.#.....####
+      ####.##############
+      #..#.LP...........#
+      ###################
+    actions: [down]
+
+  - id: wrong_no_restick_actual_final_state
+    family: boundary_reforge_no_restick
+    variant: exact_v1_113_input_actual_final
+    changed_variable: 省略 B/S 左拉回黏后直接终拍
+    contrast_with: representative_lock_push_cover_then_l_pull_retract
+    notes: 此 layout 逐格等于 NO_RESTICK_FIRE_EXACT 回放 final；仅中央目标显示 *，上下目标仍未覆盖。
+    layout: |
+      ###################
+      #....#............#
+      #...#.CMMMMMMM....#
+      #...##.##MMMMM....#
+      #..#GCC#MMMMMM....#
+      #...#CCMMMMMMM....#
+      #....###MMMMMM....#
+      #....#CMMMMMMM....#
+      #...####MMMMMM....#
+      #..#*CCMMMMMMM....#
+      #...####MMMMMM....#
+      #....#CMMMMMMM....#
+      #....###MMMMMM....#
+      #...#CCMMMMMMM....#
+      #..#GCC#MMMMMM....#
+      #...##.##MMMMM....#
+      #...#.CMMMMMMM@...#
+      #....#............#
+      #..............####
+      #..............####
+      #..#..BS.#.....####
+      ####.##############
+      #..#.LP...........#
+      ###################
+    actions: []

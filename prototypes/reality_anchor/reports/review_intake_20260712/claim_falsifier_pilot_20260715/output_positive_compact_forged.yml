@@ -1,0 +1,117 @@
+falsification_attempt_id: "positive_compact_forged_20260715"
+critic_instance_id: "fresh_claim_falsifier_positive_compact_forged"
+base_packet_ref: "base_positive_compact_reversal.yml"
+claim_replacement_ref: "case_positive_compact_forged.yml"
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "C1"
+    claim_type: mechanical_fact
+    normalized_proposition: "steps1-3 使跨过 B/S 材料边界的黏格先后切回两箱，并把横向双箱链推到左墙。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet mechanically_derived_trace.step1.events 包含 sticky_to_box:n1，step1.state 在第 3 行显示 C、M。"
+        - "base_packet mechanically_derived_trace.step2.events 包含 force_chain:n2 与 sticky_to_box:n1，step2.state 在第 3 行显示相邻 CC。"
+        - "base_packet mechanically_derived_trace.step3.events 包含 push_object:crate#2 与 force_chain:n2，step3.state 第 3 行为 #CC@...P#。"
+      countercase: "尝试寻找材料转换未发生、未形成双箱链或 step3 未抵达左墙的相反事实；指定包内没有这种反例。"
+    status: survived_attack
+    status_reason: "三步事件和逐步状态具体支持材料转换、双箱形成及抵达左墙，包内没有相反事实。"
+    surviving_scope: "仅成立到 step3；不支持双箱此后保持不动或已不可单独移动。"
+
+  - claim_id: "C2"
+    claim_type: mechanical_fact
+    normalized_proposition: "step3 后两箱进入机械死角，玩家已无法再单独移动任一箱。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet mechanically_derived_trace.step7.events 为 push_object:crate#1，step7.state 把原左端箱移到下一行。"
+        - "base_packet mechanically_derived_trace.step8.events 为 push_object:crate#1，step8.state 又把上方单箱向右移动。"
+        - "base_packet mechanically_derived_trace.step10.events 与 step11.events 均为 pull_object:crate#2，底行单箱连续被向右拉动。"
+      countercase: "canonical 回放本身就是反例：step3 后存在并实际执行了针对单箱的两次 push 和两次 pull。"
+    status: falsified
+    status_reason: "后续合法回放直接执行单箱推拉，和“普通推拉完全失效”及“机械死角”相反。"
+    surviving_scope: ""
+
+  - claim_id: "C3"
+    claim_type: mechanical_fact
+    normalized_proposition: "steps4-11 只用于玩家绕行，两箱一直保持 step3 的位置及横向邻接关系。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet mechanically_derived_trace.step3.state 第 3 行为 #CC@...P#，两箱位于同一行且横向相邻。"
+        - "base_packet mechanically_derived_trace.step7.state 的两箱分别位于第 3 行与第 4 行，已不再横向相邻。"
+        - "base_packet mechanically_derived_trace.step11.state 的两箱位于同一列的第 3、4 行，已经形成纵向邻接。"
+      countercase: "step7 即发生位置与邻接关系变化，step11 更明确形成纵向双箱列，不是单纯玩家绕行。"
+    status: falsified
+    status_reason: "状态序列直接显示 steps7-11 重排两箱，否定位置和横向关系保持不变。"
+    surviving_scope: "steps4-6 的状态确实未移动箱，但该局部事实不足以支持覆盖 steps4-11 的声明。"
+
+  - claim_id: "C4"
+    claim_type: mechanical_fact
+    normalized_proposition: "steps7-11 不包含任何单箱 push 或 pull。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet mechanically_derived_trace.step7.events: push_object:crate#1。"
+        - "base_packet mechanically_derived_trace.step8.events: push_object:crate#1。"
+        - "base_packet mechanically_derived_trace.step10.events: pull_object:crate#2。"
+        - "base_packet mechanically_derived_trace.step11.events: pull_object:crate#2。"
+      countercase: "指定区间内已有四个明示的单箱 push/pull 事件。"
+    status: falsified
+    status_reason: "事件字段逐项直接反驳该禁止条件。"
+    surviving_scope: ""
+
+  - claim_id: "C5"
+    claim_type: mechanical_fact
+    normalized_proposition: "step12 无需任何中间箱体调整，直接从 step3 的左端横链状态一次性反向取回整条横链。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "base_packet mechanically_derived_trace.step3.state 第 3 行为 #CC@...P#，责任对象是左端横向双箱链。"
+        - "base_packet mechanically_derived_trace.steps7-8.events 两次 push_object:crate#1，steps10-11.events 两次 pull_object:crate#2，构成中间箱体调整。"
+        - "base_packet mechanically_derived_trace.step11.state 将两箱置于目标列的第 3、4 行，呈纵向邻接；它不是 step3 的左端横链状态。"
+        - "base_packet mechanically_derived_trace.step12.events 为 pull_object:box_sticky_anchor、force_chain:n3 与 anchor_boundary_shift:box_sticky。"
+      countercase: "step12 的直接前态是经四次单箱推拉形成的纵向目标列链；step3 的左端横链早已在 step7 解除，未持续承担最终取回关系。"
+    status: falsified
+    status_reason: "最终 force chain 确实发生，但其输入结构不是未经调整的 step3 横链，所宣称的持续责任关系断裂。"
+    surviving_scope: "step12 存在一次 force_chain:n3；不成立的是它直接取回 step3 左端横链。"
+
+  - claim_id: "C6"
+    claim_type: mechanical_fact
+    normalized_proposition: "step12 拉动 B/S，引发 force chain 与材料边界位移，并在该步获胜。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet mechanically_derived_trace.step12.input 为 up。"
+        - "base_packet mechanically_derived_trace.step12.events 包含 pull_object:box_sticky_anchor、force_chain:n3、anchor_boundary_shift:box_sticky。"
+        - "base_packet mechanically_derived_trace.step12.win_after_step 为 true，solve_instance.final_win 也为 true。"
+      countercase: "尝试寻找 step12 未触发锚点链、未发生边界位移或未获胜的事实；指定包内没有这种反例。"
+    status: survived_attack
+    status_reason: "step12 的事件与胜利标记直接支持这条局部机械命题。"
+    surviving_scope: "只证明最终 B/S 链式动作和获胜，不证明该步远程取回未经调整的左端横链。"
+
+  - claim_id: "C7"
+    claim_type: design_value
+    normalized_proposition: "关卡的单一强反转是：普通推拉完全失效后，玩家只能依赖远程锚点取回死角箱链。"
+    strongest_attack:
+      method: rival_player_reading
+      exact_basis:
+        - "base_packet mechanically_derived_trace.steps7-8 明示两次单箱 push，steps10-11 明示两次单箱 pull。"
+        - "base_packet mechanically_derived_trace.step3.state 是左端横链，而 step11.state 是目标列纵链。"
+        - "base_packet mechanically_derived_trace.step12.events 与 win_after_step:true 只证明最终锚点交接完成胜利。"
+        - "base_packet hard_evidence.evidence_limits 明示机械回放与完整图不直接证明玩家会自然发现、感到反直觉或认为它是亮点，且本包没有玩家过程记录。"
+      countercase: "更贴近动作与可见状态的玩家侧读法是：先制造双箱，再通过四次普通单箱推拉把它们重排到目标列，最后用 B/S 完成纵向链式交接；最终锚点是收束手段，而非从普通操作完全失效中远程救回死角横链。"
+    status: undercut
+    status_reason: "价值解释依赖的“普通推拉失效”和“死角横链持续到最终”均被回放否定；具体动作序列提供了更弱且更贴局面的替代读法。"
+    surviving_scope: "最终一手确有 B/S force chain 并获胜，但不足以成立所声称的单一强反转。"
+
+overall:
+  decisive_refutations: ["C2", "C3", "C4", "C5"]
+  claims_falsified: 4
+  claims_undercut: 1
+  claims_not_established: 0
+  claims_survived: 2
+  strongest_surviving_claim: "C6：step12 拉动 B/S，引发 force chain 与材料边界位移，并在该步获胜。"
+  experiment_reading: mixed

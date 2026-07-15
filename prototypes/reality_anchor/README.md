@@ -19,7 +19,8 @@ curated miner 和 PuzzleScript 导出仍不在当前范围内。
 - 同类型锚点每关最多一个；两种锚点可以同关共存，并独立判定。
 - 锚点是 1x2 或 2x1 可移动刚体，只平移不旋转。
 - 推和拉都对一个物体实例施力；力可以沿运动方向传递到其他可推动物体。
-- 拉世界中，主角前方必须为空；主角只直接拉身后一格相邻的物体实例。
+- 玩家和本次受力对象闭包同时平移：玩家旧格会在动作中腾空，允许刚体或被拉对象进入。
+- 拉世界中，主角只直接拉身后一格相邻的物体实例；主角目标格按整个受力闭包移动后的占用判断。动作前占住该格的同一刚体或入链对象若会同时移开，不会阻止拉动。
 - 黏块是四邻接刚体；相邻黏块自动合并，跨入箱世界的格子变成独立箱子，剩余黏格按连通块分裂。
 - 任意刚体的任一部分被墙、边界或不可移动结构挡住时，整个动作失败且状态不变。
 
@@ -49,6 +50,7 @@ conformance 分发入口。
 
 ```text
 npm run check
+npx tsx --test src/prototypes/reality_anchor/runtime.test.ts
 npx tsx src/cli.ts solve prototypes/reality_anchor RA_SMOKE_01_PUSH_CHAIN
 npx tsx src/cli.ts mine prototypes/reality_anchor --preset quick --iterations 16 --max-findings 4
 npx tsx src/cli.ts explain-level prototypes/reality_anchor RA_SMOKE_04_BOX_TO_STICKY_MERGE

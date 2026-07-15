@@ -1,0 +1,137 @@
+runId: ra_exp_giant_sticky_batch_01_goal_lock_sync
+title: "真实目标活塞矛盾：逐个必撤销，大黏体同步终局"
+notes: >-
+  回答 REQ-001。两个空间分离的单箱活塞共用静态 P/L 竖边界。玩家逐个进入时，箱子推上目标后
+  位于 L 侧的一格口袋中，唯一合法出口是 left pull，必定把箱子拉离目标；顺序尝试不能累积覆盖。
+  同一墙位、箱位和目标位换成大型 C/E 形完整黏体后，两个远端指尖在一个 right 中同时推动两箱上目标并立即胜利。
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: "top_goal_only_exit_is_retract"
+    family: "two_single_crate_goal_locks"
+    variant: "top_goal_temporary_cover"
+    changed_variable: "无大型黏体；玩家单独进入上活塞，推上目标后停在 L 侧口袋"
+    contrast_with: "sequential_attempts_cannot_accumulate,giant_two_tip_sync_final"
+    notes: "up,up,right 后只有 left 合法；left 会 pull 身后目标箱。"
+    layout: |
+      ############
+      #...PL.....#
+      #...SB.....#
+      #....#.....#
+      #....CG....#
+      #....#.....#
+      #...@......#
+      #....#.....#
+      #....CG....#
+      #....#.....#
+      #..........#
+      ############
+    actions: ["up", "up", "right"]
+
+  - id: "top_goal_forced_retract_vacates"
+    family: "two_single_crate_goal_locks"
+    variant: "top_goal_exit_retract"
+    changed_variable: "在上活塞临时覆盖后执行唯一出口 left"
+    contrast_with: "top_goal_only_exit_is_retract"
+    notes: "left 应触发 pull_object:crate 并把上目标重新空出。"
+    layout: |
+      ############
+      #...PL.....#
+      #...SB.....#
+      #....#.....#
+      #....CG....#
+      #....#.....#
+      #...@......#
+      #....#.....#
+      #....CG....#
+      #....#.....#
+      #..........#
+      ############
+    actions: ["up", "up", "right", "left"]
+
+  - id: "sequential_attempts_cannot_accumulate"
+    family: "two_single_crate_goal_locks"
+    variant: "top_then_bottom"
+    changed_variable: "同一布局先进入上活塞并撤出，再进入下活塞并撤出"
+    contrast_with: "giant_two_tip_sync_final"
+    notes: "两个目标会先后短暂覆盖，但每次离开都撤销；任何时刻都不会同时保留。"
+    layout: |
+      ############
+      #...PL.....#
+      #...SB.....#
+      #....#.....#
+      #....CG....#
+      #....#.....#
+      #...@......#
+      #....#.....#
+      #....CG....#
+      #....#.....#
+      #..........#
+      ############
+    actions: ["up", "up", "right", "left", "down", "down", "down", "down", "right", "left"]
+
+  - id: "giant_two_tip_sync_final"
+    family: "giant_sticky_resolves_two_goal_locks"
+    variant: "complete_c_e_body"
+    changed_variable: "在同一墙、箱、目标坐标左侧放入完整 C/E 形黏体，两个指尖同时占据原玩家推入位"
+    contrast_with: "sequential_attempts_cannot_accumulate,cf_giant_missing_lower_tip,cf_lower_branch_wall_atomic_failure"
+    notes: "right 应由完整刚体同时推两箱上目标，初态非胜利、终态立即胜利。"
+    layout: |
+      ############
+      #...PL.....#
+      #...SB.....#
+      #....#.....#
+      #.MMMCG....#
+      #.MM.#.....#
+      #@MM.......#
+      #.MM.#.....#
+      #.MMMCG....#
+      #....#.....#
+      #..........#
+      ############
+    actions: ["right"]
+
+  - id: "cf_giant_missing_lower_tip"
+    family: "giant_sticky_resolves_two_goal_locks"
+    variant: "lower_contact_absent"
+    changed_variable: "只删除大型黏体的下指尖 `(4,8)`，其它墙、箱和目标坐标不变"
+    contrast_with: "giant_two_tip_sync_final"
+    notes: "right 只应把上箱送上目标；下箱不动，终态不胜利。"
+    layout: |
+      ############
+      #...PL.....#
+      #...SB.....#
+      #....#.....#
+      #.MMMCG....#
+      #.MM.#.....#
+      #@MM.......#
+      #.MM.#.....#
+      #.MM.CG....#
+      #....#.....#
+      #..........#
+      ############
+    actions: ["right"]
+
+  - id: "cf_lower_branch_wall_atomic_failure"
+    family: "giant_sticky_resolves_two_goal_locks"
+    variant: "one_piston_blocked"
+    changed_variable: "完整双指尖仍在，但下箱的一步目标格换成墙，目标移到墙后"
+    contrast_with: "giant_two_tip_sync_final"
+    notes: "下分支 force_blocked 应使整个 right 原子失败，上箱也不能先行上目标。"
+    layout: |
+      ############
+      #...PL.....#
+      #...SB.....#
+      #....#.....#
+      #.MMMCG....#
+      #.MM.#.....#
+      #@MM.......#
+      #.MM.#.....#
+      #.MMMC#G...#
+      #....#.....#
+      #..........#
+      ############
+    actions: ["right"]

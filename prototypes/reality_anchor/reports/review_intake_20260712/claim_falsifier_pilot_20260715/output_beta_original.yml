@@ -1,0 +1,214 @@
+falsification_attempt_id: "BETA_ORIGINAL_HELD_OUT_FALSIFICATION_20260715"
+critic_instance_id: "fresh_claim_falsifier_beta_original_01"
+base_packet_ref: "../candidate_beta.yml"
+claim_replacement_ref: null
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "BETA-A01"
+    claim_type: design_value
+    normalized_proposition: "该关卡在玩家侧成立为一个后期双锚点整体切割挑战，而不只是机制铺垫后的一条门箱顺序约束。"
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "candidate_beta.yml::slot_brief.intended_role 将角色写为 late_game_dual_anchor_resection_challenge。"
+        - "candidate_beta.yml::player_reasoning.forced_setup_disclaimer 把 step1-2 定为机制铺垫，并声明 step3-14 不虚构 alternative。"
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments 把 step1-14 全部分配给拼接、抵达拉侧和整体切割，唯一展开的玩家问题位于 RU1。"
+        - "candidate_beta.yml::hard_evidence.evidence_limits 明说图规模与强制铺垫不直接证明审美或难度。"
+      countercase: "压缩 step1-14 的必经操作劳动后，包内实际展开的玩家问题是上臂与门箱的先后；因此更贴近材料的玩家侧读法是‘机制演示之后的单一封井顺序陷阱’，而不是已被证明的双锚点切割挑战。"
+    status: undercut
+    status_reason: "双锚点、拼接和切割确实发生，但包内主动剥离了前 14 步的 alternative，也明确不以强制铺垫证明难度；这足以击穿作为玩家挑战身份的强解释。"
+    surviving_scope: "双锚点参与同一条机械链、并发生整体切割这一内容描述仍成立。"
+
+  - claim_id: "BETA-A02"
+    claim_type: mechanical_fact
+    normalized_proposition: "B/S 的前置操作使三箱纵柱与上下黏臂合并为七格 C 形整体。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "candidate_beta.yml::designer_claim.summary 明确声明三箱纵柱被刷入上下黏臂并拼成七格 C 形整体。"
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments[steps=1-2] 记载推动 B/S，使三箱与上下黏臂合并成七格整体。"
+        - "candidate_beta.yml::prototype_rules.box_sticky_boundary 规定相邻黏格合并。"
+      countercase: "包内没有逐步状态快照可独立重算七格形状；最强攻击只能指出证据主要来自已标注的回放分段，找不到相反布局、alternative 或后继状态。"
+    status: survived_attack
+    status_reason: "规则与 step1-2 的具体分段记录共同支持合并事实，指定材料内没有反例。"
+    surviving_scope: "仅确认合并和七格整体这一机械事实，不据此确认其难度或审美价值。"
+
+  - claim_id: "BETA-A03"
+    claim_type: mechanical_fact
+    normalized_proposition: "固定 P/L 横拉该整体后，连接柱跨 B 侧切回箱，整体分裂成上下黏臂及切出箱。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "candidate_beta.yml::prototype_rules.box_sticky_boundary 规定跨 B 侧切回箱并分裂。"
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments[steps=3-14] 记载抵达固定 P/L 拉侧并整体横切，生成双臂与切出箱。"
+        - "candidate_beta.yml::solve_instance.canonical_exact_inputs 与 final_win 给出完成该分段后继续获胜的完整回放，但没有逐步状态快照。"
+      countercase: "缺少 step14 状态快照使连接柱每一格无法从输出中逐格复核；然而包内没有任何 alternative 或字段显示横切未发生、未分裂或由别的对象完成。"
+    status: survived_attack
+    status_reason: "原型规则与明确的 step3-14 分段相互吻合，最强攻击只剩复核粒度不足，尚不足以推翻机械命题。"
+    surviving_scope: "确认横切、材料切回与双臂分裂；不外推为玩家必然形成的洞见。"
+
+  - claim_id: "BETA-A04"
+    claim_type: mechanical_fact
+    normalized_proposition: "切出的下方门箱既用于覆盖目标，也会封住上下区域唯一竖井的底口。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].premises 记载门箱位于目标左侧，覆盖后占住竖井底口，且另一列被切出箱占据。"
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].alternative.concrete_outcome 记载门箱覆盖目标后仍可完成下臂，但上臂把手再无可达路径。"
+        - "candidate_beta.yml::hard_evidence.order_monitor 记载所有胜局均为 upper_before_gate。"
+      countercase: "若门箱不封唯一有效竖井，应存在门箱落位后仍能完成上臂的反例；指定材料给出的完整续搜结果恰为无胜，并且所有胜局都遵守相反顺序。"
+    status: survived_attack
+    status_reason: "目标用途、封井后果和全胜局顺序监测形成一致证据链，没有找到反例。"
+    surviving_scope: "确认门箱在给定可达状态空间中的目标件与封井职责，不宣称玩家一定预见该双重职责。"
+
+  - claim_id: "BETA-A05"
+    claim_type: design_value
+    normalized_proposition: "整体切割这一次动作当下同时完成了所谓目标反馈，而不只是生成稍后使用的目标件。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "candidate_beta.yml::designer_claim.claimed_highlights[0] 声称一次整体切割同时完成材料转换、刚体分裂、目标反馈和后续职责分配。"
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments 将整体切割放在 step3-14，将门箱覆盖目标放在 step19-25。"
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].feedback 明确写明 step25 门箱落位；step18 的反馈是上臂先完成。"
+      countercase: "切割在 step14 前后已经完成，而门箱的目标落位直到 step25 才发生；切割当下最多生成目标件并赋予后续职责，不能同时完成目标落位反馈。"
+    status: falsified
+    status_reason: "声明的‘一次切割同时完成’与包内明确分开的 step14 切割、step25 门箱落位时序直接冲突。"
+    surviving_scope: "切割同时完成材料转换、刚体分裂并生成承担目标职责的门箱仍可成立。"
+
+  - claim_id: "BETA-A06"
+    claim_type: mechanical_fact
+    normalized_proposition: "整体切割后形成上臂、下臂和门箱三类后续职责。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments 分别记载 step15-18 完成上臂、step19-25 完成门箱、step26-32 完成下臂。"
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].conclusion 规定上臂必须先于门箱，而下臂可在门箱前后完成。"
+        - "candidate_beta.yml::solve_instance.final_win 为 true，且 step32 下臂完成后立即胜利。"
+      countercase: "责任断裂攻击未找到任何一类对象在获胜前退休：上臂必须在封井前完成，门箱必须覆盖目标，下臂在 canonical 中承担最后完成职责。"
+    status: survived_attack
+    status_reason: "三类职责都能定位到具体步骤和胜利条件，且没有无须其中一类即可获胜的包内反例。"
+    surviving_scope: "仅确认三项机械职责存在，不确认三项都构成独立而同等强的玩家决策。"
+
+  - claim_id: "BETA-A07"
+    claim_type: design_value
+    normalized_proposition: "把转换、分裂和三项职责集中在一次切割中，本身构成关卡的核心玩家洞见与存在理由。"
+    strongest_attack:
+      method: rival_player_reading
+      exact_basis:
+        - "candidate_beta.yml::player_reasoning.forced_setup_disclaimer 将 step1-2 归为机制铺垫，并拒绝为 step3-14 虚构 alternative。"
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments 显示切割之后三段执行分别是上臂、门箱、下臂。"
+        - "candidate_beta.yml::hard_evidence.order_monitor 只证明 upper_before_gate_on_all_wins 与 lower_arm_order_free。"
+      countercase: "更弱且更具体的玩家侧读法是：切割只是一次生成三个待办对象的状态转换，真正需要识别的独特约束只有封井前完成上臂；三项职责的数量不自动把切割提升为三重洞见。"
+    status: undercut
+    status_reason: "包内能证明集成机械发生，却没有显示玩家在切割处作出相应选择；唯一展开并被全胜局证明的判断是上臂早于门箱，足以削弱‘一次切割即核心洞见’的价值解释。"
+    surviving_scope: "一次切割确实集中地产生多项机械后果，作为机械主题描述仍成立。"
+
+  - claim_id: "BETA-A08"
+    claim_type: mechanical_fact
+    normalized_proposition: "门箱过早覆盖目标后，玩家仍能离开现场并合法完成下臂，获得持续的局部进展。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].alternative.exact_inputs 为 [down, down, right]。"
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].alternative.local_gain 记载一次对象操作完成门箱目标，玩家仍可活动并继续完成下臂。"
+        - "candidate_beta.yml::hard_evidence.alternative.delayed_lower_arm_inputs 给出七步下臂输入，continuation_status 为 complete。"
+      countercase: "若该错误在门箱落位时立即冻结玩家或阻止下臂，七步 delayed_lower_arm_inputs 就会成为反例；包内明确记录这七步可完成。"
+    status: survived_attack
+    status_reason: "alternative 给出精确输入、局部收益和后续七步，直接支持错误分支仍可活动并继续取得局部成果。"
+    surviving_scope: "确认可离开并完成下臂；不据此推断玩家一定把这段经历评价为公平或有趣。"
+
+  - claim_id: "BETA-A09"
+    claim_type: mechanical_fact
+    normalized_proposition: "过早填入门箱不是即时死袋，而是延迟到上臂把手不可达时才暴露为无胜分支。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].alternative.concrete_outcome 记载门箱落位后仍可用七步完成下臂。"
+        - "candidate_beta.yml::hard_evidence.alternative.continuation_status 为 complete，continuation_found_win 为 false。"
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].premises 将失败原因定位为竖井被占、另一列被切出箱占据、上臂把手无法从下方重新抵达。"
+      countercase: "即时死袋要求门箱落位后立刻没有有效进展；但包内的精确后续能完成下臂，找不到即时停止的相反事实。"
+    status: survived_attack
+    status_reason: "分支既有后续合法进展又经完整续搜无胜，符合‘延迟失败而非即时死袋’的机械描述。"
+    surviving_scope: "仅确认失败被延迟，不确认延迟长度足以产生某种特定情绪体验。"
+
+  - claim_id: "BETA-A10"
+    claim_type: player_model
+    normalized_proposition: "玩家会把门箱只差一次操作即可覆盖目标读成一个值得提前执行的选择，从而实际形成 RU1 所写的提问。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].player_question 把问题写为是否先完成门箱再处理两条黏臂。"
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].premises 只给出门箱三步可合法覆盖及其机械后果。"
+        - "candidate_beta.yml::hard_evidence.evidence_limits 明说 alternative 不证明玩家一定受诱导或觉得反馈公平。"
+      countercase: "alternative 证明玩家可以这样走，却没有玩家观察、可见信息分析或另一种行动显著性证据证明玩家会把它识别为诱惑并实际提出该问题。"
+    status: not_established
+    status_reason: "机械可执行性与玩家会形成某个问题是两种不同证据；包内自己明确承认缺少后者。"
+    surviving_scope: "该问题是一个合法且后果明确的分析框架，但尚未被建立为实际玩家模型。"
+
+  - claim_id: "BETA-A11"
+    claim_type: mechanical_fact
+    normalized_proposition: "所有正解都要求上臂在门箱覆盖目标之前完成。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "candidate_beta.yml::hard_evidence.order_monitor.upper_before_gate_on_all_wins 为 true。"
+        - "candidate_beta.yml::hard_evidence.graph.status 为 complete，winning_states 为 3。"
+        - "candidate_beta.yml::hard_evidence.alternative.continuation_status 为 complete，门箱优先分支 continuation_found_win 为 false。"
+      countercase: "最直接的反例应是一个 gate-before-upper 的胜局；完整 order_monitor 和门箱优先分支的完整续搜均未给出这种胜局。"
+    status: survived_attack
+    status_reason: "完整胜局顺序监测与具体错误分支相互支持，指定材料内没有违反该必要顺序的反例。"
+    surviving_scope: "确认对象完成顺序的必要性，不确认玩家能在行动前推导出来。"
+
+  - claim_id: "BETA-A12"
+    claim_type: mechanical_fact
+    normalized_proposition: "下臂既可在门箱之前完成，也可在门箱之后完成，因此它与门箱之间没有固定完成顺序。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "candidate_beta.yml::hard_evidence.order_monitor.lower_arm_order_free 为 true。"
+        - "candidate_beta.yml::player_reasoning.reasoning_units[RU1].conclusion 明确写明下臂在门箱前后均可完成。"
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments 的 canonical 顺序为上臂、门箱、下臂；alternative 则在门箱后仍完成下臂。"
+      countercase: "若下臂存在固定顺序，order_monitor.lower_arm_order_free 会与之冲突；指定包没有给出这种冲突。"
+    status: survived_attack
+    status_reason: "完整顺序监测直接支持顺序自由，且 canonical 明示至少包含门箱后完成下臂的实例。"
+    surviving_scope: "确认下臂与门箱的完成顺序可交换，不确认两种顺序带来不同的规划内容或体验。"
+
+  - claim_id: "BETA-A13"
+    claim_type: design_value
+    normalized_proposition: "下臂的顺序自由足以使后半段摆脱全序脚本，并形成有意义的调度。"
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "candidate_beta.yml::hard_evidence.order_monitor 只报告 lower_arm_order_free，没有报告下臂两种次序引出不同后继问题。"
+        - "candidate_beta.yml::hard_evidence.solution_uniqueness 为 equivalent_variants_only。"
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments 把下臂处理压缩为一个独立的 step26-32 执行段。"
+      countercase: "若把可交换但内容相同的下臂执行段压缩为一个待办块，后半段剩余的独特依赖仍只是上臂必须早于门箱；这更像等价执行块的换序，而不是已经证明的调度问题。"
+    status: undercut
+    status_reason: "顺序不全序这一字面机械性质成立，但 equivalent_variants_only 与缺少差异化后继问题，使‘有意义调度、避免脚本’的玩家价值解释被更弱的等价换序解释击穿。"
+    surviving_scope: "严格就对象完成偏序而言，后半段确实不是唯一全序；被削弱的是其作为玩家调度亮点的强度。"
+
+  - claim_id: "BETA-A14"
+    claim_type: design_value
+    normalized_proposition: "step1-14 只承担机制铺垫与抵达切割，不需要另行申报玩家矛盾或虚构 alternative。"
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "candidate_beta.yml::player_reasoning.forced_setup_disclaimer 明确限定 step1-2 为机制铺垫、step3-14 不虚构 alternative。"
+        - "candidate_beta.yml::player_reasoning.trace_partition.segments 为 step1-2 与 step3-14 各自给出单一目的。"
+        - "candidate_beta.yml::hard_evidence.solution_uniqueness 为 equivalent_variants_only。"
+      countercase: "压缩这些步骤不会丢失包内申报的 RU1 顺序问题，反而支持作者没有把纯执行包装成额外矛盾；指定材料中也没有已经存在而被遗漏的前段 alternative 可作反例。"
+    status: survived_attack
+    status_reason: "这是对声明范围的克制限定，和分段、等价变体证据一致；最强压缩攻击没有揭示被隐藏的独立玩家决策。"
+    surviving_scope: "只承认本送审包没有为前 14 步虚构额外亮点，不证明这些步骤在实际游玩中必然无选择。"
+
+overall:
+  decisive_refutations:
+    - "BETA-A05：整体切割发生于 step3-14，而门箱目标落位明确发生于 step25，故不能声称一次切割当下同时完成目标反馈。"
+  claims_falsified: 1
+  claims_undercut: 3
+  claims_not_established: 1
+  claims_survived: 9
+  strongest_surviving_claim: "BETA-A11：完整 order_monitor 与门箱优先 alternative 的完整无胜续搜共同支持所有胜局均须上臂早于门箱。"
+  experiment_reading: mixed

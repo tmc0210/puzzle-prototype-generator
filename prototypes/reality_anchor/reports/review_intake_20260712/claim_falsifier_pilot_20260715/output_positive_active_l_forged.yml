@@ -1,0 +1,155 @@
+falsification_attempt_id: "POSITIVE_ACTIVE_L_FORGED_FALSIFICATION_20260715"
+critic_instance_id: "fresh_claim_falsifier"
+base_packet_ref: "base_positive_active_l.yml"
+claim_replacement_ref: "case_positive_active_l_forged.yml"
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "claim_step13_constructs_three_cell_l"
+    claim_type: mechanical_fact
+    normalized_proposition: "step13 的动作完成后，场上形成由三个相邻黏格组成的 L 形黏刚体。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet / mechanically_derived_key_snapshots / step13 / events: box_to_sticky:n1 与 sticky_merge:n1"
+        - "base packet / mechanically_derived_key_snapshots / step13 / after: 第4行 ##MMG## 与第5行 #.@M.G#"
+      countercase: "尝试用 step13 的事件与 after 布局否定三格 L 已形成；事件明确发生转黏与合并，after 中三个 M 占据 L 三连格，没有得到反例。"
+    status: survived_attack
+    status_reason: "step13 的 after 快照直接显示三个相邻 M，且 sticky_merge:n1 支持它们在该步合并；包内没有相反事实。"
+    surviving_scope: "只支持 step13 当下形成三格 L 黏刚体，不支持其成员、材料或刚体身份延续到后续步骤。"
+
+  - claim_id: "claim_identity_material_members_unchanged_through_step30"
+    claim_type: mechanical_fact
+    normalized_proposition: "step13 的同一个三格黏刚体从 step13 到 step30 始终保持连接、材料和成员完全不变。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "claim replacement / designer_claim / player_experience_core: 声称连接、材料与成员完全不变"
+        - "base packet / mechanically_derived_key_snapshots / step14 / events: sticky_to_box:n2"
+        - "base packet / mechanically_derived_key_snapshots / step15 / events: box_to_sticky:n1 与 sticky_merge:n1"
+        - "base packet / mechanically_derived_key_snapshots / step30 / events: sticky_to_box:n2"
+      countercase: "step14 已有两个黏格转箱，step15 又有箱转黏并重新合并，step30 再有两个黏格转箱；材料与刚体成员关系均不可能在整个区间完全不变。"
+    status: falsified
+    status_reason: "指定区间内的转换与重新合并事件直接否定了‘同一黏刚体的材料和成员完全不变’。"
+    surviving_scope: ""
+
+  - claim_id: "claim_no_conversion_or_remerge_steps13_30"
+    claim_type: mechanical_fact
+    normalized_proposition: "steps13-30 不发生属于该 L 成员的 sticky_to_box、box_to_sticky 或 sticky_merge，成员也不经历由这些事件造成的刚体重写。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "claim replacement / designer_claim / work_identity_conditions / 第1项"
+        - "base packet / mechanically_derived_key_snapshots / step14 / events: sticky_to_box:n2"
+        - "base packet / mechanically_derived_key_snapshots / step15 / events: box_to_sticky:n1 与 sticky_merge:n1"
+        - "base packet / mechanically_derived_key_snapshots / step30 / events: sticky_to_box:n2"
+      countercase: "禁止条件点名的三类事件全都在指定区间的关键快照中出现。step14 的 n2 转箱发生在 step13 三格 L 被 push 后，step15 随即记录转黏与合并。"
+    status: falsified
+    status_reason: "声明所排除的事件被回放字段逐项明确记录。"
+    surviving_scope: ""
+
+  - claim_id: "claim_step14_still_same_three_sticky_rigid"
+    claim_type: mechanical_fact
+    normalized_proposition: "step14 后仍是 step13 的同一个三格连通黏刚体。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "claim replacement / designer_claim / work_identity_conditions / 第2项"
+        - "base packet / mechanically_derived_key_snapshots / step13 / after: 三个对象均以 M 显示"
+        - "base packet / mechanically_derived_key_snapshots / step14 / events: sticky_to_box:n2"
+        - "base packet / mechanically_derived_key_snapshots / step14 / after: 第4行 ##.M*## 与第5行 #..@CG#"
+      countercase: "step14 after 只剩一个明示 M，另两个原黏格在该步由 sticky_to_box:n2 转为箱；因此不再存在原来的三格黏刚体。"
+    status: falsified
+    status_reason: "step14 的事件和 after 布局共同给出直接相反事实。"
+    surviving_scope: ""
+
+  - claim_id: "claim_visible_three_cell_l_outline_at_named_snapshots"
+    claim_type: mechanical_fact
+    normalized_proposition: "若只看三个相关对象占据的格子而不要求材料或刚体身份相同，step13、step14、step15、step22 与 step30 的关键 after 快照都保留三格 L 轮廓。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "base packet / mechanically_derived_key_snapshots / step13 / after"
+        - "base packet / mechanically_derived_key_snapshots / step14 / after"
+        - "base packet / mechanically_derived_key_snapshots / step15 / after"
+        - "base packet / mechanically_derived_key_snapshots / step22 / after"
+        - "base packet / mechanically_derived_key_snapshots / step30 / after"
+      countercase: "逐一尝试在作者点名的快照中寻找非 L 的三对象占位：step13 为上方横二加右下，step14 为上方横二加右下，step15 为上方横二加左下，step22 为左侧竖二加右下，step30 为左侧竖二加右下；未找到非 L 反例。"
+    status: survived_attack
+    status_reason: "列出的关键快照确实都呈现三对象的 L 三连格轮廓，但轮廓延续不能证明同一黏刚体延续。"
+    surviving_scope: "仅为离散快照中的占位几何；不包含方向不变、材料不变、成员不变、黏连接不变或整体搬运。"
+
+  - claim_id: "claim_player_only_route_finds_intact_l_steps14_30"
+    claim_type: player_model
+    normalized_proposition: "steps14-30 的玩家问题只是在为一个持续完整的 L 刚体寻找移动路线，而不再处理其材料与结构重写。"
+    strongest_attack:
+      method: rival_player_reading
+      exact_basis:
+        - "claim replacement / designer_claim / player_action: 声称 steps14-30 只负责为持续完整的 L 找路线"
+        - "base packet / mechanically_derived_key_snapshots / step14 / events: sticky_to_box:n2"
+        - "base packet / mechanically_derived_key_snapshots / step15 / events: box_to_sticky:n1 与 sticky_merge:n1"
+        - "base packet / mechanically_derived_key_snapshots / step22 / events: pull_object:crate#1"
+        - "base packet / mechanically_derived_key_snapshots / step30 / events: force_chain:n2 与 sticky_to_box:n2"
+      countercase: "更贴近回放的玩家侧解释是：后半段在搬运由黏格与箱反复改写的对象配置，并在终局利用 force chain 与转箱完成覆盖；它不是给一个始终完整的 L 刚体单纯找路。"
+    status: undercut
+    status_reason: "包内事件为‘持续完整 L 的纯路线规划’提供了具体且更弱的替代解释。材料没有玩家过程记录，不能断言玩家实际如何表述任务，但作者的排他性解释已被击穿。"
+    surviving_scope: "仍可能包含路线规划成分；不成立的是‘只’围绕一个身份不变的完整 L 找路。"
+
+  - claim_id: "claim_pre_step13_player_problem_is_construct_l"
+    claim_type: player_model
+    normalized_proposition: "step13 以前，玩家把自己的任务理解为构造三格 L。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "claim replacement / designer_claim / player_action: step13 以前负责构造 L"
+        - "base packet / solve_instance / canonical_exact_inputs: 保留机械输入序列"
+        - "base packet / hard_evidence / evidence_limits / 第1项: 机械回放与完整图不直接证明玩家会自然发现或把重构读成亮点"
+        - "base packet / hard_evidence / evidence_limits / 第2项: 不提供玩家过程记录"
+      countercase: "回放能证明 step13 后形成 L，却不能证明玩家此前以‘构造 L’来组织观察、计划或记忆；包内也没有另一位玩家的过程证据可反证或确认该心理命题。"
+    status: not_established
+    status_reason: "这是玩家理解命题，现有材料只证明动作和状态结果；缺证不足以把它判为错误。"
+    surviving_scope: ""
+
+  - claim_id: "claim_step30_original_sticky_l_covers_goals"
+    claim_type: mechanical_fact
+    normalized_proposition: "step30 覆盖两个目标并获胜的是 step13 未被改写的三格黏刚体。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "claim replacement / designer_claim / visible_payoff 与 work_identity_conditions / 第3项"
+        - "base packet / mechanically_derived_key_snapshots / step30 / events: sticky_to_box:n2"
+        - "base packet / mechanically_derived_key_snapshots / step30 / after: 第4行 ##..*## 与第5行 #..@C*#"
+        - "base packet / prototype_rules / symbols: C 为 crate、M 为 sticky、* 为 object_on_goal"
+      countercase: "终步明确把两个黏格转箱；after 中非目标占位对象显示为 C，且没有任何 M。获胜覆盖来自终步转箱后的对象配置，而不是未改写的三格黏刚体。"
+    status: falsified
+    status_reason: "终步事件和最终布局直接否定‘未改写黏刚体原样覆盖’。"
+    surviving_scope: ""
+
+  - claim_id: "claim_level_value_is_permanent_unchanged_l_reuse"
+    claim_type: design_value
+    normalized_proposition: "本关的存在理由是展示一次构造后永久获得同一个不改身份的 L 工具，并在后续十七步持续复用。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "claim replacement / designer_claim / why_this_level_exists"
+        - "base packet / mechanically_derived_key_snapshots / step14 / events: sticky_to_box:n2"
+        - "base packet / mechanically_derived_key_snapshots / step15 / events: box_to_sticky:n1 与 sticky_merge:n1"
+        - "base packet / mechanically_derived_key_snapshots / step22 / after: 两个 M 与一个 C 组成混合材料配置"
+        - "base packet / mechanically_derived_key_snapshots / step30 / events: sticky_to_box:n2"
+      countercase: "step13 的三格黏刚体在下一步就失去三黏成员身份，之后还经过转黏、重并与终局转箱。它没有作为同一永久工具持续承担后续责任，因此‘不改身份地复用’不能解释这段回放。"
+    status: falsified
+    status_reason: "该设计价值声明所依赖的责任连续性被 step14、step15 和 step30 的具体重写打断。"
+    surviving_scope: ""
+
+overall:
+  decisive_refutations:
+    - "step14 的 sticky_to_box:n2 与 after 中仅一个明示 M，直接否定 step14 后仍为原三格黏刚体。"
+    - "step15 的 box_to_sticky:n1、sticky_merge:n1 直接否定中途不转箱回黏或重新合并。"
+    - "step30 的 sticky_to_box:n2 与最终无 M 的布局，直接否定原三格黏刚体原样覆盖双目标。"
+  claims_falsified: 5
+  claims_undercut: 1
+  claims_not_established: 1
+  claims_survived: 2
+  strongest_surviving_claim: "step13 当下确实形成三个相邻 M 构成的 L 形黏刚体；列出的关键快照也都保留三对象 L 轮廓，但这两点都不延伸为刚体身份连续性。"
+  experiment_reading: false_claim_found

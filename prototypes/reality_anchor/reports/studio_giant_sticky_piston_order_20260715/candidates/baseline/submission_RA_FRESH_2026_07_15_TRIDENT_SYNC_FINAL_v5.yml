@@ -1,0 +1,92 @@
+submission_id: SUB_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5_R1
+portfolio_id: RA_PORTFOLIO_2026_07_15_GIANT_STICKY_PISTON_ORDER
+candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+exact_version: v5
+slot: baseline
+
+designer_claim:
+  player_experience_core: >-
+    三个空间分离的 P/L 目标活塞都要求自己成为最后动作，无法逐个保留完成；
+    一个具有上下对称感的 21 格完整三叉 E 形黏块把三个互相冲突的最后动作压成同一拍。
+  player_action: >-
+    玩家可先从右侧进入任一锁箱口验证“推入后必须拉回”，再绕到巨大结构左侧，
+    把整块 E 形右推一格进入承诺位，再右推一格同时命中三个箱子。
+  visible_payoff: >-
+    最后一拍整块巨大 E 形平移，三条远距横臂同拍接触，三个目标从 CG 同时变为 C*，立即结束。
+  why_this_level_exists: >-
+    作为 baseline，它不把识形、对齐或走位伪装成难度，而是完整、直接地让玩家亲手验证三重顺序矛盾，
+    再由一个真正参与终局的超大完整结构消解矛盾。
+  work_identity_conditions:
+    - 三个目标必须各自位于只能从 L 侧原路退出的一格锁箱口，单独完成不能累积。
+    - 21 格三叉 E 形必须在动作开始时保持一个连通刚体，并保留三个等相位触点。
+    - 胜利终拍必须由同一输入的完整结构力链同时推动三只目标箱，而非逐个填目标。
+
+packaging_account:
+  opening: >-
+    玩家开局位于三只目标活塞与大结构之间；右侧保留四条等长两格短槽作为可逆观察与负空间，
+    可先向右走两格再返回主体，而不会立刻作不可逆承诺。
+  preparation: 玩家只需决定不逐个纠缠活塞，并从顶部或底部开放通道走到结构背面。
+  reveal_or_use: 第一次右推把完整结构送入三个触点都相邻的承诺位；第二次右推显露三触点原子力链。
+  ending: 三个目标在同一可见拍同时覆盖，结构前端越过 P/L 后切成三只箱，胜利无拖尾。
+  every_major_element_role:
+    - 21 格 E 形：视觉主体、唯一三触点同步 driver，也是终局直接受力对象。
+    - 三只箱与三个目标：三组彼此冲突的“必须最后完成”活塞。
+    - 三对狭廊侧墙：迫使单独推入目标的玩家从 L 侧拉回，建立不可累积性。
+    - 上下两个导向墙格：阻止巨大结构被纵向错移，保持三触点相位的可读性。
+    - 四条 x=10..11 的两格短槽：提供右侧可逆观察带，并以四层同长负空间统一锁口与三臂的读图节奏；不承担解路难度。
+    - P/L 锚点：决定三只箱可推可拉，并在终拍切下三枚越界触点。
+    - B/S 锚点：满足巨大黏体的边界合同；隔离固定，不参与本关玩家操作。
+  known_perceptible_defects:
+    - 顶部与底部绕行距离较长，但用户已明确巨大结构带来的走位审美损失可忽略；本关不把这段走位计作难度。
+    - B/S 锚点在独立墙室中只承担规则合同，没有玩家侧操作回报。
+    - 向左推动巨大结构会进入明显死路；目标全部在右侧，因此属于可读方向错误，不是隐藏陷阱。
+    - >-
+      v4 的四个 x=12 degree-1 末格已墙化并裁去旧最右外墙列，形成 v5；
+      当前四条两格短槽即使完整墙化也不改变机械解，但因 opening/readability/aesthetic 责任有意保留，
+      不把它们包装成机械必要或难度。
+
+slot_account:
+  concrete_delta_from_baseline: not_applicable
+  application_added_authorship: not_applicable
+  combination_other_mechanism: human_brief_exempted
+  combination_not_prerequisite_to_current_core: human_brief_exempted
+  combination_player_visible_relation: human_brief_exempted
+  challenge_ceiling_dimension: not_applicable
+  concrete_experience_difference_from_current_batch_works:
+    - 当前关承担预制完整结构与三重同步终拍的最直接完整呈现；不要求玩家先构造、切分或重铸巨大结构。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: maxStates=200000; terminalizeWins=true; actual=923 states / 2929 transitions
+    known_raw_winning_variants:
+      - 9 个 raw win states；玩家终拍接触坐标分别为 x=5, y=7..15。
+    equivalence_account: >-
+      去除玩家坐标后，九个胜态只有一个对象状态类；九条 non-win -> win 入边也只有一个包含前后对象状态的转移类。
+      每条入边均为 right，均移动同一个完整 sticky#1，均产生 force_chain:n4、sticky_to_box:n3，且都同时覆盖三个目标。
+      差异只是玩家从 E 形九格竖脊中的哪一格施加同一个水平力，不改变计划、对象参与或可见结果。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/results.json
+      - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/report.md
+      - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+    evidence_limits:
+      - 唯一性按玩家逻辑类声明，不把九个不同玩家落点谎称为单一 raw state。
+  bypass_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/results.json
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/results.json#base_three_tip_sync_win
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/results.json#single_top_lock_retracts
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/results.json#cf_missing_lower_tip
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/results.json#cf_cut_lower_bridge
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/results.json#cf_open_all_side_exits
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/verification.json
+  evidence_limits:
+    - cf_missing_lower_tip 与 cf_cut_lower_bridge 只支持“相同 canonical stroke 不再同步三臂”的窄声明，不声明反事实版本全局无解。
+    - mechanism-lab 的局部图带 maxExploreDepth=20；完整唯一性只来自 v5 的 923 状态无深度截断图。
+    - 反事实用于机械身份，不用于证明趣味、难度或档位。
+
+designer_self_verdict: submit_for_independent_review

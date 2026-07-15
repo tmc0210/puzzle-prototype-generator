@@ -1,0 +1,35 @@
+candidate_id: RA_EXP_ORTHOGONAL_YOKE_V1
+layout_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/exploration/orthogonal_yoke/orthogonal_yoke_v1.txt
+search_kind: short_object_macro_attack_followed_by_exact_replay
+macro_budget:
+  max_states: 600
+  max_object_depth: 6
+  status: exhausted
+  enumerated_states: 600
+  enumerated_transitions: 2030
+  reported_raw_wins: 36
+important_tool_limit: >-
+  所用旧宏脚本用静态 flood fill 近似玩家走位；在 P/L 的 L 侧，几何上的一步 left
+  实际会拉回身后的目标箱，因此其 raw win 标记不能直接作为机械事实。
+normalized_reported_groups:
+  - group: sequential_three_lock_pushes
+    reported_count: 35
+    exact_replay_ref: prototypes/reality_anchor/reports/input_replay_RA_EXP_ORTHOGONAL_YOKE_V1_SEQ_BYPASS.json
+    exact_result: false_positive_not_a_win
+    disproof: >-
+      exact replay 的第 38/39 步为 push_object:crate#1 后 pull_object:crate#1，
+      第 46/47 步同样推入后拉回；第 54 步只留下第三只箱在目标上，final.isWin=false。
+  - group: merge_two_yoke_cells_then_dock_then_two_strokes
+    reported_count: 1
+    exact_replay_ref: prototypes/reality_anchor/reports/input_replay_RA_EXP_ORTHOGONAL_YOKE_V1_SHORT.json
+    exact_result: valid_win
+    object_actions:
+      - lower_yoke_right
+      - lower_yoke_right_and_merge_pair
+      - merged_pair_up_and_merge_main
+      - whole_composite_right_stage
+      - whole_composite_right_fire
+conclusion: >-
+  已逐组 exact 审计的短宏结果只剩“合并两段轭 -> 正交接入主构 -> 两冲程同步终局”
+  这一逻辑族；未得到有效的逐锁旁路。该结果只是 600 状态、对象深度 6 的预算内攻击，
+  不是完整图或唯一性证明。

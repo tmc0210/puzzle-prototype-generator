@@ -1,0 +1,108 @@
+review_attempt_id: RA_CWHOLE_REVIEW_9
+prototype_id: reality_anchor
+review_scope: segment
+
+prototype_rules:
+  confirmed_rules:
+    - 玩家每次输入一个正交方向；空格可行走。
+    - 无 P/L 时全图为 push；有 P/L 时，以输入前玩家位置相对 P/L 边界选择 push 或 pull。
+    - push 移动玩家前方对象；pull 要求玩家前格为空，并移动玩家及其身后对象；力可以向其它可动物传播。
+    - P/L 与 B/S 都是可移动两格锚点；移动后边界随锚点改变。
+    - 无 B/S 时全图为 box；有 B/S 时，每个合法动作后按新边界将箱与黏块全局归一化。
+    - sticky 正交相邻格合并为单一刚体；任何目标格受阻都会使整块移动失败。
+  win_condition: settle 后所有目标格都被箱、黏块格或锚点格覆盖；玩家不计入覆盖。
+  object_and_event_semantics:
+    - C 为普通箱，M 为黏块格；m 为目标上的黏块，G 为空目标。
+    - P/L 分别标记 push 侧与 pull 侧；B/S 分别标记 box 侧与 sticky 侧。
+    - force_chain 表示一次对象移动同时推动了另一个可动物；anchor_boundary_shift 表示对应锚点实际改变位置。
+    - 目标 overlay 在对象覆盖时仍存在；render 中对象字形可覆盖 G。
+  player_prior:
+    - 已知普通推箱、目标覆盖、固定与可移动 P/L。
+    - 已知 B/S 归一化、箱转黏、sticky merge、黏块刚体移动。
+    - 已知锚点本身可以被推拉。
+
+portfolio:
+  - slot: baseline
+    candidate_id: CWHOLE_BASELINE
+    exact_version: CWHOLE_BASELINE_v6_sha256_9059c8758e9ac3d02469319b7ff9e740f146ef0d4e92cc2a5ef97852c5b39d3a
+    solve_instance:
+      layout: |-
+        ########
+        #BS....#
+        ##MMM..#
+        ###@m..#
+        ##MMM.G#
+        ####G.G#
+        ########
+      player_start: [3, 3]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [right, right, left, left, up, up, right, down]
+      mechanically_derived_trace_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps
+
+  - slot: application
+    candidate_id: CWHOLE_APPLICATION
+    exact_version: CWHOLE_APPLICATION_v14_sha256_c853889c255da5030f37806ca2917ff12455217439770d46bae6a4e8cb997738
+    solve_instance:
+      layout: |-
+        #########
+        ####@..##
+        #B..CC###
+        #S.M.GGG#
+        ##.M.G..#
+        ###MMm.G#
+        #########
+      player_start: [4, 1]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [down, up, right, down, left, left, left, down, right, right]
+      mechanically_derived_trace_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v14.json#/steps
+    additional_exact_replay_refs:
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v14_REVERSE_BUILD_ORDER.json#/steps
+
+  - slot: combination
+    candidate_id: CWHOLE_COMBINATION
+    exact_version: CWHOLE_COMBINATION_v8_sha256_600cabc71e11a2db13a58277c68668f466d70f5a8cb9aedca11acc245c21af6c
+    solve_instance:
+      layout: |-
+        ##########
+        #BS......#
+        ###MMM...#
+        ####@mP.G#
+        ###MMMLGG#
+        #####G.G##
+        ##########
+      player_start: [4, 3]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [right, right, left, left, up, up, right, down]
+      mechanically_derived_trace_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v8.json#/steps
+
+  - slot: challenge
+    candidate_id: CWHOLE_CHALLENGE
+    exact_version: CWHOLE_CHALLENGE_v6_sha256_2ae9b3f4386035ac4c3f77cdb777b753410717c7df6c0aa10b4fce5e87923c44
+    solve_instance:
+      layout: |-
+        ##########
+        #BS..#..##
+        #.#MMm..##
+        #..ML.G.##
+        #.@mP.G.##
+        #.#MMm..##
+        ##########
+      player_start: [2, 4]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [right, right, up, left, left]
+      mechanically_derived_trace_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v6.json#/steps
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_BASELINE_v6.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_APPLICATION_v14.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v14.json
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v14_REVERSE_BUILD_ORDER.json
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_COMBINATION_v8.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v8.json
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_CHALLENGE_v6.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v6.json

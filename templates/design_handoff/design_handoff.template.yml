@@ -13,14 +13,17 @@ tool_commands:
 prototype_specific_workflows:
   - id: WORKFLOW_ID
     kind: diagnostic | redesign_stage | paired_design_mode | pre_submission_check | post_handoff_feedback_routing | not_applicable
-    default_status: routed | disabled_unless_brief_enabled | run_after_level_review_survive | run_before_submission | run_before_submission_or_when_feedback_flags_* | run_when_feedback_flags_* | not_applicable
     trigger:
       - "When this workflow should be considered."
+    applicability_requirements:
+      - "Positive conditions that must hold before this workflow runs."
     authority_docs:
       - prototypes/MECHANIC_ID/docs/designer_contract.md
     level_review_visibility: actual_artifacts_only | not_visible
-    admission_requirements:
-      - "Required operation and artifact expected by the independent evidence reviewer."
-    forbidden_unless:
-      - "Condition required before this workflow may be used."
-      - "If this workflow derives from an archive candidate, the brief must explicitly authorize the candidate id and allowed operations."
+    result_contract:
+      allowed_version_effects:
+        - unchanged
+      review_preserving_conditions: []
+      rereview_conditions: []
+    completion_requirements:
+      - "Required operation and artifact expected before the controller may add the delivery version to the playable queue."

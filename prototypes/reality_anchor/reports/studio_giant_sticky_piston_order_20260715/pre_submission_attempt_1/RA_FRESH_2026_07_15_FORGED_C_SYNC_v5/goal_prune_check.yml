@@ -1,0 +1,96 @@
+goal_prune_check:
+  status: clean
+  candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+  exact_version: v5_sha256_9bfae9c5c1160d4088fc59c317c2bfef33bd77b7066bca23e19850fd867cb590
+  slot: application
+  authority_doc: prototypes/reality_anchor/docs/goal_prune_check.md
+  method: >-
+    对两个 G 分别只删除目标 overlay；每个反事实都重跑最短解、terminalizeWins 完整图、规范回放，
+    并在 runtime 图上展开 4-bit 乘积图。前三位用 B/S 的 before/after 坐标分别锁定 n2、n2、n4 三段，
+    第四位要求终拍前最大 sticky 分量恰为 29 格，终拍含 n3、rigid、n4 且同时覆盖 (9,5)/(9,11)。
+  base_facts:
+    shortest_cost: 12
+    graph_status: complete
+    reachable_states: 143
+    legal_transitions: 338
+    raw_win_states: 7
+    expected_trace_win: true
+    core_event_probe_status: complete
+    core_product_states: 206
+    winning_core_masks:
+      - 15
+    core_event_bypass: none
+  targets_checked:
+    - target:
+        - 9
+        - 5
+      action: keep
+      reason: >-
+        删除后全部硬门槛虽仍通过，但上目标不是顺路覆盖的引导点。它让上钩尖与上支撑轨在第三段锻造后继续承担终拍责任，
+        并与下目标组成玩家可见的双端同拍回报；删除后上箱仍被推到 (9,5)，却不再显示覆盖，直接破坏“双锁同步”作品身份与上下镜像终局。
+      semantic_role: core_aesthetic_and_experience_identity
+      cost_delta: 12->12
+      graph_status: complete
+      reachable_states: 143
+      legal_transitions: 338
+      win_state_count: 7
+      expected_trace_win: true
+      core_event_probe_status: complete
+      core_product_states: 206
+      winning_core_masks:
+        - 15
+      core_event_bypass: none
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/goal_variants/NO_GOAL_9_5.txt
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/goal_variants/NO_GOAL_9_5.json
+    - target:
+        - 9
+        - 11
+      action: keep
+      reason: >-
+        删除后全部硬门槛虽仍通过，但下目标不是顺路覆盖的引导点。它让下钩尖与下支撑轨在第三段锻造后继续承担终拍责任，
+        并与上目标组成玩家可见的双端同拍回报；删除后下箱仍被推到 (9,11)，却不再显示覆盖，直接破坏“双锁同步”作品身份与上下镜像终局。
+      semantic_role: core_aesthetic_and_experience_identity
+      cost_delta: 12->12
+      graph_status: complete
+      reachable_states: 143
+      legal_transitions: 338
+      win_state_count: 7
+      expected_trace_win: true
+      core_event_probe_status: complete
+      core_product_states: 206
+      winning_core_masks:
+        - 15
+      core_event_bypass: none
+      evidence_refs:
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/goal_variants/NO_GOAL_9_11.txt
+        - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/goal_variants/NO_GOAL_9_11.json
+  removed_targets: []
+  retained_targets:
+    - - 9
+      - 5
+    - - 9
+      - 11
+  single_delete_hard_gate_passes:
+    - - 9
+      - 5
+    - - 9
+      - 11
+  adjacent_single_delete_passes_requiring_combination_test: []
+  combination_note: >-
+    两目标不相邻；二者同时删除会使关卡不剩目标，违反“只能删到仍有目标阻止绕过”的前提，因此不建立双删候选。
+  version_effect:
+    layout_changed: false
+    exact_version_status: unchanged
+    new_version_required_by_this_check: false
+    note: 两个目标均保留，未修改 exact v5。
+  review_effect:
+    reviewed_version_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/review/independent_level_review_attempt_1.yml
+    existing_review_survives_this_check: true
+    rereview_required_by_this_check: false
+    scope_note: 这里只说明目标检查本身；最终提交状态还受冗余要素检查约束。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/submission_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.yml

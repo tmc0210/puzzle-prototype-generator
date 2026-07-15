@@ -1,0 +1,142 @@
+runId: application_forged_c_sync_v5
+title: RA_FRESH_2026_07_15_FORGED_C_SYNC_v5 构造责任与双锁终局反事实
+notes: >-
+  基准 case 与 application exact v5 layout 逐字相同；验证三次 B/S 扫线的第三停位、
+  上下钩尖的连通责任、完整 29 格双钩终局，以及锁箱口袋仍保持 L 侧回撤关系。
+defaults:
+  maxExploreDepth: 20
+  maxReturnDepth: 24
+  maxStates: 50000
+  maxTransitions: 200000
+cases:
+  - id: base_three_sweeps_then_double_lock_win
+    family: forged_giant_double_hook
+    variant: exact_v5
+    changed_variable: base
+    contrast_with: two_sweeps_then_premature_attempt
+    notes: 三次扫线依次 n2、n2、n4，完成 29 格双钩后同拍推动两只目标箱。
+    layout: |
+      #############
+      #######PL####
+      #..@SB...####
+      #.###########
+      #.###########
+      #.MMM..CCG###
+      #.MMMCCC.####
+      #.MMM...#####
+      #.MMM.#######
+      #.MMM...#####
+      #.MMMCCC.####
+      #.MMM..CCG###
+      #############
+    actions: [right, right, right, left, left, left, left, left, down, down, down, right]
+
+  - id: two_sweeps_then_premature_attempt
+    family: forged_giant_double_hook
+    variant: missing_final_column_conversion
+    changed_variable: 只完成前两次 B/S 扫线便推动主体
+    contrast_with: base_three_sweeps_then_double_lock_win
+    notes: 第三列钩尖和支撑末格仍是独立箱；主体只推支撑轨，不应推动目标箱。
+    layout: |
+      #############
+      #######PL####
+      #..@SB...####
+      #.###########
+      #.###########
+      #.MMM..CCG###
+      #.MMMCCC.####
+      #.MMM...#####
+      #.MMM.#######
+      #.MMM...#####
+      #.MMMCCC.####
+      #.MMM..CCG###
+      #############
+    actions: [right, right, left, left, left, left, down, down, down, right]
+
+  - id: cf_missing_upper_tip
+    family: forged_giant_double_hook
+    variant: missing_upper_contact
+    changed_variable: 删除上钩尖 x7,y5
+    contrast_with: base_three_sweeps_then_double_lock_win
+    notes: 相同 canonical input 只应完成下目标。
+    layout: |
+      #############
+      #######PL####
+      #..@SB...####
+      #.###########
+      #.###########
+      #.MMM...CG###
+      #.MMMCCC.####
+      #.MMM...#####
+      #.MMM.#######
+      #.MMM...#####
+      #.MMMCCC.####
+      #.MMM..CCG###
+      #############
+    actions: [right, right, right, left, left, left, left, left, down, down, down, right]
+
+  - id: cf_disconnect_upper_tip
+    family: forged_giant_double_hook
+    variant: missing_upper_support_end
+    changed_variable: 删除上支撑轨末格 x7,y6，使上钩尖与主体不连通
+    contrast_with: base_three_sweeps_then_double_lock_win
+    notes: 上钩尖虽被第三扫线转为 sticky，但动作开始时不是主体分量，不能随终拍传力。
+    layout: |
+      #############
+      #######PL####
+      #..@SB...####
+      #.###########
+      #.###########
+      #.MMM..CCG###
+      #.MMMCC..####
+      #.MMM...#####
+      #.MMM.#######
+      #.MMM...#####
+      #.MMMCCC.####
+      #.MMM..CCG###
+      #############
+    actions: [right, right, right, left, left, left, left, left, down, down, down, right]
+
+  - id: cf_prebuilt_completed_shape
+    family: forged_giant_double_hook
+    variant: prebuilt_boundary_at_final_column
+    changed_variable: B/S 初始即在最终列，八只构件预先为 sticky
+    contrast_with: base_three_sweeps_then_double_lock_win
+    notes: 同一完成形可直接终局；三次构造事件及其玩家责任全部消失。
+    layout: |
+      #############
+      #######PL####
+      #@.....SB####
+      #.###########
+      #.###########
+      #.MMM..MCG###
+      #.MMMMMM.####
+      #.MMM...#####
+      #.MMM.#######
+      #.MMM...#####
+      #.MMMMMM.####
+      #.MMM..MCG###
+      #############
+    actions: [down, down, down, right]
+
+  - id: probe_upper_lock_alcove_retracts
+    family: forged_giant_double_hook
+    variant: representative_lock_entry
+    changed_variable: 仅把玩家放到上目标箱 P 侧并移除原钩尖
+    contrast_with: base_three_sweeps_then_double_lock_win
+    notes: right 推入后仍未胜；down 进入闭合侧袋再返回，left 仍只能从 L 侧拉回目标箱。
+    layout: |
+      #############
+      #######PL####
+      #...SB...####
+      #.###########
+      #.###########
+      #.MMM..@CG###
+      #.MMMCCC.####
+      #.MMM...#####
+      #.MMM.#######
+      #.MMM...#####
+      #.MMMCCC.####
+      #.MMM..CCG###
+      #############
+    actions: [right, down, up, left]

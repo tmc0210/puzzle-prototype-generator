@@ -1,0 +1,498 @@
+diff --git a/src/playable/exportPlayable.ts b/src/playable/exportPlayable.ts
+index 4eac595..af68c88 100644
+--- a/src/playable/exportPlayable.ts
++++ b/src/playable/exportPlayable.ts
+@@ -121,7 +121,8 @@ function playableCss(): string {
+   --ok: #236b45;
+   --ok-soft: #e4f4eb;
+   --shadow: 0 12px 30px rgba(24, 32, 36, 0.08);
+-  --tile-size: clamp(32px, 6vmin, 64px);
++  --tile-size: 64px;
++  --tile-size-cap: 64px;
+ }
+ 
+ * {
+@@ -218,6 +219,11 @@ textarea:disabled {
+   flex-wrap: wrap;
+ }
+ 
++.mobile-panel-button,
++.mobile-drawer-close {
++  display: none;
++}
++
+ .metric,
+ .badge,
+ .save-status {
+@@ -425,14 +431,14 @@ textarea:disabled {
+ }
+ 
+ .play-area {
+-  overflow: auto;
++  overflow: hidden;
+   padding: 16px;
+   display: grid;
+ }
+ 
+ .play-card {
+   min-width: 0;
+-  min-height: min(720px, calc(100vh - 96px));
++  min-height: 0;
+   display: grid;
+   grid-template-rows: auto auto minmax(0, 1fr) auto;
+   gap: 12px;
+@@ -583,7 +589,7 @@ textarea:disabled {
+   min-height: 0;
+   display: grid;
+   place-items: center;
+-  overflow: auto;
++  overflow: hidden;
+   padding: 10px;
+   border: 1px solid var(--line);
+   border-radius: 8px;
+@@ -592,6 +598,7 @@ textarea:disabled {
+ 
+ .board {
+   display: grid;
++  grid-auto-rows: var(--tile-size);
+   gap: 0;
+   padding: 0;
+   border: 0;
+@@ -602,7 +609,7 @@ textarea:disabled {
+ 
+ .tile {
+   width: var(--tile-size);
+-  aspect-ratio: 1;
++  height: var(--tile-size);
+   position: relative;
+   overflow: hidden;
+   border: 0;
+@@ -1198,7 +1205,7 @@ textarea:disabled {
+   min-height: 0;
+   display: grid;
+   place-items: center;
+-  overflow: auto;
++  overflow: hidden;
+   padding: 10px;
+   border: 1px solid var(--line);
+   border-radius: 8px;
+@@ -1206,12 +1213,12 @@ textarea:disabled {
+ }
+ 
+ .editor-board {
+-  --tile-size: clamp(30px, 5.6vmin, 58px);
++  --tile-size-cap: 58px;
+ }
+ 
+ .editor-tile-button {
+   width: var(--tile-size);
+-  aspect-ratio: 1;
++  height: var(--tile-size);
+   position: relative;
+   display: block;
+   padding: 0;
+@@ -1380,6 +1387,10 @@ textarea:disabled {
+     grid-column: 2;
+   }
+ 
++  .play-card {
++    min-height: min(720px, calc(100vh - 96px));
++  }
++
+   .review-panel {
+     grid-column: 1 / -1;
+   }
+@@ -1390,11 +1401,23 @@ textarea:disabled {
+ }
+ 
+ @media (max-width: 760px) {
++  body {
++    overflow: hidden;
++  }
++
+   .review-shell,
+   .editor-shell {
+     grid-template-columns: 1fr;
+   }
+ 
++  .review-shell {
++    height: 100vh;
++    height: 100dvh;
++    min-height: 0;
++    grid-template-rows: auto minmax(0, 1fr);
++    overflow: hidden;
++  }
++
+   .app-header,
+   .play-toolbar,
+   .editor-toolbar,
+@@ -1412,8 +1435,94 @@ textarea:disabled {
+     grid-column: 1;
+   }
+ 
+-  .candidate-rail {
++  .review-shell .app-header {
++    min-height: 0;
++    flex-direction: row;
++    align-items: center;
++    padding: 8px 10px;
++  }
++
++  .review-shell .title-block .eyebrow,
++  .review-shell .header-metrics > .secondary-link,
++  .review-shell .header-metrics > .metric,
++  .review-shell .header-metrics > .badge,
++  .review-shell .header-metrics > .save-status {
++    display: none;
++  }
++
++  .review-shell .title-block h1 {
++    font-size: 16px;
++  }
++
++  .review-shell .header-metrics {
++    flex-wrap: nowrap;
++    gap: 6px;
++  }
++
++  .mobile-panel-button {
++    min-height: 34px;
++    display: inline-flex;
++    align-items: center;
++    justify-content: center;
++    padding: 0 12px;
++  }
++
++  .review-shell .play-area {
++    grid-column: 1;
++    grid-row: 2;
++    min-height: 0;
++    overflow: hidden;
++    padding: 10px;
++  }
++
++  .review-shell .play-card {
++    height: 100%;
++    min-height: 0;
++    gap: 8px;
++  }
++
++  .review-shell .play-toolbar {
++    flex-direction: row;
++    align-items: center;
++  }
++
++  .review-shell .level-heading p,
++  .review-shell .trace-log {
++    display: none;
++  }
++
++  .review-shell .candidate-rail,
++  .review-shell .review-panel {
++    display: none;
++    position: fixed;
++    inset: 0;
++    z-index: 100;
++    width: 100%;
++    height: 100vh;
++    height: 100dvh;
+     max-height: none;
++    padding: 60px 14px 14px;
++    overflow: auto;
++    background: var(--panel);
++  }
++
++  .review-shell .candidate-rail.is-open {
++    display: grid;
++  }
++
++  .review-shell .review-panel.is-open {
++    display: block;
++  }
++
++  .mobile-drawer-close {
++    position: absolute;
++    top: 12px;
++    left: 14px;
++    right: 14px;
++    min-height: 38px;
++    display: flex;
++    align-items: center;
++    justify-content: center;
+   }
+ 
+   .score-grid {
+@@ -1424,10 +1533,6 @@ textarea:disabled {
+     display: none;
+   }
+ 
+-  .tile {
+-    width: 40px;
+-  }
+-
+   .field-grid,
+   .snapshot-card {
+     grid-template-columns: 1fr;
+diff --git a/src/web/app.ts b/src/web/app.ts
+index cde36af..1720308 100644
+--- a/src/web/app.ts
++++ b/src/web/app.ts
+@@ -19,6 +19,7 @@ import {
+   puzzleScript16Sprites,
+   type PixelSpriteAsset,
+ } from "./assets/puzzlescript16/manifest.js";
++import { BoardFitController } from "./fitBoard.js";
+ 
+ declare const __BUILD_ID__: string;
+ 
+@@ -92,6 +93,7 @@ type CandidateEntry = ArchiveEntry | TemporaryEntry;
+ type CandidateTab = "archive" | "temporary";
+ type CandidateFilter = "all" | "unreviewed" | "ready" | "attention";
+ type ScoreFilter = "any" | "2" | "3" | "4" | "5";
++type NarrowPanel = "candidates" | "review" | null;
+ 
+ type ReviewDraft = {
+   humanFinalStatus: string;
+@@ -153,6 +155,7 @@ if (!appRoot) {
+   throw new Error("Missing #app root element");
+ }
+ const app = appRoot;
++const boardFitController = new BoardFitController();
+ 
+ const buildId = typeof __BUILD_ID__ === "string" ? __BUILD_ID__ : String(Date.now());
+ const data = await loadPlayableData();
+@@ -168,6 +171,7 @@ let playState: PlayState | null = null;
+ let saveStatus = reviewData.writable ? "可写评审服务已连接" : "静态只读试玩";
+ let replaying = false;
+ let toolMenuOpen = false;
++let narrowPanel: NarrowPanel = null;
+ 
+ const draftByEntry = new Map<string, ReviewDraft>();
+ 
+@@ -176,6 +180,12 @@ resetPlayStateForSelection();
+ render();
+ 
+ window.addEventListener("keydown", (event) => {
++  if (event.key === "Escape" && narrowPanel) {
++    event.preventDefault();
++    narrowPanel = null;
++    render();
++    return;
++  }
+   if (isEditableTarget(event.target)) {
+     return;
+   }
+@@ -214,13 +224,15 @@ function render(): void {
+   app.innerHTML = `
+     <div class="review-shell">
+       ${renderHeader()}
+-      <aside class="candidate-rail" aria-label="候选列表">
++      <aside class="candidate-rail ${narrowPanel === "candidates" ? "is-open" : ""}" aria-label="候选列表">
++        ${renderNarrowPanelCloseButton()}
+         ${renderCandidateRail()}
+       </aside>
+       <main class="play-area">
+         ${renderPlayArea(entry, level)}
+       </main>
+-      <aside class="review-panel" aria-label="评审面板">
++      <aside class="review-panel ${narrowPanel === "review" ? "is-open" : ""}" aria-label="评审面板">
++        ${renderNarrowPanelCloseButton()}
+         ${entry ? renderReviewPanel(entry, draft) : renderEmptyReviewPanel()}
+       </aside>
+     </div>
+@@ -228,6 +240,7 @@ function render(): void {
+ 
+   bindUiEvents();
+   restoreViewState(viewState);
++  boardFitController.observe(app.querySelector<HTMLElement>(".board-wrap"));
+ }
+ 
+ function captureViewState(): ReviewViewState {
+@@ -259,6 +272,18 @@ function renderHeader(): string {
+         <h1>${escapeHtml(data.mechanic.title)}</h1>
+       </div>
+       <div class="header-metrics" aria-label="候选概况">
++        <button
++          class="secondary-button mobile-panel-button"
++          type="button"
++          data-action="open-candidates"
++          aria-expanded="${narrowPanel === "candidates"}"
++        >关卡</button>
++        <button
++          class="secondary-button mobile-panel-button"
++          type="button"
++          data-action="open-review"
++          aria-expanded="${narrowPanel === "review"}"
++        >评审</button>
+         <a class="secondary-link" href="./editor">关卡编辑器</a>
+         <span class="metric"><strong>${archiveCount}</strong> 归档候选</span>
+         <span class="metric"><strong>${temporaryCount}</strong> 临时游玩</span>
+@@ -269,6 +294,14 @@ function renderHeader(): string {
+   `;
+ }
+ 
++function renderNarrowPanelCloseButton(): string {
++  return `
++    <button class="secondary-button mobile-drawer-close" type="button" data-action="close-narrow-panel">
++      返回试玩
++    </button>
++  `;
++}
++
+ function renderCandidateRail(): string {
+   const entries = filteredEntries();
+   const totalEntries = activeTab === "archive" ? reviewData.archiveEntries.length : reviewData.temporaryEntries.length;
+@@ -626,7 +659,10 @@ function renderBoard(runtimeAdapter: CurrentRuntimeAdapter, state: PlayState): s
+   return `
+     <div
+       class="board"
+-      style="grid-template-columns: repeat(${visual.width}, minmax(0, 1fr));"
++      data-fit-board
++      data-board-width="${visual.width}"
++      data-board-height="${visual.height}"
++      style="grid-template-columns: repeat(${visual.width}, var(--tile-size));"
+       aria-label="${escapeAttribute(state.level.title)}"
+     >
+       ${tiles.map(renderTile).join("")}
+@@ -681,6 +717,25 @@ function renderFallbackGlyph(layer: VisualLayer): string {
+ }
+ 
+ function bindUiEvents(): void {
++  app.querySelector<HTMLButtonElement>("[data-action='open-candidates']")?.addEventListener("click", () => {
++    narrowPanel = "candidates";
++    render();
++  });
++
++  app.querySelector<HTMLButtonElement>("[data-action='open-review']")?.addEventListener("click", () => {
++    captureDraftFromDom();
++    narrowPanel = "review";
++    render();
++  });
++
++  app.querySelectorAll<HTMLButtonElement>("[data-action='close-narrow-panel']").forEach((button) => {
++    button.addEventListener("click", () => {
++      captureDraftFromDom();
++      narrowPanel = null;
++      render();
++    });
++  });
++
+   app.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach((button) => {
+     button.addEventListener("click", () => {
+       captureDraftFromDom();
+@@ -729,6 +784,7 @@ function bindUiEvents(): void {
+       }
+       captureDraftFromDom();
+       toolMenuOpen = false;
++      narrowPanel = null;
+       selectedEntryKey = key;
+       resetPlayStateForSelection();
+       render();
+diff --git a/src/web/editor.ts b/src/web/editor.ts
+index d039735..0dbdb98 100644
+--- a/src/web/editor.ts
++++ b/src/web/editor.ts
+@@ -24,6 +24,7 @@ import {
+   puzzleScript16Sprites,
+   type PixelSpriteAsset,
+ } from "./assets/puzzlescript16/manifest.js";
++import { BoardFitController } from "./fitBoard.js";
+ 
+ declare const __BUILD_ID__: string;
+ 
+@@ -150,6 +151,7 @@ if (!appRoot) {
+   throw new Error("Missing #app root element");
+ }
+ const app = appRoot;
++const boardFitController = new BoardFitController();
+ 
+ const buildId = typeof __BUILD_ID__ === "string" ? __BUILD_ID__ : String(Date.now());
+ const data = await loadPlayableData();
+@@ -259,6 +261,7 @@ function render(): void {
+   bindEvents();
+   restoreViewState(previousView);
+   restoreSourceSearchInputFocus();
++  boardFitController.observe(app.querySelector<HTMLElement>(".editor-board-wrap"));
+   if (pendingScrollSelected) {
+     pendingScrollSelected = false;
+     scrollSelectedSourceIntoView();
+@@ -589,7 +592,10 @@ function renderVisualBoard(board: VisualBoard, className: string, editable = fal
+   return `
+     <div
+       class="board ${className}"
+-      style="grid-template-columns: repeat(${board.width}, minmax(0, 1fr));"
++      data-fit-board
++      data-board-width="${board.width}"
++      data-board-height="${board.height}"
++      style="grid-template-columns: repeat(${board.width}, var(--tile-size));"
+     >
+       ${tiles.map((tile) => renderTile(tile, editable)).join("")}
+     </div>
+diff --git a/src/web/fitBoard.ts b/src/web/fitBoard.ts
+new file mode 100644
+--- /dev/null
++++ b/src/web/fitBoard.ts
+@@ -0,0 +1,63 @@
++const tileSizeProperty = "--tile-size";
++const tileSizeCapProperty = "--tile-size-cap";
++
++export class BoardFitController {
++  private readonly observer = new ResizeObserver((entries) => {
++    for (const entry of entries) {
++      fitBoard(entry.target as HTMLElement);
++    }
++  });
++
++  observe(container: HTMLElement | null): void {
++    this.observer.disconnect();
++    if (!container) {
++      return;
++    }
++    fitBoard(container);
++    this.observer.observe(container);
++  }
++}
++
++function fitBoard(container: HTMLElement): void {
++  const board = container.querySelector<HTMLElement>("[data-fit-board]");
++  if (!board) {
++    return;
++  }
++
++  const width = positiveNumber(board.dataset.boardWidth);
++  const height = positiveNumber(board.dataset.boardHeight);
++  if (!width || !height) {
++    return;
++  }
++
++  const containerStyle = window.getComputedStyle(container);
++  const availableWidth = container.clientWidth
++    - cssPixels(containerStyle.paddingLeft)
++    - cssPixels(containerStyle.paddingRight);
++  const availableHeight = container.clientHeight
++    - cssPixels(containerStyle.paddingTop)
++    - cssPixels(containerStyle.paddingBottom);
++  const cap = cssPixels(window.getComputedStyle(board).getPropertyValue(tileSizeCapProperty));
++  const fittedSize = Math.min(
++    cap > 0 ? cap : Number.POSITIVE_INFINITY,
++    availableWidth / width,
++    availableHeight / height,
++  );
++  if (!Number.isFinite(fittedSize) || fittedSize <= 0) {
++    return;
++  }
++
++  // 向下保留千分之一像素，避免布局取整后出现边缘溢出。
++  const safeSize = Math.floor(fittedSize * 1000) / 1000;
++  board.style.setProperty(tileSizeProperty, `${safeSize}px`);
++}
++
++function positiveNumber(value: string | undefined): number | undefined {
++  const parsed = Number(value);
++  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
++}
++
++function cssPixels(value: string): number {
++  const parsed = Number.parseFloat(value);
++  return Number.isFinite(parsed) ? parsed : 0;
++}

@@ -1,0 +1,122 @@
+portfolio_id: RA_PORTFOLIO_2026_07_15_GIANT_STICKY_PISTON_ORDER
+prototype_context:
+  confirmed_rules:
+    - 玩家所在 P/L 边界一侧在输入时决定本次为 push 或 pull。
+    - push/pull 受力闭包会递归包含同方向目标格上的全部可动物；任一分支被墙或越界时整步原子失败。
+    - 多格 sticky 以完整连通分量作为刚体移动，移动后才按 B/S 边界归一化、合并或切分。
+    - 所有目标必须同时被 crate、sticky 或锚点覆盖才胜利；玩家覆盖不计。
+  win_condition: all_targets_covered_by_objects
+  object_and_event_semantics:
+    - 单箱在 P 侧推过边界后，玩家落在 L 侧；狭廊中离开只能 pull 回箱子并撤销目标覆盖。
+    - 一个大型 sticky 的多个前沿格可在同一输入中接触多只独立箱，形成原子多分支力链。
+    - 力链内对象同步移动；同一输入不存在可用于设计的隐藏先后顺序。
+    - 固定 B/S 可让边界左侧保持 sticky、右侧保持 crate；最终接触齿跨线后可被切为 crate。
+  tool_boundary:
+    - solver/replay/graph/counterfactual 只验证机械事实，不提供审美结论。
+    - explain-layout 与 try-inputs 使用当前 exact layout；完整图结论必须记录预算和 completeness。
+    - allowed design material 仅为 lexicon 正式条目、本任务 fresh explorer 材料和本任务从零手摆结构。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - 游戏后期玩家；已充分掌握小黏块组可达性、可动性、拼接、切分、刚体移动。
+    - 已掌握 B/S 与 P/L 锚点推拉、锚点自身也可被推拉、多对象力链和常规腾挪。
+    - 能迅速识别巨大结构、触点对齐、明显几何意图并稳定执行走位；这些不作为难度。
+  prerequisite_mechanisms:
+    - push_force
+    - pull_force
+    - movable_push_pull_anchor
+    - sticky_rigid_body
+    - box_to_sticky_binding
+    - sticky_to_box_cutting
+    - movable_box_sticky_anchor
+    - dual_anchor
+  known_prior_level_refs:
+    - RA_CAND_0010
+    - RA_CAND_0015
+    - RA_CAND_0011
+
+experience_seed:
+  human_seed: >-
+    具有对称性和辨识度的超大型完整多格黏块，通过多个触点同时推动几个 P/L 目标边界活塞顺序锁箱进入目标；
+    多个各自要求最后完成的活塞不能逐个保留，巨大完整结构用同拍动作消解矛盾。
+  explorer_id: /root/giant_sticky_explorer
+  material_board_ref: exploration/material_board.md@2026-07-15T02:17+08:00
+  validated_witness_ref: exploration/runs/batch_00_minimal_witness/cases.yml#witness_connected_comb_two_pistons
+  selected_material_refs:
+    - exploration/material_board.md#MAT-01-两个只能最后完成的真实目标活塞
+    - exploration/material_board.md#MAT-02-大型-C-E-形的双锁同步终局
+
+archive_calibration:
+  full_index_or_retrieval_summaries_read: true
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  related_positive_records_read:
+    - RA_CAND_0017
+    - RA_CAND_0022
+    - RA_CAND_0025
+    - RA_CAND_0029
+  related_lower_bound_or_boundary_records_read:
+    - RA_CAND_0020
+    - RA_CAND_0021
+  additional_human_reviewed_records_read:
+    - RA_CAND_0010
+    - RA_CAND_0015
+    - RA_CAND_0011
+  human_comment_refs:
+    - archive_calibration.yml#human_comment_refs
+
+experience_core:
+  experience_statement: >-
+    玩家面对几个彼此空间分离、各自推上目标后若要离开就必须拉回撤销的 P/L 活塞，
+    先建立“它们不可能逐个都作为最后一步”的矛盾；随后准备并操作一个视觉上完整的大型黏块，
+    用分布在结构不同位置的多个触点在同一刚体动作中把所有活塞同时送入目标。
+  visible_setup: 多个同形狭廊目标活塞与一件具有明显对称轮廓、可覆盖所有入口的巨大完整黏块同时可见。
+  player_action: 先使各活塞处于可被共同推进的同相状态，再把完整大黏块送入承诺位并完成一次同步终局 stroke。
+  visible_payoff: 大结构整体平移，多个远端触点同拍命中各自箱子，多个目标在同一帧同时由 G 变为 * 并立即胜利。
+  why_level_exists: >-
+    单个目标活塞只给出“必须最后完成”；本作品让多个“最后”互相矛盾，并让巨大结构的完整连通性、
+    多触点几何和原子受力闭包成为唯一自然的矛盾解法。
+  core_boundary:
+    central_objects:
+      - 至少两个真实 P/L 目标活塞箱及其被迫回撤狭廊
+      - 一个在同步动作开始时完整连通的大型多格 sticky 结构
+      - 分布在结构不同位置、同一动作命中多个活塞的触点
+    supporting_objects:
+      - 固定 P/L 与 B/S 锚点
+      - 限制单锁退出与大结构行程的墙体
+      - 开局观察与绕行空间
+
+work_identity:
+  conditions:
+    - 每个目标活塞单独推入后，若关卡尚未胜利，玩家必须 pull 回撤并撤销该目标。
+    - 同步终局动作开始前，大结构是一个视觉完整且机械连通的 sticky 刚体。
+    - 同一次刚体移动通过至少两个空间分离触点推动至少两个独立目标箱，并立即达成所有目标。
+    - 少一触点、少一结构连接或任一触点分支被墙拒绝时，不能得到同一同步胜利。
+    - 巨大结构的准备、移动和终局使用属于同一因果链，前置对象不在高潮前退休。
+  counterfactuals:
+    - 若任一活塞有侧向出口可保留目标，则多个“最后”不再矛盾，核心退化。
+    - 若逐个推箱也能累积所有目标，则巨大结构不再承担同步责任。
+    - 若大结构可拆成多个小块分别完成目标，则完整结构身份消失。
+    - 若最终只由一个局部触点完成目标，其余结构只是装饰，则作品身份失败。
+
+baseline_brief:
+  packaging_intent: direct_complete_realization
+  expected_scale: 约 18 至 24 格完整 sticky，三个空间分离的目标活塞；开局可直接读出整体 E/三叉轮廓。
+  expected_player_load: >-
+    只要求建立“几个最后动作不能逐个保留—先把活塞同步到同相—整体结构一次收束”的计划；
+    不把辨形、对齐、走位或巨大尺寸算作困难。
+
+allowed_design_sources:
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - exploration/material_board.md
+  - 本任务 designer fresh 手摆与 exact runtime 证据
+prototype_specific_routing:
+  - combination slot 由 human brief 明确豁免；本轮目标为 baseline、application、challenge。
+  - 三个 slot 可采用不同巨大黏块形状，但共同核心必须保持可辨认。
+  - archive 只用于人评口味与档位角色校准；fresh_required 禁止复用布局、对象职责、路线或主因果链。
+

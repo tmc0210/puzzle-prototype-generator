@@ -1,0 +1,211 @@
+runId: shield_phase_selector_v2_identity
+title: shield_phase_selector_v2 相位选择与顺序锁矛盾反事实
+defaults:
+  maxExploreDepth: 24
+  maxReturnDepth: 28
+  maxStates: 50000
+  maxTransitions: 200000
+cases:
+  - id: base_correct_upper_dock_sync
+    family: rift_shield_phase_lock
+    variant: base
+    changed_variable: base
+    contrast_with: wrong_lower_dock_sequential_block
+    layout: |
+      #####################
+      #.......#.........#.#
+      #......M#.........#.#
+      #...##MM###########.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##MM#.MMMMMMMM#.#
+      #..#...M#.MMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M.MMMMMMMMM#.#
+      #....#MMM#.MMMMMMM#.#
+      #..#@..M.MMMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #...##.M#.MMMMMMMM#.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##MM###########.#
+      #..#...M#.........#.#
+      #....#..#.........#.#
+      #####################
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [right, right, up, down, left, left, up, up, right, left]
+
+  - id: wrong_lower_dock_sequential_block
+    family: rift_shield_phase_lock
+    variant: lower_dock_one_cell_lag
+    changed_variable: 将同一长帘组件向下闭合，使下触点滞后一格
+    contrast_with: base_correct_upper_dock_sync
+    layout: |
+      #####################
+      #.......#.........#.#
+      #......M#.........#.#
+      #...##MM###########.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##MM#.MMMMMMMM#.#
+      #..#...M#.MMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M.MMMMMMMMM#.#
+      #....#MMM#.MMMMMMM#.#
+      #..#@..M.MMMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #...##.M#.MMMMMMMM#.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##MM###########.#
+      #..#...M#.........#.#
+      #....#..#.........#.#
+      #####################
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [up, up, right, right, down, up, left, left, down, down, right, left, down, down, right, left]
+
+  - id: cf_align_lower_contact_wrong_dock_wins
+    family: rift_shield_phase_lock
+    variant: add_missing_phase_cell
+    changed_variable: 在初始 x6,y17 增加一格相位齿，使 down 后下触点也位于 x6
+    contrast_with: wrong_lower_dock_sequential_block
+    layout: |
+      #####################
+      #.......#.........#.#
+      #......M#.........#.#
+      #...##MM###########.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##MM#.MMMMMMMM#.#
+      #..#...M#.MMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M.MMMMMMMMM#.#
+      #....#MMM#.MMMMMMM#.#
+      #..#@..M.MMMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #...##MM#.MMMMMMMM#.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##MM###########.#
+      #..#...M#.........#.#
+      #....#..#.........#.#
+      #####################
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [up, up, right, right, down, up, left, left, down, down, right, left]
+
+  - id: cf_open_upper_backwall_wrong_second_stroke_wins
+    family: rift_shield_phase_lock
+    variant: remove_upper_goal_backwall
+    changed_variable: 删除上锁目标后方 x3,y4 墙，使已完成上锁可在补锁拍继续被推
+    contrast_with: wrong_lower_dock_sequential_block
+    layout: |
+      #####################
+      #.......#.........#.#
+      #......M#.........#.#
+      #...##MM###########.#
+      #...GC.M#.MMMMMMMM#.#
+      #...##MM#.MMMMMMMM#.#
+      #..#...M#.MMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M.MMMMMMMMM#.#
+      #....#MMM#.MMMMMMM#.#
+      #..#@..M.MMMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #...##.M#.MMMMMMMM#.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##MM###########.#
+      #..#...M#.........#.#
+      #....#..#.........#.#
+      #####################
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [up, up, right, right, down, up, left, left, down, down, right, left, down, down, right, left]
+
+  - id: cf_missing_lower_phase_tooth
+    family: rift_shield_phase_lock
+    variant: remove_correct_lower_contact
+    changed_variable: 删除初始 x6,y19 的 correct-only 下触点
+    contrast_with: base_correct_upper_dock_sync
+    layout: |
+      #####################
+      #.......#.........#.#
+      #......M#.........#.#
+      #...##MM###########.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##MM#.MMMMMMMM#.#
+      #..#...M#.MMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M.MMMMMMMMM#.#
+      #....#MMM#.MMMMMMM#.#
+      #..#@..M.MMMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #...##.M#.MMMMMMMM#.#
+      #..#GC.M#.MMMMMMMM#.#
+      #...##.M###########.#
+      #..#...M#.........#.#
+      #....#..#.........#.#
+      #####################
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [right, right, up, down, left, left, up, up, right, left]
+
+  - id: cf_prebuilt_correct_shield
+    family: rift_shield_phase_lock
+    variant: prebuilt_upper_dock
+    changed_variable: 开局即给出上闭合后的完整 145 格结构
+    contrast_with: base_correct_upper_dock_sync
+    layout: |
+      #####################
+      #......M#.........#.#
+      #.....MM#.........#.#
+      #...##.M###########.#
+      #..#GCMM#.MMMMMMMM#.#
+      #...##.M#.MMMMMMMM#.#
+      #..#...M#.MMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #....@MMMMMMMMMMMM#.#
+      #....#.M.#.MMMMMMM#.#
+      #..#...M.MMMMMMMMM#.#
+      #....#.M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #......M#.MMMMMMMM#.#
+      #...##.M#.MMMMMMMM#.#
+      #..#GCMM#.MMMMMMMM#.#
+      #...##.M###########.#
+      #..#....#.........#.#
+      #....#..#.........#.#
+      #####################
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [left]

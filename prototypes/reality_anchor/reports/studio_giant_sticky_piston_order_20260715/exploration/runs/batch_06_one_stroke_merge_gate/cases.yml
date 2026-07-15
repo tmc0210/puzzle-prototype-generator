@@ -1,0 +1,113 @@
+runId: ra_exp_giant_sticky_batch_06_one_stroke_merge_gate
+title: "P/L 单拍推权窗口：预连接终局，动后合并错过窗口"
+notes: >-
+  路线/连接时机方向。P|L 位于 x=4|5；玩家从 P 侧 x=4 推一次后落到 L 侧 x=5，
+  因而不能在原位继续推第二拍。完整大块若动作开始前已由 `(7,6)` 桥格连接，第一次 right
+  会让上下远端前缘同时推箱入目标。删掉这一桥格后，第一次 right 只移动左侧 2x3 厚块，
+  settle 时才与右侧 2x5 双触点体合并；玩家此时已在 L 侧。为重新取得 P 侧相邻站位而回拉，再推只恢复相同前缘位置，
+  不会凭空得到第二格净前进。把 P|L 整体右移一格作为窗口宽度反事实。
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 18
+  maxStates: 40000
+  maxTransitions: 160000
+cases:
+  - id: "preconnected_one_stroke_sync_final"
+    family: "one_stroke_connectivity_gate"
+    variant: "bridge_present_before_action"
+    changed_variable: "中央桥格 `(7,6)` 在动作开始前连接左右厚体"
+    contrast_with: "gap_merges_after_stroke_misses_targets,late_merge_retract_push_cycle,cf_shift_pl_right_grants_second_push,cf_preconnected_missing_lower_tip"
+    notes: "一次 right 应移动完整大块，上下 x=9 前缘同时把 x=10 两箱推到 x=11 目标并胜利。"
+    layout: |
+      ##############
+      #...PL.......#
+      #........SB..#
+      #............#
+      #.......MMCG##
+      #####MM.MM...#
+      #...@MMMMM...#
+      #####MM.MM...#
+      #.......MMCG##
+      #............#
+      ##############
+    actions: ["right"]
+
+  - id: "gap_merges_after_stroke_misses_targets"
+    family: "one_stroke_connectivity_gate"
+    variant: "bridge_absent_late_settle_merge"
+    changed_variable: "只删除中央桥格 `(7,6)`，左右大块动作开始时分离"
+    contrast_with: "preconnected_one_stroke_sync_final,late_merge_retract_push_cycle,cf_shift_pl_right_grants_second_push"
+    notes: "第一次 right 只移动左 2x3 厚块并在 settle 时 sticky_merge；双目标零位移，玩家终态在 L 侧，right 应 destination_occupied。"
+    layout: |
+      ##############
+      #...PL.......#
+      #........SB..#
+      #............#
+      #.......MMCG##
+      #####MM.MM...#
+      #...@MM.MM...#
+      #####MM.MM...#
+      #.......MMCG##
+      #............#
+      ##############
+    actions: ["right"]
+
+  - id: "late_merge_retract_push_cycle"
+    family: "one_stroke_connectivity_gate"
+    variant: "late_merge_then_pull_back_then_push"
+    changed_variable: "缺桥局面在迟合并后为重取 P 侧相邻站位先回拉，再重新推一拍"
+    contrast_with: "gap_merges_after_stroke_misses_targets,preconnected_one_stroke_sync_final"
+    notes: "right,left,right 后完整体只回到迟合并时的前缘 x=9；两个目标仍空，证明切换回 P 侧要付出同量回撤。"
+    layout: |
+      ##############
+      #...PL.......#
+      #........SB..#
+      #............#
+      #.......MMCG##
+      #####MM.MM...#
+      #...@MM.MM...#
+      #####MM.MM...#
+      #.......MMCG##
+      #............#
+      ##############
+    actions: ["right", "left", "right"]
+
+  - id: "cf_shift_pl_right_grants_second_push"
+    family: "one_stroke_connectivity_gate"
+    variant: "two_stroke_push_window"
+    changed_variable: "只把 P|L 从 x=4|5 右移到 x=5|6，使迟合并后玩家仍在 P 侧"
+    contrast_with: "gap_merges_after_stroke_misses_targets"
+    notes: "缺桥仍使第一拍只合并；第二次 right 现在应合法，并由完整体同步完成双目标。"
+    layout: |
+      ##############
+      #....PL......#
+      #........SB..#
+      #............#
+      #.......MMCG##
+      #####MM.MM...#
+      #...@MM.MM...#
+      #####MM.MM...#
+      #.......MMCG##
+      #............#
+      ##############
+    actions: ["right", "right"]
+
+  - id: "cf_preconnected_missing_lower_tip"
+    family: "one_stroke_connectivity_gate"
+    variant: "bridge_present_upper_contact_only"
+    changed_variable: "预连接形只删除下前缘 `(9,8)`"
+    contrast_with: "preconnected_one_stroke_sync_final"
+    notes: "一次 right 仍移动完整大块但只覆盖上目标，证明单拍窗口中的下目标责任来自下前缘。"
+    layout: |
+      ##############
+      #...PL.......#
+      #........SB..#
+      #............#
+      #.......MMCG##
+      #####MM.MM...#
+      #...@MMMMM...#
+      #####MM.MM...#
+      #.......M.CG##
+      #............#
+      ##############
+    actions: ["right"]

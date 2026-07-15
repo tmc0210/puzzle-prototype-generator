@@ -1,0 +1,96 @@
+portfolio_id: RA_STUDIO_2026_07_13_C_SHAPE_WHOLE
+branches:
+  - branch_id: CWHOLE_BASELINE
+    baseline_ref: null
+    search_intent: baseline
+    designer_commitment:
+      intended_player_relation: 玩家在短局面中直接读出并移动完整 C 形，使其分离部位在一次整体位移中共同工作。
+      delta_from_baseline: null
+      supporting_mechanism: none
+      supporting_mechanism_is_not_prerequisite: null
+      ambition_dimensions:
+        - 最小完整呈现
+        - 回报集中
+    reduction_test: 去掉任一臂、填满凹口或拆开连通性后，关键整体作用不再成立。
+
+  - branch_id: CWHOLE_APPLICATION
+    baseline_ref: CWHOLE_BASELINE_v1_sha256_f7107731757265fdcee2ebeeb834e301b64c1f99b19ad730545a79931f928bc1
+    search_intent: application
+    designer_commitment:
+      intended_player_relation: 玩家先主动建立 baseline 已直接提供的凹口操作面或终局对齐，再立即用完整 C 形完成错位三目标覆盖。
+      delta_from_baseline: 新增一项由玩家建立、且被 C 形关键整体动作直接消费的条件；预先满足后退化回 baseline 的完整形状使用。
+      supporting_mechanism: none
+      supporting_mechanism_is_not_prerequisite: null
+      ambition_dimensions:
+        - 玩家作者性
+        - 同一 C 形首尾责任
+    reduction_test: 若把新增条件预先满足，应直接回到 baseline 关系；若准备段完成后对象或空间退休，则拒绝。
+
+  - branch_id: CWHOLE_COMBINATION
+    baseline_ref: CWHOLE_BASELINE_v1_sha256_f7107731757265fdcee2ebeeb834e301b64c1f99b19ad730545a79931f928bc1
+    search_intent: combination
+    designer_commitment:
+      intended_player_relation: P/L 边界先产生 C 形整体作用所需的拉动方向、操作面或承接对象，并在同一局部高潮中被完整 C 形消费。
+      delta_from_baseline: 引入非黏块几何前序机制 P/L；它的产物不能在核心前退休。
+      supporting_mechanism: P/L 锚点的推拉侧切换或可移动边界。
+      supporting_mechanism_is_not_prerequisite: baseline 只依赖全推世界、固定 B/S 与黏块刚体；P/L 不是理解完整 C 形几何所必需。
+      ambition_dimensions:
+        - 支持机制产物被核心消费
+        - 高 affordance 要素持续承担责任
+    reduction_test: 删除或预先完成 P/L 支持关系后，关键 C 形用途必须失效或明显退化；若只剩前置 P/L 小题则拒绝。
+
+  - branch_id: CWHOLE_CHALLENGE
+    baseline_ref: CWHOLE_BASELINE_v1_sha256_f7107731757265fdcee2ebeeb834e301b64c1f99b19ad730545a79931f928bc1
+    search_intent: challenge
+    designer_commitment:
+      intended_player_relation: 在保持完整 C 形错位多点覆盖身份时，让玩家在紧凑空间中完成两阶段不同方向的整体复用，或一次反直觉但可读的预定位。
+      delta_from_baseline: 提高空间规划、反直觉程度或多阶段复用上限，不以步数和对象数作证明。
+      supporting_mechanism: none_required
+      supporting_mechanism_is_not_prerequisite: null
+      ambition_dimensions:
+        - 紧凑空间规划
+        - 反直觉预定位
+        - 完整 C 形多阶段复用
+    reduction_test: 若第一次整体作用后作品已经完整，后段只是重复或清理，则拒绝 challenge。
+
+  - branch_id: CWHOLE_APPLICATION_CONSTRUCT
+    baseline_ref: CWHOLE_BASELINE_v2_sha256_cbdb7ee863e7b6a9e2526850c390a0d6c204ff78cfb6d7f2074fb2f8db6b9dcf
+    search_intent: application
+    designer_commitment:
+      intended_player_relation: 玩家把一个普通箱插入两个 sticky 部件之间，亲自构造完整 C，并立即从另一操作面使用新形成的整体。
+      delta_from_baseline: baseline 直接提供完整 C；本分支把核心对象的形成交给玩家，而不是只增加一格对齐。
+      supporting_mechanism: none
+      supporting_mechanism_is_not_prerequisite: null
+      ambition_dimensions:
+        - 核心对象构造
+        - 构造结果立即消费
+        - 与 baseline 显著档位差
+    reduction_test: 预先构造应退化一手；去连接格或换成同对象数非 C 形应不能完成同一 C 模板。
+
+  - branch_id: CWHOLE_COMBINATION_BOUNDARY_RANGE
+    baseline_ref: CWHOLE_BASELINE_v2_sha256_cbdb7ee863e7b6a9e2526850c390a0d6c204ff78cfb6d7f2074fb2f8db6b9dcf
+    search_intent: combination
+    designer_commitment:
+      intended_player_relation: 玩家移动 P/L 后，新边界范围直接决定完整 C 的两格整体行程是否合法。
+      delta_from_baseline: 新增一个非核心可移动边界；它不作为先开完的门，而是在紧邻的 C 行程中逐格被消费。
+      supporting_mechanism: movable_push_pull_anchor
+      supporting_mechanism_is_not_prerequisite: baseline 在无 P/L 的全推世界已经完整成立。
+      ambition_dimensions:
+        - 支持状态直接消费
+        - 一格与两格边界范围差
+        - 极短交接
+    reduction_test: 预对齐应退化为两次 C 推动；只移动一格时第一推可行、第二推必须因 force mode 失败。
+
+  - branch_id: CWHOLE_CHALLENGE_CARGO_RETURN
+    baseline_ref: CWHOLE_BASELINE_v2_sha256_cbdb7ee863e7b6a9e2526850c390a0d6c204ff78cfb6d7f2074fb2f8db6b9dcf
+    search_intent: challenge
+    designer_commitment:
+      intended_player_relation: 玩家先撤销 C 已覆盖的形状目标，用完整凹口运输两格载荷，再从另一行以相反 force mode 恢复 C 而留下载荷。
+      delta_from_baseline: 增加反直觉目标撤销、凹口运输与同一完整形状的 push/pull 往返复用。
+      supporting_mechanism: vertical_push_pull_anchor_as_two_cell_payload
+      supporting_mechanism_is_not_prerequisite: 核心上限是完整 C 的凹口运输与恢复；P/L 同时提供不绕路的上下行 force mode 差。
+      ambition_dimensions:
+        - 反直觉撤销完成
+        - 凹口载荷运输
+        - 完整形状往返复用
+    reduction_test: 去载荷目标应初始即胜；去任一臂或换同对象数非 C 形应完整不可解。

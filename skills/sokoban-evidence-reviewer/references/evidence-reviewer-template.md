@@ -1,68 +1,44 @@
-# 硬证据与准入审计模板
-
-## 普通硬声明审计
+# 独立硬证据审查模板
 
 ```yaml
-audit_mode: hard_claim_audit
+review_attempt_id: ""
+reviewer_instance_id: ""
 candidate_id: ""
 exact_version: ""
+review_integrity: independent | contaminated | incomplete
+
 evidence_scope:
   allowed_sources: []
   graph_completeness: complete | budget_limited | not_applicable | unknown
+
+solution_uniqueness_review:
+  declared_result: unique_complete | unique_within_budget | equivalent_variants_only | invalid_or_missing
+  search_scope: complete | budget_limited | unknown
+  exact_version_match: true | false
+  known_raw_winning_variants: []
+  equivalence_evidence_basis: []
+  known_non_equivalent_win_refs: []
+  status: supported | contradicted | unknown
+  limits: []
+
 claims:
   - claim_id: ""
     claim: ""
     status: supported | contradicted | unknown | not_applicable
     evidence_basis: []
     limits: []
+
 hard_failures: []
 evidence_gaps: []
 overall_hard_status: supported | contradicted | incomplete
+required_action: none | revise_candidate | rerun_or_supply_evidence | narrow_claim
 ```
 
-## Submission admission
+判定规则：
 
-```yaml
-audit_mode: submission_admission
-candidate_id: ""
-exact_version: ""
-
-review_gate:
-  latest_review_ref: ""
-  reviewer_instance_id: ""
-  reviewed_exact_version: ""
-  review_integrity: independent | contaminated | incomplete
-  review_verdict: survive_to_pre_submission_checks | revise_and_rereview | reject_branch | missing
-  status: survived | missing | stale | contradicted
-
-hard_evidence:
-  - claim_id: ""
-    status: supported | contradicted | unknown | not_applicable
-    evidence_basis: []
-    limits: []
-
-prototype_workflows:
-  - workflow_id: ""
-    trigger_evaluation: triggered | not_triggered | unknown
-    authority_docs_read: []
-    required_operations:
-      - operation: ""
-        artifact_refs: []
-        status: supported | contradicted | incomplete | not_applicable
-    exact_version_match: true | false
-    conclusion_within_evidence: true | false
-    status: supported | contradicted | incomplete | not_applicable
-
-stale_or_substituted_evidence: []
-blocking_reasons: []
-queue_admission: eligible_for_queue | blocked
-```
-
-## 判定规则
-
-- `supported`：所需证据种类、操作和完备性足够。
+- `supported`：所需证据种类和完备性足够。
 - `contradicted`：存在直接冲突的 exact trace、reachable state、bypass 或版本事实。
-- `unknown` / `incomplete`：证据缺失、预算不足、工具不可用、操作没执行或只给结论。
-- `not_applicable`：handoff 或声明明确不触发。
-- 任一关键 `contradicted`、`unknown`、`incomplete`、stale review 或 stale evidence 都使 `queue_admission: blocked`。
-- 不把 designer 自报状态、文件名、controller 简报或 generic evidence 替代专用 workflow。
+- `unknown` / `incomplete`：证据缺失、预算不足、工具不可用或只给结论。
+- `solution_uniqueness_review.status` 不是 `supported` 时，`overall_hard_status` 必须为 `contradicted` 或 `incomplete`。
+- 任一 `known_non_equivalent_win_refs` 都使唯一性声明 `contradicted`；不因路线长度、自然发现难度或审美影响较小而降级。
+- 不读取 designer 送审叙事，不输出审美、档位、段落或待玩准入结论。

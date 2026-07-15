@@ -121,7 +121,8 @@ function playableCss(): string {
   --ok: #236b45;
   --ok-soft: #e4f4eb;
   --shadow: 0 12px 30px rgba(24, 32, 36, 0.08);
-  --tile-size: clamp(32px, 6vmin, 64px);
+  --tile-size: 64px;
+  --tile-size-cap: 64px;
 }
 
 * {
@@ -216,6 +217,11 @@ textarea:disabled {
   justify-content: flex-end;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.mobile-panel-button,
+.mobile-drawer-close {
+  display: none;
 }
 
 .metric,
@@ -425,14 +431,14 @@ textarea:disabled {
 }
 
 .play-area {
-  overflow: auto;
+  overflow: hidden;
   padding: 16px;
   display: grid;
 }
 
 .play-card {
   min-width: 0;
-  min-height: min(720px, calc(100vh - 96px));
+  min-height: 0;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 12px;
@@ -583,7 +589,7 @@ textarea:disabled {
   min-height: 0;
   display: grid;
   place-items: center;
-  overflow: auto;
+  overflow: hidden;
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -592,6 +598,7 @@ textarea:disabled {
 
 .board {
   display: grid;
+  grid-auto-rows: var(--tile-size);
   gap: 0;
   padding: 0;
   border: 0;
@@ -602,7 +609,7 @@ textarea:disabled {
 
 .tile {
   width: var(--tile-size);
-  aspect-ratio: 1;
+  height: var(--tile-size);
   position: relative;
   overflow: hidden;
   border: 0;
@@ -1198,7 +1205,7 @@ textarea:disabled {
   min-height: 0;
   display: grid;
   place-items: center;
-  overflow: auto;
+  overflow: hidden;
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1206,12 +1213,12 @@ textarea:disabled {
 }
 
 .editor-board {
-  --tile-size: clamp(30px, 5.6vmin, 58px);
+  --tile-size-cap: 58px;
 }
 
 .editor-tile-button {
   width: var(--tile-size);
-  aspect-ratio: 1;
+  height: var(--tile-size);
   position: relative;
   display: block;
   padding: 0;
@@ -1380,6 +1387,10 @@ textarea:disabled {
     grid-column: 2;
   }
 
+  .play-card {
+    min-height: min(720px, calc(100vh - 96px));
+  }
+
   .review-panel {
     grid-column: 1 / -1;
   }
@@ -1390,9 +1401,21 @@ textarea:disabled {
 }
 
 @media (max-width: 760px) {
+  body {
+    overflow: hidden;
+  }
+
   .review-shell,
   .editor-shell {
     grid-template-columns: 1fr;
+  }
+
+  .review-shell {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
   }
 
   .app-header,
@@ -1412,8 +1435,94 @@ textarea:disabled {
     grid-column: 1;
   }
 
-  .candidate-rail {
+  .review-shell .app-header {
+    min-height: 0;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 10px;
+  }
+
+  .review-shell .title-block .eyebrow,
+  .review-shell .header-metrics > .secondary-link,
+  .review-shell .header-metrics > .metric,
+  .review-shell .header-metrics > .badge,
+  .review-shell .header-metrics > .save-status {
+    display: none;
+  }
+
+  .review-shell .title-block h1 {
+    font-size: 16px;
+  }
+
+  .review-shell .header-metrics {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .mobile-panel-button {
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+  }
+
+  .review-shell .play-area {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 0;
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .review-shell .play-card {
+    height: 100%;
+    min-height: 0;
+    gap: 8px;
+  }
+
+  .review-shell .play-toolbar {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .review-shell .level-heading p,
+  .review-shell .trace-log {
+    display: none;
+  }
+
+  .review-shell .candidate-rail,
+  .review-shell .review-panel {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
     max-height: none;
+    padding: 60px 14px 14px;
+    overflow: auto;
+    background: var(--panel);
+  }
+
+  .review-shell .candidate-rail.is-open {
+    display: grid;
+  }
+
+  .review-shell .review-panel.is-open {
+    display: block;
+  }
+
+  .mobile-drawer-close {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    right: 14px;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .score-grid {
@@ -1422,10 +1531,6 @@ textarea:disabled {
 
   .keyboard-hint {
     display: none;
-  }
-
-  .tile {
-    width: 40px;
   }
 
   .field-grid,

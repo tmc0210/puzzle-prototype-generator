@@ -1,0 +1,53 @@
+submission_id: SUB_CWHOLE_COMBINATION_v5
+portfolio_id: RA_STUDIO_2026_07_13_C_SHAPE_WHOLE
+candidate_id: CWHOLE_COMBINATION
+exact_version: CWHOLE_COMBINATION_v5_sha256_48dbab837941277f3f1fd9bcb5da57e40b3b9f5d47c302041c620d4844ad5d77
+slot: combination
+
+designer_claim:
+  player_experience_core: 玩家先把竖直 P/L 连续下移两格，使 C 上方的操作格在两次下推期间都属于 push 区，再把完整 C 推入错位目标竖井。
+  player_action: down、down 移动 P/L，right 进入 C 上方，down、down 推动完整 C。
+  visible_payoff: P/L 的新边界位置被同一局部的 C 位移立即消费；只移一格时第二次 down 会在 pull 区被拒绝。
+  why_this_level_exists: 把非核心的可移动 P/L 状态与完整 C 的两格刚体行程直接组合，而不是先开门再退休。
+  work_identity_conditions:
+    - 两次边界移动完成后只隔一步即进入 C 的整体位移。
+    - 一格边界位移只够完成 C 的第一格行程，不能完成第二格。
+    - C 始终是七格完整刚体，并由三处错位目标消费。
+
+packaging_account:
+  opening: 玩家位于竖直 P/L 上方，右下方可见 C 竖井及错位目标。
+  preparation: 连续两次下推 P/L，把 push 边界移动到 C 两格行程所需高度。
+  reveal_or_use: 向右一步进入 C 顶部，连续两次下推完整 C。
+  ending: 第二次下推立即覆盖三目标。
+  every_major_element_role:
+    - P/L 的两格位移决定玩家在两次 C 推动时的 force mode。
+    - 单个上方墙格阻止 C 被向上拉出竖井。
+    - 竖井侧墙限制 C 保持纵向行程。
+    - 三目标消费上臂、竖脊与下臂。
+  known_perceptible_defects:
+    - 两次 P/L 下移是同方向重复输入；其价值依赖玩家读出“一格只够推一次、两格才够完整行程”。
+
+slot_account:
+  concrete_delta_from_baseline: 新增可移动 P/L 边界状态，且它直接决定 baseline 式 C 推动是否合法。
+  application_added_authorship: not_applicable
+  combination_supporting_mechanism: 可移动 P/L 边界。
+  combination_not_base_rule_or_prerequisite: baseline 在无 P/L 的全推世界直接使用完整 C；理解 C 的几何整体性不要求 P/L。
+  combination_consumption_relation: 两格 P/L 位移把 y=3、y=4 操作位都纳入 push 区；C 随后的两次下推逐格消费这一范围。预对齐版退化为两手，一格版第二推失败。
+  challenge_ceiling_dimension: not_applicable
+  non_equivalence_to_other_submissions:
+    - 不构造 C，也不把 P/L 当作凹口载荷；支持机制的产物是 force-mode 边界位置。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_COMBINATION_v5.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.md
+  graph_or_uniqueness_ref: prototypes/reality_anchor/reports/layout_analysis_CWHOLE_COMBINATION_v5.md
+  bypass_refs:
+    - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5_ONE_SHIFT_ATTEMPT.md
+    - prototypes/reality_anchor/reports/layout_analysis_CWHOLE_COMBINATION_v5_PREALIGNED.md
+    - prototypes/reality_anchor/reports/layout_analysis_CWHOLE_COMBINATION_v5_NO_PL.md
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/layout_analysis_CWHOLE_COMBINATION_v5_SAME_COUNT_NON_C.md
+  evidence_limits:
+    - 删除 P/L 后全推世界仍可通关且最短成本相同；退化证据来自机制链消失与预对齐版本，而非成本下降。
+
+designer_self_verdict: submit_for_independent_review

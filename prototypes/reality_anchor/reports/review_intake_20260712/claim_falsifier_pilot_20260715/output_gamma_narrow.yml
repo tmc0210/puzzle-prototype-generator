@@ -1,0 +1,157 @@
+falsification_attempt_id: "gamma_narrow_claim_falsification_20260715"
+critic_instance_id: "fresh_claim_falsifier_gamma_narrow"
+base_packet_ref: "../candidate_gamma.yml"
+claim_replacement_ref: "case_gamma_narrow_claim.yml"
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "GNC-01"
+    claim_type: mechanical_fact
+    normalized_proposition: >-
+      steps1-4 中，上箱临时充当 B 半格上方的受力对象，使 B/S 上提，并在 step4 回到原行。
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU1_borrowed_crate_lift].alternative：单独输入 down 会让箱与 B/S 一起下移，且尚未取得目标或末段竖条条件。"
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU1_borrowed_crate_lift].feedback：step4 时 B/S 上提到左目标行，上箱回到原位。"
+        - "candidate_gamma.yml / player_reasoning.trace_partition.segments[steps 1-4]：该段目的为借上箱传力上提 B/S。"
+      countercase: >-
+        最接近的反例是 RU1 的单步 down 路线，但包只说它把箱与 B/S 一起下移且未取得后续条件，
+        没有给出一条不借上箱完成同一上提的路线，因此不能推翻该局部关系。
+    status: survived_attack
+    status_reason: >-
+      回放反馈与 trace partition 都具体支持临时传力、B/S 上提和上箱回位；包内 alternative 未形成反例。
+    surviving_scope: "仅支持 canonical steps1-4 中的机械关系，不推出玩家会预先理解这一关系。"
+
+  - claim_id: "GNC-02"
+    claim_type: mechanical_fact
+    normalized_proposition: >-
+      中段移动 P/L 会把右目标的覆盖端由 L 改成 P，并把 B/S 右侧站位从 pull 失败条件改写为可左推 B/S 的 push 条件。
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].premises：P/L 右移后该格仍在 L/pull 侧，直接左输入会失败；从上方下推 P/L 后，P 覆盖右目标，该站位才成为 B/S 的 push 侧。"
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].alternative：输入 [down, left] 的第二步因仍是 L 侧且前格被 B/S 占住而失败，局面不变。"
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback：step8 P 覆盖右目标并释放推位。"
+      countercase: >-
+        RU2 的较短尝试可攻击“必须改写侧别”这一点，但该尝试恰好在 L 侧失败，未提供保持 L 端覆盖仍能左推 B/S 的反例。
+    status: survived_attack
+    status_reason: >-
+      失败尝试和 step8 反馈共同支持站位条件确由 L/pull 改为 P/push，并同时维持右目标覆盖。
+    surviving_scope: "仅支持给定回放中的端点与站位改写，不证明玩家会自然把它概念化为 push/pull 改写。"
+
+  - claim_id: "GNC-03"
+    claim_type: mechanical_fact
+    normalized_proposition: >-
+      末段参与合并与回切的结构只由下方新黏格和右下初始黏格组成，不包含上方新黏格。
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback：step11 两箱同步转黏。"
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].player_question：待组织的是下部新黏格与右下初始黏格。"
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].conclusion：把右下黏格连续左拉两格，与下黏格合并成竖条，再整体左拉切回两箱。"
+        - "case_gamma_narrow_claim.yml / designer_claim.work_identity_conditions[2]：末段合并结构明确不包含上方新黏格。"
+      countercase: >-
+        step11 的确还产生了上方新黏格，可尝试据此主张双箱共同承担末段责任；但 RU3 对待合并对象、移动和回切的叙述始终只定位下方新黏格与初始黏格，
+        包内没有上方新黏格进入竖条或影响其移动的事实。
+    status: survived_attack
+    status_reason: >-
+      上方箱同步转黏并不等于进入末段合并结构；RU3 明确给出了仅含另外两格的合并与回切过程。
+    surviving_scope: "只支持末段结构的成员关系；不否认上方箱在 step11 被动转黏。"
+
+  - claim_id: "GNC-04"
+    claim_type: mechanical_fact
+    normalized_proposition: >-
+      临时借物传力、P/L 侧别改写站位、两格黏条合并回切这三个局部关系按前、中、末段依次发生。
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "candidate_gamma.yml / player_reasoning.trace_partition：steps1-4 为借上箱传力，steps5-11 为 P/L 换侧并释放 B/S 推位，steps12-17 为合并竖条并跨界切回。"
+        - "candidate_gamma.yml / solve_instance.canonical_exact_inputs：完整回放共 17 个输入。"
+        - "candidate_gamma.yml / hard_evidence.solution_uniqueness：unique_complete。"
+      countercase: >-
+        唯一完整解可能把三段压缩成一条固定执行链，而非三个独立选择；但本命题只声称三种具体关系依次发生，
+        trace partition 的步骤边界与三种不同状态关系一一对应，压缩掉操作劳动也不会消除其先后次序。
+    status: survived_attack
+    status_reason: "包内的完整 trace partition 直接支持三个局部关系的顺序，且声明没有附带每段存在分支的主张。"
+    surviving_scope: "仅支持关系的发生与顺序，不支持三段都构成独立决策或洞见。"
+
+  - claim_id: "GNC-05"
+    claim_type: mechanical_fact
+    normalized_proposition: >-
+      step15 下方新黏格与初始黏格合并，step17 该两格结构左拉跨界并切回两箱，其中下格覆盖底目标而获胜。
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].feedback：step15 合并成竖条；step17 同时切回两箱，下格覆盖底目标并胜利。"
+        - "candidate_gamma.yml / solve_instance.final_win：true。"
+        - "candidate_gamma.yml / hard_evidence.all_winning_path_events：包含 sticky_merge、move_sticky_rigid、sticky_to_box。"
+      countercase: >-
+        可尝试用“只有下格形成箱”反驳回切描述，但 RU3 feedback 明确写的是两格同时切回两箱；包内没有相反步骤事实。
+    status: survived_attack
+    status_reason: "RU3 的 step15、step17 反馈与 final_win 直接覆盖了合并、跨界回切、底目标覆盖和胜利。"
+    surviving_scope: "支持指定回放的可见状态变化，不推出玩家对其主观回报强度的评价。"
+
+  - claim_id: "GNC-06"
+    claim_type: design_value
+    normalized_proposition: >-
+      该关的限定设计身份，是在一条 17 步短解中连续容纳临时借物传力、锚点侧别改写站位、两格黏条先合并再回切三种具体关系。
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "candidate_gamma.yml / solve_instance.canonical_cost：17。"
+        - "candidate_gamma.yml / player_reasoning.trace_partition.status：complete，且三个 segment 分别对应三种关系。"
+        - "candidate_gamma.yml / hard_evidence.solution_uniqueness：unique_complete。"
+        - "candidate_gamma.yml / hard_evidence.evidence_limits：图、唯一解和事件齐全不证明玩家会自然发现或觉得精巧。"
+        - "case_gamma_narrow_claim.yml / designer_claim.why_this_level_exists：明确不主张每段都有分支，也不主张双箱形成终局材料闭环。"
+      countercase: >-
+        最强的较弱读法是：玩家只是在唯一顺序中执行三个机械子程序，材料只证明关系共存，不能证明自然发现、精巧感或每段独立决策。
+        但 replacement 已把价值主张收窄到三种具体关系在短关中的压缩共存，并明确排除了这些更强体验主张；完整三段回放仍具体支持这一限定身份。
+    status: survived_attack
+    status_reason: >-
+      compression test 能排除“每段都有分支”“自然发现”“精巧感”等更强解释，却没有消去三个不同关系在 17 步完整回放中的共存；这正是声明限定后的全部范围。
+    surviving_scope: "只承认三种具体关系被压缩在同一短解中，不承认它们必然构成三个玩家洞见或完整材料闭环。"
+
+  - claim_id: "GNC-07"
+    claim_type: mechanical_fact
+    normalized_proposition: >-
+      上箱只需要在 steps1-4 承担 B 半格上方的临时受力责任，之后可以退出终局材料结构。
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU1_borrowed_crate_lift].operation_steps：1-4。"
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback：step11 两箱同步转黏。"
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].premises 与 conclusion：末段只组织下部新黏格和右下初始黏格。"
+        - "case_gamma_narrow_claim.yml / designer_claim.player_experience_core：明确不声明上箱转黏后仍参与终局。"
+      countercase: >-
+        上箱在 step11 仍被同步转黏，可攻击“之后完全不发生变化”；但声明说的是其受力责任结束、可以退休，而不是对象从状态中消失或永不再变化。
+        RU3 未再把它列为末段结构成员。
+    status: survived_attack
+    status_reason: "责任中断在这里正是声明的限定内容；包内没有证据表明末段合并或回切仍需要上方新黏格。"
+    surviving_scope: "退休只指不再承担末段结构责任，不指 step4 后不再发生任何材料变化。"
+
+  - claim_id: "GNC-08"
+    claim_type: mechanical_fact
+    normalized_proposition: "P/L 必须在 step8 发生之前完成右目标覆盖端改变，并释放 B/S 的左推站位。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "case_gamma_narrow_claim.yml / designer_claim.work_identity_conditions[1]：要求 P/L 必须在 step8 以前改变右目标覆盖端并释放 B/S 的左推站位。"
+        - "case_gamma_narrow_claim.yml / designer_claim.visible_payoff：把 P 覆盖右目标并释放 B/S 推位定位在 step8。"
+        - "candidate_gamma.yml / player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback：step8 P 覆盖右目标并释放推位。"
+      countercase: >-
+        replacement 自身及 base packet 都把这两个结果定位在 step8 完成，而不是 step8 之前；没有字段表明 step7 结束时已经完成覆盖端改变和推位释放。
+    status: falsified
+    status_reason: "“step8 以前”的严格时点要求与两处明确的 step8 反馈直接冲突。"
+    surviving_scope: "若命题改为“最迟在 step8 完成”则有包内支持，但该改写不属于本轮待审原命题。"
+
+overall:
+  decisive_refutations:
+    - "GNC-08：work_identity_conditions 要求 step8 以前完成端点改变与推位释放，但 replacement.visible_payoff 和 RU2.feedback 都明确定位在 step8。"
+  claims_falsified: 1
+  claims_undercut: 0
+  claims_not_established: 0
+  claims_survived: 7
+  strongest_surviving_claim: "GNC-06：在排除分支、自然发现、精巧感和双箱终局闭环等更强解释后，三种具体关系在 17 步完整回放中的压缩共存仍经受了攻击。"
+  experiment_reading: mixed

@@ -1,0 +1,114 @@
+review_attempt_id: RA_GIANT_STICKY_PISTON_ORDER_REVIEW_1
+prototype_id: reality_anchor
+review_scope: segment
+
+prototype_rules:
+  confirmed_rules:
+    - 玩家每次输入一个正交方向；空格可行走。
+    - 有 P/L 时，以输入前玩家位置相对移动边界选择 push 或 pull；锚点本身也可被推拉，移动后边界随之改变。
+    - push 移动玩家前方对象；pull 要求玩家前格为空，并移动玩家及其身后对象；力可向其它可动物传播。
+    - 有 B/S 时，每个合法动作后按移动边界把箱与黏块全局归一化；锚点本身也可被推拉。
+    - 正交相邻 sticky 合并成单一刚体；刚体任一目的格受阻会阻断整块移动。
+  win_condition: settle 后所有目标格都被箱、黏块格或锚点格覆盖；玩家不计入覆盖。
+  object_and_event_semantics:
+    - C 为普通箱，M 为黏块格，G 为空目标，* 为被箱覆盖的目标。
+    - P/L 分别标记 push 侧与 pull 侧；B/S 分别标记 box 侧与 sticky 侧。
+    - force_chain 表示一次对象移动同时推动其它可动物；anchor_boundary_shift 表示对应锚点实际改变位置。
+
+portfolio:
+  - slot: baseline
+    candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+    exact_version: v4_sha256_39839eef5d8c118500a0e4f3a48bfb9e38819fbb8a3cf06f6210f1e6ae58772b
+    solve_instance:
+      layout: |-
+        ##############
+        #########SB###
+        ##############
+        #########PL###
+        ##############
+        #............#
+        #.....#...####
+        #...MMMMM.CG##
+        #...M.....####
+        #...M....@...#
+        #...M.....####
+        #...MMMMM.CG##
+        #...M.....####
+        #...M........#
+        #...M.....####
+        #...MMMMM.CG##
+        #.....#...####
+        #............#
+        ##############
+      player_start: [9, 9]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [up, up, up, up, left, left, left, left, down, left, left, down, right, right]
+      mechanically_derived_trace_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json#/steps
+
+  - slot: application
+    candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+    exact_version: v5_sha256_9bfae9c5c1160d4088fc59c317c2bfef33bd77b7066bca23e19850fd867cb590
+    solve_instance:
+      layout: |-
+        #############
+        #######PL####
+        #..@SB...####
+        #.###########
+        #.###########
+        #.MMM..CCG###
+        #.MMMCCC.####
+        #.MMM...#####
+        #.MMM.#######
+        #.MMM...#####
+        #.MMMCCC.####
+        #.MMM..CCG###
+        #############
+      player_start: [3, 2]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [right, right, right, left, left, left, left, left, down, down, down, right]
+      mechanically_derived_trace_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json#/steps
+
+  - slot: challenge
+    candidate_id: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK
+    exact_version: v1_sha256_027825ee031100ce6600d163cf967201c0670ee356ffe98362e335b4ec573541
+    solve_instance:
+      layout: |-
+        ###################
+        #....#............#
+        #...#.MMMMMMMMM...#
+        #...##.##.MMMMM...#
+        #..#GC.#.MMMMMM...#
+        #...#.MMMMMMMMM...#
+        #....###.MMMMMM...#
+        #....#.MMMMMMMM...#
+        #...####.MMMMMM...#
+        #..#GCMMMMMMMMM...#
+        #...####.MMMMMM...#
+        #....#.MMMMMMMM...#
+        #....###.MMMMMM...#
+        #...#.MMMMMMMMM...#
+        #..#GC.#.MMMMMM...#
+        #...##.##.MMMMM...#
+        #...#.MMMMMMMMM...#
+        #....#............#
+        #..............####
+        #..............####
+        #..#.BS@.#.....####
+        ####.##############
+        #..#....LP........#
+        ###################
+      player_start: [7, 20]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [right, up, left, left, left, left, down, down, down, right, right, right, left, left, left, up, up, up, right, right, right, right, down, up, up, right, right, right, right, right, right, up, right, up, up, up, up, up, up, up, up, up, up, up, up, up, up, up, up, left, left, left, left, left, left, left, left, left, down, down, up, up, right, right, right, right, right, right, right, right, right, down, down, down, down, down, down, down, down, down, down, down, down, down, down, down, down, left, down, left, left, left, left, left, left, left, left, up, up, up, down, down, down, down, left, down, left, up, right, right, right, right, right, right, right, right, right, right, up, up, right, up, up, up, up, up, up, up, up, left]
+      mechanically_derived_trace_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json#/steps
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/challenge/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json

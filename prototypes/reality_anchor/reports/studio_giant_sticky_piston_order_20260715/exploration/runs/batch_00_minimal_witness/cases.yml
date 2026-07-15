@@ -1,0 +1,66 @@
+runId: ra_exp_giant_sticky_batch_00_minimal_witness
+title: "最小 witness：大型双瓣黏体一手同时推动两个目标活塞"
+notes: >-
+  只验证体验种子的地基关系：一个连通的大型双瓣黏体从左侧受力后，两个远端触点在同一输入中
+  分别经 P/L 与 B/S 竖向锚体传力，推动位于 P/L 拉侧的两只箱子进入目标。
+  删除右触点与切断单格中桥分别校准触点责任和整体连通责任；
+  本批不声称已经形成多个顺序锁之间的矛盾。
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 12
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: "witness_connected_comb_two_pistons"
+    family: "giant_sticky_multi_contact_piston"
+    variant: "connected_two_tips"
+    changed_variable: "基准：左右双瓣由单格中桥连通，两个上缘右向触点都接到锚体"
+    contrast_with: "cf_remove_right_tip,cf_cut_middle_bridge"
+    notes: "right 应同时移动整个黏体、P/L、B/S 与两只箱子；两只箱子分别进入目标。"
+    layout: |
+      #################
+      #...............#
+      #...............#
+      #....LCG...BCG..#
+      #.MMMP..MMMS....#
+      #@MMMMMMMMM.....#
+      #.MMM...MMM.....#
+      #...............#
+      #################
+    actions: ["right"]
+
+  - id: "cf_remove_right_tip"
+    family: "giant_sticky_multi_contact_piston"
+    variant: "right_contact_deleted"
+    changed_variable: "只删除右瓣接触 B/S 的上缘触点；其余黏体、锚体、箱子和目标不变"
+    contrast_with: "witness_connected_comb_two_pistons"
+    notes: "right 仍移动同一连通黏体并经 P/L 推动左箱，但 B/S 与右箱不应移动，证明第二触点有独立责任。"
+    layout: |
+      #################
+      #...............#
+      #...............#
+      #....LCG...BCG..#
+      #.MMMP..MM.S....#
+      #@MMMMMMMMM.....#
+      #.MMM...MMM.....#
+      #...............#
+      #################
+    actions: ["right"]
+
+  - id: "cf_cut_middle_bridge"
+    family: "giant_sticky_multi_contact_piston"
+    variant: "upper_lower_components_split"
+    changed_variable: "只删除双瓣之间唯一的一格中桥，把左右两瓣切成两个黏体部件"
+    contrast_with: "witness_connected_comb_two_pistons"
+    notes: "玩家只接触左瓣；right 应只移动左瓣、P/L 和左箱，右瓣、B/S 与右箱留在原位。"
+    layout: |
+      #################
+      #...............#
+      #...............#
+      #....LCG...BCG..#
+      #.MMMP..MMMS....#
+      #@MMMM.MMMM.....#
+      #.MMM...MMM.....#
+      #...............#
+      #################
+    actions: ["right"]

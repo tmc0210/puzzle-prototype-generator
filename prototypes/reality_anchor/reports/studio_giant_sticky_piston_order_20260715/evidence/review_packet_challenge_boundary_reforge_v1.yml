@@ -1,0 +1,94 @@
+review_attempt_id: EVREV_RA_BOUNDARY_REFORGE_MASK_V1_R1
+candidate_id: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK
+exact_version: v1
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/challenge/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.txt
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [right, up, left, left, left, left, down, down, down, right, right, right, left, left, left, up, up, up, right, right, right, right, down, up, up, right, right, right, right, right, right, up, right, up, up, up, up, up, up, up, up, up, up, up, up, up, up, up, up, left, left, left, left, left, left, left, left, left, down, down, up, up, right, right, right, right, right, right, right, right, right, down, down, down, down, down, down, down, down, down, down, down, down, down, down, down, down, left, down, left, left, left, left, left, left, left, left, up, up, up, down, down, down, down, left, down, left, up, right, right, right, right, right, right, right, right, right, right, up, up, right, up, up, up, up, up, up, up, up, left]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: 130 个 canonical inputs 全部合法；最后一拍同时覆盖三个目标并胜利。
+  - claim_id: initial_complete_symmetric_giant
+    claim: >-
+      exact v1 初态只有一个 107 格 sticky 连通组；其占格关于 y=9 水平轴对称，三个目标锁沿左缘分布。
+  - claim_id: cut_shift_reorder_restick_chain
+    claim: >-
+      canonical 的十次对象操作依次为：B/S 右移并 sticky_to_box:n5；P/L 左移三格；
+      上端 cut crate 下推两格与下端 cut crate 上推两格；B/S 左移并 box_to_sticky:n5、sticky_merge:n1；
+      完整 sticky#1 向左发射。其余输入均为 walk。
+  - claim_id: third_pl_shift_changes_tip_action
+    claim: >-
+      在相同 exact v1 切分后状态和相同上端操作位，P/L 未移或只移两格时 down 非法；
+      P/L 第三次左移到 L5|P6 后，同一 down 合法并 push_object:crate#1。
+  - claim_id: representative_target_is_true_pl_order_lock
+    claim: >-
+      保持 exact v1 同阶段墙、目标、箱与最终 P/L，仅把玩家放到上锁 P 侧的 probe 中，left 把 x5 箱推到 x4 目标；
+      玩家落到 L 侧后 right 必须 pull_object 同一位置角色的箱并撤销覆盖。
+  - claim_id: no_restick_fire_only_central_and_is_bounded_dead
+    claim: >-
+      exact v1 省略 B/S 左拉复黏、其余按同职责执行并发射时，113 输入全部合法但只覆盖中央目标；
+      从该 actual wrong state 出发的对象动作深度 <=8 宏图完整闭合为 388 states / 1270 transitions / 0 wins。
+  - claim_id: isolation_corridor_blocks_anchor_escape
+    claim: >-
+      canonical step15 后的 runtime walk-only 可达集中不含 P 右侧 x7,y22；不存在第四次 P/L 左移或 P/L 纵移；
+      从可达站位尝试 B/S down 明确为 force_blocked。
+  - claim_id: atomic_three_lock_final
+    claim: >-
+      canonical 终拍前五个切出格已全部复黏到同一 107 格 sticky#1；终拍 left 产生 force_chain:n4、
+      move_sticky_rigid、sticky_to_box:n5，并在同一步把 x5,y4/y9/y14 三箱推到 x4 三目标。
+
+solution_uniqueness:
+  result: unique_within_budget
+  search_scope: >-
+    exact raw graph 前缀；walk-component 对象宏图；完整声明责任字母表 O1/P3/T2/B2/R1/F1；
+    exact v1 定向少换相、过拉、纵移、B/S 下移、逐锁和漏复黏攻击。
+  search_budget: >-
+    raw maxStates=30000: 30001 states / 73982 transitions / 0 prefix wins / exhausted；
+    macro depth<=6: complete 560 / 1259 / 0 wins；macro depth<=10 maxStates=2000: exhausted 2000 / 4703 / 0 wins；
+    responsibility DP: complete 94 states / 113 transitions / 6 raw role wins。
+  known_raw_winning_variants:
+    - OPPPTTBBRF canonical exact replay。
+    - OPPP 后 T×2 与 B×2 保持各自内部顺序的六种交错。
+  equivalence_account: >-
+    六种胜序列只交换上下两个独立必要重排任务；它们汇合到同一个复黏前对象状态，且都保持
+    O→P×3、R→F、三目标分配与所有对象职责，归一化为 OPEN -> SHIFT_PL -> REORDER_BOTH -> RESTICK -> FIRE。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_uniqueness/search_summary_v1.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/exploration/mobile_pl_reforge/attack_v4_responsibility_audit.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json
+  evidence_limits:
+    - 不声明 unique_complete；raw graph 与深度10 macro 都是预算耗尽前缀。
+    - responsibility audit 完整性只覆盖声明字母表，不覆盖字母表外任意超长动作族。
+    - raw graph 前缀未抵达规范解；可解性由 exact replay 独立支持。
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/challenge/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.md
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1_NO_RESTICK_FIRE_EXACT.json
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1_NO_RESTICK_FIRE_EXACT.md
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_uniqueness/search_summary_v1.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/exploration/mobile_pl_reforge/attack_v4_targeted.ts
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/exploration/mobile_pl_reforge/attack_v4_responsibility_audit.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/cases.yml
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/cases.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/results.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/report.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/phase_audit_results.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/bounded_no_restick_search.json
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - docs/21-level-design-studio-standard.md
+
+graph_completeness:
+  layout_graph: exhausted
+  reachable_states_in_prefix: 30001
+  legal_transitions_in_prefix: 73982
+  raw_win_states_in_prefix: 0
+  max_states: 30000
+  exact_solution_available_separately: true

@@ -1,0 +1,136 @@
+falsification_attempt_id: "POSITIVE_ACTIVE_L_TRUE_R2"
+critic_instance_id: "claim_falsifier_fresh_r2"
+base_packet_ref: "base_positive_active_l.yml"
+claim_replacement_ref: "case_positive_active_l_true.yml"
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "opening_construction_cut"
+    claim_type: mechanical_fact
+    normalized_proposition: "step4 拉动原三格黏条，跨越 B/S 后从右端切出一个箱，并留下两格黏条。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_key_snapshots.step=4：events 为 pull_object:sticky#1、move_sticky_rigid、sticky_to_box:n1。"
+        - "base packet mechanically_derived_key_snapshots.step=4：before 的 MMM 变为 after 的 MMC，右端仅一格成为箱。"
+        - "base packet prototype_rules.confirmed_rules[0]：对象跨 B/S 时在箱与黏格之间切换。"
+      countercase: "最强直接矛盾尝试是检查 step4 是否只是搬动预制构件、或是否没有发生切割；事件与前后状态均排除这两个反例。"
+    status: survived_attack
+    status_reason: "指定回放同时给出拉动、刚体移动、一格 sticky_to_box 和 MMC 结果，直接支持开场切出构件。"
+    surviving_scope: "仅支持指定 canonical step4 的机械变化；不外推玩家当时如何理解该变化。"
+
+  - claim_id: "raise_and_first_l_connection"
+    claim_type: mechanical_fact
+    normalized_proposition: "剩余两格黏条先被上推，随后 step13 拉回箱并经 box_to_sticky 与 sticky_merge 建立三格 L 形连接。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_key_snapshots.step=11：events 为 push_object:sticky#1、move_sticky_rigid，after 在上方形成横向 MM。"
+        - "base packet mechanically_derived_key_snapshots.step=13：events 为 pull_object:crate#1、box_to_sticky:n1、sticky_merge:n1。"
+        - "base packet mechanically_derived_key_snapshots.step=13：after 中上排相邻 MM 与其右格下方 M 组成三格 L。"
+        - "base packet canonical_exact_inputs[1..13] 与 step4、step11、step13 快照：step13 前可见结构是直条或分离箱，未给出更早的三格 L。"
+      countercase: "最强反例是 step13 只把箱贴近而未合并，或三格 L 早已预制；sticky_merge 事件、step13 前后布局和前段输入链没有支持该反例。"
+    status: survived_attack
+    status_reason: "上推、拉箱转黏、合并和 L 形几何均由指定步骤的事件及状态直接支持。"
+    surviving_scope: "“第一次”限于该 canonical 回放所保留的前 13 步状态演化。"
+
+  - claim_id: "l_not_preserved_to_end"
+    claim_type: mechanical_fact
+    normalized_proposition: "step13 的 L 形关系并非作为同一黏刚体原样保持到 step30；step14 后发生材料切割或成员变化，随后又有转黏合并与终局传力。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "base packet mechanically_derived_key_snapshots.step=13：after 为三格黏格 L。"
+        - "base packet mechanically_derived_key_snapshots.step=14：events 含 sticky_to_box:n2，after 仅保留一格 M，另两格成为箱。"
+        - "base packet mechanically_derived_key_snapshots.step=15：events 含 box_to_sticky:n1 与 sticky_merge:n1。"
+        - "base packet mechanically_derived_key_snapshots.step=30：events 含 force_chain:n2、move_sticky_rigid、sticky_to_box:n2。"
+      countercase: "若同一三格黏刚体从 step13 原样负责到终局，step14 不应有两格 sticky_to_box，step15 也不应需要新的 box_to_sticky 与 sticky_merge；指定事件恰好否定这一反例。"
+    status: survived_attack
+    status_reason: "step14 的两格切箱已直接打断原三格黏刚体身份，step15 的新合并及 step30 的 force chain 支持后续重新组织。"
+    surviving_scope: "支持材料与连接身份发生变化，不证明玩家主观上持续把各阶段视为同一个“L 形活塞”概念。"
+
+  - claim_id: "step14_step15_visible_sequence"
+    claim_type: mechanical_fact
+    normalized_proposition: "step14 推动黏刚体后两格切回箱且上目标被覆盖；step15 又拉回一箱转黏并合并。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_key_snapshots.step=14：events 为 push_object:sticky#1、move_sticky_rigid、sticky_to_box:n2。"
+        - "base packet mechanically_derived_key_snapshots.step=14：after 上排出现 *，表示目标已由对象覆盖。"
+        - "base packet mechanically_derived_key_snapshots.step=15：events 为 pull_object:crate#2、box_to_sticky:n1、sticky_merge:n1。"
+        - "base packet mechanically_derived_key_snapshots.step=15：after 出现上下相邻 M，符合新转黏成员并入黏刚体。"
+      countercase: "最强直接检查是上目标是否其实未覆盖、或 step15 只有拉箱没有合并；step14 的 * 与 step15 的转换、合并事件均排除该反例。"
+    status: survived_attack
+    status_reason: "该原子命题逐项对应 step14、step15 的事件与 after 状态，没有包内相反事实。"
+    surviving_scope: "支持可见状态序列和机械事件，不单独证明该序列带来的体验价值。"
+
+  - claim_id: "step30_double_goal_payoff"
+    claim_type: mechanical_fact
+    normalized_proposition: "step30 最后一推同时触发 force chain、黏刚体移动和两格 sticky_to_box，并使两个目标在该步后同时覆盖而获胜。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_key_snapshots.step=30：input 为 right，events 为 push_object:sticky#1、force_chain:n2、move_sticky_rigid、sticky_to_box:n2。"
+        - "base packet mechanically_derived_key_snapshots.step=30：before 的两个 G 在 after 中均为 *。"
+        - "base packet mechanically_derived_key_snapshots.step=30：win_after_step 为 true。"
+        - "base packet solve_instance.final_win 为 true。"
+      countercase: "最强反例是终局只覆盖一个目标、或胜利来自不含传力/切箱的另一动作；step30 的前后布局、事件和 win_after_step 直接排除该反例。"
+    status: survived_attack
+    status_reason: "终局事件组合、双目标状态变化与胜利标记完全一致。"
+    surviving_scope: "仅断言 canonical 最后一推的机械结果。"
+
+  - claim_id: "active_reconstruction_reading"
+    claim_type: player_model
+    normalized_proposition: "玩家主动把这段操作组织为“切出构件—抬高黏条—拉回补角—推活塞—再合并—终局传力”的重构链。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "base packet solve_instance.canonical_exact_inputs：只提供一条 30 步成功输入序列。"
+        - "base packet hard_evidence.complete_no_bypass_event_groups：证明 pull、push、材料切换、合并、刚体与 construction_cut 等事件组不可绕过，但未记录玩家如何给这些动作分组或命名。"
+        - "base packet hard_evidence.evidence_limits[0]：机械回放与完整图不直接证明玩家会自然发现或把重构读成亮点。"
+        - "base packet hard_evidence.evidence_limits[1]：本包没有作者之外的玩家过程记录。"
+      countercase: "同一条回放也可被玩家理解为逐步执行局部可行动作与材料转换，而不形成所声称的六阶段“主动重构链”；包内没有玩家过程证据区分两种读法。"
+    status: not_established
+    status_reason: "机械上确实由玩家输入完成全部事件，但“主动组织为一条重构链”是玩家认知声明；单条回放与不可绕过事件组不能证明这种分组和理解。"
+    surviving_scope: "保留下来的较弱事实是：canonical 解中的玩家输入因果性地完成了所列机械事件。"
+
+  - claim_id: "constructed_not_prefabricated_l"
+    claim_type: design_value
+    normalized_proposition: "本关的核心结构区别是先构造可用的 L 形关系，再改变其材料与连接状态，而不是把一个预制 L 原样搬到终点。"
+    strongest_attack:
+      method: rival_player_reading
+      exact_basis:
+        - "base packet mechanically_derived_key_snapshots.step=0：初始只有横向 MMM，不存在三格 L。"
+        - "base packet mechanically_derived_key_snapshots.step=4、step=11、step=13：结构依次为 MMC、上移的 MM、经转换合并得到的三格 L。"
+        - "base packet mechanically_derived_key_snapshots.step=14、step=15、step=30：L 的成员经历两格切箱、新成员转黏合并及终局两格切箱。"
+        - "base packet hard_evidence.complete_no_bypass_event_groups：construction_cut、box_to_sticky、sticky_to_box、sticky_merge 与 rigid 均不可绕过。"
+      countercase: "最强竞争读法是把整段仅看成材料边界上的局部转换与搬运，而不承认“L 形活塞”是玩家亮点；但它无法解释初态无 L、step13 才构造 L、随后又改变成员且这些事件组不可绕过这一具体结构差异。"
+    status: survived_attack
+    status_reason: "即使不接受玩家会称其为“活塞”，包内仍具体证明结构不是预制 L 的原样运输，而是必须经过构造、切割和重新合并；竞争读法没有击穿这一设计区别。"
+    surviving_scope: "仅支持关卡实现了“构造并重组，而非原样搬运预制 L”的结构身份；不证明玩家必然把它读成亮点或获得特定情绪回报。"
+
+  - claim_id: "work_identity_conditions_realized"
+    claim_type: mechanical_fact
+    normalized_proposition: "指定作品身份条件在 canonical 回放中均落实：step4 construction cut，step13 转黏合并成首次 L，step14 后成员变化，step30 以传力、刚体移动与两格切箱完成双目标。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "claim replacement designer_claim.work_identity_conditions[0..3]：明确列出四项身份条件。"
+        - "base packet mechanically_derived_key_snapshots.step=4：sticky_to_box:n1 且 after 为 MMC。"
+        - "base packet mechanically_derived_key_snapshots.step=13：box_to_sticky:n1、sticky_merge:n1 且 after 为三格 L。"
+        - "base packet mechanically_derived_key_snapshots.step=14：sticky_to_box:n2，原 L 成员发生变化。"
+        - "base packet mechanically_derived_key_snapshots.step=30：force_chain:n2、move_sticky_rigid、sticky_to_box:n2，after 双目标为 * 且 win_after_step=true。"
+      countercase: "逐项寻找 canonical 回放违反任一身份条件的反例，四个指定步骤都给出对应事件与状态，因此没有找到反例。"
+    status: survived_attack
+    status_reason: "四项条件均被指定步骤的硬事实逐项满足。"
+    surviving_scope: "只确认这些身份条件在送审 canonical 实例中实现；不把它外推为所有可能解都必须发生在完全相同的步号。"
+
+overall:
+  decisive_refutations: []
+  claims_falsified: 0
+  claims_undercut: 0
+  claims_not_established: 1
+  claims_survived: 7
+  strongest_surviving_claim: "step13 的三格 L 由上推、box_to_sticky 与 sticky_merge 主动构造，并在 step14 后发生成员变化，因而不是预制 L 原样保持到终局。"
+  experiment_reading: support_only_missing

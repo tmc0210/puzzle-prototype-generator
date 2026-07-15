@@ -1,0 +1,149 @@
+opening_comfort_check:
+  status: clean
+  candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+  exact_version: v4_sha256_39839eef5d8c118500a0e4f3a48bfb9e38819fbb8a3cf06f6210f1e6ae58772b
+  authority_doc: prototypes/reality_anchor/docs/opening_comfort_check.md
+  version_effect: unchanged
+  review_effect: existing_review_preserved
+  exact_version_guard:
+    layout_mutated: false
+    start_mutated: false
+    canonical_replay_mutated: false
+
+  enumeration:
+    graph_basis: 完整 runtime 有向图的 initial SCC，不使用 returned trace 或局部邻域代替。
+    source_graph_status: complete
+    source_reachable_states: 957
+    source_legal_transitions: 2997
+    source_winning_states: 9
+    initial_scc_state_count: 327
+    candidate_rule: initial SCC 内对象配置与 exact v4 初态相同的全部玩家坐标。
+    candidate_start_count: 106
+    candidates_with_complete_graph: 106
+    candidates_with_complete_core_event_probe: 106
+    candidates_preserving_core_chain: 106
+    shortest_cost_range: [2, 19]
+    nearest_irreversible_exit_distance_range: [0, 7]
+    full_candidate_matrix_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/raw_evidence.json#/opening/candidates
+    matrix_fields:
+      - candidateStartPosition
+      - shortestSolutionDeltaFromCurrent
+      - initialSccSize
+      - initialExitSourceDistances
+      - initialWinExitSourceDistances
+      - deadExitsBeforeFirstWinExit
+      - firstStepLegalEvents
+      - whetherCoreChainPreserved
+
+  current_start:
+    candidate_start_position: [9, 9]
+    shortest_solution_cost: 14
+    shortest_solution_delta: "14->14"
+    initial_scc_size: 327
+    initial_scc_exit_transition_count: 18
+    initial_scc_exit_source_count: 18
+    initial_scc_exit_target_count: 2
+    initial_exit_source_distances: [4, 4, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 17, 18]
+    initial_win_exit_source_distances: [12, 13, 14, 15, 16, 16, 17, 17, 18]
+    nearest_irreversible_exit_distance: 4
+    nearest_win_reaching_exit_distance: 12
+    dead_exits_before_first_win_exit: 9
+    dead_exit_target_sccs_before_first_win_exit: 1
+    first_step_legal_events:
+      up: [walk]
+      down: [walk]
+      left: [walk]
+      right: [walk]
+    whether_core_chain_preserved: true
+    graph_status: complete
+    core_event_probe_status: complete
+    exit_semantics:
+      win_reaching_exit:
+        source_count: 9
+        action: right
+        events: [push_object:sticky#1, move_sticky_rigid]
+        reading: 从巨大三叉左侧把完整刚体送入同步承诺位。
+      dead_exit:
+        source_count: 9
+        action: left
+        events: [push_object:sticky#1, move_sticky_rigid]
+        reading: 把巨大三叉推离右侧全部目标；目标方向和空旷左死区让这一错误可见，不是自然首步误触。
+
+  representative_read_only_comparisons:
+    - candidate_start_position: [9, 13]
+      shortest_solution_delta: "14->14"
+      initial_scc_size: 327
+      nearest_irreversible_exit_distance: 4
+      nearest_win_reaching_exit_distance: 12
+      dead_exits_before_first_win_exit: 9
+      first_step_legal_events: {up: [walk], down: [walk], left: [walk], right: [walk]}
+      whether_core_chain_preserved: true
+      decision: not_selected
+      reason: 与当前起点是上下镜像的完全等价读法，没有玩家侧收益，不值得改变已验证 solve instance。
+
+    - candidate_start_position: [8, 8]
+      shortest_solution_delta: "14->14"
+      initial_scc_size: 327
+      nearest_irreversible_exit_distance: 4
+      nearest_win_reaching_exit_distance: 12
+      dead_exits_before_first_win_exit: 7
+      first_step_legal_events: {down: [walk], left: [walk], right: [walk]}
+      whether_core_chain_preserved: true
+      decision: not_selected
+      reason: 少两个早期 dead-source，但失去向上观察方向并更贴近上臂墙口；不是对当前四向纯 walk 开局的严格支配。
+
+    - candidate_start_position: [7, 5]
+      shortest_solution_delta: "14->8"
+      initial_scc_size: 327
+      nearest_irreversible_exit_distance: 6
+      nearest_win_reaching_exit_distance: 6
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events: {down: [walk], left: [walk], right: [walk]}
+      whether_core_chain_preserved: true
+      decision: not_selected
+      reason: 指标更温和，但把玩家直接放到上绕行线，把正确承诺提前并将规范解缩短六步，跳过“先看到三只活塞、再否定逐个完成”的读题顺序。
+
+    - candidate_start_position: [12, 5]
+      shortest_solution_delta: "14->13"
+      initial_scc_size: 327
+      nearest_irreversible_exit_distance: 7
+      nearest_win_reaching_exit_distance: 11
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events: {left: [walk]}
+      whether_core_chain_preserved: true
+      decision: not_selected
+      reason: 虽有最长缓冲之一，却从空支路尽头只剩一个合法首步；这是路线税，不是更好的观察自由。
+
+    - candidate_start_position: [3, 7]
+      shortest_solution_delta: "14->2"
+      initial_scc_size: 327
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 0
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events:
+        up: [walk]
+        down: [walk]
+        left: [walk]
+        right: [push_object:sticky#1, move_sticky_rigid]
+      whether_core_chain_preserved: true
+      decision: not_selected
+      reason: 第一拍即可进入核心不可逆推进，属于 authority 所警惕的贴脸承诺，并抹去三目标活塞的开局读图。
+
+  chosen_start:
+    position: [9, 9]
+    action: keep
+    reason: >-
+      当前起点四个首步全是可逆 walk，最近不可逆承诺距离为 4；玩家先位于上、中两只活塞和巨大三叉之间，能直接读到三组锁口与对应横臂。
+      距离 12 才到正确巨大刚体推进，前面的 dead SCC 仅由明确向左、远离全部右侧目标的整块推动进入。106 个候选中，[9,13] 只提供镜像等价；
+      更靠绕行线的候选虽改善数值，却改变读题顺序或大幅缩短实例；支路尽头候选又只剩被迫走位。因此没有玩家侧严格优于当前起点的候选。
+
+  artifact_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/analyze.ts
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/raw_evidence.json#/opening
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json#/agency/scc
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/submission_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4.yml
+
+  final_conclusion: >-
+    保留 [9,9]。完整图 initial SCC 的 106 个同对象起点已全部只读比较并重跑完整图与核心事件探针；当前起点提供四向纯 walk、距离 4 的承诺缓冲和最直接的三活塞读题位置。
+    没有候选在不改变读题顺序、成本或首步自由的同时严格改善它，因此本检查不改变 exact v4，也不使既有 review 失效。

@@ -1,0 +1,142 @@
+review_attempt_id: RA_CWHOLE_REVIEW_1
+reviewer_instance_id: FRESH_LEVEL_REVIEWER_1_CWHOLE_20260713
+review_integrity: independent
+
+archive_calibration:
+  full_index_read: true
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  positive_or_high_anchors_read:
+    - RA_CAND_0025
+    - RA_CAND_0029
+  lower_bound_or_negative_anchors_read:
+    - RA_CAND_0019
+    - RA_CAND_0020
+    - RA_CAND_0027
+  human_comment_ids_read:
+    - HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001
+    - HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001
+    - HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001
+    - HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001
+    - HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001
+    - HP_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_001
+    - HP_STUDIO_L_1_001
+    - HP_RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1_001
+    - HP_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_001
+
+independent_readings:
+  - candidate_id: CWHOLE_BASELINE
+    exact_version: CWHOLE_BASELINE_v1_sha256_f7107731757265fdcee2ebeeb834e301b64c1f99b19ad730545a79931f928bc1
+    slot: baseline
+    opening_read: >-
+      玩家开局被放在完整七格 C 形黏块的凹口中，右侧三枚目标分别对着上臂、竖脊和下臂；题面直接承诺用凹口中的操作位推动整个形状横移。
+    player_actually_does: >-
+      玩家连续两次向右推动竖脊，同一个七格连通体两次整体右移，没有前置子题或额外换位。
+    visible_payoff: >-
+      第一次整体平移让上、下目标同时被两条臂覆盖，第二次平移让三枚目标由同一完整 C 形同时覆盖，形状的两臂与竖脊都进入终局读图。
+    ending_read: >-
+      第二次整体平移即胜利，高潮后没有清理劳动。
+    exact_basis:
+      - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_BASELINE_v1.txt
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v1.json#/steps/0
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v1.json#/steps/1
+    perceptible_defects: []
+    verdict: survive_to_pre_submission_checks
+
+  - candidate_id: CWHOLE_APPLICATION
+    exact_version: CWHOLE_APPLICATION_v1_sha256_027dc4d4737a56552fb7cc95cde17b898650add9572e42d6152092b9534ae33f
+    slot: application
+    opening_read: >-
+      完整 C 形初始位于目标列下方，玩家站在下臂下方；玩家首先会读到必须先把整形上移到目标高度，再设法进入凹口完成横推。
+    player_actually_does: >-
+      玩家先向上推动整个 C 形一格，随后连续走七步绕到左侧并进入凹口，最后用两次向右整体平移完成与 baseline 相同的三目标收束。
+    visible_payoff: >-
+      首步可见地建立了目标对齐条件，末两步仍由上臂、竖脊和下臂共同覆盖三目标；主动建立条件的责任真实存在。
+    ending_read: >-
+      进入凹口后的两次右推立即结束，但首步核心操作与末段回报之间隔着七步无对象变化的绕行。
+    exact_basis:
+      - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_APPLICATION_v1.txt
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v1.json#/steps/0
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v1.json#/steps/1
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v1.json#/steps/7
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v1.json#/steps/8
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v1.json#/steps/9
+    perceptible_defects:
+      - defect: 首次整体上移后需要连续七步纯走位才能回到 C 形凹口，准备与兑现被过长空白路程割开。
+        exact_basis: mechanically derived trace steps 2-8 全部仅为 walk，期间黏块、目标和锚点均无变化。
+        player_effect: 玩家已经完成本版本唯一新增的判断后，只能执行显然绕行，核心责任的回报被路线税稀释。
+        same_work_improvement_direction: 在保留“先整体上移建立对齐、再从凹口横推”关系的前提下压缩环路，让玩家用更短换位重新进入凹口。
+        blocking: true
+    verdict: revise_and_rereview
+
+  - candidate_id: CWHOLE_COMBINATION
+    exact_version: CWHOLE_COMBINATION_v1_sha256_e0202cee86db198af33c6d7c93a1bb6b87e11cd26e404077b76c3a441f4ec7bc
+    slot: combination
+    opening_read: >-
+      C 形开口朝右，玩家位于凹口；上方固定 P/L 明确把主区域置于 pull 侧，使玩家面对“向右走却把身后的完整 C 形带向右”的方向关系。
+    player_actually_does: >-
+      玩家连续两次向右移动，固定 P/L 的 pull 规则让身后的七格 C 形整体随玩家右移，而不是从前方推它。
+    visible_payoff: >-
+      第一次拉动让上下两臂覆盖目标，第二次让两臂与左侧竖脊共同覆盖三目标；P/L 产生的拉动方向被完整 C 形直接消费。
+    ending_read: >-
+      第二次拉动即胜利，没有独立前序子题，也没有机制退休后的清理。
+    exact_basis:
+      - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_COMBINATION_v1.txt
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v1.json#/initial
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v1.json#/steps/0
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v1.json#/steps/1
+    perceptible_defects: []
+    verdict: survive_to_pre_submission_checks
+
+  - candidate_id: CWHOLE_CHALLENGE
+    exact_version: CWHOLE_CHALLENGE_v1_sha256_98c32e2d471c82971a52d611a8fdba074cc48cb4018835acc743cc64a06c98e4
+    slot: challenge
+    opening_read: >-
+      玩家被封在 C 形右侧口袋，目标位于形状内部与左上方向；开局首先读到的唯一出路是把完整 C 形向左推开，再从下方绕到下臂施力。
+    player_actually_does: >-
+      玩家先执行被口袋强制的向左整体平移，随后走下、下、左三步到下臂下方，再向上整体平移一次并胜利。
+    visible_payoff: >-
+      同一 C 形先横移再纵移，最终上移同时覆盖剩余目标；整体形状得到双轴使用，但第一次位移主要承担放出玩家和对齐的单一前置责任。
+    ending_read: >-
+      最后一次上推立即胜利，没有高潮后劳动；问题在于此前流程几乎由口袋与单通路直接给出。
+    exact_basis:
+      - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_CHALLENGE_v1.txt
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v1.json#/initial
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v1.json#/steps/0
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v1.json#/steps/1
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v1.json#/steps/4
+    perceptible_defects:
+      - defect: 双轴位移在玩家侧退化为“唯一脱出口的一推、三步单通路、唯一收尾的一推”，没有形成真实的上限探索。
+        exact_basis: 初态玩家右、上、下均被墙或边界限制，只能向左推动；steps 2-4 均为沿下方通路 walk，step 5 是到达下臂后的直接上推胜利。
+        player_effect: 玩家无需主动选择换轴时机、构造操作面或复用第一次位移的产物，只需跟随题面逐步执行，因此得到的是双轴演示而非 challenge 关系。
+        same_work_improvement_direction: 若继续探索该角色，应在保持完整 C 形双轴消费的前提下重建操作空间，使玩家主动建立换轴条件，并让第一次位移的结果成为第二阶段可判断、可复用的资源；增加走位不能解决此问题。
+        blocking: true
+    verdict: reject_branch
+
+portfolio_comparison:
+  baseline_complete_direct_read: >-
+    成立。baseline 用两次连续整体横移直接兑现完整 C 形的凹口操作位、上下臂和竖脊，没有额外流程，也没有高潮后清理。
+  application_real_delta: >-
+    增量真实：相对 baseline，玩家必须先把完整 C 形上移一格，主动建立目标对齐条件；但该增量目前被随后七步纯走位严重稀释，因此 exact version 需修订。
+  combination_non_prerequisite_mechanism: >-
+    成立。固定 P/L 是区别于完整黏块刚体移动的另一机制，不是推动预制 C 形本身不可缺少的组成部分；它把主区域置于 pull 侧。
+  combination_consumption_relation: >-
+    成立。P/L 产生的 pull 关系被玩家身后的完整 C 形立即消费，两次向右移动都直接拉动整个形状并完成目标覆盖，不存在先解完后退休的独立子题。
+  challenge_real_ceiling_attempt: >-
+    不成立。虽然同一形状发生横、纵两轴位移，但开局推左由口袋强制，换位只有三步单通路，末次推上直接胜利；流程没有增加玩家判断、构造、复用或反直觉责任。
+  pairwise_player_experience_differences:
+    - baseline 与 application：前者直接从已对齐凹口横推，后者先主动整体上移建立对齐；差异真实，但 application 的换位包装阻塞。
+    - baseline 与 combination：两者都用两次横移完成同构回报，但 baseline 是从凹口推竖脊，combination 是在 P/L pull 侧向右走并把身后竖脊连同整个 C 形拉来，玩家与形状的施力关系实质不同。
+    - baseline 与 challenge：challenge 增加了横移后换轴上推，但当前新增关系是强制流程，不足以承担 challenge 档位。
+    - application 与 challenge：application 的新增责任是主动建立目标对齐；challenge 只呈现被口袋规定的双轴顺序，二者并非同一流程变体，但后者仍因档位不成立被否决。
+    - combination 与 application/challenge：combination 的关键关系是固定 P/L 让玩家拉动身后完整形状，其余版本均在 push 规则下从形状前方施力。
+  slot_or_redundancy_blockers:
+    - application exact version 存在七步无对象变化的路线税，不能以真实档位增量补偿包装缺陷。
+    - challenge exact version 只是强制双轴演示，不构成真实上限探索；challenge 档位应为空而不是保留该弱版本。
+
+overall_verdict: revise_and_rereview
+required_action: structural_revision

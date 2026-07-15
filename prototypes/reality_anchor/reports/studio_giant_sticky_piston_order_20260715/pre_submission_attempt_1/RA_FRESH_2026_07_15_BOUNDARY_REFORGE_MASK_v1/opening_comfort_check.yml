@@ -1,0 +1,113 @@
+schema_version: 1
+
+opening_comfort_check:
+  status: kept_with_unknown
+  candidate_id: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK
+  exact_version: v1_sha256_027825ee031100ce6600d163cf967201c0670ee356ffe98362e335b4ec573541
+  slot: challenge
+  authority_doc: prototypes/reality_anchor/docs/opening_comfort_check.md
+  coordinate_system: zero_based_xy
+  original_start: [7, 20]
+  runtime_object_state_scope: exact_initial_state
+  full_runtime_graph:
+    status: exhausted
+    max_states: 30000
+    reachable_states: 30001
+    initial_scc_size: unknown
+    initial_exit_source_distances: unknown
+    initial_win_exit_source_distances: unknown
+    nearest_irreversible_exit_distance: unknown
+    nearest_win_reaching_exit_distance: unknown
+    dead_exits_before_first_win_exit: unknown
+    reason: 完整 runtime 图未闭合，不能从预算前缀外推 SCC 或胜向出口指标。
+  same_object_pure_walk_observation:
+    status: complete
+    scope_warning: >-
+      这里只枚举 events==walk 且所有对象与边界保持初始配置的有向子图；它是开局观察空间证据，
+      不替代完整 runtime 图 initial SCC。
+    reachable_state_count: 166
+    reachable_player_position_count: 166
+    max_distance_from_start: 36
+    directed_walk_edge_count: 503
+    initial_pure_walk_scc_state_count: 165
+    initial_pure_walk_scc_player_position_count: 165
+    initial_pure_walk_scc_max_distance: 36
+    pure_walk_exit_edge_count: 1
+    pure_walk_exit_source_distances: [9]
+  immediate_inputs:
+    up:
+      legal: true
+      events: [walk]
+      reading: 起点可先向上进入同对象态观察空间。
+    down:
+      legal: false
+      reason: destination_blocked
+    left:
+      legal: false
+      reason: destination_occupied
+    right:
+      legal: true
+      events:
+        - pull_object:box_sticky_anchor
+        - anchor_boundary_shift:box_sticky
+        - sticky_to_box:n5
+      reading: canonical 核心开门动作在距离 0 即可执行，但不是唯一合法第一步。
+  first_object_commitments:
+    - event_group: B/S 右移并切出五齿
+      min_source_distance_in_pure_walk_graph: 0
+      source_count: 1
+      source_in_initial_pure_walk_scc_count: 1
+      action: right
+      irreversibility_status: unknown_without_complete_runtime_scc
+    - event_group: B/S 纵向拉动且不发生材料转换
+      min_source_distance_in_pure_walk_graph: 2
+      source_count: 2
+      source_in_initial_pure_walk_scc_count: 2
+      action: up
+      irreversibility_status: unknown_without_complete_runtime_scc
+    - event_group: P/L 左移
+      min_source_distance_in_pure_walk_graph: 10
+      source_count: 1
+      source_in_initial_pure_walk_scc_count: 0
+      action: left
+      irreversibility_status: unknown_without_complete_runtime_scc
+    - event_group: 未切分主体直接左推
+      min_source_distance_in_pure_walk_graph: 12
+      source_count: 15
+      source_in_initial_pure_walk_scc_count: 15
+      action: left
+      events:
+        - push_object:sticky#1
+        - force_chain:n2
+        - move_sticky_rigid
+        - sticky_to_box:n5
+      irreversibility_status: unknown_without_complete_runtime_scc
+  current_start_assessment:
+    forced_face_to_face: false
+    judgement: 边界贴近但非强迫贴脸
+    reason: >-
+      玩家开局紧邻 B/S，canonical 核心动作可在距离 0 触发；但 up 是纯 walk，且连入精确闭合的
+      165 状态同对象态 pure-walk initial SCC。玩家拥有充足观察、绕行和站位空间，因此当前起点
+      不是“没有任何可逆观察空间”的贴脸开局。
+    residual_risk: >-
+      right 的核心动作在视觉上仍是自然诱导；由于完整 SCC 与胜向出口未知，不能声称该距离 0
+      对象动作可逆、必胜或无早期死出口。
+  candidate_start_enumeration:
+    status: not_run_full_scc_unavailable
+    reason: authority 要求从完整图 initial SCC 枚举；当前完整图耗尽，不能把 165 格 pure-walk SCC 冒充完整候选集。
+  chosen_start:
+    position: [7, 20]
+    action: keep
+    reason: >-
+      当前起点没有确定的玩家侧 opening blocker；整批 review 对 exact v1 无 perceptible defect，
+      只读检查也未出现要求改版的证据。保留起点，完整 SCC 指标维持 unknown。
+  version_effect: unchanged
+  review_effect: preserved
+  rereview_required: false
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1/opening_runtime_evidence.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1/run_manifest.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/challenge/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/review/independent_level_review_attempt_1.yml

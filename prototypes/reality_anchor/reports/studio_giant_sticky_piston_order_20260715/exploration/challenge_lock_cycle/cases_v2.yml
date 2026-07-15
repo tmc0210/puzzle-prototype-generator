@@ -1,0 +1,99 @@
+runId: challenge_lock_cycle_e_phase_v2
+title: "封闭活塞头后的巨大三叉 E 锁循环"
+notes: "v2 封死目标外侧站位；验证真实回撤、试下锁留下相位债、修相同步终局、直达大结构旁路与缺触点退化。"
+defaults:
+  maxExploreDepth: 3
+  maxReturnDepth: 8
+  maxStates: 10000
+  maxTransitions: 40000
+cases:
+  - id: top_lock_forced_retract_v2
+    family: giant_e_lock_cycle_v2
+    variant: closed_head_retract
+    changed_variable: "目标外侧与上下侧均封墙"
+    contrast_with: lower_lock_retract_leaves_phase_v2
+    notes: "right 后 final action table 应只有 left；left 拉回箱子并撤销覆盖。"
+    layout: &layout_v2 |
+      ##############
+      #....PL......#
+      #....SB#.....#
+      #.MMMM###....#
+      #.MM..CG#....#
+      #.MM..###....#
+      #.MMM........#
+      #....@.......#
+      #.MM.........#
+      #.MM..###....#
+      #.MMMMCG#....#
+      #.....###....#
+      #............#
+      ##############
+    actions: [up, up, up, right, left]
+
+  - id: top_lock_covered_action_table_v2
+    family: giant_e_lock_cycle_v2
+    variant: covered_only_left_exit
+    changed_variable: "停在上箱刚覆盖目标的状态"
+    contrast_with: top_lock_forced_retract_v2
+    notes: "最终动作表应为 left 合法，其余三向分别被墙或目标箱封住。"
+    layout: *layout_v2
+    actions: [up, up, up, right]
+
+  - id: lower_lock_retract_leaves_phase_v2
+    family: giant_e_lock_cycle_v2
+    variant: phase_debt
+    changed_variable: "试下锁的入口动作先下推下半 E"
+    contrast_with: top_lock_forced_retract_v2
+    notes: "箱子被 left 拉回，但八格下半结构保持下移一格。"
+    layout: *layout_v2
+    actions: [down, down, down, right, left]
+
+  - id: sequential_two_locks_do_not_accumulate_v2
+    family: giant_e_lock_cycle_v2
+    variant: sequential_conflict
+    changed_variable: "先完整试上锁，再完整试下锁"
+    contrast_with: tested_both_repair_phase_sync_final_v2
+    notes: "两次覆盖均被各自 left 撤销；终态两目标都空，下半 E 留下相位债。"
+    layout: *layout_v2
+    actions: [up, up, up, right, left, down, down, down, down, down, down, right, left]
+
+  - id: tested_both_repair_phase_sync_final_v2
+    family: giant_e_lock_cycle_v2
+    variant: full_phase_repair
+    changed_variable: "先试两锁，再装配和整体上推校相"
+    contrast_with: direct_large_structure_bypass_v2
+    notes: "try-inputs 权威回放在第 53 步胜利；终拍 force_chain:n3、sticky_to_box:n2。"
+    layout: *layout_v2
+    actions: [up, up, up, right, left, down, down, down, down, down, down, right, left, up, up, up, left, left, left, left, up, up, up, up, up, right, right, right, down, down, left, left, left, down, down, down, down, down, down, down, down, right, right, right, up, left, left, left, up, up, up, up, right]
+
+  - id: direct_large_structure_bypass_v2
+    family: giant_e_lock_cycle_v2
+    variant: skip_lock_experience
+    changed_variable: "不试锁，直接合并巨大结构"
+    contrast_with: tested_both_repair_phase_sync_final_v2
+    notes: "explain-layout 返回 14 步：巨大 E 仍是终局主体，但试锁和相位债并非必经。"
+    layout: *layout_v2
+    actions: [left, left, left, left, up, up, up, up, up, right, down, left, down, right]
+
+  - id: missing_lower_remote_tip_v2
+    family: giant_e_lock_cycle_v2
+    variant: missing_lower_tip
+    changed_variable: "删除下臂最右远端触点 (5,10)"
+    contrast_with: direct_large_structure_bypass_v2
+    notes: "同一 14 步终拍只应覆盖上目标，证明两个远端触点各有责任。"
+    layout: |
+      ##############
+      #....PL......#
+      #....SB#.....#
+      #.MMMM###....#
+      #.MM..CG#....#
+      #.MM..###....#
+      #.MMM........#
+      #....@.......#
+      #.MM.........#
+      #.MM..###....#
+      #.MMM.CG#....#
+      #.....###....#
+      #............#
+      ##############
+    actions: [left, left, left, left, up, up, up, up, up, right, down, left, down, right]

@@ -1,0 +1,188 @@
+review_attempt_id: EVREV_RA_FORGED_C_SYNC_V5_R1
+reviewer_instance_id: FRESH_APPLICATION_EVIDENCE_REVIEWER_20260715_R1
+candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+exact_version: v5
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.md
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness/report.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/cases.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/cases.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/report.md
+    - prototypes/reality_anchor/mechanic.yml
+    - prototypes/reality_anchor/mechanism_lab/lexicon.md
+    - docs/21-level-design-studio-standard.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "state=81; depth=12; player=2,5"
+    - "state=93; depth=13; player=2,6"
+    - "state=103; depth=14; player=2,7"
+    - "state=112; depth=15; player=2,8"
+    - "state=118; depth=16; player=2,9"
+    - "state=122; depth=17; player=2,10"
+    - "state=124; depth=18; player=2,11"
+  equivalence_evidence_basis:
+    - >-
+      application_uniqueness/results.json 标注 candidateId=RA_FRESH_2026_07_15_FORGED_C_SYNC、
+      exactVersion=v5、layoutPath 指向 exact v5；图 status=complete，143 个 reachable states、
+      338 条 transitions、terminalizeWins=true，未触及 maxStates=200000。
+    - >-
+      同一 artifact 穷尽得到 7 个 raw win states；去除玩家坐标后 winningObjectStateClasses=1，
+      7 条 non-win -> win 入边的 beforeObjectKey、after objectKey、right 动作及
+      push_object:sticky#1 / force_chain:n3 / move_sticky_rigid / sticky_to_box:n4 事件完全一致，
+      finalTransitionClassesIncludingObjectStates=1。
+    - >-
+      七个胜态只把玩家放在同一完整 29 格刚体左缘的 y=5..11 七个接触格；对象职责、
+      两个目标的分配和三次 B/S 构造在终拍之前的因果先后不变，属于纯走位／等价接触位差异。
+    - >-
+      layout_analysis exact v5 完整图的 s0、s1、s2 各只有一个 win-reachable outgoing，
+      对应三次连续 right 的 B/S 构造；胜前 s3 的 7 个 outgoing 全部通向上述同一对象终态类。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 该结论是玩家逻辑类等价，不是 raw input 序列、玩家路径或 raw state 唯一。
+    - 七个 raw 胜态的差异仅按当前 exact v5 完整图与现有对象状态模型解释；不外推到其它版本。
+
+claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 全部合法，终态同时覆盖两个目标并胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        input_replay exact v5 的 id、layoutSource 与实际 v5 layout 一致；12 个输入全部 legal，
+        replay.completed=true、legalThroughStep=12。
+      - >-
+        第 12 步 after.isWin=true；终态在 (9,5) 与 (9,11) 渲染为两个 *，符合
+        mechanic.yml 的 all_targets_covered_by_objects 胜利条件。
+    limits: []
+
+  - claim_id: three_stage_construction
+    claim: >-
+      canonical 前三拍推动同一 B/S 锚点右移三列，依次产生 box_to_sticky:n2、n2、n4 与
+      sticky_merge:n1；第三拍后八只初始箱构件全部并入原 21 格厚脊，形成动作前单一 29 格 sticky#1。
+    status: supported
+    evidence_basis:
+      - >-
+        exact v5 layout 初态有 21 个 M 与 10 个 C；其中 (8,5)、(8,11) 两个 C 位于目标前，
+        其余 8 个 C 是待构造格。
+      - >-
+        canonical replay 第 1、2、3 步均为 right，均推动 box_sticky_anchor；B/S 的 B 坐标
+        由 x=5 依次变为 6、7、8，事件依次为 box_to_sticky:n2、n2、n4，且每步均有 sticky_merge:n1。
+      - >-
+        第 3 步 after key 只余 (8,5)、(8,11) 两个 C，并列出 29 个 M；后续第 4 至 11 步全为 walk，
+        终拍 before key 保持相同对象状态，终拍事件以 push_object:sticky#1 指认其为单一刚体。
+    limits:
+      - 箱子身份按 mechanic.yml 为 indistinguishable；“八只构件”指初态除两个目标前箱以外的八个占格及其转换计数。
+
+  - claim_id: premature_two_sweep_branch_cannot_win
+    claim: >-
+      完整主版本图中，每个前三阶段 SCC 都只有一个 win-reachable outgoing commitment，即继续 right 扫线；
+      两扫后沿左通道推动主体的 exact trace 不移动两只目标箱并进入 dead commitment branch。
+    status: supported
+    evidence_basis:
+      - >-
+        layout_analysis exact v5 图 status=complete，143 states / 338 legal transitions；SCC s0、s1、s2
+        均为 outgoingCount=2、winReachableOutgoingCount=1、deadOutgoingCount=1，solution handoff 均为 right，
+        事件分别对应三次 B/S 扫线。
+      - >-
+        two_sweeps_then_premature_attempt 与 exact v5 使用同一 layout；前两步到达 s2 的对象 key，
+        随后 4 次 left 与 3 次 down 都是可逆 walk，故推动前仍处于该 SCC。
+      - >-
+        该 trace 的终步 right 产生 push_object:sticky#1 / force_chain:n3 / move_sticky_rigid /
+        sticky_to_box:n2，而不是唯一 win-reachable 的第三次 B/S right；它改变对象 key并落入 s2 的另一条、
+        因而唯一的 dead outgoing。终态两个目标前箱仍在 (8,5)、(8,11)，(9,5)、(9,11) 未覆盖，
+        final.isWin=false。
+    limits:
+      - >-
+        identity case 自身的 returnToInitial 因 depth budget 为 unknown；dead 判定不依赖该 bounded return，
+        而依赖 exact v5 主图的 complete SCC 出边穷尽与 exact trace 的出边对应。
+
+  - claim_id: atomic_double_lock_final
+    claim: >-
+      canonical 终拍由动作前已连通的 29 格 sticky#1 产生 right、force_chain:n3、move_sticky_rigid、
+      sticky_to_box:n4，并把两只目标箱同时从 x=8 推到 x=9 的目标。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical 第 12 步 before key 有 29 个 M、仅有 (8,5)、(8,11) 两个 C；事件为
+        push_object:sticky#1、force_chain:n3、move_sticky_rigid、sticky_to_box:n4。
+      - >-
+        同一步 after key 新增 (9,5)、(9,11) 的目标覆盖箱并立即 after.isWin=true；移动阶段先于
+        box/sticky settle，结合受力闭包可确定两个动作前 x=8 的箱在同一输入中被推进 x=9。
+    limits:
+      - crate 在状态模型中不可区分；“两只目标箱”按动作前位于 (8,5)、(8,11) 的两个位置角色指称，不主张持久实例身份。
+
+  - claim_id: upper_tip_and_connection_are_necessary_for_same_stroke
+    claim: >-
+      删除上钩尖或仅删除上支撑末格时，相同 canonical input 都只完成下目标；后者还显示孤立上钩尖不随主体同拍移动。
+      不声明这些反事实超出 artifact scope 的全局性质。
+    status: supported
+    evidence_basis:
+      - >-
+        cf_missing_upper_tip 只删除 (7,5) 上钩尖；同一 12 步 trace 的终拍为 force_chain:n2 /
+        sticky_to_box:n3，终态仅 (9,11) 覆盖、(9,5) 未覆盖，final.isWin=false。
+      - >-
+        cf_disconnect_upper_tip 只删除 (7,6) 上支撑末格；第 3 步后 state key 将 (7,5) 记为与主体分离的
+        sticky 分量，终拍 push_object:sticky#1 后该格仍在 (7,5)，仅下箱到达 (9,11)，final.isWin=false。
+      - 两个反事实的相同 canonical input 均完整合法；其局部可达图各为 complete / 141 states / 0 wins。
+    limits:
+      - 只支持所列单格删除与相同 canonical stroke 的局部机械关系，不外推为任意布局、任意解路或全局必要性。
+
+  - claim_id: representative_target_geometry_retracts
+    claim: >-
+      在保持上目标、墙与 P/L 侧别并把玩家放到上箱 P 侧的 probe 中，right 推入后未胜；
+      玩家可进入闭合侧袋但不能由此离开，返回后 left 会 pull 同一目标箱并撤销覆盖。
+    status: supported
+    evidence_basis:
+      - >-
+        probe_upper_lock_alcove_retracts 的 exact trace 第 1 步 right 产生 push_object:crate#1，
+        箱由 (8,5) 到 (9,5) 覆盖上目标，玩家由 (7,5) 到 (8,5)，但下目标未覆盖，after.isWin=false。
+      - >-
+        第 2 步 down 把玩家带入 (8,6)；layout 中其右侧 (9,6) 与下侧 (8,7) 为墙、左侧 (7,6) 为箱，
+        按当前 L 侧 pull 规则该格没有侧向出口，trace 只能由第 3 步 up 返回 (8,5)。
+      - >-
+        返回后第 4 步 left 明确产生 pull_object:crate#1，把同一位置角色的箱由 (9,5) 拉回 (8,5)；
+        final key 与初始 key 相同，目标覆盖撤销，final.isWin=false。
+      - >-
+        lexicon.md 的“单箱目标活塞顺序锁”明确把“推入覆盖、L 侧 left 回撤撤销”限定为局部关系，
+        并禁止据此扩张为全局不可逆结论。
+    limits:
+      - >-
+        该 probe 的 reachable graph 在 50001 states 因 state budget exhausted；因此这里只支持给定四步 trace、
+        直接邻格封闭与该次回撤，不支持全局锁、全局唯一性或所有可达路径结论。
+
+  - claim_id: prebuilt_counterfactual_removes_construction_events
+    claim: >-
+      把 B/S 初始置于最终列并把八只构件预先设为 sticky 后，给定四步 trace 直接以同一 n3/n4 终拍胜利，
+      不再发生三次 B/S shift、box_to_sticky 或 merge 事件。
+    status: supported
+    evidence_basis:
+      - >-
+        cf_prebuilt_completed_shape 初态的 B/S object key、29 个 M 与两个目标前 C，和 exact v5 第 3 步后／终拍前
+        的对象 key 相同；玩家仅改放到左通道入口。
+      - >-
+        四步 trace 为 down、down、down、right；前三步只有 walk，终步事件与 canonical 完全相同：
+        push_object:sticky#1、force_chain:n3、move_sticky_rigid、sticky_to_box:n4，after.isWin=true。
+      - >-
+        该 case 全 trace 无 push_object:box_sticky_anchor、anchor_boundary_shift:box_sticky、box_to_sticky 或
+        sticky_merge；局部图 complete / 22 states / 7 wins。
+    limits:
+      - 只证明此预构造近邻反事实删除了给定 trace 中的构造事件，不产生审美或全局作品身份结论。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

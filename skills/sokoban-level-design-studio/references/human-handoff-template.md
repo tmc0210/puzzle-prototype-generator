@@ -1,20 +1,28 @@
-# 人类待玩作品集交接模板
+# 人类待玩交接模板
 
-只交付同时通过独立关卡审查、原型专属检查和独立准入审计的 exact versions。
+只交付完成强制送审、独立硬证据审查、fresh 玩家侧审查和原型专属提交前工作流，并已实际接入待玩列表的版本。
 
 ```yaml
 portfolio_id: ""
 entries:
   - slot: baseline | application | combination | challenge
     candidate_id: ""
-    exact_version: ""
+    reviewed_exact_version: ""
+    delivery_exact_version: ""
     player_experience: ""
     known_risks: []
     submission_packet_ref: ""
-    independent_review_ref: ""
-    pre_submission_check_refs: []
-    admission_audit_ref: ""
-    admission_state: eligible
+    evidence_review_ref: ""
+    independent_level_review_ref: ""
+    pre_submission_checks:
+      - workflow_id: ""
+        applicability: applicable | not_applicable
+        applicability_basis: ""
+        authority_docs: []
+        artifact_refs: []
+        status: completed | not_applicable
+    pre_submission_workflow_record_ref: ""
+    pre_submission_state: completed
     playtest_status: pending_playtest
 
 playable_delivery:
@@ -24,7 +32,6 @@ playable_delivery:
   playable_build_status: built | failed
   playable_ref: ""
 
-empty_slots: []
 archive_status: not_archived_waiting_for_playtest
 ```
 

@@ -1,0 +1,176 @@
+packet_id: POSITIVE_COMPACT_REVERSAL_BASE
+prototype: reality_anchor
+exact_version: RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v3_right_wall_trim
+
+prototype_rules:
+  symbols:
+    wall: "#"
+    floor: "."
+    player: "@"
+    player_on_goal: "+"
+    crate: "C"
+    sticky: "M"
+    goal: "G"
+    object_on_goal: "*"
+    push_pull_anchor: "P/L"
+    material_anchor: "B/S"
+  confirmed_rules:
+    - P/L 与 B/S 都是二格锚点；玩家所在侧决定锚点可 push 或 pull 的方向。
+    - B/S 定义箱与黏格的材料边界；黏格跨到 B 侧切回箱。
+    - 相邻黏格自动合并；对象与锚点可以形成 force chain。
+  win_condition: 所有目标由箱、黏格或锚点覆盖。
+
+solve_instance:
+  layout: |-
+    #########
+    #..G#...#
+    #...MM@P#
+    #.....#L#
+    ###BS####
+    #########
+  canonical_exact_inputs: [left, left, left, up, left, left, down, right, down, right, right, up]
+  canonical_cost: 12
+  final_win: true
+
+mechanically_derived_trace:
+  - step: 0
+    state: |-
+      #########
+      #..G#...#
+      #...MM@P#
+      #.....#L#
+      ###BS####
+      #########
+  - step: 1
+    input: left
+    events: ["push_object:sticky#1", move_sticky_rigid, "sticky_to_box:n1"]
+    state: |-
+      #########
+      #..G#...#
+      #..CM@.P#
+      #.....#L#
+      ###BS####
+      #########
+  - step: 2
+    input: left
+    events: ["push_object:sticky#1", "force_chain:n2", move_sticky_rigid, "sticky_to_box:n1"]
+    state: |-
+      #########
+      #..G#...#
+      #.CC@..P#
+      #.....#L#
+      ###BS####
+      #########
+  - step: 3
+    input: left
+    events: ["push_object:crate#2", "force_chain:n2"]
+    state: |-
+      #########
+      #..G#...#
+      #CC@...P#
+      #.....#L#
+      ###BS####
+      #########
+  - step: 4
+    input: up
+    events: [walk]
+    state: |-
+      #########
+      #..+#...#
+      #CC....P#
+      #.....#L#
+      ###BS####
+      #########
+  - step: 5
+    input: left
+    events: [walk]
+    state: |-
+      #########
+      #.@G#...#
+      #CC....P#
+      #.....#L#
+      ###BS####
+      #########
+  - step: 6
+    input: left
+    events: [walk]
+    state: |-
+      #########
+      #@.G#...#
+      #CC....P#
+      #.....#L#
+      ###BS####
+      #########
+  - step: 7
+    input: down
+    events: ["push_object:crate#1"]
+    state: |-
+      #########
+      #..G#...#
+      #@C....P#
+      #C....#L#
+      ###BS####
+      #########
+  - step: 8
+    input: right
+    events: ["push_object:crate#1"]
+    state: |-
+      #########
+      #..G#...#
+      #.@C...P#
+      #C....#L#
+      ###BS####
+      #########
+  - step: 9
+    input: down
+    events: [walk]
+    state: |-
+      #########
+      #..G#...#
+      #..C...P#
+      #C@...#L#
+      ###BS####
+      #########
+  - step: 10
+    input: right
+    events: ["pull_object:crate#2"]
+    state: |-
+      #########
+      #..G#...#
+      #..C...P#
+      #.C@..#L#
+      ###BS####
+      #########
+  - step: 11
+    input: right
+    events: ["pull_object:crate#2"]
+    state: |-
+      #########
+      #..G#...#
+      #..C...P#
+      #..C@.#L#
+      ###BS####
+      #########
+  - step: 12
+    input: up
+    events: ["pull_object:box_sticky_anchor", "force_chain:n3", "anchor_boundary_shift:box_sticky"]
+    win_after_step: true
+    state: |-
+      #########
+      #..*#...#
+      #..C@..P#
+      #..BS.#L#
+      ###..####
+      #########
+
+hard_evidence:
+  shortest_cost: 12
+  graph_status: complete
+  reachable_states: 1081
+  legal_transitions: 2597
+  winning_states: 1
+  canonical_events_include: [push_object, pull_object, move_sticky_rigid, sticky_to_box, force_chain, box_sticky_anchor_shift]
+  fixed_pl_scan: no_reachable_push_pull_anchor_shift
+  evidence_limits:
+    - 机械回放与完整图不直接证明玩家会自然发现、感到反直觉或认为它是亮点。
+    - 本包不提供人评、旧 critic 或作者之外的玩家过程记录。

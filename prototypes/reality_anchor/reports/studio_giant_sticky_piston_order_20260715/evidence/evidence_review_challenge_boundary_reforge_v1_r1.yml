@@ -1,0 +1,243 @@
+review_attempt_id: "EVREV_RA_BOUNDARY_REFORGE_MASK_V1_R1"
+reviewer_instance_id: "fresh_evidence_reviewer_boundary_reforge_v1_r1_20260715"
+candidate_id: "RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK"
+exact_version: "v1"
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/challenge/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.md
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1_NO_RESTICK_FIRE_EXACT.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1_NO_RESTICK_FIRE_EXACT.md
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_uniqueness/search_summary_v1.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/exploration/mobile_pl_reforge/attack_v4_targeted.ts
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/exploration/mobile_pl_reforge/attack_v4_responsibility_audit.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/cases.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/cases.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/report.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/phase_audit_results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/challenge_boundary_reforge_identity/bounded_no_restick_search.json
+    - prototypes/reality_anchor/mechanic.yml
+    - prototypes/reality_anchor/mechanism_lab/lexicon.md
+    - docs/21-level-design-studio-standard.md
+  graph_completeness: budget_limited
+
+solution_uniqueness_review:
+  declared_result: unique_within_budget
+  search_scope: budget_limited
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "canonical exact replay：130 inputs，责任序列 OPPPTTBBRF。"
+    - "responsibility audit / canonical_roles：119 inputs，责任序列 OPPPTTBBRF。"
+    - "responsibility audit / interleaved_tip_reorder：191 inputs，责任序列 OPPPTBTBRF。"
+    - "responsibility audit / top_bottom_bottom_top_order：183 inputs，责任序列 OPPPTBBTRF。"
+    - "responsibility audit / bottom_top_top_bottom_order：121 inputs，责任序列 OPPPBTTBRF。"
+    - "responsibility audit / bottom_top_bottom_top_order：185 inputs，责任序列 OPPPBTBTRF。"
+    - "responsibility audit / bottom_before_top：113 inputs，责任序列 OPPPBBTTRF。"
+  equivalence_evidence_basis:
+    - >-
+      attack_v4_targeted.ts 的 walkReach 对每条走位边逐步调用 Reality Anchor runtime，
+      只接受 legal 且 events 全为 walk；责任 DP 在 O1/P3/T2/B2/R1/F1 限额内按对象态、
+      玩家纯走位可达分量和已用计数去重。
+    - >-
+      attack_v4_responsibility_audit.json 记录该受限 DP 完整闭合为 94 states / 113 transitions，
+      只产生六个 winning role sequences，全部为 OPPP 开头、RF 结尾，并保持 T 内部两拍与
+      B 内部两拍各自顺序。
+    - >-
+      六个 audit 胜路都实际回放为胜，全部保持相同 O/P/T/B/R/F 对象职责、三目标分配、
+      关键事件与最终对象布局；差异只是上端 T 与下端 B 两项独立必要任务的六种交错。
+    - >-
+      130-input canonical replay 与 119-input canonical_roles 的对象事件链和最终对象布局相同；
+      差异在纯走位、发射接触行和胜态玩家位置，属于工作室标准允许的纯走位差异。
+    - >-
+      search_summary_v1.json 记录 raw graph 前缀、对象宏图与定向攻击均未发现已知非等价胜解；
+      已知多条胜路均落入同一 OPEN -> SHIFT_PL -> REORDER_BOTH -> RESTICK -> FIRE 逻辑类。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - >-
+      这里只支持 unique_within_budget，不支持 unique_complete：raw graph 在 maxStates=30000
+      处耗尽，只有 30001 reachable states / 73982 transitions / 0 prefix wins，且没有抵达规范胜路。
+    - >-
+      walk-component 宏图只在对象深度 <=6 完整闭合为 560 states / 1259 transitions / 0 wins；
+      depth<=10 搜索在 maxStates=2000 处耗尽为 2000 states / 4703 transitions / 0 wins，
+      不能解释为深度10完整或完整图。
+    - >-
+      94-state responsibility audit 的完整性严格限于 O1/P3/T2/B2/R1/F1 责任字母表；
+      不覆盖字母表外动作、额外复位、过长循环或任意超长对象动作族。
+    - >-
+      27 个定向 attack 只排除实际列出的少换相、过拉、纵移、B/S 下移、逐锁、早发射、
+      漏复黏及复位尝试，不构成未列动作族的穷举。
+
+claims:
+  - claim_id: solvable_exact_trace
+    claim: "130 个 canonical inputs 全部合法；最后一拍同时覆盖三个目标并胜利。"
+    status: supported
+    evidence_basis:
+      - >-
+        input_replay_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.json 的 id、prototype、
+        layoutSource 和 winCondition 均指向 exact v1；inputs=130、executedSteps=130、
+        legalThroughStep=130、completed=true。
+      - >-
+        审查包 canonical_inputs 与 replay.inputs 逐项一致；step 130 前 isWin=false 且无目标覆盖，
+        step 130 后 (4,4)/(4,9)/(4,14) 三目标同拍显示覆盖并 final.isWin=true。
+    limits:
+      - "该证据证明一条 exact 胜路，不证明最短解或完整唯一性。"
+
+  - claim_id: initial_complete_symmetric_giant
+    claim: >-
+      exact v1 初态只有一个 107 格 sticky 连通组；其占格关于 y=9 水平轴对称，三个目标锁沿左缘分布。
+    status: supported
+    evidence_basis:
+      - >-
+        对 exact layout 逐格核验得到 107 个 M；四邻接连通分量只有一个，大小为 107；
+        每个 (x,y) 均存在 (x,18-y)，故关于 y=9 完全对称。
+      - >-
+        三个目标坐标为 (4,4)/(4,9)/(4,14)，同列沿巨型结构左缘分布；初态各目标右邻
+        (5,4)/(5,9)/(5,14) 均为 crate。
+      - >-
+        canonical replay initial.key 同样记录 3 crates + 107 sticky cells，并与 exact layout 一致。
+    limits:
+      - >-
+        “目标锁”在本 claim 中只按三处 G-C 邻接结构理解；该初态事实本身不证明三处目标各自的
+        全局顺序必要性，局部 P/L 回撤关系由单独 probe 支持。
+
+  - claim_id: cut_shift_reorder_restick_chain
+    claim: >-
+      canonical 的十次对象操作依次为：B/S 右移并 sticky_to_box:n5；P/L 左移三格；
+      上端 cut crate 下推两格与下端 cut crate 上推两格；B/S 左移并 box_to_sticky:n5、sticky_merge:n1；
+      完整 sticky#1 向左发射。其余输入均为 walk。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical replay 恰有十个非 walk steps：1(O)，13-15(P×3)，59-60(T×2)，99-100(B×2)，
+        107(R)，130(F)；另外 120 个 steps 的唯一事件均为 walk。
+      - >-
+        step 1 为 pull_object:box_sticky_anchor + anchor_boundary_shift:box_sticky + sticky_to_box:n5；
+        steps 13-15 均为 pull_object:push_pull_anchor + anchor_boundary_shift:push_pull。
+      - >-
+        steps 59-60 为 down + push_object:crate#1；steps 99-100 为 up + push_object:crate#8；
+        step 107 为 B/S left + box_to_sticky:n5 + sticky_merge:n1；step 130 为 sticky#1 left fire。
+    limits:
+      - >-
+        “依次”只描述这条 canonical trace；责任审计已知 T/B 两项可作六种等价交错，
+        因而不能把 canonical 的 TTBB 写成唯一强制次序。
+
+  - claim_id: third_pl_shift_changes_tip_action
+    claim: >-
+      在相同 exact v1 切分后状态和相同上端操作位，P/L 未移或只移两格时 down 非法；
+      P/L 第三次左移到 L5|P6 后，同一 down 合法并 push_object:crate#1。
+    status: supported
+    evidence_basis:
+      - >-
+        results.json 的 tip_push_with_pl_unmoved、tip_push_with_pl_short_two、
+        tip_push_with_pl_final_three 三个 probe 除 P/L 横向位置外具有相同完整对象态与玩家站位 (6,1)。
+      - >-
+        L8/P9 与 L6/P7 两案的 down 均 illegal，reason=destination_occupied，events=[]；
+        L5/P6 案的 down legal，events=[push_object:crate#1]。
+      - >-
+        final-three probe 的 initial.key 与 canonical step 59 before.key 完全一致，
+        因而正案不是脱离 exact trace 的合成状态。
+    limits:
+      - >-
+        未移与短移两案是只改 P/L 停位的受控 full-board counterfactual；结论限于同一操作位的
+        动作合法性差异，不单独证明完整关卡所有可能路线。
+
+  - claim_id: representative_target_is_true_pl_order_lock
+    claim: >-
+      保持 exact v1 同阶段墙、目标、箱与最终 P/L，仅把玩家放到上锁 P 侧的 probe 中，left 把 x5 箱推到 x4 目标；
+      玩家落到 L 侧后 right 必须 pull_object 同一位置角色的箱并撤销覆盖。
+    status: supported
+    evidence_basis:
+      - >-
+        representative_lock_push_cover_then_l_pull_retract 的初态除玩家位置外与 canonical step 15 after
+        对象 key 完全一致；P/L 为 L5/P6，玩家被放到 (6,4)。
+      - >-
+        left legal 并产生 push_object:crate#2，箱由 (5,4) 到 (4,4) 覆盖目标，玩家由 (6,4) 到 (5,4)；
+        紧接 right legal 并产生 pull_object:crate#2，将同一 probe instance 拉回 (5,4)。
+      - "两步后完整 key 逐格回到 probe 初态，目标覆盖被撤销。"
+    limits:
+      - >-
+        probe 明确重放玩家到局部操作位，只证明该代表目标的条件式 P/L 推入—拉回机械关系；
+        不证明玩家在完整流程中可单独进入该口袋，也不证明 right 是推入后唯一全局续路或该目标必须最后完成。
+
+  - claim_id: no_restick_fire_only_central_and_is_bounded_dead
+    claim: >-
+      exact v1 省略 B/S 左拉复黏、其余按同职责执行并发射时，113 输入全部合法但只覆盖中央目标；
+      从该 actual wrong state 出发的对象动作深度 <=8 宏图完整闭合为 388 states / 1270 transitions / 0 wins。
+    status: supported
+    evidence_basis:
+      - >-
+        NO_RESTICK_FIRE_EXACT replay 仍从 exact v1 layoutSource 出发，113 inputs 全部合法，
+        completed=true、legalThroughStep=113；九个对象操作为 OPPP-TTBB-F，恰省略 R。
+      - >-
+        终拍事件为 push_object:sticky#1 + force_chain:n5 + move_sticky_rigid + sticky_to_box:n7；
+        final.isWin=false，只有中央目标 (4,9) 被覆盖。
+      - >-
+        wrong_no_restick_actual_final_state 的 initial.key 与 initial.render 均逐格等于 113-step replay final；
+        phase_audit_results.json 也记录 finalRenderMatchesWrongStateFile=true。
+      - >-
+        bounded_no_restick_search.json 将该 exact wrong state 标为 complete_to_depth，
+        maxObjectDepth=8、macroStates=388、macroTransitions=1270、rawWins=0。
+    limits:
+      - >-
+        “dead”只能按对象动作深度 <=8 的有界无胜理解；该 artifact 明确不支持全局不可解，
+        也不排除深度 >8 的修复路线。
+
+  - claim_id: isolation_corridor_blocks_anchor_escape
+    claim: >-
+      canonical step15 后的 runtime walk-only 可达集中不含 P 右侧 x7,y22；不存在第四次 P/L 左移或 P/L 纵移；
+      从可达站位尝试 B/S down 明确为 force_blocked。
+    status: supported
+    evidence_basis:
+      - >-
+        attack audit 的 prefixExactInputs 与 canonical 前 15 inputs 完全一致；finalPl=L5/P6，
+        reachableRightOfFinalPl=false，fourthLeftShiftExists=false。
+      - >-
+        phase_audit_results.json 从 canonical step 15 exact state 逐步调用 runtime 计算 walk-only 可达集，
+        得 163 格且 (7,22) 不可达；从任一该可达站位均无第四次左移或 P/L 纵移。
+      - >-
+        P/L 上下四邻 (5,21)/(6,21)/(5,23)/(6,23) 均为墙；B/S 下方 (6,21)/(7,21) 也均为墙。
+      - >-
+        从可达站位 (7,19) 的 exact down probe 与 attack audit 均返回 legal=false、reason=force_blocked、events=[]。
+    limits:
+      - >-
+        walk-only 结论固定 canonical step 15 的对象态，不覆盖先执行其它对象动作后的可达性；
+        本 claim 只在其声明阶段内受支持。
+
+  - claim_id: atomic_three_lock_final
+    claim: >-
+      canonical 终拍前五个切出格已全部复黏到同一 107 格 sticky#1；终拍 left 产生 force_chain:n4、
+      move_sticky_rigid、sticky_to_box:n5，并在同一步把 x5,y4/y9/y14 三箱推到 x4 三目标。
+    status: supported
+    evidence_basis:
+      - >-
+        step 107 前为 8 crates + 102 sticky cells；事件 box_to_sticky:n5 + sticky_merge:n1 后为
+        3 crates + 107 sticky cells。对 step 107 after / step 130 before 的 M 占格作四邻接核验，
+        均只有一个大小 107 的连通分量。
+      - >-
+        step 130 的对象事件精确为 push_object:sticky#1、force_chain:n4、move_sticky_rigid、sticky_to_box:n5；
+        before 无目标覆盖且 isWin=false，after 三个 (4,4)/(4,9)/(4,14) 同时覆盖且 isWin=true。
+      - >-
+        mechanic.yml 规定合法移动后先执行 box/sticky normalize 与 sticky merge，再按全部目标覆盖判胜，
+        与该终拍的 settle 后胜态一致。
+    limits:
+      - >-
+        crate 在规则合同中是 indistinguishable；证据支持三处 x5 位置角色经同一 force chain 形成
+        x4 目标覆盖，不赋予跨 normalize 的稳定 crate 实例身份。
+      - "该 trace 证明 canonical 终拍的原子三目标覆盖，不证明所有可能胜路都必须在同一 event path 上如此终结。"
+
+hard_failures: []
+evidence_gaps:
+  - "没有 complete raw graph；30000-state raw search 是耗尽前缀，不能升级为完整图。"
+  - "depth<=10 宏搜索在 2000 states 处耗尽；只有 depth<=6 宏图完整。"
+  - "责任 DP 在 O1/P3/T2/B2/R1/F1 外没有完备性，故不存在 unique_complete 证据。"
+  - "代表锁 probe 是玩家重放的局部反事实，不提供完整流程中的单独口袋可达或全局 forced-last 证明。"
+  - "漏复黏错误态只完成对象深度 <=8 的局部完整闭合，没有全局不可解证明。"
+overall_hard_status: supported
+required_action: none

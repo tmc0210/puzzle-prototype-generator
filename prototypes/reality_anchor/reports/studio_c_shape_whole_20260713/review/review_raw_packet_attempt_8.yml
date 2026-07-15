@@ -1,0 +1,53 @@
+review_attempt_id: RA_CWHOLE_REVIEW_8
+prototype_id: reality_anchor
+review_scope: baseline_gate
+
+prototype_rules:
+  confirmed_rules:
+    - 玩家每次输入一个正交方向；空格可行走。
+    - 无 P/L 时全图为 push；有 P/L 时，以输入前玩家位置相对 P/L 边界选择 push 或 pull。
+    - push 移动玩家前方对象；pull 要求玩家前格为空，并移动玩家及其身后对象；力可以向其它可动物传播。
+    - P/L 与 B/S 都是可移动两格锚点；移动后边界随锚点改变。
+    - 无 B/S 时全图为 box；有 B/S 时，每个合法动作后按新边界将箱与黏块全局归一化。
+    - sticky 正交相邻格合并为单一刚体；任何目标格受阻都会使整块移动失败。
+  win_condition: settle 后所有目标格都被箱、黏块格或锚点格覆盖；玩家不计入覆盖。
+  object_and_event_semantics:
+    - C 为普通箱，M 为黏块格；m 为目标上的黏块，G 为空目标。
+    - P/L 分别标记 push 侧与 pull 侧；B/S 分别标记 box 侧与 sticky 侧。
+    - force_chain 表示一次对象移动同时推动了另一个可动物；anchor_boundary_shift 表示对应锚点实际改变位置。
+    - 目标 overlay 在对象覆盖时仍存在；render 中对象字形可覆盖 G。
+  player_prior:
+    - 已知普通推箱、目标覆盖、固定与可移动 P/L。
+    - 已知 B/S 归一化、箱转黏、sticky merge、黏块刚体移动。
+    - 已知锚点本身可以被推拉。
+
+portfolio:
+  - slot: baseline
+    candidate_id: CWHOLE_BASELINE
+    exact_version: CWHOLE_BASELINE_v6_sha256_9059c8758e9ac3d02469319b7ff9e740f146ef0d4e92cc2a5ef97852c5b39d3a
+    solve_instance:
+      layout: |-
+        ########
+        #BS....#
+        ##MMM..#
+        ###@m..#
+        ##MMM.G#
+        ####G.G#
+        ########
+      player_start: [3, 3]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [right, right, left, left, up, up, right, down]
+      mechanically_derived_trace:
+        - {step: 1, input: right, before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/0/before, event: "push_object:sticky#1; move_sticky_rigid", after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/0/after, visible_board_change: 玩家从凹口内推动七格连通黏块整体右移一格；玩家仍位于上下臂之间，未胜利。}
+        - {step: 2, input: right, before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/1/before, event: "push_object:sticky#1; move_sticky_rigid", after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/1/after, visible_board_change: 同一七格黏块再次整体右移；其左侧凹口与上通道之间出现空地，未胜利。}
+        - {step: 3, input: left, before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/2/before, event: walk, after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/2/after, visible_board_change: 玩家向左走入凹口开口，对象不变。}
+        - {step: 4, input: left, before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/3/before, event: walk, after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/3/after, visible_board_change: 玩家继续向左离开完整 C 的凹口，对象不变。}
+        - {step: 5, input: up, before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/4/before, event: walk, after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/4/after, visible_board_change: 玩家进入完整 C 左上外侧，对象不变。}
+        - {step: 6, input: up, before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/5/before, event: walk, after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/5/after, visible_board_change: 玩家到达上通道，对象不变。}
+        - {step: 7, input: right, before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/6/before, event: walk, after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/6/after, visible_board_change: 玩家站到完整 C 上臂上方，对象不变。}
+        - {step: 8, input: down, before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/7/before, event: "push_object:sticky#1; move_sticky_rigid", after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json#/steps/7/after, visible_board_change: 完整七格黏块整体向下移动一格，四个稀疏目标全部被覆盖，胜利。}
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_BASELINE_v6.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v6.json

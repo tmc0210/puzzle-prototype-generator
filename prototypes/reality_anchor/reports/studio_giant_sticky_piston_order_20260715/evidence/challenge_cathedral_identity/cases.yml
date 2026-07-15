@@ -1,0 +1,228 @@
+runId: challenge_cathedral_e_dock_sync_v4
+title: RA_FRESH_2026_07_15_CATHEDRAL_E_DOCK_SYNC_v4 坞接选择与双锁终局反事实
+notes: >-
+  基准 case 与 challenge exact v4 layout 逐字相同。它核验同一根 9 格共享 L 龙骨的两个真实坞接：
+  上坞连接 86 格主 E 后形成可拉动的 95 格完整结构；下坞同样连接主 E，却额外吞入笼中制动齿，
+  形成 96 格完整结构并在同一 L 拉动上整体 force_blocked。反事实只用于机械身份，不用于证明难度或审美。
+defaults:
+  maxExploreDepth: 24
+  maxReturnDepth: 28
+  maxStates: 50000
+  maxTransitions: 200000
+cases:
+  - id: base_upper_dock_then_atomic_double_lock_win
+    family: cathedral_e_shared_handle_dock
+    variant: exact_v4
+    changed_variable: base
+    contrast_with: lower_dock_complete_but_braked
+    notes: 上坞把 9 格共享 L 龙骨并入 86 格主 E；随后同一龙骨左拉，让上下远端触点同拍完成两个目标锁。
+    layout: |
+      #####################
+      #...................#
+      #...##############..#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##.......MMMMM#.#
+      #...........MMMMMM#.#
+      #.............MMMM#.#
+      #..........MMMMMMM#.#
+      #............MMMMM#.#
+      #..............MMM#.#
+      #....#MMMMMMMMM.MM#.#
+      #...@..........MMM#.#
+      #.....#M#....MMMMM#.#
+      #......#...MMMMMMM#.#
+      #.............MMMM#.#
+      #...........MMMMMM#.#
+      #...##.......MMMMM#.#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##############..#
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [right, right, up, down, left, left, up, up, right, left]
+
+  - id: lower_dock_complete_but_braked
+    family: cathedral_e_shared_handle_dock
+    variant: wrong_lower_dock
+    changed_variable: 把同一共享龙骨向下坞接
+    contrast_with: base_upper_dock_then_atomic_double_lock_win
+    notes: 第八拍发生真实 sticky_merge；最终得到含主 E、龙骨和制动齿的单一 96 格结构，第十六拍 left 整体 force_blocked。
+    layout: |
+      #####################
+      #...................#
+      #...##############..#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##.......MMMMM#.#
+      #...........MMMMMM#.#
+      #.............MMMM#.#
+      #..........MMMMMMM#.#
+      #............MMMMM#.#
+      #..............MMM#.#
+      #....#MMMMMMMMM.MM#.#
+      #...@..........MMM#.#
+      #.....#M#....MMMMM#.#
+      #......#...MMMMMMM#.#
+      #.............MMMM#.#
+      #...........MMMMMM#.#
+      #...##.......MMMMM#.#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##############..#
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [up, up, up, right, right, right, down, down, up, left, left, left, down, down, right, left]
+
+  - id: lower_dock_postmerge_graph
+    family: cathedral_e_shared_handle_dock
+    variant: wrong_lower_dock_postmerge
+    changed_variable: 从错误下坞完成后的实际状态开始
+    contrast_with: base_upper_dock_then_atomic_double_lock_win
+    notes: 该状态已是单一 96 格黏块；完整可达图应无胜态。给定路线走到共享 L 把手后，最终 left 由制动齿与笼壁使整个刚体阻断。
+    layout: |
+      #####################
+      #...................#
+      #...##############..#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##.......MMMMM#.#
+      #...........MMMMMM#.#
+      #.............MMMM#.#
+      #..........MMMMMMM#.#
+      #............MMMMM#.#
+      #..............MMM#.#
+      #....#.@........MM#.#
+      #.....MMMMMMMMMMMM#.#
+      #.....#M#....MMMMM#.#
+      #......#...MMMMMMM#.#
+      #.............MMMM#.#
+      #...........MMMMMM#.#
+      #...##.......MMMMM#.#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##############..#
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [up, left, left, left, down, down, right, left]
+
+  - id: cf_remove_brake_lower_dock_wins
+    family: cathedral_e_shared_handle_dock
+    variant: remove_brake_tooth
+    changed_variable: 删除 x7,y12 的独立制动齿，保留两个坞接和其余墙体
+    contrast_with: lower_dock_complete_but_braked
+    notes: 相同错误下坞路线现在应能左拉并双目标胜，证明下分支失败来自过连接的制动齿，而非龙骨未与主 E 合体。
+    layout: |
+      #####################
+      #...................#
+      #...##############..#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##.......MMMMM#.#
+      #...........MMMMMM#.#
+      #.............MMMM#.#
+      #..........MMMMMMM#.#
+      #............MMMMM#.#
+      #..............MMM#.#
+      #....#MMMMMMMMM.MM#.#
+      #...@..........MMM#.#
+      #.....#.#....MMMMM#.#
+      #......#...MMMMMMM#.#
+      #.............MMMM#.#
+      #...........MMMMMM#.#
+      #...##.......MMMMM#.#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##############..#
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [up, up, up, right, right, right, down, down, up, left, left, left, down, down, right, left]
+
+  - id: cf_missing_upper_contact
+    family: cathedral_e_shared_handle_dock
+    variant: missing_upper_tip
+    changed_variable: 删除上臂最左触点 x6,y3
+    contrast_with: base_upper_dock_then_atomic_double_lock_win
+    notes: 相同正确路线只应完成下目标；大结构仍会移动，但缺失的远端触点失去对应目标责任。
+    layout: |
+      #####################
+      #...................#
+      #...##############..#
+      #..#GC.MMMMMMMMMMM#.#
+      #...##.......MMMMM#.#
+      #...........MMMMMM#.#
+      #.............MMMM#.#
+      #..........MMMMMMM#.#
+      #............MMMMM#.#
+      #..............MMM#.#
+      #....#MMMMMMMMM.MM#.#
+      #...@..........MMM#.#
+      #.....#M#....MMMMM#.#
+      #......#...MMMMMMM#.#
+      #.............MMMM#.#
+      #...........MMMMMM#.#
+      #...##.......MMMMM#.#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##############..#
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [right, right, up, down, left, left, up, up, right, left]
+
+  - id: cf_prebuilt_upper_dock
+    family: cathedral_e_shared_handle_dock
+    variant: prebuilt_correct_closure
+    changed_variable: 共享龙骨初始已在上坞位并与主 E 连通
+    contrast_with: base_upper_dock_then_atomic_double_lock_win
+    notes: 同一 95 格完成形可直接从共享 L 把手左拉双锁；上下坞选择与玩家对连接闭合的责任全部消失。
+    layout: |
+      #####################
+      #...................#
+      #...##############..#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##.......MMMMM#.#
+      #...........MMMMMM#.#
+      #.............MMMM#.#
+      #..........MMMMMMM#.#
+      #............MMMMM#.#
+      #....@MMMMMMMMMMMM#.#
+      #....#..........MM#.#
+      #..............MMM#.#
+      #.....#M#....MMMMM#.#
+      #......#...MMMMMMM#.#
+      #.............MMMM#.#
+      #...........MMMMMM#.#
+      #...##.......MMMMM#.#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##############..#
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [left]
+
+  - id: probe_upper_lock_alcove_retracts
+    family: cathedral_e_shared_handle_dock
+    variant: representative_lock_entry
+    changed_variable: 删除上触点并把玩家放到上目标箱 P 侧
+    contrast_with: base_upper_dock_then_atomic_double_lock_win
+    notes: left 将上箱推入目标但因下目标未覆盖而不胜；right 随即从 L 侧拉回同一箱并撤销覆盖。
+    layout: |
+      #####################
+      #...................#
+      #...##############..#
+      #..#GC@MMMMMMMMMMM#.#
+      #...##.......MMMMM#.#
+      #...........MMMMMM#.#
+      #.............MMMM#.#
+      #..........MMMMMMM#.#
+      #............MMMMM#.#
+      #..............MMM#.#
+      #....#MMMMMMMMM.MM#.#
+      #..............MMM#.#
+      #.....#M#....MMMMM#.#
+      #......#...MMMMMMM#.#
+      #.............MMMM#.#
+      #...........MMMMMM#.#
+      #...##.......MMMMM#.#
+      #..#GCMMMMMMMMMMMM#.#
+      #...##############..#
+      #####LP##############
+      #####BS##############
+      #####################
+    actions: [left, right]

@@ -1,0 +1,44 @@
+exploration_id: RA_EXP_2026_07_15_GIANT_STICKY_PISTON_ORDER
+prototype_id: reality_anchor
+experience_seed: >-
+  黏块构成具有一定对称性、辨识度和视觉冲击的大型完整多格结构；玩家利用结构上的多个触点，
+  在一次或一组整体刚体动作中同时推动几个位于 P/L 目标边界附近的活塞，并利用多个活塞顺序锁
+  不能同时完成所产生的矛盾，迫使玩家规划这些活塞的进入顺序。巨大结构的构造、切割和具体形状均开放。
+player_prior:
+  - 玩家位于游戏后期，已充分掌握普通类推箱、推拉两种受力语义与基本腾挪。
+  - 玩家已充分掌握小黏块组的可达性、可动性、拼接、切分与刚体移动。
+  - 玩家已掌握 B/S 锚点推拉、P/L 锚点相关语义、锚点自身也可被推拉，以及多对象力链。
+  - 人类玩家可快速识别巨大结构、触点对齐、精确走位和明显几何意图；这些不作为难度来源。
+allowed_mechanisms:
+  - push_force
+  - pull_force
+  - movable_push_pull_anchor
+  - sticky_rigid_body
+  - box_to_sticky_binding
+  - sticky_to_box_cutting
+  - movable_box_sticky_anchor
+  - dual_anchor
+allowed_tools:
+  - npx tsx src/cli.ts tool-maturity prototypes/reality_anchor
+  - npx tsx src/cli.ts explain-layout prototypes/reality_anchor <layout-file|-> --id <id> --targets K_runtime_smoke --max-states 300000 --graph-max-states 300000 --write
+  - npx tsx src/cli.ts try-inputs prototypes/reality_anchor <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+  - npx tsx src/cli.ts mechanism-lab-run prototypes/reality_anchor <cases.yml> --run-id <run_id> --write
+  - 可在本任务 exploration/runs 下手写临时只读探针脚本
+source_boundary:
+  allowed:
+    - prototypes/reality_anchor/mechanic.yml
+    - prototypes/reality_anchor/docs/design_handoff.yml 及其中 required docs
+    - prototypes/reality_anchor/mechanism_lab/lexicon.md
+    - docs/31-mechanism-lab-explorer-curator.md
+    - Reality Anchor runtime、solver 与 CLI 的实现源码，仅用于理解/调用工具
+    - 本任务 exploration 目录内新建的局面、脚本与证据
+  forbidden:
+    - prototypes/reality_anchor/mechanism_lab/runs/
+    - prototypes/reality_anchor/design_archive/
+    - prototypes/reality_anchor/levels.yml
+    - prototypes/reality_anchor/studio/levels.yml
+    - prototypes/reality_anchor/reports/ 下其它旧候选、旧评审与旧设计任务
+    - 任何历史候选的布局、对象职责、解法路线或因果链
+lineage_policy: fresh_required
+workspace: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/exploration
+

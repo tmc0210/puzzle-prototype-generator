@@ -1,0 +1,92 @@
+runId: ra_exp_giant_sticky_batch_04_pull_remote_sync
+title: "中央拉把手驱动远端双触点同步落锁"
+notes: >-
+  拉动方向。玩家位于 P|L 边界的 L 侧，向左离开中央把手；身后 x=6 的黏体被拉动，
+  同一巨大黏体的上下两个左缘触点则从右向左推动目标箱。玩家的局部动作与远端箱子的受力方向相同，
+  但接触责任相反：玩家在后缘拉，箱子在前缘被推。近邻反例分别删除中央把手、删除下触点，
+  以及堵死下箱目的格，区分把手接触、分支责任与原子失败。
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 18
+  maxStates: 40000
+  maxTransitions: 160000
+cases:
+  - id: "central_pull_two_remote_pistons_final"
+    family: "pull_handle_remote_multi_touch"
+    variant: "center_handle_two_left_fingertips"
+    changed_variable: "完整中央把手与上下两个远端左缘触点"
+    contrast_with: "cf_missing_center_handle_is_walk,cf_missing_lower_fingertip,cf_blocked_lower_goal_atomic"
+    notes: "一次 left 应拉动巨大黏体，同时把上下两箱向左推入目标；终态双目标覆盖并胜利。"
+    layout: |
+      ############
+      #....LP....#
+      #....BS....#
+      #..........#
+      #...GCMMM..#
+      #......MM..#
+      #....@MMM..#
+      #......MM..#
+      #...GCMMM..#
+      #..........#
+      ############
+    actions: ["left"]
+
+  - id: "cf_missing_center_handle_is_walk"
+    family: "pull_handle_remote_multi_touch"
+    variant: "rear_contact_removed"
+    changed_variable: "只删除玩家身后 `(6,6)` 的中央把手格，右侧纵脊仍连接上下触点"
+    contrast_with: "central_pull_two_remote_pistons_final"
+    notes: "left 应只让玩家走到 x=4；没有身后接触就不触发 pull_object，两个远端箱都不动。"
+    layout: |
+      ############
+      #....LP....#
+      #....BS....#
+      #..........#
+      #...GCMMM..#
+      #......MM..#
+      #....@.MM..#
+      #......MM..#
+      #...GCMMM..#
+      #..........#
+      ############
+    actions: ["left"]
+
+  - id: "cf_missing_lower_fingertip"
+    family: "pull_handle_remote_multi_touch"
+    variant: "upper_contact_only"
+    changed_variable: "只删除下分支最左触点 `(6,8)`，保留右侧连接与上触点"
+    contrast_with: "central_pull_two_remote_pistons_final"
+    notes: "一次 left 应只把上箱推入目标，下箱保持原位，证明下目标责任来自下触点而非整块位移的旁效应。"
+    layout: |
+      ############
+      #....LP....#
+      #....BS....#
+      #..........#
+      #...GCMMM..#
+      #......MM..#
+      #....@MMM..#
+      #......MM..#
+      #...GC.MM..#
+      #..........#
+      ############
+    actions: ["left"]
+
+  - id: "cf_blocked_lower_goal_atomic"
+    family: "pull_handle_remote_multi_touch"
+    variant: "lower_destination_wall"
+    changed_variable: "只把下箱左侧目标 `(4,8)` 换成墙，另在空处补一个不相关目标维持双目标计数"
+    contrast_with: "central_pull_two_remote_pistons_final"
+    notes: "下分支目的格被墙占据时，整个 left 应 force_blocked；上箱也不得先行移动。"
+    layout: |
+      ############
+      #....LP....#
+      #....BS....#
+      #.........G#
+      #...GCMMM..#
+      #......MM..#
+      #....@MMM..#
+      #......MM..#
+      #...#CMMM..#
+      #..........#
+      ############
+    actions: ["left"]

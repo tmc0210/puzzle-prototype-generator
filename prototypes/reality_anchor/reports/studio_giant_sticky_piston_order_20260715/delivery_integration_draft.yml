@@ -1,0 +1,527 @@
+schema_version: 1
+document_kind: delivery_integration_draft
+portfolio_id: RA_PORTFOLIO_2026_07_15_GIANT_STICKY_PISTON_ORDER
+mechanic: reality_anchor
+scope: 特定 Reality Anchor 原型的最终交付集成草稿；不改通用流程。
+
+integration_gate:
+  latest_full_batch_review_ref: "__PENDING_LATEST_FULL_BATCH_REVIEW_REF__"
+  latest_full_batch_review_status: "__PENDING_LATEST_FULL_BATCH_REVIEW_STATUS__"
+  required_status_before_mutation: all_three_exact_versions_survive_to_pre_submission_checks
+  exact_versions_expected:
+    baseline: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5
+    application: RA_FRESH_2026_07_15_FORGED_C_SYNC_v6
+    challenge: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1
+  forbidden_before_gate:
+    - 不写入 prototypes/reality_anchor/levels.yml。
+    - 不写入 prototypes/reality_anchor/playable_queue.yml。
+    - 不重建或宣称 playable 已完成。
+  combination_slot: human_brief_exempted
+
+levels_yml_proposals:
+  - slot: baseline
+    exact_layout_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.txt
+    exact_layout_byte_sha256: 79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+    normalized_layout_without_trailing_lf_sha256: fb90109f5eb972a4c4996db0ee73ca16726bdb4e910796516258be40a9e4403a
+    level_doc:
+      id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5
+      title: 三叉同步终拍 v5
+      layout: |-
+        #############
+        #########SB##
+        #############
+        #########PL##
+        #############
+        #...........#
+        #.....#...###
+        #...MMMMM.CG#
+        #...M.....###
+        #...M....@..#
+        #...M.....###
+        #...MMMMM.CG#
+        #...M.....###
+        #...M.......#
+        #...M.....###
+        #...MMMMM.CG#
+        #.....#...###
+        #...........#
+        #############
+      lineage:
+        source: fresh_design_review_loop
+        source_candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4
+        created_by: codex
+        created_at: "2026-07-15"
+      design_notes: >-
+        Reality Anchor 后期 baseline。玩家绕到预制 21 格连通三叉 E 形背面，两次右推；终拍同一完整刚体
+        以 force_chain:n4 同时推动三个 P/L 目标顺序锁并触发 sticky_to_box:n3。完整图为 923 states /
+        2929 transitions / 9 raw win states；九个胜态只有一个对象终转移类，故为 equivalent_variants_only。
+        exact v5 的 invalid_goal_prune、opening_comfort_check 与 redundant_element_prune 均完成且不再改版。
+        巨型结构带来的绕行、识形、触点对齐与精确操作不计作难度。
+      expected_trace:
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: right, events: [push_object, move_sticky_rigid]}
+        - {input: right, events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]}
+
+  - slot: application
+    exact_layout_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.txt
+    exact_layout_byte_sha256: 31debfe814fda7a58cc198234445f2b0d58d8aba063fc8b473e3364bded03879
+    normalized_layout_without_trailing_lf_sha256: b608c3bc5c955beebd3f1b43bdd5610d6943a080e8b3c0afe1e141a1c64526ac
+    level_doc:
+      id: RA_FRESH_2026_07_15_FORGED_C_SYNC_v6
+      title: 双钩锻造同步 v6
+      layout: |-
+        ###########
+        #######PL##
+        #..@SB...##
+        #.#########
+        #.#########
+        #.MMM..CCG#
+        #.MMMCCC.##
+        #.MMM...###
+        #.MMM.#####
+        #.MMM...###
+        #.MMMCCC.##
+        #.MMM..CCG#
+        ###########
+      lineage:
+        source: fresh_design_review_loop
+        source_candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC_v5
+        created_by: codex
+        created_at: "2026-07-15"
+      design_notes: >-
+        Reality Anchor 后期 application。玩家把 B/S 连续右移三列，依次产生 box_to_sticky:n2、n2、n4，
+        将 21 格厚脊与八个箱构件锻造成 29 格上下镜像双钩；完成形随后同拍收束两个 P/L 目标顺序锁。
+        完整图为 143 states / 338 transitions / 7 raw win states；七个胜态只有一个对象终转移类，故为
+        equivalent_variants_only。exact v6 三项提交前检查均完成且不再改版。回到主体背面的走位、识形、
+        对齐与精确操作不计作难度。
+      expected_trace:
+        - {input: right, events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]}
+        - {input: right, events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]}
+        - {input: right, events: [push_object, anchor_boundary_shift, box_to_sticky, sticky_merge]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: right, events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]}
+
+  - slot: challenge
+    exact_layout_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/challenge/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.txt
+    exact_layout_byte_sha256: 027825ee031100ce6600d163cf967201c0670ee356ffe98362e335b4ec573541
+    normalized_layout_without_trailing_lf_sha256: 140eb8e3a74fdff5ba66352101183c749a12ef6df627791645056914f57ba0f9
+    level_doc:
+      id: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1
+      title: 边界换相·重铸面具 v1
+      layout: |-
+        ###################
+        #....#............#
+        #...#.MMMMMMMMM...#
+        #...##.##.MMMMM...#
+        #..#GC.#.MMMMMM...#
+        #...#.MMMMMMMMM...#
+        #....###.MMMMMM...#
+        #....#.MMMMMMMM...#
+        #...####.MMMMMM...#
+        #..#GCMMMMMMMMM...#
+        #...####.MMMMMM...#
+        #....#.MMMMMMMM...#
+        #....###.MMMMMM...#
+        #...#.MMMMMMMMM...#
+        #..#GC.#.MMMMMM...#
+        #...##.##.MMMMM...#
+        #...#.MMMMMMMMM...#
+        #....#............#
+        #..............####
+        #..............####
+        #..#.BS@.#.....####
+        ####.##############
+        #..#....LP........#
+        ###################
+      lineage:
+        source: fresh_design_review_loop
+        created_by: codex
+        created_at: "2026-07-15"
+      design_notes: >-
+        Reality Anchor 后期 challenge。玩家先从完整、水平对称的 107 格黏块面具切出五齿，左移 P/L 三格
+        改写可施力侧，把上下端齿各向中线重排两格，再拉回 B/S 以 box_to_sticky:n5、sticky_merge:n1
+        重铸同一 107 格主体；终拍左推完整主体同拍覆盖三只 P/L 目标顺序锁。规范回放 130 输入全部合法，
+        其中只有 10 次对象操作，120 次走位不计作难度。唯一性仅为 unique_within_budget：raw graph 在
+        30000 状态预算耗尽，记录 30001 states / 73982 transitions / 0 prefix wins；不得写成完整 SCC 或
+        unique_complete。三项提交前检查均已执行，因完整图预算耗尽而保留目标和疑似冗余项为 unknown，未改版。
+      expected_trace:
+        - {input: right, events: [pull_object, anchor_boundary_shift, sticky_to_box]}
+        - {input: up, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: left, events: [pull_object, anchor_boundary_shift]}
+        - {input: left, events: [pull_object, anchor_boundary_shift]}
+        - {input: left, events: [pull_object, anchor_boundary_shift]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: down, events: [push_object]}
+        - {input: down, events: [push_object]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [push_object]}
+        - {input: up, events: [push_object]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: left, events: [walk]}
+        - {input: down, events: [walk]}
+        - {input: left, events: [pull_object, anchor_boundary_shift, box_to_sticky, sticky_merge]}
+        - {input: up, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: right, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: up, events: [walk]}
+        - {input: left, events: [push_object, force_chain, move_sticky_rigid, sticky_to_box]}
+
+playable_queue_entry_proposals:
+  - source: package
+    level_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5
+    title: 三叉同步终拍 v5
+    added_at: "2026-07-15"
+    status: pending_playtest
+    notes: Design Studio 巨型黏块/P-L 顺序锁 baseline；等待人类试玩。
+  - source: package
+    level_id: RA_FRESH_2026_07_15_FORGED_C_SYNC_v6
+    title: 双钩锻造同步 v6
+    added_at: "2026-07-15"
+    status: pending_playtest
+    notes: Design Studio 巨型黏块/P-L 顺序锁 application；等待人类试玩。
+  - source: package
+    level_id: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1
+    title: 边界换相·重铸面具 v1
+    added_at: "2026-07-15"
+    status: pending_playtest
+    notes: Design Studio 巨型黏块/P-L 顺序锁 challenge；unique_within_budget，等待人类试玩。
+
+pre_submission_workflow_aggregate:
+  portfolio_id: RA_PORTFOLIO_2026_07_15_GIANT_STICKY_PISTON_ORDER
+  tool_maturity_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/tool_maturity.md
+  entries:
+    - candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+      reviewed_exact_version: "__PENDING_LATEST_FULL_BATCH_REVIEW_CONFIRMATION_OF_v5__"
+      delivery_exact_version: v5
+      workflow_results:
+        - workflow_id: invalid_goal_prune
+          applicability: applicable
+          applicability_basis: 三目标候选准备进入待玩列表。
+          authority_docs: [prototypes/reality_anchor/docs/goal_prune_check.md]
+          operations_performed: [逐目标删除 overlay 反事实、完整图、规范回放、核心事件组检查]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/goal_prune_check.yml]
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: 本检查不改 exact v5；preserved 不表示 latest whole review 已存活。
+          status: completed
+        - workflow_id: opening_comfort_check
+          applicability: applicable
+          applicability_basis: baseline 起点影响读题与承诺缓冲，且 brief 要求显式判断。
+          authority_docs: [prototypes/reality_anchor/docs/opening_comfort_check.md]
+          operations_performed: [核对完整 initial SCC、首步事件、不可逆出口距离与 current 起点]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/opening_comfort_check.yml]
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: 本检查不改起点或 exact v5。
+          status: completed
+        - workflow_id: redundant_element_prune
+          applicability: applicable
+          applicability_basis: 布局含短槽、隔离锚点与外框，且准备进入待玩列表。
+          authority_docs: [prototypes/reality_anchor/docs/redundant_element_prune.md, prototypes/reality_anchor/docs/goal_prune_check.md, prototypes/reality_anchor/docs/opening_comfort_check.md]
+          operations_performed: [依固定顺序复核目标、对象 remove/wallify、空地与外框；确认 v5 无追加改动]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/redundant_element_prune.yml]
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: current v5 未改动；不继承旧 v4 review。
+          status: completed
+      overall_status: completed
+      return_to_design_required: false
+
+    - candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+      reviewed_exact_version: "__PENDING_LATEST_FULL_BATCH_REVIEW_CONFIRMATION_OF_v6__"
+      delivery_exact_version: v6
+      workflow_results:
+        - workflow_id: invalid_goal_prune
+          applicability: applicable
+          applicability_basis: 双目标候选准备进入待玩列表。
+          authority_docs: [prototypes/reality_anchor/docs/goal_prune_check.md]
+          operations_performed: [逐目标删除 overlay 反事实、完整图、规范回放、核心事件组检查]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/goal_prune_check.yml]
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: 本检查不改 exact v6；preserved 不表示 latest whole review 已存活。
+          status: completed
+        - workflow_id: opening_comfort_check
+          applicability: applicable
+          applicability_basis: application 必须显式比较起点与 opening commitment。
+          authority_docs: [prototypes/reality_anchor/docs/opening_comfort_check.md]
+          operations_performed: [枚举 current v6 initial SCC 的 12 个同对象起点并复核图与核心链]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/opening_comfort_check.yml]
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: 保留 [3,2]，未改起点或 exact v6。
+          status: completed
+        - workflow_id: redundant_element_prune
+          applicability: applicable
+          applicability_basis: 布局曾含厚外框，且 current successor 准备进入待玩列表。
+          authority_docs: [prototypes/reality_anchor/docs/redundant_element_prune.md, prototypes/reality_anchor/docs/goal_prune_check.md, prototypes/reality_anchor/docs/opening_comfort_check.md]
+          operations_performed: [依固定顺序从 current v6 复跑目标、对象、空地与外框反事实；确认单层闭合外框]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/redundant_element_prune.yml]
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: current v6 无追加改动；不继承旧 v5 review。
+          status: completed
+      overall_status: completed
+      return_to_design_required: false
+
+    - candidate_id: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK
+      reviewed_exact_version: "__PENDING_LATEST_FULL_BATCH_REVIEW_CONFIRMATION_OF_v1__"
+      delivery_exact_version: v1
+      workflow_results:
+        - workflow_id: invalid_goal_prune
+          applicability: applicable
+          applicability_basis: 三目标 challenge 准备进入待玩列表。
+          authority_docs: [prototypes/reality_anchor/docs/goal_prune_check.md]
+          operations_performed: [三个单删反事实、130 输入回放、各 30000 状态 solver/graph/product probe]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1/goal_prune_check.yml]
+          artifact_reported_result: kept_with_unknown
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: 图与事件探针耗尽，按 authority 保留目标；未改 exact v1。
+          status: completed
+        - workflow_id: opening_comfort_check
+          applicability: applicable
+          applicability_basis: challenge 且起点紧邻 B/S 核心动作。
+          authority_docs: [prototypes/reality_anchor/docs/opening_comfort_check.md]
+          operations_performed: [记录完整 SCC unknown；完整枚举 exact 初态 pure-walk 观察分量与首步事件]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1/opening_comfort_check.yml]
+          artifact_reported_result: kept_with_unknown
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: 保留 [7,20]，不把 165-state pure-walk SCC 冒充完整 runtime SCC。
+          status: completed
+        - workflow_id: redundant_element_prune
+          applicability: applicable
+          applicability_basis: 超大布局含 leaf/pocket/密墙与外框，且准备进入待玩列表。
+          authority_docs: [prototypes/reality_anchor/docs/redundant_element_prune.md, prototypes/reality_anchor/docs/goal_prune_check.md, prototypes/reality_anchor/docs/opening_comfort_check.md]
+          operations_performed: [按固定顺序盘点；因 base graph exhausted 禁止 clean prune；保留 unknown 项]
+          artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1/redundant_element_prune.yml]
+          artifact_reported_result: kept_with_unknown
+          version_effect: unchanged
+          review_effect: preserved
+          review_effect_basis: authority 不允许在不完整图上裁剪，exact v1 未改。
+          status: completed
+      overall_status: completed
+      return_to_design_required: false
+
+human_handoff_draft:
+  portfolio_id: RA_PORTFOLIO_2026_07_15_GIANT_STICKY_PISTON_ORDER
+  entries:
+    - slot: baseline
+      candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+      reviewed_exact_version: "__PENDING_LATEST_FULL_BATCH_REVIEW_CONFIRMATION_OF_v5__"
+      delivery_exact_version: v5
+      player_experience: 预制 21 格三叉 E 形以三个远距触点同拍消解三个 P/L 目标顺序锁的最后动作矛盾。
+      known_risks:
+        - B/S 隔离锚点只承担材料规则合同。
+        - 短槽承担 opening/read-graph/构图责任而非机械必要。
+        - 巨构绕行、识形、对齐和精确操作不计作难度。
+      submission_packet_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/submission_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.yml
+      evidence_review_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/evidence_review_baseline_v5_r1.yml
+      independent_level_review_ref: "__PENDING_LATEST_FULL_BATCH_REVIEW_REF__"
+      pre_submission_checks:
+        - {workflow_id: invalid_goal_prune, applicability: applicable, applicability_basis: 三目标待交付, authority_docs: [prototypes/reality_anchor/docs/goal_prune_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/goal_prune_check.yml], status: completed}
+        - {workflow_id: opening_comfort_check, applicability: applicable, applicability_basis: 起点影响读题与承诺, authority_docs: [prototypes/reality_anchor/docs/opening_comfort_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/opening_comfort_check.yml], status: completed}
+        - {workflow_id: redundant_element_prune, applicability: applicable, applicability_basis: 有短槽与隔离对象, authority_docs: [prototypes/reality_anchor/docs/redundant_element_prune.md, prototypes/reality_anchor/docs/goal_prune_check.md, prototypes/reality_anchor/docs/opening_comfort_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/redundant_element_prune.yml], status: completed}
+      pre_submission_workflow_record_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/delivery_integration_draft.yml#/pre_submission_workflow_aggregate
+      pre_submission_state: completed
+      playtest_status: pending_playtest
+
+    - slot: application
+      candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+      reviewed_exact_version: "__PENDING_LATEST_FULL_BATCH_REVIEW_CONFIRMATION_OF_v6__"
+      delivery_exact_version: v6
+      player_experience: 用 B/S 三列扫线亲手锻造 29 格双钩，完成形立即以两触点同拍收束两个 P/L 顺序锁。
+      known_risks:
+        - 正确 B/S 首拍可在距离 0 承诺，但 left 仍进入 12-state 可逆观察区。
+        - 提前试用未完成主体会进入可读的失败分支。
+        - 巨构回返走位、识形、对齐和精确操作不计作难度。
+      submission_packet_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/submission_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.yml
+      evidence_review_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/evidence_review_application_v6_r1.yml
+      independent_level_review_ref: "__PENDING_LATEST_FULL_BATCH_REVIEW_REF__"
+      pre_submission_checks:
+        - {workflow_id: invalid_goal_prune, applicability: applicable, applicability_basis: 双目标待交付, authority_docs: [prototypes/reality_anchor/docs/goal_prune_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/goal_prune_check.yml], status: completed}
+        - {workflow_id: opening_comfort_check, applicability: applicable, applicability_basis: application 显式起点比较, authority_docs: [prototypes/reality_anchor/docs/opening_comfort_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/opening_comfort_check.yml], status: completed}
+        - {workflow_id: redundant_element_prune, applicability: applicable, applicability_basis: successor 外框与操作面复核, authority_docs: [prototypes/reality_anchor/docs/redundant_element_prune.md, prototypes/reality_anchor/docs/goal_prune_check.md, prototypes/reality_anchor/docs/opening_comfort_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6/redundant_element_prune.yml], status: completed}
+      pre_submission_workflow_record_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/delivery_integration_draft.yml#/pre_submission_workflow_aggregate
+      pre_submission_state: completed
+      playtest_status: pending_playtest
+
+    - slot: challenge
+      candidate_id: RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK
+      reviewed_exact_version: "__PENDING_LATEST_FULL_BATCH_REVIEW_CONFIRMATION_OF_v1__"
+      delivery_exact_version: v1
+      player_experience: 把完整 107 格对称面具切边、移动 P/L 换相、重排端齿并复黏，最后以重铸主体同拍完成三锁。
+      known_risks:
+        - 唯一性仅为 unique_within_budget；raw graph exhausted@30000，不存在完整 SCC 唯一证明。
+        - 完整 initial SCC unknown；165-state 结果仅为同对象 pure-walk SCC。
+        - goal/space prune 因完整图不足保留 unknown；没有据此改版。
+        - 130 输入中 120 步为走位，且不计作难度。
+      submission_packet_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/challenge/submission_RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1.yml
+      evidence_review_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/evidence_review_challenge_boundary_reforge_v1_r1.yml
+      independent_level_review_ref: "__PENDING_LATEST_FULL_BATCH_REVIEW_REF__"
+      pre_submission_checks:
+        - {workflow_id: invalid_goal_prune, applicability: applicable, applicability_basis: 三目标 challenge 待交付, authority_docs: [prototypes/reality_anchor/docs/goal_prune_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1/goal_prune_check.yml], artifact_reported_result: kept_with_unknown, status: completed}
+        - {workflow_id: opening_comfort_check, applicability: applicable, applicability_basis: challenge 起点邻接核心动作, authority_docs: [prototypes/reality_anchor/docs/opening_comfort_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1/opening_comfort_check.yml], artifact_reported_result: kept_with_unknown, status: completed}
+        - {workflow_id: redundant_element_prune, applicability: applicable, applicability_basis: 超大布局含 leaf/pocket/密墙, authority_docs: [prototypes/reality_anchor/docs/redundant_element_prune.md, prototypes/reality_anchor/docs/goal_prune_check.md, prototypes/reality_anchor/docs/opening_comfort_check.md], artifact_refs: [prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1/redundant_element_prune.yml], artifact_reported_result: kept_with_unknown, status: completed}
+      pre_submission_workflow_record_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/delivery_integration_draft.yml#/pre_submission_workflow_aggregate
+      pre_submission_state: completed
+      playtest_status: pending_playtest
+
+  playable_delivery:
+    level_source: levels.yml
+    playable_queue: playable_queue.yml
+    queue_entries:
+      - RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5
+      - RA_FRESH_2026_07_15_FORGED_C_SYNC_v6
+      - RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1
+    playable_build_status: "__PENDING_AFTER_LEVEL_AND_QUEUE_WRITE__"
+    playable_ref: prototypes/reality_anchor/playable/data.json
+  archive_status: not_archived_waiting_for_playtest
+
+source_and_hash_verification_checklist:
+  build_command: npx tsx src/playable/exportPlayable.ts prototypes/reality_anchor
+  runtime_capability: runtime_backed_playable_available_scaffold
+  unsupported_claims: [puzzlescript_exporter, puzzlescript_checker]
+  checks:
+    - 在写入前重算三个 exact txt 的 byte SHA256，并与本草稿 exact_layout_byte_sha256 一致。
+    - 从 levels.yml 解析三个 id；分别只有一条，title、layout、lineage、design_notes、expected_trace 均非空。
+    - 将解析后的 level.layout 与 exact txt 统一 LF 并移除单个尾换行后逐字比较，同时核对 normalized SHA256。
+    - 重放三个 expected_trace，要求 14/12/130 步全部 legal 且最终 win；事件使用现有 LevelDoc 接受的基名。
+    - queue 三条必须是 source=package、level_id=对应 exact id、status=pending_playtest；catalog key 应为 package:<level_id>。
+    - 重建 playable 后，在 playable/data.json 中按 id 精确找到三关，且 layout 规范化 hash 与 exact source 一致。
+    - challenge 的导出说明仍为 unique_within_budget，并保留 raw graph exhausted@30000 边界；不得出现 unique_complete 或完整 SCC 唯一表述。
+    - human handoff 的 playtest_status 只能是 pending_playtest，archive_status 必须是 not_archived_waiting_for_playtest。
+
+audit_limits:
+  - 本草稿未读取或假设 latest whole review verdict；所有相关 ref/status 均为显式占位符。
+  - 本草稿没有修改 levels.yml、playable_queue.yml、playable 产物或 portfolio.yml。
+  - pre_submission workflow 的 completed 表示规定检查已实际执行；challenge 的 kept_with_unknown 不等于 clean，也不授权裁剪。

@@ -1,0 +1,123 @@
+runId: challenge_lock_cycle_e_phase_v1
+title: "巨大三叉 E：双目标活塞试推、回撤与组件相位债"
+notes: "同一局面验证两只真实 P/L 目标活塞、下锁试推回合留下的下半结构相位，以及完整 E 的远端双触点同步终局；同时保留直达旁路作为设计限制。"
+defaults:
+  maxExploreDepth: 4
+  maxReturnDepth: 8
+  maxStates: 12000
+  maxTransitions: 48000
+cases:
+  - id: top_lock_temp_cover
+    family: giant_e_lock_cycle
+    variant: top_cover
+    changed_variable: "停在上锁伸出位，不回撤"
+    contrast_with: top_lock_forced_retract
+    notes: "上箱临时覆盖目标；另一目标仍空。"
+    layout: |
+      ##############
+      #....PL......#
+      #....SB#.....#
+      #.MMMM#......#
+      #.MM..CG.....#
+      #.MM..#......#
+      #.MMM........#
+      #....@.......#
+      #.MM.........#
+      #.MM..#......#
+      #.MMMMCG.....#
+      #.....#......#
+      #............#
+      ##############
+    actions: [up, up, up, right]
+
+  - id: top_lock_forced_retract
+    family: giant_e_lock_cycle
+    variant: top_retract
+    changed_variable: "从上锁伸出位执行唯一离开动作 left"
+    contrast_with: top_lock_temp_cover
+    notes: "left 应为 pull_object:crate#1，并让上目标重新空出。"
+    layout: |
+      ##############
+      #....PL......#
+      #....SB#.....#
+      #.MMMM#......#
+      #.MM..CG.....#
+      #.MM..#......#
+      #.MMM........#
+      #....@.......#
+      #.MM.........#
+      #.MM..#......#
+      #.MMMMCG.....#
+      #.....#......#
+      #............#
+      ##############
+    actions: [up, up, up, right, left]
+
+  - id: lower_lock_retract_leaves_phase
+    family: giant_e_lock_cycle
+    variant: lower_retract_phase_debt
+    changed_variable: "进入下锁前必须把下半 E 下推一格"
+    contrast_with: top_lock_forced_retract
+    notes: "箱子回到原位，但下半 E 保持下移；完整试锁回合留下组件相位债。"
+    layout: |
+      ##############
+      #....PL......#
+      #....SB#.....#
+      #.MMMM#......#
+      #.MM..CG.....#
+      #.MM..#......#
+      #.MMM........#
+      #....@.......#
+      #.MM.........#
+      #.MM..#......#
+      #.MMMMCG.....#
+      #.....#......#
+      #............#
+      ##############
+    actions: [down, down, down, right, left]
+
+  - id: tested_both_repair_phase_sync_final
+    family: giant_e_lock_cycle
+    variant: full_player_trace
+    changed_variable: "先试两锁，再下压上半、粘合、整体上推校相、同步终局"
+    contrast_with: direct_assembly_bypass
+    notes: "终拍应为巨大完整 E 的双远端触点 force_chain:n3，并同时覆盖两目标。"
+    layout: |
+      ##############
+      #....PL......#
+      #....SB#.....#
+      #.MMMM#......#
+      #.MM..CG.....#
+      #.MM..#......#
+      #.MMM........#
+      #....@.......#
+      #.MM.........#
+      #.MM..#......#
+      #.MMMMCG.....#
+      #.....#......#
+      #............#
+      ##############
+    actions: [up, up, up, right, left, down, down, down, down, down, down, right, left, up, up, up, left, left, left, left, up, up, up, up, up, right, right, right, down, down, left, left, left, down, down, down, down, down, down, down, down, right, right, right, up, left, left, left, up, up, up, up, right]
+
+  - id: direct_assembly_bypass
+    family: giant_e_lock_cycle
+    variant: bypass_skip_lock_experience
+    changed_variable: "完全不试两锁，直接把上半 E 下推一格粘合"
+    contrast_with: tested_both_repair_phase_sync_final
+    notes: "若此序列直接胜利，则试锁与相位修复不是正解必经，当前图只能作为玩家诱导/分支材料。"
+    layout: |
+      ##############
+      #....PL......#
+      #....SB#.....#
+      #.MMMM#......#
+      #.MM..CG.....#
+      #.MM..#......#
+      #.MMM........#
+      #....@.......#
+      #.MM.........#
+      #.MM..#......#
+      #.MMMMCG.....#
+      #.....#......#
+      #............#
+      ##############
+    actions: [left, left, left, left, up, up, up, up, up, right, right, right, down, left, left, left, down, down, down, down, right]

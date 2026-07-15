@@ -1,0 +1,117 @@
+runId: ra_exp_giant_sticky_batch_03_cut_staggered_hooks
+title: "错相双钩越界自切：先上活塞，后下活塞"
+notes: >-
+  切割/相位方向。32 格巨大黏体的上竖钩位于 x=11，下竖钩位于 x=10；两个目标活塞都在 x=12。
+  第一个 right 只推动上箱到目标，随后上钩和上轨末格跨过 S|B 边界切成箱；剩余巨大主体继续存在。
+  第二个 right 不再触碰上目标链，只让晚一格的下钩推动下箱到目标。
+  在上钩后补一格 sticky 会让第二拍重新碰到已切出的箱链，并被目标后的墙原子阻断。
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 18
+  maxStates: 40000
+  maxTransitions: 160000
+cases:
+  - id: "staggered_first_stroke_cuts_leading_hook"
+    family: "cut_staggered_giant_piston_order"
+    variant: "leading_upper_hook_only"
+    changed_variable: "上钩比下钩领先一格；先只执行第一拍"
+    contrast_with: "staggered_cut_then_second_hook_final,cf_equal_phase_extra_lower_tip"
+    notes: "第一拍后上目标覆盖、下目标空；上钩与上轨末格应 sticky_to_box，下一拍 right 仍合法。"
+    layout: |
+      ################
+      #..........PL..#
+      #..........SB..#
+      #..............#
+      #..............#
+      #...MMMMM..MCG##
+      #...MMMMMMMM...#
+      #..@MMMMM......#
+      #...MMMMMMM....#
+      #...MMMMM.M.CG.#
+      #..............#
+      ################
+    actions: ["right"]
+
+  - id: "staggered_cut_then_second_hook_final"
+    family: "cut_staggered_giant_piston_order"
+    variant: "upper_then_lower"
+    changed_variable: "同一错相双钩连续执行两拍"
+    contrast_with: "staggered_first_stroke_cuts_leading_hook,cf_trailing_upper_cell_blocks_second"
+    notes: "第一拍上箱上目标并切掉领先钩；第二拍剩余巨大主体用下钩推下箱，终态应胜利。"
+    layout: |
+      ################
+      #..........PL..#
+      #..........SB..#
+      #..............#
+      #..............#
+      #...MMMMM..MCG##
+      #...MMMMMMMM...#
+      #..@MMMMM......#
+      #...MMMMMMM....#
+      #...MMMMM.M.CG.#
+      #..............#
+      ################
+    actions: ["right", "right"]
+
+  - id: "cf_trailing_upper_cell_blocks_second"
+    family: "cut_staggered_giant_piston_order"
+    variant: "leading_hook_has_same_row_tail"
+    changed_variable: "只在上钩后方 `(10,5)` 补一格 sticky"
+    contrast_with: "staggered_cut_then_second_hook_final"
+    notes: "第一拍仍完成上目标并切前钩；第二拍尾格应推动切出箱链撞上 `(14,5)` 墙，使整步 force_blocked、下箱不动。"
+    layout: |
+      ################
+      #..........PL..#
+      #..........SB..#
+      #..............#
+      #..............#
+      #...MMMMM.MMCG##
+      #...MMMMMMMM...#
+      #..@MMMMM......#
+      #...MMMMMMM....#
+      #...MMMMM.M.CG.#
+      #..............#
+      ################
+    actions: ["right", "right"]
+
+  - id: "cf_equal_phase_extra_lower_tip"
+    family: "cut_staggered_giant_piston_order"
+    variant: "both_hooks_leading"
+    changed_variable: "只在下钩前方 `(11,9)` 补一格 sticky，使上下触点同相"
+    contrast_with: "staggered_first_stroke_cuts_leading_hook"
+    notes: "第一拍应同时推动两箱上目标并立即胜利，二拍顺序关系退化为同拍终局。"
+    layout: |
+      ################
+      #..........PL..#
+      #..........SB..#
+      #..............#
+      #..............#
+      #...MMMMM..MCG##
+      #...MMMMMMMM...#
+      #..@MMMMM......#
+      #...MMMMMMM....#
+      #...MMMMM.MMCG.#
+      #..............#
+      ################
+    actions: ["right"]
+
+  - id: "cf_missing_upper_hook"
+    family: "cut_staggered_giant_piston_order"
+    variant: "only_late_lower_hook"
+    changed_variable: "删除领先上钩 `(11,5)`，其它主体、上轨和下钩不变"
+    contrast_with: "staggered_cut_then_second_hook_final"
+    notes: "两拍后只应完成下目标，证明第一拍的上目标责任来自领先钩。"
+    layout: |
+      ################
+      #..........PL..#
+      #..........SB..#
+      #..............#
+      #..............#
+      #...MMMMM...CG##
+      #...MMMMMMMM...#
+      #..@MMMMM......#
+      #...MMMMMMM....#
+      #...MMMMM.M.CG.#
+      #..............#
+      ################
+    actions: ["right", "right"]

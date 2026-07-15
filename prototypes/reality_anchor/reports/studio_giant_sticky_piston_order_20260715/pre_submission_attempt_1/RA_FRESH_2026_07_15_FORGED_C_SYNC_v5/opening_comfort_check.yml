@@ -1,0 +1,234 @@
+opening_comfort_check:
+  status: complete
+  candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+  exact_version: v5_sha256_9bfae9c5c1160d4088fc59c317c2bfef33bd77b7066bca23e19850fd867cb590
+  slot: application
+  authority_doc: prototypes/reality_anchor/docs/opening_comfort_check.md
+  enumeration_rule: >-
+    在 complete runtime 图的 initial SCC 中枚举保持原对象配置的全部玩家坐标；每个起点重跑最短解、完整图与四段坐标化核心事件乘积图。
+  original_start:
+    - 3
+    - 2
+  base_graph:
+    status: complete
+    reachable_states: 143
+    legal_transitions: 338
+  initial_scc_state_count: 12
+  candidate_start_count: 12
+  candidate_starts:
+    - candidate_start_position: [1, 2]
+      is_current_start: false
+      shortest_solution_delta: 12->14
+      initial_scc_size: 12
+      initial_exit_source_distances: [2, 3, 4, 5, 6, 7, 8, 9]
+      initial_win_exit_source_distances: [2]
+      nearest_irreversible_exit_distance: 2
+      nearest_win_reaching_exit_distance: 2
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events:
+        down: [walk]
+        right: [walk]
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 两格缓冲但只是沿同一可见上廊接近 B/S，新增两步不提供新的读图关系。
+    - candidate_start_position: [2, 2]
+      is_current_start: false
+      shortest_solution_delta: 12->13
+      initial_scc_size: 12
+      initial_exit_source_distances: [1, 4, 5, 6, 7, 8, 9, 10]
+      initial_win_exit_source_distances: [1]
+      nearest_irreversible_exit_distance: 1
+      nearest_win_reaching_exit_distance: 1
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events:
+        left: [walk]
+        right: [walk]
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 有一格形式缓冲，但正确方向第一步只是空走，读到的 B/S、厚脊与左通道关系与当前起点相同。
+    - candidate_start_position: [3, 2]
+      is_current_start: true
+      shortest_solution_delta: 12->12
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 5, 6, 7, 8, 9, 10, 11]
+      initial_win_exit_source_distances: [0]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 0
+      dead_exits_before_first_win_exit: 0
+      first_step_legal_events:
+        left: [walk]
+        right:
+          - "push_object:box_sticky_anchor"
+          - "anchor_boundary_shift:box_sticky"
+          - "box_to_sticky:n2"
+          - "sticky_merge:n1"
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: >-
+        右键是清楚可见的第一段锻造，左键仍可逆并通向完整 12-state 观察区；玩家可以立即作出“先构造还是先沿通道读主体”的选择，开局并非贴脸强制。
+    - candidate_start_position: [1, 3]
+      is_current_start: false
+      shortest_solution_delta: 12->15
+      initial_scc_size: 12
+      initial_exit_source_distances: [2, 3, 3, 4, 5, 6, 7, 8]
+      initial_win_exit_source_distances: [3]
+      nearest_irreversible_exit_distance: 2
+      nearest_win_reaching_exit_distance: 3
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events:
+        up: [walk]
+        down: [walk]
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 正确承诺更远，但在到达它之前先接触一条提前试推的死承诺，开局读题顺序变差。
+    - candidate_start_position: [1, 4]
+      is_current_start: false
+      shortest_solution_delta: 12->16
+      initial_scc_size: 12
+      initial_exit_source_distances: [1, 2, 3, 4, 4, 5, 6, 7]
+      initial_win_exit_source_distances: [4]
+      nearest_irreversible_exit_distance: 1
+      nearest_win_reaching_exit_distance: 4
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events:
+        up: [walk]
+        down: [walk]
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 更靠近未完成主体，错误试推比正确 B/S 构造更早出现，不适合作为 application 开局。
+    - candidate_start_position: [1, 5]
+      is_current_start: false
+      shortest_solution_delta: 12->17
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 1, 2, 3, 4, 5, 5, 6]
+      initial_win_exit_source_distances: [5]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 5
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events: &premature_push_three_way
+        up: [walk]
+        down: [walk]
+        right:
+          - "push_object:sticky#1"
+          - "force_chain:n7"
+          - "move_sticky_rigid"
+          - "sticky_to_box:n7"
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 第一眼可向右误推未完成主体，正确 B/S 承诺晚 5 步；把可选试验变成自然第一步，明显更粗糙。
+    - candidate_start_position: [1, 6]
+      is_current_start: false
+      shortest_solution_delta: 12->18
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 1, 1, 2, 3, 4, 5, 6]
+      initial_win_exit_source_distances: [6]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 6
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events: *premature_push_three_way
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 错误主体推移是距离 0 的自然动作，正确承诺晚 6 步；不采用。
+    - candidate_start_position: [1, 7]
+      is_current_start: false
+      shortest_solution_delta: 12->19
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 1, 1, 2, 2, 3, 4, 7]
+      initial_win_exit_source_distances: [7]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 7
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events: *premature_push_three_way
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 错误主体推移是距离 0 的自然动作，正确承诺晚 7 步；不采用。
+    - candidate_start_position: [1, 8]
+      is_current_start: false
+      shortest_solution_delta: 12->20
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 1, 1, 2, 2, 3, 3, 8]
+      initial_win_exit_source_distances: [8]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 8
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events: *premature_push_three_way
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 错误主体推移是距离 0 的自然动作，正确承诺晚 8 步；不采用。
+    - candidate_start_position: [1, 9]
+      is_current_start: false
+      shortest_solution_delta: 12->21
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 1, 1, 2, 2, 3, 4, 9]
+      initial_win_exit_source_distances: [9]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 9
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events: *premature_push_three_way
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 错误主体推移是距离 0 的自然动作，正确承诺晚 9 步；不采用。
+    - candidate_start_position: [1, 10]
+      is_current_start: false
+      shortest_solution_delta: 12->22
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 1, 1, 2, 3, 4, 5, 10]
+      initial_win_exit_source_distances: [10]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 10
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events: *premature_push_three_way
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 错误主体推移是距离 0 的自然动作，正确承诺晚 10 步；不采用。
+    - candidate_start_position: [1, 11]
+      is_current_start: false
+      shortest_solution_delta: 12->23
+      initial_scc_size: 12
+      initial_exit_source_distances: [0, 1, 2, 3, 4, 5, 6, 11]
+      initial_win_exit_source_distances: [11]
+      nearest_irreversible_exit_distance: 0
+      nearest_win_reaching_exit_distance: 11
+      dead_exits_before_first_win_exit: 1
+      first_step_legal_events:
+        up: [walk]
+        right:
+          - "push_object:sticky#1"
+          - "force_chain:n7"
+          - "move_sticky_rigid"
+          - "sticky_to_box:n7"
+      whether_core_chain_preserved: true
+      graph_status: complete
+      core_event_probe_status: complete
+      player_side_read: 错误主体推移是距离 0 的自然动作，且正确承诺晚 11 步；是最差的读题顺序之一。
+  chosen_start:
+    position: [3, 2]
+    action: keep
+    reason: >-
+      current start 虽存在距离 0 的正确不可逆出口，但 initial SCC 有 12 个状态，左键是可逆观察路线，右键才是可见的第一段锻造；
+      玩家并未被迫第一步承诺。移到 (2,2)/(1,2) 只增加一至两步无新信息的接近；移到左通道下方则让提前试推死路先于正确构造。
+  version_effect:
+    layout_changed: false
+    start_changed: false
+    exact_version_status: unchanged
+    new_version_required_by_this_check: false
+  review_effect:
+    reviewed_version_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/review/independent_level_review_attempt_1.yml
+    existing_review_survives_this_check: true
+    rereview_required_by_this_check: false
+    scope_note: 这里只说明开局检查本身；最终提交状态还受冗余要素检查约束。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5/raw_evidence.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json

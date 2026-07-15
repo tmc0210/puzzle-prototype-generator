@@ -1,0 +1,54 @@
+runId: ra_giant_challenge_remote_force_problem_20260715
+title: "给定组件的远程施力绕过：直条、非直线与短件对照"
+notes: "B/S 竖向边界让左侧目标箱保持 crate、右侧组件保持 sticky；反向 LP 让右侧玩家属于 P 侧。向左推动时，玩家施力点仍在 P 侧，但组件远端可推动箱子上目标。"
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 12
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: "straight_remote_bank"
+    family: "remote_force_origin_bypass"
+    variant: "straight_sticky_bar"
+    changed_variable: "给定组件是一条横向九格黏块"
+    contrast_with: "short_component_no_reach"
+    notes: "left 时远端 crate 被力链推上目标；玩家仍在 P 侧，随后 down 不撤销目标。"
+    layout: |
+      ###################
+      #....BS.....LP....#
+      #.................#
+      #...GCMMMMMMMMM@..#
+      #.................#
+      ###################
+    actions: ["left", "down"]
+
+  - id: "u_shape_remote_bank"
+    family: "remote_force_origin_bypass"
+    variant: "non_straight_u_component"
+    changed_variable: "将直条换成有空腔和双臂的 U 形连体组件"
+    contrast_with: "straight_remote_bank"
+    notes: "证明攻击不应只按直条分类；远端上臂推动 crate，玩家从右侧把手施力。"
+    layout: |
+      ###################
+      #....BS.....LP....#
+      #.................#
+      #...GCM.......M@..#
+      #.....MMMMMMMMM...#
+      #.................#
+      ###################
+    actions: ["left", "down"]
+
+  - id: "short_component_no_reach"
+    family: "remote_force_origin_bypass"
+    variant: "short_sticky_bar"
+    changed_variable: "组件缩短到五格，远端不再接触 crate"
+    contrast_with: "straight_remote_bank"
+    notes: "left 只移动短组件，目标箱不动；只证明这一给定组件 reach 不足。"
+    layout: |
+      ###################
+      #....BS.....LP....#
+      #.................#
+      #...GC....MMMMM@..#
+      #.................#
+      ###################
+    actions: ["left", "down"]

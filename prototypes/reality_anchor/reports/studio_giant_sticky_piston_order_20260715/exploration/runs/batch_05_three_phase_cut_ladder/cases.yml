@@ -1,0 +1,104 @@
+runId: ra_exp_giant_sticky_batch_05_three_phase_cut_ladder
+title: "三段错相触点与自切残留的连续负载"
+notes: >-
+  从 pull 方向切回切割相位方向。三个真实 C->G 目标活塞分别由 x=12、x=11、x=10 的触点负责，
+  在 12|13 的 S|B 边界上应于第 1、2、3 拍依次触发。目标行的触点切出后不再被主体追上；
+  相邻支撑轨的越界箱则会留在前方并被后续拍继续推动。用第三拍支撑轨撞墙检查它是否只是 MAT-05 的
+  可线性加长版本，还是产生新的玩家关系。
+defaults:
+  maxExploreDepth: 6
+  maxReturnDepth: 14
+  maxStates: 40000
+  maxTransitions: 160000
+cases:
+  - id: "three_phase_cut_ladder_final"
+    family: "staggered_cut_phase_ladder"
+    variant: "tips_at_12_11_10"
+    changed_variable: "三个触点依次落后零、一、二格，支撑轨右侧留有三格排出空间"
+    contrast_with: "two_strokes_leave_third_goal,cf_support_debris_wall_blocks_third,cf_advance_third_tip_collapses_phase"
+    notes: "right 三次应依次覆盖上、中、下目标；每拍切出当拍触点，三拍后仍保留巨大主体并胜利。"
+    layout: |
+      ###################
+      #...........PL....#
+      #...........SB....#
+      #.................#
+      #.................#
+      #...MMMMM...MCG#..#
+      #...MMMMMMMMM.....#
+      #...MMMMMMMM......#
+      #..@MMMMM..M.CG#..#
+      #...MMMMM.........#
+      #...MMMMMMM.......#
+      #...MMMMM.M..CG#..#
+      #.................#
+      ###################
+    actions: ["right", "right", "right"]
+
+  - id: "two_strokes_leave_third_goal"
+    family: "staggered_cut_phase_ladder"
+    variant: "stop_before_late_tip"
+    changed_variable: "同一三段形只执行前两拍"
+    contrast_with: "three_phase_cut_ladder_final"
+    notes: "前两拍应只覆盖上、中目标，下目标仍空；主体和晚相触点仍为 sticky。"
+    layout: |
+      ###################
+      #...........PL....#
+      #...........SB....#
+      #.................#
+      #.................#
+      #...MMMMM...MCG#..#
+      #...MMMMMMMMM.....#
+      #...MMMMMMMM......#
+      #..@MMMMM..M.CG#..#
+      #...MMMMM.........#
+      #...MMMMMMM.......#
+      #...MMMMM.M..CG#..#
+      #.................#
+      ###################
+    actions: ["right", "right"]
+
+  - id: "cf_support_debris_wall_blocks_third"
+    family: "staggered_cut_phase_ladder"
+    variant: "top_support_discharge_closed"
+    changed_variable: "只在最长支撑轨第三拍的排出格 `(15,6)` 加墙"
+    contrast_with: "three_phase_cut_ladder_final"
+    notes: "前两拍仍应覆盖上、中目标；第三拍因支撑轨前方两箱撞墙而 force_blocked，下目标不得先动。"
+    layout: |
+      ###################
+      #...........PL....#
+      #...........SB....#
+      #.................#
+      #.................#
+      #...MMMMM...MCG#..#
+      #...MMMMMMMMM..#..#
+      #...MMMMMMMM......#
+      #..@MMMMM..M.CG#..#
+      #...MMMMM.........#
+      #...MMMMMMM.......#
+      #...MMMMM.M..CG#..#
+      #.................#
+      ###################
+    actions: ["right", "right", "right"]
+
+  - id: "cf_advance_third_tip_collapses_phase"
+    family: "staggered_cut_phase_ladder"
+    variant: "bottom_tip_extended_one_cell"
+    changed_variable: "只在下触点前补 `(11,11)`，使下触点与中触点同相"
+    contrast_with: "two_strokes_leave_third_goal"
+    notes: "两次 right 应完成上目标后，在第二拍同时完成中、下目标并胜利；第三阶段被压平。"
+    layout: |
+      ###################
+      #...........PL....#
+      #...........SB....#
+      #.................#
+      #.................#
+      #...MMMMM...MCG#..#
+      #...MMMMMMMMM.....#
+      #...MMMMMMMM......#
+      #..@MMMMM..M.CG#..#
+      #...MMMMM.........#
+      #...MMMMMMM.......#
+      #...MMMMM.MM.CG#..#
+      #.................#
+      ###################
+    actions: ["right", "right"]

@@ -27,16 +27,23 @@ packaging_account:
 slot_account:
   concrete_delta_from_baseline: ""
   application_added_authorship: ""
-  combination_supporting_mechanism: ""
-  combination_not_base_rule_or_prerequisite: ""
-  combination_consumption_relation: ""
+  combination_other_mechanism: ""
+  combination_not_prerequisite_to_current_core: ""
+  combination_player_visible_relation: ""
   challenge_ceiling_dimension: ""
-  non_equivalence_to_other_submissions: []
+  concrete_experience_difference_from_current_batch_works: []
 
 hard_evidence:
   solve_instance_ref: ""
   canonical_replay_ref: ""
-  graph_or_uniqueness_ref: ""
+  solution_uniqueness:
+    result: unique_complete | unique_within_budget | equivalent_variants_only
+    search_scope: complete | budget_limited
+    search_budget: ""
+    known_raw_winning_variants: []
+    equivalence_account: ""
+    evidence_refs: []
+    evidence_limits: []
   bypass_refs: []
   identity_counterfactual_refs: []
   evidence_limits: []
@@ -44,4 +51,6 @@ hard_evidence:
 designer_self_verdict: submit_for_independent_review | withdraw
 ```
 
-Designer 必须明确写出缺点；不知道就写 `none_identified`，不得留空。`designer_self_verdict` 不能产生 review survive、admission eligible 或 pending_playtest。
+Designer 必须明确写出缺点；不知道就写 `none_identified`，不得留空。`solution_uniqueness` 必须使用 docs/21 定义的三个合法结果并引用当前 exact version 的实际证据；存在已知非等价胜解时必须 withdraw。`designer_self_verdict` 不能产生 review survive 或 pending_playtest。
+
+送审包不得发送给 independent level reviewer，也不得作为其 raw packet 的摘要来源。

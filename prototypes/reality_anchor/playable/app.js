@@ -1420,28 +1420,7 @@ function stepPush(state, input, dir, options) {
   }
   const targetObject = objectIdAt(state, destination);
   if (targetObject) {
-    if (isRuleDisabled3("push_force", options)) {
-      return illegal3(state, input, "push_force_disabled");
-    }
-    const plan = planObjectMove(state, targetObject, dir, {
-      playerBlocks: /* @__PURE__ */ new Set([pointKey3(state.player)])
-    });
-    if (!plan.legal) {
-      return illegal3(state, input, plan.reason);
-    }
-    const moved2 = translatePlannedObjects(state, plan.objectIds, dir);
-    moved2.player = destination;
-    const normalized2 = normalizeState(moved2, { emitEvents: true, options });
-    return {
-      legal: true,
-      input,
-      state: normalized2.state,
-      events: [
-        `push_object:${describeObject(targetObject)}`,
-        ...forceEvents(state, plan.objectIds),
-        ...normalized2.events
-      ]
-    };
+    return stepForce(state, input, dir, destination, targetObject, "push", options);
   }
   if (!isFreeForPlayer(state, destination)) {
     return illegal3(state, input, "destination_occupied");
@@ -1456,34 +1435,10 @@ function stepPull(state, input, dir, options) {
   if (isWallOrBounds(state, destination)) {
     return illegal3(state, input, "destination_blocked");
   }
-  if (objectIdAt(state, destination)) {
-    return illegal3(state, input, "pull_world_front_blocked");
-  }
   const behind = subtract2(state.player, dir);
   const targetObject = objectIdAt(state, behind);
   if (targetObject) {
-    if (isRuleDisabled3("pull_force", options)) {
-      return illegal3(state, input, "pull_force_disabled");
-    }
-    const plan = planObjectMove(state, targetObject, dir, {
-      playerBlocks: /* @__PURE__ */ new Set([pointKey3(destination)])
-    });
-    if (!plan.legal) {
-      return illegal3(state, input, plan.reason);
-    }
-    const moved2 = translatePlannedObjects(state, plan.objectIds, dir);
-    moved2.player = destination;
-    const normalized2 = normalizeState(moved2, { emitEvents: true, options });
-    return {
-      legal: true,
-      input,
-      state: normalized2.state,
-      events: [
-        `pull_object:${describeObject(targetObject)}`,
-        ...forceEvents(state, plan.objectIds),
-        ...normalized2.events
-      ]
-    };
+    return stepForce(state, input, dir, destination, targetObject, "pull", options);
   }
   if (!isFreeForPlayer(state, destination)) {
     return illegal3(state, input, "destination_occupied");
@@ -1493,7 +1448,33 @@ function stepPull(state, input, dir, options) {
   const normalized = normalizeState(moved, { emitEvents: true, options });
   return { legal: true, input, state: normalized.state, events: ["walk", ...normalized.events] };
 }
-function planObjectMove(state, startObject, dir, context) {
+function stepForce(state, input, dir, playerDestination, targetObject, force, options) {
+  const ruleId = force === "push" ? "push_force" : "pull_force";
+  if (isRuleDisabled3(ruleId, options)) {
+    return illegal3(state, input, `${ruleId}_disabled`);
+  }
+  const plan = planObjectMove(state, targetObject, dir);
+  if (!plan.legal) {
+    return illegal3(state, input, plan.reason);
+  }
+  const moved = translatePlannedObjects(state, plan.objectIds, dir);
+  if (objectIdAt(moved, playerDestination)) {
+    return illegal3(state, input, "player_destination_occupied");
+  }
+  moved.player = playerDestination;
+  const normalized = normalizeState(moved, { emitEvents: true, options });
+  return {
+    legal: true,
+    input,
+    state: normalized.state,
+    events: [
+      `${force}_object:${describeObject(targetObject)}`,
+      ...forceEvents(state, plan.objectIds),
+      ...normalized.events
+    ]
+  };
+}
+function planObjectMove(state, startObject, dir) {
   const moving = /* @__PURE__ */ new Set();
   const occupancy = objectOccupancy(state);
   const visit = (objectId) => {
@@ -1506,9 +1487,6 @@ function planObjectMove(state, startObject, dir, context) {
       const targetKey = pointKey3(target);
       if (!inBounds3(state, target) || state.walls.has(targetKey)) {
         return "force_blocked";
-      }
-      if (context.playerBlocks.has(targetKey)) {
-        return "force_blocked_by_player";
       }
       const blocker = occupancy.get(targetKey);
       if (blocker && blocker !== objectId) {
@@ -2189,6 +2167,58 @@ var puzzleScript16Sprites = {
   "ra.anchor.sticky_end.join_down": sprite("ra_anchor_sticky_end_join_down.png", "sticky anchor end joined down", "object")
 };
 
+// src/web/fitBoard.ts
+var tileSizeProperty = "--tile-size";
+var tileSizeCapProperty = "--tile-size-cap";
+var BoardFitController = class {
+  observer = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      fitBoard(entry.target);
+    }
+  });
+  observe(container) {
+    this.observer.disconnect();
+    if (!container) {
+      return;
+    }
+    fitBoard(container);
+    this.observer.observe(container);
+  }
+};
+function fitBoard(container) {
+  const board = container.querySelector("[data-fit-board]");
+  if (!board) {
+    return;
+  }
+  const width = positiveNumber(board.dataset.boardWidth);
+  const height = positiveNumber(board.dataset.boardHeight);
+  if (!width || !height) {
+    return;
+  }
+  const containerStyle = window.getComputedStyle(container);
+  const availableWidth = container.clientWidth - cssPixels(containerStyle.paddingLeft) - cssPixels(containerStyle.paddingRight);
+  const availableHeight = container.clientHeight - cssPixels(containerStyle.paddingTop) - cssPixels(containerStyle.paddingBottom);
+  const cap = cssPixels(window.getComputedStyle(board).getPropertyValue(tileSizeCapProperty));
+  const fittedSize = Math.min(
+    cap > 0 ? cap : Number.POSITIVE_INFINITY,
+    availableWidth / width,
+    availableHeight / height
+  );
+  if (!Number.isFinite(fittedSize) || fittedSize <= 0) {
+    return;
+  }
+  const safeSize = Math.floor(fittedSize * 1e3) / 1e3;
+  board.style.setProperty(tileSizeProperty, `${safeSize}px`);
+}
+function positiveNumber(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : void 0;
+}
+function cssPixels(value) {
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 // src/web/app.ts
 var defaultAestheticLabels = {
   "1": "\u53CD\u4F8B\u6837\u672C",
@@ -2223,7 +2253,8 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
-var buildId = true ? "mri85cu8" : String(Date.now());
+var boardFitController = new BoardFitController();
+var buildId = true ? "mrlf0bnl" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);
@@ -2236,11 +2267,18 @@ var playState = null;
 var saveStatus = reviewData.writable ? "\u53EF\u5199\u8BC4\u5BA1\u670D\u52A1\u5DF2\u8FDE\u63A5" : "\u9759\u6001\u53EA\u8BFB\u8BD5\u73A9";
 var replaying = false;
 var toolMenuOpen = false;
+var narrowPanel = null;
 var draftByEntry = /* @__PURE__ */ new Map();
 selectedEntryKey = pickInitialEntryKey();
 resetPlayStateForSelection();
 render();
 window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && narrowPanel) {
+    event.preventDefault();
+    narrowPanel = null;
+    render();
+    return;
+  }
   if (isEditableTarget(event.target)) {
     return;
   }
@@ -2274,19 +2312,22 @@ function render() {
   app.innerHTML = `
     <div class="review-shell">
       ${renderHeader()}
-      <aside class="candidate-rail" aria-label="\u5019\u9009\u5217\u8868">
+      <aside class="candidate-rail ${narrowPanel === "candidates" ? "is-open" : ""}" aria-label="\u5019\u9009\u5217\u8868">
+        ${renderNarrowPanelCloseButton()}
         ${renderCandidateRail()}
       </aside>
       <main class="play-area">
         ${renderPlayArea(entry, level)}
       </main>
-      <aside class="review-panel" aria-label="\u8BC4\u5BA1\u9762\u677F">
+      <aside class="review-panel ${narrowPanel === "review" ? "is-open" : ""}" aria-label="\u8BC4\u5BA1\u9762\u677F">
+        ${renderNarrowPanelCloseButton()}
         ${entry ? renderReviewPanel(entry, draft) : renderEmptyReviewPanel()}
       </aside>
     </div>
   `;
   bindUiEvents();
   restoreViewState(viewState);
+  boardFitController.observe(app.querySelector(".board-wrap"));
 }
 function captureViewState() {
   return {
@@ -2315,6 +2356,18 @@ function renderHeader() {
         <h1>${escapeHtml(data.mechanic.title)}</h1>
       </div>
       <div class="header-metrics" aria-label="\u5019\u9009\u6982\u51B5">
+        <button
+          class="secondary-button mobile-panel-button"
+          type="button"
+          data-action="open-candidates"
+          aria-expanded="${narrowPanel === "candidates"}"
+        >\u5173\u5361</button>
+        <button
+          class="secondary-button mobile-panel-button"
+          type="button"
+          data-action="open-review"
+          aria-expanded="${narrowPanel === "review"}"
+        >\u8BC4\u5BA1</button>
         <a class="secondary-link" href="./editor">\u5173\u5361\u7F16\u8F91\u5668</a>
         <span class="metric"><strong>${archiveCount}</strong> \u5F52\u6863\u5019\u9009</span>
         <span class="metric"><strong>${temporaryCount}</strong> \u4E34\u65F6\u6E38\u73A9</span>
@@ -2322,6 +2375,13 @@ function renderHeader() {
         <span class="save-status">${escapeHtml(saveStatus)}</span>
       </div>
     </header>
+  `;
+}
+function renderNarrowPanelCloseButton() {
+  return `
+    <button class="secondary-button mobile-drawer-close" type="button" data-action="close-narrow-panel">
+      \u8FD4\u56DE\u8BD5\u73A9
+    </button>
   `;
 }
 function renderCandidateRail() {
@@ -2635,7 +2695,10 @@ function renderBoard(runtimeAdapter, state) {
   return `
     <div
       class="board"
-      style="grid-template-columns: repeat(${visual.width}, minmax(0, 1fr));"
+      data-fit-board
+      data-board-width="${visual.width}"
+      data-board-height="${visual.height}"
+      style="grid-template-columns: repeat(${visual.width}, var(--tile-size));"
       aria-label="${escapeAttribute(state.level.title)}"
     >
       ${tiles.map(renderTile).join("")}
@@ -2685,6 +2748,22 @@ function renderFallbackGlyph(layer) {
   return `<span class="fallback-glyph">${escapeHtml(layer.fallbackGlyph)}</span>`;
 }
 function bindUiEvents() {
+  app.querySelector("[data-action='open-candidates']")?.addEventListener("click", () => {
+    narrowPanel = "candidates";
+    render();
+  });
+  app.querySelector("[data-action='open-review']")?.addEventListener("click", () => {
+    captureDraftFromDom();
+    narrowPanel = "review";
+    render();
+  });
+  app.querySelectorAll("[data-action='close-narrow-panel']").forEach((button) => {
+    button.addEventListener("click", () => {
+      captureDraftFromDom();
+      narrowPanel = null;
+      render();
+    });
+  });
   app.querySelectorAll("[data-tab]").forEach((button) => {
     button.addEventListener("click", () => {
       captureDraftFromDom();
@@ -2730,6 +2809,7 @@ function bindUiEvents() {
       }
       captureDraftFromDom();
       toolMenuOpen = false;
+      narrowPanel = null;
       selectedEntryKey = key;
       resetPlayStateForSelection();
       render();

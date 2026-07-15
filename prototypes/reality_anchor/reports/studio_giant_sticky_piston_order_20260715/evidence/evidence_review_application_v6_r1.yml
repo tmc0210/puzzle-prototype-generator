@@ -1,0 +1,240 @@
+review_attempt_id: EVREV_RA_FORGED_C_SYNC_V6_R1
+reviewer_instance_id: independent_evidence_reviewer_application_v6_r1_20260715
+candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+exact_version: v6
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.md
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness_v6/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness_v6/report.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/cases.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/cases.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/report.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/migration_manifest.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/identity_verification.json
+    - prototypes/reality_anchor/mechanic.yml
+    - prototypes/reality_anchor/mechanism_lab/lexicon.md
+    - docs/21-level-design-studio-standard.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "stateIndex=81; depth=12; player=(2,5)"
+    - "stateIndex=93; depth=13; player=(2,6)"
+    - "stateIndex=103; depth=14; player=(2,7)"
+    - "stateIndex=112; depth=15; player=(2,8)"
+    - "stateIndex=118; depth=16; player=(2,9)"
+    - "stateIndex=122; depth=17; player=(2,10)"
+    - "stateIndex=124; depth=18; player=(2,11)"
+  equivalence_evidence_basis:
+    - >-
+      application_uniqueness_v6/results.json 与 current v6 layout SHA256
+      31debfe814fda7a58cc198234445f2b0d58d8aba063fc8b473e3364bded03879 绑定，记录
+      terminalizeWins=true、maxStates=200000、graph status=complete、143 states、338 transitions、7 raw win states。
+    - >-
+      七个胜态的 player 坐标恰为 (2,5)..(2,11)，去掉 player 后 objectKey 只有一个类；
+      七个胜态各只有一条 non-win -> win 入边，七条入边的 beforeObjectKey、after objectKey、
+      action=right 与事件 push_object:sticky#1 / force_chain:n3 / move_sticky_rigid /
+      sticky_to_box:n4 全部相同，故终转移对象类只有一个。
+    - >-
+      current v6 layout_analysis 的完整主图同为 143/338/7；前三个 win-path SCC/region 的
+      win-reaching continuation 均唯一，三条 handoff 均是依次完成 n2、n2、n4 构造的 right，
+      最后一个非胜 SCC 的七个 win-reaching 出口对应同一厚脊上的七个接触格。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 结论是玩家逻辑类等价，不是 raw input 序列、玩家路径或 raw state 唯一。
+    - 完整主图在胜态终止；本审查不对胜利后的继续移动作任何结论。
+    - 等价判断只使用 current exact v6 的完整图、实际胜态和对象转移，不以路线长短、审美或档位作依据。
+
+claims:
+  - claim_id: exact_version_layout_binding
+    claim: >-
+      送审包、候选布局、replay、layout analysis、uniqueness 与 identity base case
+      都绑定到 current exact v6，布局 SHA256 为
+      31debfe814fda7a58cc198234445f2b0d58d8aba063fc8b473e3364bded03879。
+    status: supported
+    evidence_basis:
+      - >-
+        对候选 txt 原始字节实际计算 SHA256，结果与 review packet、
+        application_uniqueness_v6/results.json 和 migration_manifest.json 的哈希逐字一致。
+      - >-
+        候选 13x11 布局与 replay.layout、layout_analysis.initialState、cases.yml/json 的 base layout、
+        application_identity_v6/results.json 的 base layout 逐字一致；replay/layout analysis id、
+        uniqueness/identity verification 的 candidateId 与 exactVersion 均为本候选 v6。
+      - >-
+        cases.yml、cases.json 与 identity results 的六个 case id、layout 和 action list 逐项一致，
+        每行宽度均为 11。
+    limits:
+      - 此绑定不复用任何旧 review，也不把其它版本 artifact 当作 current v6 证据。
+
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 全部合法，终态同时覆盖两个目标并胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json 的 inputs 与送审 canonical inputs
+        逐项一致；completed=true、executedSteps=12、legalThroughStep=12，十二步全部 legal，
+        相邻步骤 before/after state key 连续。
+      - >-
+        第十二步 after.isWin=true、final.isWin=true，终态在 (9,5) 与 (9,11) 两个原始目标格均渲染 *；
+        layout analysis 也给出 found=true、cost=depth=12 的同一输入。
+    limits:
+      - 本条只证明给定十二步 exact trace 可解；解族范围另由 solution_uniqueness_review 审计。
+
+  - claim_id: three_stage_construction
+    claim: >-
+      canonical 前三拍推动同一 B/S 锚点右移三列，依次产生 box_to_sticky:n2、n2、n4
+      与 sticky_merge:n1；第三拍后八只初始箱构件全部并入原 21 格厚脊，形成单一 29 格 sticky#1。
+    status: supported
+    evidence_basis:
+      - >-
+        replay 步 1..3 均为 right，事件逐拍为 B/S push + boundary shift +
+        box_to_sticky:n2/n2/n4 + sticky_merge:n1；B/S state key 从 B=(5,2),S=(4,2)
+        依次变为 B=(6,2)/(7,2)/(8,2)，S 同步右移。
+      - >-
+        初态 state key 为 21 个 M 与 10 个 C；第三拍后为一个 29-cell M component 与仅余
+        (8,5)、(8,11) 两个 C。原 21 个 M 坐标全部保留于该 component，因此净并入八格。
+      - >-
+        步 4..11 均只发生 walk，动作前终拍的对象 state key 与第三拍后相同；
+        mechanic.yml 规定本关最多一个 distinguishable B/S anchor，支持“同一锚点”实例解释。
+    limits:
+      - 这是 canonical 事件实例与连通对象事实，不产生审美、难度或玩家价值结论。
+
+  - claim_id: premature_two_sweep_branch_cannot_win
+    claim: >-
+      current exact v6 完整主图的前三个胜路区域都只有一个 win-reachable commitment，
+      即继续 right 扫线；两扫后沿左通道推动主体的给定 exact trace 不移动两只目标箱，
+      终态也不能再向右推动主体。
+    status: supported
+    evidence_basis:
+      - >-
+        current v6 layout_analysis 主图 status=complete、143 states、338 transitions；solution path
+        的 region 0/1/2 各有 commitments=2、viable=1、dead=1，三条唯一 win-reaching handoff
+        均为 right，事件依次对应 n2、n2、n4 扫线。
+      - >-
+        identity case two_sweeps_then_premature_attempt 的十步 exact trace 全部 legal；终拍事件为
+        push_object:sticky#1 / force_chain:n3 / move_sticky_rigid / sticky_to_box:n2，
+        final.isWin=false，(8,5)、(8,11) 两只目标前箱仍在原坐标，两个 x=9 目标均未覆盖。
+      - >-
+        该 exact 终态 finalActionTable 的 right 为 illegal，reason=force_blocked。
+    limits:
+      - >-
+        two_sweeps_then_premature_attempt 的 return probe 为 depth=24 exhausted；本审查不使用它证明
+        “不可回返”。dead commitment 的全局不可胜边界只来自 current v6 完整主图，exact trace
+        另只支持其给定终态与紧接着 right 被挡。
+      - 不把 immediate force_blocked 扩张为对其它布局、其它状态或任意后续输入的全局结论。
+
+  - claim_id: atomic_double_lock_final
+    claim: >-
+      canonical 终拍由动作前已连通的 29 格 sticky#1 产生 right、force_chain:n3、
+      move_sticky_rigid、sticky_to_box:n4，并把两只目标箱同时从 x=8 推到 x=9 的目标。
+    status: supported
+    evidence_basis:
+      - >-
+        replay 步 12 before state key 含一个 29-cell M component，且 C 恰为 (8,5)、(8,11)；
+        事件逐项为 push_object:sticky#1、force_chain:n3、move_sticky_rigid、sticky_to_box:n4。
+      - >-
+        同一步 after state key 在 (9,5)、(9,11) 均有 C，两个目标同拍覆盖且 after.isWin=true；
+        uniqueness 的七条全部 win 入边也有完全相同的动作、事件和前后对象态。
+    limits:
+      - >-
+        mechanic.yml 将 crate 定义为 indistinguishable；“两只目标箱”在此是由前后坐标占用与
+        同一 force-chain 证明的两格对象参与，不主张跨任意路径的持久箱编号或 per-object necessity。
+      - sticky_to_box:n4 是该拍的材质转换计数，不被解释为四只目标箱。
+
+  - claim_id: upper_tip_and_connection_are_necessary_for_same_stroke
+    claim: >-
+      删除上钩尖或仅删除上支撑末格时，相同 canonical input 都只完成下目标；
+      两个反事实的局部完整图均无胜态。断连接 case 的孤立上钩尖不随主体同拍移动。
+    status: supported
+    evidence_basis:
+      - >-
+        cf_missing_upper_tip 相对 base 只把 (7,5) 从 C 改为 floor；十二步全部 legal，终态仅
+        (9,11) 为 *、final.isWin=false；局部图 status=complete、141 states、344 transitions、0 wins。
+      - >-
+        cf_disconnect_upper_tip 相对 base 只把 (7,6) 从 C 改为 floor；第三扫后 M state key
+        分成 27-cell 主体与 singleton (7,5)，终拍前仍分离，终拍后该尖仍在 (7,5)；
+        终态仅下目标覆盖，局部图同为 complete 141/344/0。
+      - >-
+        两个 case 的 layout、actions、exact state/event trace 与 current identity results 已逐项绑定，
+        identity_verification.json 对 current v6 的相应 narrow claims 也给出一致记录。
+    limits:
+      - >-
+        “必要”严格限于这两个单变量反事实的同一 canonical stroke 与各自局部完整图；
+        不证明其它改造、其它输入族或作品审美中的普遍必要性。
+
+  - claim_id: representative_target_geometry_retracts
+    claim: >-
+      保持上目标、墙与 P/L 侧别并把玩家放到上箱 P 侧的代表 probe 中，right 推入后未胜；
+      玩家可进入侧袋并返回，随后 left 拉回同一目标位置的箱，恢复初始对象状态。
+    status: supported
+    evidence_basis:
+      - >-
+        probe_upper_lock_alcove_retracts 与 base 的墙、目标、P/L 坐标一致；布局变化仅为移走
+        (3,2) 的玩家并让玩家占原上钩尖 (7,5)，即保留 (8,5) 的上目标前箱与 (9,5) 目标。
+      - >-
+        四步 right/down/up/left 全部 legal，玩家位置依次为 (8,5)、(8,6)、(8,5)、(7,5)；
+        事件依次为 push_object:crate#1、walk、walk、pull_object:crate#1，第一步 after.isWin=false。
+      - 最终 full state key 与 initial state key 相等，因此对象状态和玩家位置均恢复。
+    limits:
+      - >-
+        该 probe 的 broad graph 为 exhausted、50001 states、state budget exceeded；本条只支持
+        四步 exact push-enter-return-pull 关系，不支持 all-path 锁定、全局唯一或不可逃逸结论。
+      - crate 编号只用于该 exact trace 的事件配对，不扩张为通用 per-object necessity。
+
+  - claim_id: prebuilt_counterfactual_removes_construction_events
+    claim: >-
+      把 B/S 初始置于最终列并把八只构件预先设为 sticky 后，给定四步 trace
+      直接以同一 n3/n4 终拍胜利，不再发生 B/S shift、box_to_sticky 或 merge 事件。
+    status: supported
+    evidence_basis:
+      - >-
+        cf_prebuilt_completed_shape 初态去掉 player 后的完整对象 state key 与 base 第三扫后逐字相同：
+        一个 29-cell M component、两只 C 及 B=(8,2),S=(7,2)。
+      - >-
+        四步 down/down/down/right 全部 legal，前三步仅 walk；终拍事件与 base 相同，均为
+        push_object:sticky#1 / force_chain:n3 / move_sticky_rigid / sticky_to_box:n4，final.isWin=true，
+        且完整终态与 base 完整终态相同。
+      - 四步事件全集不含 B/S boundary shift、box_to_sticky、sticky_merge 或 B/S push。
+    limits:
+      - 此反事实只证明构造事件相对给定四步 exact trace 被移除，不证明其审美价值或所有可能解路。
+
+  - claim_id: exact_v6_is_verified_outline_successor
+    claim: >-
+      v6 是按 manifest 对六个 case 每行末尾两格纯墙作机械裁除的 current-exact successor；
+      v6 base identity case 与候选逐字一致，六个 case 的 actions、state key、事件、胜负与局部图摘要
+      均由 current verification 记录为不变。
+    status: supported
+    evidence_basis:
+      - >-
+        migration_manifest.json 记录六个 case 的逐行前置断言 width=13、suffix=## 与裁除动作，
+        并记录 allActionListsUnchanged=true、allInternalRowsWidth11=true、
+        baseCaseMatchesExactV6=true；candidateSha256 与实算 current v6 哈希一致。
+      - >-
+        identity_verification.json 绑定 candidateId 与 exactVersion=v6；六个 case 的
+        actionsUnchanged、stateKeysUnchanged、eventTraceUnchanged、finalWinUnchanged、
+        graphSummaryUnchanged 全部为 true。
+      - >-
+        current v6 cases.yml、cases.json 与 results.json 的六个 layout/action 逐项一致，base layout
+        又与候选/replay/layout analysis 逐字一致；本审查对所有当前机械 claim 另用 v6 artifact 独立核验。
+    limits:
+      - >-
+        本审查未读取旧 v5 review、旧 reviewer 结论或未列入白名单的 v5 source；successor 关系只取
+        allowed current manifest/identity_verification 的机械比较记录，不让旧 v5 证据替代 current v6 证据。
+      - identity case 的 base 局部图摘要为其自身工具范围，不被拿来冒充 uniqueness 主图的 143/338/7。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

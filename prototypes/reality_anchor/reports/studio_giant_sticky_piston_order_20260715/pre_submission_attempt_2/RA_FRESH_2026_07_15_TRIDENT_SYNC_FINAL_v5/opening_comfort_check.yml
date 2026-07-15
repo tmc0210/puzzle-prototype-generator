@@ -1,0 +1,92 @@
+opening_comfort_check:
+  status: clean
+  candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+  exact_version: v5_sha256_79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+  authority_doc: prototypes/reality_anchor/docs/opening_comfort_check.md
+  version_effect: unchanged
+  review_effect: no_additional_rereview_from_this_check
+  review_lineage:
+    inherited_review_valid: false
+    reason: v5 本身仍待新硬证据审查与整批复核；本检查只读验证 current v5 起点，不产生 v6。
+  exact_version_guard:
+    expected_sha256: 79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+    observed_sha256: 79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+    layout_mutated: false
+    start_mutated: false
+    canonical_replay_mutated: false
+
+  exact_v5_graph_basis:
+    source_graph_status: complete
+    source_reachable_states: 923
+    source_legal_transitions: 2929
+    source_winning_states: 9
+    initial_scc_state_count: 315
+    same_object_candidate_start_count: 102
+    candidate_rule: exact v5 完整 runtime 图 initial SCC 内、对象配置与当前初态相同的玩家坐标。
+    current_start_in_candidate_set: true
+    evidence_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/successor_verification.json#/base/opening
+
+  predecessor_exhaustive_comparison:
+    predecessor_exact: v4_sha256_39839eef5d8c118500a0e4f3a48bfb9e38819fbb8a3cf06f6210f1e6ae58772b
+    predecessor_candidate_start_count: 106
+    all_predecessor_candidates_complete_graph: true
+    all_predecessor_candidates_complete_core_event_probe: true
+    current_start_selected_in_predecessor: [9, 9]
+    artifact_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/opening_comfort_check.yml
+    successor_relation: >-
+      v5 只把四个 x=12 leaf 变成外墙并裁掉旧 x=13 全墙列；没有新增地面或起点候选，
+      玩家、对象、目标和锚点坐标不变。v5 的 102 个同对象起点是 v4 已比较 106 个候选删去四个 leaf 位置后的子集。
+    scope_limit: >-
+      attempt2 没有为 102 个位置逐一重跑完整候选矩阵；前序矩阵只作为选点谱系，
+      current [9,9] 的 solver、完整 SCC、事件乘积图和首步动作均已在 exact v5 独立重跑。
+
+  current_start:
+    candidate_start_position: [9, 9]
+    shortest_solution_cost: 14
+    initial_scc_size: 315
+    initial_scc_exit_source_count: 18
+    initial_exit_source_distances: [4, 4, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 17, 18]
+    initial_win_exit_source_distances: [12, 13, 14, 15, 16, 16, 17, 17, 18]
+    nearest_irreversible_exit_distance: 4
+    nearest_win_reaching_exit_distance: 12
+    dead_exits_before_first_win_exit: 9
+    first_step_legal_events:
+      up: [walk]
+      down: [walk]
+      left: [walk]
+      right: [walk]
+    core_event_probe_status: complete
+    core_event_probe_states: 1028
+    missing_core_event_winning_bypass: none
+    whether_core_chain_preserved: true
+    player_reading: >-
+      四个首步都是可逆 walk，最近不可逆承诺距离为 4；起点右侧仍有 x=10..11 两格观察位，
+      玩家可先离开巨构/墙口再返回，而正确巨大刚体推进的出口源最短距离为 12。
+
+  cleanup_invariant_check:
+    predecessor_cleanup_artifact_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/outline_variants/TRIM_RIGHT_AFTER_ALL_LEAF_TIPS.txt
+    byte_identical_to_exact_v5: true
+    graph_delta_from_v4: "957/2997/9->923/2929/9"
+    initial_scc_delta_from_v4: "327->315"
+    nearest_irreversible_exit_delta: "4->4"
+    nearest_win_reaching_exit_delta: "12->12"
+    dead_exits_before_first_win_delta: "9->9"
+    first_step_right_walk_preserved: true
+
+  chosen_start:
+    position: [9, 9]
+    action: keep
+    reason: >-
+      exact v5 仍提供四向纯 walk、距离 4 的承诺缓冲和右侧两格观察带；清理只去掉每条短槽第三格 leaf，
+      没有把起点贴到不可逆动作或改变三活塞先于巨构推进的读题顺序。没有必要为本检查改动 solve instance。
+
+  artifact_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/verify_successor.ts
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_2/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5/successor_verification.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/pre_submission_attempt_1/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4/opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/agency/scc
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+  final_conclusion: >-
+    保留 [9,9]。exact v5 完整图显示当前起点仍有非平凡 initial SCC、四向可逆首步与距离 4 的承诺缓冲；
+    v4 的穷举比较作为谱系校准，v5 当前起点的关键事实已独立复验。本检查不改动 v5，也不额外触发复核。
+

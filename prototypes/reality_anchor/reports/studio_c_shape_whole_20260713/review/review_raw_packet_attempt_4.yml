@@ -1,0 +1,213 @@
+review_attempt_id: RA_CWHOLE_REVIEW_4
+prototype_id: reality_anchor
+
+prototype_rules:
+  confirmed_rules:
+    - 玩家每次输入一个正交方向；空格可行走。
+    - 无 P/L 时全图为 push；有 P/L 时，以输入前玩家位置相对 P/L 边界选择 push 或 pull。
+    - push 移动玩家前方对象；pull 要求玩家前格为空，并移动玩家及其身后对象；力可以向其它可动物传播。
+    - P/L 与 B/S 都是可移动两格锚点；移动后边界随锚点改变。
+    - 无 B/S 时全图为 box；有 B/S 时，每个合法动作后按新边界将箱与黏块全局归一化。
+    - sticky 正交相邻格合并为单一刚体；任何目标格受阻都会使整块移动失败。
+  win_condition: settle 后所有目标格都被箱、黏块格或锚点格覆盖；玩家不计入覆盖。
+  object_and_event_semantics:
+    - C 为普通箱，M 为黏块格；m 为目标上的黏块，G 为空目标。
+    - P/L 分别标记 push 侧与 pull 侧；B/S 分别标记 box 侧与 sticky 侧。
+    - force_chain 表示一次对象移动同时推动了另一个可动物；anchor_boundary_shift 表示对应锚点实际改变位置。
+    - 目标 overlay 在对象覆盖时仍存在；render 中对象字形可覆盖 G。
+  player_prior:
+    - 已知普通推箱、目标覆盖、固定与可移动 P/L。
+    - 已知 B/S 归一化、箱转黏、sticky merge、黏块刚体移动。
+    - 已知锚点本身可以被推拉。
+
+portfolio:
+  - slot: baseline
+    candidate_id: CWHOLE_BASELINE
+    exact_version: CWHOLE_BASELINE_v2_sha256_cbdb7ee863e7b6a9e2526850c390a0d6c204ff78cfb6d7f2074fb2f8db6b9dcf
+    solve_instance:
+      layout: |-
+        #########
+        #BSMMMG.#
+        #..#@M.G#
+        #..MMMG.#
+        #########
+      player_start: [4, 2]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [right, right]
+      mechanically_derived_trace:
+        - step: 1
+          input: right
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v2.json#/steps/0/before
+          event: push_object:sticky#1; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v2.json#/steps/0/after
+          visible_board_change: 七格连通黏块整体右移一格，上下目标被覆盖，未胜利。
+        - step: 2
+          input: right
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v2.json#/steps/1/before
+          event: push_object:sticky#1; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v2.json#/steps/1/after
+          visible_board_change: 同一七格黏块再次整体右移，中目标也被覆盖，胜利。
+
+  - slot: application
+    candidate_id: CWHOLE_APPLICATION
+    exact_version: CWHOLE_APPLICATION_v7_sha256_763a90266af2796aa8fbe4c6625fa9a463a6ecaf46c64249fde00d84a4518658
+    solve_instance:
+      layout: |-
+        #########
+        ####@####
+        #B..C...#
+        #S.M.mGG#
+        ##.M.G..#
+        ###MMmGG#
+        #########
+      player_start: [4, 1]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [down, left, left, down, right, right]
+      mechanically_derived_trace:
+        - step: 1
+          input: down
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/0/before
+          event: push_object:crate#1; box_to_sticky:n1; sticky_merge:n1
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/0/after
+          visible_board_change: 箱向下进入 sticky 侧，与既有部件合并；棋盘出现七格连通形状，未胜利。
+        - step: 2
+          input: left
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/1/before
+          event: walk
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/1/after
+          visible_board_change: 玩家左移，所有对象不变。
+        - step: 3
+          input: left
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/2/before
+          event: walk
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/2/after
+          visible_board_change: 玩家再次左移，所有对象不变。
+        - step: 4
+          input: down
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/3/before
+          event: walk
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/3/after
+          visible_board_change: 玩家下移到连通黏块左侧，所有对象不变。
+        - step: 5
+          input: right
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/4/before
+          event: push_object:sticky#1; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/4/after
+          visible_board_change: 七格连通黏块整体右移一格，部分目标被覆盖，未胜利。
+        - step: 6
+          input: right
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/5/before
+          event: push_object:sticky#1; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/5/after
+          visible_board_change: 同一黏块再次整体右移，七个目标全部被覆盖，胜利。
+
+  - slot: combination
+    candidate_id: CWHOLE_COMBINATION
+    exact_version: CWHOLE_COMBINATION_v5_sha256_48dbab837941277f3f1fd9bcb5da57e40b3b9f5d47c302041c620d4844ad5d77
+    solve_instance:
+      layout: |-
+        #########
+        ##@.....#
+        #BP.....#
+        #SL..####
+        ##.MMM###
+        ##.M..###
+        ###MMm###
+        ###G..###
+        ###..G###
+        #########
+      player_start: [2, 1]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [down, down, right, down, down]
+      mechanically_derived_trace:
+        - step: 1
+          input: down
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/0/before
+          event: push_object:push_pull_anchor; anchor_boundary_shift:push_pull
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/0/after
+          visible_board_change: 竖直 P/L 整体下移一格，所有黏块与目标覆盖不变。
+        - step: 2
+          input: down
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/1/before
+          event: push_object:push_pull_anchor; anchor_boundary_shift:push_pull
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/1/after
+          visible_board_change: 同一 P/L 再下移一格，所有黏块与目标覆盖不变。
+        - step: 3
+          input: right
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/2/before
+          event: walk
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/2/after
+          visible_board_change: 玩家右移到黏块上方，所有对象不变。
+        - step: 4
+          input: down
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/3/before
+          event: push_object:sticky#1; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/3/after
+          visible_board_change: 七格连通黏块整体下移一格，部分目标覆盖改变，未胜利。
+        - step: 5
+          input: down
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/4/before
+          event: push_object:sticky#1; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json#/steps/4/after
+          visible_board_change: 同一黏块再次整体下移，三目标全部被覆盖，胜利。
+
+  - slot: challenge
+    candidate_id: CWHOLE_CHALLENGE
+    exact_version: CWHOLE_CHALLENGE_v5_sha256_4cd4cfaa519418136d09a8863c26c2962168cba800e1fceedbb81f325e6a2288
+    solve_instance:
+      layout: |-
+        ##########
+        #BS..#...#
+        #.#MMm..##
+        #..ML.G.##
+        #.@mP.G.##
+        #.#MMm..##
+        ##########
+      player_start: [2, 4]
+      win_condition: all_targets_covered_by_objects
+    canonical_solution:
+      exact_inputs: [right, right, up, left, left]
+      mechanically_derived_trace:
+        - step: 1
+          input: right
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/0/before
+          event: push_object:sticky#1; force_chain:n2; anchor_boundary_shift:push_pull; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/0/after
+          visible_board_change: 八格连通黏块与其凹口内竖直 P/L 同时右移一格；原有目标覆盖被部分撤销，未胜利。
+        - step: 2
+          input: right
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/1/before
+          event: push_object:sticky#1; force_chain:n2; anchor_boundary_shift:push_pull; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/1/after
+          visible_board_change: 黏块与 P/L 再同时右移；P/L 覆盖远端双目标，黏块左侧目标仍为空，未胜利。
+        - step: 3
+          input: up
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/2/before
+          event: walk
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/2/after
+          visible_board_change: 玩家上移一格，所有对象不变。
+        - step: 4
+          input: left
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/3/before
+          event: pull_object:sticky#1; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/3/after
+          visible_board_change: 八格连通黏块向左移动一格，P/L 保持在远端双目标上，未胜利。
+        - step: 5
+          input: left
+          before_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/4/before
+          event: pull_object:sticky#1; move_sticky_rigid
+          after_state_ref: prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json#/steps/4/after
+          visible_board_change: 同一黏块再次向左移动并恢复三处目标覆盖；P/L 仍覆盖双目标，胜利。
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_BASELINE_v2.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v2.json
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_APPLICATION_v7.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_COMBINATION_v5.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v5.json
+  - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_CHALLENGE_v5.txt
+  - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v5.json

@@ -1,0 +1,107 @@
+falsification_attempt_id: "GAMMA_CLEAN_CONTROL_FALSIFICATION"
+critic_instance_id: "fresh_claim_falsifier_gamma_clean_control"
+base_packet_ref: "../candidate_gamma.yml"
+claim_replacement_ref: "case_gamma_clean_control.yml"
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "gamma_clean_01_temporary_upper_crate"
+    claim_type: mechanical_fact
+    normalized_proposition: "steps1-4 中，上箱作为 B 半格上方的临时受力对象参与 B/S 上提，并在 step4 回到原行。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU1_borrowed_crate_lift].alternative: exact_inputs 为 [down]，结果是箱与 B/S 一起下移，未取得目标或末段竖条条件。"
+        - "base_packet.player_reasoning.reasoning_units[RU1_borrowed_crate_lift].operation_steps: 1-4。"
+        - "base_packet.player_reasoning.reasoning_units[RU1_borrowed_crate_lift].feedback: step4 时 B/S 上提到左目标行，上箱回到原位。"
+      countercase: "最直接的一次 down 确实没有实现上提，但声明针对的是完整 steps1-4 关系；该 alternative 只反驳了单步直推，并未给出上箱没有承担临时受力作用的反例。"
+    status: survived_attack
+    status_reason: "包内明确给出受力对象、步骤范围与 step4 的双重可见结果，最强现成反例没有触及完整四步关系。"
+    surviving_scope: "只支持上箱在 steps1-4 的临时受力职责及 step4 结果，不支持玩家会自然预判该关系。"
+
+  - claim_id: "gamma_clean_02_pl_target_endpoint_swap"
+    claim_type: mechanical_fact
+    normalized_proposition: "中段 P/L 在保持右目标覆盖的过程中，把覆盖端点从 L 改为 P，并在 step8 由 P 覆盖右目标。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].player_question: 第一次 B/S 上提后要求取得右侧左推站位并保持右目标覆盖。"
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].conclusion: 先右推 P/L，再绕到上方下推。"
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback: step8 P 覆盖右目标并释放推位。"
+        - "base_packet.solve_instance.canonical_exact_inputs: steps5-8 为 [right, up, right, down]。"
+      countercase: "可攻击点是 base packet 没有单列一个逐步状态表来命名换端前的 L 覆盖；但 RU2 把中段问题明确写成保持覆盖，并给出右推后再下推、step8 由 P 覆盖的具体动作与反馈，未出现覆盖中断或其他端点的相反事实。"
+    status: survived_attack
+    status_reason: "保持右目标覆盖的局部问题、P/L 的换位动作和 step8 的 P 端反馈相互吻合，包内没有反例。"
+    surviving_scope: "只支持该解段中的覆盖端点变化，不支持其必然被玩家当作独立洞见。"
+
+  - claim_id: "gamma_clean_03_stance_side_rewrite"
+    claim_type: mechanical_fact
+    normalized_proposition: "P/L 的中段移动把 B/S 右侧同一站位从 L/pull 条件改成可左推 B/S 的 push 条件，并在 step8 释放该推位。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].premises: P/L 右移后该格仍在 L/pull 侧，直接左输入会失败。"
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].alternative: exact_inputs 为 [down, left]；第二步因仍是 L 侧且前格被 B/S 占住而失败，局面不变。"
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].premises: 从上方下推 P/L 后，P 覆盖右目标，该站位才成为可推 B/S 的 push 侧。"
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback: step8 释放推位，step11 B 覆盖左目标且两箱同步转黏。"
+      countercase: "立即去 B/S 右侧并左推的 alternative 正好检验换侧是否多余；它在 L 侧失败，反而排除了“无需改写就能从同一站位左推”的反例。"
+    status: survived_attack
+    status_reason: "失败 alternative 与成功段分别复核改写前后的条件，具体支持同一站位由 pull 失败位变成 push 位。"
+    surviving_scope: "支持站位条件的机械改写及其对 step11 左推的作用，不延伸为玩家会提前理解该改写。"
+
+  - claim_id: "gamma_clean_04_lower_pair_merge_and_cut"
+    claim_type: mechanical_fact
+    normalized_proposition: "末段参与合并与回切的是下方新黏格和右下初始黏格：二者在 step15 形成竖条，在 step17 跨界回切，下格覆盖底目标并获胜。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "base_packet.solve_instance.layout: 右下初始黏格为 M，底目标与下箱位于底部局部区域。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].premises: step11 后目标两黏格相差两列一行，仍是两个刚体。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].alternative: exact_inputs 为 [left, down]；第二步因下方已有未合并黏格而失败，两块仍分离。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].feedback: step15 合并成竖条；step17 同时切回两箱，下格覆盖底目标并胜利。"
+        - "base_packet.solve_instance.final_win: true。"
+      countercase: "提前在只左拉一格后尝试向下并不能完成合并，但它没有产生另一套末段材料；包内成功反馈仍明确指向下方新黏格与初始黏格组成的竖条。"
+    status: survived_attack
+    status_reason: "对象范围、失败的提前操作、step15 合并和 step17 回切胜利均有具体字段支持，未找到上方新黏格被纳入末段竖条的反例。"
+    surviving_scope: "只支持末段竖条的两格组成和回切结果；不把 step11 上箱也转黏解释为其继续承担终局职责。"
+
+  - claim_id: "gamma_clean_05_upper_object_can_retire"
+    claim_type: mechanical_fact
+    normalized_proposition: "上箱在 steps1-4 完成临时传力后可以退出终局材料责任；它即使在 step11 同步转黏，也不需要加入 step15-step17 的合并回切结构。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU1_borrowed_crate_lift].feedback: step4 上箱回到原位，B/S 已上提到左目标行。"
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback: step11 两箱同步转黏。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].player_question: 末段组织对象被限定为下部新黏格与右下初始黏格。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].feedback: step15 目标两格合并为竖条，step17 回切并由下格完成底目标。"
+      countercase: "step11 的同步转黏说明上箱并非物理状态不再变化，但替换声明没有声称它静止；责任中断测试关心的是它是否仍约束终局材料组织，RU3 的对象范围和反馈没有给出这种持续责任。"
+    status: survived_attack
+    status_reason: "最强攻击只能证明上箱后来也发生转黏，不能证明它参与终局竖条；包内末段明确只追踪下方新黏格与初始黏格。"
+    surviving_scope: "“退休”仅指退出终局材料责任，不表示 step4 后不再发生任何状态变化。"
+
+  - claim_id: "gamma_clean_06_ordered_compact_bundle"
+    claim_type: design_value
+    normalized_proposition: "本关在 17 步解中依次容纳临时借物传力、锚点侧别改写站位、两格黏条先合并再回切三种具体关系；价值主张止于这种紧凑并置，不声称每段有分支或形成双箱终局闭环。"
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "base_packet.solve_instance.canonical_cost: 17。"
+        - "base_packet.player_reasoning.trace_partition.status: complete。"
+        - "base_packet.player_reasoning.trace_partition.segments: steps1-4 为借上箱传力上提 B/S，steps5-11 为 P/L 换侧并释放第二 B/S 推位，steps12-17 为合并竖条并跨界切回完成底目标。"
+        - "base_packet.hard_evidence.shortest_layer: depth 为 17，shortest_input_sequence_count 为 1。"
+        - "base_packet.hard_evidence.evidence_limits: 图、唯一解和事件齐全只证明机械结构，不证明玩家会自然发现或觉得精巧。"
+      countercase: "压缩掉各段的移动劳动后，玩家分支性和自然发现均没有获得证明；但替换声明主动排除了这些体验性外推，压缩后仍保留三个不同的对象关系及其先后依赖，因此无法击穿“在一个 17 步关中并置这些关系”的有限价值解释。"
+    status: survived_attack
+    status_reason: "完整 trace partition 与 17 步解具体支持三段关系的依次并置；证据限制会击穿“自然精巧”之类强主张，却不与当前限定的存在性、紧凑性主张冲突。"
+    surviving_scope: "仅支持三个具体关系被依次置于同一 17 步解中；不支持分支丰富、自然可读、独特洞见或双箱终局闭环。"
+
+overall:
+  decisive_refutations: []
+  claims_falsified: 0
+  claims_undercut: 0
+  claims_not_established: 0
+  claims_survived: 6
+  strongest_surviving_claim: "gamma_clean_03_stance_side_rewrite"
+  experiment_reading: all_claims_survived

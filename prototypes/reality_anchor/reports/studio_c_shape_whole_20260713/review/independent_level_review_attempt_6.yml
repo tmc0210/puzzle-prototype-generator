@@ -1,0 +1,182 @@
+review_attempt_id: RA_CWHOLE_REVIEW_6
+reviewer_instance_id: FRESH_CWHOLE_LEVEL_REVIEWER_ATTEMPT_6_20260713
+review_scope: segment
+review_integrity: independent
+
+archive_calibration:
+  full_index_read: true
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  positive_or_high_anchors_read:
+    - RA_CAND_0022
+    - RA_CAND_0025
+    - RA_CAND_0026
+    - RA_CAND_0029
+  lower_bound_or_negative_anchors_read:
+    - RA_CAND_0018
+    - RA_CAND_0019
+    - RA_CAND_0020
+    - RA_CAND_0023
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  human_comment_ids_read:
+    - HP_RA_LEX_2026_07_07_BIND_CUT_TAIL_v2_anchor_pockets_pruned_001
+    - HP_RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1_001
+    - HP_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_001
+    - HP_RA_LEX_2026_07_08_BRUSH_TRIPLE_OUTPUT_v3_outer_wall_trim_001
+    - HP_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_001
+    - HP_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_001
+    - HP_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed_001
+    - HP_STUDIO_L_1_001
+    - HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001
+    - HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001
+    - HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001
+    - HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001
+    - HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001
+
+independent_readings:
+  - candidate_id: CWHOLE_BASELINE
+    exact_version: CWHOLE_BASELINE_v2_sha256_cbdb7ee863e7b6a9e2526850c390a0d6c204ff78cfb6d7f2074fb2f8db6b9dcf
+    design_role: baseline
+    opening_read: >-
+      开局把完整七格 C 形黏块、凹口内的玩家和右侧三目标同时摊开；玩家贴着内侧竖边，墙体封住左路，最先读到的唯一有效 affordance 就是向右推动整块。
+    player_actually_does: >-
+      玩家连续两次向右施力，使同一个七格连通黏块作为刚体平移两格；没有建立条件、改变操作面或重新解释形状，全部玩法就是复现已经完全裸露的整体平移。
+    visible_payoff: >-
+      第一次平移让上下前端覆盖目标，第二次平移让中部目标也被覆盖；三个目标把 C 形前缘的同步位移显示得很清楚。
+    ending_read: >-
+      第二次推动即胜利，高潮之后没有清理劳动；收束很快，但也使关卡从开局到结束都停留在同一项显然操作上。
+    exact_basis:
+      - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_BASELINE_v2.txt
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v2.json#/initial
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v2.json#/steps/0/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_BASELINE_v2.json#/steps/1/after
+    perceptible_defects:
+      - defect: 完整 C 形、施力位和目标对应关系开局全部裸露，关卡只要求两次相同方向的显然推动，仍是接近最小 witness 的机制演示，而不是完整的直接作品。
+        exact_basis: 回放只有 [right, right]；两步均为 push_object:sticky#1 与 move_sticky_rigid，且玩家初始已位于唯一施力位。
+        player_effect: 玩家无需读出矛盾、选择操作面或完成任何短关系，只需重复唯一输入；第二步只延长第一次已经充分展示的现象。
+        same_work_improvement_direction: 在仍然直接提供完整 C 形、且不借用主动构造或额外机制的前提下，重做一个要求玩家实际读出凹口施力或目标对位关系的短包装；不能只为现布局增加走位。
+        blocking: true
+    cleanup_observations:
+      - 左侧 B/S 下方的封闭空腔在精确回放中没有玩家、对象或目标责任；若 authority workflow 能以纯删除证明所有玩家关系不变，可作为空地清理候选，但它不能修复裸露 witness 问题。
+    verdict: revise_and_rereview
+
+  - candidate_id: CWHOLE_APPLICATION
+    exact_version: CWHOLE_APPLICATION_v7_sha256_763a90266af2796aa8fbe4c6625fa9a463a6ecaf46c64249fde00d84a4518658
+    design_role: application
+    opening_read: >-
+      玩家首先看到上方单箱正对下方缺口，下面两组黏块已经勾出但尚未连成完整 C 形，右侧目标则提示完成后的整体去向；B/S 的横向材料边界让“把箱推下去补桥”成为清楚的首要关系。
+    player_actually_does: >-
+      玩家先把箱向下推入 sticky 侧，使它转为黏块并同时桥接上下两部分，亲手建立七格连通 C 形；随后用三步最短绕行来到左侧，再把新形成的刚体向右推两格。
+    visible_payoff: >-
+      第一步就集中出现箱转黏与两部分合并，棋盘从缺口形态变成完整 C 形；末段两次整体平移让五个目标逐步被同一形状覆盖，主动构造与使用属于同一条可见关系。
+    ending_read: >-
+      第二次整体推动直接胜利，没有高潮后清理；三步空走只承担从构造位切换到施力位的最短路线，没有吞没构造与使用。
+    exact_basis:
+      - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_APPLICATION_v7.txt
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/initial
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/0/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/3/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_APPLICATION_v7.json#/steps/5/after
+    perceptible_defects: []
+    cleanup_observations:
+      - 构造完成后，第二行箱子原位右侧的三格空走廊未被规范路线、对象或目标使用；可由提交前 authority workflow 检查是否能纯删除，当前不把它当作玩家关系阻塞项。
+    verdict: survive_to_pre_submission_checks
+
+  - candidate_id: CWHOLE_COMBINATION
+    exact_version: CWHOLE_COMBINATION_v6_sha256_0d30c4f8a4015755eccf3f1184208711025b2192fcc95e8151df7de38b3c3c96
+    design_role: combination
+    opening_read: >-
+      开局是紧窄的纵向构图：玩家压在可移动 P/L 上方，B/S 与它并排，完整七格 C 形位于下方，三目标继续向下展开。读题重点是必须先把 P/L 边界送到 C 形侧面，才能站在其 push 侧向下施力。
+    player_actually_does: >-
+      玩家连续向下推动 P/L 两格，向右走到 C 形上方，再连续向下推动整个 C 形两格；P/L 在后两步没有再移动，但它的新边界位置持续决定玩家处于 push 侧，因此前后两段并非互不干涉的子题。
+    visible_payoff: >-
+      P/L 的两次位移先改变可见边界位置，随后 C 形才获得向下推动的操作面；两次整体下移把纵向分布的三个目标全部覆盖，组合关系真实但表现为很短的边界设置加平移。
+    ending_read: >-
+      第二次下推 C 形即胜利，没有高潮后劳动；纵向紧缩没有造成对象互相卡住或遮蔽核心，但规范开局仍多出一段可直接截短的强制前缀。
+    exact_basis:
+      - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_COMBINATION_v6.txt
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v6.json#/initial
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v6.json#/steps/0/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v6.json#/steps/1/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v6.json#/steps/2/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_COMBINATION_v6.json#/steps/4/after
+    perceptible_defects:
+      - defect: 第一次向下推 P/L 只是强制纵向转运；其 after state 仍可原样接续剩余四步获胜，因此当前开局尚未完全消除无职责前缀。
+        exact_basis: step 1 后 P/L 位于 y=3..4、玩家位于其上方；同一回放的后缀 [down, right, down, down] 从该精确状态合法完成关卡，且第一次位移不改变黏块或目标覆盖。
+        player_effect: 玩家在真正建立 C 形的 push 操作面之前，先重复一次没有独立判断、反馈或后续复用的锚点推进；紧凑地图缩短了空间，却没有消除这项流程税。
+        same_work_improvement_direction: 以 step 1 after state 或玩家关系等价的更紧起态重新包装，只保留一次有职责的 P/L 边界设置，再重新送审；由于这会改变起点和锚点初始位置，不能降格为提交前纯删除清理。
+        blocking: true
+    cleanup_observations:
+      - 玩家初始右侧的单格死端（坐标 x=3,y=1）在规范回放中完全无职责；若独立 authority 证明封闭它不改变解族和玩家关系，可纯删除处理。
+    verdict: revise_and_rereview
+
+  - candidate_id: CWHOLE_CHALLENGE
+    exact_version: CWHOLE_CHALLENGE_v6_sha256_2ae9b3f4386035ac4c3f77cdb777b753410717c7df6c0aa10b4fce5e87923c44
+    design_role: challenge
+    opening_read: >-
+      玩家看到八格 C 形包住凹口内的竖直 P/L，C 形自身已压住三处目标，而右侧另有一对空目标；开局矛盾是如果只移动形状会丢掉原目标，但不移动又无法把锚点送到远端。
+    player_actually_does: >-
+      玩家从左侧把整个 C 形向右推两格，并通过 force chain 连同凹口内 P/L 一起搬运；随后上移到 pull 侧，向左拉回同一 C 形两格，却把 P/L 留在右端双目标上。
+    visible_payoff: >-
+      前半段 C 形像套筒一样携带 P/L 横移，后半段同一整体反向抽离；最终 C 形恢复左侧三目标覆盖而 P/L 独立覆盖远端双目标，回报集中且能直接看见“运送后脱离”。
+    ending_read: >-
+      第二次回拉同时恢复最后的目标覆盖并胜利，没有收尾劳动；唯一一次空走用于从 push 侧切换到 pull 侧，正是完成反向抽离所需的操作面转换。
+    exact_basis:
+      - prototypes/reality_anchor/reports/studio_c_shape_whole_20260713/candidates/CWHOLE_CHALLENGE_v6.txt
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v6.json#/initial
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v6.json#/steps/0/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v6.json#/steps/1/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v6.json#/steps/2/after
+      - prototypes/reality_anchor/reports/input_replay_CWHOLE_CHALLENGE_v6.json#/steps/4/after
+    perceptible_defects: []
+    cleanup_observations: []
+    verdict: survive_to_pre_submission_checks
+
+role_and_difference_reading:
+  baseline_complete_not_minimal_witness: >-
+    否。baseline 清楚展示了完整 C 形同步覆盖三个目标，且没有收尾负担，但玩家从开局到胜利只做两次相同的唯一推动；它仍是把现象裸露在极短输入中的 witness，尚未成为完整的直接作品。
+  application_real_delta: >-
+    成立。application 不直接给出完整 C 形：玩家把普通箱推过 B/S 边界，使其转黏并桥接原本分离的上下部分，再亲自使用新形成的整体；这是真实新增的条件建立责任，不只是额外走位。
+  combination_other_non_prerequisite_mechanism: >-
+    成立。P/L 的 push/pull 世界与可移动边界不是 C 形黏块刚体移动的基础组成；玩家 prior 虽已知 P/L，但本关实际引入它作为另一机制来改写 C 形的操作面。
+  combination_player_visible_relation: >-
+    成立但包装需修订。玩家必须把 P/L 下移到 C 形侧面，才能站在新 push 侧向下推动整体；P/L 的新位置持续约束后段，不是退休的独立前题。阻塞项是两次强制位移中的第一次可以被整个截去，而不是组合关系不存在。
+  challenge_real_ceiling_attempt: >-
+    成立。challenge 不是单纯加长平移：它让 C 形先通过 force chain 搬运凹口内 P/L，再切换到 pull 侧反向抽回自身并留下锚点覆盖远端目标，探索了同一整体作为载体、推杆与可分离套筒的上限关系。
+  pairwise_player_experience_differences:
+    - baseline 对 application：前者直接推动现成整体，后者先用箱转黏主动补桥、完成整体，再推动它。
+    - baseline 对 combination：前者操作面开局已给出，后者先移动 P/L 边界建立向下推动整体的 push 侧。
+    - baseline 对 challenge：前者只把 C 形当作目标模板平移，后者用它运送锚点后反向抽离并分担两组目标。
+    - application 对 combination：前者改变形状的连通组成，后者不改变形状组成而改变玩家相对 P/L 的施力制度。
+    - application 对 challenge：前者的作者性集中在造出 C 形，后者开局已有整体，难点在搬运、停放并脱离凹口内锚点。
+    - combination 对 challenge：前者把 P/L 固定在设置后的边界位置以允许 C 形下移，后者让 P/L 被 C 形携带到远端后留下，C 形再反向返回。
+  role_or_redundancy_blockers:
+    - baseline 当前只达到裸露 whole-shape witness，阻止 baseline 角色以完整作品存活。
+    - combination 的角色关系成立，但 step 1 是可由 exact replay 后缀直接证明可截短的强制前缀，阻止当前 exact version 存活。
+
+segment_readiness:
+  applicable: true
+  every_level_independent_complete_work: no
+  same_core_ordered_deepening: yes
+  experiences_non_substitutable: yes
+  major_standalone_possibilities_sufficiently_present: yes
+  exact_basis:
+    - CWHOLE_BASELINE 从现成七格 C 形的整体平移起步，但当前包装仍是两步 witness。
+    - CWHOLE_APPLICATION 让玩家用箱转黏补桥构成七格 C 形，再整体平移。
+    - CWHOLE_COMBINATION 用 P/L 边界位置建立整体下推操作面，关系成立但有可截短前缀。
+    - CWHOLE_CHALLENGE 用八格 C 形携带 P/L 右移，再拉回自身并把锚点留在远端目标。
+  missing_or_redundant_relations:
+    - 缺少一个本身完整、而非两次显然重复推动的 baseline 作品实现；应保留“现成完整 C 形的直接使用”关系，不要用 application 或额外机制替代。
+    - combination 无需更换档位关系，但当前第一次 P/L 下推属于冗余强制前缀；应以更紧起态保留一次有职责的边界设置后重新审查。
+  verdict: continue_segment_design
+
+overall_verdict: continue_segment_design
+required_action: continue_designing_segment

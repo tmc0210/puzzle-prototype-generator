@@ -1,0 +1,21 @@
+case_id: POSITIVE_ACTIVE_L_TRUE_CLAIM
+base_packet_ref: base_positive_active_l.yml
+replacement_rule: 以下 designer_claim 是唯一待审设计声明。
+
+designer_claim:
+  player_experience_core: >-
+    玩家没有直接获得终局活塞结构：先在 step4 拉动三格黏条跨过 B/S，切出右端箱；
+    再把剩余黏条上推，并于 step13 把箱拉回黏侧完成第一次 L 形连接。之后结构被切开、重合并和再次传力，最终覆盖双目标。
+  player_action: >-
+    玩家主动完成“切出构件—抬高黏条—拉回补角—推活塞—再合并—终局传力”的重构链；
+    L 形关系不是从 step13 到 step30 保持不变的同一刚体，而是在后续动作中被拆开并重新组织。
+  visible_payoff: >-
+    step13 出现三格 L；step14 推动后两格切回箱并覆盖上目标，step15 再拉回一箱转黏合并；
+    step30 最后一推触发 force chain、黏刚体移动和两格切箱，使两个目标同时被覆盖并获胜。
+  why_this_level_exists: >-
+    让玩家先主动构造可用的 L 形活塞关系，再反复改变它的材料与连接状态，而不是只搬运一个预制 L 到终点。
+  work_identity_conditions:
+    - step4 必须完成开场 construction cut，产生两格黏条与一个箱。
+    - step13 必须通过 box_to_sticky 与 sticky_merge 建立第一次 L 形连接。
+    - step14 后该结构必须发生切割或成员变化，不能把亮点描述成同一 L 刚体原样保持到终局。
+    - step30 必须以 force chain、黏刚体移动和两格切箱共同完成双目标。

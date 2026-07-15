@@ -1,0 +1,130 @@
+falsification_attempt_id: "gamma_forged_claim_falsification_20260715"
+critic_instance_id: "fresh_claim_falsifier_gamma_forged"
+base_packet_ref: "../candidate_gamma.yml"
+claim_replacement_ref: "case_gamma_forged_claim.yml"
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "GFC-01"
+    claim_type: mechanical_fact
+    normalized_proposition: "第 11 步由上下两箱转成的两个新黏格都进入第 15 步的末段合并结构。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].player_question：末段待组织的对象被明确写为‘下部新黏格与右下初始黏格’。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].conclusion：连续左拉的是右下初始黏格，它与下黏格合并成竖条。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].feedback：step15 合并成竖条。"
+      countercase: "规范回放的第 12—15 步只把右下初始黏格送去与下部新黏格合并；上部新黏格不属于该竖条。"
+    status: falsified
+    status_reason: "包内对第 15 步合并对象的来源有明确说明，直接排除了上部新黏格。"
+    surviving_scope: "第 11 步上下两箱确实同步转黏，但只有下部新黏格继续进入末段合并结构。"
+
+  - claim_id: "GFC-02"
+    claim_type: player_model
+    normalized_proposition: "玩家必须在第 11 步后同时保留两个新黏格的操作责任，才能完成终局。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].conclusion：末段计划只要求移动右下初始黏格、与下黏格合并，再整体左拉。"
+        - "base_packet.player_reasoning.trace_partition.segments[steps=12-17]：该段目的仅为‘合并竖条并跨界切回完成底目标’。"
+        - "base_packet.solve_instance.final_win：上述规范回放最终获胜。"
+      countercase: "已有获胜回放在末段只继续处理下部新黏格与初始黏格；上部新黏格在关键变化后不再约束第 12—17 步。"
+    status: falsified
+    status_reason: "‘必须同时保留’被包内成功回放反例击穿，上部新黏格的终局责任已经中断。"
+    surviving_scope: "玩家仍需保留下部新黏格的责任，并把它与右下初始黏格组织成竖条。"
+
+  - claim_id: "GFC-03"
+    claim_type: player_model
+    normalized_proposition: "玩家会规划两个新黏格与右下初始黏格三者的汇合次序，使其组成同一竖向结构。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].premises[0]：step11 后被比较为相差两列一行、仍属两个刚体的是下部新黏格与右下初始黏格。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].operation_steps：末段操作被限定为 steps 12-17。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].conclusion：这六步形成的是下部新黏格与初始黏格的竖条。"
+      countercase: "包内给出的具体玩家问题和结论都是二对象汇合，不存在把上部新黏格纳入三对象汇合次序的步骤。"
+    status: falsified
+    status_reason: "规范解中的实际规划对象只有下部新黏格与初始黏格，声明所称三对象计划与回放不符。"
+    surviving_scope: "玩家确实需要规划二对象的汇合次序。"
+
+  - claim_id: "GFC-04"
+    claim_type: mechanical_fact
+    normalized_proposition: "第 15 步形成由两个新黏格和右下初始黏格组成的三格竖向结构。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].conclusion：第 15 步前的合并被描述为右下初始黏格与下黏格合并成‘竖条’。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].premises[1]：后续整体左拉时被明确计数为‘两格’同时跨到 B 侧。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].feedback：step15 合并成竖条，step17 同时切回两箱。"
+      countercase: "第 15 步的竖条只有两格；其成员是下部新黏格和右下初始黏格。"
+    status: falsified
+    status_reason: "包内明确给出‘两格’及其来源，不支持三格结构。"
+    surviving_scope: "第 15 步确实形成竖向合并结构，但它是两格竖条。"
+
+  - claim_id: "GFC-05"
+    claim_type: mechanical_fact
+    normalized_proposition: "第 17 步由三格竖向结构整体跨界。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].premises[1]：整体左拉会让‘两格’同时跨到 B 侧。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].feedback：step17 同时切回的是两箱。"
+      countercase: "第 17 步整体跨界的是第 15 步形成的两格竖条，而非三格结构。"
+    status: falsified
+    status_reason: "跨界对象的格数被包内直接写为两格。"
+    surviving_scope: "第 17 步确有竖向结构整体跨界。"
+
+  - claim_id: "GFC-06"
+    claim_type: mechanical_fact
+    normalized_proposition: "第 11 步由上下两箱转成的两个新黏格都在第 17 步再次切回箱。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].player_question：进入末段组织的是下部新黏格与右下初始黏格。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].conclusion：这两个对象合并后整体左拉并切回两箱。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].feedback：step17 同时切回两箱。"
+      countercase: "第 17 步切回的两箱来源分别是下部新黏格和右下初始黏格；上部新黏格没有进入该回切结构。"
+    status: falsified
+    status_reason: "回切数量虽为两个，但包内给出的对象来源不是声明所称的两个新黏格。"
+    surviving_scope: "两个对象确实在第 17 步同时切回箱，其中只有一个是第 11 步的新黏格。"
+
+  - claim_id: "GFC-07"
+    claim_type: mechanical_fact
+    normalized_proposition: "终手由两只再次切回的第 11 步新箱分别覆盖左目标和底目标，共同完成这两个目标。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback：step11 已由 B 覆盖左目标。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].feedback：step17 是下格覆盖底目标并胜利。"
+        - "base_packet.player_reasoning.trace_partition.segments[steps=12-17]：末段目的被明确写为跨界切回并完成底目标。"
+      countercase: "左目标在第 11 步已由 B 半格覆盖，终手明确新增完成的是底目标；不存在两只第 11 步新箱在终手共同完成左、下目标的事实。"
+    status: falsified
+    status_reason: "左目标的覆盖对象与完成时点都和声明冲突。"
+    surviving_scope: "终手切回后的下格确实覆盖底目标并触发胜利。"
+
+  - claim_id: "GFC-08"
+    claim_type: design_value
+    normalized_proposition: "‘双箱同步转黏’的核心价值是两个转黏对象都持续承担终局责任，从而形成完整材料闭环。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "base_packet.player_reasoning.reasoning_units[RU2_reposition_pl_for_second_bs].feedback：step11 只证明两箱同步转黏这一事件发生。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].player_question：末段对象改为下部新黏格与右下初始黏格。"
+        - "base_packet.player_reasoning.reasoning_units[RU3_merge_then_cut_vertical_pair].conclusion：最终闭环由下部新黏格和初始黏格完成。"
+      countercase: "更贴近回放的玩家侧解释是：同步转黏发生后，只有下部新黏格把责任传入末段，另一名终局成员来自初始黏格；上部新黏格退休。"
+    status: undercut
+    status_reason: "同步事件本身成立，但‘两个对象持续负责’这一价值解释被明确的责任中断和更具体的二对象末段解释击穿。"
+    surviving_scope: "同步转黏仍是可见事件，下部新黏格也确实持续到终局；不能据此扩张为两个新黏格共同闭环。"
+
+overall:
+  decisive_refutations:
+    - "GFC-01：第 15 步竖条成员是下部新黏格与右下初始黏格，不含上部新黏格。"
+    - "GFC-06：第 17 步回切的两箱并非两只第 11 步新黏格。"
+    - "GFC-07：左目标在第 11 步已由 B 覆盖，终手明确完成的是底目标。"
+  claims_falsified: 7
+  claims_undercut: 1
+  claims_not_established: 0
+  claims_survived: 0
+  strongest_surviving_claim: "第 11 步确有双箱同步转黏，第 17 步也确有两格竖条整体跨界并同时切回两箱；但这两组对象并不相同。"
+  experiment_reading: mixed

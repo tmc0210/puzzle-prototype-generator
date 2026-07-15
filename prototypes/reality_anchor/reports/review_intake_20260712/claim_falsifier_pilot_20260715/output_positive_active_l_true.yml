@@ -1,0 +1,143 @@
+falsification_attempt_id: "FALSIFY_POSITIVE_ACTIVE_L_TRUE_20260715"
+critic_instance_id: "fresh_claim_falsifier_positive_active_l_true"
+base_packet_ref: "base_positive_active_l.yml"
+claim_replacement_ref: "case_positive_active_l_true.yml"
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "C1"
+    claim_type: mechanical_fact
+    normalized_proposition: "初始局面没有直接给出终局活塞结构；step4 拉动三格黏条跨越 B/S 后发生 construction cut，留下两格黏条并切出右端箱。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "solve_instance.layout：初始可动材料是第 5 行的水平三格 MMM，不是终局双目标覆盖结构。"
+        - "mechanically_derived_key_snapshots step4 events：pull_object:sticky#1、move_sticky_rigid、sticky_to_box:n1。"
+        - "mechanically_derived_key_snapshots step4 after：第 5 行由 #MMM@G# 变为 #.MMC+#，可见两格黏条与右端箱。"
+        - "hard_evidence.complete_no_bypass_event_groups 包含 construction_cut。"
+      countercase: "尝试把开局水平三格黏条视为已经预制好的终局活塞，但其形状、材料成员和位置均与 step30 前后的终局结构不同，且 step4 明确切出箱。"
+    status: survived_attack
+    status_reason: "布局与 step4 的事件、前后状态直接支持开场切构件；包内没有预制终局 L 或绕过 construction_cut 的反例。"
+    surviving_scope: "仅支持指定实例中由开局直条切成两格黏条与一箱的机械事实，不外推玩家如何命名该结构。"
+
+  - claim_id: "C2"
+    claim_type: mechanical_fact
+    normalized_proposition: "step4 后剩余黏条被上推，至 step11 位于上方，为后续补角连接提供位置关系。"
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "mechanically_derived_key_snapshots step4 after：两格黏条位于第 5 行。"
+        - "mechanically_derived_key_snapshots step11 input 为 up，events 为 push_object:sticky#1、move_sticky_rigid。"
+        - "mechanically_derived_key_snapshots step11 after：两格黏条位于第 4 行 ##MMG##。"
+        - "mechanically_derived_key_snapshots step13 after：新转成的黏格在下一行与上方黏格相邻，形成 L。"
+      countercase: "尝试把上推压缩为没有结构意义的位移；但 step11 的上方位置直接成为 step13 新黏格的相邻连接位置，删去该状态变化会失去随后 L 的几何前提。"
+    status: survived_attack
+    status_reason: "step4、step11 与 step13 快照给出连续且具体的位置依赖，不能在不损失后续连接关系的情况下把上推事实删掉。"
+    surviving_scope: "支持上推动作及其对 canonical 连接位置的机械作用，不声称该动作单独构成玩家洞见。"
+
+  - claim_id: "C3"
+    claim_type: mechanical_fact
+    normalized_proposition: "step13 通过拉箱跨回黏侧触发 box_to_sticky 与 sticky_merge，第一次建立可见的三格 L 形连接。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "prototype_rules.confirmed_rules：对象跨 B/S 的材料边界会在箱与黏格之间切换，相邻黏格自动合并为刚体。"
+        - "mechanically_derived_key_snapshots step13 events：pull_object:crate#1、box_to_sticky:n1、sticky_merge:n1。"
+        - "mechanically_derived_key_snapshots step13 before：上行 ##MMG##，下行 #..@CG#。"
+        - "mechanically_derived_key_snapshots step13 after：上行 ##MMG##，下行 #.@M.G#，三格 M 呈 L 形相邻。"
+        - "hard_evidence.complete_no_bypass_event_groups 包含 box_to_sticky 与 sticky_merge。"
+      countercase: "尝试把 step13 解释成既有 L 的平移或无连接的三格材料；前后快照显示补角格由箱转黏，且 sticky_merge 事件明确建立连接。"
+    status: survived_attack
+    status_reason: "事件日志和几何快照共同证明转黏、合并及首次三格 L；包内没有相反状态。"
+    surviving_scope: "支持 canonical step13 的首次三格 L 形刚体连接。"
+
+  - claim_id: "C4"
+    claim_type: mechanical_fact
+    normalized_proposition: "step13 的 L 形关系没有作为同一刚体原样保持到 step30；step14 发生成员切换，step15 又发生一次转黏合并。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "mechanically_derived_key_snapshots step13 after：三格 M 呈 L 形。"
+        - "mechanically_derived_key_snapshots step14 events：push_object:sticky#1、move_sticky_rigid、sticky_to_box:n2。"
+        - "mechanically_derived_key_snapshots step14 after：仅余一格 M，另有目标上的 * 与下一行的 C，原三格黏刚体成员已改变。"
+        - "mechanically_derived_key_snapshots step15 events：pull_object:crate#2、box_to_sticky:n1、sticky_merge:n1。"
+        - "mechanically_derived_key_snapshots step15 after：上下相邻两格 M 重新连接，另一个 * 留在上目标。"
+      countercase: "按 responsibility_break 攻击，step13 的三格 L 确实在 step14 后不再持续承担同一刚体职责；但这正支持声明所说的拆开并重新组织，而不是反驳它。"
+    status: survived_attack
+    status_reason: "最强的职责中断事实与声明一致：两名成员在 step14 切箱，step15 再由一箱转黏合并，因此不存在同一 L 原样运输至终局。"
+    surviving_scope: "支持连接与成员身份在 step13 至 step15 间发生变化，不主张后来恢复了完全相同的三格 L。"
+
+  - claim_id: "C5"
+    claim_type: mechanical_fact
+    normalized_proposition: "step14 推动 L 后有两格切回箱并覆盖上目标；step15 再拉回一箱，使其转黏并合并。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "mechanically_derived_key_snapshots step14 events 包含 sticky_to_box:n2。"
+        - "mechanically_derived_key_snapshots step14 after：第 4 行为 ##.M*##，上目标被 * 覆盖；第 5 行出现 C。"
+        - "mechanically_derived_key_snapshots step15 events 包含 pull_object:crate#2、box_to_sticky:n1、sticky_merge:n1。"
+        - "mechanically_derived_key_snapshots step15 after：第 4、5 行同列出现相邻 M，上目标上的 * 保留。"
+      countercase: "尝试质疑两格切箱、目标覆盖或再合并中的任一环节；step14 与 step15 的事件计数及 after 快照逐项给出了对应结果。"
+    status: survived_attack
+    status_reason: "事件和可见状态完全对应声明，包内没有 alternative 或后继状态否定这些变化。"
+    surviving_scope: "支持 step14 至 step15 的机械可见回报，不外推玩家对此回报的情绪评价。"
+
+  - claim_id: "C6"
+    claim_type: mechanical_fact
+    normalized_proposition: "step30 的最后一次右推同时触发 force chain、黏刚体移动和两格 sticky_to_box，并使两个目标同时从未覆盖变为覆盖而获胜。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "mechanically_derived_key_snapshots step30 input 为 right，events 为 push_object:sticky#1、force_chain:n2、move_sticky_rigid、sticky_to_box:n2。"
+        - "mechanically_derived_key_snapshots step30 before：两个 G 均可见，尚未覆盖。"
+        - "mechanically_derived_key_snapshots step30 after：两个目标位置均为 *。"
+        - "mechanically_derived_key_snapshots step30 win_after_step 为 true。"
+        - "solve_instance.final_win 为 true。"
+      countercase: "尝试把终局拆成先后覆盖、单纯推箱或没有刚体参与；step30 单步的 before/after 与同一步事件列表直接排除这些反例。"
+    status: survived_attack
+    status_reason: "同一步事件、目标状态变化与 win 标记共同具体支持终局传力和双目标同时覆盖。"
+    surviving_scope: "支持 canonical step30 的联合机械结果。"
+
+  - claim_id: "C7"
+    claim_type: mechanical_fact
+    normalized_proposition: "canonical 解中的玩家输入实际完成了切出构件、抬高黏条、拉回补角、推动结构、再次合并与终局传力这一重构链，而不是领取一个保持不变的预制 L 后只做搬运。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "solve_instance.canonical_exact_inputs 给出 30 个完整输入，canonical_cost 为 30。"
+        - "mechanically_derived_key_snapshots step4、step11、step13、step14、step15、step30 分别保留切出、上推、补角合并、成员切换、再合并和终局传力的动作与状态。"
+        - "hard_evidence.canonical_event_counts：move_sticky_rigid 为 4、sticky_merge 为 2、sticky_to_box 为 3。"
+        - "hard_evidence.complete_no_bypass_event_groups：pull、push、box_to_sticky、sticky_to_box、sticky_merge、rigid、construction_cut 均不可绕过。"
+        - "hard_evidence.evidence_limits：本包不证明玩家会自然发现或把重构读成亮点。"
+      countercase: "最强缺证攻击是包内没有玩家过程记录，因而不能证明玩家会如何理解或计划这条链；但原声明在此只说玩家用输入实际完成这些动作，没有声称自然发现、命名、预判或主观评价。"
+    status: survived_attack
+    status_reason: "完整输入、关键快照与不可绕过事件组支持动作层面的主动完成；证据限制只阻止把它扩张为认知或感受声明，并不否定动作链本身。"
+    surviving_scope: "“主动”仅按玩家输入是这些对象变化的直接操作来源来成立；不支持玩家必然意识到六段式重构链或觉得它紧凑、巧妙。"
+
+  - claim_id: "C8"
+    claim_type: design_value
+    normalized_proposition: "本关的可复核设计关系是先构造可用的 L，再改变其材料与连接状态并用于终局传力；它在机械结构上区别于把预制且不变的 L 搬到终点。"
+    strongest_attack:
+      method: compression_test
+      exact_basis:
+        - "solve_instance.layout：开局只有水平三格 MMM，没有 L。"
+        - "mechanically_derived_key_snapshots step4 after：直条被切为两格 M 与一格 C。"
+        - "mechanically_derived_key_snapshots step13 after：首次出现三格 M 的 L 形连接。"
+        - "mechanically_derived_key_snapshots step14 events 与 after：sticky_to_box:n2 后原 L 的材料成员和连接发生变化。"
+        - "mechanically_derived_key_snapshots step15 events：box_to_sticky:n1 与 sticky_merge:n1 再次组织连接。"
+        - "mechanically_derived_key_snapshots step30 events：force_chain:n2、move_sticky_rigid 与 sticky_to_box:n2 共同进入终局。"
+        - "hard_evidence.complete_no_bypass_event_groups 覆盖 construction_cut、两向材料切换、sticky_merge 与 rigid。"
+      countercase: "尝试把中段压缩成搬运预制 L 的操作劳动；但开局无 L，step13 才首次构成 L，step14 立即改变其成员，step15 再合并，step30 以改变后的关系传力。删掉这些关系变化就会把包内实际作品替换成另一种机械结构。"
+    status: survived_attack
+    status_reason: "该价值声明被限定为可观察的结构对比，布局、连续快照和不可绕过事件组具体支持“构造后重组”，包内没有预制 L 原样运送的反例或更贴近事实且足以击穿这一对比的解释。"
+    surviving_scope: "支持作品机械身份及其与“预制 L 原样搬运”的对比；不证明玩家会自然把它读成亮点，也不评价整关好坏。"
+
+overall:
+  decisive_refutations: []
+  claims_falsified: 0
+  claims_undercut: 0
+  claims_not_established: 0
+  claims_survived: 8
+  strongest_surviving_claim: "C8：开局无 L，step13 首次构成，step14 改变成员，step15 再合并，step30 以重组后的结构传力，因此不是预制 L 原样搬运。"
+  experiment_reading: all_claims_survived

@@ -197,7 +197,7 @@
           "region": "push"
         },
         "effect": {
-          "result": "player pushes the adjacent movable object; force may propagate forward"
+          "result": "玩家与前方受力对象闭包同时前移一格；力可沿运动方向继续传递"
         },
         "emits": [
           "push_object",
@@ -235,7 +235,7 @@
           "region": "pull"
         },
         "effect": {
-          "result": "player moves into an empty front cell and pulls the adjacent object behind them"
+          "result": "玩家与身后相邻对象的受力闭包同时前移一格；玩家目标格只需在整个闭包移动后腾空"
         },
         "emits": [
           "pull_object",
@@ -411,18 +411,19 @@
     "mechanic": "reality_anchor",
     "levels": [
       {
-        "id": "RA_FRESH_2026_07_10_SQUARE_REPAIR_BIND_HANDOFF_v5",
-        "title": "方阵修补·拆分交接 v5",
-        "layout": "############\n#####LP#####\n#######...##\n#####.CC...#\n#.GG..C.#.B#\n##GG...M..S#\n######@.#..#\n############",
+        "id": "RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5",
+        "title": "三叉同步终拍 v5",
+        "layout": "#############\n#########SB##\n#############\n#########PL##\n#############\n#...........#\n#.....#...###\n#...MMMMM.CG#\n#...M.....###\n#...M....@..#\n#...M.....###\n#...MMMMM.CG#\n#...M.....###\n#...M.......#\n#...M.....###\n#...MMMMM.CG#\n#.....#...###\n#...........#\n#############",
         "lineage": {
           "source": "fresh_design_review_loop",
+          "source_candidate_id": "RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4",
           "created_by": "codex",
-          "created_at": "2026-07-10"
+          "created_at": "2026-07-15"
         },
-        "design_notes": "全新 Reality Anchor 后期挑战。玩家先以可逆走位选择补角把手，把 M 跨 B/S 刷成箱并补齐 箱态 2x2；随后移动 B/S 生成 CC/MM 混合刷形，从唯一上口纵剪右列得到单箱与 L3。 单箱必须先让位，再由固定 P/L 在 pull 侧抽成缺角 M；L3 与单格于偏移位重并为黏态 2x2， 最后整体左拉覆盖四目标。完整图 165454 states / 413620 transitions / 1 winning state， 最短解 23。完整探针证明所有胜路都经过箱态 2x2、黏态 2x2、指定 1+3 分裂态与指定偏移 重绑态，并满足 B/S 位移、sticky_to_box、box_to_sticky >=3、sticky_merge >=3、force_chain、 pull 与 sticky 刚体移动 >=5；P/L 在完整可达图中从不移动。独立 evidence review_4 与 puzzle critic_4 均为 required_action none，critic 保守支持审美 4 / 难度 4，均不支持 5。 exact v5 已按固定顺序完成 invalid_goal_prune、opening_comfort_check、redundant_element_prune； 四目标全部保留，开局为 13 状态可逆 SCC，外框无可继续裁剪要素。\n",
+        "design_notes": "Reality Anchor 后期 baseline。玩家绕到预制 21 格连通三叉 E 形背面，两次右推；终拍同一完整刚体 以 force_chain:n4 同时推动三个 P/L 目标顺序锁并触发 sticky_to_box:n3。完整图为 923 states / 2929 transitions / 9 raw win states；九个胜态只有一个对象终转移类，故为 equivalent_variants_only。 exact v5 的 invalid_goal_prune、opening_comfort_check 与 redundant_element_prune 均完成且不再改版。 巨型结构带来的绕行、识形、触点对齐与精确操作不计作难度。",
         "expected_trace": [
           {
-            "input": "right",
+            "input": "up",
             "events": [
               "walk"
             ]
@@ -430,19 +431,59 @@
           {
             "input": "up",
             "events": [
-              "push_object",
-              "move_sticky_rigid",
-              "sticky_to_box"
+              "walk"
             ]
           },
           {
-            "input": "right",
+            "input": "up",
             "events": [
               "walk"
             ]
           },
           {
-            "input": "right",
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
             "events": [
               "walk"
             ]
@@ -456,11 +497,53 @@
           {
             "input": "right",
             "events": [
-              "walk"
+              "push_object",
+              "move_sticky_rigid"
             ]
           },
           {
-            "input": "up",
+            "input": "right",
+            "events": [
+              "push_object",
+              "force_chain",
+              "move_sticky_rigid",
+              "sticky_to_box"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_FRESH_2026_07_15_FORGED_C_SYNC_v6",
+        "title": "双钩锻造同步 v6",
+        "layout": "###########\n#######PL##\n#..@SB...##\n#.#########\n#.#########\n#.MMM..CCG#\n#.MMMCCC.##\n#.MMM...###\n#.MMM.#####\n#.MMM...###\n#.MMMCCC.##\n#.MMM..CCG#\n###########",
+        "lineage": {
+          "source": "fresh_design_review_loop",
+          "source_candidate_id": "RA_FRESH_2026_07_15_FORGED_C_SYNC_v5",
+          "created_by": "codex",
+          "created_at": "2026-07-15"
+        },
+        "design_notes": "Reality Anchor 后期 application。玩家把 B/S 连续右移三列，依次产生 box_to_sticky:n2、n2、n4， 将 21 格厚脊与八个箱构件锻造成 29 格上下镜像双钩；完成形随后同拍收束两个 P/L 目标顺序锁。 完整图为 143 states / 338 transitions / 7 raw win states；七个胜态只有一个对象终转移类，故为 equivalent_variants_only。exact v6 三项提交前检查均完成且不再改版。回到主体背面的走位、识形、 对齐与精确操作不计作难度。",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_object",
+              "anchor_boundary_shift",
+              "box_to_sticky",
+              "sticky_merge"
+            ]
+          },
+          {
+            "input": "right",
             "events": [
               "push_object",
               "anchor_boundary_shift",
@@ -475,19 +558,13 @@
             ]
           },
           {
-            "input": "up",
+            "input": "left",
             "events": [
               "walk"
             ]
           },
           {
-            "input": "up",
-            "events": [
-              "walk"
-            ]
-          },
-          {
-            "input": "up",
+            "input": "left",
             "events": [
               "walk"
             ]
@@ -507,15 +584,644 @@
           {
             "input": "down",
             "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
               "push_object",
               "force_chain",
               "move_sticky_rigid",
-              "box_to_sticky",
-              "sticky_merge"
+              "sticky_to_box"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "RA_FRESH_2026_07_15_BOUNDARY_REFORGE_MASK_v1",
+        "title": "边界换相·重铸面具 v1",
+        "layout": "###################\n#....#............#\n#...#.MMMMMMMMM...#\n#...##.##.MMMMM...#\n#..#GC.#.MMMMMM...#\n#...#.MMMMMMMMM...#\n#....###.MMMMMM...#\n#....#.MMMMMMMM...#\n#...####.MMMMMM...#\n#..#GCMMMMMMMMM...#\n#...####.MMMMMM...#\n#....#.MMMMMMMM...#\n#....###.MMMMMM...#\n#...#.MMMMMMMMM...#\n#..#GC.#.MMMMMM...#\n#...##.##.MMMMM...#\n#...#.MMMMMMMMM...#\n#....#............#\n#..............####\n#..............####\n#..#.BS@.#.....####\n####.##############\n#..#....LP........#\n###################",
+        "lineage": {
+          "source": "fresh_design_review_loop",
+          "created_by": "codex",
+          "created_at": "2026-07-15"
+        },
+        "design_notes": "Reality Anchor 后期 challenge。玩家先从完整、水平对称的 107 格黏块面具切出五齿，左移 P/L 三格 改写可施力侧，把上下端齿各向中线重排两格，再拉回 B/S 以 box_to_sticky:n5、sticky_merge:n1 重铸同一 107 格主体；终拍左推完整主体同拍覆盖三只 P/L 目标顺序锁。规范回放 130 输入全部合法， 其中只有 10 次对象操作，120 次走位不计作难度。唯一性仅为 unique_within_budget：raw graph 在 30000 状态预算耗尽，记录 30001 states / 73982 transitions / 0 prefix wins；不得写成完整 SCC 或 unique_complete。三项提交前检查均已执行，因完整图预算耗尽而保留目标和疑似冗余项为 unknown，未改版。",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift",
+              "sticky_to_box"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
             ]
           },
           {
             "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "pull_object",
+              "anchor_boundary_shift"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_object"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "push_object"
+            ]
+          },
+          {
+            "input": "up",
             "events": [
               "push_object"
             ]
@@ -527,6 +1233,24 @@
             ]
           },
           {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk"
+            ]
+          },
+          {
             "input": "left",
             "events": [
               "walk"
@@ -535,16 +1259,142 @@
           {
             "input": "down",
             "events": [
-              "pull_object",
-              "box_to_sticky"
+              "walk"
             ]
           },
           {
             "input": "left",
             "events": [
               "pull_object",
-              "move_sticky_rigid",
+              "anchor_boundary_shift",
+              "box_to_sticky",
               "sticky_merge"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk"
             ]
           },
           {
@@ -556,22 +1406,10 @@
           {
             "input": "left",
             "events": [
-              "pull_object",
-              "move_sticky_rigid"
-            ]
-          },
-          {
-            "input": "left",
-            "events": [
-              "pull_object",
-              "move_sticky_rigid"
-            ]
-          },
-          {
-            "input": "left",
-            "events": [
-              "pull_object",
-              "move_sticky_rigid"
+              "push_object",
+              "force_chain",
+              "move_sticky_rigid",
+              "sticky_to_box"
             ]
           }
         ]

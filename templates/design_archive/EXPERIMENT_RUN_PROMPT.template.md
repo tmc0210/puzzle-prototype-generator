@@ -1,23 +1,14 @@
-# 关卡作品集实验启动模板
+# 连续关卡段落实验启动模板
 
-本模板只提供任务特有信息；通用流程由 `$sokoban-level-design-studio` 负责。
+通用流程全部由 `$sokoban-level-design-studio` 负责；本 prompt 只提供本轮特有信息。
 
 ```text
-使用 $sokoban-level-design-studio，在 <prototype_id> 中围绕以下玩家体验核心制作待玩作品集：
+使用 $sokoban-level-design-studio，在 <prototype_id> 中围绕以下体验种子制作一段待玩关卡：
 
-<experience_core>
+<experience_seed>
 
-玩家此前知识与课程位置：<player_prior_and_position>
-本轮机制范围：<mechanism_scope>
-启用的搜索意图：<enabled_search_intents>
-Challenge 预声明维度：<challenge_dimensions>
-
-本轮 lineage：<fresh_required_or_authorized_source>
-允许的额外设计来源：<allowed_sources>
-禁止读取或复用：<forbidden_sources>
+玩家前序：<player_prior>
+本轮允许机制：<mechanism_scope>
+本轮 lineage 与额外允许来源：<lineage_and_allowed_sources>
 新产物 ID 前缀：<artifact_prefix>
-
-按 skill 强制填写 designer 送审包，使用不读取这些声明的 fresh reviewer 交叉审查，
-再完成原型专属检查、独立准入审计、playable_queue 接入和 playable 重建。
-最终同时交付简报与实际待玩路径；未经人类试玩，不进入 archive pass。
 ```

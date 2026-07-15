@@ -1,0 +1,150 @@
+runId: baseline_trident_sync_final_v4
+title: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4 三叉 E 形同步终局的作品身份反事实
+notes: >-
+  基准 case 的 layout 与 RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v4 逐字相同；
+  验证三个 P/L 目标活塞逐个不能累积、21 格完整黏体一次三触点终局，以及触点、连通性和狭廊出口的责任。
+defaults:
+  maxExploreDepth: 20
+  maxReturnDepth: 24
+  maxStates: 50000
+  maxTransitions: 200000
+cases:
+  - id: base_three_tip_sync_win
+    family: giant_sticky_multi_piston_sync
+    variant: connected_three_tip
+    changed_variable: base
+    contrast_with: cf_missing_lower_tip
+    notes: 完整 21 格 E 形先对齐，再一次原子力链同时推动三箱上目标。
+    layout: |
+      ##############
+      #########SB###
+      ##############
+      #########PL###
+      ##############
+      #............#
+      #.....#...####
+      #...MMMMM.CG##
+      #...M.....####
+      #...M....@...#
+      #...M.....####
+      #...MMMMM.CG##
+      #...M.....####
+      #...M........#
+      #...M.....####
+      #...MMMMM.CG##
+      #.....#...####
+      #............#
+      ##############
+    actions: [up, up, up, up, left, left, left, left, down, left, left, down, right, right]
+
+  - id: single_top_lock_retracts
+    family: giant_sticky_multi_piston_sync
+    variant: one_lock_attempt
+    changed_variable: 只进入上活塞并原路退出
+    contrast_with: base_three_tip_sync_win
+    notes: 推上目标时未胜；狭廊唯一出口触发 L 侧 pull 并恢复初态箱位。
+    layout: |
+      ##############
+      #########SB###
+      ##############
+      #########PL###
+      ##############
+      #............#
+      #.....#...####
+      #...MMMMM.CG##
+      #...M.....####
+      #...M....@...#
+      #...M.....####
+      #...MMMMM.CG##
+      #...M.....####
+      #...M........#
+      #...M.....####
+      #...MMMMM.CG##
+      #.....#...####
+      #............#
+      ##############
+    actions: [up, up, right, left]
+
+  - id: cf_missing_lower_tip
+    family: giant_sticky_multi_piston_sync
+    variant: missing_contact
+    changed_variable: 删除下臂最右触点
+    contrast_with: base_three_tip_sync_win
+    notes: 相同输入只推动上、中两箱；下目标保持空，终态不胜。
+    layout: |
+      ##############
+      #########SB###
+      ##############
+      #########PL###
+      ##############
+      #............#
+      #.....#...####
+      #...MMMMM.CG##
+      #...M.....####
+      #...M....@...#
+      #...M.....####
+      #...MMMMM.CG##
+      #...M.....####
+      #...M........#
+      #...M.....####
+      #...MMMM..CG##
+      #.....#...####
+      #............#
+      ##############
+    actions: [up, up, up, up, left, left, left, left, down, left, left, down, right, right]
+
+  - id: cf_cut_lower_bridge
+    family: giant_sticky_multi_piston_sync
+    variant: disconnected_lower_lobe
+    changed_variable: 删除竖脊中连接格使下臂成为独立部件
+    contrast_with: base_three_tip_sync_win
+    notes: 玩家从上臂施力时下部件不进入同一输入的受力闭包，不能同步三锁。
+    layout: |
+      ##############
+      #########SB###
+      ##############
+      #########PL###
+      ##############
+      #............#
+      #.....#...####
+      #...MMMMM.CG##
+      #...M.....####
+      #...M....@...#
+      #...M.....####
+      #...MMMMM.CG##
+      #...M.....####
+      #............#
+      #...M.....####
+      #...MMMMM.CG##
+      #.....#...####
+      #............#
+      ##############
+    actions: [up, up, up, up, left, left, left, left, down, left, left, down, right, right]
+
+  - id: cf_open_all_side_exits
+    family: giant_sticky_multi_piston_sync
+    variant: sequential_bypass
+    changed_variable: 每个目标活塞的 L 侧玩家位都打开向下出口
+    contrast_with: single_top_lock_retracts
+    notes: 玩家可让上、中箱留在目标后离开，最后单独推下箱胜利；顺序矛盾消失。
+    layout: |
+      ##############
+      #########SB###
+      ##############
+      #########PL###
+      ##############
+      #............#
+      #.....#...####
+      #...MMMMM.CG##
+      #...M......###
+      #...M....@...#
+      #...M.....####
+      #...MMMMM.CG##
+      #...M......###
+      #...M........#
+      #...M.....####
+      #...MMMMM.CG##
+      #.....#....###
+      #............#
+      ##############
+    actions: [up, up, right, down, left, down, down, down, right, down, left, down, down, down, right]

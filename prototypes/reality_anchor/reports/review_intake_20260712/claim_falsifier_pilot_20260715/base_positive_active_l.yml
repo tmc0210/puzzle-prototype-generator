@@ -1,0 +1,199 @@
+packet_id: POSITIVE_ACTIVE_L_BASE
+prototype: reality_anchor
+exact_version: RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4
+
+prototype_rules:
+  symbols:
+    wall: "#"
+    floor: "."
+    player: "@"
+    player_on_goal: "+"
+    crate: "C"
+    sticky: "M"
+    goal: "G"
+    object_on_goal: "*"
+    push_pull_anchor: "P/L"
+    material_anchor: "B/S"
+  confirmed_rules:
+    - B/S 定义箱与黏格的材料边界；箱跨入 S 侧转为黏格，黏格跨回 B 侧切回箱。
+    - 相邻黏格自动合并为刚体；黏刚体可以整体 push 或 pull，并可参与 force chain。
+    - 本布局的 P/L 被完整墙行封住，canonical 回放没有移动 P/L。
+  win_condition: 所有目标由箱、黏格或锚点覆盖。
+
+solve_instance:
+  layout: |-
+    #######
+    ##PL###
+    #######
+    ##..G##
+    #MMM.G#
+    #..#..#
+    ##...@#
+    #######
+    ###SB##
+    #######
+  canonical_exact_inputs: [up, up, left, right, down, down, left, left, left, up, up, right, left, right, left, down, down, right, right, up, up, down, right, down, left, left, left, up, up, right]
+  canonical_cost: 30
+  final_win: true
+
+mechanically_derived_key_snapshots:
+  - step: 0
+    state: |-
+      #######
+      ##PL###
+      #######
+      ##..G##
+      #MMM.G#
+      #..#..#
+      ##...@#
+      #######
+      ###SB##
+      #######
+  - step: 4
+    input: right
+    events: ["pull_object:sticky#1", move_sticky_rigid, "sticky_to_box:n1"]
+    before: |-
+      #######
+      ##PL###
+      #######
+      ##..G##
+      #MMM@G#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+    after: |-
+      #######
+      ##PL###
+      #######
+      ##..G##
+      #.MMC+#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+  - step: 11
+    input: up
+    events: ["push_object:sticky#1", move_sticky_rigid]
+    after: |-
+      #######
+      ##PL###
+      #######
+      ##MMG##
+      #.@.CG#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+  - step: 13
+    input: left
+    events: ["pull_object:crate#1", "box_to_sticky:n1", "sticky_merge:n1"]
+    before: |-
+      #######
+      ##PL###
+      #######
+      ##MMG##
+      #..@CG#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+    after: |-
+      #######
+      ##PL###
+      #######
+      ##MMG##
+      #.@M.G#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+  - step: 14
+    input: right
+    events: ["push_object:sticky#1", move_sticky_rigid, "sticky_to_box:n2"]
+    after: |-
+      #######
+      ##PL###
+      #######
+      ##.M*##
+      #..@CG#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+  - step: 15
+    input: left
+    events: ["pull_object:crate#2", "box_to_sticky:n1", "sticky_merge:n1"]
+    after: |-
+      #######
+      ##PL###
+      #######
+      ##.M*##
+      #.@M.G#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+  - step: 22
+    input: down
+    events: ["pull_object:crate#1"]
+    after: |-
+      #######
+      ##PL###
+      #######
+      ##.MG##
+      #..MCG#
+      #..#@.#
+      ##....#
+      #######
+      ###SB##
+      #######
+  - step: 30
+    input: right
+    events: ["push_object:sticky#1", "force_chain:n2", move_sticky_rigid, "sticky_to_box:n2"]
+    win_after_step: true
+    before: |-
+      #######
+      ##PL###
+      #######
+      ##.MG##
+      #.@MCG#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+    after: |-
+      #######
+      ##PL###
+      #######
+      ##..*##
+      #..@C*#
+      #..#..#
+      ##....#
+      #######
+      ###SB##
+      #######
+
+hard_evidence:
+  shortest_cost: 30
+  graph_status: complete
+  reachable_states: 306
+  legal_transitions: 653
+  winning_states: 2
+  canonical_event_counts:
+    move_sticky_rigid: 4
+    sticky_merge: 2
+    sticky_to_box: 3
+  complete_no_bypass_event_groups: [pull, push, box_to_sticky, sticky_to_box, sticky_merge, rigid, construction_cut]
+  evidence_limits:
+    - 机械回放与完整图不直接证明玩家会自然发现、觉得紧凑或把重构读成亮点。
+    - 本包不提供人评、旧 critic 或作者之外的玩家过程记录。
+    - key snapshots 没有逐格展示所有 walk；canonical inputs 与关键对象变化完整保留。

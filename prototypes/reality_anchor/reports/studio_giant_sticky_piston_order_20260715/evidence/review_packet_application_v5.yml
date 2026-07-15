@@ -1,0 +1,77 @@
+review_attempt_id: EVREV_RA_FORGED_C_SYNC_V5_R1
+candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+exact_version: v5
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.txt
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [right, right, right, left, left, left, left, left, down, down, down, right]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 全部合法，终态同时覆盖两个目标并胜利。
+  - claim_id: three_stage_construction
+    claim: >-
+      canonical 前三拍推动同一 B/S 锚点右移三列，依次产生 box_to_sticky:n2、n2、n4 与 sticky_merge:n1；
+      第三拍后八只初始箱构件全部并入原 21 格厚脊，形成动作前单一 29 格 sticky#1。
+  - claim_id: premature_two_sweep_branch_cannot_win
+    claim: >-
+      完整主版本图中，每个前三阶段 SCC 都只有一个 win-reachable outgoing commitment，即继续 right 扫线；
+      两扫后沿左通道推动主体的 exact trace 不移动两只目标箱并进入 dead commitment branch。
+  - claim_id: atomic_double_lock_final
+    claim: >-
+      canonical 终拍由动作前已连通的 29 格 sticky#1 产生 right、force_chain:n3、move_sticky_rigid、
+      sticky_to_box:n4，并把两只目标箱同时从 x=8 推到 x=9 的目标。
+  - claim_id: upper_tip_and_connection_are_necessary_for_same_stroke
+    claim: >-
+      删除上钩尖或仅删除上支撑末格时，相同 canonical input 都只完成下目标；
+      后者还显示孤立上钩尖不随主体同拍移动。不声明这些反事实超出 artifact scope 的全局性质。
+  - claim_id: representative_target_geometry_retracts
+    claim: >-
+      在保持上目标、墙与 P/L 侧别并把玩家放到上箱 P 侧的 probe 中，right 推入后未胜；
+      玩家可进入闭合侧袋但不能由此离开，返回后 left 会 pull 同一目标箱并撤销覆盖。
+  - claim_id: prebuilt_counterfactual_removes_construction_events
+    claim: >-
+      把 B/S 初始置于最终列并把八只构件预先设为 sticky 后，给定四步 trace 直接以同一 n3/n4 终拍胜利，
+      不再发生三次 B/S shift、box_to_sticky 或 merge 事件。
+
+solution_uniqueness:
+  result: equivalent_variants_only
+  search_scope: complete
+  search_budget: maxStates=200000; terminalizeWins=true; actual=143 states / 338 transitions
+  known_raw_winning_variants:
+    - 7 个 raw win states，终拍玩家落点为 x=2, y=5..11。
+  equivalence_account: >-
+    七个胜态去玩家坐标后只有一个对象状态类，七条 non-win -> win 入边只有一个前后对象转移类；
+    全部入边均为 right、push_object:sticky#1、force_chain:n3、move_sticky_rigid、sticky_to_box:n4，
+    区别仅为玩家沿同一完整厚脊选择七个等价接触格之一。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness/report.md
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+  evidence_limits:
+    - 这是玩家逻辑类等价声明，不是 raw input、玩家路径或 raw state 唯一声明。
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.md
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v5.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness/results.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness/report.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/cases.yml
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/cases.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/results.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity/report.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - docs/21-level-design-studio-standard.md
+
+graph_completeness:
+  layout_graph: complete
+  reachable_states: 143
+  legal_transitions: 338
+  raw_win_states: 7
+  max_states: 200000

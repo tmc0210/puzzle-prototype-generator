@@ -1,0 +1,105 @@
+falsification_attempt_id: "FALSIFY_POSITIVE_COMPACT_TRUE_20260715"
+critic_instance_id: "fresh_claim_falsifier_positive_compact_true"
+base_packet_ref: "base_positive_compact_reversal.yml"
+claim_replacement_ref: "case_positive_compact_true.yml"
+input_boundary_respected: true
+working_hypothesis: all_designer_claims_are_false
+
+claim_atoms:
+  - claim_id: "C1"
+    claim_type: mechanical_fact
+    normalized_proposition: "steps1-3 将跨过 B/S 材料边界后生成的两个箱组成横向双箱链，并推到左墙一侧。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_trace step1：events 含 sticky_to_box:n1，状态中出现一个 C 与一个 M。"
+        - "base packet mechanically_derived_trace step2：events 含 force_chain:n2 与 sticky_to_box:n1，状态中出现横向相邻的 CC。"
+        - "base packet mechanically_derived_trace step3：events 含 push_object:crate#2 与 force_chain:n2，状态为 #CC@...P#，双箱链抵达左墙一侧。"
+      countercase: "尝试以状态或事件反驳生成、成链和左推三个环节；step1-3 的逐步状态与事件均与命题一致，包内没有相反路线或 alternative。"
+    status: survived_attack
+    status_reason: "指定回放逐步给出了两次黏格切箱、双箱 force chain 与抵达左侧的状态，没有直接矛盾或反例。"
+    surviving_scope: "仅确认指定 canonical 回放中的机械过程；不推出玩家会把该位置理解为不利。"
+
+  - claim_id: "C2"
+    claim_type: player_model
+    normalized_proposition: "玩家初读会把 step3 的左端位置看作不利，并形成箱子运动方向上的预期。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "claim replacement designer_claim.work_identity_conditions[0]：明确把‘看似不利位置’定义为玩家初读与方向预期。"
+        - "base packet hard_evidence.evidence_limits[0]：机械回放与完整图不直接证明玩家会自然发现、感到反直觉或认为它是亮点。"
+        - "base packet hard_evidence.evidence_limits[1]：本包不提供人评或作者之外的玩家过程记录。"
+      countercase: "包内事实同样容许玩家从一开始就把左侧视为后续重排所需位置；没有玩家过程材料可排除这一读法，但它也未构成该初读必然不存在的反证。"
+    status: not_established
+    status_reason: "材料证明箱子到了左端，却没有证明玩家会赋予该位置‘不利’含义或形成所声称的方向预期。缺证不足以判为证伪。"
+    surviving_scope: "step3 的左端箱位是可见机械事实；玩家对此位置的初读不成立为已证事实。"
+
+  - claim_id: "C3"
+    claim_type: mechanical_fact
+    normalized_proposition: "steps7-11 继续分别操作同一批两个箱，并把它们重排成位于 B/S 上方的同列竖向排列。"
+    strongest_attack:
+      method: responsibility_break
+      exact_basis:
+        - "base packet mechanically_derived_trace step7：events 为 push_object:crate#1，两个 C 分处第二、第三行。"
+        - "base packet mechanically_derived_trace step8：events 为 push_object:crate#1，第一只箱被继续右推。"
+        - "base packet mechanically_derived_trace steps10-11：events 均为 pull_object:crate#2，第二只箱连续右移。"
+        - "base packet mechanically_derived_trace step11：两个 C 位于同一列，且下方紧邻初始 B/S 所在列。"
+      countercase: "尝试检查左推后两箱是否有一只退休、被替代或不再参与；steps7-8 与 steps10-11 分别记录 crate#1、crate#2 的操作，step11 状态保留两箱并形成竖列。"
+    status: survived_attack
+    status_reason: "逐箱 push/pull 事件与 step11 布局直接支持同一批箱继续承担重排作用，未出现责任中断。"
+    surviving_scope: "确认 canonical 回放中的分别操作和最终几何排列；不证明玩家如何计划或理解这段重排。"
+
+  - claim_id: "C4"
+    claim_type: mechanical_fact
+    normalized_proposition: "step12 拉动的是 B/S 而非 P/L，并由三对象 force chain 将箱列上送，使上箱覆盖目标并立即获胜。"
+    strongest_attack:
+      method: direct_contradiction
+      exact_basis:
+        - "base packet mechanically_derived_trace step12：events 明列 pull_object:box_sticky_anchor、force_chain:n3、anchor_boundary_shift:box_sticky。"
+        - "base packet mechanically_derived_trace step12：win_after_step 为 true，终态目标格显示 *，B/S 从底行移至上一行。"
+        - "base packet hard_evidence.fixed_pl_scan：no_reachable_push_pull_anchor_shift。"
+        - "base packet solve_instance.final_win：true。"
+      countercase: "尝试以 P/L 位移、非三对象传力或非即时获胜反驳终手归因；step12 事件、终态与 fixed_pl_scan 都不支持这些反例。"
+    status: survived_attack
+    status_reason: "终手事件精确指向 B/S 边界位移与 n3 force chain，终态同时显示上箱进目标且胜利。"
+    surviving_scope: "确认终手的机械因果与胜利结果；不推出玩家主观上一定把它体验为‘反向上送’的回报。"
+
+  - claim_id: "C5"
+    claim_type: mechanical_fact
+    normalized_proposition: "step3 的左端位置不是永久死局，而能作为拆开横向双箱链并重排为竖列的可用区域。"
+    strongest_attack:
+      method: counterexample
+      exact_basis:
+        - "base packet mechanically_derived_trace step3：两个箱位于左墙一侧的横向 CC 状态。"
+        - "base packet mechanically_derived_trace steps7-11：从该后继过程分别 push crate#1、pull crate#2，并在 step11 得到同列双箱。"
+        - "base packet mechanically_derived_trace step12：该后继过程最终 win_after_step:true。"
+        - "base packet hard_evidence.graph_status：complete；winning_states:1，canonical_cost:12。"
+      countercase: "若左端是永久死局，则从 step3 延续的 canonical 后继不应还能重排并获胜；steps7-12 构成包内明确反例，反而击败了对该命题的攻击。"
+    status: survived_attack
+    status_reason: "从左端状态继续到竖列再到胜利的完整回放直接证明该位置并非永久死局，并实际承担了重排过程。"
+    surviving_scope: "‘非永久死局’与‘可用于该回放的重排’成立；‘工作区’作为玩家的即时认知不由此自动成立。"
+
+  - claim_id: "C6"
+    claim_type: design_value
+    normalized_proposition: "这个 12 步小盘面的核心存在理由，是让玩家把左端从不利方向终点重读为横链拆分、竖列传力的工作区，并由终手获得一次方向反转的洞见。"
+    strongest_attack:
+      method: evidence_gap
+      exact_basis:
+        - "claim replacement designer_claim.why_this_level_exists：将价值归结为‘集中呈现一次方向重读’以及把左端认作工作区。"
+        - "base packet solve_instance.canonical_cost：12。"
+        - "base packet mechanically_derived_trace steps3、11、12：分别给出左端横链、B/S 上方竖列和终手获胜的机械变化。"
+        - "base packet hard_evidence.evidence_limits[0]：机械回放与完整图不直接证明玩家会自然发现、感到反直觉或认为它是亮点。"
+        - "base packet hard_evidence.evidence_limits[1]：包内没有作者之外的玩家过程记录。"
+      countercase: "可把同一回放仅理解为按可行通路运输两个箱并在终手启动锚点；包内没有玩家材料证明实际发生了从‘不利终点’到‘工作区’的认知改写，也没有足够具体反例证明这种价值解释为假。"
+    status: not_established
+    status_reason: "12 步内的横链、重排、竖列和终手反向位移均有机械支撑，但这些变化本身不能建立玩家的方向重读或关卡的体验性存在理由。"
+    surviving_scope: "机械结构集中出现在 12 步 canonical 回放中；其是否构成玩家洞见与核心价值仍未建立。"
+
+overall:
+  decisive_refutations: []
+  claims_falsified: 0
+  claims_undercut: 0
+  claims_not_established: 2
+  claims_survived: 4
+  strongest_surviving_claim: "C4：step12 由 B/S 位移与 force_chain:n3 将箱列上送，上箱覆盖目标并立即获胜。"
+  experiment_reading: mixed

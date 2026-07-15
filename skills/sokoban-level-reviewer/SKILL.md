@@ -1,13 +1,9 @@
 ---
 name: sokoban-level-reviewer
-description: 独立交叉审查类推箱子关卡作品集的玩家侧完成质量、包装缺陷、版本实质差异与 baseline/application/combination/challenge 档位成立性。适用于 designer 已完成送审包后，以 fresh context 只读取实际布局、机械回放、规则和人类归档校准材料作盲审；不读取 designer 的核心声明、档位辩护、亮点说明或送审包，也不运行硬证据工具。
+description: 以 fresh context 独立盲审一整批类推箱子实际关卡。适用于 designer 已为 baseline/application/combination/challenge 候选完成送审包和硬证据审查后，只读取 slot 名、规则、整批布局、非空输入机械回放，并自行选取少量人类归档样本，审查逐关完成质量、slot 是否实际成立及批内玩家体验是否实质不同；不读取 designer 声明、explorer 材料、旧审查或工具指标，也不判断设计空间是否穷尽。
 ---
 
 # Sokoban Level Reviewer
-
-## 职责
-
-从玩家侧独立读取实际关卡，阻止 designer 自审、自我辩护和为填满档位降低定义。审查是强制否决门，不是评分器，也不是最终人类审美判断。
 
 ## 必读材料
 
@@ -15,69 +11,60 @@ description: 独立交叉审查类推箱子关卡作品集的玩家侧完成质�
 
 - `docs/17-experience-core-level-design.md`
 - `docs/21-level-design-studio-standard.md`
-- 当前原型 `design_archive/index.yml`
 - `references/review-packet.md`
 - `references/review-template.md`
 
-按 index 独立完成归档校准：
-
-1. 浏览全部 human-reviewed 条目的 retrieval summary 与人类分数；
-2. 读取所有审美 1 分条目的 candidate record 和人类原评语；
-3. 自行选择并读取 1–3 个与本轮核心、包装或档位相关的正例；
-4. 自行选择并读取 1–3 个相关下界、失败或边界例；
-5. 在输出中记录实际读取的 archive ids 与 human comment ids。
-
-不得让 designer 代选唯一校准集。未读人类原评语时，不得开始审查。
+再读取当前原型 clean archive 的 index 或 retrieval summaries，自行选择少量校准样本：至少一个相关正例和一个具有明确人评问题的负例或边界例；若某类样本确实不存在，记录 `none_found`。读取所选样本的人类原评语，必要时再看实际布局。不得只接受 designer 代选的 anchors，也不需要复制 designer 的宽归档读取。
 
 ## 独立性
 
-- 使用从未参与该批设计的 fresh context；controller 自问自答不算独立审查。
-- 每次重新送审使用新的 `review_attempt_id` 和新的 reviewer 实例。
-- 只读取 reviewer raw packet 的白名单字段。
-- 永远不读取 designer submission packet、experience brief、branch plan、attempt log、设计声明、目标亮点、档位理由、旧 reviewer、修改说明或当前设计对话。
-- 若意外读到上述材料，标记 `review_integrity: contaminated`，本次结论无效。
+- 使用未参与当前批次设计的 fresh context；每次 `review_N+1` 使用新的 `review_attempt_id` 和 reviewer 实例。
+- 只读取 raw packet 白名单字段。
+- 不读取 experience brief、作品身份声明、explorer 材料、designer submission packet、slot 理由、attempt log、修改说明、旧 reviewer、designer action 或当前设计对话。
+- 意外读到上述材料时，标记 `review_integrity: contaminated`，本次结论无效。
 
-## 审查方法
+## 审查顺序
 
-先逐关只看实际布局与机械回放，独立写出：
+### 1. 逐关从实物重建体验
 
-- 玩家开局首先看见的结构、矛盾或 affordance；
-- 玩家实际完成的主要关系；
+对整批每个候选，根据实际布局和机械回放独立写出：
+
+- 玩家开局首先看见的结构、矛盾或可操作关系；
+- 玩家实际完成的主要事情；
+- 每次关键操作带来什么可见变化和后续影响；
 - 回报集中在哪里，高潮后是否仍有劳动；
-- 哪些对象、空间和步骤兑现了玩家期待；
-- 任何具体、可感、同题可修的问题。
+- 哪些对象、空间和步骤真正承担作用；
+- 是否存在明确、可感、同题可修的问题。
 
-再比较同批版本：
+不要把具体操作压缩成带有预设褒贬的抽象标签。边界上的多次往返若每次都改变对象关系并产生新的可见效果，不能仅凭“来回走动”判为重复劳动；反过来，事件数量多也不能掩盖玩家实际只在执行显然流程。
 
-- baseline 是否是一个完整直接实现；
-- application 是否真正新增玩家主动建立或主动使用核心条件的责任；
-- combination 是否引入一个非本核心前序知识、非基础规则、非核心自身组成部分的不同机制，并让其产物被核心消费；
-- challenge 是否在玩家实际体验上明显探索了上限，而不只是增加地图、步骤、对象、走位、唯一动作或流程；
-- 各 survivor 是否具有实质不同的玩家关系，而不只是布局、目标位置或操作次数不同。
+### 2. 检查 slot 是否由实际作品成立
 
-档位允许为空。为了填满档位保留弱版本，直接判为阻塞问题。
+- `baseline`：是完整、直接的作品，而不是把最小 witness 封在几步显然操作中。
+- `application`：相对 baseline 真正增加玩家主动建立或使用核心条件的责任，而不是只增加走位或形式变化。
+- `combination`：引入另一个不同且非本核心前序的机制，并与核心形成玩家可感的共同关系；不要求另一机制产物必须被核心消费，也不接受两个互不干涉子题的串联。
+- `challenge`：在难度、空间规划、构造、复用、反直觉、玩家作者性或形式美感上真实探索上限，而不是增加地图、对象、显然操作或流程。
 
-## 非补偿审查
+实际关卡可以同时具有多个方向的性质。只判断它是否足以承担 packet 中给出的 slot，不要求分类排他。四个 slot 使用同一完成质量标准，baseline 也可以因接近最小 witness 或其它可感缺点被拒绝。
 
-任何具体可感缺点都不能被唯一解、事件覆盖、逻辑完整、难度、对象数量或其它亮点补偿。重点检查：
+### 3. 比较整批实际体验
 
-- 无意义走位、单走廊、显然操作和高潮后的清理；
-- 核心裸露、前置吞没核心、子题拼接和机制退休；
-- affordance 承诺未兑现、整体形状退化为局部材料；
-- 玩家主动性退化为被动触发；
-- 视觉构图、空间、对象或步骤存在明确同题改进方向；
-- 多个版本在玩家侧其实是同一件作品。
+检查各关是否仍围绕可辨认的共同体验核心，同时提供实质不同的玩家关系。多两步、重复次数、地图放大、目标换位或几何换皮不能冒充差异；几何和任务关系已经完全断裂时，也不能只靠 slot 名声称属于同一作品集。
 
-不要因为一个版本保守而攻击它“还可以做得更复杂”。只有同一作品身份内存在明确改善方向时，才构成缺点。
+这里只判断当前批次中的具体同质、错位和 slot 漂移，不回答“主要可能性是否已经覆盖完”，不判断整段是否可以结束。
 
-## 输出与后续
+## 非补偿判断
 
-严格使用 `references/review-template.md`。每个 exact version 只给：
+任何明确、可感、同题可修的问题都不能被唯一解、事件覆盖、逻辑完整、难度、对象数量或其它亮点补偿。
+
+保守和直白本身不是缺点；“还可以另做一个更复杂版本”不是当前关卡的修订理由。Reviewer 只判断眼前 reviewed exact version；不能假定后续某个原型专属 workflow 会替它修复或豁免当前可感问题。
+
+## 输出
+
+严格使用 `references/review-template.md`。逐关 verdict 只使用：
 
 - `survive_to_pre_submission_checks`
 - `revise_and_rereview`
-- `reject_branch`
+- `reject_candidate`
 
-有一个阻塞问题就不能 survive。任何修改后的 exact version 必须重新送给新的 reviewer；旧 reviewer 不复审。
-
-本 reviewer 不运行 solver、graph、counterfactual 或原型专属检查，不决定硬证据是否完整，也不把版本写入待玩列表。
+任一单关缺点、slot 不成立或批内同质 blocker 都阻止整批 survive。Reviewer 只能拒绝当前候选，不能关闭 slot。本 reviewer 不运行 solver、graph、counterfactual 或原型专属提交前工作流，不输出设计空间覆盖结论、审美分、难度分或排名，也不写待玩列表。

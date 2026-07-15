@@ -1,0 +1,77 @@
+runId: ra_giant_challenge_latching_multicontact_20260715
+title: "黏合活塞 + 多触点 crown 的两拍同步"
+notes: "第一手让 crown 三个前端同时贴住分离 sticky piston 并 merge；第二手由 P 边界最后一次 push 把整个合并刚体送上三目标，玩家落入 L；继续 left 会 pull 整块并撤销目标。"
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 12
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: "fork_three_contact_simultaneous_final"
+    family: "latching_multicontact_piston"
+    variant: "three_contact_final"
+    changed_variable: "完整 E crown 具备上中下三个触点"
+    contrast_with: "center_bar_partial_only"
+    notes: "right 第一次 merge 三只 piston；第二次同时覆盖三个 goal。"
+    layout: |
+      #################
+      #BS.PL..........#
+      #################
+      #.......MMM.MG..#
+      #######.M..####.#
+      #..@MMMMMMM.MG..#
+      #######.M..####.#
+      #.......MMM.MG..#
+      #################
+    actions: ["right", "right"]
+
+  - id: "fork_three_contact_forced_retract"
+    family: "latching_multicontact_piston"
+    variant: "three_contact_then_retract"
+    changed_variable: "在同步覆盖后继续唯一回撤方向 left"
+    contrast_with: "fork_three_contact_simultaneous_final"
+    notes: "第三手从 L 侧 pull 已合并整块，三个 goal 同时重新空出。"
+    layout: |
+      #################
+      #BS.PL..........#
+      #################
+      #.......MMM.MG..#
+      #######.M..####.#
+      #..@MMMMMMM.MG..#
+      #######.M..####.#
+      #.......MMM.MG..#
+      #################
+    actions: ["right", "right", "left"]
+
+  - id: "center_bar_partial_only"
+    family: "latching_multicontact_piston"
+    variant: "single_contact_long_component"
+    changed_variable: "去掉 crown 上下臂与竖脊，只保留同 reach 的中心长件"
+    contrast_with: "fork_three_contact_simultaneous_final"
+    notes: "中心 piston 可被 merge 并覆盖，但上下目标保持空，不能 win。"
+    layout: |
+      #################
+      #BS.PL..........#
+      #################
+      #...........MG..#
+      #######....####.#
+      #..@MMMMMMM.MG..#
+      #######....####.#
+      #...........MG..#
+      #################
+    actions: ["right", "right"]
+
+  - id: "single_latch_open_side_preserves"
+    family: "latching_multicontact_piston"
+    variant: "single_contact_open_exit"
+    changed_variable: "打开最终玩家格的下侧出口"
+    contrast_with: "fork_three_contact_forced_retract"
+    notes: "right,right 后 down 为 walk，目标保持；证明黏合本身不替代 P/L 被迫回撤地形。"
+    layout: |
+      ##################
+      #BS.PL...........#
+      ##################
+      #..@MMMM.MG......#
+      #................#
+      ##################
+    actions: ["right", "right", "down"]
