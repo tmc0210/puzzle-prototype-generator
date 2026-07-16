@@ -24,6 +24,7 @@ import {
   puzzleScript16Sprites,
   type PixelSpriteAsset,
 } from "./assets/puzzlescript16/manifest.js";
+import { BoardFitController } from "./fitBoard.js";
 
 declare const __BUILD_ID__: string;
 
@@ -150,6 +151,7 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 const app = appRoot;
+const boardFitController = new BoardFitController();
 
 const buildId = typeof __BUILD_ID__ === "string" ? __BUILD_ID__ : String(Date.now());
 const data = await loadPlayableData();
@@ -259,6 +261,7 @@ function render(): void {
   bindEvents();
   restoreViewState(previousView);
   restoreSourceSearchInputFocus();
+  boardFitController.observe(app.querySelector<HTMLElement>(".editor-board-wrap"));
   if (pendingScrollSelected) {
     pendingScrollSelected = false;
     scrollSelectedSourceIntoView();
@@ -589,7 +592,10 @@ function renderVisualBoard(board: VisualBoard, className: string, editable = fal
   return `
     <div
       class="board ${className}"
-      style="grid-template-columns: repeat(${board.width}, minmax(0, 1fr));"
+      data-fit-board
+      data-board-width="${board.width}"
+      data-board-height="${board.height}"
+      style="grid-template-columns: repeat(${board.width}, var(--tile-size));"
     >
       ${tiles.map((tile) => renderTile(tile, editable)).join("")}
     </div>

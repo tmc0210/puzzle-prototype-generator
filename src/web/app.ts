@@ -19,6 +19,7 @@ import {
   puzzleScript16Sprites,
   type PixelSpriteAsset,
 } from "./assets/puzzlescript16/manifest.js";
+import { BoardFitController } from "./fitBoard.js";
 
 declare const __BUILD_ID__: string;
 
@@ -92,6 +93,7 @@ type CandidateEntry = ArchiveEntry | TemporaryEntry;
 type CandidateTab = "archive" | "temporary";
 type CandidateFilter = "all" | "unreviewed" | "ready" | "attention";
 type ScoreFilter = "any" | "2" | "3" | "4" | "5";
+type NarrowPanel = "candidates" | "review" | null;
 
 type ReviewDraft = {
   humanFinalStatus: string;
@@ -153,6 +155,7 @@ if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 const app = appRoot;
+const boardFitController = new BoardFitController();
 
 const buildId = typeof __BUILD_ID__ === "string" ? __BUILD_ID__ : String(Date.now());
 const data = await loadPlayableData();
@@ -168,6 +171,7 @@ let playState: PlayState | null = null;
 let saveStatus = reviewData.writable ? "可写评审服务已连接" : "静态只读试玩";
 let replaying = false;
 let toolMenuOpen = false;
+let narrowPanel: NarrowPanel = null;
 
 const draftByEntry = new Map<string, ReviewDraft>();
 
@@ -176,6 +180,12 @@ resetPlayStateForSelection();
 render();
 
 window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && narrowPanel) {
+    event.preventDefault();
+    narrowPanel = null;
+    render();
+    return;
+  }
   if (isEditableTarget(event.target)) {
     return;
   }
@@ -214,13 +224,15 @@ function render(): void {
   app.innerHTML = `
     <div class="review-shell">
       ${renderHeader()}
-      <aside class="candidate-rail" aria-label="候选列表">
+      <aside class="candidate-rail ${narrowPanel === "candidates" ? "is-open" : ""}" aria-label="候选列表">
+        ${renderNarrowPanelCloseButton()}
         ${renderCandidateRail()}
       </aside>
       <main class="play-area">
         ${renderPlayArea(entry, level)}
       </main>
-      <aside class="review-panel" aria-label="评审面板">
+      <aside class="review-panel ${narrowPanel === "review" ? "is-open" : ""}" aria-label="评审面板">
+        ${renderNarrowPanelCloseButton()}
         ${entry ? renderReviewPanel(entry, draft) : renderEmptyReviewPanel()}
       </aside>
     </div>
@@ -228,6 +240,7 @@ function render(): void {
 
   bindUiEvents();
   restoreViewState(viewState);
+  boardFitController.observe(app.querySelector<HTMLElement>(".board-wrap"));
 }
 
 function captureViewState(): ReviewViewState {
@@ -259,6 +272,18 @@ function renderHeader(): string {
         <h1>${escapeHtml(data.mechanic.title)}</h1>
       </div>
       <div class="header-metrics" aria-label="候选概况">
+        <button
+          class="secondary-button mobile-panel-button"
+          type="button"
+          data-action="open-candidates"
+          aria-expanded="${narrowPanel === "candidates"}"
+        >关卡</button>
+        <button
+          class="secondary-button mobile-panel-button"
+          type="button"
+          data-action="open-review"
+          aria-expanded="${narrowPanel === "review"}"
+        >评审</button>
         <a class="secondary-link" href="./editor">关卡编辑器</a>
         <span class="metric"><strong>${archiveCount}</strong> 归档候选</span>
         <span class="metric"><strong>${temporaryCount}</strong> 临时游玩</span>
@@ -266,6 +291,14 @@ function renderHeader(): string {
         <span class="save-status">${escapeHtml(saveStatus)}</span>
       </div>
     </header>
+  `;
+}
+
+function renderNarrowPanelCloseButton(): string {
+  return `
+    <button class="secondary-button mobile-drawer-close" type="button" data-action="close-narrow-panel">
+      返回试玩
+    </button>
   `;
 }
 
@@ -626,7 +659,10 @@ function renderBoard(runtimeAdapter: CurrentRuntimeAdapter, state: PlayState): s
   return `
     <div
       class="board"
-      style="grid-template-columns: repeat(${visual.width}, minmax(0, 1fr));"
+      data-fit-board
+      data-board-width="${visual.width}"
+      data-board-height="${visual.height}"
+      style="grid-template-columns: repeat(${visual.width}, var(--tile-size));"
       aria-label="${escapeAttribute(state.level.title)}"
     >
       ${tiles.map(renderTile).join("")}
@@ -681,6 +717,25 @@ function renderFallbackGlyph(layer: VisualLayer): string {
 }
 
 function bindUiEvents(): void {
+  app.querySelector<HTMLButtonElement>("[data-action='open-candidates']")?.addEventListener("click", () => {
+    narrowPanel = "candidates";
+    render();
+  });
+
+  app.querySelector<HTMLButtonElement>("[data-action='open-review']")?.addEventListener("click", () => {
+    captureDraftFromDom();
+    narrowPanel = "review";
+    render();
+  });
+
+  app.querySelectorAll<HTMLButtonElement>("[data-action='close-narrow-panel']").forEach((button) => {
+    button.addEventListener("click", () => {
+      captureDraftFromDom();
+      narrowPanel = null;
+      render();
+    });
+  });
+
   app.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach((button) => {
     button.addEventListener("click", () => {
       captureDraftFromDom();
@@ -729,6 +784,7 @@ function bindUiEvents(): void {
       }
       captureDraftFromDom();
       toolMenuOpen = false;
+      narrowPanel = null;
       selectedEntryKey = key;
       resetPlayStateForSelection();
       render();
