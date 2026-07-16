@@ -31,6 +31,7 @@ export function checkRealityAnchorToolConformance(
   checks.push(checkAdapter(pkg));
   checks.push(checkParseRender(pkg));
   checks.push(checkExpectedTraceReplay(pkg));
+  checks.push(checkAtomicCShapePushPull(pkg));
   checks.push(checkIllegalStickyBlocked(pkg));
   checks.push(checkSolverSmoke(pkg));
   checks.push(checkGraphSmoke(pkg));
@@ -185,6 +186,79 @@ function checkExpectedTraceReplay(pkg: PrototypePackage): ToolConformanceCheck {
     };
   } catch (error) {
     return fail("expected_trace_replay", error);
+  }
+}
+
+function checkAtomicCShapePushPull(pkg: PrototypePackage): ToolConformanceCheck {
+  const fixtures: Array<{
+    id: string;
+    mode: "push" | "pull";
+    layout: string;
+    expectedEvent: string;
+  }> = [
+    {
+      id: "RA_CONFORMANCE_C_SHAPE_PUSH_UP",
+      mode: "push",
+      layout: [
+        "#########",
+        "#BS.....#",
+        "#G......#",
+        "#..MMM..#",
+        "#..M@...#",
+        "#..MMM..#",
+        "#.......#",
+        "#########",
+      ].join("\n"),
+      expectedEvent: "push_object",
+    },
+    {
+      id: "RA_CONFORMANCE_C_SHAPE_PULL_UP",
+      mode: "pull",
+      layout: [
+        "###########",
+        "#BS.PL....#",
+        "#G........#",
+        "#...MMM...#",
+        "#...M@....#",
+        "#...MMM...#",
+        "#.........#",
+        "###########",
+      ].join("\n"),
+      expectedEvent: "pull_object",
+    },
+  ];
+
+  try {
+    const adapter = getRuntimeAdapter(pkg.mechanic);
+    for (const fixture of fixtures) {
+      const level: LevelDoc = {
+        id: fixture.id,
+        title: fixture.id,
+        layout: fixture.layout,
+      };
+      const state = adapter.parseLevel(level);
+      const result = adapter.step(pkg.mechanic, state, "up", {});
+      if (
+        !result.legal ||
+        !eventsMatchPattern(result.events, fixture.expectedEvent) ||
+        !eventsMatchPattern(result.events, "move_sticky_rigid")
+      ) {
+        return {
+          id: "c_shape_atomic_push_pull",
+          status: "fail",
+          reason: `${fixture.mode} C 形整体上移失败：legal=${result.legal} reason=${
+            result.reason ?? "none"
+          } events=${result.events.join(",") || "none"}。`,
+        };
+      }
+    }
+    return {
+      id: "c_shape_atomic_push_pull",
+      status: "pass",
+      reason: "C 形黏块的 push 与 pull 均按玩家和刚体同时平移的语义成立。",
+    };
+  } catch (error) {
+    return fail("c_shape_atomic_push_pull", error);
   }
 }
 

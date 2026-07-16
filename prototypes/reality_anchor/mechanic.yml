@@ -123,7 +123,7 @@ rules:
       input: move
       region: push
     effect:
-      result: player pushes the adjacent movable object; force may propagate forward
+      result: 玩家与前方受力对象闭包同时前移一格；力可沿运动方向继续传递
     emits: [push_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
     effects:
       reads: [player.position, push_pull_anchor, movable_objects, walls]
@@ -139,7 +139,7 @@ rules:
       input: move
       region: pull
     effect:
-      result: player moves into an empty front cell and pulls the adjacent object behind them
+      result: 玩家与身后相邻对象的受力闭包同时前移一格；玩家目标格只需在整个闭包移动后腾空
     emits: [pull_object, force_chain, anchor_boundary_shift, move_sticky_rigid]
     effects:
       reads: [player.position, push_pull_anchor, movable_objects, walls]

@@ -581,29 +581,7 @@ function stepPush(
 
   const targetObject = objectIdAt(state, destination);
   if (targetObject) {
-    if (isRuleDisabled("push_force", options)) {
-      return illegal(state, input, "push_force_disabled");
-    }
-    const plan = planObjectMove(state, targetObject, dir, {
-      playerBlocks: new Set([pointKey(state.player)]),
-    });
-    if (!plan.legal) {
-      return illegal(state, input, plan.reason);
-    }
-
-    const moved = translatePlannedObjects(state, plan.objectIds, dir);
-    moved.player = destination;
-    const normalized = normalizeState(moved, { emitEvents: true, options });
-    return {
-      legal: true,
-      input,
-      state: normalized.state,
-      events: [
-        `push_object:${describeObject(targetObject)}`,
-        ...forceEvents(state, plan.objectIds),
-        ...normalized.events,
-      ],
-    };
+    return stepForce(state, input, dir, destination, targetObject, "push", options);
   }
 
   if (!isFreeForPlayer(state, destination)) {
@@ -626,36 +604,11 @@ function stepPull(
   if (isWallOrBounds(state, destination)) {
     return illegal(state, input, "destination_blocked");
   }
-  if (objectIdAt(state, destination)) {
-    return illegal(state, input, "pull_world_front_blocked");
-  }
 
   const behind = subtract(state.player, dir);
   const targetObject = objectIdAt(state, behind);
   if (targetObject) {
-    if (isRuleDisabled("pull_force", options)) {
-      return illegal(state, input, "pull_force_disabled");
-    }
-    const plan = planObjectMove(state, targetObject, dir, {
-      playerBlocks: new Set([pointKey(destination)]),
-    });
-    if (!plan.legal) {
-      return illegal(state, input, plan.reason);
-    }
-
-    const moved = translatePlannedObjects(state, plan.objectIds, dir);
-    moved.player = destination;
-    const normalized = normalizeState(moved, { emitEvents: true, options });
-    return {
-      legal: true,
-      input,
-      state: normalized.state,
-      events: [
-        `pull_object:${describeObject(targetObject)}`,
-        ...forceEvents(state, plan.objectIds),
-        ...normalized.events,
-      ],
-    };
+    return stepForce(state, input, dir, destination, targetObject, "pull", options);
   }
 
   if (!isFreeForPlayer(state, destination)) {
@@ -668,11 +621,48 @@ function stepPull(
   return { legal: true, input, state: normalized.state, events: ["walk", ...normalized.events] };
 }
 
+function stepForce(
+  state: RealityAnchorState,
+  input: RealityAnchorAction,
+  dir: Direction,
+  playerDestination: Point,
+  targetObject: ObjectId,
+  force: "push" | "pull",
+  options: SolverOptions,
+): RealityAnchorStepResult {
+  const ruleId = force === "push" ? "push_force" : "pull_force";
+  if (isRuleDisabled(ruleId, options)) {
+    return illegal(state, input, `${ruleId}_disabled`);
+  }
+
+  const plan = planObjectMove(state, targetObject, dir);
+  if (!plan.legal) {
+    return illegal(state, input, plan.reason);
+  }
+
+  const moved = translatePlannedObjects(state, plan.objectIds, dir);
+  if (objectIdAt(moved, playerDestination)) {
+    return illegal(state, input, "player_destination_occupied");
+  }
+
+  moved.player = playerDestination;
+  const normalized = normalizeState(moved, { emitEvents: true, options });
+  return {
+    legal: true,
+    input,
+    state: normalized.state,
+    events: [
+      `${force}_object:${describeObject(targetObject)}`,
+      ...forceEvents(state, plan.objectIds),
+      ...normalized.events,
+    ],
+  };
+}
+
 function planObjectMove(
   state: RealityAnchorState,
   startObject: ObjectId,
   dir: Direction,
-  context: { playerBlocks: Set<string> },
 ): ForcePlan {
   const moving = new Set<ObjectId>();
   const occupancy = objectOccupancy(state);
@@ -688,9 +678,6 @@ function planObjectMove(
       const targetKey = pointKey(target);
       if (!inBounds(state, target) || state.walls.has(targetKey)) {
         return "force_blocked";
-      }
-      if (context.playerBlocks.has(targetKey)) {
-        return "force_blocked_by_player";
       }
       const blocker = occupancy.get(targetKey);
       if (blocker && blocker !== objectId) {
