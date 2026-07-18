@@ -1,0 +1,88 @@
+review_attempt_id: RA_TREE_CONSTRUCT_PREFIX_V6_EVIDENCE_02
+candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_PREFIX
+exact_version: v6_sha256_6bdff0b7ab64ca4558140b5b31567f94c28af3bce3e427dd3d05a5038a74cb03
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v6/layout.txt
+  layout_sha256: 6bdff0b7ab64ca4558140b5b31567f94c28af3bce3e427dd3d05a5038a74cb03
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [left, left, up, left, left, left, up, right]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 共 8 步且全部合法，终态同时覆盖两个目标并胜利。
+  - claim_id: direct_prefix_constructs_boundary_ready_l
+    claim: >-
+      前四步 left,left,up,left 全部合法；第四步触发 pull_object、move_sticky_rigid 与
+      sticky_merge，把原横向二格黏块和右下单格合成占据 (3,4)、(4,4)、(4,5)
+      的三格 L。该前缀后仍可在最短 4 步内完成关卡。
+  - claim_id: two_nearby_bar_constructions_are_complete_dead_ends
+    claim: >-
+      lower-bar 前缀 left,left,up,down 与 upper-bar 前缀 up,up,left,up 均全部合法，
+      分别形成局部横向三格黏块；从各自精确前缀状态出发的完整 96 状态后缀搜索均无胜态。
+  - claim_id: bs_cut_splits_l_into_box_and_tail
+    claim: >-
+      canonical 第六步 left 触发 pull_object、move_sticky_rigid 与 sticky_to_box；
+      L 的领头格跨过 B/S 边界后成为位于 (1,4) 的独立箱子，剩余黏块为
+      (2,4)、(2,5) 的竖条。
+  - claim_id: pl_side_switch_changes_pull_to_push
+    claim: >-
+      构造与跨 B/S 切割期间玩家位于 P/L 的 L 侧并执行 pull；切割后玩家位于
+      P 侧，canonical 第七、八步依次以 push 语义推动箱子和竖条完成两个目标。
+  - claim_id: every_win_uses_declared_event_families
+    claim: >-
+      当前 exact v6 的完整 193 状态、476 转移图中，没有缺少 pull_event、
+      material_normalization、sticky_merge 或 sticky_rigid_move 的胜路；固定锚点探针也未发现
+      缺少 B/S 箱黏改写或 P/L 推拉分流的胜路。本 claim 不包含锚点位移或 box_to_sticky。
+  - claim_id: complete_causal_quotient_has_four_equivalent_skeletons
+    claim: >-
+      从完整图全部胜态逆向闭包得到 96 个 win-reaching 状态；去除玩家坐标为 10 个对象态，
+      首先直接在这 96 个原始 runtime state 上消去循环，得到 14 个 raw SCC 和 12 条
+      source-to-win DAG 路径；12 条逐条映射到对象态商后恰有 4 条宏观因果骨架。四条恰为
+      “直接形成边界就位 L / 先在右侧形成同朝向 L 再可逆搬回”与“先完成箱子 / 先完成
+      竖条”的 2×2 组合，raw 路径分类计数为 1、2、3、6，未分类为 0。两个含多对象态
+      的对象商 SCC 均有覆盖同一组对象类的具体 raw SCC 见证。原始图禁用搜索和顺序探针
+      证明全部胜路必经 boundaryReadyL、preCutL、postCutProducts 与 finalProducts；
+      没有其它 win-reaching 对象分支。
+  - claim_id: all_wins_keep_same_product_duties
+    claim: >-
+      全部胜路终局都属于同一个对象态类：箱子固定在西目标 (1,3)，竖条固定在东目标列
+      (3,4)、(3,5)。全部因果骨架都要求同朝向三格 L 在边界前就位、再左移、经 B/S
+      切成同一箱子与竖条；可选差异只增加同一 L 的可逆准备搬运，或交换两个切割产物的
+      独立目标兑现顺序。本 claim 不声称 sticky_merge 必须在同一坐标触发。
+
+solution_uniqueness_claim:
+  result: equivalent_variants_only
+  search_scope: complete_graph_reverse_closure_raw_state_scc_paths_then_object_logic_mapping
+  search_budget: maxStates=400000; terminalizeWins=true; actual=193 states / 476 transitions; win-reaching=96 states / 224 transitions
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_causal_equivalence/results.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_causal_equivalence/report.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_uniqueness/results.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_uniqueness/report.md
+  equivalence_limit: >-
+    无旁路覆盖以不聚合玩家坐标的 14 个 raw SCC、12 条精确 DAG 路径为底座；对象态商
+    只用于把 12 条实际骨架归为 4 种玩家逻辑。对象商自身可能增加不可实现的路径拼接，
+    不单独承担完整性或可逆性证明。
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v6/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v6/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v6/canonical_replay.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/layout_analysis.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/layout_analysis.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_uniqueness/results.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_uniqueness/report.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_causal_equivalence/results.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_causal_equivalence/report.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_causal_equivalence/analyze.ts
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/event_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/event_probe.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/fixed_anchor_probe_box_sticky.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/fixed_anchor_probe_box_sticky.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/fixed_anchor_probe_push_pull.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/fixed_anchor_probe_push_pull.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/prefix_counterfactuals.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/prefix_counterfactuals.md
+  - prototypes/reality_anchor/mechanic.yml

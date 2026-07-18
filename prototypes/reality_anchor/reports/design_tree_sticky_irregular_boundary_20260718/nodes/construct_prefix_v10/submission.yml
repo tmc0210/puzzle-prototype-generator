@@ -1,0 +1,87 @@
+submission_id: RA_TREE_CONSTRUCT_PREFIX_V10_SUBMISSION_01
+tree_id: RA_TREE_2026_07_18_STICKY_IRREGULAR_BOUNDARY
+node_id: RA_TREE_NODE_CONSTRUCT_PREFIX_V10
+parent_node_id: RA_TREE_NODE_BASELINE_V2
+growth_relation: construct_prefix
+candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_PREFIX
+exact_version: v10_sha256_1c273480c51de2e3bbd284c2962729cd8cc7c38b549719f984b059f3cfd5a89a
+
+designer_claim:
+  player_experience_core: >-
+    同一三格 L 的凸脚同时是形状把手与动态门：P 侧 right push 把凸脚从门格移开，玩家才能
+    穿到 L 侧；第一次 L 侧 down pull 又让横臂占回门格，切断回到 P 侧的路，因此第二次下拉
+    只能继续以 L pull 把凸脚切成箱子。切后横臂再从 L 侧 up pull 回填双目标。
+  player_action: >-
+    玩家先把 L 从 P 侧右推一格，利用凸脚腾出的窄门下穿并绕到 x=6 的拉位；向下拉一次后，
+    读出门已被横臂重新封住，只能继续同侧下拉完成切脚。箱子落在专属目标后，玩家从右侧
+    绕到横臂上方，以 L 侧向上一拉让横臂同时覆盖两个上目标。
+  visible_payoff: >-
+    首推时凸脚由左上目标移动到右上目标并打开通路；第一次下拉把横臂降到双目标行、同时
+    重新封门；第二次下拉让凸脚单格变箱并压住下目标；终局横臂上拉回双目标，三项责任闭合。
+  why_this_level_exists: >-
+    父节点免费给出已坐好 B/S 拉位的 L；本节点先要求玩家用 L 自己制造并关闭通往正确拉侧的
+    窗口，把“定位到边界近旁的正确朝向与把手”变成形状责任。它不拼 L、不移动锚点、不做
+    活塞往返，区别于 RA_CAND_0025；主要记忆点是异形自身改变可达动作侧后再触发边界状态变化。
+  work_identity_conditions:
+    - 全部胜路必须先以 P 侧 right push 将完整 L 从 (4,4)(5,4)(5,5) 移到 (5,4)(6,4)(6,5)。
+    - 玩家只有在首推腾出门格后才能抵达 x=6 的 L 侧下拉位；不得存在首个 right pull/down push 平行入口。
+    - 全部胜路必须以 L 侧 down pull 移动完整 L，并继续以 L 侧 down pull + sticky_to_box:n1 切脚。
+    - 切割输出固定为箱子 (6,7) 与横臂 (5,6)(6,6)，两者分别承担下目标与上方双目标。
+    - 终局必须由 x=6 的 L 侧 up pull 将横臂移到 (5,5)(6,5)；不得存在 P 侧 push 或重黏旁路。
+
+packaging_account:
+  opening: >-
+    开局可见预制 L、两枚相邻上目标、下方箱目标、固定 P/L、反置 S/B，以及被凸脚占住的
+    单格门。L 的凸脚已经覆盖左上目标；右推后改为覆盖右上目标，同时门格明显腾空。
+  preparation: >-
+    玩家穿过腾出的门格，沿墙齿形成的窄折线抵达 x=6 的 L 侧拉位。第一次下拉保持完整 L，
+    但横臂回到门格并封死返程；该形状变化压缩了动作侧，而不是靠单向地板或锚点移动。
+  reveal_or_use: >-
+    第二次下拉让凸脚跨入 B 区，触发 sticky_to_box:n1：箱子 (6,7) 当场覆盖专属目标，横臂
+    (5,6)(6,6) 留在 S 区。玩家经右侧回路到 x=6,y=5，上拉横臂回填双目标。
+  ending: 第十六步 L 侧 up pull 同时覆盖两个上目标并胜利；箱子已在下目标，无额外清理。
+  every_major_element_role:
+    - 三格 L：凸脚腾门并切为箱子；横臂封门并最终回填双目标。
+    - P/L：首推发生在 P 侧；两次下拉与终局上拉都要求 x=6 的 L 侧把手。
+    - 单格门与 x=4,y=6 墙齿：让凸脚移动前后真正改变玩家是否能进入/返回动作侧。
+    - 右侧前墙：首推后完整 L 不能继续向右推进，把墙边否决读作换轴换侧提示。
+    - 反置 S/B：第二次下拉只切下凸脚，保持横臂连通并改变对象职责。
+    - 上方双目标：显示首推列变化，切割时被主动腾空，最终由残余横臂共同回填。
+    - 下目标与两侧墙：固定箱子落点和职责，不允许切后箱子回黏替代横臂结局。
+    - 右侧回路：只承担切后抵达 L 侧上拉位；不连通封门前的 P 侧旁路。
+  known_perceptible_defects:
+    - >-
+      不可逆主链只有首推、切脚和终拉三个凝聚进展，难度主要来自读出“凸脚腾门、横臂封门”
+      与主动腾空目标，而非多路线规划；是否达到后期难度 3 下界留给 fresh 阶段 A 和人工实玩。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete_graph_reverse_closure_raw_state_scc_paths
+    search_budget: maxStates=300000；实际 1063 状态、2471 转移、1 胜态，graph status=complete
+    known_raw_winning_variants:
+      - >-
+        win-reaching raw-state SCC 凝聚图只有一条 source-to-win 路径；SCC 内允许纯走位与
+        完整 L 的横向试探/回退，但它们返回同一完整状态，不改变四个必经对象动作与职责。
+    equivalence_account: >-
+      complete 1063 状态图的 win-reaching 闭包为 49 状态、109 转移、4 个 raw SCC、1 条
+      凝聚胜路；唯一终局对象 key 为 C(6,7)+M(5,5)(6,5)。禁用首个 P 侧 right push、
+      第一次 L 侧 down pull、第二次 L 侧 down pull+单格归一化或终局 L 侧 up pull 均 complete
+      且无胜；win-reaching 无 sticky_merge、box_to_sticky 或 anchor_boundary_shift。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10/layout_analysis.json
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/results.json
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/report.md
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/results.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/scratch/pl_bs_bypass_fix/v7_compact_dynamic_door.txt.audit.json
+  event_necessity_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/results.json
+  evidence_limits:
+    - raw SCC/DAG 折叠完整回返环，不枚举带任意循环的无限输入串。
+    - 难度、动态门是否被玩家清楚读出、腾空目标的反直觉强度不由图数据证明。
+    - 锚点固定且不移动；本节点不声明“锚点也可推拉”。
+
+designer_self_verdict: submit_for_independent_evidence_review

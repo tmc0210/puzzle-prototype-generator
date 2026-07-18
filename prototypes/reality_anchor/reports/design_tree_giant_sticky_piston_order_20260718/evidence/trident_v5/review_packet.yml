@@ -1,0 +1,80 @@
+review_attempt_id: RA_TREE_TRIDENT_V5_EVIDENCE_01
+candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+exact_version: v5_sha256_79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.txt
+  layout_sha256: 79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [up, up, up, up, left, left, left, left, down, left, left, down, right, right]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 共 14 步且全部合法，终态覆盖三个目标并胜利。
+  - claim_id: atomic_three_lock_final
+    claim: >-
+      canonical 最后一拍由同一个动作前已连通的 21 格 sticky#1 发力，产生 force_chain:n4、
+      move_sticky_rigid、sticky_to_box:n3，并把三只目标箱同时从 x=10 推到 x=11 的三个目标。
+  - claim_id: all_wins_use_same_atomic_three_lock_final
+    claim: >-
+      当前 exact v5 的完整 923 状态图中，9 条 non-win -> win 入边全为 right，
+      全部包含 push_object:sticky#1、move_sticky_rigid、force_chain:n4 与 sticky_to_box:n3；
+      去除玩家坐标后只剩一个胜利对象态和一个终局对象转移类。
+  - claim_id: individual_lock_cannot_accumulate
+    claim: >-
+      代表性的上活塞单独 right 推入目标后尚未胜利；紧接的 left 会 pull 同一箱并撤销覆盖。
+      三个口袋在布局中仅作 y 方向平移，具有相同墙与 P/L 侧关系。
+  - claim_id: three_tip_identity_for_same_stroke
+    claim: >-
+      删除下臂最右触点后，相同 canonical inputs 的最后一拍只产生 force_chain:n3 与 sticky_to_box:n2，
+      只覆盖上、中目标且终态不胜；本声明不推及该反事实的全局可解性。
+  - claim_id: connected_structure_identity_for_same_stroke
+    claim: >-
+      删除竖脊连接格后，相同 canonical inputs 只移动上部 sticky#2，最后一拍为 force_chain:n3 与 sticky_to_box:n2，
+      下部不在同一输入的受力闭包且终态不胜；本声明不推及该反事实的全局可解性。
+  - claim_id: lock_exits_create_contradiction
+    claim: >-
+      打开三个目标口袋的向下侧出口后，给定反事实 trace 依次以 push_object:crate#1、#2、#3
+      保留上、中目标并单独完成下目标，终态胜利且 trace 中不移动巨大黏体，说明原版狭廊出口承担顺序矛盾。
+
+solution_uniqueness:
+  result: equivalent_variants_only
+  search_scope: complete
+  search_budget: maxStates=200000; terminalizeWins=true; actual=923 states / 2929 transitions
+  known_raw_winning_variants:
+    - 9 个 raw win states，终拍玩家落点为 x=5, y=7..15。
+  equivalence_account: >-
+    枚举的九个胜态去除玩家坐标后只有一个对象状态类，九条 non-win -> win 入边只有一个前后对象转移类；
+    全部入边均为 right、push_object:sticky#1、force_chain:n4、move_sticky_rigid、sticky_to_box:n3，
+    区别仅为玩家沿同一完整竖脊选择九个等价接触格之一。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/report.md
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+  evidence_limits:
+    - 这是玩家逻辑类等价声明，不是 raw state 唯一声明。
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.md
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/results.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/report.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/cases.yml
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/cases.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/results.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/report.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/verification.json
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - docs/21-level-design-studio-standard.md
+
+graph_completeness:
+  layout_graph: complete
+  reachable_states: 923
+  legal_transitions: 2929
+  raw_win_states: 9
+  max_states: 200000

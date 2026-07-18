@@ -1,0 +1,81 @@
+submission_id: RA_TREE_CONSTRUCT_PREFIX_V9_SUBMISSION_01
+tree_id: RA_TREE_2026_07_18_STICKY_IRREGULAR_BOUNDARY
+node_id: RA_TREE_NODE_CONSTRUCT_PREFIX_V9
+parent_node_id: RA_TREE_NODE_BASELINE_V2
+growth_relation: construct_prefix
+candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_PREFIX
+exact_version: v9_sha256_80eef50e37f6d4cd1cc6be36a0b3352b3289290aae65b6ee588be9fef8a53f28
+
+designer_claim:
+  player_experience_core: >-
+    同一三格 L 先从 P 侧横推到墙边，继续横推被完整刚体前臂否决；玩家换到 L 侧抓住凸脚
+    向下拉，两次拉动后凸脚跨反置 S/B 成为箱子。切下的箱子封住 P 侧施力位，剩余横臂只能
+    从上方 L 侧向上拉回双目标，构成“P 推定位—L 拉切割—L 拉回填”的连续边界命运。
+  player_action: >-
+    玩家先在横推与纵推两个局部合法动作间选择；纵推一格仍可把完整 L 推回，但再纵推跨界
+    会在错列切下凸脚并失去胜路。正确做法是先横推，读出墙边为换侧提示，绕到凸脚下方连续
+    下拉；切割后沿右侧回路抵达横臂上方，从 L 侧上拉一格同时覆盖双目标。
+  visible_payoff: >-
+    开局 L 的凸脚先后在两个上方目标间移动，提示正确列；第二次下拉时凸脚单格变箱并压住
+    下目标，横臂留在 S 区。终局向上一拉，横臂重新占据开局可见的双目标，三个形状产物同步闭合。
+  why_this_level_exists: >-
+    父节点免费给出已坐好 B/S 拉位的 L；本节点先要求玩家利用 P/L、墙边和可逆窗口，把预制 L
+    定位到唯一正确切脚列，再让切割产物反过来限定终局施力侧。它不拼 L、不反复活塞，避免与
+    RA_CAND_0025 碰撞；核心高潮是同一异形在 P/L 与 S/B 交叉边界的可动性和状态提交线。
+  work_identity_conditions:
+    - 全部胜路必须先让完整三格 L 发生 P 侧 right push，并保持 L 形进入正确列。
+    - 全部胜路必须让同一完整 L 至少一次从 x=6 的 L 侧 down pull，并在正确列发生 sticky_to_box:n1。
+    - 切割结果必须固定为箱子 (6,8) 与横臂 (5,7)(6,7)，两者分别承担单目标与双目标。
+    - 终局横臂必须由 x=6 的 L 侧 up pull 到 (5,6)(6,6)，不得存在 P 侧 push、不同切割高度或重黏旁路。
+    - 错误纵推一格可完整回退；第二次纵推切出错列箱子后完整后缀无胜，形成可逆窗口与不可逆提交线。
+
+packaging_account:
+  opening: >-
+    开局完整展示预制 L、固定 P/L、反置 S/B、两个相邻上目标、一个下目标和右侧墙边。L 凸脚
+    已压住左上目标；横推后转而压住右上目标，两种局部进展都不会直接揭示完整顺序。
+  preparation: >-
+    正确 first object progress 是 P 侧 right push；下一次 right 因前臂撞墙 force_blocked。
+    纵推一格仍在可逆窗口内，继续纵推跨界后则得到 x=5 的错列箱子，完整 246 状态后缀无胜。
+  reveal_or_use: >-
+    玩家经 L 内角抵达 x=6 凸脚下方，下拉一次保持完整 L，下拉第二次只把凸脚切为 (6,8) 箱子。
+    箱子留在目标且封住横臂的 P 侧下方接触位；玩家沿右侧回路到 x=6,y=6，上拉横臂进双目标。
+  ending: 第十六步 L 侧 up pull 同时覆盖两个上目标并胜利；箱子已在下目标，无清理步骤。
+  every_major_element_role:
+    - 三格 L：横臂承担双目标，凸脚决定换侧拉位并在 S/B 边界切为目标箱子。
+    - P/L：开局 P 侧横推定位；正确切割与终局横臂回填都要求玩家转到 x=6 的 L 侧。
+    - 右侧墙边：否决正确横推后的继续推进，把“碰壁”转成换轴换侧信号。
+    - x=5,y=4 墙齿：删除正确列左臂的 P 侧向下施力位；x=6 上方虽可达，但属于 L 侧。
+    - 反置 S/B：只在第二次正确下拉时把凸脚切为单箱，保留横臂连通。
+    - 上方双目标：先显示凸脚横移的列变化，切割后要求残余横臂回填，持续消费同一形状关系。
+    - x=5,y=8 墙与 x=6,y=8 目标箱：共同封住横臂向上移动的 P 侧施力位，排除 V8 的 P 推收尾。
+    - 右侧回路：给切割后的玩家一条到 L 侧上拉位的可见通路，不允许穿过箱子改变其职责。
+  known_perceptible_defects:
+    - >-
+      切割后到终局上拉位含七步纯走位，虽然它承担“绕到 L 侧”的空间说明，但若实玩中被读为
+      过长的显然回收路径，应由 fresh 阶段 A 或人工试玩判定是否需要收紧；designer 不以步数自证难度。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v9/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v9/canonical_replay.json
+  solution_uniqueness:
+    result: pending_independent_review
+    search_scope: complete_graph_reverse_closure_raw_state_scc_paths
+    search_budget: maxStates=300000；实际 2581 状态、6578 转移、1 胜态，graph status=complete
+    known_raw_winning_variants: []
+    equivalence_account: 等待 designer-side 完整因果图与 fresh evidence reviewer 独立复核。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v9/layout_analysis.json
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v9_uniqueness/results.json
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v9_uniqueness/report.md
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v9/wrong_commit_state_analysis.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v9_uniqueness/results.json
+  event_necessity_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v9_uniqueness/results.json
+  evidence_limits:
+    - raw SCC/DAG 折叠完整回返环，不枚举带任意循环的无限输入串。
+    - 单胜态不自动等于单玩家逻辑类；送审前仍需读取全部 source-to-win 凝聚路径。
+    - 难度、纵推诱惑和终局回路的玩家侧质量不由图数据证明。
+    - 锚点固定且不移动；本节点不声明“锚点也可推拉”。
+
+designer_self_verdict: submit_after_independent_evidence_review

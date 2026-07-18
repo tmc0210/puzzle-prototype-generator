@@ -100,3 +100,5 @@ Topic brief 应包含建议顺手比较项。Explorer 完成后要在 `explorer_
 - 未覆盖导致的结论收窄：哪些未跑、等价、不适用、patch 隔离不了，或已经变成另一个题材。
 - 不应入库：哪些只是孤例、预算不足、没有 consumption probe，或尚未转成具体局部用法。
 - 是否打开了新设计空间或新组合关系：普通未覆盖变体只收窄本条语料，不直接写成下一轮 backlog。
+
+任务内 `mechanism_explore` 还必须按 `task-exploration-format.md` 写 `batch.yml`。`new_material_refs` 为空只记录本批新增数量，不产生失败状态或方向结论。

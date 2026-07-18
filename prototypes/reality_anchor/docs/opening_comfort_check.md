@@ -5,7 +5,7 @@
 设计 taste：
 
 ```text
-玩家开局不应第一步就被迫或被自然诱导进入关键不可逆承诺。好的 application / challenge 通常应允许玩家在核心区域外一两步观察、站位和读图。
+玩家开局不应第一步就被迫或被自然诱导进入关键不可逆承诺。预期难度 3 / 4 的关卡通常应允许玩家在核心区域外一两步观察、站位和读图。
 ```
 
 图和 SCC 关联：
@@ -44,7 +44,7 @@ nearest_win_reaching_exit_distance
 设计使用：
 
 - Discovery / witness 可以故意贴脸触发机制。
-- Application / challenge 更常需要 `nearest irreversible exit >= 1` 或至少有非平凡 initial SCC。
+- 预期难度 3 / 4 的关卡更常需要 `nearest irreversible exit >= 1` 或至少有非平凡 initial SCC。
 - 这类问题特别适合 LLM 精修：
   - 微调玩家起点；
   - 给起点附近开一格可逆观察空间；

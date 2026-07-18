@@ -1,25 +1,29 @@
 # 关卡设计工作室执行标准
 
-状态：当前特定原型关卡作品集执行合同。
+状态：当前特定原型体验核心设计树执行合同。
 
 设计方法见 [玩家体验核心与关卡包装方法论](17-experience-core-level-design.md)，各产物的唯一模板入口见 [关卡设计工作室模板索引](20-level-design-studio-templates.md)。
 
 ## 第一性原则
 
-流程保留两个不可合并的循环：designer 先在内部反复设计和修订，达到正式承诺状态后，再由不读取这些承诺的 fresh reviewer 交叉审查整批实际作品。
+流程先证明一个直白 baseline 是成立的关卡，再围绕同一体验核心逐节点生长。父节点一经接受便冻结；后续设计只能形成子节点，不能为了新想法回写旧版本。
+
+Reviewer 在同一轮中依次承担两个不可倒置的阶段：先盲审实际关卡的完成质量并写定 verdict，再读取体验核心、冻结设计树和当前生长关系。存活节点进入完整教练判断；未存活节点只检查继续按阶段 A 修订是否会偏离原方向。阶段 B 不能追改阶段 A verdict。
 
 ```text
-human experience seed
--> fresh explorer 持续发布任务内材料
--> designer 独立校准归档
--> 逐关内层 Design Studio
--> 每关强制送审包与独立硬证据审查
--> fresh reviewer 盲读整批实际关卡
--> designer_action_N
--> 修改后进入新的整批 review_N+1
--> prototype-specific pre-submission workflows
--> 接入待玩列表
--> 人类试玩与最终编排
+外层：设计树生长循环
+  human experience seed -> baseline 工作节点
+  或 冻结节点 + 教练方向 -> 生长工作节点
+  -> 调用内层单节点设计循环
+  -> 冻结节点后选择下一父节点与方向 / 退回当前设计 / 设计树充分
+
+内层：单节点设计循环
+  Design Studio -> exact candidate -> 硬证据 -> 阶段 A -> 阶段 B -> designer_action
+  -> 冻结节点 / 回到 Design Studio / 更换结构 family / 撤回工作节点
+
+设计树充分
+-> 各冻结节点执行原型专属提交前工作流
+-> 接入待玩列表与人类试玩
 ```
 
 任何角色都不能自行授予下一阶段资格。
@@ -30,37 +34,39 @@ human experience seed
 
 ## 角色与权限
 
-### Experience-core explorer
+### Task-local mechanism explorer
 
-从人类体验种子构造最小 witness，使用手摆、runtime、短输入、solver 和矿工、临时脚本持续生产任务内材料。它不读审美归档，不设计正式候选，不给材料分档，不执行审查，也不更新全局 lexicon。
+由 fresh agent 显式调用 `$sokoban-mechanism-lab` 的 `mechanism_explore` / `task_local` 模式。它把体验种子或 designer 给出的局部结构空间展开为结构谱，使用手摆、runtime、短输入、solver、矿工或临时脚本持续发布任务内正向设计语料。它的权限止于 task lexicon、索引、局部 runs 和下一采样轴；Designer 负责正式节点与玩家侧判断，Reviewer 负责审查，Curator 负责全局 lexicon。
 
 ### Designer / controller
 
-由同一个主 agent 兼任两个职责切面：作为 designer，完成归档校准、选择 explorer 材料、定义体验核心与作品身份、逐关设计、填写送审包并处理 `designer_action_N`；作为 controller，维护任务、版本和批次边界，从实际产物组装 reviewer 白名单输入，派遣 fresh reviewer，运行原型专属提交前工作流，并把满足硬门的 delivery versions 实际接入待玩列表。
+由同一个主 agent 兼任两个职责切面。Designer 完成归档校准、定义体验核心与作品身份、制作 baseline 与子节点、填写送审包并回应审查；Controller 维护冻结树和版本边界，从实际产物组装 reviewer 白名单输入，派遣 fresh reviewer，运行原型专属提交前工作流，并实际交付所有待玩节点。
 
-下文的 `Designer` 与 `Controller` 都指这个主 agent 在不同动作中的职责，不表示两个独立 agent。主 agent 不能兼任 explorer、independent evidence reviewer 或 independent level reviewer，也不能用设计解释覆盖独立 verdict。
+主 agent 负责 designer/controller。Task-local explorer、independent evidence reviewer 和 independent level reviewer 分别由 fresh agent 承担，独立 verdict 保持原文。只有显式调用 `$sokoban-mechanism-lab` 并按 task-local 合同落盘的产物获得 explorer artifact 身份。
 
 ### Independent evidence reviewer
 
-逐关核验 exact version 的可解性、解族、旁路、事件、对象参与和作品身份机械条件。它不评价审美、slot 或整批差异，不读取 designer 的包装说明。
+核验 exact version 的可解性、解族、旁路、事件、对象参与和作品身份机械条件。它不评价审美，不读取 designer 的包装说明。
 
-### Independent level reviewer
+### Independent level reviewer / experience-core coach
 
-用 fresh context 读取整批 slot 名、实际布局和非空 exact inputs 的机械回放，并独立选取少量 human-reviewed archive 样本校准。它逐关判断完成质量，同时比较 slot 是否成立及批内玩家体验是否实质不同；不读取 experience brief、explorer 材料、designer 送审包、slot 理由、attempt log、旧审查或修改说明。
+同一 fresh reviewer 先只根据实际布局、非空 exact inputs、机械回放和独立人类归档校准完成阶段 A 质量门。Verdict 固定后，Controller 才提供体验核心、冻结树与当前生长关系，使其进入阶段 B。
+
+阶段 A 存活时，阶段 B 判断 baseline 与核心是否对齐，或子节点是否非拼接地增加了前序构造或后继应用。阶段 A 未存活时，阶段 B 只防止 designer 沿质量修订把原目的优化掉；它不能冻结节点、判断树充分或改派新方向。两种模式都只用自然语言表达，不输出多方向任务单、布局规格或 deadend 指标。
 
 ### Human designer / curator
 
-试玩待玩版本，决定哪些作品进入游戏、怎样排序，以及是否结束某个 slot 的设计。只有人类可以产生 `defer`、`needs_revision`、`ready_for_archive` 或 `reject`，也只有人类可以把仍无存活版本的 slot 关闭。
+试玩冻结节点，决定哪些作品进入游戏。只有人类可以产生 `defer`、`needs_revision`、`ready_for_archive` 或 `reject`。
 
 ## 启动与并行探索
 
-### 1. 启动 explorer
+### 1. 启动 task-local mechanism explorer
 
-人类可以只给一个结构或现象，例如“C 形黏块”，不需要给出最小 witness。Controller 建立任务目录，写 exploration brief，并以不继承设计对话的 fresh agent 启动 `$sokoban-experience-core-explorer`。
+人类可以只给一个结构或现象，例如“C 形黏块”，无需先给局部结构小图。Controller 建立任务目录，按 `skills/sokoban-mechanism-lab/references/task-exploration-format.md` 写 `dispatch.yml`，并以不继承设计对话的 fresh agent 显式启动 `$sokoban-mechanism-lab`，固定 `intent: mechanism_explore` 与 `publication_scope: task_local`。
 
-Explorer 只收到体验种子、玩家前序、允许机制、规则与工具入口、source boundary 和任务目录。不要把审美归档、旧候选或 designer 的关卡设想传给它。
+Explorer 只收到体验种子、玩家前序、允许机制、规则与工具入口、source boundary 和任务目录。不要把审美归档、旧候选、正式 exact、review 或 designer 的关卡设想传给它。
 
-Explorer 首先构造可运行的最小 witness，用非空输入保存动作前后局面，用近邻反事实标明已经证明和尚未证明的关系，然后立即发布 `material_board.md`。之后按批继续探索，不等待所谓“空间穷尽”。
+Explorer 首先构造可运行的直白局面材料，用非空输入保存动作前后局面，用近邻结构谱说明形状、站位、边界和动作结果怎样变化，然后立即发布 task-local `lexicon.md` 与 `lexicon_index.md`。之后按批增加正向材料和结构谱覆盖，不等待所谓“空间穷尽”。
 
 ### 2. Designer 并行校准
 
@@ -68,142 +74,160 @@ Designer 不等待 explorer 完成，同时：
 
 1. 完整读取当前原型 clean human-reviewed archive 的 index 或 retrieval summaries；
 2. 读取所有明确审美 1 分样本的人类原评语；
-3. 自行选择并读取若干与当前体验核心、包装或 slot 相关的正例、下界和边界原评语；需要判断具体包装或撞题时打开实际布局；
+3. 自行选择并读取若干与当前体验核心或包装相关的正例、下界和边界原评语，必要时打开实际布局；
 4. Explorer 首批材料尚未发布时，可以继续扩读其它 human-reviewed 样本，而不是提前画布局；
 5. 确认玩家前序、规则范围和已有相关关卡。
 
-Index 摘要只用于定位，不能替代实际选中样本的人类原评语。未归档 report、旧 critic、designer 自评和工具结论不能校准审美。Independent level reviewer 不需要复制 designer 的宽读策略，但必须自行选取少量正反样本，不能只接受 designer 选择的 anchors。
+Index 摘要只用于定位，不能替代实际选中样本的人类原评语。未归档 report、旧 critic、designer 自评和工具结论不能校准审美。Independent reviewer 自行选少量正反样本，不接受 designer 代选的唯一 anchors。
 
 ### 3. 持续协作
 
-Designer 完成校准时若 explorer 尚未发布已验证 witness，等待首次发布，不先画正式布局。此后在声明每个新关卡和处理每次 `designer_action_N` 前读取最新材料面板；正在验证或送审的 exact version 不因后台新结果而静默变化。
+Designer 完成校准时若 explorer 尚未发布首批已验证材料，等待首次发布，不先画正式布局。此后在制作每个节点和处理每次教练意见前读取最新 task lexicon 与索引；正在验证或送审的 exact version 不因后台新结果而静默变化。
 
-Designer 可把具体材料缺口或探索方向写入 `explorer_requests.md`。Explorer 只返回材料，不替 designer 修改正式候选。Explorer 连续两批切换不同方向、完成实际实验而没有新材料时，可以进入 `idle_waiting_request`，等待 designer 给出新的具体问题。
+Designer 可把局部材料缺口写成 `exploration/requests/<request_id>.yml`。Request 只描述待展开的结构空间和采样轴；完整候选、难度与 family 判断留在 Designer 的正式循环。Explorer 只返回正向结构材料。一批 `new_material_refs` 为空只表示本批新增为零；它继续换采样轴或等待下一份 request。
 
-## 内层：逐关 Design Studio
+### 4. Designer 的委派边界
 
-除非 human brief 明确改变范围，目标批次包含 baseline、application、combination、challenge 各一个当前候选。Designer 一次只推进一个候选，不同时摊开多个半成品；当前候选失败时以新的实质设计替换它，而不是默认增加同 slot 的候选数量。
+适合委派的工作是局部结构谱、runtime 对照、动作后局面、最小消费结构、近邻变体和原始证据。Designer 必须自己定义体验核心和作品身份，提取并改造材料中的核心逻辑，设计完整 layout 与包装，从玩家侧读取 exact，并判断审美、难度、family 去留和是否送审。
 
-每个候选在送审前必须完成：
+当当前候选暴露材料缺口时，Designer 先把问题改写成与候选坐标和包装无关的设计空间。例如把当前旁路分离成“三格 L 保留操作位、两格替代物失去操作位的局部筛选结构谱”。制作完整候选、修订 exact、方向选择与作品比较由 Designer 自己完成。
 
-```text
-读取最新材料
--> 重新查看当前批次已有作品的实际布局与解法
--> 声明本关准备增加的玩家体验和与已有作品的具体差异
--> 提出结构假设并画第一版布局
--> replay 实际输入
--> 从玩家侧重读开局、选择、回报与结束
--> 运行必要硬证据
--> 修订同一候选，或关闭候选并换一个实质不同的结构
--> 达到可正式承诺状态后才填写送审包
-```
+Designer 读取各局面卡的结构旋钮、动作后状态和最小用法，自行变形、拼接或重构为完整作品。材料数量、单个 probe 的退化和一批新增为零只描述采样覆盖；结构表达能力由 Designer 在实际改造中判断。
 
-第一版布局不能直接送审。只要 designer 仍能指出明确的同题改进方向、硬事实仍未知，或成品只是把最小 witness 封在显然操作中，就必须继续内层循环。
+## 外层：设计树生长
 
-### Baseline
+### 1. 制作 baseline
 
-当现有材料足以支撑完整、直接、低风险的作品时，填写 experience brief 和当前关卡声明，再开始正式布局。Baseline 的“最小”不是步数、地图或对象数量最少，而是没有明确的同题改进方向；接近最小 witness 的显然操作不能作为 baseline。
+Designer 先以首批局部结构语料、体验核心和作品身份作为节点 brief，建立 baseline 工作节点并调用单节点设计循环。Baseline 可以直白，目标是让体验核心被玩家亲自、清楚、集中地完成，而不是提前加入全部可能包装。这里要求的是把当前 baseline 做完整，不要求消除所有未来生长方向，也不因接近某张直白材料卡而自动失败；无意义走位、被动动画、失职对象、弱回报或高潮后劳动仍然是缺点。
 
-使用 exact replay 检查开局、准备、核心回报和收束，再用 solver、graph、bypass、uniqueness 与 identity counterfactual 修硬问题。若唯一解修订淹没核心，关闭当前候选并换结构，不追加无关子题。
+### 2. 冻结根节点
 
-### 后续方向与连续作品观
+Baseline 通过硬证据、阶段 A 质量门，并在阶段 B 被确认与体验核心一致后，冻结为设计树根节点。冻结节点保存 exact layout、replay、送审、硬证据、质量门和教练意见引用；此后不能覆盖。
 
-Baseline 形成后，依次设计 application、combination、challenge。方向定义以 docs/17 为准；实际作品可以同时具有多种性质，但必须足以承担本轮预先选择的 slot。四个 slot 使用同一完成质量标准，baseline 不因保守或先做而豁免显然操作、无意义走位和其它可感缺点。
+教练随后只提出一个最值得尝试的生长关系，或判断当前树已经充分。Designer 按这段自然语言建立一个工作中子节点，不把建议拆成字段清单，也不同时实现其它方向。
 
-开始每个后续关卡前，designer 必须根据当前批次的实际布局和解法写清：
+### 3. 制作子节点
 
-- 本关准备增加哪一种玩家可感体验；
-- 它与每个已有作品的具体差异；
-- 如果移除本关，连续游玩时会损失什么体验。
+Controller 以一个冻结节点和当前教练意见建立新的工作节点，并调用同一个单节点设计循环。冻结父节点只提供体验核心、作品身份和玩家关系的对照，不是默认地图底稿；是否沿用其局部结构由当前结构 family 决定。工作节点只实现当前教练意见指向的一个关系：
 
-只增加少量操作、扩大地图或替换几何外形，不构成新的玩家体验；与 baseline 几乎失去可辨认的共同核心，也不能靠 slot 名维持作品集关系。
+- `construct_prefix`：玩家主动构造体验核心所需的前置局面；
+- `apply_suffix`：玩家应用体验核心结果，且后继约束反向改变此前构造判断。
 
-“整段是否已经穷尽所有主要可能性”不可可靠验证，因此连续作品观只作为 designer 的正向创作总纲；具体流程仍由当前候选状态和人类决定。
+父节点保持冻结。工作节点不能用“只增加了一段”继承父节点结论。失败尝试只写尝试日志，不进入设计树。
+
+机制可以自然进入子节点，教练也可以点名具体允许机制，但它必须服务当前前序选择或后继反约束。机制组合不作为第三种生长类型；如果新机制本身成为主要体验，应另开体验核心和设计树。
 
 ## 解族唯一性送审门
 
-这里的唯一解不是原始输入序列唯一，而是玩家逻辑类唯一。纯走位差异、回到同一完整游戏状态且不改变后续关系的完整回返环、规则与目标下的真实对称重标号，以及相互独立的必要步骤换序，可以属于同一逻辑类；它们必须保持相同的对象职责、目标分配和依赖步骤的因果先后。
+这里的唯一解不是原始输入序列唯一，而是玩家逻辑类唯一。纯走位差异、回到同一完整游戏状态且不改变后续关系的完整回返环、规则与目标下的真实对称重标号，以及相互独立的必要步骤换序，可以属于同一逻辑类；它们必须保持相同的对象职责、目标分配和依赖步骤因果先后。
 
-Designer 在填写送审包前必须完成 `solution_uniqueness` 自查，结果只能是：
+Designer 在每个 exact version 送审前完成 `solution_uniqueness` 自查，结果只能是：
 
 - `unique_complete`：完整搜索或完整状态图只留下一个玩家逻辑类；
-- `unique_within_budget`：搜索运行到明确记录的预算，未发现非等价胜解；这只声明预算内结果，不得伪装成完整证明；
-- `equivalent_variants_only`：发现了多条原始胜路，但引用的实际证据足以说明它们之间只有上述等价差异。
+- `unique_within_budget`：面向替代胜解或玩家逻辑类的搜索持续到预先声明的预算，在实际搜索范围内未发现非等价胜解；
+- `equivalent_variants_only`：多条原始胜路只有上述等价差异，并有实际证据支持。
 
-发现任一非等价胜解，或已知存在多条胜路却不能证明它们只属于同一逻辑类时，当前 exact version 不能送审。路线更长、更难自然发现或只损害更高审美目标，都不能把 bypass 降级为 caveat；一个 exact 反例已经足够，无需继续枚举全部旁路。
+三种结果描述不同的证据形态，不构成关卡完成质量、复杂度或设计价值的档位。复杂关卡可以正常使用 `unique_within_budget`；它在声明范围内得到 `supported` 后，与其它两个结果拥有相同送审资格。找到首条胜解便停止的普通求解不能支持该结果，搜索必须在首解之后继续寻找替代胜解或逻辑类，直到完成声明范围或达到记录的预算。
 
-送审包必须记录结果、搜索范围或预算、已知原始胜路、等价性说明、证据引用与边界。Independent evidence reviewer 只审计该声明是否被当前 exact version 的原始 artifact 支持，不替 designer 搜索或补证。唯一性审查不是 `supported` 时，当前候选返回 Design Studio，不能进入整批 level review。
+发现非等价胜解，或不能证明已知多解等价时，当前 exact version 不能送审。Independent evidence reviewer 只审计当前证据，不替 designer 补搜。唯一性审查不是 `supported` 时，返回内层设计。
 
-## 外层：整批 Review Loop
+## 内层：单节点设计循环
 
-### 1. 强制 designer 送审包
+### 1. Design Studio
 
-每个拟提交 exact version 必须完整填写 designer 送审包，固定 designer 自己对体验核心、作品身份、包装、slot、已知问题、`solution_uniqueness` 和证据边界的承诺。缺送审包或唯一性结果不属于三个合法值时，仍是 working material。
+每个工作节点都完整执行同一个 Design Studio Loop：
 
-送审包不发送给 independent level reviewer，也不能作为 reviewer raw packet 的摘要来源。
+1. 根据节点 brief 写出当前玩家关系和结构假设。Baseline 以体验核心和作品身份为目标；生长节点还要把教练指出的一个玩家关系落实为本轮设计问题。目标难度 1—2 至少记录玩家目标和预期机制操作；目标难度 3 以上先写可随设计更新的 reasoning sketch，说明玩家面对的问题、可见前提、预期判断、操作关系和反馈。
+2. 读取最新 task-local `lexicon.md`、`lexicon_index.md` 和本轮允许的全局 lexicon 或其它设计语料，按需向持续 explorer 提出局部结构空间 request。材料是非穷尽的词汇与局部启发：有合适关系可以取用或改造，没有则围绕当前结构假设自行构造。
+3. 使用手画、runtime、miner、脚本或其它当前原型允许的手段设计 layout，并明确当前 solve instance。工具只寻找、实例化或验证服务于当前设计问题的结构；工具输出本身不是候选。
+4. 实际运行非空 replay 和本轮允许的 solver、analyzer、graph 或反事实工具。Designer 亲自读取 exact inputs、逐步状态、事件、对象参与、关键状态变化、图事实和工具边界，而不是只接受摘要或通过状态。
+5. 根据实际 layout 与 replay，从玩家侧重读开局看见什么、需要判断什么、局部选择为何不同、关键操作怎样改变后续关系、回报在哪里以及怎样结束；据此更新结构假设和正式设计说明。
+6. 若机械事实不支持当前声明，玩家侧读法无法由实际关卡支撑，或当前生长关系没有成立，进入 [玩家体验核心与关卡包装方法论](17-experience-core-level-design.md) 的“结构修订：从差异到结构责任”方法。修订形成新 exact version 后，重新执行实际 replay、证据读取、玩家侧重读和必要 diagnostic；该方法可以导向同一 family 的重构、换 family 或撤回，但不是单节点状态机中的新增阶段。
+7. 按本文件的解族唯一性送审门完成当前 exact version 自查。发现非等价胜解，或不能证明已知多解等价时，留在 Design Studio；一个 exact 反例已经足以触发修订，不因路线较长或较难自然发现而降级。
+8. 只有当前 exact version 已有可复现 replay、玩家侧读法能够由实物支持、机械声明不超过证据边界且唯一性结果合法时，才填写完整 designer 送审包并进入硬证据审查。是否送审与它是第几版无关。
 
-### 2. 独立硬证据审查
+若修改 layout、start、goal、胜利条件、核心机制使用或玩家关系，形成新的 exact version；旧机械证据和旧审查不能替它背书。原型 handoff 声明的设计期 diagnostic 按 routing 执行，`kind: pre_submission_check` 仍只在设计树充分后运行。
 
-Controller 从每个实际 exact version、规则合同和原始 artifact 另组硬证据包，只从 designer 送审包提取 `solution_uniqueness` 机械声明及其引用，不传递包装、slot 辩护或审美说明。Fresh evidence reviewer 逐关核验可解性、`solution_uniqueness`、旁路、事件、对象参与和机械身份条件。
+### 2. 强制 designer 送审包与硬证据审查
 
-任一当前候选的 `overall_hard_status` 不是 `supported` 时，该候选回到内层 Design Studio；整批暂不发送给 level reviewer。
+拟提交 exact version 必须完整填写送审包，固定 designer 对体验核心、作品身份、包装、已知问题和证据边界的承诺。送审包不发送给阶段 A reviewer。
 
-### 3. Fresh 整批玩家侧审查
+Controller 从实际 exact version、规则合同和原始 artifact 另组硬证据包，只提取必要机械声明及引用。Fresh evidence reviewer 核验可解性、解族唯一性、旁路、事件、对象参与和机械身份条件。`overall_hard_status` 不是 `supported` 时，不进入阶段 A。
 
-所有当前候选硬证据受支持后，controller 从规则、slot 名、整批实际布局、solve instances、非空 exact inputs 和由同一 inputs 机械 replay 的逐步状态重新组装 raw packet。
+### 3. 阶段 A：Fresh 玩家侧质量门
 
-Raw packet 禁止包含 designer 声明、slot 理由、explorer 材料、指标、旧审查或 controller 总结。Fresh reviewer 必须独立完成三项判断：
+Controller 从规则、实际布局、solve instance、非空 exact inputs 和机械回放组装 raw packet。Baseline 只包含当前节点；子节点同时包含冻结父节点与当前子节点的实际 artifact，以便 reviewer 看清新增内容，但不透露拟议方向、体验核心或 designer 解释。人类 brief 若明确规定审查边界、允许的审美取舍或不可改变条件，应以可追溯的人类原意进入 raw packet；designer 的辩护不能借此进入。
 
-1. 每关是否是没有明确非补偿缺点的完整作品；
-2. 每关实际是否足以承担其 slot；
-3. 批内作品是否提供实质不同、不可用形式差异冒充的玩家体验。
+Fresh reviewer 独立判断当前 exact version 是否没有明确非补偿缺点，输出：
 
-Reviewer 不要求分类排他，也不判断设计空间是否穷尽。它对每个 exact version 输出 `survive_to_pre_submission_checks`、`revise_and_rereview` 或 `reject_candidate`，并输出整批比较结果。
+- `survive_quality_gate`
+- `revise_and_rereview`
+- `reject_candidate`
 
-### 4. Designer action 与下一轮
+Verdict 写定后不可追改。随后发送阶段 B context；只有存活节点拥有树决定资格，未存活节点只接受方向保持诊断。Designer 在收到阶段 B note 前不修订或撤回当前工作节点。
 
-Designer 必须根据独立 artifacts 写 `designer_action_N`，逐项决定修订当前候选、撤回并在同 slot 开始新候选，或推进存活批次。Designer 的辩护不能覆盖 verdict。
+### 4. 阶段 B：体验核心教练
 
-修改 layout、start、goal、对象、核心操作或玩家关系后形成新 exact version，重新填写送审包并重跑该版本必要硬证据。之后用新的 reviewer 实例盲审包含所有当前候选的完整批次，形成 `review_N+1`；不把旧 reviewer、修改说明或 designer action 传给新 reviewer。
+阶段 A verdict 写定后，Controller 才向同一 reviewer 提供体验核心、冻结设计树、当前父子关系、原教练方向和允许机制。Context 同时写明阶段 A outcome；只有 `survive_quality_gate` 对应完整树决定权限，其它 outcome 只对应方向保持权限。
 
-`reject_candidate` 只关闭当前候选，slot 继续保持 `designing`。下一步必须是修订、同 slot 替换或向 explorer 提出定向请求；只有人类可以把 slot 改为 `human_closed`。
+阶段 A 未存活时，阶段 B 不重复质量批评，也不判断是否冻结。它把阶段 A 从实物重建出的实际增量与节点原 brief 比较，只问：沿阶段 A 的同题修订继续优化当前结构，是否仍会实现原先指定的体验核心或生长关系。
+
+- 方向仍在时，用一小段自然语言确认继续修订当前节点即可，不再增加第二组修改任务；
+- 方向已经被另一种前序、后继、独立子题或新体验核心取代时，点明原目的与当前实际价值各是什么，要求停止精修当前结构，回到冻结父节点与原 brief 更换结构 family 或撤回工作节点。错方向中的有趣结构可以作为材料保留，但不能静默重命名当前节点。
+
+方向丢失时，这项纠偏优先于阶段 A 的局部改进建议，避免 designer 把一个关卡修到完成后才发现结构回答了另一道题。失败节点的阶段 B 不产生 `freeze_root`、`freeze_child` 或 `tree_sufficient` 决定。
+
+阶段 A 存活时，阶段 B 才执行以下完整教练判断。
+
+Baseline 轮中，教练确认实际体验与核心一致后冻结根节点，再给一个最高优先生长方向。子节点轮中，教练判断新增内容是否确实改变了玩家与同一核心的关系：
+
+在应用前序或后继标准前，先把阶段 A 重建出的玩家实际体验与冻结 baseline 的 `experience_statement`、`player_action`、`visible_payoff` 和身份条件比较，确认同一个具有区分性的玩家关系仍然成立。机械条件只提供必要证据，不能单独决定作品身份。若作品身份丢失，当前子节点直接不冻结，并明确 baseline 承诺了什么、当前玩家实际经历了什么；这个判断不改写前序或后继标准。
+
+- 对前序，检查不知道核心所需局面的熟练玩家是否仍能只靠局部判断轻松走完；若能，通常是强制动画或独立子题。Deadend 只是判断选择真实性的证据，不是设计指标。
+- 对后继，检查它是否区分了多种眼前可完成核心的状态，并让约束返回前序；删除后继若不让关键构造选择更显然，通常是追加子题。
+
+教练内部可以严格逐项攻击，外部只写短篇自然语言：说明成立或失败的原因，只给一个宏观方向，并以整体放弃信号收束。不得输出字段表、问题清单、方向菜单、坐标、步数或 deadend 数量。
+
+成立的子节点冻结。教练可以建议从它继续生长，也可以回到某个冻结祖先尝试另一关系。若当前节点完整但新增关系拼接，只拒绝冻结子节点，不损害父节点。
+
+### 5. Designer action 与新一轮
+
+Designer 同时根据阶段 A 与阶段 B artifacts 写 `designer_action_N`。方向保持时，按阶段 A 缺点修订当前节点；方向丢失时，优先回到冻结父节点与原 brief 更换结构 family 或撤回，不沿错误结构继续局部优化。新 exact version 重新经过内层循环，并使用未看过该版本的新 reviewer 执行阶段 A。旧 reviewer、修改说明和 designer action 不进入新 raw packet。
+
+当教练无法提出具体、非拼接、仍以原核心为主角的方向，或继续生长只会让核心退为材料时，将 `tree_state` 设为 `sufficient`。流程不机械要求前序与后继各有一个节点。
 
 ## 原型专属提交前工作流
 
-整批 level review 存活后，必须读取当前原型 `design_handoff.yml`，逐项处理所有 `kind: pre_submission_check` workflow。它可能是只读验证，也可能包含 authority docs 明确规定的操作；通用流程不预设其目的、检查对象或修改方式。适用性必须按 workflow 的 positive conditions 和 authority docs 实际判定，不能用 designer 目测或自填结论跳过。适用项执行规定动作并保存原始 artifact；不适用项记录可核验依据。
+设计树充分后，Controller 对每个冻结节点读取当前原型 `design_handoff.yml`，逐项处理所有 `kind: pre_submission_check` workflow。适用性按 positive conditions 和 authority docs 实际判定；适用项执行规定动作并保存原始 artifact，不适用项记录可核验依据。
 
-这些 workflow 由 controller 在 level review 之后独立运行，不转交 evidence reviewer 或 level reviewer。每项结果都要记录 reviewed exact version、实际操作、产物引用、delivery exact version，以及 authority docs 对版本和审查效力的规定。
+只读 workflow 不改变 reviewed exact version。若 workflow 改变 exact version，只有 authority docs 事先明确允许该类变换保留 review，且本次满足全部操作边界、必需复验和不变量时，才可保留 review；其它变化必须为该节点形成新 exact version，返回硬证据、阶段 A 和阶段 B。冻结树中原节点不被覆盖，只有重审存活的新版本可以替代其 delivery 指向。
 
-- 只读 workflow 不改变 reviewed exact version，完成后保留既有 review。
-- 若 workflow 改变 exact version，只有 authority docs 事先明确规定该类变换可保留 review，且本次满足其全部操作边界、必需复验和不变量时，才可产生 delivery version 并保留 review。
-- 其它任何版本变化都属于新的设计版本，必须回到内层 Design Studio、必要硬证据审查和新的整批 Review Loop。
-
-使用提交前工作流记录保存上述判断。通用层不得自行发明某种操作的安全性，也不得把一个原型的检查或变换规则套用到另一个原型。
+通用层不得发明某种操作的安全性，也不得把一个原型的检查规则套用到另一个原型。
 
 ## 待玩交付
 
-Controller 只按 artifacts 检查：
+Controller 对每个冻结节点按 artifacts 检查：
 
 ```text
-all_submission_packets = complete
-all_solution_uniqueness_reviews = supported
-all_independent_hard_evidence = supported
-latest_full_batch_level_review = survived
-all_pre_submission_checks = completed_or_recorded_not_applicable
-all_pre_submission_workflow_records = completed
-all_delivery_version_evidence = current
+submission_packet = complete
+solution_uniqueness_review = supported
+independent_hard_evidence = supported
+quality_gate = survived
+coach_tree_decision = frozen
+pre_submission_checks = completed_or_recorded_not_applicable
+delivery_version_evidence = current
 ```
 
-满足后把 delivery versions 写入 `studio/levels.yml` 或 `levels.yml`，加入 `playable_queue.yml`，使用 `status: pending_playtest`，重建 playable 并确认 source/id 可解析。交付简报逐项列出提交前检查及 artifact refs，但文字简报不能替代实际待玩交付。
+满足后把各 delivery version 写入 `studio/levels.yml` 或 `levels.yml`，加入 `playable_queue.yml` 并设为 `pending_playtest`，重建 playable，确认 source/id 可解析。人类交接列出设计树亲缘关系、各节点体验差异和 artifact refs；它不是教练表格，也不能替代实际待玩交付。
 
 ## 状态
 
 ```text
-slot_state: designing | review_survived | delivered | human_closed
-candidate_state: designing | hard_validated | review_survived | candidate_rejected
-review_state: not_submitted | evidence_review_required | batch_review_required | revise_required | candidate_rejected | survived
+node_state: designing | hard_validated | quality_survived | frozen | rejected
+tree_state: building_baseline | growing | sufficient
+review_state: not_submitted | evidence_review_required | quality_review_required | coach_review_required | revise_required | rejected | frozen
 pre_submission_state: not_started | incomplete | completed
 playtest_status: not_queued | pending_playtest | defer | needs_revision | ready_for_archive | reject
 ```
 
-Designer/controller 不能产生独立 review 状态，reviewer 不能关闭 slot，designer/controller 也不能代替人类填写试玩结果。任何状态都不表达审美等级。
+Designer/controller 不能产生独立 review 状态，也不能代替人类填写试玩结果。任何状态都不表达审美等级。

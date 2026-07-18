@@ -1,6 +1,6 @@
 ---
 name: sokoban-mechanism-lab
-description: 探索 Sokoban-like 原型 runtime 的局部结构，并整理成 designer 可拼接的机制设计语料。Use when Codex needs to run mechanism explorer, curate mechanism_lab/lexicon.md, prepare mechanism_lab runs, or maintain prototype-specific mechanism lexicons without entering level design or review.
+description: 探索 Sokoban-like 原型 runtime 的局部结构，并整理成 designer 可拼接、变形和压缩的设计语料。Use when Codex needs to explore a named local design space, run task-local background material exploration for Level Design Studio, curate mechanism_lab/lexicon.md, prepare mechanism_lab runs, or maintain prototype-specific mechanism lexicons without entering full level design or review.
 ---
 
 # Sokoban Mechanism Lab
@@ -29,11 +29,14 @@ description: 探索 Sokoban-like 原型 runtime 的局部结构，并整理成 d
 - 不把“实验中出现过某机制”写成“该机制在被研究”。若某机制只生成材料，它只能写作材料来源；标题和归属必须落在真正制造设计差异的结构层。
 - 新 lexicon 条目至少要有一个已观察到的最小用法。只有事件 witness 或规则验证时，停在 run / proposed notes，不进入正式 lexicon。
 
+Explorer 接收的是要展开的设计空间。它的结论范围只覆盖实际采样的局部结构关系；没有形成新关系的摆法留作对照。完整候选、玩家侧完成度、难度、审美、family 去留与正式设计取舍由 designer 独立负责。
+
 ## 必读路由
 
 按任务类型读取 references：
 
 - 开始机制探索时读 `references/protocol.md`。
+- 为 Level Design Studio 执行任务内探索时，同时读 `references/task-exploration-format.md`。
 - 准备或解释 `mechanism-lab-run` 输入输出时读 `references/local-run-format.md`。
 - 整理或更新 lexicon 时读 `references/lexicon-format.md`。
 - 作为 curator 筛选 explorer 语料时读 `references/curator-rubric.md`。
@@ -49,7 +52,7 @@ Repo 级边界详见 `docs/31-mechanism-lab-explorer-curator.md`。
 1. 选一个设计空间：必须能静态说清开始摆法、关键动作、动后局面和最小用法。不能写成二元问法、发生什么问法、验证规则或工具跑通检查。
 2. 写结构谱草案：列 3-6 个近邻变体，包含正例、错例、宽一格 / 少一格 / 换对象 / 换顺序 / 预分离等对照。
 3. 跑最小对照实验：runtime 只确认结构谱和对照关系，不负责替 agent 发现 topic。
-4. 语料化收口：把结果整理成新条目、并入旧条目、补充旧条目、暂存或丢弃。
+4. 语料化收口：发布新的正向结构材料，或把没有形成新结构关系的变体并入已有材料；原始实验全部留在 run 中。
 
 ## 标准意图
 
@@ -65,7 +68,7 @@ mechanism_loop(prototype, optional_scope, optional_round_budget)
 
 单独任务可归一为：
 
-- `mechanism_explore(prototype, scope)`：只跑探索，不更新正式 lexicon。
+- `mechanism_explore(prototype, scope, publication_scope, output_root)`：只跑探索。`publication_scope=global_proposal` 时产出全局 lexicon 草案；`publication_scope=task_local` 时只更新指定任务的正向语料池。
 - `mechanism_curate(prototype, run_ids)`：只做语料整理和收录裁决。
 
 ## 输入合同
@@ -80,7 +83,7 @@ mechanism_loop(prototype, optional_scope, optional_round_budget)
 - `source_boundary`：允许读取和禁止读取的材料。
 - `structure_spectrum`：本轮要比较的 3-6 个近邻变体。
 - `do_not_repeat`：已有语料中不要重复证明的结论。
-- `success_criterion`：怎样才算产出可用语料，而不只是规则 witness。
+- `materialization_target`：本轮希望展开哪些可复用局部关系，而不只是记录规则 witness。
 
 `lexicon_index.md` 只用于快速避重和定位具体结构；其中的后续候选 / 维护备注默认不是 explorer topic。`backlog.md` 只记录新设计空间或组合空间，不记录普通补证、补归因或补变体事项。
 
@@ -126,6 +129,8 @@ proposed_families.md
 - 证据来源：run id、case id、关键观察。
 
 机制角色、关键观察点、材料来源、退化解释仍要写，但放在语料化结果之后，作为 curator 检查用，不作为读者入口。
+
+在 `publication_scope=task_local` 中，按 `references/task-exploration-format.md` 更新任务 lexicon、索引和 batch record；其中只发布正向材料、合并关系、已采样结构轴与下一采样轴。全局收录裁决仍由单独的 curator 流程负责。
 
 ## Curator 收口
 

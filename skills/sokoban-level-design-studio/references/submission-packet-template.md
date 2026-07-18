@@ -4,10 +4,12 @@
 
 ```yaml
 submission_id: ""
-portfolio_id: ""
+tree_id: ""
+node_id: ""
+parent_node_id: null
+growth_relation: baseline | construct_prefix | apply_suffix
 candidate_id: ""
 exact_version: ""
-slot: baseline | application | combination | challenge
 
 designer_claim:
   player_experience_core: ""
@@ -23,15 +25,6 @@ packaging_account:
   ending: ""
   every_major_element_role: []
   known_perceptible_defects: []
-
-slot_account:
-  concrete_delta_from_baseline: ""
-  application_added_authorship: ""
-  combination_other_mechanism: ""
-  combination_not_prerequisite_to_current_core: ""
-  combination_player_visible_relation: ""
-  challenge_ceiling_dimension: ""
-  concrete_experience_difference_from_current_batch_works: []
 
 hard_evidence:
   solve_instance_ref: ""

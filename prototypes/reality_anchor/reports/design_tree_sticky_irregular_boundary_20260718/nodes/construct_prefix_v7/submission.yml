@@ -1,0 +1,88 @@
+submission_id: RA_TREE_CONSTRUCT_PREFIX_V7_SUBMISSION_01
+tree_id: RA_TREE_2026_07_18_STICKY_IRREGULAR_BOUNDARY
+node_id: RA_TREE_NODE_CONSTRUCT_PREFIX_V7
+parent_node_id: RA_TREE_NODE_BASELINE_V2
+growth_relation: construct_prefix
+candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_PREFIX
+exact_version: v7_sha256_b9671c2f0485553f0a9bb09cccf170026a4553bb1fb7ee6e51bcb9c689a4d0d5
+
+designer_claim:
+  player_experience_core: >-
+    玩家在同一把手位面对一个会立即改变三格材料形状的二择：向左拉右下单格，和上方
+    横臂拼成凸脚朝东的 L；或向下拉横臂，在东目标行拼成看似已经成功的三格横条。
+    只有 L 能整块向左靠近 B/S，再让领头格跨界改写成西目标箱子与东目标竖条。
+  player_action: >-
+    玩家先读出西目标必须得到箱子、东目标最终要由竖条覆盖，抵达横臂下方把手位后
+    拒绝“立即盖住东目标”的横条，改为左拉单格形成 L；随后连续左拉，在 P/L 的
+    L 侧完成整块移动与 B/S 切割，再从 P 侧推动两个产物完成目标。
+  visible_payoff: >-
+    第四步正确 L 成形；第六步领头格跨过 B/S 变为箱子，凸脚和横臂残段变成两格竖条。
+    箱子马上向上进入西目标，竖条马上向右重占东目标，高潮后没有额外清理。
+  why_this_level_exists: >-
+    冻结 baseline 免费给出边界 L 与正确拉位；本节点把它拆成横臂和单格，让玩家必须
+    在同一站位用切割输出反推正确拼法。错误横条具有强烈的局部正反馈——当场覆盖东目标——
+    但完整后缀无胜；因此新增前段要求提前理解凸脚方向和两个产物职责，而非顺着唯一拼法搬运。
+  work_identity_conditions:
+    - 玩家必须主动把分离的横臂与单格拼成凸脚朝东的三格 L，正确 L 是全部胜路的必经对象态。
+    - 同一把手位的 down 必须形成覆盖东目标的三格横条，且该 exact 前缀完整后缀搜索无胜。
+    - 全部胜路只能从初始材料经唯一 sticky_merge 边直接进入边界就位 L，不得再有异地合 L 后搬回的第二构造逻辑。
+    - B/S 必须把 pre-cut L 改写为箱子加竖条；箱子固定承担西目标，竖条固定承担东目标。
+    - P/L 侧区切换必须可感：切割前在 L 侧 pull，切割后在 P 侧 push 两个产物。
+
+packaging_account:
+  opening: >-
+    开局完整展示横臂、右下单格、两个目标与左上固定锚点。三步可逆走位把玩家送到
+    横臂下方、单格左侧的共同把手位；右上原本无职责的空腔已填实为墙，不留下不可达假空间。
+  preparation: >-
+    在共同把手位，left 拉单格形成正确 L；down 拉横臂形成目标行横条并立即覆盖东目标。
+    两者都在一拍内发生 sticky_merge，差别直接可见。错误横条后缀 complete、4 状态无胜；
+    正确 L 后缀最短 4 步获胜。
+  reveal_or_use: >-
+    正确 L 成形后两次左拉：第一次把 L 就位到边界，第二次触发 sticky_to_box，得到
+    (1,4) 箱子和 (2,4)(2,5) 竖条。随后箱子上推、竖条右推，两个产物各闭合一个目标。
+  ending: 第八步竖条右推覆盖东目标即胜；切割后只有两次产物兑现。
+  every_major_element_role:
+    - 上方横臂：正确 L 的两格横臂；错误 down 时成为目标行横条的主体。
+    - 右下单格：正确 left 时成为 L 凸脚，并决定边界切割后保留竖条。
+    - 东目标：诱惑错误横条立即覆盖，同时要求正确切割后的竖条最终回占。
+    - 西目标：只能由 B/S 切出的箱子覆盖，否决“只完成东目标”的横条拼法。
+    - B/S：固定材料边界，执行唯一一次 sticky_to_box 切割。
+    - P/L：固定力学边界，使切割前的 pull 与切割后的 push 发生明确侧区切换。
+    - 上部实墙与右侧封口：固定锚点并阻止 V6 的异地合 L 搬回旁路；墙后不存在可见空腔或伪支路。
+    - 下方墙齿：提供正确/错误共用把手位，同时阻止 L 从下方另行改线。
+  known_perceptible_defects:
+    - >-
+      抵达共同把手位的有效走位基本唯一；本关的玩家判断集中在把手位的 left/down 二择，
+      不声称拥有多条摆位路线。若实玩者不把错误横条的即时目标覆盖读成有吸引力的候选，
+      前序构造会显得偏薄，应以 fresh 质量审查和待玩记录为准。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v7/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v7/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete_graph_reverse_closure_raw_state_scc_paths
+    search_budget: maxStates=400000，terminalizeWins=true；实际 26 状态、42 转移、3 胜态；win-reaching 22 状态、35 转移
+    known_raw_winning_variants:
+      - raw SCC 路径 R1、R2：同一直接边界合 L，先完成箱子，最后推动竖条；差别是玩家终局站位走法。
+      - raw SCC 路径 R3：同一直接边界合 L，先推动竖条，最后推动箱子。
+    equivalence_account: >-
+      win-reaching 原始状态直接做 SCC 后有 9 个 SCC、3 条 source-to-win DAG 路径；三条均
+      只使用 direct_boundary_merge，且都必经 boundaryReadyL、preCutL、postCutProducts、
+      finalProducts。三胜态只有一个对象态 C:1,3 与 M:3,4;3,5；差异只在玩家绕步和两个
+      独立产物的目标兑现先后，未发现第二构造逻辑、不同对象职责或不同目标分配。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7_uniqueness/results.json
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7_uniqueness/report.md
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7/layout_analysis.json
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7_uniqueness/results.json#/prefixCounterfactuals
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7_uniqueness/report.md#构造反事实
+  event_necessity_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7_uniqueness/results.json#/eventNecessityChecks
+  evidence_limits:
+    - raw SCC DAG 消去完整状态回返循环，不枚举无限循环展开后的原始输入串。
+    - 固定锚点未发生位移；本作品只声明其固定 B/S 材料边界与 P/L 力学分流，不声明锚点位移或 box_to_sticky。
+    - 二择的玩家侧吸引力与难度不由图数据证明，留给阶段 A 与人工实玩。
+
+designer_self_verdict: submit_for_independent_review

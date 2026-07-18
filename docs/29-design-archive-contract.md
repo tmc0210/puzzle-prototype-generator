@@ -1,12 +1,12 @@
 # Design Archive Contract
 
 状态：当前 clean archive 合约。本文只定义归档入口、候选短卡、人类评语和
-检索索引；不定义单关创作或作品集流程。
+检索索引；不定义体验核心设计树创作流程。
 
 ## 权威边界
 
 ```text
-玩家体验核心、作品身份、baseline、探索分支与人类作品集：
+玩家体验核心、作品身份、baseline 与设计树生长：
   以 docs/17-experience-core-level-design.md 和 docs/21-level-design-studio-standard.md 为准。
 
 工作室材料、独立硬证据审查、玩家侧审查与提交前工作流记录形状：
@@ -69,7 +69,7 @@ Designer 的校准入口：
 - 读取所有审美 1 分候选的人类原评语。
 - 选 1-3 个相关高分 / 正例候选，读取人类原评语。
 - 选 1-3 个相关低分 / 失败 / 下界候选，读取人类原评语。
-- 等待 explorer 首批材料时可以继续扩读其它 human-reviewed 候选。
+- 等待 task-local Mechanism Lab 首批材料时可以继续扩读其它 human-reviewed 候选。
 - 只有需要防重复或判断人评边界时，才读候选卡里的完整 layout。
 ```
 

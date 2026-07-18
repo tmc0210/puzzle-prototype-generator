@@ -1,0 +1,91 @@
+runId: batch_002_two_core_complete_states_suffix
+title: "现场形成三格与长悬臂 L，共享 P/L 推拉核心后由左齿分流"
+notes: >-
+  二格或三格规整 sticky 横条与一只 box-side crate 起初分离；玩家在 L 侧向左拉 crate 跨固定 S/B，
+  现场形成三格右脚 L 或四格长左悬臂 L，再共同执行 P-side right 与 L-side down。
+  交接后的第二次 down 由左侧单齿只阻断长悬臂，去齿对照隔离 consumer。
+defaults:
+  maxExploreDepth: 14
+  maxReturnDepth: 24
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: short_l_tooth_suffix_pass
+    family: two_core_complete_states_suffix
+    variant: onsite_short_l_core_complete_tooth_suffix_pass
+    changed_variable: "二格横条现场形成三格右脚 L；无独有左悬臂进入后缀齿格"
+    contrast_with:
+      - long_left_arm_tooth_suffix_block
+      - short_l_open_same_translation
+    notes: "left×3 拉 crate 跨 S/B 并形成三格 L；right,down 完成 P/L 交接；第二次 down 通过左齿。"
+    layout: |
+      ############
+      #####PL#####
+      ######SB####
+      #..........#
+      #....MM....#
+      #.......@C.#
+      #....#.....#
+      #........G.#
+      #..........#
+      ############
+    actions: [left, left, left, right, down, down]
+
+  - id: long_left_arm_tooth_suffix_block
+    family: two_core_complete_states_suffix
+    variant: onsite_long_left_arm_core_complete_tooth_suffix_block
+    changed_variable: "把二格横条延长为三格横条，现场形成多一格左悬臂的四格 L"
+    contrast_with:
+      - short_l_tooth_suffix_pass
+      - long_left_arm_open_suffix_pass
+    notes: "与短 L 共用 left×3,right,down；第二次 down 时长左臂目标格撞单齿。"
+    layout: |
+      ############
+      #####PL#####
+      ######SB####
+      #..........#
+      #...MMM....#
+      #.......@C.#
+      #....#.....#
+      #........G.#
+      #..........#
+      ############
+    actions: [left, left, left, right, down, down]
+
+  - id: long_left_arm_open_suffix_pass
+    family: two_core_complete_states_suffix
+    variant: onsite_long_left_arm_without_tooth_suffix_pass
+    changed_variable: "只移除交接后长左臂第二次下拉的目标墙齿"
+    contrast_with: long_left_arm_tooth_suffix_block
+    notes: "保持四格长悬臂形成与同一动作序列；去齿后第二次 down 应恢复。"
+    layout: |
+      ############
+      #####PL#####
+      ######SB####
+      #..........#
+      #...MMM....#
+      #.......@C.#
+      #..........#
+      #........G.#
+      #..........#
+      ############
+    actions: [left, left, left, right, down, down]
+
+  - id: short_l_open_same_translation
+    family: two_core_complete_states_suffix
+    variant: onsite_short_l_without_tooth_same_extra_translation
+    changed_variable: "在与去齿四格 L 相同地形中使用二格横条，只改变现场形成后的占格数"
+    contrast_with: long_left_arm_open_suffix_pass
+    notes: "与去齿四格 L 做同一 left×3,right,down,down；末态仍是三格 L，不可能仅靠该次平移变成四格 L。"
+    layout: |
+      ############
+      #####PL#####
+      ######SB####
+      #..........#
+      #....MM....#
+      #.......@C.#
+      #..........#
+      #........G.#
+      #..........#
+      ############
+    actions: [left, left, left, right, down, down]

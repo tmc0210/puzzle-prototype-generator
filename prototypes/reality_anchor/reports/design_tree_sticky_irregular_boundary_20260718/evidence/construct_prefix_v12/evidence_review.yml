@@ -1,0 +1,155 @@
+review_attempt_id: "RA_TREE_CONSTRUCT_PREFIX_V12_EVIDENCE_01"
+reviewer_instance_id: "fresh-evidence-reviewer-v12-20260718-01"
+candidate_id: "RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_S"
+exact_version: "v12_sha256_67eb19809e76d2b459e511520fb3e79b766cf6da42596acb3d88b9566959eb69"
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v12/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v12/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v12/canonical_replay.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/layout_analysis.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/layout_analysis.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/equivalence_audit.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/equivalence_audit.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/report.md
+    - prototypes/reality_anchor/mechanic.yml
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_complete
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "equivalence_audit.json#/scc/paths/0: SCC 0>1>3>5>6>7>8"
+    - "equivalence_audit.json#/scc/paths/1: SCC 0>2>3>5>6>7>8"
+    - "equivalence_audit.json#/scc/paths/2: SCC 0>2>4>5>6>7>8"
+    - "equivalence_audit.json#/scc/paths/3: SCC 0>2>4>6>7>8"
+    - "equivalence_audit.json#/equivalentVariant/terminalUpperContactWitness"
+  equivalence_evidence_basis:
+    - "equivalence_audit.ts: 对 complete graph 的完整 reverse win closure 计算 SCC condensation，并穷举 source SCC 到 win SCC 的全部路径"
+    - "equivalence_audit.json#/graph: complete，242 states / 550 transitions / 1 win；win closure 为 64 states / 143 edges"
+    - "equivalence_audit.json#/scc: 9 个 win-closure SCC，pathCount=4；四个代表 trace 都按相同因果顺序经过 canonical threeL、fourS、preFinal 与 win 对象态"
+    - "equivalence_audit.json#/scc/components/6: 正确 L 的变化只含上箱在 (7,4)/(6,4) 的可逆预推与 L 的完整左移—右返"
+    - "equivalence_audit.json#/necessity/matchedMandatoryEdges: fourS 构成边唯一，S 的 left-push 两个接触位得到同一对象前后态，down-pull 对象转移唯一"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "结论是玩家逻辑类唯一，不是原始输入序列唯一。"
+    - "完整图以 terminalizeWins=true 枚举；胜态之后的输入不属于送审的胜利路径范围。"
+
+claims:
+  - claim_id: candidate_id_match
+    claim: "送审 candidate id 与 exact 硬证据中的 candidate id 一致。"
+    status: supported
+    evidence_basis:
+      - "review_packet.yml#/candidate_id"
+      - "equivalence_audit.json#/candidateId"
+      - "report.md: candidate"
+    limits: []
+
+  - claim_id: exact_version_and_layout_hash_match
+    claim: "exact version、布局文件实际 SHA-256、equivalence audit 与机械报告绑定到同一布局。"
+    status: supported
+    evidence_basis:
+      - "layout.txt: 实际 SHA-256=67eb19809e76d2b459e511520fb3e79b766cf6da42596acb3d88b9566959eb69"
+      - "equivalence_audit.json#/exactVersion"
+      - "equivalence_audit.json#/layoutSha256"
+      - "equivalence_audit.ts: 读取 layout 后计算 SHA-256，并在不匹配时失败"
+      - "report.md: exact 与 layout SHA-256"
+    limits: []
+
+  - claim_id: solvable_exact_trace
+    claim: "canonical 14 步全部合法并胜利；第 3、10 步触发 box_to_sticky，第 4、10 步触发 sticky_merge；第 13 步 left push 移动完整 S，第 14 步 down pull 把完整 S 拉入墙口并覆盖目标。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json#/replay: completed=true，executedSteps=14，legalThroughStep=14"
+      - "canonical_replay.json#/steps/2,3,9,12,13: 指定事件、对象前后态与最终 isWin=true"
+      - "layout_analysis.json#/solution: found=true，cost=14，inputs 与事件序列一致"
+      - "mechanic.yml#/win: 目标由 crate、sticky 或 anchor 覆盖即胜"
+    limits: []
+
+  - claim_id: initial_has_no_working_l_or_s
+    claim: "初态只有两个分离单格 sticky 端点 M(4,4)、M(3,5) 与两只独立 crate；不含必经三格 L，也不含工作四格 S。"
+    status: supported
+    evidence_basis:
+      - "layout.txt: 初态字符布局"
+      - "canonical_replay.json#/initial/key: C:7,4;7,5|M:3,5|4,4"
+      - "equivalence_audit.json#/canonical/threeL 与 /canonical/fourS: 所声明三格 L、四格 S 的 exact 对象态均不同于初态"
+    limits: []
+
+  - claim_id: mandatory_correct_three_cell_l
+    claim: "全部胜路必须先由下箱占据 (4,5)，形成同一三格 L；禁止进入该 exact 对象态后，完整搜索 213 states 且无胜。"
+    status: supported
+    evidence_basis:
+      - "equivalence_audit.json#/necessity/threeL: status=complete，exploredStates=213，foundWin=false"
+      - "equivalence_audit.json#/scc/paths: 四条 source-to-win 代表路径均进入 canonical.threeL，且先于 fourS"
+      - "equivalence_audit.json#/scc/components/6: 胜闭包在 fourS 前只含同一三格 L 及其完整左移—右返对象态"
+    limits: []
+
+  - claim_id: mandatory_constructed_four_cell_s
+    claim: "全部胜路必须由上箱跨 B/S 补成同一工作 S；禁止进入该对象态或禁止其唯一构成边后，完整搜索均为 225 states 且无胜。"
+    status: supported
+    evidence_basis:
+      - "equivalence_audit.json#/necessity/fourS: status=complete，exploredStates=225，foundWin=false"
+      - "equivalence_audit.json#/necessity/exactFourSConstructionLeftPush: status=complete，exploredStates=225，foundWin=false，forbiddenEdgesEncountered=1"
+      - "equivalence_audit.json#/necessity/matchedMandatoryEdges/fourSConstructionLeftPush: 唯一匹配边为 left，且事件含 box_to_sticky 与 sticky_merge"
+      - "equivalence_audit.json#/scc/paths: 四条代表胜路均进入同一 canonical.fourS"
+    limits: []
+
+  - claim_id: wrong_square_and_upper_partial_no_win
+    claim: "2×2 square 与分离端点加镜像 L 均为可达错误构形，其完整后继分别为 8、14 states 且无胜。"
+    status: supported
+    evidence_basis:
+      - "equivalence_audit.json#/deadEnds/wrongSquare: exact replay 可达，completeGraphDescendants=8，foundWin=false，inWinClosure=false"
+      - "equivalence_audit.json#/deadEnds/upperPartialThenLower: exact replay 可达，completeGraphDescendants=14，foundWin=false，inWinClosure=false"
+      - "equivalence_audit.ts: replay 对输入逐步要求 legal，并从 complete graph 中枚举全部 descendants"
+    limits: []
+
+  - claim_id: mandatory_s_front_left_push
+    claim: "工作 S 必须 left push 到指定 preFinal 对象态；两个玩家接触位变体的对象前后态、action 与事件相同；禁止全部匹配边后完整搜索 232 states 且无胜。"
+    status: supported
+    evidence_basis:
+      - "equivalence_audit.json#/necessity/exactTerminalLeftPush: status=complete，exploredStates=232，foundWin=false，forbiddenEdgesEncountered=2"
+      - "equivalence_audit.json#/necessity/matchedMandatoryEdges/terminalLeftPush: 两条边均为相同 fromObject/toObject、left 与 push_object:sticky#1 + move_sticky_rigid，仅玩家接触位不同"
+      - "canonical_replay.json#/steps/12: canonical witness 到达同一 preFinal 对象态"
+    limits: []
+
+  - claim_id: mandatory_final_down_pull
+    claim: "全部胜路最终必须由 L 侧 down pull 把 S 移到指定胜态；只匹配一个对象转移；禁止该转移后完整搜索 241 states 且无胜。"
+    status: supported
+    evidence_basis:
+      - "equivalence_audit.json#/necessity/exactDownPull: status=complete，exploredStates=241，foundWin=false，forbiddenEdgesEncountered=1"
+      - "equivalence_audit.json#/necessity/matchedMandatoryEdges/downPull: 唯一匹配对象转移为 down + pull_object:sticky#1 + move_sticky_rigid"
+      - "canonical_replay.json#/steps/13: 同一 from/to 对象态且 after.isWin=true"
+    limits: []
+
+  - claim_id: four_raw_scc_paths_are_one_logic_class
+    claim: "complete 胜利闭包为 64 states / 143 transitions / 9 raw SCC / 4 source-to-win paths；四条路径只改变上箱预推的插入时机，并允许不改变后续关系的完整回返；它们共享同一桥接角、三格 L、四格 S、left push、down pull 与终局职责。"
+    status: supported
+    evidence_basis:
+      - "equivalence_audit.json#/graph 与 /scc: 64 closure states、143 closure edges、9 SCC、pathCount=4"
+      - "equivalence_audit.ts: 从 complete reverse win closure 建 SCC DAG 并递归穷举全部 source-to-win SCC paths"
+      - "equivalence_audit.json#/scc/paths: 四条 objectChangeTrace 的差异仅是上箱从 (7,4) 到 (6,4) 这一步相对下箱桥接步骤的插入时机"
+      - "equivalence_audit.json#/scc/components/6: SCC 内仅含正确 L 的原位/左移与上箱 (7,4)/(6,4) 组合，出口仍回到同一 exact L 后形成同一 S"
+      - "equivalence_audit.json#/necessity: canonical threeL、fourS、preFinal 与 win 对象态及其关键边均为胜利必要条件"
+    limits:
+      - "SCC 路径是原始状态图路径族的压缩；等价性依据还包括分量对象态清单和所有关键出口反事实，不以 SCC 数量本身代替等价性。"
+
+  - claim_id: complete_graph_single_player_logic_class
+    claim: "complete 图为 242 states / 550 transitions / 1 terminal win；全部胜路只有同一个构形与消费逻辑类，不存在另一四格 merge outcome、桥接角、动作侧或终局对象职责。"
+    status: supported
+    evidence_basis:
+      - "layout_analysis.json#/graph 与 equivalence_audit.json#/graph: 两份 artifact 一致报告 complete、242 states、550 transitions、1 win"
+      - "equivalence_audit.json#/scc: 完整胜闭包的 4 条 SCC 路径已穷举"
+      - "equivalence_audit.json#/necessity: threeL、fourS、S left push 与 down pull 均经 complete 禁止反事实证明必要"
+      - "equivalence_audit.json#/necessity/matchedMandatoryEdges: fourS 构成边唯一、终局 left push 仅为同对象转移的接触位变体、down pull 对象转移唯一"
+      - "equivalence_audit.json#/deadEnds: 两个已知替代构形均不在胜闭包且完整后继无胜"
+    limits:
+      - "单一 terminal win 本身不足以证明逻辑类唯一；本结论依赖完整胜闭包、全部 SCC 路径、对象态清单与必要性反事实的联合证据。"
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

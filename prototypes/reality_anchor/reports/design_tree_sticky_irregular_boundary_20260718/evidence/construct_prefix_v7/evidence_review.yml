@@ -1,0 +1,124 @@
+review_attempt_id: "RA_TREE_CONSTRUCT_PREFIX_V7_EVIDENCE_01"
+reviewer_instance_id: "fresh_construct_prefix_v7_evidence_reviewer_20260718_01"
+candidate_id: "RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_PREFIX"
+exact_version: "v7_sha256_b9671c2f0485553f0a9bb09cccf170026a4553bb1fb7ee6e51bcb9c689a4d0d5"
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v7/layout.txt"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v7/canonical_replay.json"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v7/canonical_replay.md"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7/layout_analysis.json"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7/layout_analysis.md"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7_uniqueness/results.json"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7_uniqueness/report.md"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v7_uniqueness/analyze.ts"
+    - "prototypes/reality_anchor/mechanic.yml"
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "R1: raw SCC 8->7->6->5->4->2->0->9；direct_boundary_merge；crate_then_tail；终局玩家站位变体 1。"
+    - "R2: raw SCC 8->7->6->5->4->2->1->9；direct_boundary_merge；crate_then_tail；终局玩家站位变体 2。"
+    - "R3: raw SCC 8->7->6->5->4->3->9；direct_boundary_merge；tail_then_crate。"
+  equivalence_evidence_basis:
+    - "construct_prefix_v7_uniqueness/results.json graph：complete，26 raw states、42 transitions、3 terminal wins；win-reaching reverse closure 为 22 states、35 transitions。"
+    - "construct_prefix_v7_uniqueness/analyze.ts：直接以包含 Ply 坐标的 runtime key 建图；只在 objectKey 中显式剥离 Ply，Tarjan SCC 本身不聚合玩家坐标；从全部 terminal wins 反向闭包后穷举凝聚 DAG 的 source-to-synthetic-win 路径。"
+    - "construct_prefix_v7_uniqueness/results.json rawStateSccProof：9 个 raw SCC、3 条且仅 3 条 acyclic source-to-win 路径；三条 constructionLogic 均为 direct_boundary_merge。"
+    - "construct_prefix_v7_uniqueness/results.json causalMilestones：胜路闭包只有一条 initialSeparateMaterials->boundaryReadyL 的 sticky_merge 边和一条 preCutL->postCutProducts 的 sticky_to_box 边；全部胜路对象态只落在声明的 7 个 role keys。"
+    - "construct_prefix_v7_uniqueness/results.json mandatoryRoleChecks：分别绕开 boundaryReadyL、preCutL、postCutProducts、finalProducts 的搜索均 complete 且 foundWin=false。"
+    - "construct_prefix_v7_uniqueness/results.json equivalence：3 个 win raw states 只有 1 个 winningObjectKey；所有 final incoming edges 只来自 crateDone 或 tailAdvanced，最终箱子均在西目标 (1,3)，竖条均在东目标列 (3,4)/(3,5)。"
+    - "箱子兑现只把 crate 从 (1,4) 推至 (1,3)，竖条兑现只把 sticky 从 (2,4)/(2,5) 推至 (3,4)/(3,5)；两个必要动作不改写对方对象、目标分配或共同前置因果链，因而 crate_then_tail 与 tail_then_crate 是相互独立必要步骤的换序。"
+    - "同一 raw SCC 内的额外动作只能形成回到同一完整 raw state 的回返环；R1/R2 的差异不改变对象职责、目标分配或后续关系，属于允许的玩家绕步/终局站位差异。"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "terminalizeWins=true；结论覆盖首次达到胜利前的全部可达 raw-state 路径，不描述胜利后的输入。"
+    - "SCC 路径数是把回到同一完整 raw state 的环折叠后的有限逻辑路径数，不是原始输入字符串数量。"
+    - "本结论只核验玩家逻辑类唯一性，不评价完成质量、难度或审美价值。"
+
+claims:
+  - claim_id: "solvable_exact_trace"
+    claim: "canonical inputs 共 8 步且全部合法，终态同时覆盖两个目标并胜利。"
+    status: supported
+    evidence_basis:
+      - "layout.txt 实算 SHA256 为 b9671c2f0485553f0a9bb09cccf170026a4553bb1fb7ee6e51bcb9c689a4d0d5，与 exact_version、solve_instance 和 results.json 一致。"
+      - "canonical_replay.json：inputs 为 left,left,up,left,left,left,up,right；executedSteps=8、legalThroughStep=8、completed=true，final.isWin=true。"
+      - "终态 key 为 C:1,3 与 M:3,4;3,5，分别覆盖布局中的两个目标 (1,3)、(3,5)。"
+    limits: []
+
+  - claim_id: "direct_prefix_constructs_boundary_ready_l"
+    claim: "前四步合法；第四步把初始两片黏块直接合成位于 (3,4)、(4,4)、(4,5) 的 boundary-ready L，且该状态后最短 4 步获胜。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json step 4：left 合法，事件为 pull_object:sticky#2、move_sticky_rigid、sticky_merge:n1；after key 的 M 为 3,4;4,4;4,5。"
+      - "results.json prefixCounterfactuals.correctL：同一四步前缀 legal=true，suffix found=true、cost=4、status=found。"
+    limits: []
+
+  - claim_id: "same_handle_goal_bar_is_complete_dead_end"
+    claim: "同一前三步把手位改走 down 会合法合成目标行三格横条并立即覆盖东目标；该 exact state 的完整后缀搜索无胜。"
+    status: supported
+    evidence_basis:
+      - "results.json prefixCounterfactuals：correctL 与 wrongGoalBar 共用前三步 left,left,up，第四步分别为 left/down。"
+      - "wrongGoalBar 第四步 legal=true，事件为 pull_object:sticky#1、move_sticky_rigid、sticky_merge:n1；state key 的 M 为 3,5;4,5;5,5，render 显示 (3,5) 目标被覆盖。"
+      - "wrongGoalBar.suffix：status=complete、exploredStates=4、found=false。"
+    limits: []
+
+  - claim_id: "bs_cut_splits_l_into_box_and_tail"
+    claim: "canonical 第六步把 pre-cut L 改写为 (1,4) 的箱子与 (2,4)、(2,5) 的两格竖条。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json step 6：left 合法，事件为 pull_object:sticky#1、move_sticky_rigid、sticky_to_box:n1；after key 为 C:1,4|M:2,4;2,5。"
+      - "mechanic.yml box_sticky_normalize：合法移动后按 B/S 区域在箱子与黏块间归一化；sticky_to_box 是该 settle 规则的声明事件。"
+    limits: []
+
+  - claim_id: "canonical_pl_side_switch_changes_pull_to_push"
+    claim: "canonical 构造与切割阶段使用 pull；切割后最后两步改用 push，依次推动箱子和竖条完成目标。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json steps 4-6 分别出现 pull_object:sticky，steps 7-8 分别出现 push_object:crate#1 与 push_object:sticky#1。"
+      - "mechanic.yml：P/L anchor 依据玩家所在侧选择 push 或 pull；push_force 与 pull_force 分别以 region push/pull 为触发条件。"
+      - "step 7 后 C 从 (1,4) 到西目标 (1,3)；step 8 后 M 从 (2,4)/(2,5) 到 (3,4)/(3,5) 并胜利。"
+    limits:
+      - "证据以 runtime 发出的 pull/push 事件及规则触发条件确认侧别切换；artifact 未另列独立 region-label 字段。"
+
+  - claim_id: "all_wins_use_single_construction_logic"
+    claim: "完整 raw-state 胜路中只有 initial materials 直接合成 boundaryReadyL 的构造逻辑，不存在异地合 L 后搬回或其它可胜构造逻辑。"
+    status: supported
+    evidence_basis:
+      - "results.json graph 与 analyze.ts：完整图 26/42/3；22-state/35-edge win-reaching 逆向闭包直接在含玩家坐标的 raw state 上做 Tarjan SCC。"
+      - "rawStateSccProof：凝聚图 9 SCC、恰有 3 条 source-to-win 路径，三条均标记 direct_boundary_merge。"
+      - "causalMilestones.uniqueWinReachingMergeEdge 只有一条：初始对象态经 left、pull_object、move_sticky_rigid、sticky_merge 到 boundaryReadyL。"
+      - "winReachingObjectKeys 恰等于声明的 7 个 milestone object keys，因此没有未声明的可胜异地构造对象态。"
+    limits:
+      - "结论限于当前 exact version 与 mechanic.yml 的 runtime 语义。"
+
+  - claim_id: "all_wins_keep_same_milestones_and_product_duties"
+    claim: "全部胜路必经四个声明对象态，且终局产品职责与目标分配一致；三条 raw 路径只差独立产品的兑现顺序或玩家终局站位。"
+    status: supported
+    evidence_basis:
+      - "rawStateSccProof.paths：R1-R3 全部含 boundaryReadyL、preCutL、postCutProducts、finalProducts。"
+      - "mandatoryRoleChecks：逐一禁止四个 role 的 raw states 后均 complete 且无胜。"
+      - "equivalence.winningObjectKeys 只有 C:1,3|M:3,4;3,5 这一类；graph 有 3 个胜态，故其差异只可能在 raw key 的 Ply 坐标。"
+      - "finalIncomingEdges 共 3 条，只来自 crateDone 或 tailAdvanced；对象转换签名显示箱子目标动作和竖条目标动作彼此不改写对方。"
+    limits:
+      - "对象 identity 按 mechanic.yml：crate 不可区分，sticky 的语义身份不可区分、可见区别为当前连接形状。"
+
+  - claim_id: "all_wins_use_declared_event_families"
+    claim: "所有胜路均需要 pull、push、material normalization、sticky_merge、sticky rigid move；当前完整可达图没有 anchor_boundary_shift。"
+    status: supported
+    evidence_basis:
+      - "results.json eventNecessityChecks：分别删除含 pull_object、push_object、box_to_sticky/sticky_to_box、sticky_merge、move_sticky_rigid 的边后，五次搜索均 status=complete 且 foundWin=false。"
+      - "results.json reachableAnchorShiftEdgeCount=0；analyze.ts 对完整 graph.edges 扫描 anchor_boundary_shift 前缀。"
+      - "canonical_replay.json 也实际包含 pull、push、sticky_to_box、sticky_merge、move_sticky_rigid 各事件族。"
+    limits:
+      - "event necessity 是事件族级别，不主张某个带实例编号的单一 event instance 在所有胜路上必经。"
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

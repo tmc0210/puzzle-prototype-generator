@@ -1,0 +1,328 @@
+review_attempt_id: RA_TREE_CONSTRUCT_PREFIX_V10_REVIEW_01
+prototype_id: reality_anchor
+review_target: growth_child
+prototype_rules:
+  confirmed_rules:
+    - 玩家所在 P/L 边界一侧在输入时决定本次为 push 或 pull；无 P/L 时全图为 push world。
+    - push/pull 受力闭包递归包含同方向目标格上的全部可动物；任一分支被墙或越界时整步原子失败。
+    - 多格 sticky 以完整连通分量作为刚体移动，移动后才按 B/S 边界归一化、合并或按连通块切分。
+    - 拉世界中玩家只直接拉身后一格相邻对象；玩家目标格按整个受力闭包移动后的占用判断。
+    - 所有目标必须同时被 crate、sticky 或锚点格覆盖才胜利；玩家覆盖不计。
+  win_condition: all_targets_covered_by_objects
+  object_and_event_semantics:
+    - sticky 刚体任一格被墙、越界或不可动结构挡住时整块移动失败（force_blocked），凸角/横臂新增格都可能成为墙门。
+    - sticky 连体块跨越 B/S 边界时，跨入箱世界的格变成独立箱子，剩余黏格按连通分量分裂。
+    - 黏块推进墙口/通道后能否回返，取决于是否存在可达反向施力站位格且整块回推目标格开放；L 形凸角可提供侧向把手。
+    - P/L 边界近旁，同一异形黏块从 P 侧推过与从 L 侧拉过呈现规则分叉：推则整块随力闭包前移，拉则只有身后相邻格被抽取、远端格留下、形状被改写；差异必须发生在边界附近，而非各处分别使用一次推和一次拉。
+  player_prior:
+    - 游戏后期玩家，已充分掌握规整形状小黏块组的可达性、可动性、拼接与切分。
+    - 已掌握 B/S 锚点（固定与可移动）、各类腾挪基本技巧与多对象力链。
+    - P/L 锚点为更早期知识，熟悉 push/pull 侧判定、边界交接与锚点本身可推拉。
+    - 能迅速识别显然操作方向、基本可达性、局部几何关系和短死路；这些不作为难度。
+human_review_constraints:
+  - statement: 关卡定位游戏后期；玩家已充分熟悉规整形状小黏块组、拼接切分、B/S 推拉与腾挪；P/L 为更早期知识。
+    human_source_ref: 本轮人类 brief（2026-07-18 对话原意）
+  - statement: 预期难度 3~5；允许不同 slot 使用不同黏块形状，但核心与高潮必须是异形黏块在边界的可动性/可逆性/状态变化。
+    human_source_ref: 本轮人类 brief（2026-07-18 对话原意）
+  - statement: 注意与现有归档关卡防撞；RA_CAND_0010/0015/0011 仅作档位角色校准，不作设计素材。
+    human_source_ref: 本轮人类 brief（2026-07-18 对话原意）
+  - statement: 锚点边界包含 P/L 边界；利用异形块在 P/L 边界两侧的推拉可动性可成立且优于单纯墙口/墙边腾挪。
+    human_source_ref: 本轮人类确认（2026-07-18 对话原意）
+  - statement: P/L 两侧可动性差异必须在 P/L 边界附近体现；仅在不同位置分别使用推侧与拉侧各一次，不算兑现该核心。
+    human_source_ref: 本轮人类追加修正（2026-07-18 对话原意）
+  - statement: 持续设计过程直到每个作品完整、设计树饱满；中间过程无需暂停等待人类确认。
+    human_source_ref: 本轮人类指令（2026-07-18 对话原意）
+frozen_parent:
+  node_id: RA_TREE_NODE_BASELINE_V2
+  candidate_id: RA_BASELINE_STICKY_IRREGULAR_BOUNDARY
+  exact_version: v2_sha256_b6abe9e2eb1c32b76cc67f7e9da19da294a3800ba53788d0670c464c584ffc22
+  solve_instance:
+    layout: |-
+      ########
+      #BS#...#
+      #PL#...#
+      #G##...#
+      #..MMG.#
+      #..@M#.#
+      #...#..#
+      ########
+    player_start:
+      - 3
+      - 5
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+      description: |
+        After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.
+  canonical_solution:
+    exact_inputs:
+      - left
+      - left
+      - up
+      - down
+      - down
+      - right
+      - right
+      - up
+      - up
+      - right
+      - right
+      - up
+      - left
+      - up
+      - right
+      - down
+      - right
+    mechanically_derived_trace:
+      - step: 1
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/0/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/0/after
+        visible_board_change: (2,4) .→M; (4,4) M→.; (2,5) .→@; (3,5) @→M; (4,5) M→.
+      - step: 2
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/1/before
+        event: pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n1
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/1/after
+        visible_board_change: (1,4) .→C; (3,4) M→.; (1,5) .→@; (2,5) @→M; (3,5) M→.
+      - step: 3
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/2/before
+        event: push_object:crate#1
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/2/after
+        visible_board_change: (1,3) G→*; (1,4) C→@; (1,5) @→.
+      - step: 4
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/3/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/3/after
+        visible_board_change: (1,4) @→.; (1,5) .→@
+      - step: 5
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/4/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/4/after
+        visible_board_change: (1,5) @→.; (1,6) .→@
+      - step: 6
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/5/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/5/after
+        visible_board_change: (1,6) @→.; (2,6) .→@
+      - step: 7
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/6/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/6/after
+        visible_board_change: (2,6) @→.; (3,6) .→@
+      - step: 8
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/7/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/7/after
+        visible_board_change: (3,5) .→@; (3,6) @→.
+      - step: 9
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/8/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/8/after
+        visible_board_change: (3,4) .→@; (3,5) @→.
+      - step: 10
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/9/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/9/after
+        visible_board_change: (2,4) M→.; (3,4) @→M; (4,4) .→@; (2,5) M→.; (3,5) .→M
+      - step: 11
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/10/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/10/after
+        visible_board_change: (3,4) M→.; (4,4) @→M; (5,4) G→+; (3,5) M→.; (4,5) .→M
+      - step: 12
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/11/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/11/after
+        visible_board_change: (5,3) .→@; (5,4) +→G
+      - step: 13
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/12/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/12/after
+        visible_board_change: (4,3) .→@; (5,3) @→.
+      - step: 14
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/13/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/13/after
+        visible_board_change: (4,2) .→@; (4,3) @→M; (4,5) M→.
+      - step: 15
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/14/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/14/after
+        visible_board_change: (4,2) @→.; (5,2) .→@
+      - step: 16
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/15/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/15/after
+        visible_board_change: (5,2) @→.; (5,3) .→@
+      - step: 17
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/16/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json#/steps/16/after
+        visible_board_change: (4,3) M→.; (5,3) @→M; (6,3) .→@; (4,4) M→.; (5,4) G→m
+  artifact_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json
+candidate:
+  node_id: RA_TREE_NODE_CONSTRUCT_PREFIX_V10
+  candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_PREFIX
+  exact_version: v10_sha256_1c273480c51de2e3bbd284c2962729cd8cc7c38b549719f984b059f3cfd5a89a
+  solve_instance:
+    layout: |-
+      ###########
+      #####PL####
+      ###########
+      ##.@#######
+      ###.MM.####
+      ####.mG..##
+      #S#.#.....#
+      #B#.#.G#..#
+      ######....#
+      ###########
+    player_start:
+      - 3
+      - 3
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+      description: |
+        After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.
+  canonical_solution:
+    exact_inputs:
+      - down
+      - right
+      - down
+      - right
+      - down
+      - right
+      - down
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+      - left
+      - left
+      - up
+    mechanically_derived_trace:
+      - step: 1
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/0/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/0/after
+        visible_board_change: (3,3) @→.; (3,4) .→@
+      - step: 2
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/1/before
+        event: push_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/1/after
+        visible_board_change: (3,4) @→.; (4,4) M→@; (6,4) .→M; (5,5) m→G; (6,5) G→m
+      - step: 3
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/2/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/2/after
+        visible_board_change: (4,4) @→.; (4,5) .→@
+      - step: 4
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/3/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/3/after
+        visible_board_change: (4,5) @→.; (5,5) G→+
+      - step: 5
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/4/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/4/after
+        visible_board_change: (5,5) +→G; (5,6) .→@
+      - step: 6
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/5/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/5/after
+        visible_board_change: (5,6) @→.; (6,6) .→@
+      - step: 7
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/6/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/6/after
+        visible_board_change: (5,4) M→.; (6,4) M→.; (5,5) G→m; (6,6) @→M; (6,7) G→+
+      - step: 8
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/7/before
+        event: pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n1
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/7/after
+        visible_board_change: (5,5) m→G; (6,5) m→G; (5,6) .→M; (6,7) +→*; (6,8) .→@
+      - step: 9
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/8/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/8/after
+        visible_board_change: (6,8) @→.; (7,8) .→@
+      - step: 10
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/9/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/9/after
+        visible_board_change: (7,8) @→.; (8,8) .→@
+      - step: 11
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/10/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/10/after
+        visible_board_change: (8,7) .→@; (8,8) @→.
+      - step: 12
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/11/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/11/after
+        visible_board_change: (8,6) .→@; (8,7) @→.
+      - step: 13
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/12/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/12/after
+        visible_board_change: (8,5) .→@; (8,6) @→.
+      - step: 14
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/13/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/13/after
+        visible_board_change: (7,5) .→@; (8,5) @→.
+      - step: 15
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/14/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/14/after
+        visible_board_change: (6,5) G→+; (7,5) @→.
+      - step: 16
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/15/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json#/steps/15/after
+        visible_board_change: (6,4) .→@; (5,5) G→m; (6,5) +→m; (5,6) M→.; (6,6) M→.
+  artifact_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json
+artifact_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json

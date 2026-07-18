@@ -1,0 +1,150 @@
+review_attempt_id: RA_TREE_CONSTRUCT_PREFIX_V6_EVIDENCE_02
+reviewer_instance_id: fresh_independent_evidence_reviewer_construct_prefix_v6_attempt_02_20260718
+candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_PREFIX
+exact_version: v6_sha256_6bdff0b7ab64ca4558140b5b31567f94c28af3bce3e427dd3d05a5038a74cb03
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v6/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v6/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v6/canonical_replay.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/layout_analysis.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/layout_analysis.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_uniqueness/results.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_uniqueness/report.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_causal_equivalence/results.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_causal_equivalence/report.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6_causal_equivalence/analyze.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/event_probe.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/event_probe.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/fixed_anchor_probe_box_sticky.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/fixed_anchor_probe_box_sticky.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/fixed_anchor_probe_push_pull.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/fixed_anchor_probe_push_pull.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/prefix_counterfactuals.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v6/prefix_counterfactuals.md
+    - prototypes/reality_anchor/mechanic.yml
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "R10-R12：direct_boundary_ready_l；其中 S1/S2 仅交换两个切割产物的最终兑现顺序。"
+    - "R1-R9：right_staged_same_orientation_l_then_return；其中 S3/S4 仅交换两个切割产物的最终兑现顺序。"
+    - "三个 terminal win runtime states 的玩家坐标不同，但对象态同为 class 9。"
+  equivalence_evidence_basis:
+    - "complete 193-state / 476-transition 图，全部 3 个胜态的逆向闭包为 96 states / 224 transitions。"
+    - "96 个原始 runtime states 未聚合玩家坐标即做 SCC，得到 14 个 raw SCC 与 12 条 source-to-win DAG 路径；12 条全部映射，S1/S2/S3/S4 计数为 1/2/3/6，未分类为 0。"
+    - "S1 与 S2、S3 与 S4 的差别是 crate 与 sticky tail 两个必要且相互独立的最终目标兑现步骤换序；全部终局对象职责相同。"
+    - "对象 SCC 2 与 5 分别由 raw SCC 4 与 10 覆盖相同对象类的强连通见证支持，故对象商中的相关可逆循环不是单纯商图伪拼接。"
+  known_non_equivalent_win_refs:
+    - >-
+      causal results raw path R10（13->12->6->5->4->2->0->14，S2）与
+      R1（13->11->10->7->6->5->4->2->0->14，S4）：前者由 class 0
+      直接通过带 sticky_merge 的对象变化进入 boundaryReadyL class 2；后者先由另一条
+      sticky_merge 进入 optionalRightStagedL class 1，再经过对象搬运进入 class 2。
+    - >-
+      causal results object transitions 0->2 与 0->1->2：这不是纯走位差异、真实对称重标号、
+      相互独立必要步骤换序，也不是回到同一完整游戏状态的完整回返环；它改变了 L 的合成位置
+      以及“先合成、再搬到边界”是否存在，形成两个已知玩家构造逻辑。
+  status: contradicted
+  limits:
+    - "raw SCC DAG 穷尽的是消去完整状态回返循环后的 SCC 路径，不是无限循环展开后的原始输入串集合。"
+    - "对象商只用于给 raw 路径命名；完整性以 complete graph 的 raw-state reverse closure 与 raw SCC DAG 为底座。"
+    - "末段先箱子/先竖条可按独立必要步骤换序视为等价；本次 contradiction 只来自 direct 与 right-staged 两种前段构造逻辑。"
+
+claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 共 8 步且全部合法，终态同时覆盖两个目标并胜利。
+    status: supported
+    evidence_basis:
+      - "layout SHA256 实算为 6bdff0b7ab64ca4558140b5b31567f94c28af3bce3e427dd3d05a5038a74cb03，与 exact version 一致。"
+      - "canonical_replay.json：executedSteps=8、legalThroughStep=8、final.isWin=true。"
+      - "layout_analysis.json：solution found=true、cost=8、inputs 与 canonical 一致。"
+    limits: []
+
+  - claim_id: direct_prefix_constructs_boundary_ready_l
+    claim: 前四步形成指定三格 L，且其后存在最短 4 步胜利后缀。
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json step 4：left 合法，事件依次为 pull_object:sticky#2、move_sticky_rigid、sticky_merge:n1；after key 的 M 为 (3,4),(4,4),(4,5)。"
+      - "prefix_counterfactuals.json correct_l_merge：prefixLegal=true，suffixSolve found=true、cost=4，后缀为 left,left,up,right。"
+    limits:
+      - "cost=4 的最短性取自该前缀状态的完整后缀求解 artifact；本审查未另行补跑搜索。"
+
+  - claim_id: two_nearby_bar_constructions_are_complete_dead_ends
+    claim: lower-bar 与 upper-bar 两个四步前缀均合法、形成横向三格黏块，完整后缀搜索均无胜态。
+    status: supported
+    evidence_basis:
+      - "prefix_counterfactuals.json wrong_lower_bar_merge：prefixLegal=true，after M=(3,5),(4,5),(5,5)，suffixSolve status=complete、exploredStates=96、found=false。"
+      - "prefix_counterfactuals.json wrong_upper_bar_merge：prefixLegal=true，after M=(3,4),(4,4),(5,4)，suffixSolve status=complete、exploredStates=96、found=false。"
+    limits:
+      - "96 是两个精确前缀状态各自的完整可达后缀状态数，不是全关完整图的 96-state win-reaching closure。"
+
+  - claim_id: bs_cut_splits_l_into_box_and_tail
+    claim: canonical 第六步把 preCutL 切成 (1,4) 箱子与 (2,4),(2,5) 竖条。
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json step 6：事件顺序 pull_object:sticky#1、move_sticky_rigid、sticky_to_box:n1；after key 为 C:1,4|M:2,4;2,5。"
+      - "mechanic.yml：移动后先 box_sticky_normalize，再 sticky_merge；sticky side/box side 决定材料正规化。"
+      - "causal results：win-reaching 中唯一 normalization-bearing edge 是 preCutL class 3 -> postCutProducts class 4。"
+    limits: []
+
+  - claim_id: pl_side_switch_changes_pull_to_push
+    claim: 切割前在 L 侧执行 pull，切割后在 P 侧以 push 完成两个目标。
+    status: supported
+    evidence_basis:
+      - "canonical steps 4-6 的对象操作均为 pull；step 6 后玩家为 (1,5)，steps 7-8 分别为 push_object:crate#1 与 push_object:sticky#1。"
+      - "mechanic.yml：输入时玩家所在 P/L 区域分别选择 push_force 或 pull_force。"
+      - "fixed_anchor_probe_push_pull.json：fixed_push_pull_effect 禁用探针 status=complete、exploredStates=196、found=false，且固定锚点 reachable scan 无 anchor shift。"
+    limits:
+      - "固定锚点探针是规则反事实，支持 P/L 分流必要性；它不是当前 193-state 原始图本身。"
+
+  - claim_id: every_win_uses_declared_event_families
+    claim: 全部胜路包含 pull、material normalization、sticky merge 与 sticky rigid move；固定锚点反事实支持 B/S 改写与 P/L 分流必要性。
+    status: supported
+    evidence_basis:
+      - "event_probe.json：pull_event、material_normalization、sticky_merge、sticky_rigid_move 四个 individual probes 均在完整 193-state 图上 status=complete、found=false。"
+      - "causal results/analyze.ts：win-reaching event-bearing edges 只有两条 sticky_merge 与一条 sticky_to_box；initial object-changing outgoing 恰为两条 merge edge，且无 object-changing incoming to initial。"
+      - "fixed_anchor_probe_box_sticky.json：fixed_box_sticky_effect 无胜利旁路，status=complete、exploredStates=196；forbidden anchor-shift 无命中。"
+      - "fixed_anchor_probe_push_pull.json：fixed_push_pull_effect 无胜利旁路，status=complete、exploredStates=196；forbidden anchor-shift 无命中。"
+    limits:
+      - "按 claim 边界，不支持锚点位移必经，也不支持 box_to_sticky 必经；实际 win-reaching normalization 实例是 sticky_to_box。"
+      - "固定锚点反事实图各为 196 states / 490 transitions，与当前 exact 原始图分开解释。"
+
+  - claim_id: complete_causal_quotient_has_four_equivalent_skeletons
+    claim: complete reverse closure 的 12 条 raw SCC DAG 路径恰映射为 4 个彼此等价的宏观因果骨架。
+    status: contradicted
+    evidence_basis:
+      - "causal results 与 analyze.ts 一致：193/476 complete graph，96/224 win closure，raw SCC=14，raw paths=12，对象类=10，S1/S2/S3/S4 映射计数 1/2/3/6，未分类=0。"
+      - "两个多对象对象-SCC 均有具体 raw-SCC witness：object SCC 2 <- raw SCC 4（classes 4,7；8 states；15 internal edges）；object SCC 5 <- raw SCC 10（classes 1,5,8；60 states；152 internal edges）。"
+      - "四个 milestone 禁用搜索均 complete 且无胜路；两项原始图顺序探针均 complete 且无法越序抵达。"
+      - "但 raw R10/R1 与对象变化 0->2 / 0->1->2 直接显示 direct merge 和 staged merge-then-transport 两种不同前段构造逻辑；支持“四骨架穷尽”，不支持“四骨架全等价”。"
+    limits:
+      - "对象 SCC 5 的上下搬运有 raw SCC 10 强连通见证；从 initial class 0 经 merge 进入该 SCC、再单向汇入 boundaryReadyL 的整条替代前段并不是回到同一完整状态的回返环。"
+      - "S1/S2 与 S3/S4 内部的最终步骤换序仍可视为等价，不消除两种前段构造逻辑的差异。"
+
+  - claim_id: all_wins_keep_same_product_duties
+    claim: 全部胜路经过相同主要里程碑并保持箱子西目标、竖条东目标的产品职责。
+    status: supported
+    evidence_basis:
+      - "mandatory predicate bypass checks：禁止 boundaryReadyL、preCutL、postCutProducts、finalProducts 时分别完整探索 176/177/178/190 states，均无胜路。"
+      - "order-specific raw checks：避开 boundaryReadyL 不可达 preCutL；避开 preCutL 不可达 postCutProducts；两项均 complete。"
+      - "uniqueness results：3 个胜态只有 1 个 winning object class，object key 固定为 C:1,3|M:3,4;3,5。"
+      - "causal final incoming exhaustiveness：全部 3 条非胜到胜入边来自 crateDone 或 tailAdvanced，分别由竖条或箱子完成最后目标，均进入 finalProducts class 9。"
+    limits:
+      - "相同对象职责与主要里程碑是玩家逻辑等价的必要条件，不是充分条件；它不能把 direct 与 staged 两种前段自动合并为一个逻辑类。"
+      - "right-staged 对象 SCC 内部搬运可逆，但该分支的 merge 进入和最终汇入 boundaryReadyL 不是整个替代前段的完整状态回返环。"
+
+hard_failures:
+  - >-
+    已知完整图胜路至少分成两种非等价玩家构造逻辑：direct 路径用 class 0->2 的 merge
+    直接形成 boundaryReadyL；right-staged 路径用 class 0->1 的异地 merge 后，再以对象搬运
+    到达 class 2。后者不是纯走位、对称重标号、独立必要步骤换序或回到同一完整状态的回返环，
+    因此 equivalent_variants_only 被已知非等价胜路直接反驳。
+evidence_gaps: []
+overall_hard_status: contradicted
+required_action: revise_candidate

@@ -36,7 +36,7 @@ mechanism_loop(prototype, optional_scope, optional_round_budget)
 
 单独任务可归一为：
 
-- `mechanism_explore(prototype, scope)`：只跑探索，不更新正式 lexicon。
+- `mechanism_explore(prototype, scope, publication_scope, output_root)`：只跑探索。`global_proposal` 产出全局语料草案；`task_local` 按 `task-exploration-format.md` 更新当前设计任务的语料池。
 - `mechanism_curate(prototype, run_ids)`：只做语料裁决和整理。
 
 ## 默认线性循环
@@ -48,7 +48,7 @@ mechanism_loop(prototype, optional_scope, optional_round_budget)
 1. 选一个设计空间：必须能静态说清开始摆法、关键动作、动后局面和最小用法。
 2. 写结构谱草案：列 3-6 个近邻变体，包含正例、错例、宽一格 / 少一格 / 换对象 / 换顺序 / 预分离等对照。
 3. 跑最小对照实验：runtime 只确认结构谱和对照关系，不负责发现 topic。
-4. 语料化收口：整理为新条目、并入旧条目、补充旧条目、暂存或丢弃。
+4. 语料化收口：发布新的正向结构材料，或把没有形成新结构关系的变体并入已有材料；原始实验保留在 run 中。
 
 选题阶段不提前跑 runtime。若题材只能写成二元问法、发生什么问法、验证规则或工具跑通检查，它不是合格设计空间。
 
@@ -91,7 +91,7 @@ prototypes/<mechanic_id>/mechanism_lab/runs/<run_id>/
 - source_boundary:
 - structure_spectrum:
 - do_not_repeat:
-- success_criterion:
+- materialization_target:
 - output_contract:
 ```
 
@@ -158,12 +158,14 @@ proposed_families.md
 - 误用边界：哪些相近结构不会产生同样结果。
 - 证据来源：run id、case id、关键观察。
 
-随后再写 curator 检查信息：
+`publication_scope=global_proposal` 时，随后再写 curator 检查信息：
 
 - 机制角色：active_rule、material_source、consumer、incidental。
 - 关键观察点：哪一步出现差异。
 - 退化解释：为什么不是普通占位、阻挡、容量、shortcut、目标覆盖或已有结构补谱。
 - 建议裁决：`promote`、`merge`、`supplement`、`relabel`、`defer` 或 `reject`。
+
+`publication_scope=task_local` 时只发布正向结构材料、变体合并、采样轴与下一采样轴。单个 case 没有形成新材料时，作为对照或原始 run 事实。完整候选评价、难度、审美和方向选择由 designer 负责。
 
 ## Curator
 

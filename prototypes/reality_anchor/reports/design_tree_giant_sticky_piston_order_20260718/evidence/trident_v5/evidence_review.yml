@@ -1,0 +1,101 @@
+review_attempt_id: RA_TREE_TRIDENT_V5_EVIDENCE_01
+reviewer_instance_id: EVR_FRESH_TRIDENT_TREE_02
+candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+exact_version: v5_sha256_79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.md
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_uniqueness_v5/report.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/cases.yml
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/cases.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/report.md
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/baseline_identity_v5/verification.json
+    - prototypes/reality_anchor/mechanic.yml
+    - prototypes/reality_anchor/mechanism_lab/lexicon.md
+    - docs/21-level-design-studio-standard.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "9 个 raw 胜态；玩家终拍落点为 x=5、y=7..15。"
+  equivalence_evidence_basis:
+    - "baseline_uniqueness_v5/results.json：923 状态、2929 转移的 complete 图仅有 1 个胜利对象态类与 1 个终局对象转移类。"
+    - "9 条 non-win -> win 入边均为 right，且事件均为 push_object:sticky#1、force_chain:n4、move_sticky_rigid、sticky_to_box:n3。"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "只支持玩家逻辑类等价，不支持 raw 输入序列或玩家坐标唯一；图以 terminalizeWins=true 枚举胜态。"
+
+claims:
+  - claim_id: solvable_exact_trace
+    claim: "canonical inputs 共 14 步且全部合法，终态覆盖三个目标并胜利。"
+    status: supported
+    evidence_basis:
+      - "input_replay_v5.json：14 步全部合法并完成，final.isWin=true；终态三个 G 均为 *。"
+    limits: []
+
+  - claim_id: atomic_three_lock_final
+    claim: "canonical 最后一拍由同一连通 21 格 sticky#1 同时推动三箱入目标。"
+    status: supported
+    evidence_basis:
+      - "input_replay_v5.json step 14：right 合法，事件为 push_object:sticky#1、force_chain:n4、move_sticky_rigid、sticky_to_box:n3。"
+      - "step 14 前后状态键：三箱均由 x=10 移至 x=11，三个目标同时覆盖；发力黏体在动作前为单一连通 21 格对象。"
+    limits: []
+
+  - claim_id: all_wins_use_same_atomic_three_lock_final
+    claim: "完整图中的全部胜路使用同一原子三锁终拍。"
+    status: supported
+    evidence_basis:
+      - "baseline_uniqueness_v5/results.json：complete 923 状态图有 9 条 non-win -> win 入边，全部为 right 且含 sticky#1、force_chain:n4、move_sticky_rigid、sticky_to_box:n3。"
+      - "全部胜态去除玩家坐标后仅 1 个对象态类，终局前后对象转移也仅 1 类。"
+    limits: []
+
+  - claim_id: individual_lock_cannot_accumulate
+    claim: "单独推入一个目标后退出会拉回同一箱，不能靠逐个锁定累积胜利。"
+    status: supported
+    evidence_basis:
+      - "single_top_lock_retracts：step 3 push_object:crate#1 后仍未胜；step 4 left 触发 pull_object:crate#1，箱位恢复且目标撤销。"
+      - "原版 complete 图的全部 9 条胜利入边均为原子三锁终拍；布局中三处目标口具有相同局部墙、P/L 侧与 y 平移关系。"
+    limits:
+      - "单口回撤 trace 直接探测上口；其余两口由 exact 布局的局部平移同构及完整胜路枚举共同支持。"
+
+  - claim_id: three_tip_identity_for_same_stroke
+    claim: "删除下臂最右触点后，相同 canonical stroke 只完成两触点且不胜。"
+    status: supported
+    evidence_basis:
+      - "cf_missing_lower_tip：相同 14 步全部合法，终拍为 force_chain:n3、sticky_to_box:n2，仅上、中目标覆盖，final.isWin=false。"
+    limits:
+      - "只支持相同 canonical inputs 的窄反事实，不支持该反事实版本的全局可解性结论。"
+
+  - claim_id: connected_structure_identity_for_same_stroke
+    claim: "切断竖脊后，相同 canonical stroke 只移动上部黏体并完成两触点，终态不胜。"
+    status: supported
+    evidence_basis:
+      - "cf_cut_lower_bridge：终拍移动 sticky#2，事件为 force_chain:n3、sticky_to_box:n2；下部对象坐标不变，final.isWin=false。"
+    limits:
+      - "只支持相同 canonical inputs 的受力闭包差异，不支持该反事实版本的全局可解性结论。"
+
+  - claim_id: lock_exits_create_contradiction
+    claim: "打开三处目标口向下出口后，可保留前两目标并逐箱完成三目标，且无需移动巨大黏体。"
+    status: supported
+    evidence_basis:
+      - "cf_open_all_side_exits：15 步全部合法，依次出现 push_object:crate#1/#2/#3，前两箱保持在 x=11，最终三目标覆盖且 final.isWin=true。"
+      - "该 trace 无 push_object:sticky 或 move_sticky_rigid；与原版单口回撤 trace 对照，出口开闭改变目标能否保留。"
+    limits:
+      - "只支持三处出口一并打开的反事实关系，不证明每个出口分别具有独立必要性。"
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

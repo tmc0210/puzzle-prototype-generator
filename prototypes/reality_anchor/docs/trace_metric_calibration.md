@@ -44,5 +44,5 @@ solution_space_reuse:
 solve instance 单独出指标；配对或多阶段设计不得在本版把多个 instance 压成一个分数。
 
 只有在分析任务明确引用本 calibration id，且规范解、candidate version 与参考
-范围一致时才读取。它只能作为描述性元数据；不得用于 baseline / branch 排名、
-审美打分或作品集取舍。
+范围一致时才读取。它只能作为描述性元数据；不得用于候选排名、审美打分或
+待玩取舍。

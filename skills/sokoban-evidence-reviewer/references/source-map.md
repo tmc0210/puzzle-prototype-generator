@@ -3,7 +3,7 @@
 | 核验内容 | 当前来源 |
 | --- | --- |
 | 工具只验证硬事实 | `docs/17-experience-core-level-design.md` `## 工具与结构材料` |
-| 作品集硬证据边界 | `docs/21-level-design-studio-standard.md` `## 外层：整批 Review Loop` |
+| 每节点硬证据边界 | `docs/21-level-design-studio-standard.md` `## 外层：每节点 Review Loop` |
 | 玩家逻辑类唯一与三个合法送审结果 | `docs/21-level-design-studio-standard.md` `## 解族唯一性送审门` |
 | 输出形状 | `skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md` |
 | SCC / graph 解释 | `docs/30-scc-graph-diagnostic-reading.md` |

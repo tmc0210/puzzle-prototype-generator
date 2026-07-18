@@ -1,0 +1,72 @@
+review_attempt_id: RA_TREE_TRIDENT_V5_REVIEW_01
+reviewer_instance_id: LVR_FRESH_TRIDENT_TREE_01
+review_integrity: independent
+
+archive_calibration:
+  index_or_summary_ref: prototypes/reality_anchor/design_archive/index.yml
+  selected_anchors:
+    - candidate_id: RA_CAND_0029
+      calibration_role: positive
+      human_comment_refs:
+        - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0029.md#HP_STUDIO_L_1_001
+      selection_reason: >-
+        同属 sticky piston 结构，且人类原评明确肯定两次不同活塞结构、要素复用与空间利用，
+        可用于校准“活塞动作真正承担玩家可感责任”时的完成度上界。
+    - candidate_id: RA_CAND_0031
+      calibration_role: negative_or_boundary
+      human_comment_refs:
+        - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md#HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001
+      selection_reason: >-
+        同样涉及大型黏块与顺序/推动表现；人类原评明确指出纯走位和开路组成的单行道过场、
+        未被后续复用的机制事件与题面规模不成比例，可用于辨别可见核心与流程税。
+  missing_anchor_note: none
+
+independent_reading:
+  review_target: baseline_root
+  node_id: RA_TREE_NODE_TRIDENT_V5
+  candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+  exact_version: v5_sha256_79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+  opening_read: >-
+    开局中央是一块轮廓极醒目的三齿巨型 sticky，三条横臂的前端与右侧三只箱子、三个目标逐行对应；
+    玩家很快能读出应从左侧推动整块结构，让三条齿同时成为活塞。玩家却出生在结构右侧中段，
+    首次有效操作面位于左上侧，需要先沿上方空地绕到那里。
+  player_actually_does: >-
+    玩家先连续走十二步，从巨型结构右侧绕至最上方横臂的左侧；随后向右推动整个 sticky 两次。
+    第一次推动把三条齿整体送到三只箱子旁，第二次推动在同一原子输入中让三条齿共同传力，
+    将三只独立箱子同时推上各自目标，并使跨过固定 B/S 边界的三个齿端转化为 crate。
+  key_visible_changes:
+    - 巨型三齿 sticky 第一次整体右移一格，三条齿端同时与三只箱子完成对齐。
+    - 第二次右推让完整刚体再次平移，并在一个同步力链中把三只箱子同时送上三处目标。
+    - 同一次终局输入中，越过固定 B/S 边界的三个 sticky 齿端同时切为 crate，三处目标一起变为覆盖态。
+  visible_payoff: >-
+    一个右推动作让玩家亲眼看到巨型三齿结构同时驱动三条相隔的物体线；三只箱子同步落位、
+    三个齿端同步变材质，回报集中且与开局构图直接对应。
+  ending_read: >-
+    第二次推动后所有目标同时覆盖，关卡立即结束，没有高潮后的清理步骤；收束本身清楚、完整。
+  parent_delta_read: not_applicable
+  exact_basis:
+    - raw_packet.yml#/candidate/solve_instance/layout
+    - raw_packet.yml#/candidate/canonical_solution/exact_inputs
+    - raw_packet.yml#/candidate/canonical_solution/mechanically_derived_trace/0
+    - raw_packet.yml#/candidate/canonical_solution/mechanically_derived_trace/11
+    - raw_packet.yml#/candidate/canonical_solution/mechanically_derived_trace/12
+    - raw_packet.yml#/candidate/canonical_solution/mechanically_derived_trace/13
+    - raw_packet.yml#/prototype_rules/confirmed_rules
+    - raw_packet.yml#/prototype_rules/player_prior
+  perceptible_defects:
+    - defect: 首次对象交互前的十二步只是绕到已显然可见的操作侧，形成无意义赶路。
+      exact_basis: >-
+        canonical_solution 的第 1 至第 12 步事件全部是 walk，棋盘对象与目标状态均未改变；
+        第 13 步才首次推动 sticky。全图视野与 player_prior 又使三齿、三箱、三目标的对齐意图在开局即可识别。
+      player_effect: >-
+        熟练玩家读出核心后仍要执行一段没有选择、试探、反馈或状态准备的绕行，
+        使巨型结构在高潮前先表现为通行障碍，并削弱两次集中推动本可具有的利落节奏。
+      same_work_improvement_direction: >-
+        缩短玩家抵达首次推动面的距离，或调整初始站位，让玩家在很短的有目的接近后就能开始推动；
+        保留三齿巨型刚体、两次右推、同步三箱落位与 B/S 齿端切分这一完整作品关系。
+      blocking: true
+  verdict: revise_and_rereview
+
+overall_verdict: revise_and_rereview
+required_actions:
+  - 移除或显著压缩首次对象交互前的纯走位，形成新的 exact version 后交由 fresh reviewer 重新执行阶段 A。

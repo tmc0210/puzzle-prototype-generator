@@ -51,7 +51,7 @@ mechanism_loop(prototype, optional_scope, optional_round_budget)
 
 单独任务：
 
-- `mechanism_explore(prototype, scope)`：只跑探索，不更新正式 lexicon。
+- `mechanism_explore(prototype, scope, publication_scope, output_root)`：只跑探索。`global_proposal` 产出全局语料草案；`task_local` 更新指定设计任务的正向语料池。
 - `mechanism_curate(prototype, run_ids)`：只做语料整理和裁决。
 
 ## 默认线性循环
@@ -63,7 +63,7 @@ mechanism_loop(prototype, optional_scope, optional_round_budget)
 1. 选一个设计空间：静态说清“开始摆法 -> 关键动作 -> 动后局面 -> 最小用法”。
 2. 写结构谱草案：3-6 个近邻变体，包含正例、错例、宽一格 / 少一格 / 换对象 / 换顺序 / 预分离等对照。
 3. 跑最小对照实验：runtime 只确认结构谱和对照关系，不负责发现 topic。
-4. 语料化收口：新条目、并入旧条目、补充旧条目、暂存或丢弃。
+4. 语料化收口：发布新的正向结构材料，或把没有形成新结构关系的变体并入已有材料；原始实验保留在 run 中。
 
 选题阶段不提前跑 runtime。以下题材不合格：
 
@@ -100,7 +100,7 @@ prototypes/<mechanic_id>/mechanism_lab/runs/<run_id>/
 - source_boundary:
 - structure_spectrum:
 - do_not_repeat:
-- success_criterion:
+- materialization_target:
 - output_contract:
 ```
 
@@ -177,12 +177,14 @@ Explorer 先写结构谱，再跑实验。结构谱必须包含：
 - 误用边界：哪些相近结构不会产生同样结果。
 - 证据来源：run id、case id、关键观察。
 
-随后写 curator 检查信息：
+`publication_scope=global_proposal` 时，随后写 curator 检查信息：
 
 - 机制角色：`active_rule`、`material_source`、`consumer`、`incidental`。
 - 关键观察点。
 - 退化解释。
 - 建议裁决：`promote`、`merge`、`supplement`、`relabel`、`defer` 或 `reject`。
+
+`publication_scope=task_local` 时只发布正向结构材料、变体合并、采样轴与下一采样轴；完整候选评价、难度、审美和方向选择由 designer 负责。任务内目录、dispatch、request、正向 lexicon 与 batch record 以 `skills/sokoban-mechanism-lab/references/task-exploration-format.md` 为准。
 
 ## Curator 要求
 

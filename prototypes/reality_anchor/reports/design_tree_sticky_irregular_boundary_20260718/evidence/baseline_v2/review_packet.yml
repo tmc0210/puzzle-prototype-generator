@@ -1,0 +1,49 @@
+review_attempt_id: RA_TREE_BASELINE_V2_EVIDENCE_01
+candidate_id: RA_BASELINE_STICKY_IRREGULAR_BOUNDARY
+exact_version: v2_sha256_b6abe9e2eb1c32b76cc67f7e9da19da294a3800ba53788d0670c464c584ffc22
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/layout.txt
+  layout_sha256: b6abe9e2eb1c32b76cc67f7e9da19da294a3800ba53788d0670c464c584ffc22
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [left, left, up, down, down, right, right, up, up, right, right, up, left, up, right, down, right]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 共 17 步且全部合法，终态同时覆盖两个目标并胜利。
+  - claim_id: foot_cage_blocks_push_side
+    claim: >-
+      初始局面玩家站在 L 凸脚正西一格；四向中 east 被凸脚 destination_occupied、
+      north 被凸脚 destination_occupied、south 为 pull 凸脚被其后墙挡住的 force_blocked，
+      唯一合法互动动作是 west pull。
+  - claim_id: extraction_cuts_via_bs
+    claim: >-
+      canonical 第二步 left 触发 pull_object:sticky#1、move_sticky_rigid 与 sticky_to_box:n1，
+      L 领头格越过 B/S 边界被切成独立箱子，剩余两格保持 sticky 竖条。
+  - claim_id: all_wins_assign_products_to_distinct_goals
+    claim: >-
+      当前 exact v2 的完整 766 状态图中，3 条 non-win -> win 入边最终都把切出箱子送上西目标
+      且把剩余竖条送上东目标；去除玩家坐标后只剩一个胜利对象态类。
+  - claim_id: pl_boundary_makes_west_a_pull
+    claim: >-
+      玩家初始位于 P/L 的 L（pull）侧（x=3 > L 列 x=2）；西侧移动按 pull 语义从身后一格抽取黏块，
+      故 west 抽取由 P/L 边界规则分叉产生而非普通推动。
+
+solution_uniqueness_claim:
+  result: equivalent_variants_only
+  search_scope: complete
+  search_budget: maxStates=200000; terminalizeWins=true; actual=766 states / 1824 transitions
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/baseline_v2_uniqueness/results.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/baseline_v2_uniqueness/report.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/baseline_v2/layout_analysis_baseline_v2.json
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/baseline_v2/layout_analysis_baseline_v2.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/baseline_v2/layout_analysis_baseline_v2.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/baseline_v2_uniqueness/results.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/baseline_v2_uniqueness/report.md

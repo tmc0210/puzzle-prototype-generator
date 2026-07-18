@@ -1,0 +1,70 @@
+review_attempt_id: RA_TREE_CONSTRUCT_PREFIX_V10_EVIDENCE_01
+candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_PREFIX
+exact_version: v10_sha256_1c273480c51de2e3bbd284c2962729cd8cc7c38b549719f984b059f3cfd5a89a
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/layout.txt
+  layout_sha256: 1c273480c51de2e3bbd284c2962729cd8cc7c38b549719f984b059f3cfd5a89a
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [down, right, down, right, down, right, down, down, right, right, up, up, up, left, left, up]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 共 16 步且全部合法；第 16 步后箱子覆盖下目标、二格横臂覆盖上方双目标并胜利。
+  - claim_id: mandatory_p_side_right_push_opens_shape_gate
+    claim: >-
+      全部胜路必须先把初始完整 L 从 (4,4)(5,4)(5,5) 以 right 的
+      push_object:sticky#1 移到 (5,4)(6,4)(6,5)。初始对象不动闭包只有这一类可胜首对象动作；
+      禁用该 exact 对象转移后完整搜索无胜。凸脚离开 (5,5) 后玩家才可穿过该门格到下方动作侧。
+  - claim_id: mandatory_first_l_side_down_pull_recloses_gate
+    claim: >-
+      全部胜路必须从 x=6 的 L 侧执行第一次 down pull，把完整 L 移到
+      (5,5)(6,5)(6,6)；横臂重新占据 (5,5) 并切断返回 P 侧的门。禁用该对象转移后完整搜索无胜。
+  - claim_id: mandatory_second_l_side_down_pull_cuts_foot
+    claim: >-
+      全部胜路必须继续从 L 侧执行第二次 down，触发 pull_object:sticky#1、move_sticky_rigid、
+      sticky_to_box:n1；唯一切割输出为箱子 (6,7) 与横臂 (5,6)(6,6)。禁用该对象转移或
+      sticky_to_box:n1 后完整搜索均无胜。
+  - claim_id: mandatory_l_side_up_pull_finishes_arm
+    claim: >-
+      全部胜路必须在切后从 x=6,y=5 执行 up pull，将横臂从 (5,6)(6,6) 移到
+      (5,5)(6,5) 覆盖双目标；禁用该对象转移后完整搜索无胜，不存在 P 侧 push 收尾。
+  - claim_id: fixed_product_duties_and_terminal_object_key
+    claim: >-
+      全部胜路的切后箱子固定留在 (6,7) 下目标，横臂固定承担 (5,5)(6,5) 双目标；
+      完整图只有 1 个胜态和 1 个终局对象 key C:6,7|M:5,5;6,5。
+  - claim_id: complete_graph_has_single_player_logic_class
+    claim: >-
+      complete 图为 1063 状态、2471 转移、1 胜态；win-reaching 闭包为 49 状态、109 转移，
+      raw-state SCC 为 4 个，凝聚图只有 1 条 source-to-win 路径。SCC 内横向试探可完整回到
+      同一 game state，不改变对象职责、目标分配或四个必要动作的因果先后。
+  - claim_id: no_win_reaching_merge_rebind_or_anchor_shift
+    claim: >-
+      win-reaching 闭包中没有 sticky_merge、box_to_sticky 或 anchor_boundary_shift 事件；
+      全胜路不会通过重黏、反向材质变化或移动锚点替代声明的动态门与切脚链。
+
+solution_uniqueness_claim:
+  result: unique_complete
+  search_scope: complete_graph_reverse_closure_raw_state_scc_paths
+  search_budget: maxStates=300000; terminalizeWins=true; actual=1063 states / 2471 transitions / 1 win; win-reaching=49 states / 109 transitions
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/results.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/report.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10/layout_analysis.json
+  equivalence_account: >-
+    完整图只有一个玩家逻辑类：P 侧 right push 腾门，L 侧 down pull 封门并继续切脚，切后
+    L 侧 up pull 横臂回目标。raw SCC 内只含回到同一完整状态的走位或横向试探回返环。
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v10/canonical_replay.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10/layout_analysis.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10/layout_analysis.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10/tooth_block_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/results.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/report.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v10_uniqueness/analyze.ts
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/scratch/pl_bs_bypass_fix/v7_compact_dynamic_door.txt.audit.json
+  - prototypes/reality_anchor/mechanic.yml

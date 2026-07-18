@@ -38,7 +38,7 @@ required_action: none | revise_candidate | rerun_or_supply_evidence | narrow_cla
 
 - `supported`：所需证据种类和完备性足够。
 - `contradicted`：存在直接冲突的 exact trace、reachable state、bypass 或版本事实。
-- `unknown` / `incomplete`：证据缺失、预算不足、工具不可用或只给结论。
+- `unknown` / `incomplete`：证据缺失、实际搜索未覆盖所声明的范围、工具不可用或只给结论。对 `unique_within_budget`，完成预先声明的搜索并达到记录预算不是证据缺口。
 - `solution_uniqueness_review.status` 不是 `supported` 时，`overall_hard_status` 必须为 `contradicted` 或 `incomplete`。
 - 任一 `known_non_equivalent_win_refs` 都使唯一性声明 `contradicted`；不因路线长度、自然发现难度或审美影响较小而降级。
 - 不读取 designer 送审叙事，不输出审美、档位、段落或待玩准入结论。

@@ -1,0 +1,281 @@
+review_attempt_id: RA_TREE_FORGED_V6_REVIEW_01
+prototype_id: reality_anchor
+review_target: growth_child
+prototype_rules:
+  confirmed_rules:
+    - 玩家所在 P/L 边界一侧在输入时决定本次为 push 或 pull。
+    - push/pull 受力闭包会递归包含同方向目标格上的全部可动物；任一分支被墙或越界时整步原子失败。
+    - 多格 sticky 以完整连通分量作为刚体移动，移动后才按 B/S 边界归一化、合并或切分。
+    - 所有目标必须同时被 crate、sticky 或锚点覆盖才胜利；玩家覆盖不计。
+  win_condition: all_targets_covered_by_objects
+  object_and_event_semantics:
+    - 单箱在 P 侧推过边界后，玩家落在 L 侧；狭廊中离开只能 pull 回箱子并撤销目标覆盖。
+    - 一个大型 sticky 的多个前沿格可在同一输入中接触多只独立箱，形成原子多分支力链。
+    - 力链内对象同步移动；同一输入不存在可用于设计的隐藏先后顺序。
+    - 固定 B/S 可让边界左侧保持 sticky、右侧保持 crate；最终接触齿跨线后可被切为 crate。
+  player_prior:
+    - 游戏后期玩家，已掌握小黏块组可达性、可动性、拼接、切分和刚体移动。
+    - 已掌握 B/S、P/L、锚点移动、多对象力链和常规腾挪。
+    - 能迅速识别巨大结构、触点对齐和明显几何意图并稳定执行走位；这些不作为难度。
+human_review_constraints:
+  - statement: 本任务允许忽略由超大型完整结构本身造成的额外绕行与回返走位审美损失； 这类走位不作为质量门阻断项，也不计入难度。
+    human_source_ref: human_brief_2026_07_15#giant_structure_walking_aesthetic_exemption
+frozen_parent:
+  node_id: RA_TREE_NODE_TRIDENT_V5
+  candidate_id: RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL
+  exact_version: v5_sha256_79dcb407d4464dc53e839129afb4e511a7785166d99a8fa58ad093509c9bdee4
+  solve_instance:
+    layout: |-
+      #############
+      #########SB##
+      #############
+      #########PL##
+      #############
+      #...........#
+      #.....#...###
+      #...MMMMM.CG#
+      #...M.....###
+      #...M....@..#
+      #...M.....###
+      #...MMMMM.CG#
+      #...M.....###
+      #...M.......#
+      #...M.....###
+      #...MMMMM.CG#
+      #.....#...###
+      #...........#
+      #############
+    player_start:
+      - 9
+      - 9
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+      description: |
+        After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.
+  canonical_solution:
+    exact_inputs:
+      - up
+      - up
+      - up
+      - up
+      - left
+      - left
+      - left
+      - left
+      - down
+      - left
+      - left
+      - down
+      - right
+      - right
+    mechanically_derived_trace:
+      - step: 1
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/0/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/0/after
+        visible_board_change: (9,8) .→@; (9,9) @→.
+      - step: 2
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/1/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/1/after
+        visible_board_change: (9,7) .→@; (9,8) @→.
+      - step: 3
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/2/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/2/after
+        visible_board_change: (9,6) .→@; (9,7) @→.
+      - step: 4
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/3/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/3/after
+        visible_board_change: (9,5) .→@; (9,6) @→.
+      - step: 5
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/4/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/4/after
+        visible_board_change: (8,5) .→@; (9,5) @→.
+      - step: 6
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/5/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/5/after
+        visible_board_change: (7,5) .→@; (8,5) @→.
+      - step: 7
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/6/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/6/after
+        visible_board_change: (6,5) .→@; (7,5) @→.
+      - step: 8
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/7/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/7/after
+        visible_board_change: (5,5) .→@; (6,5) @→.
+      - step: 9
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/8/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/8/after
+        visible_board_change: (5,5) @→.; (5,6) .→@
+      - step: 10
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/9/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/9/after
+        visible_board_change: (4,6) .→@; (5,6) @→.
+      - step: 11
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/10/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/10/after
+        visible_board_change: (3,6) .→@; (4,6) @→.
+      - step: 12
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/11/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/11/after
+        visible_board_change: (3,6) @→.; (3,7) .→@
+      - step: 13
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/12/before
+        event: push_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/12/after
+        visible_board_change: (3,7) @→.; (4,7) M→@; (9,7) .→M; (4,8) M→.; (5,8) .→M; (4,9) M→.; (5,9) .→M; (4,10) M→.; (5,10) .→M; (4,11) M→.; (9,11) .→M; (4,12) M→.; (5,12) .→M; (4,13) M→.; (5,13) .→M; (4,14) M→.; … total=19
+      - step: 14
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/13/before
+        event: push_object:sticky#1, force_chain:n4, move_sticky_rigid, sticky_to_box:n3
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json#/steps/13/after
+        visible_board_change: (4,7) @→.; (5,7) M→@; (11,7) G→*; (5,8) M→.; (6,8) .→M; (5,9) M→.; (6,9) .→M; (5,10) M→.; (6,10) .→M; (5,11) M→.; (11,11) G→*; (5,12) M→.; (6,12) .→M; (5,13) M→.; (6,13) .→M; (5,14) M→.; … total=19
+  artifact_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+candidate:
+  node_id: RA_TREE_NODE_FORGED_V6
+  candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+  exact_version: v6_sha256_31debfe814fda7a58cc198234445f2b0d58d8aba063fc8b473e3364bded03879
+  solve_instance:
+    layout: |-
+      ###########
+      #######PL##
+      #..@SB...##
+      #.#########
+      #.#########
+      #.MMM..CCG#
+      #.MMMCCC.##
+      #.MMM...###
+      #.MMM.#####
+      #.MMM...###
+      #.MMMCCC.##
+      #.MMM..CCG#
+      ###########
+    player_start:
+      - 3
+      - 2
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+      description: |
+        After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.
+  canonical_solution:
+    exact_inputs:
+      - right
+      - right
+      - right
+      - left
+      - left
+      - left
+      - left
+      - left
+      - down
+      - down
+      - down
+      - right
+    mechanically_derived_trace:
+      - step: 1
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/0/before
+        event: push_object:box_sticky_anchor, anchor_boundary_shift:box_sticky, box_to_sticky:n2, sticky_merge:n1
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/0/after
+        visible_board_change: (3,2) @→.; (4,2) S→@; (5,2) B→S; (6,2) .→B; (5,6) C→M; (5,10) C→M
+      - step: 2
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/1/before
+        event: push_object:box_sticky_anchor, anchor_boundary_shift:box_sticky, box_to_sticky:n2, sticky_merge:n1
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/1/after
+        visible_board_change: (4,2) @→.; (5,2) S→@; (6,2) B→S; (7,2) .→B; (6,6) C→M; (6,10) C→M
+      - step: 3
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/2/before
+        event: push_object:box_sticky_anchor, anchor_boundary_shift:box_sticky, box_to_sticky:n4, sticky_merge:n1
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/2/after
+        visible_board_change: (5,2) @→.; (6,2) S→@; (7,2) B→S; (8,2) .→B; (7,5) C→M; (7,6) C→M; (7,10) C→M; (7,11) C→M
+      - step: 4
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/3/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/3/after
+        visible_board_change: (5,2) .→@; (6,2) @→.
+      - step: 5
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/4/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/4/after
+        visible_board_change: (4,2) .→@; (5,2) @→.
+      - step: 6
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/5/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/5/after
+        visible_board_change: (3,2) .→@; (4,2) @→.
+      - step: 7
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/6/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/6/after
+        visible_board_change: (2,2) .→@; (3,2) @→.
+      - step: 8
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/7/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/7/after
+        visible_board_change: (1,2) .→@; (2,2) @→.
+      - step: 9
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/8/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/8/after
+        visible_board_change: (1,2) @→.; (1,3) .→@
+      - step: 10
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/9/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/9/after
+        visible_board_change: (1,3) @→.; (1,4) .→@
+      - step: 11
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/10/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/10/after
+        visible_board_change: (1,4) @→.; (1,5) .→@
+      - step: 12
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/11/before
+        event: push_object:sticky#1, force_chain:n3, move_sticky_rigid, sticky_to_box:n4
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json#/steps/11/after
+        visible_board_change: (1,5) @→.; (2,5) M→@; (5,5) .→M; (7,5) M→.; (9,5) G→*; (2,6) M→.; (8,6) .→C; (2,7) M→.; (5,7) .→M; (2,8) M→.; (5,8) .→M; (2,9) M→.; (5,9) .→M; (2,10) M→.; (8,10) .→C; (2,11) M→.; … total=19
+  artifact_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json
+artifact_refs:
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/baseline/RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_TRIDENT_SYNC_FINAL_v5.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json

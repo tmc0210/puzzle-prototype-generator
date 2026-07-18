@@ -49,24 +49,24 @@ player_goal: [x, y]
 不要为了填表额外枚举 C/D->A/B。额外边缘可达性不能自动成为亮点；只有它被声明
 为具体 meta instance 并形成另一段玩家体验时，才进入作品设计。
 
-## Base 后的 Meta 再设计
+## 当前关卡后的 Meta 再设计
 
-当一个本轮 baseline 或 branch 已经值得保留，且 brief 未禁用 meta routing 时，
-可以尝试同布局重读：
+当本轮当前关卡已经值得保留，且 human brief 明确要求 meta routing 时，可以另开
+一个单关任务尝试同布局重读：
 
 ```text
 A->B 当前作品成立
 -> 声明 C->D 希望产生的另一段玩家体验
 -> 在保护 A->B 作品身份的前提下修改结构
 -> 分别重跑 A->B 与 C->D 硬证据
--> 作为独立 branch 平级交给人类试玩
+-> 将 C->D 作为新任务的当前关卡交给人类试玩
 ```
 
 有效重读要求 C->D 改变状态消费、对象责任、阅读顺序或核心操作关系。只换入口、
 缩短路程或从另一侧复述同一路线，属于 `interface_clone` 或
-`connectivity_note_only`，不进入作品集。
+`connectivity_note_only`，不形成正式关卡。
 
-Meta 分支记录：
+Meta 再设计记录：
 
 ```yaml
 meta_reinterpretation_variant:
@@ -87,12 +87,12 @@ meta_reinterpretation_variant:
 ```
 
 Meta payoff 不能补偿 A->B 中明确可修的问题。若潜伏元素污染 base 读法，即使它在
-C->D 获得用途，也应由人类试玩判断两个版本是否值得共同保留。
+C->D 获得用途，当前 meta 候选也必须继续修订或退出送审。
 
 ## Meta-First 模式
 
 只有 human brief 明确写出 `meta_design_mode: meta_first_design` 时启用。此时 A->B
-与 C->D 共同构成一个体验核心，baseline 从一开始就包含两个 solve instance。
+与 C->D 共同构成一个体验核心，当前关卡从一开始就包含两个 solve instance。
 
 必须满足：
 
@@ -107,11 +107,11 @@ meta-first 作品。
 
 ## 提交前清理
 
-版本进入 human portfolio 前运行 `pre_human_polish_checklist.md`。清理只处理明确的
+版本进入人类待玩列表前运行 `pre_human_polish_checklist.md`。清理只处理明确的
 呈现和冗余问题；任何改变 layout、start、goal、胜利条件或核心机制使用的修改都
 产生新版本并重跑硬证据。清理结果不产生审美结论。
 
-## 人类作品集
+## 人类待玩交接
 
-Base、meta reinterpretation 和 meta-first 作品平级描述各自玩家体验、共享结构、
-相对增量、已知风险与证据边界。LLM 不用 pair 数量、路线长度或图指标排序。
+Base、meta reinterpretation 和 meta-first 若分别完成其所属的体验核心设计树流程，各自描述玩家体验、
+共享结构、相对增量、已知风险与证据边界。LLM 不用 pair 数量、路线长度或图指标排序。

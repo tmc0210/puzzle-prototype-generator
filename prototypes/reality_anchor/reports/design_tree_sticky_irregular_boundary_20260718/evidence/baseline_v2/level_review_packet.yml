@@ -1,0 +1,162 @@
+review_attempt_id: RA_TREE_BASELINE_V2_REVIEW_01
+prototype_id: reality_anchor
+review_target: baseline_root
+
+prototype_rules:
+  confirmed_rules:
+    - walk: 目标格为空时玩家移动一格（事件 walk）。
+    - push_force（push region）: 玩家与前方受力对象闭包同时前移一格，力沿运动方向传递；任一对象的整组目标格中有墙或被堵则整步 illegal（force_blocked）。
+    - pull_force（pull region）: 玩家与身后相邻对象的受力闭包同时前移一格；玩家目标格只需在整个闭包移动后腾空（玩家目标格被将移动对象的旧格占据不阻止该步）。
+    - box_sticky_normalize（settle）: 每次合法移动后，B/S 锚点按坐标划分 box 侧与 sticky 侧；box 侧的对象格变为 crate，sticky 侧的对象格变为 sticky cell（事件 box_to_sticky:nN / sticky_to_box:nN）。
+    - sticky_merge（settle）: 正交相邻的 sticky cell 合并为一个刚性块；不连通部分分成多个块（事件 sticky_merge:nN / sticky_split）。
+    - target_cover_win: settle 后所有目标被 crate、sticky cell 或锚点格覆盖即胜；玩家站在目标上不算。
+    - sticky_block 刚性组: 整组四连通块一起平移；任一格目标被墙/被堵则整步失败。
+    - push_pull_anchor: P 格所在列为 push 侧标签、L 格所在列为 pull 侧标签；玩家输入瞬间所在列（相对锚点列）决定该步使用 push 还是 pull 语义。锚点本身可被推/拉移动。
+    - box_sticky_anchor: B 格列与 S 格列之间按列划分 box/sticky 两侧（B 在左、S 在右时，x <= B.x 为 box 侧）。锚点本身可被推/拉移动。
+  win_condition: all_targets_covered_by_objects（玩家不算）
+  object_and_event_semantics:
+    - "#": 墙（solid）
+    - ".": 地板（walkable）
+    - "G": 目标
+    - "@": 玩家
+    - "C": crate（可推可拉，目标覆盖，个体不可区分）
+    - "M": sticky_block cell（可推可拉，刚性组，目标覆盖；当前可见区分仅为连通形状）
+    - "P"/"L": push_pull_anchor 的 push 侧/pull 侧标签格
+    - "B"/"S": box_sticky_anchor 的 box 侧/sticky 侧标签格
+    - 事件: walk, push_object, pull_object, move_sticky_rigid, force_chain, box_to_sticky:nN, sticky_to_box:nN, sticky_merge:nN, sticky_split, anchor_boundary_shift
+  player_prior:
+    - 玩家已充分熟悉规整形状小黏块组的可达性/可动性、黏块拼接与切分、B/S 锚点推拉、各类腾挪基本技巧。
+    - P/L 锚点相关知识为更早期内容且较为熟悉。
+
+human_review_constraints: []
+
+frozen_parent: null
+
+candidate:
+  node_id: RA_TREE_NODE_BASELINE_V2
+  candidate_id: RA_BASELINE_STICKY_IRREGULAR_BOUNDARY
+  exact_version: v2_sha256_b6abe9e2eb1c32b76cc67f7e9da19da294a3800ba53788d0670c464c584ffc22
+  solve_instance:
+    layout: |-
+      ########
+      #BS#...#
+      #PL#...#
+      #G##...#
+      #..MMG.#
+      #..@M#.#
+      #...#..#
+      ########
+    player_start: { x: 3, y: 5 }
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+  canonical_solution:
+    exact_inputs: [left, left, up, down, down, right, right, up, up, right, right, up, left, up, right, down, right]
+    mechanically_derived_trace:
+      - step: 1
+        input: left
+        before_state_ref: "Ply:3,5|C:|M:3,4;4,4;4,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "pull_object:sticky#1, move_sticky_rigid"
+        after_state_ref: "Ply:2,5|C:|M:2,4;3,4;3,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 整块 L 形黏块随玩家左移一格（玩家原在凸脚 (4,5) 正西一格的 (3,5)）。
+      - step: 2
+        input: left
+        before_state_ref: "Ply:2,5|C:|M:2,4;3,4;3,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n1"
+        after_state_ref: "Ply:1,5|C:1,4|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 领头格越过 B/S 边界列变为独立 crate（1,4）；剩余两格 (2,4)(2,5) 保持 sticky 竖条。L 形被切成 crate+竖条。
+      - step: 3
+        input: up
+        before_state_ref: "Ply:1,5|C:1,4|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "push_object:crate#1"
+        after_state_ref: "Ply:1,4|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: crate 被推上西侧目标 (1,3)，显示 *。
+      - step: 4
+        input: down
+        before_state_ref: "Ply:1,4|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:1,5|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家南下开始绕位。
+      - step: 5
+        input: down
+        before_state_ref: "Ply:1,5|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:1,6|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家到底行西端。
+      - step: 6
+        input: right
+        before_state_ref: "Ply:1,6|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:2,6|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家沿底行东移。
+      - step: 7
+        input: right
+        before_state_ref: "Ply:2,6|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:3,6|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家到竖条正南 (3,6)。
+      - step: 8
+        input: up
+        before_state_ref: "Ply:3,6|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:3,5|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家北上贴到竖条东侧 (3,5)。
+      - step: 9
+        input: up
+        before_state_ref: "Ply:3,5|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:3,4|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家到 (3,4)，即竖条顶格正东一格。
+      - step: 10
+        input: right
+        before_state_ref: "Ply:3,4|C:1,3|M:2,4;2,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "pull_object:sticky#1, move_sticky_rigid"
+        after_state_ref: "Ply:4,4|C:1,3|M:3,4;3,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家东移 pull 竖条整体东移一格。
+      - step: 11
+        input: right
+        before_state_ref: "Ply:4,4|C:1,3|M:3,4;3,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "pull_object:sticky#1, move_sticky_rigid"
+        after_state_ref: "Ply:5,4|C:1,3|M:4,4;4,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 竖条再东移一格到 (4,4)(4,5)，紧邻东侧目标 (5,4) 西侧。
+      - step: 12
+        input: up
+        before_state_ref: "Ply:5,4|C:1,3|M:4,4;4,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:5,3|C:1,3|M:4,4;4,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家北上到目标东侧通道 (5,3)。
+      - step: 13
+        input: left
+        before_state_ref: "Ply:5,3|C:1,3|M:4,4;4,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:4,3|C:1,3|M:4,4;4,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家西移一格。
+      - step: 14
+        input: up
+        before_state_ref: "Ply:4,3|C:1,3|M:4,4;4,5|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "pull_object:sticky#1, move_sticky_rigid"
+        after_state_ref: "Ply:4,2|C:1,3|M:4,3;4,4|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家北上 pull 竖条整体北移一格（竖条在玩家南侧）。
+      - step: 15
+        input: right
+        before_state_ref: "Ply:4,2|C:1,3|M:4,3;4,4|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:5,2|C:1,3|M:4,3;4,4|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家东移到 (5,2)。
+      - step: 16
+        input: down
+        before_state_ref: "Ply:5,2|C:1,3|M:4,3;4,4|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "walk"
+        after_state_ref: "Ply:5,3|C:1,3|M:4,3;4,4|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家南下到 (5,3)，竖条顶格 (4,3) 正东。
+      - step: 17
+        input: right
+        before_state_ref: "Ply:5,3|C:1,3|M:4,3;4,4|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        event: "pull_object:sticky#1, move_sticky_rigid"
+        after_state_ref: "Ply:6,3|C:1,3|M:5,3;5,4|PL:P:1,2;L:2,2|BS:B:1,1;S:2,1"
+        visible_board_change: 玩家东移 pull 竖条整体东移一格，竖条底格 (5,4) 覆盖东侧目标，两目标同时被覆盖，胜利。
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/baseline_v2/canonical_replay.md

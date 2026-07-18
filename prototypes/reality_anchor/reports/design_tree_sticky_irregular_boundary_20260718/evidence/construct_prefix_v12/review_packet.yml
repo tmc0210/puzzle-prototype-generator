@@ -1,0 +1,73 @@
+review_attempt_id: RA_TREE_CONSTRUCT_PREFIX_V12_EVIDENCE_01
+candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_S
+exact_version: v12_sha256_67eb19809e76d2b459e511520fb3e79b766cf6da42596acb3d88b9566959eb69
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v12/layout.txt
+  layout_sha256: 67eb19809e76d2b459e511520fb3e79b766cf6da42596acb3d88b9566959eb69
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [down, left, left, left, right, right, right, up, left, left, down, left, left, down]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: >-
+      canonical 14 步全部合法并胜利；第 3、10 步分别触发 box_to_sticky，第 4、10 步触发
+      sticky_merge；第 13 步 left push 移动完整 S，第 14 步 down pull 把完整 S 拉入墙口并覆盖目标。
+  - claim_id: initial_has_no_working_l_or_s
+    claim: >-
+      初态只有两个分离单格 sticky 端点 M(4,4)、M(3,5) 与两只独立 crate；不含必经三格 L
+      M(4,4)(3,5)(4,5)，也不含工作四格 S M(4,4)(5,4)(3,5)(4,5)。
+  - claim_id: mandatory_correct_three_cell_l
+    claim: >-
+      全部胜路必须先由下箱占据 (4,5)，形成同一三格 L；禁止进入该 exact 对象态后，完整搜索
+      213 states 且无胜。
+  - claim_id: mandatory_constructed_four_cell_s
+    claim: >-
+      全部胜路必须由上箱跨 B/S 补成同一工作 S M(4,4)(5,4)(3,5)(4,5)；禁止进入该对象态
+      或禁止其唯一构成边后，完整搜索均为 225 states 且无胜。
+  - claim_id: wrong_square_and_upper_partial_no_win
+    claim: >-
+      上箱先占桥、下箱补角可真实形成 2×2 square M(3,4)(4,4)(3,5)(4,5)，完整后继 8 states
+      无胜；上箱先跨界、下箱随后跨界形成分离端点加镜像 L 的 exact 后继 14 states 亦无胜。
+  - claim_id: mandatory_s_front_left_push
+    claim: >-
+      工作 S 必须 left push 到 M(3,4)(4,4)(2,5)(3,5)；存在两个玩家接触位变体但对象前后态、
+      action 与事件相同。禁止全部匹配边后完整搜索 232 states 且无胜。
+  - claim_id: mandatory_final_down_pull
+    claim: >-
+      全部胜路最终必须由 L 侧 down pull 把 S 移到 M(3,5)(4,5)(2,6)(3,6)；只匹配一个对象
+      转移。禁止该转移后完整搜索 241 states 且无胜。
+  - claim_id: four_raw_scc_paths_are_one_logic_class
+    claim: >-
+      complete 胜利闭包为 64 states / 143 transitions / 9 raw SCC / 4 source-to-win paths。
+      四条路径只改变上箱在 B 侧预推一格的插入时机，并允许正确 L 的完整左移—右返；它们
+      共享同一桥接角、三格 L、四格 S、P 侧 left push、L 侧 down pull 与终局职责。
+  - claim_id: complete_graph_single_player_logic_class
+    claim: >-
+      complete 图为 242 states / 550 transitions / 1 terminal win；全部胜路只有上述一个构形与
+      消费逻辑类，不存在另一四格 merge outcome、桥接角、动作侧或终局对象职责。
+
+solution_uniqueness_claim:
+  result: unique_complete
+  search_scope: complete_graph_reverse_closure_raw_state_scc_paths
+  search_budget: maxStates=500000; terminalizeWins=true; actual=242 states / 550 transitions / 1 terminal win; win-reaching=64 states / 143 transitions
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/layout_analysis.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/equivalence_audit.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/report.md
+  equivalence_account: >-
+    四条 raw SCC 路径是第二只材料在 B 侧的一格预推与第一只材料桥接步骤的换序，加上正确 L
+    的同态完整回返；四格 merge outcome 只有工作 S，全部路径随后共享同一 left-push 对象态、
+    唯一 down-pull 转移和唯一胜态。唯一性指玩家逻辑类，不指原始输入串。
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v12/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v12/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v12/canonical_replay.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/layout_analysis.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/layout_analysis.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/equivalence_audit.ts
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/equivalence_audit.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v12/report.md
+  - prototypes/reality_anchor/mechanic.yml

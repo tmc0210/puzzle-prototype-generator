@@ -47,7 +47,7 @@ docs/17-experience-core-level-design.md
 docs/21-level-design-studio-standard.md
 docs/20-level-design-studio-templates.md
 skills/sokoban-level-design-studio/SKILL.md
-skills/sokoban-experience-core-explorer/SKILL.md
+skills/sokoban-mechanism-lab/SKILL.md
 skills/sokoban-level-reviewer/SKILL.md
 skills/sokoban-evidence-reviewer/SKILL.md
 ```
@@ -116,10 +116,10 @@ prototypes/pull_portal_fallback/reports/*
 | `docs/14-curriculum-ordering.md` | 课程排序规则。 | generalized capability standard | 保留；knowledge 流程恢复时核心输入。 |
 | `docs/15-level-spec-contract.md` | curriculum 到 level specs 的契约。 | generalized capability standard | 保留；候选生成和验收连接层。 |
 | `docs/16-candidate-generation-v2.md` | 第一版 seed factory / candidates_v2 工具切片。 | archive / extract | 保留 candidates_v2 契约价值；pull-portal seed 结构归档。 |
-| `docs/17-experience-core-level-design.md` | 玩家体验核心、作品身份、包装、基线与相对探索方法论。 | generalized capability standard | 保留；关卡创作本体的首要入口。 |
+| `docs/17-experience-core-level-design.md` | 玩家体验核心、作品身份、baseline、非拼接生长、结构修订与设计树方法论。 | generalized capability standard | 保留；关卡创作本体的首要入口。 |
 | `docs/19-multi-instance-object-model.md` | 多实例对象模型。 | generalized capability standard | 保留；新机制 adapter 和 analyzer 设计必读。 |
 | `docs/20-level-design-studio-templates.md` | 工作室各角色产物的唯一模板索引。 | active validation standard | 保留为薄索引；具体 schema 只维护在对应 skill reference。 |
-| `docs/21-level-design-studio-standard.md` | 当前后台材料探索、逐关设计、双层交叉审查、原型专属提交前工作流与待玩交付流程。 | active validation standard | 保留；特定原型关卡设计入口。 |
+| `docs/21-level-design-studio-standard.md` | 当前后台材料探索、baseline 与逐节点设计、两阶段 reviewer、原型专属提交前工作流与设计树待玩交付流程。 | active validation standard | 保留；特定原型关卡设计入口。 |
 | `docs/22-ruleset-to-seeds-and-slots-draft.md` | ruleset -> initial design plan 的盲测草案。 | draft / incubation | 暂不作为标准；需要用新机制 blind test 验证后再晋升。 |
 | `docs/23-pull-portal-casebook-and-tool-notes.md` | pull-portal 专用 casebook 和工具路径。 | archive / casebook | 归档；明确排除 blind tests。 |
 | `docs/24-runtime-adapter-boundary.md` | 当前 runtime adapter 工程边界。 | generalized capability standard | 保留；新机制实现必读。 |
@@ -127,7 +127,7 @@ prototypes/pull_portal_fallback/reports/*
 | `docs/26-tool-contracts-and-conformance.md` | 工具抽象、输出契约、conformance 方案。 | generalized capability standard | 保留；需要继续落地 schema 和 CLI。 |
 | `docs/27-document-map-and-archive-plan.md` | 本文档。 | documentation governance | 保留；每次文档重组后更新。 |
 | `docs/28-mechanic-disambiguation-and-ascii-probes.md` | 实现前机制语义确认和 ASCII probe 流程。 | generalized capability standard | 保留；新机制实现前必须先用它确认 runtime-critical 语义。 |
-| `docs/29-design-archive-contract.md` | clean archive 入档边界、流程完整性、人类评语和检索元数据合约。 | active validation standard | 保留为 docs/21 / docs/20 之后的薄归档层；不定义单关设计或审查流程，不作为自动 curriculum 生成标准。 |
+| `docs/29-design-archive-contract.md` | clean archive 入档边界、流程完整性、人类评语和检索元数据合约。 | active validation standard | 保留为 docs/21 / docs/20 之后的薄归档层；不定义设计树创作或审查流程，不作为自动 curriculum 生成标准。 |
 
 ## Template And Prompt Surface
 
@@ -209,6 +209,6 @@ docs/incubation/
 1. 把 README 的文档索引改成“入口路径”，而不是枚举所有历史文件。
 2. 将 03/04/12/13/14/15 的 knowledge/player-model 关系去重，形成未来 skill 的最小输入集。
 3. 从 16 提取 `CandidateLevelV2` 与 seed factory contract 到 26 和模板，剩余 pull-portal seed 结构归档。
-4. 用不同原型实验检验 17/20/21 的玩家体验核心、基线冻结和相对分支边界。
+4. 用不同原型实验检验 17/20/21 的 baseline、非拼接设计树生长和两阶段审查边界。
 5. 用一个新机制 blind test 验证 22；通过后再决定是否晋升为 upstream design-plan 标准。
 6. 实现 `tool-conformance` 和 scaffold command，使 25/26/templates 从文档标准变成可运行标准。

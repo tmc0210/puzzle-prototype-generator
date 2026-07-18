@@ -1,4 +1,4 @@
-# 独立整批关卡审查模板
+# 独立单关审查模板
 
 ```yaml
 review_attempt_id: ""
@@ -14,45 +14,33 @@ archive_calibration:
       selection_reason: ""
   missing_anchor_note: none | ""
 
-independent_readings:
-  - slot: baseline | application | combination | challenge
-    candidate_id: ""
-    exact_version: ""
-    opening_read: ""
-    player_actually_does: ""
-    key_visible_changes: []
-    visible_payoff: ""
-    ending_read: ""
-    exact_basis: []
-    perceptible_defects:
-      - defect: ""
-        exact_basis: ""
-        player_effect: ""
-        same_work_improvement_direction: ""
-        blocking: true
-    verdict: survive_to_pre_submission_checks | revise_and_rereview | reject_candidate
-
-slot_and_portfolio_reading:
-  baseline_complete_not_minimal_witness: ""
-  application_real_delta_from_baseline: ""
-  combination_other_non_prerequisite_mechanism: ""
-  combination_player_visible_relation: ""
-  challenge_real_ceiling_attempt: ""
-  common_core_still_recognizable: ""
-  pairwise_player_experience_differences: []
-  blockers:
-    - candidate_id: ""
-      blocker_type: single_level_defect | slot_not_established | redundant_with_candidate | common_core_lost
+independent_reading:
+  review_target: baseline_root | growth_child
+  node_id: ""
+  candidate_id: ""
+  exact_version: ""
+  opening_read: ""
+  player_actually_does: ""
+  key_visible_changes: []
+  visible_payoff: ""
+  ending_read: ""
+  parent_delta_read: "baseline_root 时写 not_applicable"
+  exact_basis: []
+  perceptible_defects:
+    - defect: ""
       exact_basis: ""
-      required_action: revise_candidate | replace_candidate
+      player_effect: ""
+      same_work_improvement_direction: ""
+      blocking: true
+  verdict: survive_quality_gate | revise_and_rereview | reject_candidate
 
-overall_verdict: survive_to_pre_submission_checks | revise_and_rereview
+overall_verdict: survive_quality_gate | revise_and_rereview | reject_candidate
 required_actions: []
 ```
 
 规则：
 
 - `review_integrity` 不是 `independent` 时，本次审查无效。
-- 任一 blocking defect 或 `slot_and_portfolio_reading.blockers` 都阻止整批 survive。
-- `reject_candidate` 只关闭当前候选，不关闭 slot。
-- 不输出设计空间覆盖、段落完成度、审美分、难度分、排名或工具质量结论。
+- 任一 blocking defect 都阻止当前关卡 survive。
+- `reject_candidate` 只关闭当前候选。
+- 本文件只固定阶段 A 质量门；不输出设计树覆盖、前序/后继判断、教练建议、审美分、难度分、排名或工具质量结论。

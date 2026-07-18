@@ -1,0 +1,76 @@
+review_attempt_id: RA_TREE_CONSTRUCT_PREFIX_V11_EVIDENCE_01
+candidate_id: RA_STICKY_IRREGULAR_BOUNDARY_CONSTRUCT_Z
+exact_version: v11_sha256_fb16d7c1587211705a29794d958a069b2cc47209dc7c2db2a1c19b040682e783
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v11/layout.txt
+  layout_sha256: fb16d7c1587211705a29794d958a069b2cc47209dc7c2db2a1c19b040682e783
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [left, down, left, up, right, up, left, left]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: >-
+      canonical inputs 共 8 步且全部合法；第 4 步 sticky_merge:n1 构成 Z，第 7、8 步连续从
+      P 侧向左推动并触发 sticky_to_box，最终三箱一黏覆盖四目标并胜利。
+  - claim_id: mandatory_constructed_z_object_state
+    claim: >-
+      全部胜路必须进入 Z 对象态 M(5,6)(6,6)(6,7)(7,7)；禁止任何转移进入该对象态后，
+      完整搜索 416 状态且无胜。初态只有两个分离的水平二连黏块，不含工作 Z。
+  - claim_id: equivalent_z_assembly_orders_only
+    claim: >-
+      可胜装配允许“下料先左移再上合”或“下料先上移再左合”；两者在合并前属于同一
+      raw SCC，合并后得到完全相同的 Z 对象态并进入同一 raw SCC。胜利闭包只有 1 个
+      merge outcome，不构成第二种非等价构形逻辑。
+  - claim_id: wrong_square_construction_has_no_win
+    claim: >-
+      输入 left,left,down,left,up 可由同一材料真实构成 2×2 square
+      M(5,6)(6,6)(5,7)(6,7)；从该 exact 状态继续完整搜索 55 状态且无胜。
+  - claim_id: p_push_and_l_pull_same_cut_different_reachability
+    claim: >-
+      构成后的同一 Z 在同一 P/L-B/S 局部首次左移：P 侧 push 与 L 侧 pull 都产生
+      C(4,6)+M(5,6)(5,7)(6,7)。P 推后玩家位于 (7,7)，尚有 1 步胜利后继；L 拉后
+      玩家位于 (3,6)，被墙袋与切后对象封死，其后继搜索仅 1 状态且 complete/no-win。
+  - claim_id: mandatory_p_side_first_cut
+    claim: >-
+      全部胜路必须执行首次 P 侧 left push 切割；禁止该 exact 对象转移后完整搜索
+      444 状态且无胜。胜利闭包中不存在 pull_object 边。
+  - claim_id: mandatory_final_push_and_fixed_terminal_duties
+    claim: >-
+      全部胜路必须从 C(4,6)+M(5,6)(5,7)(6,7) 继续 left push，触发 force_chain:n2、
+      move_sticky_rigid、sticky_to_box:n2，得到唯一胜态对象 key
+      C(3,6)(4,6)(4,7)+M(5,7)；禁止该转移后完整搜索 495 状态且无胜。
+  - claim_id: complete_graph_single_player_logic_class
+    claim: >-
+      complete 图为 496 状态、1229 转移、1 胜态；win-reaching 闭包为 134 状态、326 转移，
+      raw SCC 为 4 个且只有 1 条 source-to-win 凝聚路径。除同一 Z 的等价装配顺序、纯走位
+      与可逆回返外，不存在另一构形、切割或目标职责 family。
+  - claim_id: no_anchor_movement_or_winning_pull_bypass
+    claim: >-
+      全图没有锚点状态变化或锚点移动边；胜利闭包没有 pull_object 边，也没有第二个 merge
+      outcome，因此不存在移动锚点、L 拉或其它重黏替代胜路。
+
+solution_uniqueness_claim:
+  result: unique_complete
+  search_scope: complete_graph_reverse_closure_raw_state_scc_paths
+  search_budget: maxStates=500000; terminalizeWins=true; actual=496 states / 1229 transitions / 1 win; win-reaching=134 states / 326 transitions
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v11_uniqueness/results.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v11_uniqueness/report.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v11/layout_analysis.json
+  equivalence_account: >-
+    完整图只有一个玩家逻辑类：两条 domino 错位合成同一 Z，再由 P 侧首次切割和最终推动
+    完成三箱一黏目标职责。两种装配顺序在同一 pre/post raw SCC 之间得到同一 Z，不改变
+    切割高度、动作侧或终局职责。
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v11/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v11/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/nodes/construct_prefix_v11/canonical_replay.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v11/layout_analysis.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v11/layout_analysis.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v11_uniqueness/results.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v11_uniqueness/report.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/evidence/construct_prefix_v11_uniqueness/analyze.ts
+  - prototypes/reality_anchor/mechanic.yml

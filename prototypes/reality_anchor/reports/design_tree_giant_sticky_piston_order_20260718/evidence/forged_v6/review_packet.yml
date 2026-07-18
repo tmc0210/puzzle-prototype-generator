@@ -1,0 +1,89 @@
+review_attempt_id: RA_TREE_FORGED_V6_EVIDENCE_01
+candidate_id: RA_FRESH_2026_07_15_FORGED_C_SYNC
+exact_version: v6_sha256_31debfe814fda7a58cc198234445f2b0d58d8aba063fc8b473e3364bded03879
+layout_sha256: 31debfe814fda7a58cc198234445f2b0d58d8aba063fc8b473e3364bded03879
+
+solve_instance:
+  prototype: reality_anchor
+  layout_ref: prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.txt
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [right, right, right, left, left, left, left, left, down, down, down, right]
+
+controller_rule_claims:
+  - claim_id: solvable_exact_trace
+    claim: canonical inputs 全部合法，终态同时覆盖两个目标并胜利。
+  - claim_id: three_stage_construction
+    claim: >-
+      canonical 前三拍推动同一 B/S 锚点右移三列，依次产生 box_to_sticky:n2、n2、n4 与 sticky_merge:n1；
+      第三拍后八只初始箱构件全部并入原 21 格厚脊，形成动作前单一 29 格 sticky#1。
+  - claim_id: premature_two_sweep_branch_cannot_win
+    claim: >-
+      当前 exact v6 完整主图的前三个胜路区域都只有一个 win-reachable commitment，即继续 right 扫线；
+      两扫后沿左通道推动主体的给定 exact trace 不移动两只目标箱，终态也不能再向右推动主体。
+  - claim_id: atomic_double_lock_final
+    claim: >-
+      canonical 终拍由动作前已连通的 29 格 sticky#1 产生 right、force_chain:n3、move_sticky_rigid、
+      sticky_to_box:n4，并把两只目标箱同时从 x=8 推到 x=9 的目标。
+  - claim_id: upper_tip_and_connection_are_necessary_for_same_stroke
+    claim: >-
+      删除上钩尖或仅删除上支撑末格时，相同 canonical input 都只完成下目标；两个反事实的局部完整图均无胜态。
+      后者还显示孤立上钩尖不随主体同拍移动。不声明这些反事实超出 artifact scope 的其它性质。
+  - claim_id: representative_target_geometry_retracts
+    claim: >-
+      在保持上目标、墙与 P/L 侧别并把玩家放到上箱 P 侧的 probe 中，right 推入后未胜；
+      玩家可进入闭合侧袋并返回，随后 left 会 pull 同一目标箱并恢复初始对象状态。
+  - claim_id: prebuilt_counterfactual_removes_construction_events
+    claim: >-
+      把 B/S 初始置于最终列并把八只构件预先设为 sticky 后，给定四步 trace 直接以同一 n3/n4 终拍胜利，
+      不再发生 B/S shift、box_to_sticky 或 merge 事件。
+  - claim_id: exact_v6_is_verified_outline_successor
+    claim: >-
+      v6 是对 v5 每行末尾两格纯墙的机械裁除；v6 base identity case 与候选逐字一致，六个 case 的 actions、state key、
+      事件、胜负和局部图摘要与 v5 逐项一致。本声明只用于绑定 exact version，不要求 reviewer 接受旧 v5 证据。
+
+solution_uniqueness:
+  result: equivalent_variants_only
+  search_scope: complete
+  search_budget: maxStates=200000; terminalizeWins=true; actual=143 states / 338 transitions
+  known_raw_winning_variants:
+    - 7 个 raw win states，终拍玩家落点为 x=2, y=5..11。
+  equivalence_account: >-
+    七个胜态去玩家坐标后只有一个对象状态类，七条 non-win -> win 入边只有一个前后对象转移类；
+    全部入边均为 right、push_object:sticky#1、force_chain:n3、move_sticky_rigid、sticky_to_box:n4，
+    区别仅为玩家沿同一完整厚脊选择七个等价接触格之一。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness_v6/results.json
+    - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness_v6/report.md
+    - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json
+  evidence_limits:
+    - 这是玩家逻辑类等价声明，不是 raw input、玩家路径或 raw state 唯一声明。
+
+allowed_evidence_sources:
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/candidates/application/RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json
+  - prototypes/reality_anchor/reports/input_replay_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.md
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.json
+  - prototypes/reality_anchor/reports/layout_analysis_RA_FRESH_2026_07_15_FORGED_C_SYNC_v6.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness_v6/results.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_uniqueness_v6/report.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/cases.yml
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/cases.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/results.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/report.md
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/migration_manifest.json
+  - prototypes/reality_anchor/reports/studio_giant_sticky_piston_order_20260715/evidence/application_identity_v6/identity_verification.json
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - docs/21-level-design-studio-standard.md
+
+graph_completeness:
+  layout_graph: complete
+  reachable_states: 143
+  legal_transitions: 338
+  raw_win_states: 7
+  max_states: 200000
+
+known_limits:
+  - 代表锁 probe 的广图在 50001 states 超预算；只核验其四步 exact 关系，不据此作 all-path 声明。
+  - 两扫局部 return 搜索为 depth exhausted；不使用它证明不可回返，dead commitment 只取自 exact v6 主图。
+  - cleanup predecessor artifacts 不在 allowed evidence sources 中；当前包只把 v6 新产物交给 fresh reviewer。
