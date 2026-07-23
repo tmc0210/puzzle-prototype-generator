@@ -396,6 +396,7 @@ export type LevelDoc = {
   id: string;
   title: string;
   layout: string;
+  global_burn_cycle?: number;
   win?: WinCondition;
   expected_events?: string[];
   expected_trace?: Array<{

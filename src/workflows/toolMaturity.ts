@@ -20,6 +20,37 @@ const genericUnavailable = {
 
 export function capabilitiesForMechanic(mechanicId: string): ToolCapability[] {
   switch (mechanicId) {
+    case "candle_sokoban":
+      return [
+        capability(
+          "probe_seed_suite",
+          "probe_seed_suite",
+          "Confirmed candle ASCII and settlement probes are package fixtures.",
+        ),
+        unavailable("raw_sampler", "No candle-specific sampler profile exists."),
+        unavailable("temporary_miner", "No candle-specific miner exists."),
+        unavailable(
+          "candidate_seed_factories",
+          "No candle level_specs_v2 seed factories exist.",
+        ),
+        unavailable(
+          "curated_miner",
+          "Candle scoring and filtering are not calibrated.",
+        ),
+        capability(
+          "runtime_backed_playable",
+          "scaffold",
+          "The generic playable builds through the registered candle runtime adapter.",
+        ),
+        unavailable(
+          "puzzlescript_exporter",
+          "Rolling, projections, fire closure, and simultaneous shrink are not exported.",
+        ),
+        unavailable(
+          "puzzlescript_checker",
+          "Candle PuzzleScript export is unavailable.",
+        ),
+      ];
     case "pull_portal_fallback":
       return [
         capability("probe_seed_suite", "probe_seed_suite", "Existing candidate fixtures serve as probe seeds."),

@@ -630,9 +630,11 @@ function renderPlayStatus(): string {
     return `<span class="play-status" title="未选择候选">未选择候选</span>`;
   }
   const className = playState.won ? "play-status win" : "play-status";
-  const text = playState.won
+  const actionText = playState.won
     ? `已达成胜利，${playState.moveCount} 步`
     : `${playState.moveCount} 步，${playState.lastEvents.length > 0 ? playState.lastEvents.join(", ") : "等待输入"}`;
+  const stateText = adapter.describeState?.(playState.current).join(" · ");
+  const text = stateText ? `${stateText} · ${actionText}` : actionText;
   return `<span class="${className}" title="${escapeAttribute(text)}">${escapeHtml(text)}</span>`;
 }
 

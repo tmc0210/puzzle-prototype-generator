@@ -74,20 +74,13 @@ levels:
 
   - id: CANDLE_PROBE_05_FIRE_DEATH
     title: Walk Around the Flame
-    global_burn_cycle: 12
+    global_burn_cycle: 5
     layout: |-
-      #########
-      #@......#
-      #o.L111.#
-      #.......#
-      #########
+      #######
+      #.@...#
+      #o.L1.#
+      #######
     expected_trace:
-      - input: right
-        events: [walk, countdown]
-      - input: right
-        events: [walk, countdown]
-      - input: right
-        events: [walk, countdown]
       - input: right
         events: [walk, countdown]
       - input: right
@@ -97,12 +90,13 @@ levels:
       - input: down
         events: [walk, countdown]
       - input: left
-        events: [push_axis, light_brazier, countdown, win_all_braziers_lit]
-    expected_events: [walk, push_axis, light_brazier, win_all_braziers_lit]
+        events: [push_axis, light_brazier, countdown, shrink, win_all_braziers_lit]
+    expected_events: [walk, push_axis, light_brazier, countdown, shrink, win_all_braziers_lit]
     design_notes: >
-      The exposed flame still kills the player, but death is no longer a win.
-      The player must walk around the dangerous cell, reach the safe tail side,
-      and push left so the flame enters the only brazier.
+      Moving down from the start enters the exposed flame and kills the player.
+      The safe route walks around the flame, reaches the candle's tail side, and
+      pushes left on the fifth valid action so the flame enters the only brazier
+      during the normal global burn boundary.
 
   - id: CANDLE_PROBE_06_BURN_SHRINK
     title: Global Burn Shrinks Every Lit Candle

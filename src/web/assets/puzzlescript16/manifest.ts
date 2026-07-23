@@ -5,21 +5,30 @@ export type PixelSpriteAsset = {
   file: string;
   src: string;
   layerRole: SpriteLayerRole;
-  size: 16;
+  size: 16 | 32;
 };
 
 function sprite(
   file: string,
   label: string,
   layerRole: SpriteLayerRole,
+  size: 16 | 32 = 16,
 ): PixelSpriteAsset {
   return {
     file,
     label,
     layerRole,
-    size: 16,
+    size,
     src: `./assets/puzzlescript16/${file}`,
   };
+}
+
+function candleSprite(
+  file: string,
+  label: string,
+  layerRole: SpriteLayerRole,
+): PixelSpriteAsset {
+  return sprite(file, label, layerRole, 32);
 }
 
 export const puzzleScript16Sprites: Record<string, PixelSpriteAsset> = {
@@ -61,7 +70,56 @@ export const puzzleScript16Sprites: Record<string, PixelSpriteAsset> = {
   "ra.anchor.sticky_end.join_right": sprite("ra_anchor_sticky_end_join_right.png", "sticky anchor end joined right", "object"),
   "ra.anchor.sticky_end.join_up": sprite("ra_anchor_sticky_end_join_up.png", "sticky anchor end joined up", "object"),
   "ra.anchor.sticky_end.join_down": sprite("ra_anchor_sticky_end_join_down.png", "sticky anchor end joined down", "object"),
+  "candle.terrain.floor": candleSprite("candle_terrain_floor.png", "tomb floor", "terrain"),
+  "candle.terrain.wall": candleSprite("candle_terrain_wall.png", "tomb wall", "terrain"),
+  "candle.player.alive": candleSprite("candle_player_alive.png", "player", "actor"),
+  "candle.player.dead": candleSprite("candle_player_dead.png", "dead player", "actor"),
+  "candle.brazier.unlit": candleSprite("candle_brazier_unlit.png", "unlit brazier", "object"),
+  "candle.brazier.lit": candleSprite("candle_brazier_lit.png", "lit brazier", "object"),
+  "candle.wick.left.unlit": candleSprite("candle_wick_left_unlit.png", "unlit wick facing left", "object"),
+  "candle.wick.right.unlit": candleSprite("candle_wick_right_unlit.png", "unlit wick facing right", "object"),
+  "candle.wick.up.unlit": candleSprite("candle_wick_up_unlit.png", "unlit wick facing up", "object"),
+  "candle.wick.down.unlit": candleSprite("candle_wick_down_unlit.png", "unlit wick facing down", "object"),
+  "candle.wick.left.lit": candleSprite("candle_wick_left_lit.png", "lit wick facing left", "object"),
+  "candle.wick.right.lit": candleSprite("candle_wick_right_lit.png", "lit wick facing right", "object"),
+  "candle.wick.up.lit": candleSprite("candle_wick_up_lit.png", "lit wick facing up", "object"),
+  "candle.wick.down.lit": candleSprite("candle_wick_down_lit.png", "lit wick facing down", "object"),
 };
+
+const candleIds = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const;
+const candleDirections = ["left", "right", "up", "down"] as const;
+
+for (const id of candleIds) {
+  puzzleScript16Sprites[`candle.body.${id}.middle_horizontal`] = candleSprite(
+    `candle_body_${id}_middle_horizontal.png`,
+    `candle ${id} horizontal body`,
+    "object",
+  );
+  puzzleScript16Sprites[`candle.body.${id}.middle_vertical`] = candleSprite(
+    `candle_body_${id}_middle_vertical.png`,
+    `candle ${id} vertical body`,
+    "object",
+  );
+  for (const direction of candleDirections) {
+    puzzleScript16Sprites[`candle.body.${id}.tail_${direction}`] = candleSprite(
+      `candle_body_${id}_tail_${direction}.png`,
+      `candle ${id} tail joined ${direction}`,
+      "object",
+    );
+  }
+}
+
+for (const id of [...candleIds, "single"] as const) {
+  for (const direction of candleDirections) {
+    for (const state of ["unlit", "lit"] as const) {
+      puzzleScript16Sprites[`candle.cap.${id}.${direction}.${state}`] = candleSprite(
+        `candle_cap_${id}_${direction}_${state}.png`,
+        `${state} candle ${id} wick end facing ${direction}`,
+        "object",
+      );
+    }
+  }
+}
 
 export const requiredRealityAnchorSpriteKeys = [
   "ra.terrain.floor.box_side",
@@ -94,4 +152,32 @@ export const requiredRealityAnchorSpriteKeys = [
   "ra.anchor.sticky_end.join_right",
   "ra.anchor.sticky_end.join_up",
   "ra.anchor.sticky_end.join_down",
+] as const;
+
+export const requiredCandleSokobanSpriteKeys = [
+  "candle.terrain.floor",
+  "candle.terrain.wall",
+  "candle.player.alive",
+  "candle.player.dead",
+  "candle.brazier.unlit",
+  "candle.brazier.lit",
+  "candle.wick.left.unlit",
+  "candle.wick.right.unlit",
+  "candle.wick.up.unlit",
+  "candle.wick.down.unlit",
+  "candle.wick.left.lit",
+  "candle.wick.right.lit",
+  "candle.wick.up.lit",
+  "candle.wick.down.lit",
+  ...candleIds.flatMap((id) => [
+    `candle.body.${id}.middle_horizontal`,
+    `candle.body.${id}.middle_vertical`,
+    ...candleDirections.map((direction) => `candle.body.${id}.tail_${direction}`),
+  ]),
+  ...[...candleIds, "single"].flatMap((id) =>
+    candleDirections.flatMap((direction) => [
+      `candle.cap.${id}.${direction}.unlit`,
+      `candle.cap.${id}.${direction}.lit`,
+    ]),
+  ),
 ] as const;

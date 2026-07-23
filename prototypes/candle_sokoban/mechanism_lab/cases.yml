@@ -1,0 +1,50 @@
+runId: candle_runtime_probe_v1
+title: Candle runtime local probes
+notes: Rule-focused experiments; not candidate levels.
+
+defaults:
+  maxExploreDepth: 12
+  maxReturnDepth: 8
+  maxStates: 20000
+
+cases:
+  - id: invalid_wall_does_not_tick
+    family: turn_cost
+    variant: invalid_input
+    changedVariable: blocked_by_wall
+    question: Does an invalid wall input preserve the complete state and global countdown?
+    layout: |-
+      ##########
+      #@#111R.o#
+      ##########
+    actions: [right]
+    win:
+      type: event_occurs
+      event: countdown
+
+  - id: axial_push_lights_brazier
+    family: fire_contact
+    variant: axial_push
+    changedVariable: flame_enters_brazier
+    question: Does a moved exposed flame light the brazier before the global countdown advances?
+    layout: |-
+      #########
+      #@111R.o#
+      #########
+    actions: [right]
+
+  - id: side_roll_atomic_input
+    family: movement
+    variant: side_roll
+    changedVariable: multi_small_step_single_turn
+    question: Does the candle roll until blocked while the player moves one cell?
+    layout: |-
+      ########
+      #..1..o#
+      #.@1...#
+      #..d.###
+      ########
+    actions: [right]
+    win:
+      type: event_occurs
+      event: roll_candle

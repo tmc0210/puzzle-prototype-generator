@@ -1,5 +1,6 @@
 import type { KnowledgeDoc, LevelDoc, MechanicDoc, WinCondition } from "../core/types.js";
 import type { PuzzleRuntime, RuntimeSearchOptions } from "../core/puzzleRuntime.js";
+import { candleSokobanAdapter } from "./candle_sokoban/runtime.js";
 import { iceSlideAdapter } from "./ice_slide_escape/runtime.js";
 import { pullPortalAdapter } from "./pull_portal_fallback/runtime.js";
 import { realityAnchorAdapter } from "./reality_anchor/runtime.js";
@@ -116,6 +117,7 @@ export type RuntimeAdapter<
   ): AdapterReplayResult<State>;
   isWin(state: State, winCondition: WinCondition): boolean;
   isEventWin(events: string[], winCondition?: WinCondition): boolean;
+  describeState?(state: State): string[];
   renderVisualState?(state: State, mechanic: MechanicDoc): VisualBoard;
   editor?: RuntimeEditorAdapter;
 };
@@ -369,6 +371,9 @@ export function validateLevelByParsing<State>(
 }
 
 export function getRuntimeAdapter(mechanic: MechanicDoc): CurrentRuntimeAdapter {
+  if (mechanic.id === candleSokobanAdapter.id) {
+    return candleSokobanAdapter;
+  }
   if (mechanic.id === pullPortalAdapter.id) {
     return pullPortalAdapter;
   }

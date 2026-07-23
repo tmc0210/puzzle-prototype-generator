@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   puzzleScript16Sprites,
+  requiredCandleSokobanSpriteKeys,
   requiredRealityAnchorSpriteKeys,
 } from "./manifest.js";
 
@@ -14,6 +15,12 @@ const seenFiles = new Set<string>();
 for (const key of requiredRealityAnchorSpriteKeys) {
   if (!puzzleScript16Sprites[key]) {
     errors.push(`Missing Reality Anchor sprite key: ${key}`);
+  }
+}
+
+for (const key of requiredCandleSokobanSpriteKeys) {
+  if (!puzzleScript16Sprites[key]) {
+    errors.push(`Missing Candle Sokoban sprite key: ${key}`);
   }
 }
 
@@ -29,8 +36,10 @@ for (const file of seenFiles) {
   try {
     await access(filePath);
     const size = await pngSize(filePath);
-    if (size.width !== 16 || size.height !== 16) {
-      errors.push(`${file} must be 16x16, got ${size.width}x${size.height}`);
+    const expectedSize = Object.values(puzzleScript16Sprites)
+      .find((sprite) => sprite.file === file)?.size ?? 16;
+    if (size.width !== expectedSize || size.height !== expectedSize) {
+      errors.push(`${file} must be ${expectedSize}x${expectedSize}, got ${size.width}x${size.height}`);
     }
   } catch (error) {
     errors.push(`${file}: ${error instanceof Error ? error.message : String(error)}`);

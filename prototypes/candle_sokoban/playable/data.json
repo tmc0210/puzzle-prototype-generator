@@ -1,0 +1,769 @@
+{
+  "mechanic": {
+    "id": "candle_sokoban",
+    "title": "Candle Sokoban",
+    "version": 1,
+    "description": "Throwaway runtime prototype for rigid multi-cell candles that can be pushed along their axis or rolled sideways, transmit fire through projected wick cells, share one global burn countdown, and light every brazier to win.\n",
+    "layers": [
+      "terrain",
+      "actor",
+      "object",
+      "projection"
+    ],
+    "objects": {
+      "floor": {
+        "glyph": ".",
+        "layer": "terrain",
+        "traits": [
+          "walkable"
+        ]
+      },
+      "wall": {
+        "glyph": "#",
+        "layer": "terrain",
+        "traits": [
+          "solid",
+          "wick_concealer"
+        ]
+      },
+      "player": {
+        "glyph": "@",
+        "layer": "actor",
+        "traits": [
+          "player"
+        ]
+      },
+      "candle": {
+        "glyph": "1r",
+        "layer": "object",
+        "traits": [
+          "solid",
+          "rigid",
+          "pushable",
+          "rollable",
+          "wick_projector",
+          "burnable"
+        ]
+      },
+      "brazier": {
+        "glyph": "o",
+        "layer": "object",
+        "traits": [
+          "solid",
+          "permanent_when_lit",
+          "fire_source_when_lit"
+        ]
+      },
+      "wick_projection": {
+        "glyph": "*",
+        "layer": "projection",
+        "traits": [
+          "non_solid",
+          "overlap",
+          "fire_source_when_lit"
+        ]
+      }
+    },
+    "inputs": {
+      "up": {
+        "intent": "move",
+        "dir": "up",
+        "cost": 1
+      },
+      "down": {
+        "intent": "move",
+        "dir": "down",
+        "cost": 1
+      },
+      "left": {
+        "intent": "move",
+        "dir": "left",
+        "cost": 1
+      },
+      "right": {
+        "intent": "move",
+        "dir": "right",
+        "cost": 1
+      }
+    },
+    "rules": [
+      {
+        "id": "walk",
+        "priority": 10,
+        "phase": "input",
+        "trigger": {
+          "input": "move",
+          "destination": "free"
+        },
+        "effect": {
+          "move_player": "input.dir",
+          "entering_exposed_flame_sets_dead": true
+        },
+        "emits": [
+          "walk",
+          "player_died"
+        ],
+        "effects": {
+          "reads": [
+            "player.position",
+            "terrain",
+            "candle.position",
+            "brazier.position",
+            "wick_projection"
+          ],
+          "writes": [
+            "player.position",
+            "player.dead"
+          ],
+          "emits": [
+            "walk",
+            "player_died"
+          ],
+          "locality": "local",
+          "reversible": "conditional"
+        }
+      },
+      {
+        "id": "move_candle",
+        "priority": 20,
+        "phase": "input",
+        "trigger": {
+          "input": "move",
+          "destination_has": "candle"
+        },
+        "branches": [
+          {
+            "id": "axis_push",
+            "when": {
+              "input_parallel_to_candle_axis": true
+            },
+            "effect": {
+              "translate_candle_cells": 1,
+              "player_enters_contacted_body_origin": true
+            },
+            "emits": [
+              "push_axis"
+            ],
+            "effects": {
+              "reads": [
+                "player.position",
+                "candle.position",
+                "terrain",
+                "brazier.position"
+              ],
+              "writes": [
+                "player.position",
+                "candle.position"
+              ],
+              "emits": [
+                "push_axis"
+              ],
+              "locality": "local",
+              "reversible": "conditional"
+            }
+          },
+          {
+            "id": "side_roll",
+            "when": {
+              "input_perpendicular_to_candle_axis": true
+            },
+            "effect": {
+              "translate_until_next_body_step_blocked": true,
+              "settle_contacts_after_each_small_step": true,
+              "player_moves_one_cell_only": true
+            },
+            "emits": [
+              "roll_step",
+              "roll_candle"
+            ],
+            "effects": {
+              "reads": [
+                "player.position",
+                "candle.position",
+                "terrain",
+                "brazier.position"
+              ],
+              "writes": [
+                "player.position",
+                "candle.position",
+                "candle.lit",
+                "brazier.lit"
+              ],
+              "emits": [
+                "roll_step",
+                "roll_candle"
+              ],
+              "locality": "spatial_nonlocal",
+              "reversible": "conditional"
+            }
+          }
+        ]
+      },
+      {
+        "id": "contact_settlement",
+        "priority": 30,
+        "phase": "automatic",
+        "trigger": {
+          "after_each_movement_small_step": true
+        },
+        "effect": {
+          "extinguish_concealed_wicks_first": true,
+          "recursively_ignite_exposed_same_cell_wicks": true,
+          "light_same_cell_braziers": true
+        },
+        "emits": [
+          "extinguish",
+          "ignite",
+          "light_brazier"
+        ],
+        "effects": {
+          "reads": [
+            "candle.position",
+            "candle.lit",
+            "terrain",
+            "brazier.position",
+            "brazier.lit"
+          ],
+          "writes": [
+            "candle.lit",
+            "brazier.lit"
+          ],
+          "emits": [
+            "extinguish",
+            "ignite",
+            "light_brazier"
+          ],
+          "locality": "spatial_nonlocal",
+          "reversible": "false"
+        }
+      },
+      {
+        "id": "global_burn_and_shrink",
+        "priority": 40,
+        "phase": "end_of_turn",
+        "trigger": {
+          "after_successful_action": true
+        },
+        "effect": {
+          "advance_global_countdown_even_without_lit_candles": true,
+          "reset_global_countdown_after_burn_settlement": true,
+          "shrink_all_currently_lit_candles_simultaneously": true,
+          "restrict_shrink_transfer_to_vacated_cells": true
+        },
+        "emits": [
+          "countdown",
+          "shrink",
+          "burn_out",
+          "shrink_ignite"
+        ],
+        "effects": {
+          "reads": [
+            "globalBurnCycle",
+            "globalBurnCountdown",
+            "candle.position",
+            "candle.lit"
+          ],
+          "writes": [
+            "globalBurnCountdown",
+            "candle.position",
+            "candle.lit"
+          ],
+          "emits": [
+            "countdown",
+            "shrink",
+            "burn_out",
+            "shrink_ignite"
+          ],
+          "locality": "spatial_nonlocal",
+          "reversible": "false"
+        }
+      },
+      {
+        "id": "check_win",
+        "priority": 50,
+        "phase": "end_of_turn",
+        "trigger": {
+          "after_burn_settlement": true
+        },
+        "effect": {
+          "win_when_all_braziers_lit_and_player_alive": true
+        },
+        "emits": [
+          "win_all_braziers_lit"
+        ],
+        "effects": {
+          "reads": [
+            "brazier.lit",
+            "player.dead"
+          ],
+          "writes": [],
+          "emits": [
+            "win_all_braziers_lit"
+          ],
+          "locality": "global",
+          "reversible": "true"
+        }
+      }
+    ],
+    "win": {
+      "type": "all_braziers_lit",
+      "description": "All braziers are lit and the player is alive after full turn settlement."
+    },
+    "counterfactuals": {
+      "no_candle_movement": {
+        "disable_rules": [
+          "move_candle"
+        ]
+      }
+    },
+    "optimizations": {
+      "reachability_macro": {
+        "status": "fail",
+        "requires": [
+          "player_walk_side_effect_free"
+        ],
+        "notes": "Successful walking advances the global countdown, so walking cannot be collapsed into a reachability macro.\n"
+      }
+    },
+    "export": {
+      "puzzlescript_next": {
+        "status": "unavailable",
+        "notes": "Projection overlap, recursive fire closure, per-substep rolling contacts, global countdown settlement, and simultaneous shrink are runtime-only in this prototype.\n"
+      }
+    }
+  },
+  "knowledge": {
+    "mechanic": "candle_sokoban",
+    "knowledge": [
+      {
+        "id": "K_candle_runtime_smoke",
+        "type": "interaction",
+        "statement": "An exposed candle flame sharing a cell with an unlit brazier lights it.",
+        "source": {
+          "kind": "declared",
+          "rule": "contact_settlement",
+          "events": [
+            "light_brazier"
+          ]
+        },
+        "detector": {
+          "required_events": [
+            "light_brazier"
+          ]
+        },
+        "evidence": {
+          "strength": "weak",
+          "witness_level": "CANDLE_SMOKE_01_LIGHT_BRAZIER",
+          "notes": "Runtime bring-up target only; not a finalized curriculum claim."
+        }
+      }
+    ]
+  },
+  "levels": {
+    "mechanic": "candle_sokoban",
+    "levels": [
+      {
+        "id": "CANDLE_SMOKE_01_LIGHT_BRAZIER",
+        "title": "Push Flame Into Brazier",
+        "global_burn_cycle": 5,
+        "layout": "#########\n#@111R.o#\n#########",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_axis",
+              "light_brazier",
+              "countdown",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "push_axis",
+          "light_brazier",
+          "countdown",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "Primary solver and playable smoke. One axial push moves the projected flame onto the only brazier.\n"
+      },
+      {
+        "id": "CANDLE_PROBE_02_SIDE_ROLL",
+        "title": "Side Roll Until Blocked",
+        "global_burn_cycle": 5,
+        "layout": "########\n#..1...#\n#.@1...#\n#..D.###\n#...o..#\n########",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "roll_candle",
+              "light_brazier",
+              "countdown",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "roll_step",
+          "roll_candle",
+          "light_brazier",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "The vertical candle rolls right by one small step, then its lower body would hit the wall. Its projected flame lands on the only brazier, so the same roll demonstrates the mechanism and completes a formal objective.\n"
+      },
+      {
+        "id": "CANDLE_PROBE_03_CONCEALED_FLAME",
+        "title": "Wall Conceals Flame",
+        "global_burn_cycle": 5,
+        "layout": "#########\n#.1...#.#\n#@1...#.#\n#.D...#.#\n#..#Oo..#\n#########",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "extinguish",
+              "ignite",
+              "light_brazier",
+              "roll_candle",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "roll_step",
+          "extinguish",
+          "ignite",
+          "light_brazier",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "A single side roll carries the projected flame across a wall, extinguishing it, then across a lit brazier to reignite it, and finally across the only unlit brazier to complete the formal objective.\n"
+      },
+      {
+        "id": "CANDLE_PROBE_04_RECURSIVE_IGNITION",
+        "title": "Shared Wick Cell Ignition",
+        "global_burn_cycle": 5,
+        "layout": "##########\n#@111R.o.#\n#......u.#\n#........#\n##########",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_axis",
+              "ignite",
+              "light_brazier",
+              "countdown",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "push_axis",
+          "ignite",
+          "light_brazier",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "After the push, candle#1's flame and the singleton candle wick share one logical cell while the same cell overlaps the only brazier. The singleton ignites during the contact closure and the brazier provides a formal win.\n"
+      },
+      {
+        "id": "CANDLE_PROBE_05_FIRE_DEATH",
+        "title": "Walk Around the Flame",
+        "global_burn_cycle": 5,
+        "layout": "#######\n#.@...#\n#o.L1.#\n#######",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_axis",
+              "light_brazier",
+              "countdown",
+              "shrink",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "walk",
+          "push_axis",
+          "light_brazier",
+          "countdown",
+          "shrink",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "Moving down from the start enters the exposed flame and kills the player. The safe route walks around the flame, reaches the candle's tail side, and pushes left on the fifth valid action so the flame enters the only brazier during the normal global burn boundary.\n"
+      },
+      {
+        "id": "CANDLE_PROBE_06_BURN_SHRINK",
+        "title": "Global Burn Shrinks Every Lit Candle",
+        "global_burn_cycle": 5,
+        "layout": "###########\n#@........#\n#.#111R.o.#\n#.....u..##\n#.....2..##\n#.........#\n###########",
+        "expected_trace": [
+          {
+            "input": "down",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown",
+              "shrink",
+              "shrink_ignite"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "roll_candle",
+              "light_brazier",
+              "countdown",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "countdown",
+          "shrink",
+          "shrink_ignite",
+          "roll_candle",
+          "light_brazier",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "The fifth valid turn shortens the lit horizontal candle. Its retreating flame exposes and ignites the vertical candle's formerly concealed wick. The player must then roll that newly lit candle right to light the only brazier and complete a formal objective.\n"
+      },
+      {
+        "id": "CANDLE_PROBE_07_UNLIT_COUNTDOWN",
+        "title": "Countdown Advances Before Ignition",
+        "global_burn_cycle": 2,
+        "layout": "#########\n#@..1..##\n#...1..##\n#...d..##\n#....Oo##\n#########",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "roll_candle",
+              "ignite",
+              "light_brazier",
+              "countdown",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "countdown",
+          "roll_candle",
+          "ignite",
+          "light_brazier",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "Two successful walks advance and reset the board countdown while no candle is lit. The following side roll crosses a lit brazier, ignites the candle, and then lights the only unlit brazier for a formal win.\n"
+      },
+      {
+        "id": "CANDLE_LEVEL_01_TWO_ALTARS",
+        "title": "双层祭坛",
+        "global_burn_cycle": 5,
+        "layout": "##########\n#........#\n#@111R.o.#\n#........#\n#........#\n#......o.#\n##########",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_axis",
+              "light_brazier",
+              "countdown"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "roll_candle",
+              "light_brazier",
+              "countdown",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "push_axis",
+          "roll_candle",
+          "light_brazier",
+          "countdown",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "入门应用关。玩家先沿长轴推动燃烧蜡烛点亮上方火盆，再绕到蜡烛上方侧推， 让同一团火焰向下滚动并点亮下方火盆。\n"
+      },
+      {
+        "id": "CANDLE_LEVEL_02_CARRY_THE_SPARK",
+        "title": "携火而行",
+        "global_burn_cycle": 8,
+        "layout": "##########\n#......o.#\n#........#\n#......O.#\n#..111r..#\n#........#\n#..@.....#\n##########",
+        "expected_trace": [
+          {
+            "input": "up",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "roll_candle",
+              "ignite",
+              "light_brazier",
+              "countdown",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "walk",
+          "roll_candle",
+          "ignite",
+          "light_brazier",
+          "countdown",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "玩家从下方侧推未点燃的横向蜡烛。烛芯在滚动途中经过已点燃火盆取得火种， 随后继续滚动，在停止前把火送到未点燃火盆。\n"
+      },
+      {
+        "id": "CANDLE_LEVEL_03_BURIED_SPARK",
+        "title": "埋藏的火种",
+        "global_burn_cycle": 4,
+        "layout": "############\n#@....2....#\n#.....d...##\n#..111R.oo##\n#..........#\n############",
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown",
+              "shrink",
+              "shrink_ignite"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "roll_candle",
+              "light_brazier",
+              "countdown",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "walk",
+          "shrink",
+          "shrink_ignite",
+          "roll_candle",
+          "light_brazier",
+          "countdown",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "四步接近动作推进全局燃烧倒计时。第一根蜡烛随后缩短，露出并点燃原本埋在 端帽下方的朝下烛芯；玩家再向右侧推新点燃的蜡烛，依次点亮两个火盆。\n"
+      }
+    ]
+  }
+}

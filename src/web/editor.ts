@@ -473,10 +473,13 @@ function renderPlayLog(): string {
       ? `${playState.moveCount} 步`
       : "无法试玩";
   const events = playState?.lastEvents.length ? playState.lastEvents.join(", ") : "等待输入";
+  const stateSummary = playState
+    ? adapter.describeState?.(playState.current).join(" · ")
+    : undefined;
   return `
     <div class="play-status-row">
       <span class="play-status ${playState?.won ? "win" : ""}">${escapeHtml(status)}</span>
-      <span class="keyboard-hint">${escapeHtml(events)}</span>
+      <span class="keyboard-hint">${escapeHtml(stateSummary ? `${stateSummary} · ${events}` : events)}</span>
     </div>
     <div class="trace-log">
       ${(playState?.messages ?? []).slice(0, 8).map((message) => `<div>${escapeHtml(message)}</div>`).join("") ||
