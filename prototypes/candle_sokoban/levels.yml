@@ -47,8 +47,25 @@ levels:
       #########
     expected_trace:
       - input: right
-        events: [extinguish, ignite, light_brazier, roll_candle, win_all_braziers_lit]
-    expected_events: [roll_step, extinguish, ignite, light_brazier, win_all_braziers_lit]
+        events:
+          - extinguish_by_wall
+          - ignite_from_brazier
+          - roll_multi_cell_one_turn
+          - roll_intermediate_extinguish
+          - roll_intermediate_ignite
+          - roll_reignite_after_extinguish
+          - light_brazier
+          - win_all_braziers_lit
+    expected_events:
+      - roll_step
+      - extinguish_by_wall
+      - ignite_from_brazier
+      - roll_multi_cell_one_turn
+      - roll_intermediate_extinguish
+      - roll_intermediate_ignite
+      - roll_reignite_after_extinguish
+      - light_brazier
+      - win_all_braziers_lit
     design_notes: >
       A single side roll carries the projected flame across a wall, extinguishing
       it, then across a lit brazier to reignite it, and finally across the only
@@ -65,8 +82,8 @@ levels:
       ##########
     expected_trace:
       - input: right
-        events: [push_axis, ignite, light_brazier, countdown, win_all_braziers_lit]
-    expected_events: [push_axis, ignite, light_brazier, win_all_braziers_lit]
+        events: [push_axis, ignite_from_wick, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [push_axis, ignite_from_wick, light_brazier, win_all_braziers_lit]
     design_notes: >
       After the push, candle#1's flame and the singleton candle wick share one
       logical cell while the same cell overlaps the only brazier. The singleton
@@ -123,8 +140,8 @@ levels:
       - input: right
         events: [walk, countdown]
       - input: right
-        events: [roll_candle, light_brazier, countdown, win_all_braziers_lit]
-    expected_events: [countdown, shrink, shrink_ignite, roll_candle, light_brazier, win_all_braziers_lit]
+        events: [roll_candle, roll_multi_cell_one_turn, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [countdown, shrink, shrink_ignite, roll_candle, roll_multi_cell_one_turn, light_brazier, win_all_braziers_lit]
     design_notes: >
       The fifth valid turn shortens the lit horizontal candle. Its retreating
       flame exposes and ignites the vertical candle's formerly concealed wick.
@@ -143,13 +160,107 @@ levels:
       #########
     expected_trace:
       - input: right
-        events: [walk, countdown]
+        events: [walk, countdown_without_lit_candle, countdown]
       - input: right
-        events: [walk, countdown]
+        events: [walk, countdown_without_lit_candle, countdown]
       - input: right
-        events: [roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
-    expected_events: [countdown, roll_candle, ignite, light_brazier, win_all_braziers_lit]
+        events:
+          - roll_candle
+          - roll_multi_cell_one_turn
+          - ignite_from_brazier
+          - ignite_midcycle
+          - roll_intermediate_ignite
+          - light_brazier
+          - countdown
+          - win_all_braziers_lit
+    expected_events:
+      - countdown_without_lit_candle
+      - roll_candle
+      - roll_multi_cell_one_turn
+      - ignite_from_brazier
+      - ignite_midcycle
+      - roll_intermediate_ignite
+      - light_brazier
+      - win_all_braziers_lit
     design_notes: >
       Two successful walks advance and reset the board countdown while no candle
       is lit. The following side roll crosses a lit brazier, ignites the candle,
       and then lights the only unlit brazier for a formal win.
+
+  - id: CANDLE_PROBE_08_BODY_CONCEALMENT
+    title: 烛身遮住烛芯后再释放
+    global_burn_cycle: 5
+    layout: |-
+      ########
+      #.1..#.#
+      #@1..#.#
+      #.D..#.#
+      #..r...#
+      ########
+    win:
+      type: event_occurs
+      event: wick_reexposed_unlit
+    expected_trace:
+      - input: right
+        events:
+          - extinguish_by_candle_body
+          - wick_reexposed_unlit
+          - roll_candle
+          - roll_multi_cell_one_turn
+    expected_events:
+      - extinguish_by_candle_body
+      - wick_reexposed_unlit
+      - roll_candle
+      - roll_multi_cell_one_turn
+    design_notes: >
+      第一个滚动小步让已燃烛芯进入另一根蜡烛的烛身，明确区分烛身遮蔽与
+      墙体遮蔽。第二个小步让烛芯重新外露，但附近没有任何点火源。
+
+  - id: CANDLE_PROBE_09_INTERMEDIATE_LAST_BRAZIER
+    title: 最后一个火盆在滚动终点前点亮
+    global_burn_cycle: 5
+    layout: |-
+      #########
+      #..1..#.#
+      #.@1..#.#
+      #..D..#.#
+      #...o...#
+      #########
+    expected_trace:
+      - input: right
+        events:
+          - light_brazier
+          - roll_candle
+          - roll_multi_cell_one_turn
+          - roll_intermediate_light_brazier
+          - roll_last_brazier_before_endpoint
+          - win_all_braziers_lit
+    expected_events:
+      - light_brazier
+      - roll_candle
+      - roll_multi_cell_one_turn
+      - roll_intermediate_light_brazier
+      - roll_last_brazier_before_endpoint
+      - win_all_braziers_lit
+    design_notes: >
+      唯一火盆在第一个滚动小步被点亮，但蜡烛仍继续滚到由墙体决定的终点，
+      然后本次行动才结束。
+
+  - id: CANDLE_PROBE_10_EXPOSED_FLAME_DEATH
+    title: 进入外露火焰会死亡
+    global_burn_cycle: 5
+    layout: |-
+      #######
+      #.@...#
+      #o.L1.#
+      #######
+    win:
+      type: event_occurs
+      event: player_died
+    expected_trace:
+      - input: down
+        events: [walk, countdown, player_died]
+    expected_events: [walk, countdown, player_died]
+    design_notes: >
+      玩家以一次合法移动进入外露火焰。死亡在该行动的全局倒计时之后结算，
+      并产生独立 runtime 事件。

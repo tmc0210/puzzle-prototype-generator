@@ -1,14 +1,10 @@
-# Candle Sokoban Prototype Notes
+# Candle Sokoban 原型记录
 
-Question: does the runtime state and settlement order remain correct when driven
-through the retained ASCII conformance probes?
+当前结论：runtime 机械已通过十个 ASCII 探针与专属 conformance；正式关卡设计和
+人类试玩尚未开始。
 
-Verdict: mechanically verified; campaign and human playtest not started.
+统一燃烧进度属于棋盘级五回合倒计时，不属于单根蜡烛。十个诊断探针覆盖无火
+走表、多烛同步缩短、墙与烛身灭火、点火来源、滚动中间结算和火焰致死。
 
-2026-07-23 design correction: burn progress belongs to one board-level
-countdown, not individual candles. The runtime state now stores
-`globalBurnCycle` and `globalBurnCountdown`; the seven probes cover countdown
-progress without fire and simultaneous shortening of multiple lit candles.
-
-Keep only validated rule and state-model decisions when this throwaway prototype
-is deleted or absorbed.
+机制暴露顺序是完整可达图上的硬 gate。只保留经过 runtime 验证的规则、状态和
+事件；旧知识表、旧课程和外部知识文档均不进入正式设计来源。

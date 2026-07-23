@@ -139,7 +139,13 @@ function parseLevel(level, burnCycle = readGlobalBurnCycle(level)) {
     braziers: sortBraziers(braziers)
   };
   validateInitialOccupancy(level, state);
-  settleContacts(state, []);
+  const initialEvents = [];
+  settleContacts(state, initialEvents);
+  if (initialEvents.length > 0) {
+    throw new Error(
+      `Level ${level.id} changes during silent initial contact settlement: ${initialEvents.join(", ")}`
+    );
+  }
   return state;
 }
 function validateInitialOccupancy(level, state) {
@@ -287,23 +293,37 @@ function step(mechanic, state, input, options = {}) {
       if (!canTranslateCandle(next, candle, dir)) {
         return illegal(state, input, "axis_push_blocked");
       }
+      const previousProjections = snapshotWickProjections(next);
       translateCandle(candle, dir);
       next.player = destination;
       events.push(`push_axis:${candle.id}`);
-      settleContacts(next, events);
+      settleContacts(next, events, previousProjections);
     } else {
       let distance = 0;
+      const rollSteps = [];
       while (canTranslateCandle(next, candle, dir)) {
+        const previousProjections = snapshotWickProjections(next);
         translateCandle(candle, dir);
         distance += 1;
         events.push(`roll_step:${candle.id}:d${distance}`);
-        settleContacts(next, events);
+        const stepEvents = [];
+        settleContacts(next, stepEvents, previousProjections);
+        events.push(...stepEvents);
+        rollSteps.push({
+          distance,
+          events: stepEvents,
+          allBraziersLit: next.braziers.length > 0 && next.braziers.every((brazier) => brazier.lit)
+        });
       }
       if (distance === 0) {
         return illegal(state, input, "roll_blocked");
       }
       next.player = destination;
       events.push(`roll_candle:${candle.id}:d${distance}`);
+      if (distance > 1) {
+        events.push(`roll_multi_cell_one_turn:${candle.id}:d${distance}`);
+      }
+      emitRollingExposureEvents(events, rollSteps, distance, candle.id);
     }
   } else {
     const flames = exposedFlames(next).filter(
@@ -331,32 +351,56 @@ function step(mechanic, state, input, options = {}) {
     events
   };
 }
-function settleContacts(state, events) {
+function settleContacts(state, events, previousProjections) {
   for (const projection of wickProjections(state)) {
     if (!projection.candle.lit || !projection.concealed) {
       continue;
     }
     projection.candle.lit = false;
     events.push(`extinguish:${projection.candle.id}:concealed`);
+    if (projection.concealedBy === "wall") {
+      events.push(`extinguish_by_wall:${projection.candle.id}`);
+    } else if (projection.concealedBy === "candle_body") {
+      events.push(`extinguish_by_candle_body:${projection.candle.id}`);
+    }
   }
+  const reexposedUnlit = new Set(
+    wickProjections(state).filter(
+      (projection) => previousProjections?.get(projection.candle.id)?.concealed === true && !projection.concealed && !projection.candle.lit
+    ).map((projection) => projection.candle.id)
+  );
   while (true) {
     const projections = wickProjections(state);
-    const sources = /* @__PURE__ */ new Set();
+    const brazierSources = /* @__PURE__ */ new Set();
+    const wickSources = /* @__PURE__ */ new Set();
     for (const brazier of state.braziers) {
       if (brazier.lit) {
-        sources.add(pointKey(brazier.position));
+        brazierSources.add(pointKey(brazier.position));
       }
     }
     for (const projection of projections) {
       if (projection.candle.lit && projection.inBounds && !projection.concealed) {
-        sources.add(pointKey(projection.point));
+        wickSources.add(pointKey(projection.point));
       }
     }
+    const sources = /* @__PURE__ */ new Set([...brazierSources, ...wickSources]);
     let changed = false;
     for (const projection of projections) {
-      if (!projection.candle.lit && projection.inBounds && !projection.concealed && sources.has(pointKey(projection.point))) {
+      const key = pointKey(projection.point);
+      if (!projection.candle.lit && projection.inBounds && !projection.concealed && sources.has(key)) {
         projection.candle.lit = true;
         events.push(`ignite:${projection.candle.id}`);
+        if (brazierSources.has(key)) {
+          events.push(`ignite_from_brazier:${projection.candle.id}:${key}`);
+        }
+        if (wickSources.has(key)) {
+          events.push(`ignite_from_wick:${projection.candle.id}:${key}`);
+        }
+        if (state.globalBurnCountdown < state.globalBurnCycle) {
+          events.push(
+            `ignite_midcycle:${projection.candle.id}:t${state.globalBurnCountdown}`
+          );
+        }
         changed = true;
       }
     }
@@ -368,12 +412,21 @@ function settleContacts(state, events) {
       }
     }
     if (!changed) {
-      return;
+      break;
+    }
+  }
+  for (const candleId of reexposedUnlit) {
+    const candle = state.candles.find((candidate) => candidate.id === candleId);
+    if (candle && !candle.lit) {
+      events.push(`wick_reexposed_unlit:${candleId}`);
     }
   }
 }
 function advanceGlobalBurnCountdown(state, events) {
   const previous = state.globalBurnCountdown;
+  if (state.candles.every((candle) => !candle.lit)) {
+    events.push(`countdown_without_lit_candle:${previous}`);
+  }
   if (previous > 1) {
     state.globalBurnCountdown = previous - 1;
     events.push(`countdown:${previous}->${state.globalBurnCountdown}`);
@@ -381,12 +434,28 @@ function advanceGlobalBurnCountdown(state, events) {
   }
   state.globalBurnCountdown = state.globalBurnCycle;
   events.push(`countdown:1->${state.globalBurnCycle}`);
-  settleGlobalBurn(state, events);
+  settleGlobalBurn(state, events, {
+    ignitedThisAction: eventObjectIds(events, "ignite"),
+    extinguishedThisAction: eventObjectIds(events, "extinguish")
+  });
 }
-function settleGlobalBurn(state, events) {
+function settleGlobalBurn(state, events, actionContacts) {
   const burning = new Set(
     state.candles.filter((candle) => candle.lit).map((candle) => candle.id)
   );
+  if (burning.size > 1) {
+    events.push(`simultaneous_burn:${[...burning].sort().join("+")}`);
+  }
+  for (const candleId of actionContacts.ignitedThisAction) {
+    if (burning.has(candleId)) {
+      events.push(`boundary_ignite_participates:${candleId}`);
+    }
+  }
+  for (const candleId of actionContacts.extinguishedThisAction) {
+    if (!burning.has(candleId) && state.candles.some((candle) => candle.id === candleId)) {
+      events.push(`boundary_extinguish_avoids_burn:${candleId}`);
+    }
+  }
   const before = cloneState(state);
   const vacatedBySurvivingFlame = /* @__PURE__ */ new Set();
   const survivors = [];
@@ -432,13 +501,59 @@ function wickProjections(state) {
   return state.candles.map((candle) => {
     const point = wickPoint(candle);
     const key = pointKey(point);
+    const concealedBy = state.walls.has(key) ? "wall" : occupied.has(key) ? "candle_body" : null;
     return {
       candle,
       point,
       inBounds: inBounds(state, point),
-      concealed: state.walls.has(key) || occupied.has(key)
+      concealed: concealedBy !== null,
+      concealedBy
     };
   });
+}
+function snapshotWickProjections(state) {
+  return new Map(
+    wickProjections(state).map((projection) => [
+      projection.candle.id,
+      { concealed: projection.concealed }
+    ])
+  );
+}
+function emitRollingExposureEvents(events, rollSteps, totalDistance, rollingCandleId) {
+  const intermediate = rollSteps.filter((step5) => step5.distance < totalDistance);
+  for (const step5 of intermediate) {
+    if (eventsMatchPattern(step5.events, "light_brazier")) {
+      events.push(`roll_intermediate_light_brazier:${rollingCandleId}:d${step5.distance}`);
+      if (step5.allBraziersLit) {
+        events.push(`roll_last_brazier_before_endpoint:${rollingCandleId}:d${step5.distance}`);
+      }
+    }
+    if (eventsMatchPattern(step5.events, "ignite")) {
+      events.push(`roll_intermediate_ignite:${rollingCandleId}:d${step5.distance}`);
+    }
+    if (eventsMatchPattern(step5.events, "extinguish")) {
+      events.push(`roll_intermediate_extinguish:${rollingCandleId}:d${step5.distance}`);
+    }
+  }
+  const extinguishedAt = /* @__PURE__ */ new Map();
+  for (const step5 of rollSteps) {
+    for (const candleId of eventObjectIds(step5.events, "extinguish")) {
+      extinguishedAt.set(candleId, step5.distance);
+    }
+    for (const candleId of eventObjectIds(step5.events, "ignite")) {
+      const earlierExtinguish = extinguishedAt.get(candleId);
+      if (earlierExtinguish !== void 0 && earlierExtinguish < step5.distance) {
+        events.push(
+          `roll_reignite_after_extinguish:${candleId}:d${earlierExtinguish}->d${step5.distance}`
+        );
+      }
+    }
+  }
+}
+function eventObjectIds(events, type) {
+  return new Set(
+    events.filter((event) => eventType(event) === type).map((event) => event.split(":")[1]).filter((value) => Boolean(value))
+  );
 }
 function exposedFlames(state) {
   return wickProjections(state).filter(
@@ -3095,7 +3210,7 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "mrxp2w2q" : String(Date.now());
+var buildId = true ? "mrxsvcp5" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);

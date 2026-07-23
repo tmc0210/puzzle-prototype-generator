@@ -66,11 +66,11 @@ rules:
     effect:
       move_player: input.dir
       entering_exposed_flame_sets_dead: true
-    emits: [walk, player_died]
+    emits: [walk, player_died, countdown, countdown_without_lit_candle]
     effects:
       reads: [player.position, terrain, candle.position, brazier.position, wick_projection]
       writes: [player.position, player.dead]
-      emits: [walk, player_died]
+      emits: [walk, player_died, countdown, countdown_without_lit_candle]
       locality: local
       reversible: conditional
 
@@ -101,11 +101,27 @@ rules:
           translate_until_next_body_step_blocked: true
           settle_contacts_after_each_small_step: true
           player_moves_one_cell_only: true
-        emits: [roll_step, roll_candle]
+        emits:
+          - roll_step
+          - roll_candle
+          - roll_multi_cell_one_turn
+          - roll_intermediate_light_brazier
+          - roll_last_brazier_before_endpoint
+          - roll_intermediate_ignite
+          - roll_intermediate_extinguish
+          - roll_reignite_after_extinguish
         effects:
           reads: [player.position, candle.position, terrain, brazier.position]
           writes: [player.position, candle.position, candle.lit, brazier.lit]
-          emits: [roll_step, roll_candle]
+          emits:
+            - roll_step
+            - roll_candle
+            - roll_multi_cell_one_turn
+            - roll_intermediate_light_brazier
+            - roll_last_brazier_before_endpoint
+            - roll_intermediate_ignite
+            - roll_intermediate_extinguish
+            - roll_reignite_after_extinguish
           locality: spatial_nonlocal
           reversible: conditional
 
@@ -118,11 +134,29 @@ rules:
       extinguish_concealed_wicks_first: true
       recursively_ignite_exposed_same_cell_wicks: true
       light_same_cell_braziers: true
-    emits: [extinguish, ignite, light_brazier]
+    emits:
+      - extinguish
+      - extinguish_by_wall
+      - extinguish_by_candle_body
+      - wick_reexposed_unlit
+      - ignite
+      - ignite_from_brazier
+      - ignite_from_wick
+      - ignite_midcycle
+      - light_brazier
     effects:
       reads: [candle.position, candle.lit, terrain, brazier.position, brazier.lit]
       writes: [candle.lit, brazier.lit]
-      emits: [extinguish, ignite, light_brazier]
+      emits:
+        - extinguish
+        - extinguish_by_wall
+        - extinguish_by_candle_body
+        - wick_reexposed_unlit
+        - ignite
+        - ignite_from_brazier
+        - ignite_from_wick
+        - ignite_midcycle
+        - light_brazier
       locality: spatial_nonlocal
       reversible: "false"
 
@@ -136,11 +170,27 @@ rules:
       reset_global_countdown_after_burn_settlement: true
       shrink_all_currently_lit_candles_simultaneously: true
       restrict_shrink_transfer_to_vacated_cells: true
-    emits: [countdown, shrink, burn_out, shrink_ignite]
+    emits:
+      - countdown
+      - countdown_without_lit_candle
+      - shrink
+      - burn_out
+      - simultaneous_burn
+      - boundary_ignite_participates
+      - boundary_extinguish_avoids_burn
+      - shrink_ignite
     effects:
       reads: [globalBurnCycle, globalBurnCountdown, candle.position, candle.lit]
       writes: [globalBurnCountdown, candle.position, candle.lit]
-      emits: [countdown, shrink, burn_out, shrink_ignite]
+      emits:
+        - countdown
+        - countdown_without_lit_candle
+        - shrink
+        - burn_out
+        - simultaneous_burn
+        - boundary_ignite_participates
+        - boundary_extinguish_avoids_burn
+        - shrink_ignite
       locality: spatial_nonlocal
       reversible: "false"
 

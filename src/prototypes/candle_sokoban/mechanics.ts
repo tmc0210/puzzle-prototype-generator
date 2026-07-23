@@ -6,7 +6,7 @@ import type {
   Point,
   WinCondition,
 } from "../../core/types.js";
-import { eventsMatchPattern } from "../../core/events.js";
+import { eventType, eventsMatchPattern } from "../../core/events.js";
 
 export type CandleAction = InputId;
 
@@ -57,6 +57,17 @@ type WickProjection = {
   point: Point;
   inBounds: boolean;
   concealed: boolean;
+  concealedBy: "wall" | "candle_body" | null;
+};
+
+type WickProjectionSnapshot = {
+  concealed: boolean;
+};
+
+type RollStepRecord = {
+  distance: number;
+  events: string[];
+  allBraziersLit: boolean;
 };
 
 const defaultBurnCycle = 5;
@@ -211,7 +222,13 @@ export function parseLevel(
     braziers: sortBraziers(braziers),
   };
   validateInitialOccupancy(level, state);
-  settleContacts(state, []);
+  const initialEvents: string[] = [];
+  settleContacts(state, initialEvents);
+  if (initialEvents.length > 0) {
+    throw new Error(
+      `Level ${level.id} changes during silent initial contact settlement: ${initialEvents.join(", ")}`,
+    );
+  }
   return state;
 }
 
@@ -396,23 +413,38 @@ export function step(
       if (!canTranslateCandle(next, candle, dir)) {
         return illegal(state, input, "axis_push_blocked");
       }
+      const previousProjections = snapshotWickProjections(next);
       translateCandle(candle, dir);
       next.player = destination;
       events.push(`push_axis:${candle.id}`);
-      settleContacts(next, events);
+      settleContacts(next, events, previousProjections);
     } else {
       let distance = 0;
+      const rollSteps: RollStepRecord[] = [];
       while (canTranslateCandle(next, candle, dir)) {
+        const previousProjections = snapshotWickProjections(next);
         translateCandle(candle, dir);
         distance += 1;
         events.push(`roll_step:${candle.id}:d${distance}`);
-        settleContacts(next, events);
+        const stepEvents: string[] = [];
+        settleContacts(next, stepEvents, previousProjections);
+        events.push(...stepEvents);
+        rollSteps.push({
+          distance,
+          events: stepEvents,
+          allBraziersLit:
+            next.braziers.length > 0 && next.braziers.every((brazier) => brazier.lit),
+        });
       }
       if (distance === 0) {
         return illegal(state, input, "roll_blocked");
       }
       next.player = destination;
       events.push(`roll_candle:${candle.id}:d${distance}`);
+      if (distance > 1) {
+        events.push(`roll_multi_cell_one_turn:${candle.id}:d${distance}`);
+      }
+      emitRollingExposureEvents(events, rollSteps, distance, candle.id);
     }
   } else {
     const flames = exposedFlames(next).filter(
@@ -447,6 +479,7 @@ export function step(
 function settleContacts(
   state: CandleSokobanState,
   events: string[],
+  previousProjections?: Map<string, WickProjectionSnapshot>,
 ): void {
   for (const projection of wickProjections(state)) {
     if (!projection.candle.lit || !projection.concealed) {
@@ -454,32 +487,62 @@ function settleContacts(
     }
     projection.candle.lit = false;
     events.push(`extinguish:${projection.candle.id}:concealed`);
+    if (projection.concealedBy === "wall") {
+      events.push(`extinguish_by_wall:${projection.candle.id}`);
+    } else if (projection.concealedBy === "candle_body") {
+      events.push(`extinguish_by_candle_body:${projection.candle.id}`);
+    }
   }
+
+  const reexposedUnlit = new Set(
+    wickProjections(state)
+      .filter(
+        (projection) =>
+          previousProjections?.get(projection.candle.id)?.concealed === true &&
+          !projection.concealed &&
+          !projection.candle.lit,
+      )
+      .map((projection) => projection.candle.id),
+  );
 
   while (true) {
     const projections = wickProjections(state);
-    const sources = new Set<string>();
+    const brazierSources = new Set<string>();
+    const wickSources = new Set<string>();
     for (const brazier of state.braziers) {
       if (brazier.lit) {
-        sources.add(pointKey(brazier.position));
+        brazierSources.add(pointKey(brazier.position));
       }
     }
     for (const projection of projections) {
       if (projection.candle.lit && projection.inBounds && !projection.concealed) {
-        sources.add(pointKey(projection.point));
+        wickSources.add(pointKey(projection.point));
       }
     }
+    const sources = new Set([...brazierSources, ...wickSources]);
 
     let changed = false;
     for (const projection of projections) {
+      const key = pointKey(projection.point);
       if (
         !projection.candle.lit &&
         projection.inBounds &&
         !projection.concealed &&
-        sources.has(pointKey(projection.point))
+        sources.has(key)
       ) {
         projection.candle.lit = true;
         events.push(`ignite:${projection.candle.id}`);
+        if (brazierSources.has(key)) {
+          events.push(`ignite_from_brazier:${projection.candle.id}:${key}`);
+        }
+        if (wickSources.has(key)) {
+          events.push(`ignite_from_wick:${projection.candle.id}:${key}`);
+        }
+        if (state.globalBurnCountdown < state.globalBurnCycle) {
+          events.push(
+            `ignite_midcycle:${projection.candle.id}:t${state.globalBurnCountdown}`,
+          );
+        }
         changed = true;
       }
     }
@@ -491,7 +554,14 @@ function settleContacts(
       }
     }
     if (!changed) {
-      return;
+      break;
+    }
+  }
+
+  for (const candleId of reexposedUnlit) {
+    const candle = state.candles.find((candidate) => candidate.id === candleId);
+    if (candle && !candle.lit) {
+      events.push(`wick_reexposed_unlit:${candleId}`);
     }
   }
 }
@@ -501,6 +571,9 @@ function advanceGlobalBurnCountdown(
   events: string[],
 ): void {
   const previous = state.globalBurnCountdown;
+  if (state.candles.every((candle) => !candle.lit)) {
+    events.push(`countdown_without_lit_candle:${previous}`);
+  }
   if (previous > 1) {
     state.globalBurnCountdown = previous - 1;
     events.push(`countdown:${previous}->${state.globalBurnCountdown}`);
@@ -509,16 +582,36 @@ function advanceGlobalBurnCountdown(
 
   state.globalBurnCountdown = state.globalBurnCycle;
   events.push(`countdown:1->${state.globalBurnCycle}`);
-  settleGlobalBurn(state, events);
+  settleGlobalBurn(state, events, {
+    ignitedThisAction: eventObjectIds(events, "ignite"),
+    extinguishedThisAction: eventObjectIds(events, "extinguish"),
+  });
 }
 
 function settleGlobalBurn(
   state: CandleSokobanState,
   events: string[],
+  actionContacts: {
+    ignitedThisAction: Set<string>;
+    extinguishedThisAction: Set<string>;
+  },
 ): void {
   const burning = new Set(
     state.candles.filter((candle) => candle.lit).map((candle) => candle.id),
   );
+  if (burning.size > 1) {
+    events.push(`simultaneous_burn:${[...burning].sort().join("+")}`);
+  }
+  for (const candleId of actionContacts.ignitedThisAction) {
+    if (burning.has(candleId)) {
+      events.push(`boundary_ignite_participates:${candleId}`);
+    }
+  }
+  for (const candleId of actionContacts.extinguishedThisAction) {
+    if (!burning.has(candleId) && state.candles.some((candle) => candle.id === candleId)) {
+      events.push(`boundary_extinguish_avoids_burn:${candleId}`);
+    }
+  }
   const before = cloneState(state);
   const vacatedBySurvivingFlame = new Set<string>();
   const survivors: Candle[] = [];
@@ -580,13 +673,77 @@ export function wickProjections(state: CandleSokobanState): WickProjection[] {
   return state.candles.map((candle) => {
     const point = wickPoint(candle);
     const key = pointKey(point);
+    const concealedBy = state.walls.has(key)
+      ? "wall"
+      : occupied.has(key)
+        ? "candle_body"
+        : null;
     return {
       candle,
       point,
       inBounds: inBounds(state, point),
-      concealed: state.walls.has(key) || occupied.has(key),
+      concealed: concealedBy !== null,
+      concealedBy,
     };
   });
+}
+
+function snapshotWickProjections(
+  state: CandleSokobanState,
+): Map<string, WickProjectionSnapshot> {
+  return new Map(
+    wickProjections(state).map((projection) => [
+      projection.candle.id,
+      { concealed: projection.concealed },
+    ]),
+  );
+}
+
+function emitRollingExposureEvents(
+  events: string[],
+  rollSteps: RollStepRecord[],
+  totalDistance: number,
+  rollingCandleId: string,
+): void {
+  const intermediate = rollSteps.filter((step) => step.distance < totalDistance);
+  for (const step of intermediate) {
+    if (eventsMatchPattern(step.events, "light_brazier")) {
+      events.push(`roll_intermediate_light_brazier:${rollingCandleId}:d${step.distance}`);
+      if (step.allBraziersLit) {
+        events.push(`roll_last_brazier_before_endpoint:${rollingCandleId}:d${step.distance}`);
+      }
+    }
+    if (eventsMatchPattern(step.events, "ignite")) {
+      events.push(`roll_intermediate_ignite:${rollingCandleId}:d${step.distance}`);
+    }
+    if (eventsMatchPattern(step.events, "extinguish")) {
+      events.push(`roll_intermediate_extinguish:${rollingCandleId}:d${step.distance}`);
+    }
+  }
+
+  const extinguishedAt = new Map<string, number>();
+  for (const step of rollSteps) {
+    for (const candleId of eventObjectIds(step.events, "extinguish")) {
+      extinguishedAt.set(candleId, step.distance);
+    }
+    for (const candleId of eventObjectIds(step.events, "ignite")) {
+      const earlierExtinguish = extinguishedAt.get(candleId);
+      if (earlierExtinguish !== undefined && earlierExtinguish < step.distance) {
+        events.push(
+          `roll_reignite_after_extinguish:${candleId}:d${earlierExtinguish}->d${step.distance}`,
+        );
+      }
+    }
+  }
+}
+
+function eventObjectIds(events: string[], type: string): Set<string> {
+  return new Set(
+    events
+      .filter((event) => eventType(event) === type)
+      .map((event) => event.split(":")[1])
+      .filter((value): value is string => Boolean(value)),
+  );
 }
 
 function exposedFlames(state: CandleSokobanState): WickProjection[] {

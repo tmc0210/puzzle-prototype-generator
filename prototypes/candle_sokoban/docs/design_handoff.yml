@@ -1,0 +1,99 @@
+mechanic: candle_sokoban
+
+required_docs:
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+
+tool_commands:
+  tool_maturity: "npx tsx src/cli.ts tool-maturity prototypes/candle_sokoban"
+  conformance: "npm run candle:conformance"
+  solve_package_probes: "npm run candle:solve"
+  explain_layout: "npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write"
+  try_inputs: "npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write"
+  exposure_audit: "npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts <layout-file|-> --id <id> --exact-version <exact> --allowed-exposure-through <branch> --max-states 300000 --out <report.json>"
+  playable_build: "npm run candle:playable:build"
+  playable_replay_check: "npm run candle:playable:check-replays"
+
+design_corpus:
+  allowed_design_sources:
+    - "当前任务由 $sokoban-mechanism-lab 以 mechanism_explore/task_local 正式发布的 lexicon。"
+    - "Controller 为当前任务明确提供的玩家前序与 clean archive 校准视图。"
+  excluded_sources:
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - C:/Users/ASUS/Downloads/CANDLE_SOKOBAN_KNOWLEDGE.md
+  policy:
+    - "knowledge.yml 与 curriculum.yml 只是通用包 schema 兼容占位，不得进入任何设计或审查输入。"
+    - "levels.yml 只承担 runtime 回归，不是课程、候选、布局模板或审美校准样本。"
+    - "没有当前 task-local publication provenance 的实验材料不得进入 Designer 设计来源。"
+
+delivery_contract:
+  accepted_level_source: prototypes/candle_sokoban/studio/levels.yml
+  diagnostic_level_source: prototypes/candle_sokoban/levels.yml
+  playable_queue: prototypes/candle_sokoban/playable_queue.yml
+  queue_status: pending_playtest
+  single_delivery_version_only: true
+
+hard_evidence_requirements:
+  mechanic_exposure_gate:
+    sequence_ref: prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    required_report_fields:
+      - exact_version
+      - level.layout_sha256
+      - exposure_gate.sequence_sha256
+      - exposure_gate.allowed_exposure_through
+      - graph.status
+      - forbidden_hits
+      - raw_graph.nodes
+      - raw_graph.edges
+    pass_condition: "verdict=pass，graph.status=complete，forbidden_hits 为空。"
+    unknown_condition: "graph.status=exhausted 且尚未命中 later event；不得按通过处理。"
+  normal_win_only: "正式候选必须使用 all_braziers_lit，不得使用 event_occurs。"
+  current_exact_only: "任何布局、胜利条件或核心机制用法变化都会使旧 replay、graph、exposure 与 review 失效。"
+
+prototype_specific_workflows:
+  - id: strict_exposure_gate_recheck
+    kind: pre_submission_check
+    default_status: always_run_before_delivery
+    trigger:
+      - "当前唯一候选已经通过 Critic，准备进入待玩列表。"
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    hard_checks:
+      - "对 delivery exact 重跑 exposure audit。"
+      - "报告 exact、layout digest 与 delivery version 一致。"
+      - "graph.status 为 complete，verdict 为 pass，forbidden_hits 为空。"
+    version_effect: unchanged
+    review_effect: preserved
+
+  - id: runtime_conformance_recheck
+    kind: pre_submission_check
+    default_status: always_run_before_delivery
+    trigger:
+      - "当前唯一候选准备进入待玩列表。"
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    hard_checks:
+      - "npm run check 通过。"
+      - "npm run candle:conformance 的所有已实现检查通过。"
+      - "工具 unavailable 项只记录边界，不得伪报为已实现。"
+    version_effect: unchanged
+    review_effect: preserved
+
+  - id: playable_delivery_build
+    kind: pre_submission_check
+    default_status: always_run_before_delivery
+    trigger:
+      - "唯一 delivery version 已写入 studio/levels.yml 并加入 playable_queue.yml。"
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    hard_checks:
+      - "重建 runtime-backed playable。"
+      - "queue entry 的 source、level id 与 delivery version 可解析。"
+      - "playable replay coverage 检查通过。"
+    version_effect: unchanged
+    review_effect: preserved

@@ -1,0 +1,206 @@
+schema_version: 1
+prototype: candle_sokoban
+status: human_maintained_draft
+event_authority: prototypes/candle_sokoban/mechanic.yml
+description: >
+  candle_sokoban 的线性机制暴露硬门。allowed_exposure_through 及之前阶段允许
+  出现；之后阶段的 new_events 在当前 exact version 的全部可达状态与边上都必须
+  完全不可达，而不只是最短解或提交 replay 没有出现。缺少 complete reachable
+  graph 时只能判 unknown，不能用抽样或未命中代替“已禁用”。本序列只控制可由
+  runtime 正向事件辨认的机制；未列出的通用事件与下方 explicitly_excluded 项目
+  不参与此硬门，也不能据此声称机制已被有效使用或值得做成关卡。
+
+event_exposure_sequence:
+  - branch: global_countdown
+    title: 成功行动推进全局倒计时
+    source_rule: global_burn_and_shrink
+    new_events:
+      - countdown
+
+  - branch: axis_push
+    title: 沿长轴推动蜡烛一格
+    source_rule: move_candle
+    new_events:
+      - push_axis
+
+  - branch: flame_lights_brazier
+    title: 外露火焰点亮火盆
+    source_rule: contact_settlement
+    new_events:
+      - light_brazier
+
+  - branch: exposed_flame_danger
+    title: 玩家进入外露火焰死亡
+    source_rule: walk
+    new_events:
+      - player_died
+
+  - branch: candle_shrink
+    title: 燃烧边界从烛芯端缩短蜡烛
+    source_rule: global_burn_and_shrink
+    new_events:
+      - shrink
+
+  - branch: wall_extinguish
+    title: 墙遮住烛芯并立即灭火
+    source_rule: contact_settlement
+    new_events:
+      - extinguish_by_wall
+
+  - branch: countdown_without_fire
+    title: 全部熄灭后倒计时仍继续
+    source_rule: global_burn_and_shrink
+    new_events:
+      - countdown_without_lit_candle
+
+  - branch: wick_reexposed_unlit
+    title: 烛芯重新外露但不会自动复燃
+    source_rule: contact_settlement
+    new_events:
+      - wick_reexposed_unlit
+
+  - branch: candle_burn_out
+    title: 最后一格燃尽并消失
+    source_rule: global_burn_and_shrink
+    new_events:
+      - burn_out
+
+  - branch: side_roll
+    title: 侧推使蜡烛滚到碰撞终点
+    source_rule: move_candle
+    new_events:
+      - roll_candle
+
+  - branch: multi_cell_roll_one_turn
+    title: 多格滚动仍只消耗一个行动
+    source_rule: move_candle
+    new_events:
+      - roll_multi_cell_one_turn
+
+  - branch: ignite_from_brazier
+    title: 已点亮火盆点燃外露烛芯
+    source_rule: contact_settlement
+    new_events:
+      - ignite_from_brazier
+
+  - branch: ignite_from_wick
+    title: 已燃烛芯直接点燃另一根外露烛芯
+    source_rule: contact_settlement
+    new_events:
+      - ignite_from_wick
+
+  - branch: candle_body_extinguish
+    title: 另一根蜡烛的烛身遮住烛芯并灭火
+    source_rule: contact_settlement
+    new_events:
+      - extinguish_by_candle_body
+
+  - branch: simultaneous_burn
+    title: 多根燃烧蜡烛在同一边界一起结算
+    source_rule: global_burn_and_shrink
+    new_events:
+      - simultaneous_burn
+
+  - branch: midcycle_ignition
+    title: 倒计时中途点燃不会重置节拍
+    source_rule: contact_settlement
+    new_events:
+      - ignite_midcycle
+
+  - branch: boundary_extinguish_avoids_burn
+    title: 边界行动先灭火即可避开本次燃烧
+    source_rule: global_burn_and_shrink
+    new_events:
+      - boundary_extinguish_avoids_burn
+
+  - branch: boundary_ignite_participates
+    title: 边界行动中新点燃会立即参加本次燃烧
+    source_rule: global_burn_and_shrink
+    new_events:
+      - boundary_ignite_participates
+
+  - branch: roll_intermediate_lights_brazier
+    title: 滚动途中而非终点点亮火盆
+    source_rule: move_candle
+    new_events:
+      - roll_intermediate_light_brazier
+
+  - branch: roll_intermediate_ignition
+    title: 滚动途中点燃蜡烛且继续滚动
+    source_rule: move_candle
+    new_events:
+      - roll_intermediate_ignite
+
+  - branch: roll_intermediate_extinguish
+    title: 滚动途中熄灭蜡烛且继续滚动
+    source_rule: move_candle
+    new_events:
+      - roll_intermediate_extinguish
+
+  - branch: roll_reignite_after_extinguish
+    title: 同一次滚动中先灭火再重新点燃
+    source_rule: move_candle
+    new_events:
+      - roll_reignite_after_extinguish
+
+  - branch: last_brazier_before_roll_endpoint
+    title: 最后一个火盆在滚动终点前已点亮
+    source_rule: move_candle
+    new_events:
+      - roll_last_brazier_before_endpoint
+
+runtime_witnesses:
+  declared_trace_levels:
+    global_countdown: CANDLE_SMOKE_01_LIGHT_BRAZIER
+    axis_push: CANDLE_SMOKE_01_LIGHT_BRAZIER
+    flame_lights_brazier: CANDLE_SMOKE_01_LIGHT_BRAZIER
+    exposed_flame_danger: CANDLE_PROBE_10_EXPOSED_FLAME_DEATH
+    candle_shrink: CANDLE_PROBE_05_FIRE_DEATH
+    wall_extinguish: CANDLE_PROBE_03_CONCEALED_FLAME
+    countdown_without_fire: CANDLE_PROBE_07_UNLIT_COUNTDOWN
+    wick_reexposed_unlit: CANDLE_PROBE_08_BODY_CONCEALMENT
+    side_roll: CANDLE_PROBE_02_SIDE_ROLL
+    multi_cell_roll_one_turn: CANDLE_PROBE_03_CONCEALED_FLAME
+    ignite_from_brazier: CANDLE_PROBE_07_UNLIT_COUNTDOWN
+    ignite_from_wick: CANDLE_PROBE_04_RECURSIVE_IGNITION
+    candle_body_extinguish: CANDLE_PROBE_08_BODY_CONCEALMENT
+    midcycle_ignition: CANDLE_PROBE_07_UNLIT_COUNTDOWN
+    roll_intermediate_lights_brazier: CANDLE_PROBE_09_INTERMEDIATE_LAST_BRAZIER
+    roll_intermediate_ignition: CANDLE_PROBE_03_CONCEALED_FLAME
+    roll_intermediate_extinguish: CANDLE_PROBE_03_CONCEALED_FLAME
+    roll_reignite_after_extinguish: CANDLE_PROBE_03_CONCEALED_FLAME
+    last_brazier_before_roll_endpoint: CANDLE_PROBE_09_INTERMEDIATE_LAST_BRAZIER
+  conformance_checks:
+    candle_burn_out: global_countdown_semantics
+    simultaneous_burn: global_countdown_semantics
+    boundary_extinguish_avoids_burn: global_countdown_semantics
+    boundary_ignite_participates: global_countdown_semantics
+
+explicitly_excluded:
+  - id: generic_walk_and_win
+    reason: walk 与 win_all_braziers_lit 是通用行动/目标事件，不是待隐藏机制。
+  - id: generic_contact_events
+    events: [ignite, extinguish]
+    reason: 已由带来源或遮蔽原因的精确事件覆盖，不能作为更细阶段的独立 gate。
+  - id: roll_step
+    reason: 每次 roll_candle 都必然产生 roll_step，二者没有可分离的暴露窗口。
+  - id: shrink_ignite
+    reason: 退焰点火只作为特定布局的组合 witness，不定义独立机制阶段。
+  - id: wick_only_negative_rule
+    reason: “烛身接触火焰不会点燃”是负规则，没有不造伪事件即可使用的正向扳机。
+  - id: same_step_recursive_chain
+    reason: 当前 F5 没有区别于普通直接传火的新来源坐标，也没有独立可观察结果。
+  - id: invalid_input_does_not_tick
+    reason: 无效输入不产生 runtime edge 或事件，属于操作语义核验，不适合作为事件暴露 gate。
+  - id: undo
+    reason: undo 不属于 puzzle runtime 的状态转移与完整可达图。
+  - id: death_before_win_priority
+    reason: “死亡时不胜利”依赖事件缺席与结算顺序，不能由单个正向事件严格代表。
+
+review_contract:
+  later_event_absence_requires:
+    - exact_candidate_version
+    - complete_reachable_graph
+    - raw_edge_events
+  incomplete_or_sampled_scan_verdict: unknown
+  event_occurrence_only_means: 该机制已可达，不证明必经、有效使用、难度或关卡质量。

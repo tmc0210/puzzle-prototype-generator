@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import type { LevelDoc, PrototypePackage } from "../../core/types.js";
 import { eventsMatchPattern } from "../../core/events.js";
@@ -6,6 +6,10 @@ import { analyzeGraphWithRuntime } from "../../core/graphAnalyzer.js";
 import { solveWithRuntime } from "../../core/solver.js";
 import { analyzeLevel } from "../../workflows/levelAnalyzer.js";
 import { getRuntimeAdapter } from "../runtimeAdapter.js";
+import {
+  auditCandleExposure,
+  loadCandleExposureSequence,
+} from "./exposureAudit.js";
 import { candleSokobanToolCapabilities } from "./tools.js";
 
 export type CandleConformanceStatus = "pass" | "fail" | "unknown" | "unavailable";
@@ -31,6 +35,7 @@ export function checkCandleSokobanToolConformance(
     checkParseRender(pkg),
     checkExpectedTraceReplay(pkg),
     checkGlobalCountdownSemantics(pkg),
+    checkExposureAudit(pkg),
     checkSolverSmoke(pkg),
     checkGraphSmoke(pkg),
     checkLayoutAnalyzerSmoke(pkg),
@@ -66,6 +71,62 @@ export function checkCandleSokobanToolConformance(
     status,
     checks,
   };
+}
+
+function checkExposureAudit(pkg: PrototypePackage): CandleConformanceCheck {
+  try {
+    const sequencePath = path.join(pkg.root, "docs", "mechanic_exposure_sequence.yml");
+    const { sequence, raw } = loadCandleExposureSequence(sequencePath);
+    const baseline = pkg.levels.levels.find(
+      (level) => level.id === "CANDLE_SMOKE_01_LIGHT_BRAZIER",
+    );
+    const lateExposure = pkg.levels.levels.find(
+      (level) => level.id === "CANDLE_PROBE_03_CONCEALED_FLAME",
+    );
+    if (!baseline || !lateExposure) {
+      throw new Error("Missing Candle exposure audit fixtures.");
+    }
+
+    const passing = auditCandleExposure(pkg, baseline, sequence, raw, {
+      allowedExposureThrough: "flame_lights_brazier",
+      maxStates: 20_000,
+    });
+    if (
+      passing.verdict !== "pass" ||
+      passing.graph.status !== "complete" ||
+      passing.raw_graph.edges.length === 0
+    ) {
+      throw new Error("Early exposure fixture did not produce a complete passing raw graph.");
+    }
+
+    const failing = auditCandleExposure(pkg, lateExposure, sequence, raw, {
+      allowedExposureThrough: "wall_extinguish",
+      maxStates: 20_000,
+    });
+    if (
+      failing.verdict !== "fail" ||
+      !failing.forbidden_hits.some((hit) => hit.pattern === "ignite_from_brazier")
+    ) {
+      throw new Error("Later reachable ignition was not rejected by the exposure hard gate.");
+    }
+
+    const incomplete = auditCandleExposure(pkg, baseline, sequence, raw, {
+      allowedExposureThrough: "flame_lights_brazier",
+      maxStates: 1,
+    });
+    if (incomplete.verdict !== "unknown" || incomplete.graph.status !== "exhausted") {
+      throw new Error("Incomplete exposure scan was not reported as unknown.");
+    }
+
+    return {
+      id: "mechanic_exposure_hard_gate",
+      status: "pass",
+      reason:
+        "Verified complete pass, reachable-later-event fail, incomplete-graph unknown, and raw edge event output.",
+    };
+  } catch (error) {
+    return fail("mechanic_exposure_hard_gate", error);
+  }
 }
 
 export function formatCandleSokobanConformanceMarkdown(
@@ -137,12 +198,16 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
     if (
       !unlitStep.legal ||
       unlitStep.state.globalBurnCountdown !== 4 ||
-      unlitStep.state.candles.some((candle: { lit: boolean }) => candle.lit)
+      unlitStep.state.candles.some((candle: { lit: boolean }) => candle.lit) ||
+      !eventsMatchPattern(unlitStep.events, "countdown_without_lit_candle")
     ) {
-      throw new Error("Countdown did not advance from 5 to 4 without a lit candle.");
+      throw new Error(
+        "Countdown did not advance from 5 to 4 with a no-fire exposure event.",
+      );
     }
 
     let simultaneousState = adapter.parseLevel(simultaneousLevel);
+    let simultaneousEvents: string[] = [];
     for (const input of ["right", "left", "right", "left", "right"]) {
       const result = adapter.step(pkg.mechanic, simultaneousState, input, {
         winCondition: simultaneousLevel.win ?? pkg.mechanic.win,
@@ -151,6 +216,7 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
         throw new Error(`Simultaneous burn probe rejected '${input}'.`);
       }
       simultaneousState = result.state;
+      simultaneousEvents = result.events;
     }
     const lengths = Object.fromEntries(
       simultaneousState.candles.map(
@@ -166,8 +232,12 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
         `Expected countdown=5 and lengths candle#1=3,candle#2=1; got countdown=${simultaneousState.globalBurnCountdown}, lengths=${JSON.stringify(lengths)}.`,
       );
     }
+    if (!eventsMatchPattern(simultaneousEvents, "simultaneous_burn")) {
+      throw new Error("Simultaneous burn settlement omitted its exposure event.");
+    }
 
     let ignitionState = adapter.parseLevel(ignitionLevel);
+    let ignitionEvents: string[] = [];
     for (const input of ["right", "left", "down", "right", "right"]) {
       const ignitionStep = adapter.step(pkg.mechanic, ignitionState, input, {
         winCondition: ignitionLevel.win ?? pkg.mechanic.win,
@@ -176,6 +246,7 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
         throw new Error(`Ignition boundary probe rejected '${input}'.`);
       }
       ignitionState = ignitionStep.state;
+      ignitionEvents = ignitionStep.events;
     }
     const ignitionLengths = Object.fromEntries(
       ignitionState.candles.map(
@@ -188,8 +259,18 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
     ) {
       throw new Error("A candle ignited at countdown 1 did not join the same global burn settlement.");
     }
+    if (
+      !eventsMatchPattern(ignitionEvents, "ignite_from_wick") ||
+      !eventsMatchPattern(ignitionEvents, "boundary_ignite_participates") ||
+      !eventsMatchPattern(ignitionEvents, "burn_out")
+    ) {
+      throw new Error(
+        "Boundary ignition omitted its source, participation, or singleton burnout event.",
+      );
+    }
 
     let extinctionState = adapter.parseLevel(extinctionLevel);
+    let extinctionEvents: string[] = [];
     for (const input of ["right", "left", "up", "right", "right"]) {
       const result = adapter.step(pkg.mechanic, extinctionState, input, {
         winCondition: extinctionLevel.win ?? pkg.mechanic.win,
@@ -198,6 +279,7 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
         throw new Error(`Extinction boundary probe rejected '${input}'.`);
       }
       extinctionState = result.state;
+      extinctionEvents = result.events;
     }
     const extinguished = extinctionState.candles[0];
     if (
@@ -207,11 +289,18 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
     ) {
       throw new Error("A candle extinguished at countdown 1 incorrectly shortened.");
     }
+    if (
+      !eventsMatchPattern(extinctionEvents, "extinguish_by_wall") ||
+      !eventsMatchPattern(extinctionEvents, "boundary_extinguish_avoids_burn")
+    ) {
+      throw new Error("Boundary wall extinction omitted its cause or timing event.");
+    }
 
     return {
       id: "global_countdown_semantics",
       status: "pass",
-      reason: "Verified no-fire ticking, simultaneous burn, boundary ignition, and boundary extinction.",
+      reason:
+        "Verified no-fire ticking, simultaneous burn, boundary ignition, and boundary wall extinction with dedicated exposure events.",
     };
   } catch (error) {
     return fail("global_countdown_semantics", error);
@@ -391,16 +480,33 @@ function checkRuntimeBackedPlayable(pkg: PrototypePackage): CandleConformanceChe
   const missing = required.filter(
     (file) => !existsSync(path.join(pkg.root, "playable", file)),
   );
-  return missing.length === 0
+  if (missing.length > 0) {
+    return {
+      id: "runtime_backed_playable",
+      status: "unknown",
+      reason: `Build artifacts missing: ${missing.join(", ")}.`,
+    };
+  }
+
+  const bundledRuntime = readFileSync(path.join(pkg.root, "playable", "app.js"), "utf8");
+  const requiredExposureMarkers = [
+    "extinguish_by_wall",
+    "countdown_without_lit_candle",
+    "roll_last_brazier_before_endpoint",
+  ];
+  const staleMarkers = requiredExposureMarkers.filter(
+    (marker) => !bundledRuntime.includes(marker),
+  );
+  return staleMarkers.length === 0
     ? {
         id: "runtime_backed_playable",
         status: "pass",
-        reason: "Playable build artifacts exist.",
+        reason: "Playable artifacts exist and bundle the current exposure runtime markers.",
       }
     : {
         id: "runtime_backed_playable",
-        status: "unknown",
-        reason: `Build artifacts missing: ${missing.join(", ")}.`,
+        status: "fail",
+        reason: `Playable runtime bundle is stale; missing ${staleMarkers.join(", ")}.`,
       };
 }
 
