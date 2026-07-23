@@ -1,0 +1,184 @@
+id: candle_sokoban
+title: Candle Sokoban
+version: 1
+description: >
+  Throwaway runtime prototype for rigid multi-cell candles that can be pushed
+  along their axis or rolled sideways, transmit fire through projected wick
+  cells, share one global burn countdown, and light every brazier to win.
+
+layers:
+  - terrain
+  - actor
+  - object
+  - projection
+
+objects:
+  floor:
+    glyph: "."
+    layer: terrain
+    traits: [walkable]
+  wall:
+    glyph: "#"
+    layer: terrain
+    traits: [solid, wick_concealer]
+  player:
+    glyph: "@"
+    layer: actor
+    traits: [player]
+  candle:
+    glyph: "1r"
+    layer: object
+    traits: [solid, rigid, pushable, rollable, wick_projector, burnable]
+  brazier:
+    glyph: "o"
+    layer: object
+    traits: [solid, permanent_when_lit, fire_source_when_lit]
+  wick_projection:
+    glyph: "*"
+    layer: projection
+    traits: [non_solid, overlap, fire_source_when_lit]
+
+inputs:
+  up:
+    intent: move
+    dir: up
+    cost: 1
+  down:
+    intent: move
+    dir: down
+    cost: 1
+  left:
+    intent: move
+    dir: left
+    cost: 1
+  right:
+    intent: move
+    dir: right
+    cost: 1
+
+rules:
+  - id: walk
+    priority: 10
+    phase: input
+    trigger:
+      input: move
+      destination: free
+    effect:
+      move_player: input.dir
+      entering_exposed_flame_sets_dead: true
+    emits: [walk, player_died]
+    effects:
+      reads: [player.position, terrain, candle.position, brazier.position, wick_projection]
+      writes: [player.position, player.dead]
+      emits: [walk, player_died]
+      locality: local
+      reversible: conditional
+
+  - id: move_candle
+    priority: 20
+    phase: input
+    trigger:
+      input: move
+      destination_has: candle
+    branches:
+      - id: axis_push
+        when:
+          input_parallel_to_candle_axis: true
+        effect:
+          translate_candle_cells: 1
+          player_enters_contacted_body_origin: true
+        emits: [push_axis]
+        effects:
+          reads: [player.position, candle.position, terrain, brazier.position]
+          writes: [player.position, candle.position]
+          emits: [push_axis]
+          locality: local
+          reversible: conditional
+      - id: side_roll
+        when:
+          input_perpendicular_to_candle_axis: true
+        effect:
+          translate_until_next_body_step_blocked: true
+          settle_contacts_after_each_small_step: true
+          player_moves_one_cell_only: true
+        emits: [roll_step, roll_candle]
+        effects:
+          reads: [player.position, candle.position, terrain, brazier.position]
+          writes: [player.position, candle.position, candle.lit, brazier.lit]
+          emits: [roll_step, roll_candle]
+          locality: spatial_nonlocal
+          reversible: conditional
+
+  - id: contact_settlement
+    priority: 30
+    phase: automatic
+    trigger:
+      after_each_movement_small_step: true
+    effect:
+      extinguish_concealed_wicks_first: true
+      recursively_ignite_exposed_same_cell_wicks: true
+      light_same_cell_braziers: true
+    emits: [extinguish, ignite, light_brazier]
+    effects:
+      reads: [candle.position, candle.lit, terrain, brazier.position, brazier.lit]
+      writes: [candle.lit, brazier.lit]
+      emits: [extinguish, ignite, light_brazier]
+      locality: spatial_nonlocal
+      reversible: "false"
+
+  - id: global_burn_and_shrink
+    priority: 40
+    phase: end_of_turn
+    trigger:
+      after_successful_action: true
+    effect:
+      advance_global_countdown_even_without_lit_candles: true
+      reset_global_countdown_after_burn_settlement: true
+      shrink_all_currently_lit_candles_simultaneously: true
+      restrict_shrink_transfer_to_vacated_cells: true
+    emits: [countdown, shrink, burn_out, shrink_ignite]
+    effects:
+      reads: [globalBurnCycle, globalBurnCountdown, candle.position, candle.lit]
+      writes: [globalBurnCountdown, candle.position, candle.lit]
+      emits: [countdown, shrink, burn_out, shrink_ignite]
+      locality: spatial_nonlocal
+      reversible: "false"
+
+  - id: check_win
+    priority: 50
+    phase: end_of_turn
+    trigger:
+      after_burn_settlement: true
+    effect:
+      win_when_all_braziers_lit_and_player_alive: true
+    emits: [win_all_braziers_lit]
+    effects:
+      reads: [brazier.lit, player.dead]
+      writes: []
+      emits: [win_all_braziers_lit]
+      locality: global
+      reversible: "true"
+
+win:
+  type: all_braziers_lit
+  description: All braziers are lit and the player is alive after full turn settlement.
+
+counterfactuals:
+  no_candle_movement:
+    disable_rules: [move_candle]
+
+optimizations:
+  reachability_macro:
+    status: fail
+    requires:
+      - player_walk_side_effect_free
+    notes: >
+      Successful walking advances the global countdown, so walking cannot be collapsed
+      into a reachability macro.
+
+export:
+  puzzlescript_next:
+    status: unavailable
+    notes: >
+      Projection overlap, recursive fire closure, per-substep rolling contacts,
+      global countdown settlement, and simultaneous shrink are runtime-only in this prototype.

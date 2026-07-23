@@ -1,0 +1,277 @@
+prototype_context:
+  confirmed_rules:
+    - 全局燃烧周期固定为 5，所有有效行动推进同一个倒计时。
+    - 归零时所有仍点燃的蜡烛同时缩短；缩短腾格可触发同格烛芯传火。
+    - 侧滚逐格处理点燃、火盆接触与遮蔽熄灭。
+  win_condition: 玩家存活且全部火盆点亮
+  object_and_event_semantics: 以 CANDLE_SOKOBAN_DESIGN.md 和 CANDLE_SOKOBAN_ASCII.md 为准
+  tool_boundary: solver 与 graph 只提供机械证据，不提供审美或难度评分
+
+slot_brief:
+  intended_role: 当前本地试玩队列中的高难综合机制候选
+  target: 把固定五回合燃烧、缩短传火、遮蔽熄灭和火盆重燃串成一条可读因果链
+  difficulty_expectation: highest_available_unscored
+
+mechanic_exposure_context:
+  mechanic_window: canonical_shortest_trace
+  allowed_exposure_through: not_claimed
+  claimed_core_events:
+    canonical_only:
+      - step_5_shrink_ignite_candle_2
+      - step_6_light_relay_then_extinguish
+      - step_10_burn_out_candle_1
+      - step_13_reignite_candle_2
+      - step_22_light_final_brazier_and_win
+    all_shortest:
+      - one_shared_non_walk_event_signature
+  latest_exposure_timing_check:
+    derived_latest_event_stage: RU3
+    claimed_latest_exposed_event: canonical_step_13_ignite_candle_2
+    all_solution_required_evidence_ref: not_claimed
+    canonical_occurrences:
+      - step: 13
+        operation_segment_ref: OP4
+        reasoning_unit_refs: [RU3]
+    status: later_phase_present
+    revision_direction: none
+
+design_target:
+  aesthetic_score_target: unscored_missing_human_archive_context
+  difficulty_score_target: highest_available
+  target_role_notes: 不作量化评分；等待真实玩家试玩校准
+
+solve_instance:
+  layout: |-
+    ############
+    #..........#
+    #.....#....#
+    #......1.o.#
+    #..222rD...#
+    #..........#
+    #@.....o...#
+    #......#...#
+    #.....#....#
+    ############
+  player_start: [1, 6]
+  player_goal: all_braziers_lit
+  win_condition: all_braziers_lit
+
+mechanism_scope:
+  central:
+    - first_boundary_shrink_ignition
+    - relay_light_then_concealment_extinction
+    - stable_brazier_reignition_on_return_roll
+  allowed_support:
+    - axial_push
+    - player_routing
+    - later_candle_shrink
+  incidental_allowed:
+    - equivalent_walk_order_variants
+  required_winning_path_events: []
+  forbidden_winning_path_events: []
+  forbidden_if_seen_anywhere: []
+
+player_reasoning:
+  canonical_trace_ref: level_analysis_CANDLE_FRESH_01_BURNED_GATE_RETURN.json
+  player_goal:
+    description: 用同一根运输烛先点亮中继火盆，再取回火种点亮终点
+    state_ref: initial
+  reasoning_units:
+    - id: RU1
+      player_question: 被火烛烛身遮住的运输烛怎样取得第一簇火？
+      premises:
+        - statement: candle#2 的右向烛芯与 candle#1 的燃烧端烛身同格
+          state_ref: initial
+        - statement: 第五个有效行动会让 candle#1 从燃烧端缩短
+          state_ref: initial_countdown_5
+      conclusion: 先抵达向下侧滚施力位，让第五步缩短负责点燃 candle#2
+      operation_refs: [OP1, OP2]
+      alternative:
+        status: not_claimed
+        description: 不声明其它路线的玩家自然性
+        local_gain: none
+        from_state_ref: initial
+        result_state_ref: not_applicable
+        concrete_outcome: not_applicable
+      feedback:
+        - state_ref: step_5
+          visible_change: candle#1 长度变 1，candle#2 端帽由 r 变 R
+    - id: RU2
+      player_question: 为什么点亮中继火盆后必须先放弃运输烛上的火？
+      premises:
+        - statement: 向下滚动会经过 (7,6) 火盆，终点烛芯落入 (7,7) 墙格
+          state_ref: step_5
+        - statement: candle#1 要到下一燃烧边界才会完全消失
+          state_ref: step_6
+      conclusion: 接受遮蔽熄灭，利用行走推进第二个边界并打开回程
+      operation_refs: [OP2, OP3]
+      alternative:
+        status: replayed_attempt
+        description: 到达运输烛左端后直接向右端推
+        local_gain: 更靠近最终火盆
+        from_state_ref: step_6
+        exact_inputs: [down, down, left, down, right]
+        result_state_ref: step_10_plus_blocked_input
+        concrete_outcome: x7,y7 的墙使 axis_push_blocked，蜡烛未移动
+      feedback:
+        - state_ref: step_6
+          visible_change: 中继火盆点亮且 candle#2 熄灭
+        - state_ref: step_10
+          visible_change: candle#1 完全燃尽，原占位清空
+    - id: RU3
+      player_question: 清路后怎样恢复火种并完成最后接触？
+      premises:
+        - statement: (7,6) 已点亮火盆是永久火源
+          state_ref: step_10
+        - statement: 反向侧滚让 candle#2 的烛芯再次经过该火盆
+          state_ref: step_12
+      conclusion: 向上滚动重燃，再绕到左端连续端推
+      operation_refs: [OP4, OP5, OP6]
+      alternative:
+        status: not_claimed
+        description: 不声明更长胜解不存在
+        local_gain: none
+        from_state_ref: step_10
+        result_state_ref: not_applicable
+        concrete_outcome: not_applicable
+      feedback:
+        - state_ref: step_13
+          visible_change: candle#2 反向滚动并由中继火盆重燃
+        - state_ref: step_22
+          visible_change: 最终火盆点亮，全部目标完成
+  operation_segments:
+    - id: OP1
+      step_range: 1-5
+      exact_inputs: [up, up, up, right, right]
+      purpose: 抵达侧滚施力位并在第五步触发缩短传火
+      supports_reasoning_units: [RU1]
+    - id: OP2
+      step_range: 6-6
+      exact_inputs: [down]
+      purpose: 点亮中继火盆并在终点遮蔽熄灭
+      supports_reasoning_units: [RU1, RU2]
+    - id: OP3
+      step_range: 7-12
+      exact_inputs: [down, down, left, down, down, right]
+      purpose: 推进第二燃烧边界并绕到运输烛下方
+      supports_reasoning_units: [RU2]
+    - id: OP4
+      step_range: 13-13
+      exact_inputs: [up]
+      purpose: 反向滚动经过中继火盆重燃并返回上层
+      supports_reasoning_units: [RU3]
+    - id: OP5
+      step_range: 14-18
+      exact_inputs: [up, up, up, left, up]
+      purpose: 绕到缩短后运输烛的左端
+      supports_reasoning_units: [RU3]
+    - id: OP6
+      step_range: 19-22
+      exact_inputs: [right, right, right, right]
+      purpose: 沿长轴把火焰送入最终火盆
+      supports_reasoning_units: [RU3]
+  resolution:
+    resolves: [RU1, RU2, RU3]
+    operation_refs: [OP1, OP2, OP3, OP4, OP5, OP6]
+    final_state_ref: step_22
+    visible_confirmation: 两个火盆均为 O，事件含 win_all_braziers_lit
+  trace_partition:
+    status: complete
+    ordered_segment_ids: [OP1, OP2, OP3, OP4, OP5, OP6]
+    uncovered_steps: []
+    overlapping_steps: []
+
+evidence:
+  commands_run:
+    - npx tsx src/cli.ts solve prototypes/candle_sokoban CANDLE_FRESH_01_BURNED_GATE_RETURN
+    - npx tsx src/cli.ts explain-level prototypes/candle_sokoban CANDLE_FRESH_01_BURNED_GATE_RETURN --max-states 500000 --graph-max-states 1000000 --write
+    - npx tsx prototypes/candle_sokoban/reports/audit_CANDLE_FRESH_01_shortest.ts
+    - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban prototypes/candle_sokoban/reports/CANDLE_FRESH_01_LAYOUT.txt --id CANDLE_FRESH_01_ALT_AXIS_BLOCK --inputs up,up,up,right,right,down,down,down,left,down,right --write
+  solver_result: solved_cost_22_explored_20241
+  trace_summary: 22 步规范解覆盖两次侧滚、四次端推和四个燃烧边界
+  target_events:
+    - shrink_ignite:candle#2@5
+    - light_brazier:7,6@6
+    - extinguish:candle#2:concealed@6
+    - burn_out:candle#1@10
+    - ignite:candle#2@13
+    - light_brazier:9,3@22
+  object_or_instance_evidence: exact trace 使用 candle#1 作为一次性门与点火器，candle#2 作为往返运输烛
+  winning_path_event_checks: all-shortest 审计在深度 22 完整，48 条最短输入序列仅有 1 种非行走事件签名
+  replayed_attempt_evidence: input_replay_CANDLE_FRESH_01_ALT_AXIS_BLOCK.json 在第 11 步返回 axis_push_blocked
+  reachable_event_exposure: not_claimed
+  graph_or_counterfactual_evidence:
+    - graph 在 1000000 状态预算耗尽，不能作为完整可达图
+    - no_candle_movement 反事实完整搜索无解
+  evidence_limits:
+    - 不声称所有任意长度胜解都遵循同一事件链
+    - 不声称完整图唯一性
+    - 不提供审美或量化难度结论
+
+solution_uniqueness:
+  result: equivalent_variants_only
+  evidence_refs:
+    - CANDLE_FRESH_01_SHORTEST_AUDIT.json
+    - audit_CANDLE_FRESH_01_shortest.ts
+
+hard_fact_summary_for_critic:
+  solver: cost_22_explored_20241
+  required_or_forbidden_events: no_all_solution_claim
+  routed_diagnostic_facts: graph_exhausted_at_1000000
+  calibrated_trace_metrics:
+    status: unavailable
+    reason: calibration_missing
+  evidence_limits: no_human_archive_context_no_score
+  artifact_refs:
+    - level_analysis_CANDLE_FRESH_01_BURNED_GATE_RETURN.json
+    - CANDLE_FRESH_01_SHORTEST_AUDIT.json
+    - input_replay_CANDLE_FRESH_01_ALT_AXIS_BLOCK.json
+
+diagnostic_routing:
+  hard_evidence: evidence_reviewer
+  mechanism_scope: evidence_reviewer
+  design_evidence_alignment: evidence_reviewer
+  taste_probes: unavailable_without_human_archive
+  scc_graph: exhausted_do_not_use_for_complete_claims
+  variant_family: fresh
+  start_position: fixed_by_layout
+  prototype_specific_work: none
+
+prototype_specific_contracts:
+  interface_pair_policy:
+    declared_interface_points: []
+    target_pairs: []
+    ignored_pair_classes: []
+    risky_pair_classes: []
+  pair_diagnostics:
+    ignored_pairs: []
+    risky_pairs: []
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: none
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: 蜡烛原型没有可用的人类评审 clean archive
+
+attempt_log:
+  serious_structural_attempts:
+    - v0 因火烛误写为未点燃而完整图无胜路
+    - v1 修正初始点燃状态后得到 22 步解
+  local_repairs:
+    - d 改为 D
+  abandoned_families:
+    - CANDLE_CHALLENGE_03_BURIED_WICK_RELAY_legacy_unreviewed
+
+archive_taste_context:
+  examples: []
+  none_found_reason: prototypes/candle_sokoban 下没有人类评分或评语支持的 clean archive
+
+claim_last_review:
+  mode: not_used
+  facts_packet: not_applicable
+  claim_packet: not_applicable
+  read_order: not_applicable

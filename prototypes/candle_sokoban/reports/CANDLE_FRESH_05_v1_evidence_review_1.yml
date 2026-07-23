@@ -1,0 +1,135 @@
+review_iteration: 1
+candidate_version_reviewed: v1
+review_input_type: candidate_version
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: evidence.solver_result
+    evidence_basis: >
+      level_analysis_CANDLE_FRESH_05_PHASE_SPLIT_WEAVE.json 与同名 Markdown
+      均给出 cost/depth=22、exploredStates=561；规范 replay 有 22 个非空输入，
+      replay.completed=true、legalThroughStep=22，全部 22 步合法。analysis 的
+      22 个 keySnapshots 与 replay 的逐步 input、events、before/after render
+      完全一致；step 22 产生 light_brazier:9,8 与 win_all_braziers_lit，
+      after.isWin 和 final.isWin 均为 true。
+  - target_ref: mechanic_exposure_context.claimed_core_events
+    evidence_basis: >
+      规范回放逐项给出十五个声明事件：step 1 为 light_brazier:10,3 与
+      extinguish:candle#1:concealed；step 5 为 shrink:candle#2:len2、
+      shrink:candle#4:len1 与 shrink_ignite:candle#1；steps 8-10 三次
+      push_axis:candle#4，step 10 又产生 shrink:candle#1:len3、
+      shrink:candle#2:len1 与 burn_out:candle#4；step 15 为
+      light_brazier:8,5、ignite:candle#3、再次 extinguish:candle#1:concealed、
+      burn_out:candle#2 与 shrink:candle#3:len2；step 20 为
+      shrink:candle#3:len1；step 22 为 light_brazier:9,8。对象、长度和坐标
+      均与 packet 一致。
+  - target_ref: mechanism_scope.required_winning_path_events
+    evidence_basis: >
+      CANDLE_FRESH_05_REQUIRED_EVENTS_AUDIT.json 的 required_events 与 packet
+      十五项逐字一致；搜索以 complete 结束，explored_states=2520、
+      bypass_found=false，未发现缺少任一指定事件的获胜路径。因此这里支持的是
+      十五个 event pattern 在每条胜路中至少出现一次，而不是由单条规范轨迹
+      推出 all-solution 必要性。
+  - target_ref: mechanism_scope.central
+    evidence_basis: >
+      CANDLE_FRESH_05_ORDERED_CHAIN_AUDIT.json 把开局左滚点亮 10,3 后遮熄
+      candle#1、首边界形成 A4/B2 且 lock1 并 shrink_ignite A、至少三次左推
+      candle#4、第二边界形成 A3/B1 且 lock burn_out、归零下滚依次点亮 8,5、
+      点燃 candle#3、遮熄 candle#1 并在同边界烧尽 B/缩短 C2、下一边界 C1、
+      最后右滚点亮 9,8 七个阶段编码为有序门。该审计在 50,000 预算内以
+      complete 结束，探索 3,956 个 state-phase-push 组合且 bypass_found=false，
+      支持 packet 的 all-winning-path 顺序、首/二/三边界状态以及 lock 至少
+      三次左推声明。central 中“首边界只能缩短 candle#2”按其 A/B 相位差上下文
+      指两根主烛中只有 B 缩短；同一边界另有上层锁 candle#4 缩成单格，
+      packet 与证据都没有隐去该事件。
+  - target_ref: mechanic_exposure_context.latest_exposure_timing_check
+    evidence_basis: >
+      packet 提供的等价 exposure sequence 最后一个含 new_events 的 stage 是
+      delayed_relay_window。该 stage 中规范时间最晚且由 complete all-solution
+      required gate 支持的声明事件是 light_brazier:9,8。规范 optimal replay
+      的全部 occurrence 只有 step 22；step 22 精确落入 OP4 的 21-22 范围，
+      OP4 支持 RU3。独立复核结果为
+      delayed_relay_window -> light_brazier:9,8 -> step 22 -> OP4 -> RU3，
+      满足三 reasoning-unit 候选的 later-phase timing gate，不是
+      required_but_frontloaded。level analysis 主图 status=complete，
+      reachableStateCount=1701，未发生 graph-exhausted 降级。
+  - target_ref: player_reasoning.trace_partition
+    evidence_basis: >
+      OP1..OP4 的闭区间依次为 1-5、6-14、15-20、21-22，连续覆盖全部
+      22 步且无重叠或缺口。四段 exact_inputs 分别与 replay 相同区间的 action
+      序列完全一致；段内反馈也分别对上 step 1/5 的首相位、step 10 的
+      A3/B1/lock burn_out、step 15/20 的接力缩短，以及 step 22 的最终点火胜利。
+  - target_ref: player_reasoning.reasoning_units.RU1.alternative
+    evidence_basis: >
+      input_replay_CANDLE_FRESH_05_ALT_PREBOUNDARY_LOCK.json 的五个输入非空并
+      与 packet 一致。前四步合法，step 5 的 left 为
+      legal=false、stoppedReason=destination_blocked、events=[]；
+      before/after state key 相同且倒计时保持 1/5，final.isWin=false，
+      与 concrete_outcome 一致。
+  - target_ref: player_reasoning.reasoning_units.RU2.alternative
+    evidence_basis: >
+      input_replay_CANDLE_FRESH_05_ALT_LOCK_TIMING.json 的前五步与规范前缀
+      相同；从 canonical after step 5 起的 steps 6-10 正是
+      [left,left,left,right,left]。steps 6-8 三次 push_axis:candle#4，
+      steps 9-10 为 walk；step 10 的第二边界仍产生
+      shrink:candle#1:len3、shrink:candle#2:len1 与 burn_out:candle#4。
+      其后回放沿同一出口完成且最终胜利，支持该尝试只是局部等价等待/换序，
+      没有改变声明的非走路阶段链。
+  - target_ref: player_reasoning.reasoning_units.RU3.alternative
+    evidence_basis: >
+      input_replay_CANDLE_FRESH_05_ALT_RELAY_BURNOUT.json 的前 20 步与规范
+      prefix 相同；其后八个输入正是 packet 所列
+      [left,right,left,right,left,right,right,right]。step 25 产生
+      burn_out:candle#3；steps 26-28 只发生 walk/countdown，玩家到达原推动位
+      也没有 candle#3 可滚。final 中火盆 9,8 仍为 0、isWin=false，
+      与 concrete_outcome 一致。
+  - target_ref: player_reasoning.resolution
+    evidence_basis: >
+      规范 replay 的 step 22 after/final 状态中三个火盆 10,3、8,5、9,8
+      均为已点亮，玩家仍存在，final.isWin=true；这与 all_braziers_lit
+      的目标状态、最终右滚 operation、点火反馈和完成反馈一致。
+  - target_ref: solution_uniqueness
+    evidence_basis: >
+      result=equivalent_variants_only 属于 reviewer 允许枚举。
+      CANDLE_FRESH_05_SHORTEST_AUDIT.json 的搜索状态为
+      complete_through_shortest_depth，shortest_depth=22；完整枚举的 72 条
+      最短输入序列只有 1 个忽略 walk/countdown 后的 non-walk event signature。
+      该签名与规范 replay 和 ordered all-solution gate 没有明显冲突，因此
+      equivalent_variants_only 在“全部最短解共享一个非走路事件签名”的证据
+      范围内合法；它不扩张为所有非最短胜路唯一。
+  - target_ref: evidence.graph_or_counterfactual_evidence
+    evidence_basis: >
+      level analysis 的主图为 complete：1701 个可达状态、4579 条合法转移、
+      2 个胜利状态，maxStates=50000 未耗尽；no_candle_movement 反事实也以
+      complete 结束，exploredStates=1、solvable=false。这只支持完整图聚合事实
+      和“禁用全部蜡烛移动时不可解”的窄机械事实；packet 未把它们写成质量结论。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - >
+    required-event complete gate 证明十五个 event patterns 在每条胜路中至少
+    出现一次，不单独证明唯一 occurrence、固定 step 或固定 action boundary；
+    严格顺序和边界状态依赖独立的 ordered-chain complete gate。
+  - >
+    ordered-chain gate 只支持它编码的七阶段、状态谓词和至少三次 lockPushes；
+    它不证明阶段间所有 walk 输入唯一，也不排除 packet 已允许的不改变非走路
+    事件签名的等价等待位置。
+  - >
+    equivalent_variants_only 的直接枚举范围是完整最短深度 22；72 条最短输入
+    序列共享一个非 walk/countdown 事件签名，不等于所有任意长度胜路只有一个
+    输入序列或一个全局解族。
+  - >
+    三条 alternative replay 只证明各自精确输入的具体结果；全胜路排除来自
+    complete required-event 与 ordered-chain audits，而不是从单个失败/等价
+    尝试外推。
+  - >
+    complete graph 的两个 winning states、SCC 分支与汇合数据没有
+    player_facing_interpretation，按 SCC/graph 审查规则 verdict_effect 为 none；
+    它们不能自行推出方案唯一性、玩家推理价值或候选质量。
+  - >
+    no_candle_movement 反事实只证明至少需要某种蜡烛移动，不能单独证明任一
+    具体对象、具体滚动、遮火、缩短或接力步骤的 per-object necessity。
+  - >
+    本次审查没有使用 calibrated_trace_metrics，也不评价审美、趣味、人类难度、
+    玩家是否自然读出机制或 campaign placement。
+questions_for_designer: []

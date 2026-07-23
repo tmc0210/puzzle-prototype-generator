@@ -150,6 +150,9 @@ const inputByKey: Record<string, InputId> = {
   D: "right",
 };
 
+const replayInitialFrameMs = 650;
+const replayStepFrameMs = 320;
+
 const appRoot = document.querySelector<HTMLElement>("#app");
 if (!appRoot) {
   throw new Error("Missing #app root element");
@@ -370,10 +373,10 @@ function renderPlayArea(entry: CandidateEntry | undefined, level: LevelDoc | und
             class="primary-button"
             type="button"
             data-action="replay"
-            ${hasReplay || level ? "" : "disabled"}
-            title="回放"
+            ${hasReplay && !replaying ? "" : "disabled"}
+            title="${hasReplay ? (replaying ? "正在回放" : "回放") : "无可用回放"}"
           >
-            Replay
+            ${replaying ? "回放中…" : "Replay"}
           </button>
           <div class="toolbox">
             <button
@@ -630,9 +633,13 @@ function renderPlayStatus(): string {
     return `<span class="play-status" title="未选择候选">未选择候选</span>`;
   }
   const className = playState.won ? "play-status win" : "play-status";
-  const text = playState.won
-    ? `已达成胜利，${playState.moveCount} 步`
-    : `${playState.moveCount} 步，${playState.lastEvents.length > 0 ? playState.lastEvents.join(", ") : "等待输入"}`;
+  const actionText = replaying
+    ? `正在回放，${playState.moveCount} / ${expectedInputsForLevel(playState.level).length} 步`
+    : playState.won
+      ? `已达成胜利，${playState.moveCount} 步`
+      : `${playState.moveCount} 步，${playState.lastEvents.length > 0 ? playState.lastEvents.join(", ") : "等待输入"}`;
+  const stateText = adapter.describeState?.(playState.current).join(" · ");
+  const text = stateText ? `${stateText} · ${actionText}` : actionText;
   return `<span class="${className}" title="${escapeAttribute(text)}">${escapeHtml(text)}</span>`;
 }
 
@@ -897,19 +904,23 @@ async function replayExpected(): Promise<void> {
   const key = entry ? entryKey(entry) : "";
   resetPlayStateForSelection();
   render();
-  for (const input of inputs) {
-    await sleep(140);
-    if (selectedEntryKey !== key) {
-      break;
+  try {
+    await sleep(replayInitialFrameMs);
+    for (const input of inputs) {
+      if (selectedEntryKey !== key) {
+        break;
+      }
+      if (playState?.won && isTerminalWinCondition(levelWin(playState.level))) {
+        break;
+      }
+      applyInput(input);
+      render();
+      await sleep(replayStepFrameMs);
     }
-    if (playState?.won && isTerminalWinCondition(levelWin(playState.level))) {
-      break;
-    }
-    applyInput(input);
+  } finally {
+    replaying = false;
     render();
   }
-  replaying = false;
-  render();
 }
 
 function applyInput(input: InputId): void {

@@ -1,0 +1,454 @@
+candidate_id: CANDLE_FRESH_04_SMOTHERED_REVERSE_RELAY
+candidate_version: v2
+title: 灭焰逆渡
+
+prototype_context:
+  confirmed_rules:
+    - 全局燃烧周期固定为 5；每次有效行动推进一次，无效输入不推进
+    - 倒计时从 1 结算时，所有仍点燃蜡烛同步缩短或燃尽
+    - 烛身遮挡火焰时蜡烛立即熄灭；侧滚逐格处理点火、遮挡与火盆接触
+    - 已熄灭蜡烛可以从原烛芯端反向轴推，烛芯接触火焰时可以重新点燃
+    - 玩家存活且全部火盆点亮时胜利
+  win_condition: all_braziers_lit
+  object_and_event_semantics: 以 CANDLE_SOKOBAN_DESIGN.md 和 CANDLE_SOKOBAN_ASCII.md 为准
+  tool_boundary: >
+    solver、完整状态图、事件门、结构门和反事实只支持机械事实；不据此宣称
+    人类感知难度、审美分数、自然度或 campaign 位置。
+
+slot_brief:
+  intended_role: challenge_or_capstone_candidate
+  target: >
+    把主动熄灭变成获得反向端推权限的必要中间态，再要求精确改列、稳定火源重燃、
+    反向运输和接力烛高度窗口，形成三个连续且彼此依赖的推理阶段。
+  difficulty_expectation: highest_available_unscored_missing_human_archive_context
+
+mechanic_exposure_context:
+  mechanic_window:
+    - stage: forced_smother_and_release
+      new_events:
+        - light_brazier:12,5
+        - extinguish:candle#1:concealed
+        - burn_out:candle#single1
+    - stage: reverse_alignment_and_reignite
+      new_events:
+        - push_axis:candle#1
+        - ignite:candle#1
+    - stage: reverse_relay_transfer
+      new_events:
+        - ignite:candle#2
+        - light_brazier:13,2
+    - stage: delayed_relay_height_and_completion
+      new_events:
+        - shrink:candle#2:len3
+        - shrink:candle#2:len2
+        - light_brazier:14,4
+  allowed_exposure_through: delayed_relay_height_and_completion
+  claimed_core_events:
+    - extinguish:candle#1:concealed
+    - burn_out:candle#single1
+    - burn_out:candle#single4
+    - ignite:candle#1
+    - ignite:candle#2
+    - shrink:candle#2:len3
+    - shrink:candle#2:len2
+    - light_brazier:12,5
+    - light_brazier:13,2
+    - light_brazier:14,4
+  latest_exposure_timing_check:
+    derived_latest_event_stage: delayed_relay_height_and_completion
+    claimed_latest_exposed_event: light_brazier:14,4
+    all_solution_required_evidence_ref: CANDLE_FRESH_04_REQUIRED_EVENTS_AUDIT.json
+    canonical_occurrences:
+      - step: 57
+        operation_segment_ref: OP7
+        reasoning_unit_refs: [RU3]
+    status: later_phase_present
+    revision_direction: none
+
+design_target:
+  aesthetic_score_target: unscored_missing_human_archive_context
+  difficulty_score_target: target_3_plus_unscored
+  target_role_notes: >
+    作为当前规则集最高难度方向候选送人工试玩；没有 clean human-reviewed archive，
+    因而不声明量化难度、审美达标或正式 campaign 位置。
+
+solve_instance:
+  layout: |-
+    ##################
+    #..##########....#
+    #............o...#
+    #...........Du...#
+    #............2o..#
+    #...........o2...#
+    #..11111111R.2...#
+    #........R.@#.####
+    #..........O..####
+    #..###############
+    ##################
+  player_start: "11,7"
+  player_goal: not_applicable
+  win_condition: all_braziers_lit
+
+mechanism_scope:
+  central:
+    - 主烛第一次上滚必须先点亮火盆 12,5，再被 candle#single1 烛身遮火而熄灭
+    - candle#single1 与致死火焰闩 candle#single4 必须在首个燃烧边界燃尽
+    - 已熄灭主烛必须从原烛芯侧向左轴推一格，留下 x=2..10、y=2 的精确对齐
+    - 主烛必须从该对齐位置下滚到 y=8，使烛芯经过稳定火盆 11,8 而重新点燃
+    - 主烛回到上层后向右轴推，点亮火盆 13,2 并点燃同格烛芯的 candle#2
+    - candle#2 必须连续缩短到 len3 与 len2，使朝上火焰下降到火盆 14,4 所在行后右滚完成
+  allowed_support:
+    - 有效走位推进固定五拍全局倒计时
+    - 侧滚持续到实体阻挡
+    - 火盆永久点亮
+    - 点燃的主烛在运输过程中同步缩短
+  incidental_allowed:
+    - 不改变非 walk/countdown 事件序列的等价走位变体
+  required_winning_path_events:
+    - extinguish:candle#1:concealed
+    - burn_out:candle#single1
+    - burn_out:candle#single4
+    - ignite:candle#1
+    - ignite:candle#2
+    - shrink:candle#2:len3
+    - shrink:candle#2:len2
+    - light_brazier:12,5
+    - light_brazier:13,2
+    - light_brazier:14,4
+  forbidden_winning_path_events: []
+  forbidden_if_seen_anywhere: []
+
+player_reasoning:
+  canonical_trace_ref: input_replay_CANDLE_FRESH_04_SMOTHERED_REVERSE_RELAY.json
+  player_goal:
+    description: >
+      点亮三个未燃火盆；利用开局稳定火盆重新点燃主烛，再把火传给竖直接力烛。
+    state_ref: initial_state
+  reasoning_units:
+    - id: RU1
+      player_question: >
+        开局三面受限时，为什么必须把点燃的主烛向上滚，并接受它在途中熄灭？
+      premises:
+        - statement: 玩家右侧是墙、下方是稳定火盆实体，左侧一步会进入 candle#single4 的火焰并死亡
+          state_ref: initial_state
+        - statement: 主烛朝右点燃，玩家不能从其燃烧端向左轴推；上方滚动路径先经过火盆 12,5，再经过 candle#single1 烛身
+          state_ref: initial_state
+      conclusion: >
+        只有向上侧滚能形成存活进程；滚动先取得第一个目标，再让烛身遮住火焰，
+        把主烛转成可从原烛芯侧反推的未燃状态。随后用有效走位推进首个边界，
+        等遮火锁烛与致死火焰闩燃尽，才进入主烛右侧。
+      operation_refs: [OP1]
+      alternative:
+        status: replayed_attempt
+        description: 开局向左，试图直接接近主烛原烛芯侧
+        local_gain: 立即进入主烛右端附近的一格
+        from_state_ref: initial_state
+        exact_inputs: [left]
+        result_state_ref: input_replay_CANDLE_FRESH_04_ALT_START_LEFT.json#final
+        concrete_outcome: >
+          第 1 步虽然是合法 walk，却同时出现 player_died:candle#single4；玩家死亡，
+          所有火盆仍未新增点亮，不能继续取得主烛右端站位。
+      feedback:
+        - state_ref: canonical_after_step_1
+          visible_change: 火盆 12,5 已亮，主烛停在 y=2 且变为未点燃
+        - state_ref: canonical_after_step_5
+          visible_change: candle#single1 与 candle#single4 同时燃尽，主烛右侧和下层入口开放
+    - id: RU2
+      player_question: >
+        已熄灭主烛应向左反推几格，之后怎样重新点燃并把它送回上层？
+      premises:
+        - statement: 上墙只有 x=1..2 的缺口；主烛原本占 x=3..11、y=2，未改列时无法从上侧向下滚
+          state_ref: canonical_after_step_5
+        - statement: 稳定火盆位于 11,8；主烛向左一格后烛芯落在 x=10，向下滚时火焰接触范围会经过该火盆
+          state_ref: canonical_after_step_9
+        - statement: 若再左推一格，主烛会占 x=1..9、y=2，把玩家进入上方滚位所需的左入口封死
+          state_ref: input_replay_CANDLE_FRESH_04_ALT_OVER_SHIFT.json#after_step_10
+      conclusion: >
+        主烛必须只左推一格到 x=2..10。玩家从左侧缺口绕到其上方并向下滚，
+        主烛到 y=8 时从稳定火盆重新取火；再经下层缺口绕回并向上滚，才能在
+        上层从左向右轴推，把火送到第二目标与接力烛。
+      operation_refs: [OP2, OP3, OP4, OP5]
+      alternative:
+        status: replayed_attempt
+        description: 在正确左推一格后再额外左推一格，再尝试进入上方滚位
+        local_gain: 让主烛烛芯进一步靠近稳定火盆所在列
+        from_state_ref: initial_state
+        exact_inputs: [up, up, up, up, down, up, right, up, left, left, down, left, left, left, left, left, left, left, left, left, up, up, right, down]
+        result_state_ref: input_replay_CANDLE_FRESH_04_ALT_OVER_SHIFT.json#final
+        concrete_outcome: >
+          第二次 left 把主烛推至 x=1..9、y=2；玩家绕到 x=1,3 后，第 21 步 up
+          因主烛封住缺口而 roll_blocked，回放只合法到第 20 步，无法执行下滚重燃。
+      feedback:
+        - state_ref: canonical_after_step_9
+          visible_change: 主烛只向左移动一格，左端 x=2 与上墙缺口精确对齐
+        - state_ref: canonical_after_step_24
+          visible_change: 主烛已滚到 y=8，并在滚动中出现 ignite:candle#1
+        - state_ref: canonical_after_step_34
+          visible_change: 主烛重新滚回 y=2，稳定火盆实体不再阻挡后续轴推
+        - state_ref: canonical_after_step_48
+          visible_change: 火盆 13,2 点亮，candle#2 同时点燃
+    - id: RU3
+      player_question: >
+        candle#2 刚点燃时火焰在第 2 行，什么时候右滚才能碰到第 4 行的最终火盆？
+      premises:
+        - statement: candle#2 朝上且初始总长四格，点燃时占 x=13、y=3..6，火焰位于 y=2
+          state_ref: canonical_after_step_48
+        - statement: 每次燃烧缩短都从上端移除一格，使朝上火焰向下移动一行
+          state_ref: confirmed_rule_shrink
+        - statement: 最终火盆位于 14,4；右滚从左侧施力，第一小步会让火焰经过该格
+          state_ref: canonical_after_step_55
+      conclusion: >
+        利用从第二目标向接力烛左侧绕行的有效动作跨过两个燃烧边界，使 candle#2
+        依次缩短到 len3 和 len2；火焰到 y=4 后立即从左侧右滚，第一小步点亮最终火盆。
+      operation_refs: [OP6, OP7]
+      alternative:
+        status: replayed_attempt
+        description: 在正确窗口前后继续绕行，等 candle#2 再缩短一次才右滚
+        local_gain: 仍能到达接力烛左侧并完成一次合法右滚
+        from_state_ref: initial_state
+        exact_inputs: [up, up, up, up, down, up, right, up, left, down, left, left, left, left, left, left, left, left, left, left, up, up, right, down, down, down, down, down, down, left, down, down, right, up, up, up, up, up, up, left, up, right, right, right, right, right, right, right, down, down, down, down, right, right, right, right, left, down, up, right, right]
+        result_state_ref: input_replay_CANDLE_FRESH_04_ALT_LATE_RELAY.json#final
+        concrete_outcome: >
+          第 60 步 candle#2 缩短到 len1，火焰降到 y=5；第 61 步右滚合法并到达右侧，
+          但没有 light_brazier:14,4，最终火盆仍暗且状态未胜利。
+      feedback:
+        - state_ref: canonical_after_step_50
+          visible_change: candle#2 缩短到 len3，火焰从 y=2 降到 y=3
+        - state_ref: canonical_after_step_55
+          visible_change: candle#2 缩短到 len2，火焰降到最终火盆所在 y=4
+        - state_ref: canonical_after_step_57
+          visible_change: 右滚第一小步点亮火盆 14,4，随后出现 win_all_braziers_lit
+  operation_segments:
+    - id: OP1
+      step_range: 1-5
+      exact_inputs: [up, up, up, up, down]
+      purpose: 强制上滚主烛，点亮第一目标、接受遮火熄灭，并推进首边界烧掉两根单格烛
+      supports_reasoning_units: [RU1]
+    - id: OP2
+      step_range: 6-9
+      exact_inputs: [up, right, up, left]
+      purpose: 进入主烛原烛芯侧，只向左轴推一格完成精确对齐
+      supports_reasoning_units: [RU2]
+    - id: OP3
+      step_range: 10-24
+      exact_inputs: [down, left, left, left, left, left, left, left, left, left, left, up, up, right, down]
+      purpose: 绕过左上缺口站到主烛上侧，向下滚到 y=8 并从稳定火盆重新点燃
+      supports_reasoning_units: [RU2]
+    - id: OP4
+      step_range: 25-34
+      exact_inputs: [down, down, down, down, down, left, down, down, right, up]
+      purpose: 经左下缺口回到主烛下侧，再把点燃主烛滚回上层
+      supports_reasoning_units: [RU2]
+    - id: OP5
+      step_range: 35-48
+      exact_inputs: [up, up, up, up, up, left, up, right, right, right, right, right, right, right]
+      purpose: 到达主烛左侧并连续右推，点亮第二目标且点燃 candle#2
+      supports_reasoning_units: [RU2]
+    - id: OP6
+      step_range: 49-56
+      exact_inputs: [down, down, down, down, right, right, right, right]
+      purpose: 绕到 candle#2 左侧，同时推进两个边界使其缩短到 len2
+      supports_reasoning_units: [RU3]
+    - id: OP7
+      step_range: 57
+      exact_inputs: [right]
+      purpose: 在火焰位于 y=4 的唯一高度窗口右滚，点亮最终火盆
+      supports_reasoning_units: [RU3]
+  resolution:
+    resolves: [RU1, RU2, RU3]
+    operation_refs: [OP1, OP2, OP3, OP4, OP5, OP6, OP7]
+    final_state_ref: canonical_after_step_57
+    visible_confirmation: 三个未燃火盆全部点亮，玩家存活，事件包含 win_all_braziers_lit
+  trace_partition:
+    status: complete
+    ordered_segment_ids: [OP1, OP2, OP3, OP4, OP5, OP6, OP7]
+    uncovered_steps: []
+    overlapping_steps: []
+
+evidence:
+  commands_run:
+    - npx tsx src/cli.ts solve prototypes/candle_sokoban CANDLE_FRESH_04_SMOTHERED_REVERSE_RELAY
+    - npx tsx src/cli.ts explain-level prototypes/candle_sokoban CANDLE_FRESH_04_SMOTHERED_REVERSE_RELAY --max-states 100000 --graph-max-states 100000 --counterfactual-max-states 100000 --write
+    - npx tsx prototypes/candle_sokoban/reports/audit_CANDLE_FRESH_04_required_events.ts
+    - npx tsx prototypes/candle_sokoban/reports/audit_CANDLE_FRESH_04_structural.ts
+    - npx tsx prototypes/candle_sokoban/reports/audit_CANDLE_FRESH_04_shortest.ts
+    - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban prototypes/candle_sokoban/reports/CANDLE_FRESH_04_v0_LAYOUT.txt --id CANDLE_FRESH_04_ALT_START_LEFT --inputs left --write
+  solver_result:
+    found: true
+    cost: 57
+    explored_states: 13761
+    exact_inputs: [up, up, up, up, down, up, right, up, left, down, left, left, left, left, left, left, left, left, left, left, up, up, right, down, down, down, down, down, down, left, down, down, right, up, up, up, up, up, up, left, up, right, right, right, right, right, right, right, down, down, down, down, right, right, right, right, right]
+  trace_summary:
+    first_target_step: 1
+    forced_release_boundary_step: 5
+    exact_reverse_push_step: 9
+    stable_source_reignite_step: 24
+    relay_ignite_and_second_target_step: 48
+    relay_shrink_steps: [50, 55]
+    final_target_step: 57
+  target_events:
+    - step: 1
+      events: [light_brazier:12,5, extinguish:candle#1:concealed]
+    - step: 5
+      events: [burn_out:candle#single1, burn_out:candle#single4]
+    - step: 9
+      events: [push_axis:candle#1]
+    - step: 24
+      events: [ignite:candle#1]
+    - step: 48
+      events: [ignite:candle#2, light_brazier:13,2]
+    - step: 50
+      events: [shrink:candle#2:len3]
+    - step: 55
+      events: [shrink:candle#2:len2]
+    - step: 57
+      events: [light_brazier:14,4, win_all_braziers_lit]
+  object_or_instance_evidence:
+    - 三个坐标化 light_brazier 事件、两根单格烛燃尽、主烛熄灭/重燃和 candle#2 两次缩短均出现在规范最短 trace
+    - 顺序结构门显式跟踪主烛未燃状态、精确占格、首个燃烧边界、稳定火源重燃、回到上层及接力缩短次序
+  winning_path_event_checks:
+    required_event_artifact: CANDLE_FRESH_04_REQUIRED_EVENTS_AUDIT.json
+    structural_artifact: CANDLE_FRESH_04_STRUCTURAL_AUDIT.json
+    result: >
+      两项搜索均 complete 且无绕过：34,963 个非覆盖事件状态中，每条胜路包含十个
+      指定事件；41,991 个状态/阶段组合中，每条胜路依次完成九个结构阶段，包括
+      首边界同时烧掉两根单格烛、未燃主烛精确反推、稳定火源重燃和接力烛两次缩短。
+  reachable_event_exposure:
+    graph_status: complete
+    reachable_states: 34984
+    legal_transitions: 119956
+    winning_states: 21
+  graph_or_counterfactual_evidence:
+    no_candle_movement:
+      solvable: false
+      search_status: complete
+      explored_states: 2
+  evidence_limits:
+    - required-events 门证明十个事件至少一次必经，不单独证明唯一出现次数
+    - ordered structural 门证明九个已编码阶段按顺序出现在每条胜路，不证明阶段之间只有规范走位
+    - 两项完整门都只支持机械必要性，不评价玩家是否自然读出
+    - 最短解等价性只按完整非 walk/countdown 事件签名归一，不扩张为所有非最短胜路唯一
+    - 工具证据不支持审美、好玩程度、量化难度或 campaign 位置结论
+
+solution_uniqueness:
+  result: equivalent_variants_only
+  evidence_refs:
+    - CANDLE_FRESH_04_SHORTEST_AUDIT.json
+    - audit_CANDLE_FRESH_04_shortest.ts
+    - level_analysis_CANDLE_FRESH_04_SMOTHERED_REVERSE_RELAY.json
+  scope_note: >
+    完整枚举最短深度 57；18,720 条最短输入序列只有 1 个完整非 walk/countdown
+    事件签名，也只有 1 个归一化核心事件签名。该结论不扩展为所有非最短胜路唯一。
+
+hard_fact_summary_for_critic:
+  solver:
+    cost: 57
+    explored_states: 13761
+    exact_inputs_nonempty: true
+  required_or_forbidden_events:
+    all_ten_claimed_events_required_on_every_win: true
+    all_nine_ordered_structural_stages_required_on_every_win: true
+    unlit_exact_reverse_alignment_required_on_every_win: true
+    first_boundary_dual_burnout_required_on_every_win: true
+    stable_source_ignite_then_upper_return_required_on_every_win: true
+    audit_status: complete
+  routed_diagnostic_facts:
+    graph:
+      status: complete
+      reachable_states: 34984
+      legal_transitions: 119956
+      winning_states: 21
+    no_candle_movement:
+      solvable: false
+      status: complete
+    over_shift_replay:
+      legal_through_step: 20
+      failing_step: 21
+      reason: roll_blocked
+    late_relay_replay:
+      relay_length_before_roll: 1
+      final_target_lit: false
+  calibrated_trace_metrics:
+    calibration: trace_metrics_unavailable
+    status: unavailable
+    reason: calibration_missing
+  evidence_limits:
+    - 无 clean human-reviewed archive，禁止分数化审美或难度结论
+    - graph 事实只作机械诊断，不作质量 verdict
+    - ordered structural 门不证明阶段之间的走位唯一，也不评价推理价值
+  artifact_refs:
+    - level_analysis_CANDLE_FRESH_04_SMOTHERED_REVERSE_RELAY.json
+    - CANDLE_FRESH_04_REQUIRED_EVENTS_AUDIT.json
+    - CANDLE_FRESH_04_STRUCTURAL_AUDIT.json
+    - CANDLE_FRESH_04_SHORTEST_AUDIT.json
+    - input_replay_CANDLE_FRESH_04_ALT_START_LEFT.json
+    - input_replay_CANDLE_FRESH_04_ALT_OVER_SHIFT.json
+    - input_replay_CANDLE_FRESH_04_ALT_LATE_RELAY.json
+
+diagnostic_routing:
+  hard_evidence: evidence_reviewer
+  mechanism_scope: evidence_reviewer
+  design_evidence_alignment: evidence_reviewer
+  taste_probes: not_routed_missing_human_archive_context
+  scc_graph:
+    routed_to: evidence_reviewer_as_neutral_graph_fact
+    graph_fact: complete graph with 34984 states and 21 winning states
+    neutral_meaning: 多个胜利状态可能来自计时或走位变体，不能据此推出多个非等价核心解
+    player_facing_interpretation: ""
+    verdict_effect: none
+  variant_family: not_applicable_fresh_required
+  start_position: evidence_reviewer_for_exact_initial_action_replay
+  prototype_specific_work: not_applicable_no_design_handoff
+
+prototype_specific_contracts:
+  interface_pair_policy:
+    declared_interface_points: []
+    target_pairs: []
+    ignored_pair_classes: []
+    risky_pair_classes: []
+  pair_diagnostics:
+    ignored_pairs: []
+    risky_pairs: []
+
+archive_lineage_policy:
+  default: fresh_required
+  authorized_archive_variant_work:
+    enabled: false
+    authorized_by: none
+    candidate_ids: []
+    allowed_operations: []
+  candidate_relation: fresh
+  why_not_archive_variant: >
+    本轮从“主动遮火以获得反向端推权限，再精确改列重燃”的 reasoning sketch 起步，
+    不继承既有关卡布局、对象角色或规范解链。
+
+attempt_log:
+  serious_structural_attempts:
+    - 初版锁烛火焰会重新点燃刚熄灭主烛，破坏主动熄灭阶段，改为让遮火与锁火分离
+    - 开放版状态空间过大且存在无意义绕行，压缩成左右两个窄回路
+    - 可移动起始闩能被绕过，改成一步致死且首边界燃尽的固定火焰闩
+    - 未限制上墙时主烛无需改列即可下滚，加入只允许 x=1..2 进入的精确滚位
+    - 第二目标原位置允许未燃主烛提前多推，移到 candle#2 烛芯同格兼作实体终点
+    - 最终目标曾落在主烛扫过区域，移到 x=14,y=4，只能由缩短后的 candle#2 触及
+    - v1 evidence review 指出事件门未编码 single4、结构门未检查未燃状态且未证明阶段顺序；v2 将三项全部纳入完整全胜路门
+  local_repairs:
+    - 让主烛恰好左推一格时对齐滚位，第二次左推会封死入口
+    - 让稳定火盆只在主烛下滚至 y=8 时提供重燃，并要求再从下回路返回
+    - 将接力烛设为四格，保留两个全局燃烧边界的可见高度变化
+    - 将结构审计从两个“曾出现”布尔标志增强为九阶段有序自动机，并显式检查主烛 lit=false
+  abandoned_families:
+    - 无致死闩版本：玩家可用等待或绕行改写开局时序
+    - 宽上层版本：无需反推即可重燃，核心因果链退化
+
+archive_taste_context:
+  examples: []
+  none_found_reason: >
+    candle_sokoban 当前没有同时满足 clean archive、human_reviewed true 和人类原文评语
+    的正负校准条目；因此不发送 puzzle critic，也不接受任何分数化质量结论。
+  score_claim_allowed: false
+
+claim_last_review:
+  mode: not_used
+  facts_packet: not_applicable
+  claim_packet: not_applicable
+  read_order: not_applicable
