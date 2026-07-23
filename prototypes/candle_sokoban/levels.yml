@@ -133,7 +133,7 @@ levels:
 
   - id: CANDLE_PROBE_07_UNLIT_COUNTDOWN
     title: Countdown Advances Before Ignition
-    global_burn_cycle: 2
+    global_burn_cycle: 5
     layout: |-
       #########
       #@..1..##
@@ -181,7 +181,7 @@ levels:
 
   - id: CANDLE_LEVEL_02_CARRY_THE_SPARK
     title: 携火而行
-    global_burn_cycle: 8
+    global_burn_cycle: 5
     layout: |-
       ##########
       #......o.#
@@ -203,15 +203,17 @@ levels:
 
   - id: CANDLE_LEVEL_03_BURIED_SPARK
     title: 埋藏的火种
-    global_burn_cycle: 4
+    global_burn_cycle: 5
     layout: |-
-      ############
-      #@....2....#
-      #.....d...##
-      #..111R.oo##
-      #..........#
-      ############
+      #############
+      #@.....2....#
+      #......d...##
+      #..1111R.oo##
+      #...........#
+      #############
     expected_trace:
+      - input: right
+        events: [walk, countdown]
       - input: right
         events: [walk, countdown]
       - input: right
@@ -229,7 +231,7 @@ levels:
 
   - id: CANDLE_CHALLENGE_01_CLEAR_THE_FLUE
     title: 清空火道
-    global_burn_cycle: 20
+    global_burn_cycle: 5
     layout: |-
       ############
       #.......o..#
@@ -247,7 +249,7 @@ levels:
 
   - id: CANDLE_CHALLENGE_02_TWIN_RELEASE
     title: 穿焰双路
-    global_burn_cycle: 10
+    global_burn_cycle: 5
     layout: |-
       ##################
       #@...............#
@@ -261,3 +263,22 @@ levels:
       左侧竖烛先穿过第一根火烛的外露火焰，点亮中间火盆，随后又被右侧烛身遮蔽
       而熄灭。全局燃烧边界释放右侧竖烛后，玩家还要调整两根旧蜡烛的占位，才能
       把新火焰送到最右侧火盆。
+
+  - id: CANDLE_FRESH_01_BURNED_GATE_RETURN
+    title: 焚门归火
+    global_burn_cycle: 5
+    layout: |-
+      ############
+      #..........#
+      #.....#....#
+      #......1.o.#
+      #..222rD...#
+      #..........#
+      #@.....o...#
+      #......#...#
+      #.....#....#
+      ############
+    design_notes: >
+      第一根火烛在首个燃烧边界缩短时释放并点燃第二根蜡烛。第二根蜡烛先向下滚动，
+      点亮中继火盆后让烛芯撞入遮蔽格而熄灭；待第一根蜡烛在下一燃烧边界完全燃尽，
+      再把第二根蜡烛反向滚回中继火盆取火，最后沿长轴推向终点。

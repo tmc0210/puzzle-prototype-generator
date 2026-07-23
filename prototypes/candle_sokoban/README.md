@@ -24,7 +24,8 @@ The cap is the final candle body cell. The logical wick occupies the adjacent
 cell in the cap direction and is not drawn separately. Digits `1` through `9`
 identify different multi-cell candle bodies.
 
-Each level may set `global_burn_cycle` (default `5`). The board owns one
+The global burn cycle is fixed at `5`; if a level declares
+`global_burn_cycle`, the value must be `5`. The board owns one
 `globalBurnCountdown`; every successful action advances it, even when no candle
 is lit. When it advances from `1`, every candle that is lit after movement and
 contact settlement shortens simultaneously, then the countdown resets. Igniting,

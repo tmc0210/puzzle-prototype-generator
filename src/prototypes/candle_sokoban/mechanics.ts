@@ -685,8 +685,10 @@ function readGlobalBurnCycle(level: LevelDoc): number {
   if (value === undefined) {
     return defaultBurnCycle;
   }
-  if (typeof value !== "number" || !Number.isInteger(value) || value <= 0) {
-    throw new Error(`Level ${level.id} global_burn_cycle must be a positive integer`);
+  if (value !== defaultBurnCycle) {
+    throw new Error(
+      `Level ${level.id} global_burn_cycle must be fixed at ${defaultBurnCycle}`,
+    );
   }
   return value;
 }

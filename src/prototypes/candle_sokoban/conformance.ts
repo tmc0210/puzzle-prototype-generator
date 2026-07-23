@@ -90,10 +90,25 @@ export function formatCandleSokobanConformanceMarkdown(
 function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformanceCheck {
   try {
     const adapter = getRuntimeAdapter(pkg.mechanic);
+    let rejectedNonFiveCycle = false;
+    try {
+      adapter.parseLevel({
+        id: "CONFORMANCE_REJECT_NON_FIVE_CYCLE",
+        title: "Conformance: reject non-five cycle",
+        global_burn_cycle: 4,
+        layout: "#####\n#@.o#\n#####",
+      });
+    } catch {
+      rejectedNonFiveCycle = true;
+    }
+    if (!rejectedNonFiveCycle) {
+      throw new Error("A candle level with global_burn_cycle other than 5 was accepted.");
+    }
+
     const unlitLevel: LevelDoc = {
       id: "CONFORMANCE_UNLIT_COUNTDOWN",
       title: "Conformance: unlit countdown",
-      global_burn_cycle: 2,
+      global_burn_cycle: 5,
       layout: "########\n#@....o#\n#..11r.#\n########",
     };
     const simultaneousLevel: LevelDoc = {
@@ -105,14 +120,14 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
     const ignitionLevel: LevelDoc = {
       id: "CONFORMANCE_BOUNDARY_IGNITION",
       title: "Conformance: boundary ignition",
-      global_burn_cycle: 1,
-      layout: "##########\n#@111R.o.#\n#......u.#\n#........#\n##########",
+      global_burn_cycle: 5,
+      layout: "############\n#@.........#\n#..111R.o..#\n#.......u..#\n#..........#\n############",
     };
     const extinctionLevel: LevelDoc = {
       id: "CONFORMANCE_BOUNDARY_EXTINCTION",
       title: "Conformance: boundary extinction",
-      global_burn_cycle: 2,
-      layout: "#########\n#@111R..#\n#o......#\n#########",
+      global_burn_cycle: 5,
+      layout: "#########\n#.111R..#\n#@......#\n#o......#\n#########",
     };
 
     const unlitInitial = adapter.parseLevel(unlitLevel);
@@ -121,10 +136,10 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
     });
     if (
       !unlitStep.legal ||
-      unlitStep.state.globalBurnCountdown !== 1 ||
+      unlitStep.state.globalBurnCountdown !== 4 ||
       unlitStep.state.candles.some((candle: { lit: boolean }) => candle.lit)
     ) {
-      throw new Error("Countdown did not advance from 2 to 1 without a lit candle.");
+      throw new Error("Countdown did not advance from 5 to 4 without a lit candle.");
     }
 
     let simultaneousState = adapter.parseLevel(simultaneousLevel);
@@ -152,17 +167,22 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
       );
     }
 
-    const ignitionInitial = adapter.parseLevel(ignitionLevel);
-    const ignitionStep = adapter.step(pkg.mechanic, ignitionInitial, "right", {
-      winCondition: ignitionLevel.win ?? pkg.mechanic.win,
-    });
+    let ignitionState = adapter.parseLevel(ignitionLevel);
+    for (const input of ["right", "left", "down", "right", "right"]) {
+      const ignitionStep = adapter.step(pkg.mechanic, ignitionState, input, {
+        winCondition: ignitionLevel.win ?? pkg.mechanic.win,
+      });
+      if (!ignitionStep.legal) {
+        throw new Error(`Ignition boundary probe rejected '${input}'.`);
+      }
+      ignitionState = ignitionStep.state;
+    }
     const ignitionLengths = Object.fromEntries(
-      ignitionStep.state.candles.map(
+      ignitionState.candles.map(
         (candle: { id: string; bodyCells: unknown[] }) => [candle.id, candle.bodyCells.length],
       ),
     );
     if (
-      !ignitionStep.legal ||
       ignitionLengths["candle#1"] !== 3 ||
       "candle#single2" in ignitionLengths
     ) {
@@ -170,7 +190,7 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
     }
 
     let extinctionState = adapter.parseLevel(extinctionLevel);
-    for (const input of ["right", "right"]) {
+    for (const input of ["right", "left", "up", "right", "right"]) {
       const result = adapter.step(pkg.mechanic, extinctionState, input, {
         winCondition: extinctionLevel.win ?? pkg.mechanic.win,
       });
@@ -181,7 +201,7 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
     }
     const extinguished = extinctionState.candles[0];
     if (
-      extinctionState.globalBurnCountdown !== 2 ||
+      extinctionState.globalBurnCountdown !== 5 ||
       extinguished?.lit !== false ||
       extinguished?.bodyCells.length !== 4
     ) {

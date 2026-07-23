@@ -1,0 +1,73 @@
+review_iteration: 1
+candidate_version_reviewed: 1
+review_input_type: candidate_version
+verdict: supports_claim
+review_loop_state: proposal_ready
+required_action: none
+supported_claims:
+  - target_ref: mechanic_exposure_context.claimed_core_events.canonical_only
+    evidence_basis: >-
+      level_analysis_CANDLE_FRESH_01_BURNED_GATE_RETURN.json 的 exact 22 步
+      canonical trace 在 step 5 记录 shrink:candle#1:len1 与
+      shrink_ignite:candle#2，在 step 6 记录 light_brazier:7,6 后紧接
+      extinguish:candle#2:concealed，在 step 10 记录 burn_out:candle#1，
+      在 step 13 记录 ignite:candle#2，并在 step 22 记录
+      light_brazier:9,3 与 win_all_braziers_lit；各事件与候选所列步骤、
+      对象和坐标一致。
+  - target_ref: mechanism_scope.central
+    evidence_basis: >-
+      权威规则允许全局第五个有效行动触发缩短、缩短腾格内的同格烛芯传火、
+      侧滚逐格点火与遮蔽熄灭，以及已点燃火盆作为永久稳定火源。exact trace
+      分别在 step 5、step 6、step 13 实例化
+      first_boundary_shrink_ignition、
+      relay_light_then_concealment_extinction 和
+      stable_brazier_reignition_on_return_roll，没有把事件 pattern 扩张为
+      per-object necessity 或任意长度胜解必经声明。
+  - target_ref: player_reasoning.reasoning_units
+    evidence_basis: >-
+      OP1-OP6 连续覆盖 canonical steps 1-22，无遗漏或重叠，且 exact_inputs
+      与 analyzer 的 canonical inputs 完全一致。RU1 的 step 5 缩短点火、
+      RU2 的 step 6 点盆后遮蔽熄灭及 step 10 燃尽清空、RU3 的 step 13
+      火盆重燃和 step 22 完成都有对应 before/after 状态与事件。
+      input_replay_CANDLE_FRESH_01_ALT_AXIS_BLOCK.json 独立复现 RU2 的
+      replayed_attempt：规范前缀到 step 6 后执行 down, down, left, down
+      到达候选的 step_10_plus_blocked_input 前态，第 11 个输入 right 返回
+      axis_push_blocked、events 为空，before/after state key 完全相同；
+      其 candle#2 右侧目标格 x7,y7 为墙，与候选的 concrete_outcome 一致。
+  - target_ref: mechanic_exposure_context.latest_exposure_timing_check
+    evidence_basis: >-
+      在候选声明的三个 central 机制实例中，最晚的是 step 13 的
+      ignite:candle#2；其唯一 canonical occurrence 位于 OP4，而 OP4
+      支持第三个 reasoning unit RU3。因此该 central latest event 并未
+      frontload 到 RU1，时序门结论为 later_phase_present。由于
+      allowed_exposure_through 与 all-solution required gate 均未声明，
+      此项只支持 canonical central-event timing，不支持 reachable exposure
+      window 或所有胜解必经性。
+  - target_ref: mechanic_exposure_context.claimed_core_events.all_shortest
+    evidence_basis: >-
+      CANDLE_FRESH_01_SHORTEST_AUDIT.json 声明搜索
+      complete_through_shortest_depth，最短深度为 22，共计 48 条最短输入序列，
+      distinct_non_walk_event_signatures 为 1；配套审计脚本按 runtime state
+      与累计非 walk、非 countdown 事件签名枚举到最短胜利深度。这支持
+      one_shared_non_walk_event_signature，但仅限全部最短解。
+  - target_ref: solution_uniqueness
+    evidence_basis: >-
+      result 使用允许值 equivalent_variants_only，且引用的最短解审计显示
+      48 条最短输入序列共享同一非行走事件签名，与该结果在“最短解族”范围内
+      不冲突。候选同时明确不声称任意长度胜解唯一或完整图唯一性。
+  - target_ref: evidence.graph_or_counterfactual_evidence
+    evidence_basis: >-
+      analyzer 将主图明确标为 exhausted：在 maxStates=1000000 时记录
+      1000001 个 reachable states 并因 state budget exceeded 停止；候选只把
+      它作为不能形成完整可达图的限制。no_candle_movement 反事实则以
+      searchStatus complete 在 1044 个 explored states 后报告无解，只支持
+      蜡烛移动这一粗粒度机制类别对可解性的必要性。
+unsupported_or_overclaimed: []
+evidence_limits:
+  - 主图与 agency 图均预算耗尽，不能支持完整可达扫描、完整图唯一性、任意长度胜解必经事件或 forbidden_if_seen_anywhere 结论。
+  - equivalent_variants_only 的现有证据边界是深度 22 的全部最短输入序列；不能外推为所有长度胜解只有等价变体。
+  - no_candle_movement 反事实只排除完全禁止蜡烛移动的模型，不能证明某次特定推动、某根对象的逐对象必要性或候选完整事件链的 all-solution necessity。
+  - analyzer 的 returned canonical trace 与 object descriptions 支持实例参与，不等于 all-solution object participation；报告本身也未提供 instance-level object participation 汇总。
+  - 候选未声明 allowed_exposure_through、reachable_event_exposure、required_winning_path_events、forbidden_winning_path_events 或 forbidden_if_seen_anywhere，因此本审查不赋予这些范围声明。
+  - calibrated_trace_metrics、intended_role、难度和审美字段不属于机械证据，本审查未据此形成结论。
+questions_for_designer: []

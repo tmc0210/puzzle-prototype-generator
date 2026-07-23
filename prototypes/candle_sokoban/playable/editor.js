@@ -509,8 +509,10 @@ function readGlobalBurnCycle(level) {
   if (value === void 0) {
     return defaultBurnCycle;
   }
-  if (typeof value !== "number" || !Number.isInteger(value) || value <= 0) {
-    throw new Error(`Level ${level.id} global_burn_cycle must be a positive integer`);
+  if (value !== defaultBurnCycle) {
+    throw new Error(
+      `Level ${level.id} global_burn_cycle must be fixed at ${defaultBurnCycle}`
+    );
   }
   return value;
 }
@@ -3093,7 +3095,7 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "mrxawm40" : String(Date.now());
+var buildId = true ? "mrxbkgya" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);

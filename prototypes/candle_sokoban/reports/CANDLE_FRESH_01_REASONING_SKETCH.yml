@@ -1,0 +1,48 @@
+candidate_id: CANDLE_FRESH_01_BURNED_GATE_RETURN
+candidate_version: 0
+created_at: 2026-07-23
+design_mode: fresh
+archive_lineage: none
+archive_taste_context: none_found
+difficulty_target: highest_available
+global_burn_cycle: 5
+
+reasoning_sketch:
+  player_goal: 点亮分处两端的全部火盆，同时保留一条能回收火种的路线。
+  central_question: >
+    哪根蜡烛应当先作为临时挡板和点火器被消耗，哪根蜡烛必须先熄灭、
+    再利用已经点亮的火盆重燃并返回最终火盆？
+  causal_chain:
+    - 开局火烛占据主通道，并遮住运输烛的烛芯；直接移动运输烛不会获得火种。
+    - 第一个五回合边界令火烛缩短，腾出的格同时让运输烛烛芯外露并被后退火焰点燃。
+    - 运输烛第一次侧滚只负责点亮中继火盆，随后烛芯进入遮蔽格而熄灭；此时直接驶向终点不可行。
+    - 玩家继续利用有效行动推进第二个燃烧边界，让原火烛完全燃尽并清空返程通道。
+    - 运输烛沿相反方向再次侧滚，经过中继火盆取得稳定火源，随后改用端推把火焰送到最终火盆。
+  intended_reasoning_units:
+    - id: RU1
+      question: 为什么不能立即把运输烛送往最终火盆？
+      visible_premises:
+        - 运输烛的烛芯被开局火烛或墙遮蔽。
+        - 唯一稳定火源位于运输烛第一次滚动路径的另一侧。
+      conclusion: 必须先等燃烧边界释放并点燃运输烛。
+    - id: RU2
+      question: 为什么点亮中继火盆后不能继续同向推进？
+      visible_premises:
+        - 第一次滚动的停止格会遮蔽运输烛烛芯。
+        - 原火烛仍占据返程所需的通道。
+      conclusion: 必须主动保留中继火盆，并消耗原火烛来打开返程。
+    - id: RU3
+      question: 通道清空后怎样恢复火种并完成终点？
+      visible_premises:
+        - 点亮的中继火盆是永久火源。
+        - 运输烛反向滚动可让烛芯经过中继火盆。
+      conclusion: 反向滚动重燃，再以不同轴向操作完成最后接触。
+
+layout_constraints:
+  - 不新增蜡烛原型之外的机关。
+  - 至少出现一次缩短传火、一次遮蔽熄灭、一次火盆重燃。
+  - 三个推理单元必须分别落在规范最优解的不同操作段。
+  - 任一提前接近最终火盆的路线都应因无火、遮挡或不可恢复占位失败。
+  - 固定周期 5 不得通过配置调整。
+
+status: reasoning_sketch_only
