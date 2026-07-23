@@ -374,3 +374,518 @@ levels:
       横烛因此只能在第三个边界动作向下滚动，途中先点亮第二火盆、
       再点燃接力烛，随后自身被接力烛身遮熄；归零时只让接力烛缩短。接力烛
       再缩成单格后，邻近火盆才不再阻挡侧滚，并成为最后的点火目标。
+
+  - id: CANDLE_CURRICULUM_01_AXIS_PUSH
+    title: 01 向前一格
+    global_burn_cycle: 5
+    layout: |-
+      ##########
+      #........#
+      #@.11R.o.#
+      #........#
+      ##########
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [push_axis, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [walk, push_axis, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 1，主要教学 M1 长轴端推。玩家先走到蜡烛尾端，再向右推动一次；
+      蜡烛保持横向与烛芯端不变，玩家进入原尾端格，火焰随之向火盆移动。
+
+  - id: CANDLE_CURRICULUM_02_FLAME_TO_BRAZIER
+    title: 02 火焰入盆
+    global_burn_cycle: 5
+    layout: |-
+      #######
+      #..@..#
+      #..1..#
+      #..D..#
+      #.....#
+      #..o..#
+      #######
+    expected_trace:
+      - input: down
+        events: [push_axis, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [push_axis, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 2，主要教学 F1 火焰点亮火盆。玩家从上方沿长轴推动竖烛；
+      烛身不会进入火盆，真正抵达火盆格的是端帽下方的火焰投影。
+
+  - id: CANDLE_CURRICULUM_03_SIDE_ROLL
+    title: 03 滚到尽头
+    global_burn_cycle: 5
+    layout: |-
+      ########
+      #......#
+      #....o.#
+      #.11R..#
+      #..@...#
+      #......#
+      ########
+    expected_trace:
+      - input: up
+        events: [roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [roll_step, roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 3，主要教学 M2 侧推持续滚动。玩家从下方侧推横烛一次，
+      蜡烛逐格向上滚到边界决定的终点；途中火焰经过火盆并完成目标。
+
+  - id: CANDLE_CURRICULUM_04_WICK_TAKES_FIRE
+    title: 04 只有烛芯接火
+    global_burn_cycle: 5
+    layout: |-
+      #########
+      ####@####
+      #.11r.o.#
+      #.....O.#
+      #.......#
+      #.#U#...#
+      #.......#
+      #########
+    expected_trace:
+      - input: down
+        events: [roll_candle, extinguish, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: left
+        events: [walk, countdown]
+      - input: left
+        events: [walk, countdown]
+      - input: left
+        events: [walk, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: right
+        events: [push_axis, countdown]
+      - input: left
+        events: [walk, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: up
+        events: [walk, countdown]
+      - input: up
+        events: [roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events:
+      [walk, push_axis, roll_step, roll_candle, extinguish, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 4，主要教学 F3 只有烛芯能够接火。第一次下滚时，未燃横烛的
+      普通烛身覆盖下方火烛的火焰格，只会压灭火源而不会被点燃。玩家把横烛
+      沿长轴右推一格后再向上滚，新的烛芯列才会先经过已点亮火盆取得火种，
+      随后把火送入上方目标。
+
+  - id: CANDLE_CURRICULUM_05_BRAZIER_RELAY
+    title: 05 从火盆取火
+    global_burn_cycle: 5
+    layout: |-
+      ############
+      #..........#
+      #..2......##
+      #.@2......##
+      #..d......##
+      #....O..o.##
+      #..........#
+      ############
+    expected_trace:
+      - input: right
+        events: [roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [roll_step, roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 5，主要教学 F2 已点亮火盆是永久火源。玩家从左侧推动未燃竖烛
+      向右滚动；朝下烛芯先经过已点亮火盆取火，再沿同一条轨迹把火送到未点亮火盆。
+
+  - id: CANDLE_CURRICULUM_06_FLAME_DETOUR
+    title: 06 绕开火焰
+    global_burn_cycle: 5
+    layout: |-
+      ########
+      #..o...#
+      #.@....#
+      #..U...#
+      #......#
+      ########
+    expected_trace:
+      - input: down
+        events: [walk, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: up
+        events: [push_axis, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [walk, push_axis, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 6，主要教学 H1 火焰危险与燃烧端不可推。玩家若从起点向右进入
+      朝上火烛的外露火焰会死亡；安全解必须绕到蜡烛下端，再沿长轴向上推动，
+      让火焰进入顶端火盆。
+
+  - id: CANDLE_CURRICULUM_07_GLOBAL_BEAT
+    title: 07 五步一拍
+    global_burn_cycle: 5
+    layout: |-
+      #############
+      #...........#
+      #......2...##
+      #@.....2...##
+      #......d...##
+      #.......O.o##
+      #...........#
+      #############
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [walk, roll_step, roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 7，主要教学 T1 全局五回合倒计时。玩家必须先连续走五步到达竖烛
+      左侧，观察倒计时从 5 回到 5；第六个有效行动侧滚蜡烛，途中从稳定火盆取火
+      并点亮目标。
+
+  - id: CANDLE_CURRICULUM_08_VALID_ACTIONS
+    title: 08 动了才计时
+    global_burn_cycle: 5
+    layout: |-
+      ##########
+      #........#
+      #...2...##
+      #@..2...##
+      #...d...##
+      #....Oo.##
+      ##########
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [walk, roll_step, roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 8，主要教学 T2 无火也计时与 M4 无效输入不计时。开局向左撞墙
+      不改变棋盘和倒计时；向右走位属于成功行动，即使场上没有点燃蜡烛也会推进
+      倒计时。到达竖烛左侧后再向右侧滚完成目标。
+
+  - id: CANDLE_CURRICULUM_09_WICK_END_SHRINK
+    title: 09 烛芯退一格
+    global_burn_cycle: 5
+    layout: |-
+      #############
+      #@....11R.o.#
+      #############
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [push_axis, light_brazier, countdown, shrink, win_all_braziers_lit]
+    expected_events: [walk, push_axis, light_brazier, countdown, shrink, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 9，主要教学 B1 燃烧从烛芯端缩短。玩家四次走位后在第五个有效
+      行动沿长轴推动火烛点亮火盆；同一回合触发燃烧边界，右侧烛芯端移除一格，
+      左侧烛身保持原位，火焰向内退一格。
+
+  - id: CANDLE_CURRICULUM_10_BURNOUT_GATE
+    title: 10 燃尽开门
+    global_burn_cycle: 5
+    layout: |-
+      ###########
+      #@........#
+      #####.#####
+      #####U#####
+      #.........#
+      #..2......#
+      #..2......#
+      #..d......#
+      #....O.o..#
+      #.........#
+      ###########
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: left
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown, burn_out]
+      - input: right
+        events: [walk, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: left
+        events: [walk, countdown]
+      - input: left
+        events: [walk, countdown]
+      - input: left
+        events: [walk, countdown]
+      - input: down
+        events: [walk, countdown]
+      - input: right
+        events: [roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events:
+      [walk, roll_step, roll_candle, burn_out, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 10，主要教学 B3 最后一格燃尽消失。单格朝上火烛的火焰封住上层
+      通道，烛身封住下层通道；第五个有效行动后它完整燃尽，火焰与烛身一同消失。
+      玩家穿过新开的门，从左侧推动未燃竖烛，经稳定火盆取火并点亮目标。
+
+  - id: CANDLE_CURRICULUM_11_LONG_ROLL_ONE_TURN
+    title: 11 滚远只算一步
+    global_burn_cycle: 5
+    layout: |-
+      #############
+      #...........#
+      #..1......#.#
+      #.@1......#.#
+      #..D......#.#
+      #........o..#
+      #...........#
+      #############
+    expected_trace:
+      - input: right
+        events: [roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [roll_step, roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 11，主要教学 M3 多格侧滚仍只算一个回合。玩家只输入一次向右，
+      竖烛连续滚动六格并在右墙前停下，远端火焰点亮火盆；全局倒计时只从 5
+      推进到 4。
+
+  - id: CANDLE_CURRICULUM_12_EVERY_ROLL_STEP
+    title: 12 每格都会接触
+    global_burn_cycle: 5
+    layout: |-
+      #############
+      #...........#
+      #..1......#.#
+      #.@1......#.#
+      #..D......#.#
+      #....o.o.o..#
+      #...........#
+      #############
+    expected_trace:
+      - input: right
+        events: [roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [roll_step, roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 12，主要教学 R1 侧滚每一小步独立结算接触。一次向右侧滚中，
+      火焰依次经过三个不同格子的火盆并全部点亮，证明途中格而非只有终点会结算。
+
+  - id: CANDLE_CURRICULUM_13_FIRE_DOES_NOT_STOP
+    title: 13 火变了也不停
+    global_burn_cycle: 5
+    layout: |-
+      ##############
+      #............#
+      #..2.........#
+      #.@2.........#
+      #..d.........#
+      #....O.o.#...#
+      #............#
+      ##############
+    expected_trace:
+      - input: right
+        events: [roll_candle, ignite, light_brazier, extinguish, countdown, win_all_braziers_lit]
+    expected_events:
+      [roll_step, roll_candle, ignite, light_brazier, extinguish, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 13，主要教学 R2 火焰状态变化不改变滚动终点。未燃竖烛向右滚动，
+      烛芯先从火盆取火、再点亮目标、随后进入墙格熄灭；蜡烛仍继续滚到棋盘右侧
+      的实体终点。
+
+  - id: CANDLE_CURRICULUM_14_BODY_SMOTHERS_FLAME
+    title: 14 烛身也会灭火
+    global_burn_cycle: 5
+    layout: |-
+      ##############
+      #............#
+      #..1.........#
+      #.@1.........#
+      #..D.........#
+      #....o22r....#
+      #............#
+      ##############
+    expected_trace:
+      - input: right
+        events: [roll_candle, light_brazier, extinguish, countdown, win_all_braziers_lit]
+    expected_events: [roll_step, roll_candle, light_brazier, extinguish, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 14，主要教学 H2 其他烛身会遮蔽烛芯。燃烧竖烛向右侧滚时先点亮
+      火盆，随后它的火焰投影进入横烛的普通烛身格并立即熄灭；横烛实体不在竖烛
+      的滚动占格行，因此不会改变竖烛的实体终点。
+
+  - id: CANDLE_CURRICULUM_15_EXPOSE_AND_RELIGHT
+    title: 15 离墙后重新取火
+    global_burn_cycle: 5
+    layout: |-
+      #############
+      #...........#
+      #..1......#.#
+      #.@1......#.#
+      #..D......#.#
+      #....#.O.o..#
+      #...........#
+      #############
+    expected_trace:
+      - input: right
+        events: [roll_candle, extinguish, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events:
+      [roll_step, roll_candle, extinguish, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 15，主要教学 H3 遮挡移开后可以重新点燃。同一次向右侧滚中，
+      火焰先进入墙格而熄灭；烛芯离墙后重新外露但不会自动复燃，必须继续经过
+      已点亮火盆取火，之后才能点亮终点火盆。
+
+  - id: CANDLE_CURRICULUM_16_WICK_TO_WICK
+    title: 16 烛芯对烛芯
+    global_burn_cycle: 5
+    layout: |-
+      #############
+      #...........#
+      #..2......#.#
+      #.@2......#.#
+      #..d......#.#
+      #.11R....o..#
+      #...........#
+      #############
+    expected_trace:
+      - input: right
+        events: [roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [roll_step, roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 16，主要教学 F4 烛芯同格传火。未燃竖烛向右侧滚时，朝下烛芯
+      与横向火烛的朝右火焰投影到同一格，竖烛立即点燃；两根蜡烛实体没有相撞。
+      新火焰随后继续沿滚动轨迹点亮终点火盆。
+
+  - id: CANDLE_CURRICULUM_17_SAME_STEP_CHAIN
+    title: 17 同一步连锁
+    global_burn_cycle: 5
+    layout: |-
+      ############
+      #......d...#
+      #.@11R.o...#
+      #......u...#
+      #..........#
+      ############
+    expected_trace:
+      - input: right
+        events: [push_axis, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [push_axis, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 17，主要教学 F5 新火焰在同一小步继续连锁。玩家向右推动横向
+      火烛后，它的火焰进入共享格；上方朝下烛芯、下方朝上烛芯和火盆同时投影在
+      该格，接触闭包在同一个移动小步内点燃两根蜡烛并点亮火盆。
+
+  - id: CANDLE_CURRICULUM_18_SIMULTANEOUS_SHRINK
+    title: 18 两根一起缩短
+    global_burn_cycle: 5
+    layout: |-
+      ###############
+      #@....11R.o...#
+      #.........3...#
+      #.........3...#
+      #.........D...#
+      #.............#
+      ###############
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [push_axis, light_brazier, countdown, shrink, win_all_braziers_lit]
+    expected_events: [walk, push_axis, light_brazier, countdown, shrink, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 18，主要教学 B2 所有点燃蜡烛同时缩短。玩家四次走位后在第五个
+      有效行动推动横烛点亮火盆；燃烧边界同时让横烛和右侧竖烛各缩短一格，
+      两个结果不依赖处理顺序。
+
+  - id: CANDLE_CURRICULUM_19_TIMER_NEVER_RESETS
+    title: 19 火变倒计时不变
+    global_burn_cycle: 5
+    layout: |-
+      ###############
+      #.............#
+      #...1......#..#
+      #@..1......#..#
+      #...D......#..#
+      #.....#.O.o...#
+      #.............#
+      ###############
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [roll_candle, extinguish, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events:
+      [walk, roll_step, roll_candle, extinguish, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 19，主要教学 T3 点燃、熄灭和重燃都不改变倒计时。两次走位把
+      倒计时推进到 3；第三个行动侧滚火烛，途中先被墙熄灭、再从火盆重燃并点亮
+      目标，行动结束后倒计时只按正常节拍从 3 变为 2。
+
+  - id: CANDLE_CURRICULUM_20_BOUNDARY_IGNITION
+    title: 20 最后一拍点火
+    global_burn_cycle: 5
+    layout: |-
+      ##############
+      #............#
+      #.....2....#.#
+      #@....2....#.#
+      #.....d....#.#
+      #.......O.o..#
+      #............#
+      ##############
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [roll_candle, ignite, light_brazier, countdown, shrink, win_all_braziers_lit]
+    expected_events:
+      [walk, roll_step, roll_candle, ignite, light_brazier, countdown, shrink, win_all_braziers_lit]
+    design_notes: >
+      课程顺序 20，主要教学 T4 倒计时为 1 时临界点燃会立刻缩短。玩家四次走位
+      后，在第五个有效行动侧滚未燃竖烛；烛芯先从火盆取火并点亮目标，行动结束时
+      新点燃蜡烛立即参加燃烧结算并从烛芯端缩短一格。
