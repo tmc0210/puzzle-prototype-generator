@@ -159,3 +159,76 @@ levels:
       Two successful walks advance and reset the board countdown while no candle
       is lit. The following side roll crosses a lit brazier, ignites the candle,
       and then lights the only unlit brazier for a formal win.
+
+  - id: CANDLE_LEVEL_01_TWO_ALTARS
+    title: 双层祭坛
+    global_burn_cycle: 5
+    layout: |-
+      ##########
+      #........#
+      #@111R.o.#
+      #........#
+      #........#
+      #......o.#
+      ##########
+    expected_trace:
+      - input: right
+        events: [push_axis, light_brazier, countdown]
+      - input: up
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: down
+        events: [roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [push_axis, roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      入门应用关。玩家先沿长轴推动燃烧蜡烛点亮上方火盆，再绕到蜡烛上方侧推，
+      让同一团火焰向下滚动并点亮下方火盆。
+
+  - id: CANDLE_LEVEL_02_CARRY_THE_SPARK
+    title: 携火而行
+    global_burn_cycle: 8
+    layout: |-
+      ##########
+      #......o.#
+      #........#
+      #......O.#
+      #..111r..#
+      #........#
+      #..@.....#
+      ##########
+    expected_trace:
+      - input: up
+        events: [walk, countdown]
+      - input: up
+        events: [roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [walk, roll_candle, ignite, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      玩家从下方侧推未点燃的横向蜡烛。烛芯在滚动途中经过已点燃火盆取得火种，
+      随后继续滚动，在停止前把火送到未点燃火盆。
+
+  - id: CANDLE_LEVEL_03_BURIED_SPARK
+    title: 埋藏的火种
+    global_burn_cycle: 4
+    layout: |-
+      ############
+      #@....2....#
+      #.....d...##
+      #..111R.oo##
+      #..........#
+      ############
+    expected_trace:
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown]
+      - input: right
+        events: [walk, countdown, shrink, shrink_ignite]
+      - input: right
+        events: [roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    expected_events: [walk, shrink, shrink_ignite, roll_candle, light_brazier, countdown, win_all_braziers_lit]
+    design_notes: >
+      四步接近动作推进全局燃烧倒计时。第一根蜡烛随后缩短，露出并点燃原本埋在
+      端帽下方的朝下烛芯；玩家再向右侧推新点燃的蜡烛，依次点亮两个火盆。
