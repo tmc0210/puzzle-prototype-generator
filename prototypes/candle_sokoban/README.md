@@ -1,6 +1,6 @@
 # Candle Sokoban
 
-Status: throwaway logic prototype.
+Status: runtime foundation with conformance probes; no current campaign.
 
 ## Prototype question
 
@@ -10,7 +10,8 @@ burn countdown, simultaneous shortening, death priority, and full-state undo whi
 remaining usable by the repository's generic solver, analyzer, editor, and
 runtime-backed playable?
 
-The runtime is authoritative. `levels.yml` contains diagnostic probes, not a
+The runtime is authoritative. `levels.yml` contains only diagnostic probes.
+They are excluded from `playable_queue.yml` and are not candidate levels or a
 finished campaign.
 
 ## ASCII
@@ -55,4 +56,6 @@ temporary miner: unavailable
 candidate seed factories: unavailable
 ```
 
-Knowledge and curriculum files are schema-valid runtime-smoke placeholders only.
+Knowledge records confirmed rule semantics. Curriculum contains only a minimal
+runtime-diagnostics placeholder and does not prescribe a future course or level
+count.
