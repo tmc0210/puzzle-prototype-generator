@@ -1,5 +1,6 @@
 import { loadPrototypePackage } from "../../../src/core/io.js";
 import { getRuntimeAdapter } from "../../../src/prototypes/runtimeAdapter.js";
+import { writeFile } from "node:fs/promises";
 
 const root = "prototypes/candle_sokoban";
 const levelId = "CANDLE_FRESH_04_SMOTHERED_REVERSE_RELAY";
@@ -97,7 +98,7 @@ for (const [signature, win] of wins) {
   normalized.set(coreSignature, (normalized.get(coreSignature) ?? 0n) + win.count);
 }
 
-console.log(JSON.stringify({
+const report = {
   level_id: levelId,
   search_status: "complete_through_shortest_depth",
   shortest_depth: shortestDepth,
@@ -114,4 +115,11 @@ console.log(JSON.stringify({
     signature,
   })),
   visited_state_signature_pairs: seen.size,
-}, null, 2));
+};
+const json = `${JSON.stringify(report, null, 2)}\n`;
+await writeFile(
+  `${root}/reports/CANDLE_FRESH_04_SHORTEST_AUDIT.json`,
+  json,
+  "utf8",
+);
+console.log(json);

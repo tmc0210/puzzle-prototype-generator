@@ -3091,13 +3091,15 @@ var inputByKey = {
   d: "right",
   D: "right"
 };
+var replayInitialFrameMs = 650;
+var replayStepFrameMs = 320;
 var appRoot = document.querySelector("#app");
 if (!appRoot) {
   throw new Error("Missing #app root element");
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "mrxd1lsl" : String(Date.now());
+var buildId = true ? "mrxfkt0c" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);
@@ -3290,10 +3292,10 @@ function renderPlayArea(entry, level) {
             class="primary-button"
             type="button"
             data-action="replay"
-            ${hasReplay || level ? "" : "disabled"}
-            title="\u56DE\u653E"
+            ${hasReplay && !replaying ? "" : "disabled"}
+            title="${hasReplay ? replaying ? "\u6B63\u5728\u56DE\u653E" : "\u56DE\u653E" : "\u65E0\u53EF\u7528\u56DE\u653E"}"
           >
-            Replay
+            ${replaying ? "\u56DE\u653E\u4E2D\u2026" : "Replay"}
           </button>
           <div class="toolbox">
             <button
@@ -3519,7 +3521,7 @@ function renderPlayStatus() {
     return `<span class="play-status" title="\u672A\u9009\u62E9\u5019\u9009">\u672A\u9009\u62E9\u5019\u9009</span>`;
   }
   const className = playState.won ? "play-status win" : "play-status";
-  const actionText = playState.won ? `\u5DF2\u8FBE\u6210\u80DC\u5229\uFF0C${playState.moveCount} \u6B65` : `${playState.moveCount} \u6B65\uFF0C${playState.lastEvents.length > 0 ? playState.lastEvents.join(", ") : "\u7B49\u5F85\u8F93\u5165"}`;
+  const actionText = replaying ? `\u6B63\u5728\u56DE\u653E\uFF0C${playState.moveCount} / ${expectedInputsForLevel(playState.level).length} \u6B65` : playState.won ? `\u5DF2\u8FBE\u6210\u80DC\u5229\uFF0C${playState.moveCount} \u6B65` : `${playState.moveCount} \u6B65\uFF0C${playState.lastEvents.length > 0 ? playState.lastEvents.join(", ") : "\u7B49\u5F85\u8F93\u5165"}`;
   const stateText = adapter.describeState?.(playState.current).join(" \xB7 ");
   const text = stateText ? `${stateText} \xB7 ${actionText}` : actionText;
   return `<span class="${className}" title="${escapeAttribute(text)}">${escapeHtml(text)}</span>`;
@@ -3753,19 +3755,23 @@ async function replayExpected() {
   const key = entry ? entryKey(entry) : "";
   resetPlayStateForSelection();
   render();
-  for (const input of inputs) {
-    await sleep(140);
-    if (selectedEntryKey !== key) {
-      break;
+  try {
+    await sleep(replayInitialFrameMs);
+    for (const input of inputs) {
+      if (selectedEntryKey !== key) {
+        break;
+      }
+      if (playState?.won && isTerminalWinCondition(levelWin(playState.level))) {
+        break;
+      }
+      applyInput(input);
+      render();
+      await sleep(replayStepFrameMs);
     }
-    if (playState?.won && isTerminalWinCondition(levelWin(playState.level))) {
-      break;
-    }
-    applyInput(input);
+  } finally {
+    replaying = false;
     render();
   }
-  replaying = false;
-  render();
 }
 function applyInput(input) {
   if (!playState) {
