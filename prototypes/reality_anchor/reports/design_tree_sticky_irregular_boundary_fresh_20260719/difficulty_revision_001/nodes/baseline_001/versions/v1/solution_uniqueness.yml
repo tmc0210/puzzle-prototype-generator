@@ -1,0 +1,69 @@
+node_id: baseline_001
+exact_version: v1
+result: unique_complete
+search_scope: complete
+search_budget: max_states=300000; graph_max_states=300000
+
+complete_graph:
+  reachable_states: 227
+  legal_transitions: 610
+  winning_states: 1
+  graph_status: complete
+  terminal_win_expansion: disabled
+
+shortest_family:
+  cost: 16
+  raw_shortest_path_count: 2
+  object_signature_count: 1
+  shared_object_signature:
+    - push:right
+    - pull:right
+    - pull:right
+    - pull:down
+  known_raw_variants:
+    - inputs: up right up right right right down right right down down down left left up down
+      difference: 第一次从上格左面 push:right。
+    - inputs: right up up right right right down right right down down down left left up down
+      difference: 第一次从下格左面 push:right；之后到达相同对象关系。
+
+all_win_milestone_audit:
+  - pose: 7,4;8,4;7,5
+    role: 第一次 P 侧 push 后位姿
+    dominates_every_win_path: true
+    unique_first_entry: push:right from 6,4;7,4;6,5
+  - pose: 8,4;9,4;8,5
+    role: 第一次 L 侧 pull:right 后位姿
+    dominates_every_win_path: true
+    unique_first_entry: pull:right from 7,4;8,4;7,5
+  - pose: 9,4;10,4;9,5
+    role: 低阶格对准双墙齿缺口
+    dominates_every_win_path: true
+    unique_first_entry: pull:right from 8,4;9,4;8,5
+  - pose: 9,5;10,5;9,6
+    role: 唯一胜利对象位姿
+    dominates_every_win_path: true
+    unique_first_entry: pull:down from 9,4;10,4;9,5
+
+equivalence_account: >-
+  两条最短 raw path 只在第一次从 L 的上格或下格左面推动，以及相应纯走位次序上不同；对象职责、
+  四个里程碑与因果先后完全相同。完整图中终手前的额外对象移动均位于可逆子图；已专门验证正确列右侧
+  多 pull:right 一格后，可用 `up,left,left,left,down,left,up,right,right,right,down` 返回超调前 exact state。
+  所有胜路必须按顺序首次进入四个支配位姿，且每次首次进入的 mode/direction 唯一，因此不存在旧 push、
+  提前正交下牵、超调后下牵或其它目标分配的非等价胜解。
+
+bypass_audit:
+  immediate_second_push_after_opening: fixed P/L makes player land on pull side; unavailable
+  old_left_face_push_right: old faces are reachable but are on pull side; unavailable
+  early_pull_down: left tooth blocks lower-toe target
+  notch_pull_down: right tooth blocks the player/object relation that would bypass the lower-toe handle
+  overrun_pull_down: right tooth blocks the overrun lower-toe target
+  non_equivalent_winning_family_found: false
+
+evidence_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/design_reading.yml
+
+evidence_limits:
+  - 完整性只覆盖当前 runtime、当前 exact layout 与声明的 terminal-win 图语义。
+  - 状态图与反事实支持机械唯一性，不证明难度、审美或玩家是否自然发现。

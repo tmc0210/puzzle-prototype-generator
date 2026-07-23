@@ -1,0 +1,260 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_EXPERIENCE_BRIEF_002
+designer_instance_id: RA_IRREGULAR_DESIGNER_20260719
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+prototype_id: reality_anchor
+status: shared_experience_brief_complete
+
+scope_status:
+  artifact_role: 整棵设计树共享的体验核心、作品身份与 baseline 定位
+  completed_in_this_assignment:
+    - 从人类体验种子、独立归档校准和首批 task-local 正向材料收束玩家体验核心
+    - 固定可反事实证伪的作品身份
+    - 固定后期玩家前序、允许机制和 baseline 难度定位
+  not_performed:
+    - 未画正式布局
+    - 未建立 baseline 或任何设计树节点
+    - 未选择正式 structure family 或具体异形
+    - 未决定 construct_prefix、apply_suffix 或其它生长方向
+    - 未产生 solve instance、replay、证据、送审包或 review 状态
+
+prototype_context:
+  confirmed_rules:
+    - P/L 锚点把棋盘分成推世界与拉世界；没有 P/L 时全图为推世界。
+    - B/S 锚点把棋盘分成箱世界与黏世界；没有 B/S 时全图为箱世界，关卡作者不能直接放置独立 M。
+    - 两类锚点均为可移动的 1x2 或 2x1 刚体，只平移不旋转；同类型每关最多一个。
+    - 推与拉都对一个物体实例施力，力可沿运动方向传递；玩家与受力闭包同时平移。
+    - 黏块按四邻接组成刚体；相邻黏格自动合并，跨入箱世界的黏格变为独立箱子，剩余黏格按连通块分裂。
+    - 任一刚体的任一部分被墙、棋盘边界或不可移动结构阻挡时，整个动作失败且状态不变。
+  win_condition: >-
+    每步移动、箱黏归一化与黏块合并全部结算后，所有目标必须由箱子、黏块格或任一锚点格覆盖；玩家覆盖目标不计胜利。
+  object_and_event_semantics:
+    - sticky_block 的可见身份来自当前连通形状；整个连通块作为一个刚体受力和移动。
+    - push_object 与 pull_object 只陈述输入时的施力方式；不自动证明该操作具有玩家价值。
+    - move_sticky_rigid 只证明黏块刚体发生移动；形状是否承担核心责任仍需近邻反事实和玩家侧重读。
+    - anchor_boundary_shift 只证明锚点移动；锚点是否有机改变异形边界关系仍需由 exact 关卡证明。
+    - sticky_merge、sticky_split、box_to_sticky 与 sticky_to_box 只陈述结算事件，不能替代作品身份。
+  allowed_mechanisms:
+    - 小型异形黏块刚体移动与墙或棋盘边界阻挡
+    - 黏块拼接与切分
+    - B/S 锚点边界及其移动
+    - P/L 推拉区域及其移动，但只在有机改变或利用异形边界关系时使用
+    - 推拉锚点自身被推动或拉动，但不得成为主要体验核心
+    - 玩家前序内的基本推拉、力链与目标覆盖
+  tool_boundary:
+    - runtime replay、solver、graph、agency、layout analyzer 与反事实工具只验证规则事实、可解性、解族、旁路、事件和对象参与。
+    - task-local lexicon 与全局 lexicon 只提供可改造的局部词汇，不评价完整关卡、难度、审美或 family 前途。
+    - raw sampler 的兴趣分与标签不是关卡质量、机制必经、唯一解或玩家洞见证明。
+    - PuzzleScript exporter、curated miner、seed factories 与 candidate generator 在 Reality Anchor v0 中不可用。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  stage: late_game
+  player_prior:
+    - 玩家拥有全图视野、正常几何直觉和稳定操作能力。
+    - 玩家已充分熟悉规整小黏块组的可达性、可动性和基本腾挪。
+    - 玩家已充分熟悉黏块拼接、切分及其状态变化。
+    - 玩家已充分熟悉 B/S 锚点推拉、P/L 锚点和各类基础推拉、绕位与力链技巧。
+    - 玩家会迅速剪除显然方向、基本站位和短死路；这些不计为谜题难度。
+  prerequisite_mechanisms:
+    - push_object
+    - pull_object
+    - move_sticky_rigid
+    - sticky_merge
+    - sticky_split
+    - box_to_sticky
+    - sticky_to_box
+    - anchor_boundary_shift:box_sticky
+    - anchor_boundary_shift:push_pull
+  known_prior_level_refs: []
+  known_prior_level_note: >-
+    本简报不假定某个归档 exact 已被玩家玩过；归档候选只用于审美校准与作品防撞，不作为规则教学前序或设计素材。
+
+experience_seed:
+  human_seed: >-
+    围绕 L、T、Z/S、阶梯或其它小型异形黏块，研究其在墙口、墙边与锚点边界附近的可动性、动作可逆性和动作后状态；
+    不同节点可使用不同异形，但核心思考和高潮始终由具体占格拓扑与边界关系主导。
+  designer_interpretation: >-
+    值得独立成关的不是“异形能移动”，而是同一异形刚体在一个紧邻的核心动作组中同时承担两种相隔的空间责任：
+    近端的偏置操作面让玩家取得并保持施力关系，远端突臂或错位轮廓则在墙口、墙边或锚点边界处接触、避让或扫带；
+    玩家必须预见这两处会随同一次刚体移动一起变化，才能得到可继续、可回返或被有意锁定的动后状态。
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  dispatch_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  task_index_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs/ra_task_t_shoulder_sweep_20260719_01/batch.yml
+  selected_material_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#t-形肩窝侧拉远臂扫带与远端墙
+  selection_status: selected_as_local_vocabulary_and_relation_source_without_selecting_a_formal_family
+  first_batch_reading: >-
+    首批 T 形材料验证了一个可用局部词汇：肩窝侧提供近端把手，第二手移动时远臂比 L 形多覆盖一格，因而可扫带 B/S 或被同格墙阻挡。
+    这只支持“近端施力与远端边界作用由同一异形刚体耦合”的抽象关系；本 brief 不选 T 形、right/down 次序、双锚组合或任何图示摆法为正式 family。
+  evidence_limits:
+    - 首批材料只覆盖图示 T/L 朝向和 right,down 两手次序；镜像与其它朝向未采样。
+    - B/S 扫带实例可证明动作、事件和目标覆盖，回初始搜索预算耗尽，不能据此宣称不可回返。
+    - 局部材料不是完整候选，也不证明难度、审美、唯一性、无旁路或本树应采用该结构。
+
+archive_calibration:
+  calibration_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/archive_calibration.yml
+  full_index_or_retrieval_summaries_read: true
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  related_positive_records_read:
+    - RA_CAND_0025
+    - RA_CAND_0029
+  related_lower_bound_or_boundary_records_read:
+    - RA_CAND_0012
+    - RA_CAND_0013
+    - RA_CAND_0014
+    - RA_CAND_0016
+    - RA_CAND_0018
+    - RA_CAND_0020
+    - RA_CAND_0021
+    - RA_CAND_0023
+  additional_human_reviewed_records_read:
+    - RA_CAND_0010
+    - RA_CAND_0015
+    - RA_CAND_0011
+  additional_records_use: >-
+    RA_CAND_0010、0015、0011 仅按 human_brief 校准另一体验核心的 baseline 与两个生长档位差异，不进入本任务设计来源。
+  human_comment_refs:
+    - HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001
+    - HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001
+    - HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001
+    - HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001
+    - HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001
+    - HP_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_001
+    - HP_STUDIO_L_1_001
+    - HP_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_001
+    - HP_RA_LEX_2026_07_07_RATCHET_SPLIT_TOOTH_v2_001
+  player_side_lessons:
+    - 异形、双锚、合并或切割的可见信号会抬高期待；若解法只兑现普通腾挪或事件标签，这是非补偿性缺点。
+    - 紧凑、清楚的短作品可以成立；后期难度必须来自具体几何判断，不能来自路线税、重复处理、单行道演出或反馈迟缓的 deadend。
+    - 前置构造或机制演出若完成后退休，不能靠机制覆盖补偿与高潮的割裂。
+
+experience_core:
+  experience_statement: >-
+    熟练玩家面对一个紧邻墙口、墙边或锚点边界的小型异形黏块，先把它读成一个因轮廓不齐而难以安全折向、贴边或回返的刚体；
+    随后玩家从其偏置操作面主动施力，让完整异形在一个紧邻的核心动作组中移动：近端轮廓维持玩家的施力或回返关系，
+    远端突臂或错位占格同时接触、避让或扫带边界责任对象。玩家由此亲眼看到，同一次刚体运动因具体形状而得到规整替代物无法保留的合法动作和动后状态。
+  visible_setup: >-
+    开局或核心阶段清楚展示一块小型连通异形、一个承担责任的墙口/墙边/锚点边界，以及异形近端操作面与远端轮廓将同时受到约束的空间矛盾；
+    玩家可以先观察这一关系，不靠隐藏信息或规则记忆猜测。
+  player_action: >-
+    玩家比较异形不同操作面和移动方向，预见完整占格集合在下一步或紧邻短序列中的去向，再亲自推或拉整块异形，
+    利用近端取得的操作关系让远端轮廓在边界处完成所需接触、避让或扫带，并读取该动作是否保留回返或造成有意的状态承诺。
+  visible_payoff: >-
+    关键动作后，异形的近端与远端职责在同一画面中兑现：它仍保留所需操作/回返关系，而远端边界接触使通路、锚点、材料状态、对象位置或目标覆盖发生集中可见变化；
+    近邻规整形或删去关键突臂的替代物会被阻挡、漏掉作用对象或留下不同的不可用状态。
+  why_level_exists: >-
+    它把玩家已熟悉的黏块刚体规则推进到真正由二维拓扑主导的空间推理：玩家不是处理一个更大的箱子，也不是观看合并切割动画，
+    而是把异形的不同部位当作同一动作中的操作端和边界作用端，预见并利用动作后的具体状态。
+  core_boundary:
+    central_objects:
+      - 一块在核心动作时保持连通的小型异形黏块及其具体占格拓扑
+      - 异形近端的偏置操作面、肩窝、缺口或等价施力关系
+      - 异形远端突臂或错位轮廓在同一核心动作组中的边界接触范围
+      - 实际改变动作合法性、操作位、回返性或动后状态的墙口、墙边或锚点边界
+    supporting_objects:
+      - 仅提供推拉语义或站位转换的 P/L 锚点
+      - 仅作为可动边界、材料结算或可见反馈载体的 B/S 锚点
+      - 用于收束和显示动后状态的目标、箱子、墙体或必要空地
+
+work_identity:
+  conditions:
+    - >-
+      核心动作时必须存在一块连通的小型异形黏块；其具体二维拓扑至少形成两个不重合的职责区域：近端负责玩家施力或保留操作关系，远端负责边界接触、避让或扫带。
+    - >-
+      近端与远端职责必须由同一个刚体动作或紧邻且不可拆开的核心动作组耦合；若拆成两个独立对象或两个退休子题，作品身份不成立。
+    - >-
+      墙口、墙边或锚点边界必须对该异形的合法动作、操作位、回返性或动后状态承担可验证的结构责任，而不是视觉布景。
+    - >-
+      玩家必须先读取完整占格集合的后继位置，再亲自选择操作面、方向和时机执行关键推拉；不能只执行显然唯一动作或观看强制结算。
+    - >-
+      关键动作后的差异必须立刻可见并被当前关卡消费；高潮后尽快结束，支持对象不得在异形关系结束后另起主要子题。
+    - >-
+      不同树节点可以使用不同异形、不同边界和不同局部结构，但都必须保持“近端操作关系与远端边界作用由同一异形刚体耦合”这一玩家关系。
+  counterfactuals:
+    - >-
+      把异形替换为等数量的直条、矩形或其它规整黏块后，若相同操作面、方向、边界作用和动后状态仍全部成立，则具体拓扑没有承担责任，已不是本作品。
+    - >-
+      删去关键突臂、补平缺口或把偏置轮廓改成近邻形状后，至少应失去远端接触、合法通行、操作位、回返或所需动后状态之一；否则形状差异只是装饰。
+    - >-
+      移走负责的墙口/墙边/锚点边界、把开口放宽或预先把边界对象移到结果位置后，若核心判断仍原样成立，则边界没有结构责任。
+    - >-
+      把近端把手与远端作用端拆成两个可独立操作对象后，若玩家仍做同一判断，则刚体耦合没有成为体验核心。
+    - >-
+      若构造、拼接、切割或锚点搬运完成后全部退休，异形高潮可以单独解决，则新增流程是拼接子题，不属于共享作品身份。
+    - >-
+      若关键动作被做成无需比较形状后继位置的强制动画，或工具标签齐全但玩家只做普通腾挪，则主动几何读取已经丢失。
+  archive_collision_boundaries:
+    - >-
+      不复刻 RA_CAND_0025 的“横向三格经 B/S 切端、构造 L 形、反复作活塞并由双目标提示消费”的完整关系；换朝向、坐标或墙皮不构成新作品。
+    - >-
+      不复刻 RA_CAND_0029 的“两阶段用上方黏块以不同活塞结构推动 B/S 并最终归位”的完整关系。
+    - >-
+      不复刻 RA_CAND_0020 的“固定 B/S 切开 C 形为上下 sticky 端点与中心 crate bridge，再以对称重复分支消费三个输出”的关系。
+    - >-
+      不复刻 RA_CAND_0021 的“P/L 作 force-chain 推杆强推 C 形或近邻大黏块过固定 B/S，再把切开端点送入墙齿目标”的关系。
+
+level_brief:
+  baseline_packaging_intent: direct_clear_realization
+  expected_difficulty: 3
+  tree_expected_difficulty_range: [3, 5]
+  stage: late_game
+  expected_scale: >-
+    紧凑、小到中小型；只保留一块核心小型异形、一个明确负责的边界关系和兑现动后状态所必需的最少支持对象，
+    不用大地图或多机制数量制造分量。
+  expected_player_load: >-
+    baseline 让熟练玩家在清楚题面中进行一次真实但可读的二维后继投影：同时跟踪近端操作关系与远端占格去向，并判断动作后是否仍可操作或可回返。
+    难度来自这项非显然几何耦合，不来自规则教学、长走位、重复处理、机械试错或 solver 搜索量。
+  baseline_setup_policy:
+    - 可以直接给予已经成形的异形和核心边界局面，不要求 baseline 主动构造形状。
+    - 核心关系必须由玩家主动完成，不能是开局贴脸触发的强制 witness。
+    - 对预期难度 3，起点应提供与题面相称的观察和站位空间，再进入关键不可逆承诺。
+    - 关键动作后只保留必要的可见兑现与短收束，不追加清理劳动。
+  non_goals:
+    - 不把可动锚点本身设为主要谜题。
+    - 不把拼接、切割或事件覆盖数量设为 baseline 目标。
+    - 不在本 brief 中指定具体异形、操作方向、目标数、步数、坐标或 structure family。
+
+allowed_design_sources:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - 人类确认的本 experience_brief 与当前 assignment 允许的规则、runtime 和工具入口
+  - Designer 围绕作品身份自行构造的 fresh 局部关系
+forbidden_design_sources:
+  - 归档候选的布局、结构、机制组合、包装或高潮
+  - prototypes/reality_anchor/mechanism_lab/runs/
+  - Explorer 的 raw runs，除非未来 assignment 明确授权
+  - 旧 reports、旧 exact、旧审查、旧 critic 或未归档自评
+
+prototype_specific_routing:
+  - 每个节点设计前及每次处理教练意见前，读取 assignment 指定的最新 task-local lexicon 与索引；新材料不得静默改变正在验证或送审的 exact。
+  - 后续节点 assignment 才能进入 layout、solve instance、非空 replay、玩家侧重读和解族唯一性自查；本 brief 不授予该阶段资格。
+  - 新局部材料缺口必须先抽象成与候选坐标、包装和 family 去留无关的设计空间，再由 Controller 调度 Explorer。
+  - Reality Anchor 的 invalid_goal_prune、opening_comfort_check 与 redundant_element_prune 都是原型专属 pre_submission_check；只在 Controller 后续正式分配时执行。
+  - expected_difficulty 为 3，后续提交前 opening_comfort_check 适用；任何起点改动都会改变 solve instance 并要求重跑相关证据。
+  - 提交前若存在多个目标、明显 leaf/pocket/thick border 或孤立对象，按 design_handoff 由 Controller 编排 goal prune 与 redundant element prune。
+
+human_review_constraints:
+  - fresh Explorer 不读取归档、历史候选、旧 reports、旧 exact、旧审查或 Designer 设想。
+  - 每个新 exact version 使用 fresh evidence reviewer 与 fresh level reviewer。
+  - 同一 exact version 的阶段 A 与阶段 B 由同一 fresh level reviewer 连续完成，阶段 A verdict 写定后才能读取本 brief 和树关系。
+  - 不预设冻结节点数量，也不在本 brief 决定生长方向；由存活节点的阶段 B 判断下一关系与树的充分性。
+  - 独立审查从熟练后期玩家侧判断，不把规整黏块基础腾挪、机械试错、事件标签或 solver 复杂度当作作品价值。
+  - 阶段 A 独立 reviewer 自主完成其归档校准，不接受本 Designer 代选的唯一 anchors。
+
+read_provenance:
+  assignment_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/designer_experience_brief_002.yml
+  input_scope: assignment_input_refs_only
+  output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/experience_brief.yml

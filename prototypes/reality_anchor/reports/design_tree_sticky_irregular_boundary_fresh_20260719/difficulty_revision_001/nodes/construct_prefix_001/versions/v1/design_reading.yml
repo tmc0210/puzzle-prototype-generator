@@ -1,0 +1,58 @@
+node_id: construct_prefix_001
+exact_version: v1
+candidate_id: RA_DIFFICULTY_CONSTRUCT_PREFIX_UPPER_L_V1
+reading_status: failed_player_side_re_read
+
+canonical_player_reading:
+  opening: >-
+    玩家看到一个双格黏条、一个仍在 B 侧的单箱、固定 B/S 与 P/L，以及右侧 L 形目标和双墙齿。
+    最短路径先把单箱推入 S 侧，再把它送到双格条左下，主动构成三格 L。
+  after_construction: >-
+    新黏上的低阶格紧邻玩家，玩家从该新把手 push:right，使整个 L 跨入 P/L；随后绕外侧两次 pull:right，
+    最后从墙齿缺口下方 pull:down。第一次正确对象动作之后仍持续操纵同一异形，canonical 本身没有退休构造。
+  plausible_wrong_construction: >-
+    玩家也可先把双格条降到目标同高的下带，再把单格接成同朝向 L；这一选择局部上更贴近目标，
+    跨界后才因远臂撞左墙齿受阻。该失败分支的反馈时机与可见诱因成立。
+
+actual_legal_action_space_reading:
+  decisive_defect: >-
+    canonical 不是当前 exact 唯一的玩家逻辑。上方与右侧外回路在合体前已经可达，玩家能先从 L 侧牵动双格条，
+    或分别搬运组件后再合体；完整图显示这些路径仍可进入同一终局走廊。
+  observed_non_equivalence:
+    - 正确上带构造位姿不支配所有胜路，active construction 可被跳过。
+    - 同一跨界位姿既可由 push:right 进入，也可由 pull:right 进入，force mode 与把手生命周期不同。
+    - 第一次水平 pull 后位姿亦非必经；组件可异位、断开或回拉后再收敛。
+    - 只有最终墙齿对齐列与终手胜位姿为所有胜路共享，说明作品在结尾才收束。
+
+parent_relation_audit:
+  parent_start_push_preserved_on_canonical: true
+  parent_start_push_preserved_on_all_winning_families: false
+  parent_two_horizontal_pulls_preserved_on_canonical: true
+  parent_multi_face_final_pull_preserved_on_canonical: true
+  construct_prefix_dominates_all_winning_families: false
+  judgment: >-
+    canonical 的后半段保留了 parent 操作，但存在胜族绕过其启动 push 与正确构造；
+    因而不能以“某条解保留 parent”替代“当前 exact 保留 parent 难度关系”的要求。
+
+major_element_role_failures:
+  - element: 合体前可达的 L 侧外回路
+    intended_role: 合体并跨界后取得外部 pull 把手
+    actual_role: 未合体双格条也能提前使用同一把手越界
+  - element: 新生成的低阶格
+    intended_role: 唯一 P 侧启动把手，并把 construction 立即接到 parent
+    actual_role: 只在最短解中承担该职责，不支配所有胜路
+  - element: 双墙齿
+    intended_role: 消费正确/错误构造并维持终段换面
+    actual_role: 能收束最终列并拒绝下带 probe，但无法追溯约束合体前的组件顺序
+  - element: 固定 P/L
+    intended_role: 构造完成后的单一 push-to-pull handoff
+    actual_role: 分离组件也可在两侧分别用不同 force mode 搬运，产生非等价 first-entry classes
+
+what_metrics_do_not_rescue:
+  - 唯一 terminal winning state 只说明目标位姿唯一，不说明到达它的对象因果族唯一。
+  - 唯一 shortest raw path 只说明最省输入的 canonical 清楚，不排除更长的结构性旁路。
+  - 下带失败状态不在 win-backreach 只证明该一个诱饵被拒绝，不证明其它提前越界/延后合体族被拒绝。
+
+designer_player_verdict: >-
+  不送 fresh 独立审查。当前 v1 的 canonical 有可读的 construct-prefix 雏形，但实际玩家可以绕过它；
+  继续把它包装成唯一解会把图的终局收敛误写成玩家逻辑唯一性。

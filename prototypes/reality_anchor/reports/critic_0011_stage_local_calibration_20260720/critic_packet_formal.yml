@@ -1,0 +1,456 @@
+review_attempt_id: stage-local-calibration-formal-20260720
+prototype_id: reality_anchor
+prototype_rules:
+  confirmed_rules:
+    - P/L 是可平移不可旋转的推拉锚点；P 侧为推世界，L 侧为拉世界
+    - 玩家推拉物体时，受力对象闭包与玩家同时平移；任何刚体受阻则整次动作失败
+    - 锚点覆盖目标计入胜利，玩家覆盖目标不计
+  win_condition: 所有目标均由箱子、黏块或锚点格覆盖
+  object_and_event_semantics:
+    - "# 墙；. 地面；@ 玩家；C 箱子；G 目标；P/L 推拉锚点；* 箱子在目标；+ 玩家在目标"
+  player_prior:
+    - 已完成 base packet 所列五个有序前序关卡
+prior_course_refs:
+  - prototypes/reality_anchor/reports/llm_fill_player_benchmark_20260714_tmp/primer_f.md
+target_difficulty: 4
+stage_difficulty_calibration_refs:
+  - prototypes/reality_anchor/reports/critic_0011_stage_local_calibration_20260720/stage_local_calibration_formal.md
+cross_stage_aesthetic_calibration_refs:
+  - prototypes/reality_anchor/reports/critic_0011_stage_local_calibration_20260720/broader_aesthetic_calibration_formal.md
+candidate:
+  candidate_id: anonymous-current
+  exact_version: anonymous-exact-v1
+  solve_instance:
+    layout: |-
+      ######
+      #PL@.#
+      #..GG#
+      #.CG##
+      #....#
+      ######
+    player_start:
+      - 3
+      - 1
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+      description: |
+        After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.
+  canonical_solution:
+    exact_inputs:
+      - down
+      - left
+      - left
+      - down
+      - right
+      - up
+      - down
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - right
+      - up
+      - left
+      - left
+      - left
+      - down
+      - right
+      - left
+      - down
+      - right
+    mechanically_derived_trace:
+      - step: 1
+        input: down
+        before_layout: |-
+          ######
+          #PL@.#
+          #..GG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #PL..#
+          #..+G#
+          #.CG##
+          #....#
+          ######
+      - step: 2
+        input: left
+        before_layout: |-
+          ######
+          #PL..#
+          #..+G#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #PL..#
+          #.@GG#
+          #.CG##
+          #....#
+          ######
+      - step: 3
+        input: left
+        before_layout: |-
+          ######
+          #PL..#
+          #.@GG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #PL..#
+          #@.GG#
+          #.CG##
+          #....#
+          ######
+      - step: 4
+        input: down
+        before_layout: |-
+          ######
+          #PL..#
+          #@.GG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #PL..#
+          #..GG#
+          #@CG##
+          #....#
+          ######
+      - step: 5
+        input: right
+        before_layout: |-
+          ######
+          #PL..#
+          #..GG#
+          #@CG##
+          #....#
+          ######
+        event: push_object:crate#1
+        after_layout: |-
+          ######
+          #PL..#
+          #..GG#
+          #.@*##
+          #....#
+          ######
+      - step: 6
+        input: up
+        before_layout: |-
+          ######
+          #PL..#
+          #..GG#
+          #.@*##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #PL..#
+          #.@GG#
+          #..*##
+          #....#
+          ######
+      - step: 7
+        input: down
+        before_layout: |-
+          ######
+          #PL..#
+          #.@GG#
+          #..*##
+          #....#
+          ######
+        event: pull_object:push_pull_anchor, anchor_boundary_shift:push_pull
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.@*##
+          #....#
+          ######
+      - step: 8
+        input: left
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.@*##
+          #....#
+          ######
+        event: pull_object:crate#1
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #@CG##
+          #....#
+          ######
+      - step: 9
+        input: down
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #@CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #@...#
+          ######
+      - step: 10
+        input: right
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #@...#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #.@..#
+          ######
+      - step: 11
+        input: right
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #.@..#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #..@.#
+          ######
+      - step: 12
+        input: up
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #..@.#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.C+##
+          #....#
+          ######
+      - step: 13
+        input: up
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.C+##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #....#
+          #PL+G#
+          #.CG##
+          #....#
+          ######
+      - step: 14
+        input: right
+        before_layout: |-
+          ######
+          #....#
+          #PL+G#
+          #.CG##
+          #....#
+          ######
+        event: pull_object:push_pull_anchor, anchor_boundary_shift:push_pull
+        after_layout: |-
+          ######
+          #....#
+          #.PL+#
+          #.CG##
+          #....#
+          ######
+      - step: 15
+        input: up
+        before_layout: |-
+          ######
+          #....#
+          #.PL+#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #...@#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+      - step: 16
+        input: left
+        before_layout: |-
+          ######
+          #...@#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #..@.#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+      - step: 17
+        input: left
+        before_layout: |-
+          ######
+          #..@.#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #.@..#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+      - step: 18
+        input: left
+        before_layout: |-
+          ######
+          #.@..#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #@...#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+      - step: 19
+        input: down
+        before_layout: |-
+          ######
+          #@...#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #....#
+          #@PLG#
+          #.CG##
+          #....#
+          ######
+      - step: 20
+        input: right
+        before_layout: |-
+          ######
+          #....#
+          #@PLG#
+          #.CG##
+          #....#
+          ######
+        event: push_object:push_pull_anchor, anchor_boundary_shift:push_pull
+        after_layout: |-
+          ######
+          #....#
+          #.@PL#
+          #.CG##
+          #....#
+          ######
+      - step: 21
+        input: left
+        before_layout: |-
+          ######
+          #....#
+          #.@PL#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #....#
+          #@.PL#
+          #.CG##
+          #....#
+          ######
+      - step: 22
+        input: down
+        before_layout: |-
+          ######
+          #....#
+          #@.PL#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_layout: |-
+          ######
+          #....#
+          #..PL#
+          #@CG##
+          #....#
+          ######
+      - step: 23
+        input: right
+        before_layout: |-
+          ######
+          #....#
+          #..PL#
+          #@CG##
+          #....#
+          ######
+        event: push_object:crate#1
+        after_layout: |-
+          ######
+          #....#
+          #..PL#
+          #.@*##
+          #....#
+          ######
+mechanical_evidence_status: supported

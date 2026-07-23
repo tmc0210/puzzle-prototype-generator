@@ -1,0 +1,103 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V13_OPENING_SIDE_ACCESS_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v13_probe_only
+status: probe_passed_for_candidate
+
+scope:
+  formal_target: false
+  candidate: false
+  graph_run: false
+  solver_run: false
+  uniqueness_written: false
+  submission_written: false
+
+artifact_refs:
+  reasoning_sketch: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/reasoning_sketch.yml
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/diagnostics/opening_access_layout.txt
+  opening_to_h2_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/diagnostics/opening_to_h2_replay.json
+  pre_h0_walk_reachability: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/diagnostics/pre_h0_walk_reachability.json
+  post_h0_handle_reachability: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/diagnostics/post_h0_handle_reachability.json
+  regression_probe: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/diagnostics/regression_probe.json
+
+parser_exception:
+  dummy_target: [13,1]
+  isolated_by_walls: true
+  covered: false
+  triggered_win: false
+  design_role: none
+
+runtime:
+  runner: npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+  observed_case_count: 8
+  cases:
+    - {id: RA_V13_OPENING_TO_H2, result: main_chain_passed, legal_through_step: 21}
+    - {id: RA_V13_PRE_H0_WALK_REACHABILITY, result: h1_faces_inaccessible, reachable_count: 19}
+    - {id: RA_V13_POST_H0_HANDLE_REACHABILITY, result: h1_face_reachable_by_walk, reachable_count: 16}
+    - {id: RA_V13_REPEAT_PUSH, result: expected_destination_occupied, legal_through_step: 6, stopped_at_step: 7}
+    - {id: RA_V13_SECOND_DEEP_CUT, result: expected_force_blocked, legal_through_step: 1, stopped_at_step: 2}
+    - {id: RA_V13_MOTHER_H2_CONTRAST, result: expected_force_blocked, legal_through_step: 30, stopped_at_step: 31}
+    - {id: RA_V13_CRATE_EAST_BRANCH, result: bounded_before_h2_footprint, legal_through_step: 22}
+    - {id: RA_V13_CRATE_SOUTH_BRANCH, result: bounded_remerge_without_h2_substitution, legal_through_step: 20}
+
+gates:
+  opening_p_side_cut:
+    result: passed
+    start: [4,4]
+    bs_initial: [[4,5],[4,6]]
+    first_input: down
+  pre_h0_walk_access:
+    result: passed
+    h0_p_push_face_reachable: true
+    equivalent_l_side_pull_faces_reachable: false
+    intended_h1_face_reachable: false
+  h0_first_p_push:
+    result: passed
+    step: 6
+    input: right
+    vacated_l_gate_cell: [6,8]
+  post_h0_handle_access:
+    result: passed
+    pure_walk_exit: [down]
+    h1_face_walk_path: [down, right, right, right, up]
+    additional_object_or_anchor_motion_used: false
+  repeat_push:
+    result: passed
+    stop_reason: destination_occupied
+  progressive_h2:
+    result: passed
+    h1_pull_steps: [12,13]
+    h2_input: up
+    h2_step: 21
+    exact_loop_executed: false
+  mother_upper_tail:
+    result: passed
+    same_h2_input: up
+    failure: force_blocked
+    player_destination_open: true
+    responsible_wall: [10,5]
+  second_deep_cut:
+    result: passed
+    failure: force_blocked
+    responsible_wall: [4,8]
+    state_unchanged_at_stop: true
+  cut_crate_substitution:
+    result: passed_with_bounded_state_scope
+    north_and_west_faces_inaccessible: true
+    east_branch_bounded_before_h2_footprint: true
+    south_bounded_remerge_observed: true
+    former_cut_cell_entered_h2_footprint: false
+    reproduced_intended_h2_footprint: false
+
+designer_decision:
+  gate: passed_for_candidate_only
+  statement: >-
+    当前 exact probe 在 P-side 完成 opening cut；H0 前冻结对象/锚点的 walk-only 可达域无法取得任何列出的
+    L-side 等价 pull face，而 H0 的首次 P push 使 L 自身让出 (6,8)，玩家随即只用 walk 进入外侧并取得 H1。
+    主链继续完成两次 H1 与 up H2，未执行 exact loop；repeat、母体上尾与第二格 deep cut 回归保持。
+    cut crate 的 east 分支有界，south 分支虽有一次重并，但 former cut cell 不进入也不复现 intended H2 footprint。
+    Designer 只据此把 probe 交给 Controller 作 candidate 决策，不形成正式 candidate。
+  evidence_limit: >-
+    只覆盖列出的 exact-layout/current-runtime trace、冻结对象 walk-only BFS 与有界 crate 分支；
+    不声称完整图、解族唯一性、全局 crate 不可操作或待玩质量。

@@ -1,0 +1,81 @@
+schema_version: reality_anchor_counterfactual_exact_state_v1
+counterfactual_id: remove_distal_toe_core_snapshot
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v2
+coordinate_system: zero_based_xy
+
+source:
+  relation: current_exact_canonical_step_7_after
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+  layout_sha256: 6b537c3847a8abf968e184c2920445135755822eb81efc51da9f77a26d171d86
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/canonical_replay.json
+  canonical_step: 7
+  source_state_key: "Ply:6,4|C:|M:5,3;6,3;4,4;5,4|PL:none|BS:B:4,2;S:4,3"
+  source_state:
+    player: [6, 4]
+    crates: []
+    sticky_components:
+      - [[5, 3], [6, 3], [4, 4], [5, 4]]
+    push_pull_anchor: null
+    box_sticky_anchor:
+      B: [4, 2]
+      S: [4, 3]
+    goals: [[4, 1], [4, 3]]
+    goal_overlays:
+      - goal: [4, 3]
+        occupant: S
+    is_win: false
+
+single_variable_change:
+  kind: remove_one_sticky_cell
+  removed_sticky_cells: [[4, 4]]
+  role: S 下方远趾
+  unchanged:
+    - current exact 的墙与地面几何
+    - goals [4,1] 与 [4,3]
+    - player [6,4]
+    - B [4,2] 与 S [4,3]
+    - 近端上推接触格 [6,3]
+    - 其余黏块格 [5,3]、[6,3]、[5,4]
+
+counterfactual_state:
+  geometry_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+  geometry_mode: inherit_walls_and_floor_only
+  player: [6, 4]
+  crates: []
+  sticky_components:
+    - [[5, 3], [6, 3], [5, 4]]
+  push_pull_anchor: null
+  box_sticky_anchor:
+    B: [4, 2]
+    S: [4, 3]
+  goals: [[4, 1], [4, 3]]
+  goal_overlays:
+    - goal: [4, 3]
+      occupant: S
+  is_win: false
+
+expected_probe:
+  inputs: [up]
+  required_precondition: runtime state injection must preserve S-on-goal overlay at [4,3]
+  expected_legal_through_step: 1
+  expected_dynamic_boundary:
+    player_after: [6, 3]
+    box_sticky_anchor_unchanged:
+      B: [4, 2]
+      S: [4, 3]
+    upper_goal_covered: false
+    lower_goal_covered_by: S
+    final_win: false
+  expected_events_boundary:
+    includes: ["push_object:sticky#1", move_sticky_rigid]
+    excludes: ["force_chain:n2", "anchor_boundary_shift:box_sticky"]
+
+execution_boundary:
+  status: requires_state_injection
+  direct_try_inputs_layout_available: false
+  reason: >-
+    Reality Anchor 文本 layout 只支持 G、+、*、m 四种目标表达；不支持 B/S 与目标叠加。
+    canonical step 7 的 S 位于下端目标 [4,3]，因此任何纯文本快照都会丢目标、移目标或丢 S，无法保持单变量。
+  claim_policy: >-
+    在可信 state injection 重跑前，此 artifact 只固定精确反事实状态与预期边界，不充当已执行 runtime replay。

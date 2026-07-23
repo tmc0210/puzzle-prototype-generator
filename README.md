@@ -13,9 +13,9 @@
 -> 学习目标排序
 -> 课程规划 / 体验种子
 -> 后台局部结构语料探索
--> 直白 baseline
--> 每节点独立硬证据与玩家侧质量门
--> 体验核心教练引导设计树生长
+-> 唯一单关候选
+-> 每个 exact version 的独立硬证据与玩家侧质量门
+-> 体验核心对齐与同候选修订
 -> 原型专属提交前工作流
 -> 待玩列表
 -> 人类试玩取舍
@@ -57,7 +57,7 @@
 常用入口：
 
 - 新机制 runtime + tools bring-up: [Agent Preflight](docs/09-agent-preflight.md), [机制语义确认与 ASCII Probe](docs/28-mechanic-disambiguation-and-ascii-probes.md), [Runtime Adapter 边界](docs/24-runtime-adapter-boundary.md), [新机制实现 Playbook](docs/25-new-mechanic-implementation-playbook.md), [工具契约与 Conformance](docs/26-tool-contracts-and-conformance.md), [新机制 Prompt + 代码模板](templates/new_mechanic/README.md)
-- 当前体验核心设计树工作室: [玩家体验核心与关卡包装方法论](docs/17-experience-core-level-design.md), [关卡设计工作室执行标准](docs/21-level-design-studio-standard.md), [模板索引](docs/20-level-design-studio-templates.md), [`$sokoban-level-design-studio`](skills/sokoban-level-design-studio/SKILL.md), [`$sokoban-mechanism-lab`](skills/sokoban-mechanism-lab/SKILL.md), [`$sokoban-level-reviewer`](skills/sokoban-level-reviewer/SKILL.md)
+- 当前体验核心单关工作室: [玩家体验核心与单关包装方法论](docs/17-experience-core-level-design.md), [关卡设计工作室执行标准](docs/21-level-design-studio-standard.md), [模板索引](docs/20-level-design-studio-templates.md), [`$sokoban-level-design-studio`](.agents/skills/sokoban-level-design-studio/SKILL.md), [`$sokoban-level-designer`](.agents/skills/sokoban-level-designer/SKILL.md), [`$sokoban-mechanism-lab`](.agents/skills/sokoban-mechanism-lab/SKILL.md), [`$sokoban-evidence-reviewer`](.agents/skills/sokoban-evidence-reviewer/SKILL.md), [`$sokoban-puzzle-critic`](.agents/skills/sokoban-puzzle-critic/SKILL.md)
 - 人类设计师参与的候选归档实验: [Design Archive Contract](docs/29-design-archive-contract.md), [Design Archive Templates](templates/design_archive/README.md)
 - 未来 knowledge / curriculum skill 化: [机制 IR](docs/02-mechanic-ir.md), [多实例对象模型](docs/19-multi-instance-object-model.md), [玩家模型轻量本体](docs/12-player-model-ontology.md), [玩家模型推导流程](docs/13-player-model-derivation.md), [课程排序规范](docs/14-curriculum-ordering.md), [关卡规格契约](docs/15-level-spec-contract.md)
 - pull-portal 归档 / casebook: [实现记录](docs/07-implementation-notes.md), [Pull Portal Casebook](docs/23-pull-portal-casebook-and-tool-notes.md), [reports index](prototypes/pull_portal_fallback/reports/README.md)

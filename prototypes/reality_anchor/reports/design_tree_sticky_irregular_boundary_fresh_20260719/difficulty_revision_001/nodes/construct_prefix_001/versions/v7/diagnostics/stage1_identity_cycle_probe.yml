@@ -1,0 +1,85 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V7_PROBE_STAGE1_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v7_stage1_probe_only
+status: stage1_passed
+
+artifact_refs:
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_layout.txt
+  replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_replay.json
+
+runtime:
+  runner: npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+  probe_id: RA_V7_STAGE1_IDENTITY_CYCLE
+  completed: true
+  legal_through_step: 13
+  graph_run: false
+  p_l_present: false
+  formal_candidate_layout: false
+
+phases:
+  correct_cut_pair:
+    checkpoint_step: 1
+    input: up
+    events:
+      - push_object:box_sticky_anchor
+      - anchor_boundary_shift:box_sticky
+      - sticky_to_box:n1
+    box_sticky_anchor:
+      B: [2, 6]
+      S: [2, 5]
+    sticky_components:
+      - [[6, 4], [7, 4], [6, 5]]
+    crates:
+      - [6, 6]
+    reading: 移动 B/S 一格把连通四格母体的下尾切成 crate，保留一个连通三格 L 残体。
+
+  remerge_undo:
+    checkpoint_step: 7
+    input: down
+    events:
+      - push_object:box_sticky_anchor
+      - anchor_boundary_shift:box_sticky
+      - box_to_sticky:n1
+      - sticky_merge:n1
+    box_sticky_anchor:
+      B: [2, 7]
+      S: [2, 6]
+    sticky_components:
+      - [[6, 4], [7, 4], [6, 5], [6, 6]]
+    crates: []
+    reading: 玩家只撤回 B/S；原 crate 随边界转回 sticky 并与三格残体合并，恢复原连通母体。
+
+  recut_exact_restore:
+    checkpoint_step: 13
+    input: up
+    events:
+      - push_object:box_sticky_anchor
+      - anchor_boundary_shift:box_sticky
+      - sticky_to_box:n1
+    box_sticky_anchor:
+      B: [2, 6]
+      S: [2, 5]
+    sticky_components:
+      - [[6, 4], [7, 4], [6, 5]]
+    crates:
+      - [6, 6]
+    reading: 玩家再次移动 B/S 到同一切深，恢复与第一阶段切分后完全相同的状态。
+
+exact_comparison:
+  compared_steps: [1, 13]
+  step_1_state_key: "Ply:2,7|C:6,6|M:6,4;7,4;6,5|PL:none|BS:B:2,6;S:2,5"
+  step_13_state_key: "Ply:2,7|C:6,6|M:6,4;7,4;6,5|PL:none|BS:B:2,6;S:2,5"
+  full_state_key_equal: true
+  non_player_state_equal: true
+  player_state_equal: true
+  direct_crate_move_used: false
+  reset_used: false
+
+designer_decision:
+  stage1_gate: passed
+  statement: >-
+    current runtime 支持由玩家实际移动 B/S 完成“切分为 L+crate—回粘恢复母体—再次切分并 exact restore”的身份循环。
+  evidence_limit: >-
+    仅支持 stage1 身份态可逆性；不支持 P/L 配对链、替代切深、crate 旁路、可解性、解族、正式 exact 或作品质量声明。

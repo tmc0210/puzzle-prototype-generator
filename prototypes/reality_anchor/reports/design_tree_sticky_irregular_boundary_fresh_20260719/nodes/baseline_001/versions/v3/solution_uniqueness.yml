@@ -1,0 +1,57 @@
+assignment_id: RA_DESIGNER_BASELINE_V3_OUTLINE_TRIM_REVISION_001
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v3
+layout_sha256: 477d96ae46c2a683a6ec4073f89b724474c3d02cfdac1ef83af27efe26290b4a
+
+result: unique_complete
+search_scope: complete
+search_budget: maxStates=300000; graphMaxStates=300000
+actual_search:
+  reachable_states: 19
+  legal_transitions: 34
+  winning_states: 1
+  compressed_regions: 3
+  commitment_transitions: 2
+  winning_regions: 1
+  initial_commitments: 2
+  initial_viable_commitments: 1
+  initial_dead_commitments: 1
+  branching_win_sccs: 0
+  merging_win_sccs: 0
+
+logic_class_account: >-
+  完整状态图只留下一个玩家逻辑类：从 initial SCC 选择下方肩窝，向右推动完整 T，
+  再从保留的左臂 pull 面向下拉，使远端右臂扫带 B/S 覆盖目标。
+  上方下推是另一个真实 commitment，但属于 dead SCC；不存在第二个 win-reaching commitment 或第二个胜态。
+
+known_raw_winning_variants:
+  - 唯一胜态前可在 8 状态 initial SCC 内作纯走位排列、回退与重定位；它们不改变对象职责、目标分配或依赖顺序。
+
+equivalence_account: >-
+  所有胜路都必须离开同一个 viable commitment，保持“横推 T 对准远臂列 -> 下拉 T 触发 B/S”这一因果顺序。
+  initial SCC 内的双向走位只改变玩家到达肩窝的路线，不构成第二玩家逻辑类。
+
+dead_alternative:
+  inputs: [up, right, right, down]
+  result: dead
+  evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/dead_upper_replay.json
+
+outline_equivalence:
+  result: complete_graph_isomorphic_to_v2_after_coordinate_translation
+  mapping: "(x,y)->(x-1,y)"
+  state_keys_equal: true
+  labeled_edges_equal: true
+  winning_state_keys_equal: true
+  evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/outline_graph_isomorphism.json
+
+evidence_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/complete_graph_opening.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.json
+
+evidence_limits:
+  - 唯一性按 docs/21 的玩家逻辑类声明，不把 initial SCC 内的纯走位差异谎称为不同解。
+  - 完整图只证明当前 exact version 的状态级解族，不评价玩家是否容易看出唯一逻辑类。
+  - explain-layout 未提供 instance-level object participation，故对象职责由逐步 replay 与反事实支持。
+
+designer_uniqueness_gate: passed

@@ -1,0 +1,100 @@
+assignment_id: RA_DESIGNER_CONSTRUCT_PREFIX_001
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v1
+layout_sha256: d4affc733071b977ddaf9f7207c3ba366fb5f7d2e45b19d8d874f4cf1b99d0d9
+
+player_side_reread:
+  opening_view: >-
+    玩家从下条左侧开局；上条与水平 B/S、左侧目标挤在同一顶行，右端和上方都是墙。
+    下条与上条之间留一行空地，左下墙齿正位于两条对齐后的目标格中。题面同时暴露目标方向、两根短条和墙齿轮廓。
+  first_meaningful_choice: >-
+    玩家可以绕到下条下方，把它直接上推并与上条合成整齐 2x2；也可以立即把下条向右推一格，
+    再从下方上推成错位 S。两次上推都合法、都触发 merge，且两种合并后都能走到下层右侧把手。
+  viable_read: >-
+    先把下条右移一格再上推。形成的 S 在左下留下墙齿缺口，而上层左格仍与 S 端隔一格对齐；
+    玩家绕到下层右侧左推时，完整 S 可以避开墙齿，远端上臂同时把 B/S 左推到目标。
+  dead_read: >-
+    直接上推得到的 2x2 并不会在合并时失败，玩家也能取得同方向右把手；只有终局左推时，
+    左下格的目标位被墙齿占据，整块动作以 force_blocked 原子拒绝，B/S 保持原位。
+  payoff: >-
+    正确终拍由近端下层右把手驱动四格 S 整体左移；左下缺口越过墙齿，上层远臂把 B/S 一同左推，
+    B 覆盖唯一目标后立即结束。构造轮廓、刚体运动和边界作用在一拍中同时可见。
+
+difficulty_read:
+  target: 4
+  verdict: supported_at_lower_edge
+  player_reasoning_burden:
+    - 必须主动破坏两条表面上的整齐对齐，先把下条横移，再决定合并位置。
+    - 两种合并都合法且都保留相同方向的后继把手，不能只凭“是否还能操作”选形。
+    - 必须同时投影终局左移的完整占格：左下格要避墙，上层远格要接触不可直接操作的 S 端。
+    - 必须把 B/S 左侧目标反推为“从右侧借异形推动”，而不是寻找玩家直接施力位。
+  calibration_limit: >-
+    核心只有一次构造选择与一次兑现，房间紧凑，试错后也会直接暴露墙齿阻塞；因此只主张难度 4 的低端，
+    不以 133 个状态或 8 步长度冒充持续多阶段推演。
+
+structural_responsibility:
+  construction_prefix: >-
+    两根分离横条让玩家主动决定合并偏移；上条开局被 B/S、顶墙和右墙固定，不能绕过前缀单独完成终局动作。
+  irregular_body: >-
+    S 的下层右格提供近端推动面，左下缺口负责避开墙齿，上层左格负责远端接触 S 端；三个职责必须由同一合并刚体同时兑现。
+  boundary_object: >-
+    水平 B/S 既封住上条的左操作面，又是终局唯一被远端作用的对象；B 左移一格覆盖唯一目标，动作后无清理尾巴。
+  compact_room: >-
+    下方回廊只承担在下条下方与合并体右侧之间换位，不提供直接进入 B/S 目标行的旁路。
+
+non_splicing_diagnosis:
+  verdict: passed
+  reason: >-
+    前缀没有先产出一把可与后半段脱离使用的“钥匙”，也没有在合并后切换到新对象、新语法或独立清理任务。
+    玩家在前缀中决定的唯一状态差异就是合并体的左侧轮廓；后继唯一对象动作直接读取这一轮廓，
+    并在同一拍同时检验墙齿缺口和远端 B/S 接触。2x2 的合并与把手均真实存在，只因完整占格不适合该后继动作而失败。
+  parent_relation: >-
+    父节点预制 T 后要求联合读取近端操作面与远端足迹；本节点保留这条体验身份，但把“异形已给出”改为
+    “先从两个局部均可行的合并中构造正确异形”。增长发生在前序构造，而非在父核心后拼接另一道题。
+  anti_splice_checks:
+    - 构造完成后没有目标结算、门锁开启或对象转交；只有形状本身留存。
+    - S 与 2x2 的差别只由随后同一个左推动作消费。
+    - 正确终拍同时包含近端刚体推动、远端 force chain 与 B/S 边界位移，没有第二个独立兑现阶段。
+    - 删墙齿会让 2x2 同把手获胜；删远端上臂会让 S 同输入可动但不胜，说明两个职责都落在终局读取上。
+
+counterfactual_reading:
+  aligned_square_branch:
+    result: dead_as_expected
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/runtime_analysis.yml
+    observation: 2x2 合并与取右把手均合法；第 7 步左推 force_blocked、无事件、未胜。
+  remove_wall_tooth:
+    result: alternative_restored_as_expected
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_no_wall_tooth.txt
+    observation: 只把墙齿改为空地后，2x2 的七步输入全部合法，终拍推动 B/S 并胜利。
+  delete_remote_upper_arm:
+    result: fail_as_expected
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_delete_remote_arm.txt
+    observation: 同一八步仍完成合并与终局左移，但终拍没有 force chain 或 B/S 位移，未胜。
+  winning_bypass:
+    result: absent_in_complete_graph
+    observation: >-
+      完整 133-state 图只有一个胜态；可胜 SCC 子图无 branching/merging，初始 SCC 五个出口只有 canonical S 合并出口可胜。
+
+parent_contrast:
+  baseline_core_preserved: >-
+    仍由一个异形刚体把近端操作面与远端作用格绑定，并用远端格移动玩家不可直接操作的 B/S 后立即结束。
+  genuine_growth: >-
+    baseline 开局已给出 T；本节点必须先比较两个都能合并、都保留后继把手的局部构造，
+    根据稍后的整块运动和远端接触主动形成 S。
+  map_and_grammar_changes_not_claimed_as_growth: >-
+    本节点没有继承 baseline 的地图、T 形、P/L pull 或上下观察路；这些只是重新承载冻结体验核心，
+    送审增长只声明 construct_prefix。
+
+known_perceptible_defects:
+  - 一旦玩家试做 2x2 并在终局撞墙，正确右移一格会很直接；重玩信息增益高于首次预判难度。
+  - 正确 S 合并后只剩三步换位和一次兑现，没有第二次形态应用；这是单一 construct-prefix 节点的紧凑上限。
+  - 顶行把目标、B/S 和上条紧密排在一起，远端作用线较醒目，降低了搜索负担。
+
+designer_conclusion: >-
+  v1 的非空 replay、完整图、2x2 死分支和两个身份反事实共同支持结构假设；玩家必须主动构造 S，
+  且构造差异只由后继同一整块左推与远端边界接触结算。已知缺点限制在紧凑度和试错后的透明度，
+  不破坏 3–5 人类范围或 construct_prefix 的非拼接关系，故通过 designer gate。

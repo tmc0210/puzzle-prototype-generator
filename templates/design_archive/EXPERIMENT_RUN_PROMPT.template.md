@@ -1,9 +1,9 @@
-# 连续关卡段落实验启动模板
+# 单关设计实验启动模板
 
 通用流程全部由 `$sokoban-level-design-studio` 负责；本 prompt 只提供本轮特有信息。
 
 ```text
-使用 $sokoban-level-design-studio，在 <prototype_id> 中围绕以下体验种子制作一段待玩关卡：
+使用 $sokoban-level-design-studio，在 <prototype_id> 中围绕以下体验种子制作一个待玩单关候选：
 
 <experience_seed>
 

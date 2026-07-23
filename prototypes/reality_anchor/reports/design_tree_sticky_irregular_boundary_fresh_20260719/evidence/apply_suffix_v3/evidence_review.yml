@@ -1,0 +1,191 @@
+review_attempt_id: RA_HARD_APPLY_SUFFIX_V3_001
+reviewer_instance_id: CODEX_FRESH_EVIDENCE_REVIEWER_RA_APPLY_SUFFIX_V3_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v3
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/alternate_handle_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/square_counterplay_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/counterfactual_results.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/counterfactual_remove_lower_target.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/counterfactual_win_at_core.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/probe_v3.ts
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - id: immediate_upper_right_handle
+      cost: 9
+      final_player: [6, 3]
+      replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/canonical_replay.json
+    - id: lower_right_handle_after_reposition
+      cost: 11
+      final_player: [5, 4]
+      replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/alternate_handle_replay.json
+  equivalence_evidence_basis:
+    - >-
+      runtime_analysis 将当前 layout_sha256
+      76379e4f0b029cab00feceefa1975712cad6ef6909b084077ea7379a2fff531d 的图标记为 complete：
+      176 reachable states、441 legal transitions、2 winning states、1 winning object signature。
+    - >-
+      两条实际胜利 replay 在 canonical 第 8 步后共享同一完整状态
+      Ply:6,4|C:|M:5,3;6,3;4,4;5,4|PL:none|BS:B:4,2;S:4,3；
+      之后只在同一可达区选择不同接触点，最终移动同一完整 Z，并得到相同对象终局
+      C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2。
+    - >-
+      完整图记录初始 4 个 commitment 仅 offset-Z 分支可胜；2x2 commitment 的 54-state
+      forward closure 为 0 wins。已知两条胜路保持相同构造、对象职责、目标分配与不可逆因果顺序。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 结论仅覆盖当前 v3、当前 runtime 与当前 win condition，不外推到布局或规则变体。
+    - raw input 序列及玩家终位并不唯一；结论只到玩家逻辑类。
+    - winning-state 数量不单独承担等价性证明；等价性同时依赖两条 actual replay、完整图分支事实和相同对象终局。
+
+claims:
+  - claim_id: exact_solvable
+    claim: 当前 v3 exact 的九步 canonical 输入全部合法并获胜。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json 与 packet 均指向 v3、相同 layout_ref 和相同 layout_sha256。
+      - canonical_replay.json 记录 9 个输入全部 legal、legal_through_step 9、completed true、final is_win true。
+      - README.md 与 mechanic.yml 确认玩家站目标不算覆盖，目标须由箱、黏块或锚点格覆盖。
+    limits: []
+
+  - claim_id: neutral_two_step_opening_commitments
+    claim: >-
+      正确 offset-Z 分支以 up,left 进入第一次对象承诺，错误 2x2 分支以 left,up 进入第一次对象承诺；
+      两者第一步都只 walk，第二步才移动黏块。前者承诺态 forward closure 52 states / 2 wins，
+      后者承诺态 forward closure 54 states / 0 wins。
+    status: supported
+    evidence_basis:
+      - runtime_analysis.yml 的 opening_commitment_probe 逐项记录两组 opening、首拍 walk、次拍对象事件和 commitment depth 2。
+      - complete graph 分支记录 offset-Z state index 4 的 closure 为 52/2，2x2 state index 5 的 closure 为 54/0。
+    limits:
+      - SCC、closure 和 commitment 数字仅支持当前 exact 的可达结构，不支持难度或质量判断。
+
+  - claim_id: canonical_construct_core_suffix_chain
+    claim: >-
+      第 5 步形成四格错位 Z；第 8 步左推同一 Z 并触发 force_chain 与 B/S 左移，尚未胜；
+      第 9 步上推同一 Z，再次触发 force_chain 与 B/S 上移并立即胜利。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json 第 5 步的 sticky_merge:n1 后状态为四格错位 Z。
+      - 第 8、9 步均记录 push_object:sticky#1、force_chain:n2、anchor_boundary_shift:box_sticky 与 move_sticky_rigid。
+      - 第 8 步 B/S 为 B:4,2;S:4,3 且 is_win false；第 9 步为 B:4,1;S:4,2 且 is_win true。
+    limits: []
+
+  - claim_id: boundary_coverage_handoff_on_suffix
+    claim: >-
+      第 8 步后 S 占下端目标 [4,3]；第 9 步后 B 覆盖上端目标 [4,1]，
+      同一 Z 的远趾由 [4,4] 上移到 [4,3] 接替 S，完成下端覆盖。
+    status: supported
+    evidence_basis:
+      - layout.txt 的目标位于 [4,1] 与 [4,3]。
+      - canonical 第 8 步状态含 S:4,3 与黏格 4,4；第 9 步状态含 B:4,1、S:4,2 与黏格 4,3。
+      - 第 9 步 is_win true，符合 mechanic.yml 的 all_targets_covered_by_objects。
+    limits: []
+
+  - claim_id: square_same_core_but_no_win
+    claim: >-
+      规整 2x2 能完成同类 B/S 左移 core，并能沿十三步反击把 B/S 上推到上端；
+      但最终下端目标只由玩家站住，不算覆盖，当前 exact 不胜。
+    status: supported
+    evidence_basis:
+      - square_counterplay_replay.json 第 5 步记录与 canonical core 相同类型的 force_chain 与 B/S 左移事件。
+      - 第 13 步 B/S 到 B:4,1;S:4,2，玩家位于 [4,3]，而对象签名没有 [4,3] 覆盖者，final_win false。
+      - README.md 与 mechanic.yml 明确玩家站在目标上不算覆盖。
+    limits:
+      - “同类 core”在此只指同一类 B/S 左移与事件链，不宣称两种构造的完整对象状态相同。
+
+  - claim_id: square_cannot_complete_current_exact
+    claim: >-
+      complete graph 为 176 states / 441 transitions / 2 wins；2x2 承诺态全部 54 个 forward reachable states 中
+      没有胜态，因此当前 exact 无 2x2 胜利解族。
+    status: supported
+    evidence_basis:
+      - runtime_analysis.yml 标记 complete graph status complete，并记录 176 states、441 transitions、2 wins。
+      - 同一 complete graph 的 square commitment closure 为 54 reachable states、0 reachable winning states。
+      - square_counterplay_replay.json 的 branch fact 与上述 closure 一致。
+    limits:
+      - 结论仅针对由 [left, up] 达到的当前 exact 2x2 承诺态及其完整 forward closure。
+
+  - claim_id: lower_handoff_target_mechanical_responsibility
+    claim: >-
+      相对 current v3 只删除下端目标 [4,3] 后，同一 2x2 十三步反击全部合法并获胜；
+      该目标对排除不做远趾覆盖交接的 2x2 结果承担机械责任。
+    status: supported
+    evidence_basis:
+      - layout.txt 与 counterfactual_remove_lower_target.txt 逐格对应，唯一变化是 [4,3] 从 G 到 .；两者哈希均与 artifact 记录一致。
+      - counterfactual_results.yml 记录同一 13-step square witness completed true、legal_through_step 13、final_win true。
+      - 当前 exact 的同一 13-step witness final_win false，且 complete square closure 为 0 wins。
+    limits:
+      - 反事实只支持该目标的机械排旁路责任，不支持审美或玩家体验结论。
+
+  - claim_id: core_equivalence_under_core_win_condition
+    claim: >-
+      把上端目标移到第一次 B/S 左移后 B 所在的 [4,2] 并保留下端目标时，
+      Z 的八步 core 与 2x2 的五步 core 都合法并在同类 B/S 左移后获胜。
+    status: supported
+    evidence_basis:
+      - counterfactual_win_at_core.txt 相对 current v3 仅把目标由 [4,1] 移到 [4,2]，并保留 [4,3] 目标。
+      - counterfactual_results.yml 记录 offset-Z 8-step witness 与 square 5-step witness 均 completed、合法并 final_win true。
+      - 两条 witness 的最终 B/S 均为 B:4,2;S:4,3，shared_core_events 均为黏块推送、force_chain、anchor shift 与 rigid move。
+    limits:
+      - 该目标移动改变两个 ASCII 格，只支持反事实胜利条件下的机械 core 等价。
+
+  - claim_id: distal_toe_mechanical_necessity
+    claim: >-
+      从 canonical 第 8 步后的 current-v3 状态只删除远趾 [4,4]，保留 goals、player、近端上推面与 B/S；
+      输入 up 合法并移动剩余黏块，但不产生 force_chain 或 anchor shift，B/S 不动且不胜。
+    status: supported
+    evidence_basis:
+      - counterfactual source_state_key 与 canonical 第 8 步 state_key 完全一致。
+      - 注入前后 state key 显示唯一对象删除为黏格 [4,4]；player、B/S、其余黏格均保持，goals 沿用 current v3。
+      - 输入 up 记录 legal true；事件只有 sticky push、rigid move 与 sticky_to_box，没有 force_chain 或 anchor shift；B/S 保持 B:4,2;S:4,3，final_win false。
+      - probe_v3.ts 显示该注入态由 canonical 8-step 状态 clone 后只过滤 pointKey 4,4 构造。
+    limits:
+      - 结论只证明该源状态与该上推输入中的机械必要性，不外推为审美价值。
+
+  - claim_id: solution_logic_family_unique
+    claim: >-
+      complete graph 有 2 个 winning states、1 个 winning object signature，初始 4 个 commitments 仅 1 个可胜；
+      两条实际胜利 replay 共享同一 offset-Z 构造、core 后对象状态、suffix 对象职责和对象终局。
+    status: supported
+    evidence_basis:
+      - complete graph status complete，记录 2 winning states、1 winning object signature 与 4/1 initial commitments。
+      - canonical_replay.json 与 alternate_handle_replay.json 在第 8 步共享同一完整 state key，最终对象签名完全相同。
+      - 两条 replay 的最终不可逆对象动作都为上推同一 Z、触发同一 force_chain 与 B/S 上移；差异仅为同一可达区域中的走位和接触点。
+      - 2x2 commitment 的完整 54-state closure 为 0 wins，未发现 non-equivalent win ref。
+    limits:
+      - 不把 raw input 或玩家终位视为唯一；只支持当前 v3 的玩家逻辑类唯一。
+
+  - claim_id: no_post_suffix_cleanup
+    claim: canonical 第 9 步同拍完成 B/S 上移与远趾补位并立即进入胜态，没有后续清理。
+    status: supported
+    evidence_basis:
+      - canonical 第 9 步同时记录 force_chain、anchor_boundary_shift 与 sticky rigid move，after state 已由 B 覆盖 [4,1]、黏格覆盖 [4,3]。
+      - 第 9 步即 is_win true，replay 在此 completed 且 final is_win true。
+    limits:
+      - 该声明仅针对 canonical replay 的终止时点。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

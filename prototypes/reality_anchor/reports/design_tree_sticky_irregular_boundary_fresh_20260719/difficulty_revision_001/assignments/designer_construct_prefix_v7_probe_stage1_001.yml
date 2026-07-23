@@ -1,0 +1,46 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V7_PROBE_STAGE1_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v6
+
+design_brief: >-
+  v7 family reasoning 已选择“移动 B/S 切深—边界位置与异形残体配对承诺—P/L 多面回收”。
+  本阶段只验证身份态的可逆三步，不画正式 candidate，不接 P/L，不跑完整图：移动 B/S 形成正确残体配对态；
+  撤回 B/S 让 crate 回粘并恢复母体；再次移动 B/S 后精确恢复同一非玩家状态。
+  三步必须由玩家实际移动 B/S 完成，不能靠独立搬 crate、死袋或重置。任一门槛失败即写诊断并停止。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - 任一 archive candidate、reviewer packet、reviewer output 或旧树 exact
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_probe.yml
+
+required_outputs:
+  - 一个最小 runtime-backed probe，非空动作必须依次覆盖 correct_cut_pair、remerge_undo、recut_exact_restore。
+  - probe 记录每段后的 B/S 占格、残体连通块、crate 占格和非玩家状态 exact comparison。
+  - 通过时只写 stage1_passed；失败时写 family_failed 或 stage1_failed 及最小冲突。两者都不得写正式 layout/submission。

@@ -1,0 +1,82 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V7_PROBE_STAGE2_PL_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v7_stage2_probe_only
+status: stage2_passed
+
+artifact_refs:
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage2_paired_pl_layout.txt
+  paired_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage2_paired_pl_replay.json
+  remerged_mother_probe: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage2_remerged_mother_probe.json
+
+runtime_parser_exception:
+  dummy_target: [10, 1]
+  isolation_walls: [[9, 1], [11, 1], [10, 0], [10, 2]]
+  covered: false
+  win_triggered: false
+  design_role: none
+  sole_role: satisfy_current_cli_parser
+
+paired_l_chain:
+  correct_cut_pair:
+    step: 1
+    B: [2, 6]
+    S: [2, 5]
+    sticky_l: [[6, 4], [7, 4], [6, 5]]
+    crate: [6, 6]
+  p_side_axial_stroke:
+    step: 8
+    events: [push_object:sticky#1, move_sticky_rigid]
+    player: [6, 4]
+    sticky_l: [[7, 4], [8, 4], [7, 5]]
+  l_side_outside_pull:
+    step: 14
+    events: [pull_object:sticky#1, move_sticky_rigid]
+    player: [10, 4]
+    sticky_l: [[8, 4], [9, 4], [8, 5]]
+  reverse_exact_return:
+    step: 20
+    events: [pull_object:sticky#1, move_sticky_rigid]
+    player: [6, 4]
+    sticky_l: [[7, 4], [8, 4], [7, 5]]
+    exact_equal_to_step_8:
+      full_state: true
+      non_player_state: true
+      player_state: true
+      pl_state: true
+      bs_state: true
+      crate_state: true
+  second_orthogonal_face:
+    step: 28
+    input: down
+    legal: true
+    events: [pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n1]
+    reading: 同一三格 L 从右下正交面整体发起下拉；动作合法，结算后下排一格跨入 box side。
+
+remerged_mother_contrast:
+  same_prefix_supported:
+    p_side_axial_stroke: true
+    l_side_outside_pull: true
+    reverse_exact_return: true
+  second_orthogonal_attempt:
+    step: 28
+    legal: false
+    failure: force_blocked
+    player_destination: [8, 6]
+    player_destination_open: true
+    extra_tail_cell: [7, 6]
+    extra_tail_target_wall: [7, 7]
+    state_unchanged: true
+  why_not_equivalent: >-
+    母体不是因站位不可达或 crate 子题被提前删掉；它完整承担前三段操作，直到同一第二正交输入才由多出的下尾目标格撞墙。
+    正确 L 不含该占格，故动作合法。差异来自完整刚体的远端占格责任。
+
+designer_decision:
+  stage2_gate: passed
+  statement: >-
+    current runtime 支持正确 B/S 配对态中的同一 L 完成 P 侧轴向 stroke、实际外换把、L 侧 pull、反向 exact 回返与第二正交施力；
+    回粘母体不能等价替代完整链，且差异由多出的形状目标格而非玩家站位产生。
+  evidence_limit: >-
+    只支持 combined local chain。未设设计目标，dummy G 仅满足 parser；未制作正式 candidate、未运行 solver/完整图、
+    未测试替代切深、crate 旁路、完整解族或作品质量。

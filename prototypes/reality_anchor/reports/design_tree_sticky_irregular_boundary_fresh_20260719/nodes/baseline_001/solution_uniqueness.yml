@@ -1,0 +1,50 @@
+assignment_id: RA_DESIGNER_BASELINE_001
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v2
+layout_sha256: e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6
+
+result: unique_complete
+search_scope: complete
+search_budget: maxStates=300000; graphMaxStates=300000
+actual_search:
+  reachable_states: 19
+  legal_transitions: 34
+  winning_states: 1
+  compressed_regions: 3
+  commitment_transitions: 2
+  winning_regions: 1
+  initial_commitments: 2
+  initial_viable_commitments: 1
+  initial_dead_commitments: 1
+  branching_win_sccs: 0
+  merging_win_sccs: 0
+
+logic_class_account: >-
+  完整状态图只留下一个玩家逻辑类：在初始双向可逆走位区选择下方肩窝，向右推动完整 T，
+  再从保留下来的左臂 pull 面向下拉；终手由 T 右臂扫带 B/S 覆盖目标。
+  上方下推是唯一另一 commitment，完整图判为 dead；不存在第二个 win-reaching commitment 或第二个 winning state。
+
+known_raw_winning_variants:
+  - 完整图只有一个 winning state；进入有效 commitment 前允许的纯走位排列、回退或重定位不改变对象职责与因果顺序，均属同一逻辑类。
+
+equivalence_account: >-
+  等价差异只可能发生在初始 r0 的双向走位中。所有胜路都必须取同一个 r0 -> r2 commitment，
+  保持“横推 T 对准远臂列 -> 下拉 T 触发 B/S”这一对象职责、目标分配和因果先后。
+
+dead_alternative:
+  inputs: [up, right, right, down]
+  commitment: push T down from upper face
+  result: dead
+  evidence: 完整图初始 region 的唯一 dead commitment；实际 replay 未移动 B/S，未胜利。
+
+evidence_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/runtime_analysis.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/fixed_anchor_probe.md
+
+evidence_limits:
+  - 唯一性按 docs/21 的玩家逻辑类声明，不把初始可逆走位差异谎称为不同解。
+  - 完整图证明当前 exact version 的状态级解族；不评价玩家是否容易看出唯一逻辑类。
+  - explain-layout 未提供 instance-level object participation，故不以该字段支持唯一性。
+
+designer_uniqueness_gate: passed

@@ -1,0 +1,65 @@
+exploration_id: RA_EXP_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+prototype_id: reality_anchor
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件。"
+experience_seed: >-
+  小型异形黏块刚体在墙口、墙边与锚点边界附近移动时，由具体占格形状产生不同的合法动作、
+  操作位、回返性和动作后状态；比较 L、T、Z/S、阶梯或其它小型异形及其拼接切割近邻。
+player_prior:
+  - 后期玩家已熟悉规整小黏块组的可达性、可动性与基本腾挪。
+  - 已熟悉黏块拼接切分、B/S 锚点推拉和 P/L 锚点推拉。
+  - 探索材料不承担规则教学或完整关卡难度判断。
+allowed_mechanisms:
+  - move_sticky_rigid
+  - sticky_merge
+  - sticky_split
+  - box_to_sticky
+  - sticky_to_box
+  - anchor_boundary_shift:box_sticky
+  - push_object
+  - pull_object
+  - anchor_boundary_shift:push_pull（只作为可选的有机边界变量）
+allowed_tools:
+  - npx tsx src/cli.ts mechanism-lab-run prototypes/reality_anchor <cases.yml> --run-id <run_id> --write
+  - npx tsx src/cli.ts explain-layout prototypes/reality_anchor <layout-file|-> --id <id> --targets K_runtime_smoke --max-states 300000 --graph-max-states 300000 --write
+  - npx tsx src/cli.ts try-inputs prototypes/reality_anchor <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+  - task-local temporary scripts under this exploration workspace
+source_boundary:
+  allowed:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - prototypes/reality_anchor/docs/design_handoff.yml
+    - prototypes/reality_anchor/docs/mechanic_exposure_sequence.yml
+    - prototypes/reality_anchor/docs/miner_probe_prior_v1.md
+    - prototypes/reality_anchor/mechanism_lab/lexicon.md
+    - prototypes/reality_anchor/mechanism_lab/lexicon_index.md
+    - src/prototypes/reality_anchor/runtime.ts
+    - src/prototypes/reality_anchor/mechanics.ts
+    - src/prototypes/reality_anchor/tools.ts
+    - src/cli.ts
+    - .agents/skills/sokoban-mechanism-lab/SKILL.md
+    - .agents/skills/sokoban-mechanism-lab/references/protocol.md
+    - .agents/skills/sokoban-mechanism-lab/references/task-exploration-format.md
+    - .agents/skills/sokoban-mechanism-lab/references/local-run-format.md
+    - .agents/skills/sokoban-mechanism-lab/references/lexicon-format.md
+  forbidden:
+    - prototypes/reality_anchor/design_archive/
+    - prototypes/reality_anchor/levels.yml
+    - prototypes/reality_anchor/studio/levels.yml
+    - prototypes/reality_anchor/playable_queue.yml
+    - prototypes/reality_anchor/playtest_reviews.yml
+    - prototypes/reality_anchor/reports/
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_20260718/
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/human_brief.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/experience_brief.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/design_tree.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/reviews/
+task_lexicon_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+task_index_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+

@@ -1,0 +1,94 @@
+review_attempt_id: RA_HARD_BASELINE_V2_002
+required_skill: sokoban-evidence-reviewer
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+node_id: baseline_001
+exact_version: v2
+layout_sha256: e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6
+prototype_id: reality_anchor
+
+solve_instance:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+  player_start: [2, 3]
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [down, right, right, right, down]
+
+solution_uniqueness_claim_extracted:
+  result: unique_complete
+  search_scope: complete
+  search_budget: maxStates=300000; graphMaxStates=300000
+  known_raw_winning_variants:
+    - 完整图只有一个 winning state；初始可逆走位排列与回退不改变对象职责、目标分配或因果顺序。
+  equivalence_account: >-
+    完整图与 agency graph 记录两个 opening commitment，其中只有肩窝横推进入 win-reaching region；
+    所有胜路保持“横推完整 T，再下拉 T 触发 B/S”的对象职责和因果顺序。
+
+claim_scope_correction:
+  withdrawn_claim_id: boundary_alignment_mechanical_necessity
+  reason: >-
+    单变量 B/S 左移反事实仍可按同一五步胜利：第 4 步先把锚点推回当前 exact 的对齐位，第 5 步再下拉覆盖目标。
+    本包不再声称 B/S 的初始横向坐标是机械必要条件。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/evidence_fix_001.yml
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_SHIFT_BS_SINGLE.json
+
+mechanical_claims:
+  - claim_id: exact_solvable
+    claim: 当前 exact layout 可由非空输入 down,right,right,right,down 合法通关。
+  - claim_id: canonical_event_chain
+    claim: >-
+      终手合法，包含 pull_object:sticky#1、force_chain:n2、anchor_boundary_shift:box_sticky 与 move_sticky_rigid，
+      终态由 B 端覆盖唯一目标而胜利。
+  - claim_id: solution_logic_class_unique
+    claim: >-
+      在完整 19-state / 34-transition 图中只有一个 winning state；agency graph 的两个 opening commitment
+      只有一个可胜，且所有胜路只留下同一个玩家逻辑类。
+  - claim_id: no_direct_anchor_or_upper_face_win_bypass
+    claim: >-
+      完整图中唯一另一 opening commitment 是从上方操作面下推 T，进入 dead region；不存在不经 T 横推再下拉的胜利 commitment。
+  - claim_id: remote_arm_mechanical_necessity
+    claim: >-
+      删除 T 的远端右臂成为近邻 L 形后，同一五步仍全部合法，但终手不含 force_chain 或 B/S 位移，且不胜利。
+  - claim_id: connected_irregular_body_participation
+    claim: >-
+      当前 exact 中四格 T 在第 4、5 步作为同一 connected sticky rigid body 移动；第 5 步由其远端占格把 B/S 纳入力链。
+
+allowed_evidence_sources:
+  authority:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+  exact_and_raw_artifacts:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_l_shape.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/evidence_fix_001.yml
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_L.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_L.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_SHIFT_BS_SINGLE.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_SHIFT_BS_SINGLE.md
+
+forbidden_sources:
+  - 旧 hard review 与旧 hard packet
+  - designer node_brief、design_reading 与 submission 中除本包已单独提取的 solution_uniqueness/withdrawal scope 以外的内容
+  - experience_brief、archive_calibration、design archive 与人类审美评语
+  - task-local explorer 语料及其 runs
+  - 任何旧 exact、quality review、coach note、designer action、当前设计对话或 Controller 审美解释
+
+evidence_boundaries:
+  - complete graph 只有一个 winning state 不能单独证明每条路径都含某事件；事件链另由 exact replay 和 agency commitment 事实支持。
+  - 删除远臂反事实只核验该远端格在同一输入链中的机械责任，不评价审美或玩家难度。
+  - B/S 单变量反事实是对已撤回声明的反例，只用于限定本包不再主张什么，不应被误写为当前 exact 的缺陷或身份支持。
+  - raw layout analysis 未提供 instance-level object participation；对象参与仅按逐步 exact state 与事件核验，证据不足处写 unknown。
+
+output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/baseline_v2/evidence_review_02.yml

@@ -1,0 +1,92 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V8_PROBE_STAGE1_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v8_stage1_probe_only
+status: partial_pass
+
+scope:
+  case_count: 2
+  completed:
+    - H0→非恒等_H1→H2_前进链
+    - H0_direct_blocked_及_H1_预放恢复对照
+  deliberately_not_run:
+    - 独立移墙版本
+    - 母体相同前段与额外尾格失败
+    - B/S 第二格深切
+    - crate 独立施力、目标重分或 substitution
+    - solver、完整图、目标、胜利与解族
+
+artifact_refs:
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1_progressive_layout.txt
+  progressive_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1_progressive_replay.json
+  h0_direct_probe: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1_h0_direct_probe.json
+
+runtime:
+  runner: npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+  case_count: 2
+  progressive_probe_id: RA_V8_STAGE1_PROGRESSIVE
+  h0_direct_probe_id: RA_V8_STAGE1_H0_DIRECT
+  h0_direct_subprobe_count: 2
+  progressive_completed: true
+  progressive_legal_through_step: 13
+  h0_direct_stopped_at_step: 8
+  h0_direct_reason: force_blocked
+  graph_run: false
+  formal_candidate_layout: false
+
+progressive_gate:
+  h0:
+    checkpoint_step: 1
+    sticky_l: [[7, 4], [8, 4], [7, 5]]
+    player: [6, 5]
+  h1:
+    checkpoint_step: 10
+    input: right
+    events: [pull_object:sticky#1, move_sticky_rigid]
+    sticky_l: [[8, 4], [9, 4], [8, 5]]
+    player: [10, 4]
+    non_player_state_equal_to_h0: false
+  h2:
+    checkpoint_step: 13
+    input: down
+    events: [pull_object:sticky#1, move_sticky_rigid]
+    sticky_l: [[8, 5], [9, 5], [8, 6]]
+    player: [9, 6]
+  reading: >-
+    同一三格 L 先从 P 侧进入 H0，再由玩家实际绕到外侧并在 L 侧 right pull 一格进入不同的 H1；
+    玩家随后走到 H1 新形成的 (9,5) 正交面，down 合法拉动同一刚体进入 H2。canonical probe 不含 H1→H0 回环。
+
+h0_direct_gate:
+  existing_face_attempt:
+    player: [8, 5]
+    input: down
+    player_destination_open: true
+    failure: force_blocked
+    responsible_wall: [7, 6]
+    sticky_state_unchanged: true
+  future_face_at_h0:
+    player: [9, 5]
+    input: down
+    events: [walk]
+    sticky_moved: false
+  preplaced_h1_control:
+    player: [9, 5]
+    input: down
+    responsible_wall_still_present: true
+    events: [pull_object:sticky#1, move_sticky_rigid]
+    legal: true
+  reading: >-
+    H0 的既有正交面可达，但完整 L 的旧尾格目标撞 (7,6) 墙；H1 将使用的站位在 H0 也可达，
+    可是尚未与对象邻接，down 只会 walk。外侧非恒等右移后，同一墙仍保留却退出目标集合，
+    新右臂又把 (9,5) 变为真实 pull 面，因此 H2 只从 H1 成立。
+
+designer_decision:
+  stage1_gate: partial_pass
+  statement: >-
+    两个收缩 runtime case 均成立：H0→非恒等 H1→H2 可复现，且 H0 不能直接执行等价正交终段；
+    同墙保留的 H1 预放状态恢复该动作，支持“外侧进位生成新面并移出旧墙 footprint”的最小结构责任。
+  stop_reason: >-
+    按 Controller 的硬收缩，本轮在两个 case 成立后停止；不把未运行的母体、深切与 crate substitution 门槛冒充通过。
+  evidence_limit: >-
+    status 只能是 partial_pass，不能写 stage1_passed；本产物不是正式 layout、candidate、solve instance、目标解、完整图或 submission。

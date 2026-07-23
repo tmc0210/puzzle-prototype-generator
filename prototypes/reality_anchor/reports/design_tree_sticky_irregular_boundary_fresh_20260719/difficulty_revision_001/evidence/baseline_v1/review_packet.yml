@@ -1,0 +1,114 @@
+review_attempt_id: RA_HARD_DIFFICULTY_BASELINE_V1_001
+required_skill: sokoban-evidence-reviewer
+candidate_id: RA_DIFFICULTY_BASELINE_L_KEYHOLE_V1
+node_id: baseline_001
+exact_version: v1
+layout_sha256: 03b1881bcabb6e69452eb0bed06234a31e4c5831e4c46123d21b914c1eaa6f1d
+prototype_id: reality_anchor
+
+solve_instance:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  runtime_semantics: current src/prototypes/reality_anchor/mechanics.ts
+  win_condition: all_targets_covered_by_objects
+  inputs: [up, right, down, left]
+  input_cost: 1
+  terminal_win_expansion: disabled
+  canonical_inputs: [up, right, up, right, right, right, down, right, right, down, down, down, left, left, up, down]
+
+solution_uniqueness_claim_extracted:
+  result: unique_complete
+  search_scope: complete
+  search_budget: max_states=300000; graph_max_states=300000
+  equivalence_account: >-
+    两条最短 raw path 只在第一次从 L 的上格或下格左面推动，以及相应纯走位次序上不同；
+    对象职责、四个里程碑与因果先后相同。完整图中所有胜路都依次首次进入同四个位姿，
+    每个位姿的首次进入 mode/direction 唯一；正确列右侧多 pull:right 一格属于可逆子图，
+    已有 exact-state return trace。声明不存在旧 push、提前下牵、超调后下牵或其它目标分配的非等价胜解。
+
+mechanical_claims:
+  - claim_id: exact_solvable
+    claim: >-
+      current v1 的 16 步 canonical 输入全部合法，依次执行
+      push:right、pull:right、pull:right、pull:down 四次对象操纵，并在第 16 步立即获胜。
+
+  - claim_id: solution_logic_unique
+    claim: >-
+      current v1 的 complete terminal-win graph 为 227 states / 610 legal transitions /
+      1 terminal winning state；最短 cost 16，有 2 条 raw 最短路径但只有 1 个对象签名，
+      且所有胜路都必须按顺序进入四个声明的对象里程碑位姿。
+
+  - claim_id: fixed_pl_handle_switch_necessity
+    claim: >-
+      所有胜路第一次进入首个位姿均为 push:right，后续三次首次进入分别只能为
+      pull:right、pull:right、pull:down；第一次跨越固定 P/L 后，旧左侧接触面即使可达也不能继续 push:right。
+      只移除 P/L 的反事实完整图把最短解缩为 cost 7 的四次全 push 对象签名。
+
+  - claim_id: left_tooth_order_necessity
+    claim: >-
+      只移除左墙齿 [8,6] 的反事实完整图把最短解缩为 cost 10，
+      对象顺序改为 push:right、pull:down、pull:right、pull:right；因此该墙齿机械上阻止提前正交下牵。
+
+  - claim_id: right_tooth_lower_toe_handle_necessity
+    claim: >-
+      只移除右墙齿 [10,6] 的反事实完整图把最短解缩为 cost 12；
+      最短路终手从上臂格直接 pull:down，而不再需要玩家站到低阶突出部下方牵引该突出部。
+
+  - claim_id: lower_toe_identity_necessity
+    claim: >-
+      删除 L 的低阶突出格 [6,5] 并同步删除其对应目标 [9,6] 后，异形退化成二格横条；
+      反事实完整图最短解为 cost 11，且对象签名退化为四次纯 pull。
+
+  - claim_id: overrun_reversible
+    claim: >-
+      canonical 前 9 步后的正确列位姿再多 pull:right 一格仍合法；随后 11 个声明输入全部合法，
+      并精确返回超调前的完整 runtime state。
+
+  - claim_id: no_post_terminal_cleanup
+    claim: canonical 最后一次 pull:down 当步达到唯一 terminal winning state，不需要后续整理。
+
+allowed_evidence_sources:
+  authority:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - prototypes/reality_anchor/docs/design_handoff.yml
+    - prototypes/reality_anchor/docs/mechanic_exposure_sequence.yml
+    - prototypes/reality_anchor/docs/miner_probe_prior_v1.md
+    - prototypes/reality_anchor/docs/goal_prune_check.md
+    - prototypes/reality_anchor/docs/opening_comfort_check.md
+    - prototypes/reality_anchor/docs/redundant_element_prune.md
+    - docs/17-experience-core-level-design.md
+    - docs/21-level-design-studio-standard.md
+    - docs/30-scc-graph-diagnostic-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+  exact_and_raw_artifacts:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/evidence_manifest.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/complete_graph_audit.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/complete_graph_audit.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/canonical_replay_verification.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/overrun_return_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_audit.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_audit.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_remove_pl.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_remove_left_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_remove_right_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_remove_lower_toe.txt
+
+forbidden_sources:
+  - Designer 的 node_brief、reasoning_sketch、design_reading、submission 与审美/难度自评；solution_uniqueness 只作为已提取硬声明的定位来源
+  - experience_brief、difficulty_recalibration_reading、human_feedback、design_tree、旧树 exact/evidence/review、Designer action、当前对话与 Controller 审美解释
+  - task-local Explorer 请求、run、batch、lexicon、其它候选或其它 exact
+
+evidence_boundaries:
+  - 完整图与里程碑支配只支持 current v1 的可达结构、终止胜态与解族，不产生难度、审美、可读性或 campaign placement 结论。
+  - 四个反事实只支持各自指定 cell 删除后的机械变化，不把该变化外推为通用设计规则或审美必要性。
+  - P/L 声明限于固定边界改变当前对象操纵模式、以及 remove-P/L 反事实中的对象签名变化；不评价其是否构成体验高潮。
+  - 低阶突出格声明限于指定删格反事实，不声称任何 L 形都必须使用该构造。
+  - 可逆性声明限于落盘 overrun trace 精确返回同一 runtime state，不声称所有错误动作都可逆。
+
+output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/evidence/baseline_v1/evidence_review.yml

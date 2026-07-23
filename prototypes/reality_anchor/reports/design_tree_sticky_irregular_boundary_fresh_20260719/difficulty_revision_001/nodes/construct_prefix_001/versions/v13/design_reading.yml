@@ -1,0 +1,50 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V13_CANDIDATE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+candidate_id: RA_DIFFICULTY_CONSTRUCT_PREFIX_OPENING_ACCESS_V13
+exact_version: v13
+status: withdraw_current_exact
+
+formal_player_reading:
+  opening: >-
+    玩家先看到左侧 P-only 小室中的 B/S、右侧被墙带包住的四格母体，以及远处只与 H2 足迹重合的三个目标。
+    开局切分把上格切成 crate、留下三格 L；此后仍要重新读取这块 L 的近端把手与右侧目标关系。
+  access_update: >-
+    切分并不直接给出 L-side 把手。H0 前，玩家可到 `(5,8)` 的 P-side push face，却不能以冻结对象的 walk
+    到达 `(8,7)`、`(8,8)` 或 intended H1 face。首次 right push 同时移动整个 L，并让它自身腾出 `(6,8)` 门格。
+  p_l_world_and_handle_exchange: >-
+    玩家从 L 让出的门格向下进入外圈，随后只用 walk 绕到右侧；这些步只负责换把，不计作难度。
+    有效判断是：必须先在 P 世界用近端推面让 L 非恒等位移，才会产生进入 L 世界后可用的右侧 pull 面。
+  h1_and_remote_h2: >-
+    玩家从外侧连续两次 right pull 更新 L 的占格与操作面，再从下侧取得 H2 面。最后的 up pull 让远端上臂
+    `(10,6)` 与下方两格 `(9,7)(10,7)` 同时覆盖三个目标，完整二维足迹在同一步兑现并立即结束。
+  construction_relation: >-
+    canonical 中，B/S 切分制造三格 L 与一只被排除在 H2 外的 crate；后续 P/L 换侧、外换把和远端 H2
+    继续消费这块 L，而不是让构造结束后另起目标题。
+
+directed_audit_reading:
+  canonical_first_win: >-
+    无约束 bounded first-win 搜索在 897 个状态处首先返回 canonical 的同一 21 步链；这只证明该搜索次序中的首胜，
+    不证明唯一性。
+  mandatory_defect: >-
+    23 步胜路在 canonical opening cut 后，从 `(5,7)` 向左再次推动 B/S 到 `B=(3,6),S=(3,7)`，
+    再执行相同 H0、H1、H2 核心链并获胜。额外 B/S 动作改变对象终态、没有回到同一完整状态，也不是必要动作换序；
+    因此“B/S-first 后退休”不成立，存在非等价胜族。
+  identity_counterfactual_defect: >-
+    同一已启动批还在删除 P/L 的全推反事实中找到 11 步胜路：切分后连续向右推动 L，再从下方上推到 H2。
+    把 P/L 移到活动区全为 P-side 时出现同一胜路。于是目标与墙结构并未要求 P/L 的推入、腾门、外换把和 pull 生命周期；
+    canonical 使用了 P/L，但作品身份中的“P/L 不可删、不可同侧替代”反事实失败。
+
+designer_verdict:
+  decision: withdraw
+  candidate_ready_for_graph: false
+  reason: >-
+    formal replay 成立不能补偿已观察到的非等价胜族和 P/L 身份反事实失败。按 assignment mandatory stop，
+    不继续扩展 case、不跑完整图、不写 solution_uniqueness 或 submission。
+  retained_positive_fact: >-
+    v13 确实修复了 v12 的开局直达 L-side pull：H0 前的 frozen-object walk-only 可达域不再接触等价 pull face，
+    canonical 中 L 自身腾门的 access differential 仍由实物支持；撤回原因来自新的 B/S 与 P/L 责任缺口。
+  evidence_limit: >-
+    玩家侧读法依据 formal layout、21 步 actual replay 与列出的 bounded directed results；普通走位长度未被当作难度，
+    未作完整解族或审美通过声明。

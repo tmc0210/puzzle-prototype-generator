@@ -1,0 +1,124 @@
+assignment_id: RA_DESIGNER_CONSTRUCT_V2_OUTLINE_TRIM_REVISION_001
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v2
+layout_sha256: 7d55f2a77c99ce5bb4e0d75752b77f8d9d26b707a8e40531829e20b566f1606d
+
+commands:
+  canonical_analysis: >-
+    npx tsx src/cli.ts explain-layout prototypes/reality_anchor <v2-layout>
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V2 --targets K_runtime_smoke
+    --max-states 300000 --graph-max-states 300000
+  canonical_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor <v2-layout>
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V2_CANONICAL
+    --inputs right,down,right,up,right,right,up,left
+  square_branch_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor <v2-layout>
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V2_SQUARE
+    --inputs down,right,up,right,right,up,left
+  no_wall_tooth_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor <v2-no-tooth-layout>
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V2_CF_NO_TOOTH
+    --inputs down,right,up,right,right,up,left
+  delete_remote_arm_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor <v2-delete-arm-layout>
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V2_CF_DELETE_ARM
+    --inputs right,down,right,up,right,right,up,left
+  outline_graph_isomorphism: >-
+    npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/verify_outline_graph_isomorphism.ts
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/layout.txt
+
+shortest_solution:
+  found: true
+  cost: 8
+  depth: 8
+  explored_states_until_first_solution: 101
+  inputs: [right, down, right, up, right, right, up, left]
+  construction_event:
+    step: 4
+    events: ["push_object:sticky#2", move_sticky_rigid, "sticky_merge:n1"]
+    resulting_cells: [[4,1],[5,1],[5,2],[6,2]]
+    shape: horizontal_staggered_S
+  payoff_event:
+    step: 8
+    events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+    win: true
+
+complete_graph:
+  status: complete
+  budget: 300000
+  reachable_states: 133
+  legal_transitions: 350
+  event_only_illegal_transitions: 0
+  winning_states: 1
+
+opening_and_agency:
+  status: complete
+  initial_region_states: 12
+  initial_region_commitments: 4
+  initial_region_viable_commitments: 1
+  initial_region_dead_commitments: 3
+  initial_scc_states: 24
+  initial_scc_out: 5
+  initial_scc_win_out: 1
+  initial_scc_dead_out: 4
+  compressed_regions: 12
+  commitment_transitions: 22
+  solution_scc_path: [s0, s3, s4]
+  branching_win_sccs: 0
+  merging_win_sccs: 0
+
+shared_consumer_divergence:
+  S_branch:
+    inputs: [right, down, right, up, right, right, up, left]
+    merge_legal: true
+    right_handle_reached: true
+    final_left_legal: true
+    final_events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+    win: true
+  aligned_2x2_branch:
+    inputs: [down, right, up, right, right, up, left]
+    merge_legal: true
+    constructed_cells: [[4,1],[5,1],[4,2],[5,2]]
+    right_handle_reached: true
+    legal_through_step: 6
+    final_left_result: force_blocked
+    win: false
+  no_wall_tooth:
+    changed_cell: [3,2]
+    same_2x2_inputs_legal_through_step: 7
+    final_events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+    win: true
+    reading: 墙齿是只拒绝 2x2 左下目标格、而留在 S 缺口中的 shared consumer。
+
+remote_arm_identity:
+  changed_cell: [4,1]
+  canonical_inputs_legal_through_step: 8
+  merge_present: true
+  final_events: ["push_object:sticky#1", move_sticky_rigid]
+  force_chain_present: false
+  anchor_boundary_shift_present: false
+  win: false
+
+outline_isomorphism:
+  status: complete
+  mapping: "v1 (x,y)->v2 (x-1,y)"
+  v1_graph: "133 states / 350 labeled edges / 1 win"
+  v2_graph: "133 states / 350 labeled edges / 1 win"
+  state_keys_equal_after_translation: true
+  action_event_labeled_edges_equal_after_translation: true
+  winning_state_keys_equal_after_translation: true
+
+raw_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/complete_graph_opening.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/square_branch_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/no_wall_tooth_square_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/delete_remote_arm_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/outline_graph_isomorphism.json
+
+evidence_limits:
+  - explain-layout 未返回 instance-level object participation；对象责任由逐步状态、事件和反事实支持。
+  - 去墙齿同时开放一个可走格；只引用同一 2x2 shared-consumer 输入恢复合法并获胜的直接事实。
+  - 完整图与同构不评价难度、审美或父子增长质量。

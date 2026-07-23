@@ -1,0 +1,39 @@
+request_id: ra_req_connected_parent_subtractive_irregular_residue_001
+exploration_id: RA_EXP_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+design_space: >-
+  从一个开局已连通的黏块母体出发，由玩家主动选择跨越固定或可移动 B/S 边界的深度、方向或时机，
+  使部分占格转回 crate，并让未越界部分直接留下一个仍连通的小型异形残体。探索重点是减法式身份构造：
+  构造动作前后始终只有一个承担后段责任的连通黏块，不以多个分离组件在后段重新合并为前提。
+  正向局部材料应让至少两个合法切分结果在切分本身之后仍可操作，而其中一个 L、S、阶梯或其它非规整残体
+  能继续提供轴向外侧把手、可撤销回返状态和另一正交面；规整或另一近邻残体则由更后的墙口、站位格或
+  P/L 操作面关系拒绝，不能在切分动作当下因普通墙位或唯一站位提前淘汰。切出的 crate 应留在残体后段
+  受力闭包之外，或被局部地形隔离，不能重新黏回、替代残体完成后段，也不能成为独立钥匙子题。
+sampling_axes:
+  - 母体占格拓扑：4—6 格连通条、L、T、S/Z、阶梯及只差一格的近邻形状。
+  - B/S 边界：固定/可移动、水平/竖直、标签朝向，以及切线穿过母体的不同深度。
+  - 主动切分变量：玩家选择跨线一格/两格、先轴向 stroke/先正交 stroke、边界先移/母体先移；排除纯强制结算。
+  - 输出身份图：一个连通异形残体加若干 crates、一个规整连通残体加若干 crates、以及产生多个 sticky 组件的负对照。
+  - 切分后玩家接触面：立即外侧轴向把手、短 walk 后外侧把手、可反向回到同一完整状态、可从第二正交面再次施力。
+  - P/L 相对关系：切分后同一残体从 P 侧 push 转为 L 侧 pull，或从 L 侧 pull 转为 P 侧 push；P/L 不单独搬运、不充当按钮。
+  - 后段局部 consumer：只进入远端趾/填角目标格的墙齿、只占玩家换面站位的墙口、移除 consumer 后近邻残体恢复合法。
+  - 切出 crates 的去向：留在 box side 死袋、被边界隔离、可移动但不进入残体受力线；测试能否晚粘回或替代残体。
+  - 时序负对照：不切分、过切、先移动 B/S、切后先处理 crate、以及尝试把多个残余组件重新合并。
+current_material_refs:
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md#固定-bs-切割二格黏块分成箱子和黏块
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#s-形折向斜趾跨线顶入一格箱袋
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#三格-l-外侧换把旧推面越界失配与低阶格封向
+do_not_repeat:
+  - 不采样“多个分离组件先合并，再用 gate 阻止 anchor-first”的 v1—v5 路线。
+  - 不把 B/S 搬运、独立钥匙、按钮、长走路或单一强制动作当作构造本身。
+  - 不用预先开放的外回路让分离组件提前取得后段把手。
+  - 不用紧贴缺角的连续正交 pull 替代轴向外换把、回返读取与第二操作面。
+  - 不要求 P/L 让出的旧半格在动作后立即与玩家相邻；该假设已有负材料。
+  - 不把 sticky_to_box 或 sticky_split 事件本身当正向成果；必须证明残体的后续可操作关系。
+  - 不在切分时用明显墙位或站位不可达直接删除错误结果；差异应由更后的局部 consumer 产生。
+  - 不保留可晚合并回正确异形的多个 sticky 残片，也不让切出 crate 替代残体完成后段。
+materialization_target: >-
+  发布至少一组 runtime-backed 局面卡片：同一连通母体具有两个玩家可选且切分当下均合法的身份输出；
+  正确输出直接留下一个连通小异形，并实际支持“外侧轴向施力—反向回到同一完整状态—换到另一正交面”的
+  局部操作面生命周期；近邻输出至少通过首次外侧动作，随后才被独立墙齿或站位 consumer 拒绝，且移除 consumer 后恢复。
+  同组必须包含切出 crate 晚粘回、替代残体、先移动 B/S 与过切/不切的负对照，并明确证据只覆盖局部结构，
+  不评价完整关卡、难度、family 去留或解族唯一性。

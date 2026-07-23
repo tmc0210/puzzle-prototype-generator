@@ -1,0 +1,60 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V8_CANDIDATE_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v7
+
+design_brief: >-
+  v8 stage1/stage1b 已用 current runtime 证明完整 combined local chain：玩家实际移动一格 B/S 切出三格 L+crate；
+  同一 L 经 P 侧 H0、外侧非恒等 H1 到正交 H2；回粘母体承担相同前段后由额外尾格在 H2 输入撞墙；
+  第二格深切不可达，cut crate 的四面均不能独立施力。现在把 H2 footprint 物化为正式目标并形成 v8 candidate。
+  正式布局不得含 dummy G；所有目标必须在 canonical H2 由同一 L 的动作结果覆盖，cut crate 不覆盖目标。
+  canonical 必须实际包含 B/S 切分、P 侧 stroke、玩家外换把、L 侧非恒等 pull 与 H2 正交 pull，且不执行 exact loop。
+  本阶段只做 current-runtime replay、玩家侧重读与定向反例审计；不跑无界完整图，不写 uniqueness/submission。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1_progressive_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_identity_progressive_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_l_progressive_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_mother_contrast_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_identity_and_substitution_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - 任一 archive candidate、reviewer packet、reviewer output 或旧树 exact
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/design_reading.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/candidate_local_checks.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/candidate_directed_audit.json
+
+required_outputs:
+  - 正式 layout 只放有责任目标；canonical 在 H2 立即或极短收束获胜，cut crate/B/S/P/L 不承担独立目标。
+  - review_actual_replay 来自正式 layout 的非空 current-runtime 回放，并与 canonical exact version 一致。
+  - design_reading 只把 B/S 身份管理、P/L 换侧、非恒等外拉与 H2 多面消费计作玩家负担；不计 walking/执行长度。
+  - 定向审计至少覆盖：不切/回粘母体直胜、跳过外侧 H1、第二格深切、cut crate 目标/替代、B/S-first 后退休、P/L 可删/同侧替代。
+  - 任一非等价胜族即保存诊断并撤回；局部审计通过只写 candidate_ready_for_graph，不写 solution_uniqueness/submission。

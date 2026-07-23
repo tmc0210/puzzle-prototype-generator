@@ -1,0 +1,34 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_BASELINE_V1_REVIEW_REPLAY_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: baseline_001
+parent_node_id: null
+growth_relation: baseline
+exact_version_basis: v1
+
+design_brief: >-
+  不修改 current v1 的 layout、canonical_replay、submission、hard evidence 或任何设计内容。
+  新版 Controller 的 prepare-review 接口要求 raw replay 同时含非空 `layout` 字符串和机械回放。
+  请从 current layout.txt 与 canonical_replay.json 生成一份机械等价的 review_actual_replay.json：
+  内嵌逐字相同的 layout，保留同一 candidate/exact、同一 16 inputs、同一逐步 actual events/state 与 final win。
+  用 current runtime 重放校验全部输入合法且终态获胜；若不等价则停止并报告，不改关。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/canonical_replay_verification.json
+  - prototypes/reality_anchor/mechanic.yml
+  - docs/21-level-design-studio-standard.md
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+
+exploration_request_root: null
+
+required_outputs:
+  - review_actual_replay.json 含非空 layout、同一 16 inputs、非空 mechanical trace、逐步 actual events/state、legal_through_step=16 与 final_win=true。
+  - 在文件中记录 source layout/canonical refs 与机械等价校验结果；不得加入 Designer 的体验解释、难度、审美或送审辩护。

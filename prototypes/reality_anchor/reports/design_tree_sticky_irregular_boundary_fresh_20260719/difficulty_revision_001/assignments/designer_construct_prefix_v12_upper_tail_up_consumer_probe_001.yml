@@ -1,0 +1,63 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V12_UPPER_TAIL_UP_CONSUMER_PROBE_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v11
+
+design_brief: >-
+  v11 证明 cut crate 首次位移不胜，但第二次可占 H2 目标，B/S 回粘后又没有同核心恢复 witness，故下尾/向下 H2 family 关闭。
+  v12 保留已成立的 B/S 身份切换、P/L 跨界、repeat push 阻断、纯 walk 离场与外侧非恒等 H1；将母体/L 关系上下镜像或等价旋转，
+  使切出的余料位于上方，H2 从下侧向上 pull。正确 L 的 H2 footprint 不经过 cut crate 的操作面；回粘母体多出的上尾则在同一 H2 向上
+  位移时进入独占墙齿。第一次 P push 后玩家仍必须进入 L 世界并拥有不移动任何对象的纯 walk 离场。
+  实际 B/S 一格切分/反向回粘、第二格深切阻断、cut crate 四面 substitution 必须同布局成立。
+  先做无目标 combined runtime probe，不形成 candidate、不跑图。
+
+runtime_parser_exception: >-
+  current CLI 要求至少一个 G；允许一个完全隔离、从未覆盖且不触发 win 的 dummy target。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_exit_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_state_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/intended_h2_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_displacement_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_restore_or_failure_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_state_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - 任一 archive candidate、reviewer packet、reviewer output 或旧树 exact
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/upper_tail_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/upper_tail_l_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/repeat_push_exit_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/mother_deep_crate_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/upper_tail_probe.yml
+
+required_outputs:
+  - current-runtime 正链：实际 B/S 切出上方余料；首次 P push 跨入 L 世界；repeat push 不移动 L；纯 walk 离场；外侧 pull H1；从下侧 up pull H2。
+  - 回粘母体完成同前段，在同一 up H2 输入因唯一上尾目标撞墙；玩家目标格开放。
+  - 第二格深切与 cut crate 四面动作表全部回归；H2 取面路线不得经过可施力 crate face，crate 不得进入 H2 footprint。
+  - 任一 gate 失败即保存最小冲突；全部通过只写 probe_passed_for_candidate，不得形成正式目标/candidate/图/submission。

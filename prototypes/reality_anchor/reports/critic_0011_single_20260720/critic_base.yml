@@ -1,0 +1,535 @@
+review_attempt_id: critic-0011-review-1
+prototype_id: reality_anchor
+prototype_rules:
+  confirmed_rules:
+    - P/L 是可平移不可旋转的推拉锚点；P 侧为推世界，L 侧为拉世界
+    - 玩家推拉物体时，受力对象闭包与玩家同时平移；任何刚体受阻则整次动作失败
+    - 锚点覆盖目标计入胜利，玩家覆盖目标不计
+  win_condition: 所有目标均由箱子、黏块或锚点格覆盖
+  object_and_event_semantics:
+    - "# 墙；. 地面；@ 玩家；C 箱子；G 目标；P/L 推拉锚点；* 箱子在目标；+ 玩家在目标"
+  player_prior:
+    - 已完成 base packet 所列五个有序前序关卡
+prior_course_refs:
+  - prototypes/reality_anchor/reports/llm_fill_player_benchmark_20260714_tmp/primer_f.md
+target_difficulty: 4
+human_archive_refs:
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0001.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0004.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0006.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0007.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0008.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0009.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0010.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0015.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0025.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md
+  - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md
+candidate:
+  candidate_id: anonymous-current
+  exact_version: anonymous-exact-v1
+  solve_instance:
+    layout: |-
+      ######
+      #PL@.#
+      #..GG#
+      #.CG##
+      #....#
+      ######
+    player_start:
+      - 3
+      - 1
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+      description: |
+        After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.
+  canonical_solution:
+    exact_inputs:
+      - down
+      - left
+      - left
+      - down
+      - right
+      - up
+      - down
+      - left
+      - down
+      - right
+      - right
+      - up
+      - up
+      - right
+      - up
+      - left
+      - left
+      - left
+      - down
+      - right
+      - left
+      - down
+      - right
+    mechanically_derived_trace:
+      - step: 1
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/0/before
+        before_layout: |-
+          ######
+          #PL@.#
+          #..GG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/0/after
+        after_layout: |-
+          ######
+          #PL..#
+          #..+G#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (3,1) @→.; (3,2) G→+
+      - step: 2
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/1/before
+        before_layout: |-
+          ######
+          #PL..#
+          #..+G#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/1/after
+        after_layout: |-
+          ######
+          #PL..#
+          #.@GG#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (2,2) .→@; (3,2) +→G
+      - step: 3
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/2/before
+        before_layout: |-
+          ######
+          #PL..#
+          #.@GG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/2/after
+        after_layout: |-
+          ######
+          #PL..#
+          #@.GG#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (1,2) .→@; (2,2) @→.
+      - step: 4
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/3/before
+        before_layout: |-
+          ######
+          #PL..#
+          #@.GG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/3/after
+        after_layout: |-
+          ######
+          #PL..#
+          #..GG#
+          #@CG##
+          #....#
+          ######
+        visible_board_change: (1,2) @→.; (1,3) .→@
+      - step: 5
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/4/before
+        before_layout: |-
+          ######
+          #PL..#
+          #..GG#
+          #@CG##
+          #....#
+          ######
+        event: push_object:crate#1
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/4/after
+        after_layout: |-
+          ######
+          #PL..#
+          #..GG#
+          #.@*##
+          #....#
+          ######
+        visible_board_change: (1,3) @→.; (2,3) C→@; (3,3) G→*
+      - step: 6
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/5/before
+        before_layout: |-
+          ######
+          #PL..#
+          #..GG#
+          #.@*##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/5/after
+        after_layout: |-
+          ######
+          #PL..#
+          #.@GG#
+          #..*##
+          #....#
+          ######
+        visible_board_change: (2,2) .→@; (2,3) @→.
+      - step: 7
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/6/before
+        before_layout: |-
+          ######
+          #PL..#
+          #.@GG#
+          #..*##
+          #....#
+          ######
+        event: pull_object:push_pull_anchor, anchor_boundary_shift:push_pull
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/6/after
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.@*##
+          #....#
+          ######
+        visible_board_change: (1,1) P→.; (2,1) L→.; (1,2) .→P; (2,2) @→L; (2,3) .→@
+      - step: 8
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/7/before
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.@*##
+          #....#
+          ######
+        event: pull_object:crate#1
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/7/after
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #@CG##
+          #....#
+          ######
+        visible_board_change: (1,3) .→@; (2,3) @→C; (3,3) *→G
+      - step: 9
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/8/before
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #@CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/8/after
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #@...#
+          ######
+        visible_board_change: (1,3) @→.; (1,4) .→@
+      - step: 10
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/9/before
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #@...#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/9/after
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #.@..#
+          ######
+        visible_board_change: (1,4) @→.; (2,4) .→@
+      - step: 11
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/10/before
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #.@..#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/10/after
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #..@.#
+          ######
+        visible_board_change: (2,4) @→.; (3,4) .→@
+      - step: 12
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/11/before
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.CG##
+          #..@.#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/11/after
+        after_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.C+##
+          #....#
+          ######
+        visible_board_change: (3,3) G→+; (3,4) @→.
+      - step: 13
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/12/before
+        before_layout: |-
+          ######
+          #....#
+          #PLGG#
+          #.C+##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/12/after
+        after_layout: |-
+          ######
+          #....#
+          #PL+G#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (3,2) G→+; (3,3) +→G
+      - step: 14
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/13/before
+        before_layout: |-
+          ######
+          #....#
+          #PL+G#
+          #.CG##
+          #....#
+          ######
+        event: pull_object:push_pull_anchor, anchor_boundary_shift:push_pull
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/13/after
+        after_layout: |-
+          ######
+          #....#
+          #.PL+#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (1,2) P→.; (2,2) L→P; (3,2) +→L; (4,2) G→+
+      - step: 15
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/14/before
+        before_layout: |-
+          ######
+          #....#
+          #.PL+#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/14/after
+        after_layout: |-
+          ######
+          #...@#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (4,1) .→@; (4,2) +→G
+      - step: 16
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/15/before
+        before_layout: |-
+          ######
+          #...@#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/15/after
+        after_layout: |-
+          ######
+          #..@.#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (3,1) .→@; (4,1) @→.
+      - step: 17
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/16/before
+        before_layout: |-
+          ######
+          #..@.#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/16/after
+        after_layout: |-
+          ######
+          #.@..#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (2,1) .→@; (3,1) @→.
+      - step: 18
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/17/before
+        before_layout: |-
+          ######
+          #.@..#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/17/after
+        after_layout: |-
+          ######
+          #@...#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (1,1) .→@; (2,1) @→.
+      - step: 19
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/18/before
+        before_layout: |-
+          ######
+          #@...#
+          #.PLG#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/18/after
+        after_layout: |-
+          ######
+          #....#
+          #@PLG#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (1,1) @→.; (1,2) .→@
+      - step: 20
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/19/before
+        before_layout: |-
+          ######
+          #....#
+          #@PLG#
+          #.CG##
+          #....#
+          ######
+        event: push_object:push_pull_anchor, anchor_boundary_shift:push_pull
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/19/after
+        after_layout: |-
+          ######
+          #....#
+          #.@PL#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (1,2) @→.; (2,2) P→@; (3,2) L→P; (4,2) G→L
+      - step: 21
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/20/before
+        before_layout: |-
+          ######
+          #....#
+          #.@PL#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/20/after
+        after_layout: |-
+          ######
+          #....#
+          #@.PL#
+          #.CG##
+          #....#
+          ######
+        visible_board_change: (1,2) .→@; (2,2) @→.
+      - step: 22
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/21/before
+        before_layout: |-
+          ######
+          #....#
+          #@.PL#
+          #.CG##
+          #....#
+          ######
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/21/after
+        after_layout: |-
+          ######
+          #....#
+          #..PL#
+          #@CG##
+          #....#
+          ######
+        visible_board_change: (1,2) @→.; (1,3) .→@
+      - step: 23
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/22/before
+        before_layout: |-
+          ######
+          #....#
+          #..PL#
+          #@CG##
+          #....#
+          ######
+        event: push_object:crate#1
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_critic_0011_single_20260720.json#/steps/22/after
+        after_layout: |-
+          ######
+          #....#
+          #..PL#
+          #.@*##
+          #....#
+          ######
+        visible_board_change: (1,3) @→.; (2,3) C→@; (3,3) G→*
+hard_evidence_refs:
+  - prototypes/reality_anchor/reports/critic_0011_single_20260720/evidence_review.yml

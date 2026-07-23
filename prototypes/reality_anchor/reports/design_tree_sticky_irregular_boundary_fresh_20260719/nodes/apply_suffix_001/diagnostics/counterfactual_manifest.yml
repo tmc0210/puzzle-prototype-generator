@@ -1,0 +1,90 @@
+schema_version: reality_anchor_counterfactual_manifest_v1
+assignment_id: RA_DESIGNER_APPLY_SUFFIX_001
+node_id: apply_suffix_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v2
+current_exact:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+  layout_sha256: 6b537c3847a8abf968e184c2920445135755822eb81efc51da9f77a26d171d86
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/canonical_replay.json
+coordinate_system: zero_based_xy
+
+counterfactuals:
+  - id: remove_lower_target
+    artifact_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/counterfactual_remove_lower_target.txt
+    artifact_kind: try_inputs_layout
+    relative_variable:
+      kind: remove_goal_overlay
+      changes:
+        - coordinate: [4, 3]
+          from: G
+          to: .
+      all_other_layout_cells_unchanged: true
+    inputs:
+      square_bypass: [down, left, up, right, up, left, down, down, left, up, up, left, left, up]
+    expected_boundary:
+      completed: true
+      legal_through_step: 14
+      final_win: true
+      identity_limit: 删除下端交接责任后，2x2 深层旁路恢复获胜。
+    execution_status: replayed_and_matched
+
+  - id: win_at_core
+    artifact_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/counterfactual_win_at_core.txt
+    artifact_kind: try_inputs_layout
+    relative_variable:
+      kind: relocate_upper_goal_to_core_B_cell
+      changes:
+        - coordinate: [4, 1]
+          from: G
+          to: .
+        - coordinate: [4, 2]
+          from: .
+          to: G
+      lower_goal_preserved_at: [4, 3]
+      all_other_layout_cells_unchanged: true
+    inputs:
+      z_core: [left, down, left, up, right, up, left]
+      square_core: [down, left, up, right, up, left]
+    expected_boundary:
+      z_core:
+        completed: true
+        legal_through_step: 7
+        final_win: true
+      square_core:
+        completed: true
+        legal_through_step: 6
+        final_win: true
+      identity_limit: 胜利提前到 core 时，两种构造都完成相同边界动作并获胜。
+    execution_status: both_replayed_and_matched
+
+  - id: remove_distal_toe_core_snapshot
+    artifact_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/counterfactual_remove_distal_toe_core_snapshot.yml
+    artifact_kind: structured_exact_state
+    source: current exact canonical step 7 after
+    relative_variable:
+      kind: remove_one_sticky_cell
+      removed_sticky_cells: [[4, 4]]
+      goals_preserved: [[4, 1], [4, 3]]
+      player_preserved: [6, 4]
+      box_sticky_anchor_preserved:
+        B: [4, 2]
+        S: [4, 3]
+      near_push_contact_preserved: [6, 3]
+      all_other_dynamic_cells_unchanged: true
+    inputs:
+      state_probe: [up]
+    expected_boundary:
+      legal_through_step: 1
+      B_S_unchanged: true
+      upper_goal_covered: false
+      lower_goal_covered_by: S
+      final_win: false
+      identity_limit: 保留近端上推面而删除远趾时，上推不应把作用传到 B/S。
+    execution_status: pending_trusted_state_injection
+    encoding_limit: >-
+      不提供 `.txt` 代理。文本 layout 不能编码 S-on-goal；迁移目标、删除目标或删除 S 都会破坏单变量。
+
+manifest_boundary: >-
+  前两组是可由 try-inputs 独立重跑的 layout；第三组只固定忠实 exact state，须由可信 state injection 入口执行。
+  若不存在可信注入入口，应从硬证据包撤回第三项已执行反事实 claim，不得用代理布局替代。

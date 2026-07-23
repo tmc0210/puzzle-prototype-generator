@@ -329,7 +329,7 @@ Rules:
 
 ## Step 6: Calling The Downstream Designer Loop
 
-`docs/21-level-design-studio-standard.md` is the downstream baseline-and-branch design process. It can be used after this document selects one plan item and writes the three-part experiment note.
+`docs/21-level-design-studio-standard.md` is the downstream single-candidate level-design process. It can be used after this document selects one plan item and writes the three-part experiment note.
 
 When using `docs/21` from this upstream phase:
 

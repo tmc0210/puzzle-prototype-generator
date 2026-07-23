@@ -1,0 +1,97 @@
+runId: ra_task_fixed_pl_handle_closure_agency_20260719_05
+title: "固定 P/L 外侧换把：边界模式失配、低阶格封向与动作后能动性"
+notes: >-
+  只比较固定竖向 P/L 边界旁 3—4 格异形黏块的外侧换把。玩家先从 P 侧向右推，
+  再绕到刚体右端的外侧平面，从 L 侧向右拉同一刚体；动作后以完整局部图筛查
+  同位形 push/pull 继续族、非回返方向分支与玩家局部走位。隔离目标只防止空目标使图初态终止，
+  不作为 consumer。
+defaults:
+  maxExploreDepth: 80
+  maxReturnDepth: 80
+  maxStates: 300000
+  maxTransitions: 1200000
+cases:
+  - id: l3_boundary_mismatch
+    family: fixed_pl_outer_face_handle_closure
+    variant: boundary_mismatch_plus_low_shape_wall
+    changed_variable: "三格 L 的旧左面全部越到 L 侧；低阶格下方墙只封正交下拉"
+    contrast_with:
+      - hook4_backward_toe_leak
+      - l3_boundary_shift_leaks_push
+      - l3_without_low_shape_wall_has_turn_pull
+    notes: >-
+      开始摆法：三格 L 上二下一，玩家在下格左侧；固定 P/L 边界为 x=6/7，低阶格两次右移后的下方目标格设墙。
+      关键动作：right 后沿下方开放房间绕到上横臂右端外侧，再 right pull；不是缺角同格换向。
+      动后局面：玩家停在右端外侧，可立即 up/down walk；旧左面相邻格均在 L 侧，不能 right push；
+      低墙让缺角处 down pull 为 force_blocked。最小用法：同位形图只保留 pull:right 继续与 pull:left 完整可逆回返。
+    layout: |
+      #############
+      #B####PL##G##
+      #S###########
+      ######.....##
+      #####.MM....#
+      #####@M....##
+      ######..#..##
+      ######....###
+      #############
+    actions: [right, down, down, right, right, right, up, up, up, right]
+
+  - id: hook4_backward_toe_leak
+    family: fixed_pl_outer_face_handle_closure
+    variant: backward_toe_restores_old_push
+    changed_variable: "在上横臂左端增加一格后伸趾"
+    contrast_with: l3_boundary_mismatch
+    notes: >-
+      与正例同一边界、低墙和外侧换把路径；四格钩形多出的左趾在动作后仍留有 x=6 的 P 侧站位。
+      玩家可在不移动刚体时走到该格并 right push；同时右端仍有 right pull，形成同方向双模式继续族。
+    layout: |
+      #############
+      #B####PL##G##
+      #S###########
+      ######.....##
+      #####MMM....#
+      #####@M....##
+      ######..#..##
+      ######....###
+      #############
+    actions: [right, down, down, right, right, right, up, up, up, right]
+
+  - id: l3_boundary_shift_leaks_push
+    family: fixed_pl_outer_face_handle_closure
+    variant: boundary_one_column_right
+    changed_variable: "保持三格 L 与低墙，把固定 P/L 边界整体右移一列"
+    contrast_with: l3_boundary_mismatch
+    notes: >-
+      动后形状与玩家站位和正例相同，但旧左面相邻格 x=7 现在属于 P 侧；
+      完整同位形图同时出现 push:right 与 pull:right，说明关闭来自边界相对轮廓的位置，不是不可达。
+    layout: |
+      #############
+      #B#####PL#G##
+      #S###########
+      ######.....##
+      #####.MM....#
+      #####@M....##
+      ######..#..##
+      ######....###
+      #############
+    actions: [right, down, down, right, right, right, up, up, up, right]
+
+  - id: l3_without_low_shape_wall_has_turn_pull
+    family: fixed_pl_outer_face_handle_closure
+    variant: low_shape_wall_removed
+    changed_variable: "保持边界与三格 L，移走低阶格下方形状目标墙"
+    contrast_with: l3_boundary_mismatch
+    notes: >-
+      外侧换把后仍没有 P 侧 right push，但玩家走到 L 缺角时可 down pull；完整图中至少一条 down 分支不能回到换把后的完整状态。
+      因而边界失配只关旧 push，低阶格墙还负责排除非回返的正交继续族。
+    layout: |
+      #############
+      #B####PL##G##
+      #S###########
+      ######.....##
+      #####.MM....#
+      #####@M....##
+      ######.....##
+      ######....###
+      #############
+    actions: [right, down, down, right, right, right, up, up, up, right]

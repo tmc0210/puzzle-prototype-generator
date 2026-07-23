@@ -1,0 +1,89 @@
+submission_id: SUB_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v1
+
+designer_claim:
+  player_experience_core: >-
+    玩家先从两根分离横条主动构造异形，再用近端右把手驱动整个形体；胜负由左下缺口能否避墙、
+    以及远端上臂能否在同一动作中推动边界对象共同决定。
+  player_action: >-
+    先把下横条向右推一格，绕到下方把它上推，与固定上条合并成错位 S；
+    再绕到合并体下层右侧向左推，使完整 S 越过墙齿并推动 B/S。
+  visible_payoff: >-
+    终局左推同时移动四格 S、触发二对象 force chain、使 B/S 左移一格，并让 B 覆盖唯一目标后立即结束。
+  why_this_level_exists: >-
+    把 baseline 中“近端操作与远端足迹联合读取”的体验向前生长一步：异形不再预制，
+    玩家必须依据稍后的整块运动和远端接触，主动选择正确合并偏移。
+  work_identity_conditions:
+    - 两根横条开局分离，下条既能直接上推成 2x2，也能先右移再上推成 S；两个合并都必须合法。
+    - S 与 2x2 合并后都保留下层右侧的同方向把手，不能在构造事件本身直接宣判答案。
+    - S 的左下缺口避开墙齿，而上层左格在同一左推动作中接触 S 端并推动 B/S。
+    - 上条在合并前不可被单独操作，B/S 也不能由玩家直接取得获胜施力位。
+
+growth_account:
+  parent_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001
+  frozen_parent_core: >-
+    一个异形刚体把近端操作面与远端作用格绑定；玩家必须联合读取二者，并由远端格作用不可直接操作的边界对象后立即结束。
+  added_construct_prefix: >-
+    baseline 直接给出 T；本节点先给两根短横条，让玩家比较两个局部都可行、都保留后继把手的合并，
+    根据后续完整左移和远端接触主动形成 S。
+  non_splicing_verdict: passed
+  non_splicing_reason: >-
+    构造完成时没有钥匙结算、开门、对象转交或语法切换；S/2x2 的唯一状态差异是左侧轮廓，
+    后继唯一对象动作直接消费该轮廓，并同时完成缺口检验、远端 B/S 作用与胜利。
+  deliberately_not_inherited: >-
+    不继承 parent 的地图、预制 T、P/L pull、上下操作路或具体口袋；这些不是冻结项，
+    本节点只以新实物承载相同体验身份并声明 construct_prefix 增长。
+
+packaging_account:
+  opening: 玩家位于下条左侧，可同时看见顶行目标、B/S、固定上条、下条以及上条左下的墙齿。
+  preparation: 选择直接上推成 2x2，或先右移一格再上推成错位 S；两种合并都给出真实动后状态和右把手。
+  reveal_or_use: 从右侧左推合并体；2x2 原子撞墙，S 则以缺口避墙并由远端上臂推动 B/S。
+  ending: 正确终拍让 B 覆盖目标并立即胜利，没有回收、复位或清理尾巴。
+  every_major_element_role:
+    - 固定上条是异形的远端上臂来源；其左格在终局独占 B/S 接触责任。
+    - 可移动下条承载主动构造选择，并在合并后提供近端右把手与左下缺口。
+    - 左下墙齿区分 S 与 2x2 的完整左移轮廓；去掉它会恢复 2x2 胜法。
+    - 水平 B/S 同时封住上条左操作面并充当终局边界对象；B 左移一格覆盖目标。
+    - 下方回廊只提供构造与取把手换位，不提供直接操作 B/S 的旁路。
+  known_perceptible_defects:
+    - 2x2 试错在终局撞墙后会高度暴露正确的一格偏移，重玩难度明显低于首次读取。
+    - 正确合并后只有换位与一次兑现，不包含第二次异形应用；本节点保持单一 construct-prefix 聚焦。
+    - 顶行关系紧凑且目标方向清楚，远端作用线较醒目，整体处于难度 4 的低端。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete
+    search_budget: maxStates=300000; graphMaxStates=300000; actual=133 states / 350 transitions
+    known_raw_winning_variants:
+      - 初始 SCC 内可有走位、回退或下条搬动后恢复；它们不改变最终 S、右把手、B/S 分工和因果顺序。
+    equivalence_account: >-
+      所有胜路必须形成同一四格 S，再由同一右把手左推，使同一远端上臂推动同一 B/S 到唯一胜态；
+      可胜 SCC 子图无 branching 或 merging，2x2 不在可胜子图中。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/solution_uniqueness.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/runtime_analysis.yml
+    evidence_limits:
+      - 唯一性按玩家逻辑类声明；初始 SCC 内的可逆搬动与纯走位不算非等价胜解。
+  bypass_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/runtime_analysis.yml
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_no_wall_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_delete_remote_arm.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/runtime_analysis.yml
+  evidence_limits:
+    - explain-layout 未返回 instance-level object participation；对象职责由逐步状态、事件与精确占格反事实支持。
+    - 一个 winning state 本身不足以排除同终态异路；解族声明同时依赖完整可胜 SCC 结构与 canonical 不可逆事件。
+    - 去墙齿反事实还开放一个可走格；这里只引用它对同一 2x2 终局左推恢复合法并获胜的直接支持。
+    - 删远端上臂反事实证明该格对相同核心输入的机械必要，不证明独立玩家难度或审美质量。
+    - 图工具只支持当前 exact 的机械与旁路声明，不用状态数、步数或 reading hint 支持质量 verdict。
+
+designer_self_verdict: submit_for_independent_review

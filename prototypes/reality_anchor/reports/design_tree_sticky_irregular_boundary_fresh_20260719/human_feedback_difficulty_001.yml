@@ -1,0 +1,40 @@
+feedback_id: RA_STICKY_IRREGULAR_HUMAN_DIFFICULTY_001
+tree_id: RA_TREE_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+received_at: 2026-07-19
+source: human
+scope: 当前三节点 delivery exact 的实际玩家难度
+human_feedback_verbatim: >-
+  流程是对了，但是这个难度很明显是不对吧。前两关实际只有一次二择，难度在1~2之间，
+  第三关虽然也只有一次二择，但是因为形状的差异会在几步之后揭示而非直接一眼看墙能看出来，难度可能在2~3之间吧。
+outcomes:
+  - node_id: baseline_001
+    exact_version: v3
+    previous_target_difficulty: 3
+    human_observed_difficulty: 1-2
+    playtest_status: needs_revision
+    reason: 只有一次立即可读的二择，熟练玩家不承担持续状态推演。
+  - node_id: construct_prefix_001
+    exact_version: v2
+    previous_target_difficulty: 4
+    human_observed_difficulty: 1-2
+    playtest_status: needs_revision
+    reason: 只有一次二择，2x2 与错位形的差异直接由墙齿显露。
+  - node_id: apply_suffix_001
+    exact_version: v4
+    previous_target_difficulty: 4
+    human_observed_difficulty: 2-3
+    playtest_status: needs_revision
+    reason: 仍只有一次二择；虽然错误形状在数步后才揭示，推演深度仍不足以稳定达到 3-5。
+feedback_boundary:
+  preserved:
+    - Studio 流程与三节点亲缘组织正确。
+    - 异形黏块在墙口、墙边和锚点边界的可动性仍是目标体验核心。
+  rejected:
+    - 以机械不可替代性、完整证据或延迟数步揭示替代真实玩家难度。
+    - 仅修改难度标签后继续交付。
+controller_route:
+  queue_action: withdraw_current_three_exact_versions
+  archive_action: none
+  next_stage: return_to_design_studio
+  revision_requirement: >-
+    形成新 exact 与新审查链；难度来自多个相互影响的异形状态、操作面或可逆性判断，而非增加走位、执行长度或一眼可见的单次二择。

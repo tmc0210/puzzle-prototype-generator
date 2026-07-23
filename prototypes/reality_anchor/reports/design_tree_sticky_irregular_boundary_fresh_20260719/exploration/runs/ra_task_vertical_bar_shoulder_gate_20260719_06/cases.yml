@@ -1,0 +1,118 @@
+runId: ra_task_vertical_bar_shoulder_gate_20260719_06
+title: "竖向二格条主动接肩后的缺角换面与远臂墙齿"
+notes: >-
+  竖向二格条封墙带口，单格从同一构造侧接上/下肩；比较凸格跨 P/L 后，
+  腾空缺角是否实际接到外侧轴向把手或正交 pull 面，并保存过宽与过封闭边界。
+defaults:
+  maxExploreDepth: 22
+  maxReturnDepth: 34
+  maxStates: 80000
+  maxTransitions: 320000
+cases:
+  - id: upper_axis_pull_open
+    family: vertical_bar_shoulder_gate
+    variant: upper_shoulder_bottom_notch_to_axis_pull
+    changed_variable: 单格接上肩，动作后下缺角接到底侧外廊
+    contrast_with: lower_axis_handle_closed
+    notes: 上肩先 merge，再由新凸格三次右向动作跨 P/L；从下缺角实走到底侧外廊并沿轴 pull。
+    layout: |
+      #############
+      #BS..PL.....#
+      #.....#....G#
+      #.....##....#
+      #..@M.M.....#
+      #.....M.....#
+      #.....#.....#
+      #.....#.....#
+      #############
+    actions: [right, right, right, down, right, down, right, right, up, right]
+
+  - id: lower_axis_handle_closed
+    family: vertical_bar_shoulder_gate
+    variant: lower_shoulder_top_notch_closed_before_axis_handle
+    changed_variable: 只把单格从上肩改到下肩；同一外墙齿封住上缺角后的第一步
+    contrast_with: upper_axis_pull_open
+    notes: 下肩也先 merge 且凸格跨 P/L；玩家进入上缺角后，向上接外廊被墙拒绝。
+    layout: |
+      #############
+      #BS..PL.....#
+      #.....#....G#
+      #.....##....#
+      #.....M.....#
+      #..@M.M.....#
+      #.....#.....#
+      #.....#.....#
+      #############
+    actions: [right, right, right, up, right, up]
+
+  - id: upper_orthogonal_turn_open
+    family: vertical_bar_shoulder_gate
+    variant: upper_shoulder_bottom_notch_pull_down
+    changed_variable: 上肩的下缺角作为正交向下 pull 面
+    contrast_with: lower_orthogonal_far_arm_blocked
+    notes: 上肩合体跨线后进入下缺角，直接向下 pull；远臂向下目标格开放。
+    layout: |
+      #############
+      #BS..PL.....#
+      #.....#....G#
+      #.....#.#...#
+      #..@M.M.....#
+      #.....M.....#
+      #.....#.....#
+      #.....#.....#
+      #############
+    actions: [right, right, right, down, right, down]
+
+  - id: lower_orthogonal_far_arm_blocked
+    family: vertical_bar_shoulder_gate
+    variant: lower_shoulder_top_notch_pull_up_far_arm_tooth
+    changed_variable: 只把单格从上肩改到下肩；同一 x=8,y=3 墙齿进入远臂向上目标格
+    contrast_with: upper_orthogonal_turn_open
+    notes: 下肩合体跨线后进入上缺角；向上 pull 时竖条远臂目标格撞墙。
+    layout: |
+      #############
+      #BS..PL.....#
+      #.....#....G#
+      #.....#.#...#
+      #.....M.....#
+      #..@M.M.....#
+      #.....#.....#
+      #.....#.....#
+      #############
+    actions: [right, right, right, up, right, up]
+
+  - id: overwide_premerge_pull_leak
+    family: vertical_bar_shoulder_gate
+    variant: wall_band_extra_opening_reaches_old_outer_handle
+    changed_variable: 墙带在竖条上方多开一格
+    contrast_with: [upper_axis_pull_open, lower_axis_handle_closed]
+    notes: 不接肩；玩家从额外开口绕到分离竖条外侧并沿轴 pull，证明过宽墙带泄漏旧把手。
+    layout: |
+      #############
+      #BS..PL.....#
+      #.....#....G#
+      #...........#
+      #..@M.M.....#
+      #.....M.....#
+      #.....#.....#
+      #.....#.....#
+      #############
+    actions: [up, right, right, right, right, down, right]
+
+  - id: overclosed_upper_merge_illegal
+    family: vertical_bar_shoulder_gate
+    variant: upper_shoulder_target_cell_walled
+    changed_variable: 在上肩单格要进入的 x=5,y=4 放墙
+    contrast_with: upper_axis_pull_open
+    notes: 竖条仍封口，但单格第一推的目标格被墙占住，sticky merge 尚未发生即失败。
+    layout: |
+      #############
+      #BS..PL.....#
+      #.....#....G#
+      #.....#.....#
+      #..@M#M.....#
+      #.....M.....#
+      #.....#.....#
+      #.....#.....#
+      #############
+    actions: [right]

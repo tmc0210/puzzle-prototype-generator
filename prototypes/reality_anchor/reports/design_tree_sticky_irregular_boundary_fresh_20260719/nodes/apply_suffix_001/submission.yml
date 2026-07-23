@@ -1,0 +1,98 @@
+assignment_id: RA_DESIGNER_APPLY_SUFFIX_001
+designer_instance_id: RA_IRREGULAR_DESIGNER_20260719
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: apply_suffix_001
+parent_node_id: construct_prefix_001
+growth_relation: apply_suffix
+designer_action: submit_for_independent_review
+submission_status: complete
+
+candidate:
+  candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+  exact_version: v2
+  target_difficulty: 4
+  stage: late_game
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+  layout_sha256: 6b537c3847a8abf968e184c2920445135755822eb81efc51da9f77a26d171d86
+  solve_instance:
+    player_start: [8, 5]
+    win_condition: all_targets_covered_by_objects
+  canonical_inputs: [left, down, left, up, right, up, left, up]
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/canonical_replay.json
+
+experience_core_claim: >-
+  玩家先构造一个右上错位 Z，而不是同样能完成眼前左推的 2x2。两种构造都能在 core 中把同一 B/S 左移、让 S 暂占边界下端目标；
+  只有 Z 在动后保留可上推的近端操作面和能接替 S 的远趾。suffix 上推同一刚体时，远趾把 B/S 向上转角，
+  B 覆盖上端目标，远趾原拍补住下端目标，后继因此反向决定此前的偏移构造。
+
+parent_relation_claim:
+  inherited: >-
+    保留 parent 的主动两横条构造，以及“近端操作面与远端不规则轮廓由同一刚体动作耦合”的身份。
+  growth: >-
+    parent 在第一次边界动作就分出正确构造；本节点让 Z 与 2x2 都真实完成第一次 B/S 左移，
+    再由同一边界覆盖的 suffix 交接反向筛选前序构造，增加的是后继应用而不是重复 core。
+  non_splicing: >-
+    suffix 没有新对象或独立清理；它继续移动 core 已触碰的同一 Z 与同一 B/S。上下目标是同一边界覆盖的两个连续职责，
+    core 时由 B/S 暂时承担，suffix 时由 B 与远趾原拍交接。
+
+hard_claims:
+  - id: canonical_solvable
+    claim: canonical 8 拍全部合法并在最后一拍获胜。
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/canonical_replay.json
+  - id: same_immediate_core
+    claim: 正确 Z 与错误 2x2 都能用一次左推触发相同事件族并把 B/S 从 x=5 移到 x=4；该拍均不胜。
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/runtime_analysis.yml#square_counterplay
+  - id: suffix_consumes_irregular_relation
+    claim: 正确 suffix 同一拍移动完整 Z、上移同一 B/S，并由远趾覆盖 S 腾出的下端目标。
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/runtime_analysis.yml#canonical_replay
+  - id: square_bypass_rejected
+    claim: 2x2 可通过上抬与直接推锚让 B 到上端，但不能覆盖下端目标；该 14 拍回放合法且不胜。
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/runtime_analysis.yml#square_counterplay
+  - id: complete_graph
+    claim: 完整可达图有 176 状态、441 合法边、2 胜态；初始 4 个承诺仅 1 个可胜。
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/runtime_analysis.yml#complete_graph
+  - id: unique_logic_family
+    claim: 两个胜态属于同一 Z、同一对象终局、同一上移应用的两个玩家把手变体；不存在 2x2 胜利解族。
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/solution_uniqueness.yml
+
+identity_counterfactual_results:
+  - change: 删除下端覆盖交接目标。
+    result: 已证实 2x2 深层旁路恢复获胜。
+    identity_reading: suffix 不再反向筛选构造。
+  - change: 把上端目标移到 core 后 B 所在格。
+    result: Z 与 2x2 都在相同 core 左推后获胜。
+    identity_reading: 两种构造的第一次边界动作确实等价完成。
+  - change: 从 core 后正确 Z 删除远趾，保留近端上推面。
+    result: 上推合法但 B/S 不动、不胜。
+    identity_reading: 远趾是传递 anchor 作用并接替覆盖的因果部件。
+identity_counterfactual_evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/runtime_analysis.yml#counterfactuals
+
+attempt_account:
+  v1: >-
+    拒绝。单一上端目标允许 2x2 在 core 后整体上抬，腾出左下通道，再由玩家直接上推 B/S 获胜；
+    这是完整图中的真实第三胜态，不是等价站位。
+  v2: >-
+    通过 designer runtime 与反事实检查。没有用墙封死 v1 旁路，而是把同一 B/S 上移必然腾出的边界下端覆盖交接纳入 suffix；
+    2x2 仍能执行旁路的对象移动，但不能完成作品要求的同一边界应用。
+
+quality_reading:
+  strengths:
+    - 错误构造真实完成 core，后继而非第一拍决定构造。
+    - canonical 的 core 与 suffix 紧邻，结尾一拍同时显示近端传力、远端推锚与覆盖交接。
+    - 深层 2x2 旁路被关系责任否决，而不是被路线墙齿否决。
+  review_risks:
+    - 独立 reviewer 需判断双目标是否被自然读成同一边界覆盖交接，而不是额外清单锁。
+    - 独立 reviewer 需判断 core 后的第二个 Z 把手变体是否仍保持 suffix 的紧邻应用感。
+  designer_reading_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/design_reading.yml
+
+submitted_files:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/node_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/runtime_analysis.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/design_reading.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/solution_uniqueness.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/submission.yml
+
+designer_boundary_statement: >-
+  本提交只写入 assignment 允许的 apply_suffix_001 节点目录；未写 controller 状态、design_tree、review packet、冻结字段或 archive。

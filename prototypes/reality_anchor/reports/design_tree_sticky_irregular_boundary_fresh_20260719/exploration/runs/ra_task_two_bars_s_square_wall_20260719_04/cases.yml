@@ -1,0 +1,69 @@
+runId: ra_task_two_bars_s_square_wall_20260719_04
+title: "两横条主动合并为 S 或 2x2 后的错位墙齿"
+notes: "同一两横条起态允许主动合并成 S 或 2x2；两者都能获得右侧把手，左下墙齿只接受 S 的错位缺口。"
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: two_bars_merge_s_wall_notch_pass
+    family: two_bars_merge_alignment_wall_consumer
+    variant: s_alignment_avoids_lower_left_tooth
+    changed_variable: "先把下横条向右错一列再上推，合并为横置 S"
+    contrast_with:
+      - two_bars_merge_square_wall_notch_blocks
+      - two_bars_merge_square_without_consumer_passes
+    notes: "开始摆法：同列分离两横条；关键动作：right,down,right,up 合并 S，再绕到右侧 left；动后局面：S 左移一格且下排缺口避开墙；最小用法：一格墙齿只接受错位占格。"
+    layout: |
+      #############
+      #B###########
+      #S..........#
+      #....MM.....#
+      #...#.......#
+      #...@MM.....#
+      #...........#
+      #...........#
+      #..........G#
+      #############
+    actions: ["right", "down", "right", "up", "right", "right", "up", "left"]
+
+  - id: two_bars_merge_square_wall_notch_blocks
+    family: two_bars_merge_alignment_wall_consumer
+    variant: square_alignment_hits_lower_left_tooth
+    changed_variable: "下横条不横移，直接上推，合并为 2x2"
+    contrast_with:
+      - two_bars_merge_s_wall_notch_pass
+      - two_bars_merge_square_without_consumer_passes
+    notes: "同一起态用 down,right,up 合并 2x2；绕到右侧后的 left 把玩家送向开放格，但 2x2 下排左目标格撞墙。"
+    layout: |
+      #############
+      #B###########
+      #S..........#
+      #....MM.....#
+      #...#.......#
+      #...@MM.....#
+      #...........#
+      #...........#
+      #..........G#
+      #############
+    actions: ["down", "right", "up", "right", "right", "up", "left"]
+
+  - id: two_bars_merge_square_without_consumer_passes
+    family: two_bars_merge_alignment_wall_consumer
+    variant: square_alignment_consumer_removed
+    changed_variable: "移走 2x2 左移目标格中的单格墙齿"
+    contrast_with: two_bars_merge_square_wall_notch_blocks
+    notes: "2x2 分支输入完全相同；墙齿移走后合并与后继 left 均合法，完整 2x2 左移一格。"
+    layout: |
+      #############
+      #B###########
+      #S..........#
+      #....MM.....#
+      #...........#
+      #...@MM.....#
+      #...........#
+      #...........#
+      #..........G#
+      #############
+    actions: ["down", "right", "up", "right", "right", "up", "left"]

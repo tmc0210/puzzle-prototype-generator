@@ -1,0 +1,47 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V12_CANDIDATE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+candidate_id: RA_DIFFICULTY_CONSTRUCT_PREFIX_UPPER_TAIL_V12
+exact_version: v12
+status: withdrawn_non_equivalent_winning_family
+
+formalization:
+  layout_sha256: b5eb3fbb432d8b4eb231f7f7cd27ef621e11a8506b4d41efa60a6450fc73952
+  dummy_target_removed: true
+  targets: [[10,6],[9,7],[10,7]]
+  target_role: same_l_h2_footprint_only
+  canonical_final_action: up_pull
+  canonical_final_action_immediate_win: true
+
+intended_player_reading:
+  opening: >-
+    玩家看见 B/S 右侧把四格母体的一格切成上方余料；三格 L、固定 P/L 与上尾墙齿共同显示，
+    目标轮廓要求保留缺角而不是回粘成四格母体。
+  judgments_after_first_cut:
+    - 应保留三格 L，还是把 cut crate 借 B/S 回粘回母体；回粘会让最后向上平移多出撞墙的上尾目标格。
+    - 怎样让 L 跨过 P/L 后换到外侧拉面，而不是把首次对象移动当作完成。
+    - 首次 P push 后同向 repeat 被占位关闭，玩家应先纯 walk 离开旧把手，再从外侧重新取得 pull 面。
+    - H1 的横向对位仍需让底部回路和最终向上把手同时保持开放；目标只在向上 H2 后一次覆盖。
+  canonical_payoff: >-
+    最后一手从下侧向上拉，同一 L 的两格仍为 sticky，第三格跨入 box side 成 crate，三格同时覆盖 H2 目标并立即胜利。
+
+actual_player_reading_after_directed_audit:
+  bypass: >-
+    上述持续判断没有被正式目标保住。B/S 切分后，玩家可直接沿底行走到三格 L 右侧；该位置已经在 L 世界，
+    连续三次 right pull 就先复制 canonical H0、再完成两个 H1 横移，随后绕到底部执行同一 up H2。
+  lost_relation: >-
+    首次 P push、跨界后的同向阻断与专门的 pure-walk 离场全部可删。P/L 没有改变胜族中的对象操纵关系，
+    construct_prefix 从“主动形成并保存后段把手”退化为“切分后直接从结果侧拉走”。
+  equivalence_judgment: non_equivalent
+  reason: >-
+    反例不是纯走位差异或回返环；它删除 canonical 唯一一次 push_object:sticky#1、删除 P/L 跨侧转换与其后的换把，
+    并从相反操作面以 pull 生成同一 H0，因此对象职责与依赖顺序改变。
+
+designer_decision:
+  verdict: withdraw_current_exact
+  candidate_ready_for_graph: false
+  mandatory_stop_triggered: true
+  statement: >-
+    formal replay 可复现，但首个定向 bounded first-win 搜索即找到非等价胜族。按 assignment 不再跑其它 case、
+    不跑完整图、不写 uniqueness 或 submission，也不将该 exact 标记为 candidate_ready_for_graph。

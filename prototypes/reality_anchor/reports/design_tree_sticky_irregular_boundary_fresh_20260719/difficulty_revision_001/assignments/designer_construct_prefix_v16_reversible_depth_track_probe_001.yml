@@ -1,0 +1,64 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V16_REVERSIBLE_DEPTH_TRACK_PROBE_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v15
+
+design_brief: >-
+  v15 单墙封住 B/S-left 胜族并保持 canonical/access，但 v13 的 `(4,8)` deep-cut 墙同时占据玩家执行 reverse remerge 所需的 driver cell，
+  bounded 603 states 无 mother restore。v16 不再强制阻断 deep cut；把 B/S 纵向关系物化为可逆三态轨：mother、正确一格 cut、过切。
+  相对 v13 formal exact 固定最小 diff 候选为：(3,6) floor→wall，封 B/S-left；(4,8)(4,9) wall→floor，
+  让玩家可从下侧把 B/S 在三个纵向深度间推回。Designer 可在不扩大三格责任范围的前提下修正等价坐标，但必须列 exact diff。
+  正确一格 cut 后走原 H0→外绕→H1×2→up H2。mother 与过切必须 actual 可达、可返回正确 cut state，但不能胜、不能目标分工、
+  不能用规整残体或 crates 替代 L。B/S-right commitment 继续 bounded non-win，B/S-left blocked。
+  opening pre/post access 与 P/L 操作关系必须保持。先做 formal-target probe 与 bounded first-win，不写 formal v16 candidate/submission、不跑完整图。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/diagnostics/opening_access_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/diagnostics/candidate_directed_audit.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v15/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v15/diagnostics/single_stop_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - 任一 archive candidate、reviewer packet、reviewer output 或旧树 exact
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v16/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v16/diagnostics/depth_track_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v16/diagnostics/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v16/diagnostics/depth_state_cycle.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v16/diagnostics/state_branch_audit.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v16/diagnostics/opening_pl_regression.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v16/diagnostics/bounded_first_win_audit.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v16/diagnostics/depth_track_probe.yml
+
+required_outputs:
+  - 列出相对 v13 exact 的最小 diff；canonical 21 步 H2 win 与 opening pre/post access/P-L relation 保持。
+  - current-runtime depth cycle：mother→correct cut→deep cut，并分别能返回 correct cut；记录 B/S、sticky components、crates 与 exact state comparison。
+  - mother/deep branches bounded 无 win、无 H2 footprint/目标分工、无规整残体或 crate substitution；返回后仍完整执行 correct L H0→H1→H2。
+  - B/S-left actual blocked；B/S-right commitment bounded non-win；actual first-win 审计无非等价胜族才通过。
+  - P/L counterfactual 按关系变化记录，不因全推可解性失败。
+  - 通过只写 probe_passed_for_candidate；任一 state branch actual 胜族或不可恢复即失败。不得写 formal candidate、完整图、uniqueness/submission。

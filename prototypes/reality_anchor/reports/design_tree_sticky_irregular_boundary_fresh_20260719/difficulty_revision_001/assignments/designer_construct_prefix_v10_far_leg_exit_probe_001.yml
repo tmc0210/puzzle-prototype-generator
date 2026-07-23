@@ -1,0 +1,66 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V10_FAR_LEG_EXIT_PROBE_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v9
+
+design_brief: >-
+  v9 把首次 P-side push 后玩家送入 L 世界，成功关闭连续 second push；但 H0 玩家被对象关系夹死：left 拉回 L、
+  up 独立拉动 cut crate 并重新 merge、down/right occupied，外换把不可达。v10 保留 P/L 跨界语义，改变母体/L 的朝向、
+  施力接触行或切尾位置，使首次 push 后的 L-world 玩家至少有一个真实 walk 离场方向；该步不得移动 L、crate 或锚点，
+  随后玩家绕到异形外侧以 L-side pull 进入非恒等 H1，再从新正交面进入 H2。
+  允许使用“近端横臂、远端下腿”的镜像/旋转 L 或其它三格异形，以及对应四格母体；但母体多出的切尾必须仍在 H1-like→H2
+  接受额外远端墙责任。实际 B/S 一格切分、反向回粘、第二格深切阻断、cut crate 不可独立替代仍需同布局成立。
+  先做无目标 combined runtime probe，不形成 candidate、不跑图。
+
+runtime_parser_exception: >-
+  current CLI 要求至少一个 G；允许一个完全隔离、从未覆盖且不触发 win 的 dummy target。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_identity_and_substitution_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/pl_transition_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/pl_transition_l_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/repeat_push_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/mother_crate_regression_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/pl_transition_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - 任一 archive candidate、reviewer packet、reviewer output 或旧树 exact
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_exit_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_l_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/repeat_push_and_exit_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/mother_deep_crate_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_exit_probe.yml
+
+required_outputs:
+  - actual B/S 切分后，首次 P push 让玩家进入 L 世界；立即同向输入不移动异形；至少一个垂直/正交离场输入是纯 walk。
+  - 玩家由该离场绕到外侧，L pull 到非恒等 H1，再从 H1 新面正交施力到 H2；canonical probe 不含 exact loop。
+  - 回粘母体完成同前段，在 H1-like→H2 因唯一额外尾格 force_blocked；玩家目标格开放。
+  - 第二格深切与 cut crate 全面 substitution 回归通过；P/L 跨界或纯 walk 离场任一退化即停止。
+  - 写 v10 reasoning 说明新异形朝向怎样保存近端操作与远端责任；通过只写 probe_passed，不得形成目标/candidate/图/submission。

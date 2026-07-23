@@ -1,0 +1,66 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V13_OPENING_SIDE_ACCESS_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v13_probe_only
+status: probe_passed_for_candidate
+
+structure_hypothesis:
+  relation: same_l_vacated_cell_opens_outer_handle_route
+  statement: >-
+    B/S 与起点移入固定 P/L 的左侧 P-only 小室。x=6 墙带只在 (6,8) 留口，开局由三格 L 的近端格占住；
+    切分后玩家可到 (5,8) 做首次 P-side right push，但 walk-only 不能穿过 L 到达右侧 pull face。
+    首推把 L 右移后，玩家落在 L 让出的 (6,8)，再以纯 walk down 进入底部回路，才可绕到 (9,8)
+    取得 intended H1 pull。access gate 因而由同一 L 的非恒等位移产生，不是 B/S、钥匙或隐藏区域开门。
+
+responsibilities:
+  p_only_cut_start: [4,4]
+  bs_initial: [[4,5],[4,6]]
+  bs_after_cut: [[4,6],[4,7]]
+  h0_push_face: [5,8]
+  l_gate_cell_before_h0: [6,8]
+  player_after_h0: [6,8]
+  first_pure_walk_after_h0: {input: down, destination: [6,9]}
+  intended_h1_pull_face: [9,8]
+  pre_h0_equivalent_pull_faces: [[8,7],[8,8]]
+  barrier: fixed wall band at x=6 with the L-occupied opening at (6,8)
+
+preserved_v12_relation:
+  h1_pulls: [right, right]
+  h2_input: up
+  h2_footprint: [[9,7],[10,7],[10,6]]
+  mother_extra_target_wall: [10,5]
+  cut_crate_initial: [7,6]
+  exact_loop_executed: false
+
+observed_results:
+  opening_to_h2:
+    inputs: [down, right, down, down, down, right, down, right, right, right, up, right, right, down, left, left, left, up, up, right, up]
+    legal_through_step: 21
+    h0_step: 6
+    h1_steps: [12, 13]
+    h2_step: 21
+  walk_only_access_differential:
+    pre_h0:
+      reachable_count: 19
+      h0_push_face_reachable: true
+      equivalent_l_side_pull_faces_reachable: false
+      intended_h1_face_reachable: false
+    post_h0:
+      reachable_count: 16
+      gate_exit_path: [down]
+      intended_h1_face_path: [down, right, right, right, up]
+  regressions:
+    repeat_push: {result: blocked, stop_reason: destination_occupied}
+    mother_h2: {result: blocked, stop_reason: force_blocked, responsible_wall: [10,5]}
+    second_deep_cut: {result: blocked, stop_reason: force_blocked, responsible_wall: [4,8]}
+    cut_crate_substitution:
+      result: passed_with_bounded_state_scope
+      east_branch: bounded_before_h2_footprint
+      south_branch: remerges_but_does_not_enter_or_reproduce_h2_footprint
+
+evidence_boundary: >-
+  本版本只有隔离 dummy G；21 步 opening→H2 主链、冻结对象的 H0 前后 walk-only 差分、repeat、母体、
+  deep cut 与已取面的 cut-crate 分支均已在同一 exact/current runtime 上核验。south crate 分支会发生一次有界重并，
+  但 former cut cell 未进入或复现 H2 footprint；因此这里只通过「不能替代 intended H2」这一有界命题，
+  不主张 crate 全局不可操作或全图旁路穷尽，也不形成目标、candidate、图、uniqueness 或 submission。

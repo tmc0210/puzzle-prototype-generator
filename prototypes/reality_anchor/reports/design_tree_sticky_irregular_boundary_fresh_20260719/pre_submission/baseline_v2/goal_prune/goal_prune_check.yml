@@ -1,0 +1,42 @@
+assignment_id: RA_PRE_BASELINE_V2_GOAL_PRUNE
+workflow_id: invalid_goal_prune
+node_id: baseline_001
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version_basis: v2
+layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+layout_sha256: e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6
+
+goal_prune_check:
+  status: clean
+  applicability: formally_assigned_pre_submission_check
+  target_count: 1
+  targets_checked:
+    - target: [8, 5]
+      action: keep
+      reason: >-
+        这是 reviewed exact 的唯一目标；goal_prune authority 与 design_handoff 均明确禁止删除唯一目标。
+        因删除操作没有权限，未制作删目标版本，也未运行无目标 layout 的 solver、graph 或事件探针。
+      deletion_probe: not_run_authority_forbidden
+      current_exact_expected_trace_win: true
+      current_exact_final_coverage: B 覆盖 [8,5]
+      core_event_bypass: not_applicable_without_authorized_counterfactual
+  removed_targets: []
+  retained_targets:
+    - [8, 5]
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/submission.yml
+    - prototypes/reality_anchor/docs/goal_prune_check.md
+    - prototypes/reality_anchor/docs/design_handoff.yml
+
+operation:
+  target_deleted: false
+  reviewed_artifact_modified: false
+  derived_exact_artifact_written: false
+  rationale: 唯一目标命中必须保留条件，检查在 authority 边界内结束。
+
+version_effect: unchanged
+result_exact_version: v2
+controller_boundary: >-
+  本 artifact 只记录 Designer 的目标裁剪专业检查；不写冻结、delivery、playable queue、pre-submission 总状态或其它 Controller 状态。

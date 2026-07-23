@@ -1,0 +1,72 @@
+review_attempt_id: RA_QUALITY_CONSTRUCT_PREFIX_V2_001
+prototype_id: reality_anchor
+review_target: growth_child
+prototype_rules:
+  confirmed_rules:
+    - B/S 锚点把棋盘分成箱世界与黏世界；B/S 为可移动 1x2 刚体，只平移不旋转。
+    - 推或拉对一个物体实例施力，力可沿运动方向传递；玩家与受力闭包同时平移。
+    - 四邻接黏块自动合并为一个刚体；整个刚体任一格受墙或边界阻挡则动作失败且状态不变。
+  win_condition: 全部目标必须由箱、黏块格或锚点格覆盖；玩家覆盖不计胜利。
+  player_prior:
+    - 玩家已熟悉规整小黏块可动性、拼接切分、B/S 与 P/L、基础推拉与腾挪。
+    - 玩家会快速剪除显然方向、基本站位与短死路。
+fresh_review_firewall:
+  - Stage A 只读规则、自主归档校准、以下 actual parent/candidate layouts 与非空 mechanical replays。
+  - 禁止体验简报、design_tree、旧 exact/review、Designer 说明、hard review、redundant workflow、对话或修改说明。
+  - Stage A verdict 写定后才可读取 Stage B coach context。
+frozen_parent:
+  node_id: baseline_001
+  candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+  exact_version: v3
+  solve_instance:
+    layout: |-
+      #########
+      ###PL####
+      #...#####
+      #@#MMM.##
+      #...M.SB#
+      ####...G#
+      #########
+    player_start: [1, 3]
+    win_condition: all_targets_covered_by_objects
+  canonical_solution:
+    exact_inputs: [down, right, right, right, down]
+    actual_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/canonical_replay.json
+    nonempty: true
+    final_win: true
+candidate:
+  node_id: construct_prefix_001
+  candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+  exact_version: v2
+  layout_sha256: 7d55f2a77c99ce5bb4e0d75752b77f8d9d26b707a8e40531829e20b566f1606d
+  solve_instance:
+    layout: |-
+      #########
+      #GBSMM###
+      ####....#
+      ###@MM..#
+      ###.....#
+      #########
+    player_start: [3, 3]
+    win_condition: all_targets_covered_by_objects
+  canonical_solution:
+    exact_inputs: [right, down, right, up, right, right, up, left]
+    actual_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/canonical_replay.json
+    nonempty: true
+    legal_through_step: 8
+    final_win: true
+    mechanical_steps:
+      - {step: 1, input: right, events: ["push_object:sticky#2", move_sticky_rigid], win: false}
+      - {step: 2, input: down, events: [walk], win: false}
+      - {step: 3, input: right, events: [walk], win: false}
+      - {step: 4, input: up, events: ["push_object:sticky#2", move_sticky_rigid, "sticky_merge:n1"], state_key: "Ply:5,3|C:|M:4,1;5,1;5,2;6,2|PL:none|BS:B:2,1;S:3,1", win: false}
+      - {step: 5, input: right, events: [walk], win: false}
+      - {step: 6, input: right, events: [walk], win: false}
+      - {step: 7, input: up, events: [walk], win: false}
+      - {step: 8, input: left, events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid], state_key: "Ply:6,2|C:|M:3,1;4,1;4,2;5,2|PL:none|BS:B:1,1;S:2,1", win: true}
+artifact_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/canonical_replay.json
+stage_a_output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/reviews/construct_prefix_v2/quality_review.yml

@@ -1,0 +1,78 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V7_MOBILE_BOUNDARY_REVISION_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v6
+
+design_brief: >-
+  v6 的抽象减法门槛得到一半正材料：同一连通母体可由不同切分深度留下三格 L、五格异形或规整残体，
+  异形残体也可从新的外侧面继续刚体移动；但开放局部中切出 crate 可以晚粘回，简单三墙一口隔离只覆盖直接反推，
+  未证明长路径不会回粘。因此 v6 不形成 exact，也不能靠死袋、独立封箱或更长执行把身份问题藏起来。
+  选择一个 v7 family：可以保留“连通母体减法”，但只有当 B/S 边界的有意义移动、P/L 推拉转换或同一异形的
+  可逆状态管理自然改变晚粘回关系时才继续；晚粘回也可成为玩家必须主动进入再撤销的同核心状态，前提是它不把异形退休、
+  不让 crates 成为独立钥匙。也可以完全换 family。无论选择什么，正确构造后都必须继续承担冻结 baseline 已有的
+  P/L 外侧换把、exact-state 或等价回返读取、另一正交操作面和墙口远端责任；不得把它们压成一次形状二择。
+  难度可以来自真实异形腾挪、移动 B/S/P/L、操作面保存恢复或状态反转，不要求增加更多层延迟推演。
+  先写 family reasoning 并用最小 runtime probe 验证局部责任；局部链完整后才画 v7 exact，禁止直接跑大图。
+
+controller_verified_v6_boundary:
+  positive_facts:
+    - 同一连通母体可经浅切与深切产生不同连通残体。
+    - 至少一个三格 L 或五格异形残体可在切分后接受真实外侧轴向刚体动作。
+  negative_facts:
+    - 无额外关系时，切出 crate 存在晚粘回并触发 box_to_sticky 与 sticky_merge 的合法 replay。
+    - 静态三墙一口只证明直接反推站位受限，不足以证明长路径隔离。
+  use_boundary: >-
+    这些事实只用于关闭 v6 门槛与确定 v7 风险；不得读取 Explorer raw run、坐标、layout、replay 或 proposed family，
+    不把局部材料当作完整关卡设计。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v1/design_reading.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v2/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v3/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/diagnostics/failure_diagnosis.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v5/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/requests/ra_req_connected_parent_subtractive_irregular_residue_001.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/archive
+  - 任一 reviewer 输入、输出或归档 candidate 的布局与 replay
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/node_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/design_reading.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/solution_uniqueness.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/submission.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics
+
+exploration_request_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/requests
+
+required_outputs:
+  - 第一阶段写 v7 family reasoning；逐项说明新增关系如何保留或增强 baseline 的 P/L 换把、回返和多面腾挪。
+  - 若继续减法 family，必须先用最小 runtime probe 处理晚粘回；静态死袋或独立 crate 子题不通过。
+  - 局部责任成立后再完成 v7 exact、非空 replay、玩家侧重读与解族自查；发现非等价胜族即保存诊断并停止，不写 submission。

@@ -1,0 +1,61 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V11_CRATE_STATE_PROBE_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v10
+
+design_brief: >-
+  v10 的核心局部链均成立：实际 B/S 切分、P push 后跨入 L 世界、repeat push 阻断、纯 walk 离场、外侧非恒等 H1 pull、
+  H2 正交动作、母体远尾墙责任与第二格深切阻断。唯一失败是玩家在取得 H2 操作面时也到达 cut crate 东侧，right 可独立 pull
+  crate 一格。v11 不再把“crate 发生任何移动”自动判死，而把它作为同一身份/可逆状态关系的明确分支审查。
+  若 crate 位移可以覆盖或替代 H2 目标、让 L 退休、产生非等价胜族，或要求一个独立清理子题，family 失败。
+  只有当该位移不能胜且能由 B/S 回粘—再切、同一 P/L/形状操作或短而可读的原关系恢复，且恢复后玩家仍完整承担 L 的 H1→H2，
+  才可保留。Designer 也可用不删弱主链的局部几何改变消除该施力，但不得封掉 v10 纯 walk 离场或 H2 footprint。
+  本阶段只做 provisional H2 target 下的 crate-state runtime probe 与 reasoning，不形成正式 candidate、不跑完整图。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_exit_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_l_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/repeat_push_and_exit_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/mother_deep_crate_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_exit_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - 任一 archive candidate、reviewer packet、reviewer output 或旧树 exact
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_state_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/intended_h2_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_displacement_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_restore_or_failure_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_state_probe.yml
+
+required_outputs:
+  - 用 provisional H2 footprint 目标运行 intended v10 主链，确认仍由同一 L 的 H2 动作即时覆盖，cut crate 不在目标上。
+  - 从相同 H1/H2 取面状态执行 crate east pull，测试它能否直接/随后覆盖目标、替代 L 或形成另一对象分工。
+  - 若保留 crate 分支，必须给 current-runtime 恢复 witness，并证明恢复依赖同一 B/S/P/L/异形关系而非独立清理；恢复后仍需完整 H1→H2。
+  - 若用几何消除 crate 施力，必须重跑 v10 的跨界、纯 walk、H1→H2、母体尾格与深切 gates；任一退化即失败。
+  - 通过只写 probe_passed_for_candidate；失败写最小非等价/不可恢复冲突。不得写正式 layout、完整图、uniqueness 或 submission。

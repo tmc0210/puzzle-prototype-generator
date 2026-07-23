@@ -1,0 +1,160 @@
+review_attempt_id: RA_HARD_APPLY_SUFFIX_V4_001
+reviewer_instance_id: codex_fresh_evidence_reviewer_ra_apply_suffix_v4_20260719
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v4
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/complete_graph_opening.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/alternate_handle_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/square_counterplay_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_results.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_remove_lower_target.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_win_at_core.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/probe_v4.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/outline_graph_isomorphism.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - inputs: [up, left, down, left, up, right, up, left, up]
+      cost: 9
+      final_player: [3, 3]
+      final_object_signature: "C:|M:2,2;3,2;1,3;2,3|PL:none|BS:B:1,1;S:1,2"
+    - inputs: [up, left, down, left, up, right, up, left, down, left, up]
+      cost: 11
+      final_player: [2, 4]
+      final_object_signature: "C:|M:2,2;3,2;1,3;2,3|PL:none|BS:B:1,1;S:1,2"
+  equivalence_evidence_basis:
+    - complete_graph_opening.json records a complete 176-state graph with exactly 2 winning states and 1 winning object signature.
+    - canonical_replay.json and alternate_handle_replay.json reach the same step-8 complete object state and then move the same Z and the same B/S upward to the same object terminal state.
+    - The alternate route differs after the shared step-8 state only by legal walking down and left within the unchanged reachable region before contacting a different lower cell of the same rigid Z; construction, object duties, target assignment, and dependency order are unchanged.
+    - The complete opening audit records 4 initial commitments, only 1 win-viable commitment, and the regular-2x2 commitment's complete 54-state forward closure contains 0 wins.
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - Raw input sequence and terminal player position are not unique; support is only for one player-logic class under the studio standard.
+    - The graph and equivalence facts apply only to candidate RA_STICKY_IRREGULAR_APPLY_SUFFIX_001 exact v4 with layout SHA-256 3516694d71bfeb0270fa2e4c787d07d9579bf042c3abdc4b99b0e2ef913b8c2e.
+
+claims:
+  - claim_id: exact_solvable
+    claim: current v4 九步 canonical 全部合法并获胜。
+    status: supported
+    evidence_basis:
+      - layout.txt independently hashes to 3516694d71bfeb0270fa2e4c787d07d9579bf042c3abdc4b99b0e2ef913b8c2e, matching the packet and replay.
+      - canonical_replay.json records completed=true, legal_through_step=9, and final.is_win=true for the declared inputs.
+    limits: []
+
+  - claim_id: neutral_two_step_opening_commitments
+    claim: offset-Z 以 up,left、2x2 以 left,up 在第二步才承诺对象；前者 forward closure 52 states/2 wins，后者 54/0。
+    status: supported
+    evidence_basis:
+      - complete_graph_opening.json records walk-only first steps for both openings, object-moving commitment events on step 2, and complete forward closures of 52 states/2 wins versus 54 states/0 wins.
+      - canonical_replay.json and square_counterplay_replay.json independently show the corresponding step-2 event patterns and exact states.
+    limits: []
+
+  - claim_id: canonical_construct_core_suffix_chain
+    claim: 第5步形成错位 Z，第8步左推同一 Z 与 B/S 且未胜，第9步上推同一 Z 与 B/S 并立即胜。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json step 5 produces the four-cell state M:3,3;4,3;2,4;3,4 with sticky_merge:n1.
+      - Steps 8 and 9 both record push_object:sticky#1, force_chain:n2, anchor_boundary_shift:box_sticky, and move_sticky_rigid; step 8 is nonwinning and step 9 is winning.
+    limits: []
+
+  - claim_id: boundary_coverage_handoff
+    claim: 第8步 S 占下端目标 [1,3]；第9步 B 覆盖 [1,1]，Z 远趾由 [1,4] 上移到 [1,3] 接替 S。
+    status: supported
+    evidence_basis:
+      - The exact layout places goals at [1,1] and [1,3].
+      - canonical_replay.json step 8 has BS:S at [1,3] and sticky cell [1,4]; step 9 has BS:B at [1,1], S at [1,2], and sticky cell [1,3].
+    limits: []
+
+  - claim_id: square_same_core_but_no_win
+    claim: 2x2 十三步路线可完成同类 B/S 左移和上移，但下端目标最终仅由玩家站住，不胜。
+    status: supported
+    evidence_basis:
+      - square_counterplay_replay.json is legal through all 13 steps; step 5 moves B/S left through the stated force chain and step 13 moves B/S up.
+      - Its terminal state has player [1,3], B [1,1], no object at the lower target [1,3], and final_win=false; the rule contract explicitly says player coverage does not count.
+    limits: []
+
+  - claim_id: square_cannot_complete_current_exact
+    claim: complete graph 176/441/2；2x2 commitment 的 54-state forward closure 为 0 wins。
+    status: supported
+    evidence_basis:
+      - complete_graph_opening.json records status=complete, 176 reachable states, 441 legal transitions, and 2 winning states.
+      - The same artifact records the regular-square commitment at state index 5 with 54 forward-reachable states and 0 forward-winning states.
+    limits: []
+
+  - claim_id: lower_target_responsibility
+    claim: 相对 v4 只删除下端目标 [1,3] 后，同一 2x2 十三步路线全部合法并获胜。
+    status: supported
+    evidence_basis:
+      - Direct layout comparison shows counterfactual_remove_lower_target.txt differs from v4 only at [1,3], G to floor; its SHA-256 matches counterfactual_results.yml.
+      - counterfactual_results.yml records the identical 13-input square witness as completed, legal_through_step=13, and final_win=true.
+    limits:
+      - This establishes the lower target's mechanical responsibility for rejecting that exact 2x2 witness, not an aesthetic conclusion.
+
+  - claim_id: core_equivalence_counterfactual
+    claim: 把上端目标移到 core 后 B 所在 [1,2] 时，Z 八步 core 与 2x2 五步 core 都合法并获胜。
+    status: supported
+    evidence_basis:
+      - Direct layout comparison confirms counterfactual_win_at_core.txt removes the goal at [1,1], adds it at [1,2], and leaves the lower goal at [1,3]; its SHA-256 matches counterfactual_results.yml.
+      - counterfactual_results.yml records the offset-Z 8-step and square 5-step witnesses as completed, legal through their full lengths, and winning, with the same shared-core event pattern.
+    limits:
+      - This counterfactual supports only the mechanical claim that the later boundary handoff distinguishes the constructions.
+
+  - claim_id: distal_toe_necessity
+    claim: 从 v4 canonical 第8步状态只删除远趾 [1,4] 后，up 合法但无 force_chain/anchor shift，B/S 不动且不胜。
+    status: supported
+    evidence_basis:
+      - counterfactual_results.yml copies the canonical step-8 state, removes only sticky cell [1,4], and records the resulting exact before-state key.
+      - Its up transition is legal and emits push_object:sticky#1, move_sticky_rigid, and sticky_to_box:n2, with no force_chain or anchor_boundary_shift; BS remains B:[1,2], S:[1,3], and final_win=false.
+    limits:
+      - This is an injected exact-state counterfactual, not a claim that the altered state is naturally reachable from a modified initial layout.
+
+  - claim_id: solution_logic_family_unique
+    claim: complete graph 有2 wins/1 object signature，4 commitments 仅1 viable；两条胜利 replay 同属 offset-Z handoff 逻辑类。
+    status: supported
+    evidence_basis:
+      - complete_graph_opening.json records a complete graph with 2 wins, 1 winning object signature, and only 1 viable commitment among 4 initial commitments.
+      - Both winning replays share the offset-Z construction through step 8, move the same objects through the same suffix event pattern, and preserve the same object responsibilities and target assignment.
+      - The second replay is obtained from the shared step-8 object state by two walks before the same upward rigid-object/anchor move, so its distinct terminal player position is a pure contact-point variant rather than a non-equivalent solution family.
+    limits:
+      - This does not claim raw-input uniqueness.
+
+  - claim_id: outline_trim_isomorphic
+    claim: 相对 v3 只裁纯墙外列后，按 (x,y)->(x-3,y) 平移，176 states、441 action/event-labeled edges 与2个胜态全部一一相同。
+    status: supported
+    evidence_basis:
+      - Direct exact-layout comparison shows v4 is precisely v3 columns x=3..9 retained and translated by x-3; every deleted cell is a wall.
+      - outline_graph_isomorphism.json records status=complete, source and target counts 176 states/441 edges/2 wins, plus equality of translated state keys, action/event-labeled edges, and winning state keys.
+    limits:
+      - The isomorphism supports mechanical equality only; it does not inherit any v3 review or produce a quality or workflow-retention conclusion.
+
+  - claim_id: no_post_suffix_cleanup
+    claim: canonical 第9步同拍完成 B/S 上移与远趾补位并立即胜利。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json step 8 is nonwinning; step 9 simultaneously records sticky-rigid movement, force_chain:n2, anchor_boundary_shift:box_sticky, final B at [1,1], sticky coverage at [1,3], and is_win=true.
+    limits: []
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

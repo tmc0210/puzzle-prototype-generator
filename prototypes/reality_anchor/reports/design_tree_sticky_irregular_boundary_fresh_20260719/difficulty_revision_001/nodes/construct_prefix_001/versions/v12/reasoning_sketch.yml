@@ -1,0 +1,41 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V12_UPPER_TAIL_UP_CONSUMER_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v12_probe_only
+status: probe_passed_for_candidate
+
+construction:
+  relation: upper_tail_up_consumer
+  statement: >-
+    将 v10 的下尾关系上下翻转；B/S 先切出母体上端 (7,6) 为 crate，P/L 首推后玩家进入 L 世界，
+    以纯 walk 离场，再由外侧两次 right pull 得到 H1。底部回路使玩家从下侧抵达 (9,7)，
+    最后 up pull 把正确三格 L 放入 {(9,7),(10,7),(10,6)}。
+  responsibilities:
+    cut_residue: [7, 6]
+    h2_face: [9, 7]
+    h2_player_destination: [9, 6]
+    h2_footprint: [[9, 7], [10, 7], [10, 6]]
+    mother_unique_extra_cell_before_h2: [10, 6]
+    mother_unique_extra_target: [10, 5]
+    responsible_wall: [10, 5]
+
+player_read:
+  first_p_push_crosses_into_l_world: true
+  repeat_push_blocked: destination_occupied
+  pure_walk_exit_after_first_push: up
+  h1_is_outside_pull: true
+  h2_is_up_pull_from_below: true
+  h2_face_route: [[11,9], [10,9], [9,9], [8,9], [8,8], [8,7], [9,7]]
+  h2_face_route_touches_cut_crate_force_face: false
+
+contrast:
+  correct_l_h2: legal
+  remerged_mother_same_h2: force_blocked
+  player_destination_open: true
+  sole_extra_failure: mother cell (10,6) targets upper-tail wall (10,5)
+
+evidence_boundary: >-
+  这是无正式目标的 combined probe；隔离 G 仅满足 parser。正链与母体反例来自 current-runtime 已运行结果；
+  最后一版新增 (12,9) 墙后的第二格深切依布局占用作静态机械复核，未在停止命令后补跑。
+  不形成 candidate、完整图、解族、uniqueness 或 submission。

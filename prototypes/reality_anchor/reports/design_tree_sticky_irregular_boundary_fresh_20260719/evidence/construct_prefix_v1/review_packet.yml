@@ -1,0 +1,96 @@
+review_attempt_id: RA_HARD_CONSTRUCT_PREFIX_V1_001
+required_skill: sokoban-evidence-reviewer
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+node_id: construct_prefix_001
+exact_version: v1
+layout_sha256: d4affc733071b977ddaf9f7207c3ba366fb5f7d2e45b19d8d874f4cf1b99d0d9
+prototype_id: reality_anchor
+
+solve_instance:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+  player_start: [4, 3]
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [right, down, right, up, right, right, up, left]
+
+solution_uniqueness_claim_extracted:
+  result: unique_complete
+  search_scope: complete
+  search_budget: maxStates=300000; graphMaxStates=300000
+  known_raw_winning_variants:
+    - 初始 SCC 内允许纯走位、回退或搬动下条后恢复正确偏移；这些不改变最终 S、右把手、B/S 目标分配与因果顺序。
+    - agency r1 存在可回到胜路的 detour，但不产生第二个构造答案或第二个不可逆胜利逻辑类。
+  equivalence_account: >-
+    所有胜路最终形成同一四格 S [[5,1],[6,1],[6,2],[7,2]]，再从同一右侧把手左推，
+    由同一上层远端格推动同一 B/S 到唯一胜态；只把不改变对象职责与因果顺序的可逆搬动和走位视为等价。
+
+mechanical_claims:
+  - claim_id: exact_solvable
+    claim: 当前 exact layout 可由非空八步输入 right,down,right,up,right,right,up,left 全部合法通关。
+  - claim_id: canonical_construct_and_payoff_chain
+    claim: >-
+      第 4 步上推下条触发 sticky_merge:n1 并形成 connected 四格 S；终手左推同一刚体，触发
+      push_object:sticky#1、force_chain:n2、anchor_boundary_shift:box_sticky 与 move_sticky_rigid，B 左移覆盖唯一目标并胜利。
+  - claim_id: solution_logic_class_unique
+    claim: >-
+      完整 133-state / 350-transition 图只有一个 winning state；12 个 agency region 中初始四个 commitment 只有一个可胜，
+      可胜 SCC 子图无 branching 或 merging，未发现第二个非等价胜利逻辑类。
+  - claim_id: two_constructible_shapes_same_operation_side
+    claim: >-
+      exact 中两根分离二格横条既可合法合并成错位 S，也可合法合并成整齐 2x2；两个分支均能让玩家到达合并体右侧并尝试向左推，
+      构造动作本身不以非法输入直接宣判答案。
+  - claim_id: aligned_square_blocked_at_shared_consumer
+    claim: >-
+      2x2 分支的前六步全部合法；从其右侧执行与 S 分支同方向的终局左推时，exact 在第 7 步返回 force_blocked，且未胜利。
+  - claim_id: wall_tooth_mechanical_responsibility
+    claim: >-
+      只把 exact 的墙齿 [4,2] 改为空地后，同一 2x2 七步分支全部合法；终手恢复相同类型的 force chain 与 B/S 左移，并获胜。
+  - claim_id: remote_upper_arm_mechanical_necessity
+    claim: >-
+      只删除预置上条远端格 [5,1] 后，canonical 八步仍全部合法且仍发生合并；终手只移动三格黏块，
+      不含 force_chain 或 B/S 位移，终态不胜。
+  - claim_id: connected_irregular_body_participation
+    claim: >-
+      canonical 第 4 步后四格黏块四邻接合并为同一 S 形刚体；终手四格整体平移，且其上层远端格把 B/S 纳入力链。
+  - claim_id: no_winning_bypass_in_current_exact
+    claim: >-
+      当前 exact 的 complete graph 只有一个 winning state、一个 winning agency region 和一个初始可胜 commitment；
+      不合并上条、形成 2x2 或其他下条搬动均未形成第二个 win-reaching 构造出口。
+
+allowed_evidence_sources:
+  authority:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+  exact_and_raw_artifacts:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_no_wall_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_delete_remote_arm.txt
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REVIEW.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REVIEW.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_SQUARE.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_SQUARE.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_NO_WALL_SQUARE.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_NO_WALL_SQUARE.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_DELETE_ARM.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_DELETE_ARM.md
+
+forbidden_sources:
+  - designer node_brief、design_reading 与 submission 中除本包已单独提取的 solution_uniqueness 以外的内容
+  - experience_brief、archive_calibration、design_tree、冻结父节点、growth_relation 与人类审美评语
+  - task-local explorer 语料、请求和 runs
+  - 任何旧 report、旧 exact、旧 review、designer action、当前设计对话或 Controller 审美解释
+
+evidence_boundaries:
+  - complete graph 的一个 winning state 不能单独证明事件必经性；解族结论须结合 complete agency/SCC 与 exact replay。
+  - 去墙齿反事实同时把该格变为可走地面；只核验同一 2x2 消费动作由 blocked 恢复为合法并胜利，不外推其他身份结论。
+  - 删远端上臂反事实只核验该格对同一 canonical 输入触发 B/S 位移的机械责任，不评价审美、难度或树增长。
+  - raw layout analysis 未提供 instance-level object participation；对象职责只按逐步 exact state、规则合同和隔离反事实核验。
+
+output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/construct_prefix_v1/evidence_review.yml

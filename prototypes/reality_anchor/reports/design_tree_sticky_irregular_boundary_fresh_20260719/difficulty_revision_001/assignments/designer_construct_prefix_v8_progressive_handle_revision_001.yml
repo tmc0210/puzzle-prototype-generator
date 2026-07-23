@@ -1,0 +1,71 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V8_PROGRESSIVE_HANDLE_REVISION_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v7
+
+design_brief: >-
+  v7 局部材料保留，但正式 exact 撤回：深切两格可用二格横条加独立 crates 重分目标并获胜；另有 16 步胜路
+  整体省略 intended 外拉—exact 回返环。后者是结构性错误：若动作环回到完全相同 state，后续 continuation 在环前已经存在，
+  因而该 loop 不可能成为胜利依赖。v8 不再把“实际执行 exact loop”当难度或父负担保存条件。
+  可以继续使用可移动 B/S 的母体—L 身份循环，但可逆性只作为玩家可读、可主动撤销的状态属性；canonical 的 P/L 链必须向前推进：
+  外侧 pull 到达一个不同的新状态，该状态的偏移、把手或远端轮廓必须被下一正交动作/墙口消费，且从 pull 前状态不能直接做等价终段。
+  深切横条、切出 crates、回粘母体与 B/S-first 后退休都不得形成胜族。允许使用可移动 P/L，前提是锚点移动真实改变同一异形的
+  操作面与远端边界关系，而不是另起搬锚点子题。难度来自 active B/S 状态管理、P/L 换侧和连续多面腾挪的耦合，
+  不要求增加更多推演层，也不得把正确切分压成一次显然二择后只剩唯一执行。
+  第一阶段只写一个 v8 family reasoning 和最多三个最小 runtime gates；不画正式 layout、不设目标、不跑完整图。
+
+controller_correction:
+  exact_loop_boundary: >-
+    exact-state 回环可用于证明动作可逆、支持玩家试探或反事实，但不能被声明为任何胜解必须执行的前进步骤。
+    v8 的实际玩家负担必须由非恒等状态之间的操作面转换与后继消费承担。
+  preserved_positive_material:
+    - 玩家移动 B/S 可在四格母体、三格 L+crate 之间切分、回粘并精确恢复。
+    - 三格 L 可完成 P 侧轴向 stroke、外侧 L pull 与第二正交动作。
+    - 四格母体可被远端额外尾格的墙责任区分。
+  closed_v7_exact:
+    - 深切二格横条与独立 crates 可重分三个目标并获胜。
+    - intended 外拉—exact 回返环可整体省略，父节点操作面负担未被胜利依赖保存。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage2_paired_pl_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/design_reading.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/candidate_local_checks.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/candidate_directed_audit.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - 任一 archive candidate、reviewer packet、reviewer output 或旧树 exact
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics
+
+required_outputs:
+  - 只写一个 v8 family reasoning，明确外侧 P/L 动作怎样到达非恒等新状态、该状态怎样被后继正交动作或墙口消费。
+  - 最多列三个局部 runtime gates：progressive outside-handle、pre-shift direct finish blocked、mother/deep-cut/crate substitution blocked；本阶段不运行。
+  - 逐项说明 B/S 与 P/L 如何都保持对同一异形的操作责任；若选择删去一个锚点，必须由不更低的真实异形操作关系替代。
+  - 若无法避免 v7 的目标重分与 optional-loop 边界，写 withdrawn reasoning 并结束，不画布局。

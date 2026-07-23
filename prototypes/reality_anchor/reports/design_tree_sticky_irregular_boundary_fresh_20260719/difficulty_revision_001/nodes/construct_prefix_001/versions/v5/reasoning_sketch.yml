@@ -1,0 +1,44 @@
+schema: sokoban_design_reasoning_sketch_v1
+version: v5
+status: local_exact_eligible_unverified
+
+opening_access_family:
+  name: double_cell_access_throat_with_same_box_commitment_shelf
+  conclusion: >-
+    把开局下排两箱的原始占格同时作为通往 B/S 操作面的串联双格 access throat，
+    并把两种最终构造放在同一承诺搁架上。gate 的 blocker、选择材料和最终异形
+    是同一组箱，不新增钥匙、按钮或独立动作；打开 access 是构造承诺的直接可见后果。
+
+required_relations:
+  - id: double_cell_throat
+    statement: >-
+      开局下排两箱的原始占格共同组成串联双格 throat；只有两格都被让出，
+      玩家才能到达 B/S 的操作面。
+  - id: s_branch_commitment_shelf
+    statement: >-
+      S 分支须先将下排横条错位，再把两箱依次推入承诺搁架；两箱全部入架后形成最终 S 轮廓。
+  - id: square_branch_commitment_shelf
+    statement: >-
+      2x2 分支不横移下排横条，直接把两箱推入对齐的承诺搁架；两箱全部入架后形成最终 2x2 轮廓。
+  - id: partial_move_keeps_gate_closed
+    statement: >-
+      只移动一箱、只让出一格或只完成错位时，双格 throat 仍不完整，玩家不能接触 B/S。
+  - id: committed_shape_locked_before_sweep
+    statement: >-
+      上沿与施力面必须使入架后的箱在 B/S 扫线前不可再改形，避免玩家先开 gate、
+      移动 B/S，再返回完成或改写构造。
+
+downstream_preservation:
+  statement: >-
+    opening/access 只承担阻止过早接触 B/S；B/S 的 push→circle→pull 以及后续身份门关系保持不变。
+
+rejection_conditions:
+  - 只移动一箱、只让出一格或只做错位即可接触或移动 B/S。
+  - 玩家可在最终 S 或 2x2 轮廓形成前穿过 throat。
+  - 玩家可在 gate 打开或 B/S 移动后返回并完成、改写或互换 S/2x2 构造。
+  - 为打开 access 引入独立钥匙、按钮、额外 blocker、强制单动作或长距离步行。
+  - 两个分支未共享同一组构造箱、同一双格 throat 与同一承诺搁架关系。
+  - opening/access 改写或取代 B/S 的 push→circle→pull 以及下游身份门。
+
+verification_boundary: >-
+  当前仅为 reasoning family 判断，尚无 layout、local probe、exact replay、diagnostic 或 submission 证据。

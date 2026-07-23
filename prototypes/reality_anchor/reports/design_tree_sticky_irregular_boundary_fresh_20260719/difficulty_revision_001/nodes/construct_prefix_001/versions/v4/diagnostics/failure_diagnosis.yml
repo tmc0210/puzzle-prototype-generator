@@ -1,0 +1,84 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V4_GRAPH_SUBMISSION_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v4
+status: family_failed_non_equivalent_winning_family
+
+exact_immutability:
+  layout_changed: false
+  start_changed: false
+  goals_changed: false
+  objects_changed: false
+  layout_sha256: EBE99FBB2FE9F636B6B24886AC0AA1663BE4B2ABBF83548418D049E8B04AB2F2
+
+declared_budget_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/diagnostics/graph_budget.yml
+rerunnable_script_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/diagnostics/graph_solution_family_audit.ts
+raw_json_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/diagnostics/graph_solution_family_raw.json
+
+phase_1_graph:
+  status: budget_exhausted
+  max_states: 300000
+  reachable_states_recorded: 300000
+  expanded_states: 157079
+  legal_transitions: 580105
+  terminal_winning_states_recorded: 0
+  reading: >-
+    full-state BFS 在 300k 预算内未触及胜态，不能据此声明不可解或唯一；canonical 另由非空 deterministic replay 证明可解。
+
+phase_2:
+  started: false
+  declared_ceiling_states: 2000000
+  stop_reason: >-
+    phase_1 同批定向 solution-family audit 已确认一个 current-exact 非等价获胜反例。按 assignment，单个反例足以阻止送审，
+    不再为已失效 exact 消耗 phase_2 预算。
+
+canonical_family:
+  name: arrange_boxes_then_bs_merge
+  inputs: 75
+  is_win: true
+  first_material_action_step: 9
+  first_bs_shift_step: 27
+  first_full_sticky_step: 31
+  causal_reading: 先把四箱排成 S 候选，再由 B/S 扫线生成完整 sticky，之后 handoff。
+
+non_equivalent_winning_family:
+  name: anchor_first_then_sticky_construct
+  inputs: 59
+  is_win: true
+  first_bs_shift_step: 1
+  first_material_action_step: 33
+  first_full_sticky_step: 36
+  object_action_difference:
+    canonical_prefix:
+      - push_object:crate + force_chain
+      - 两次独立 push_object:crate
+      - B/S 扫线 box_to_sticky 与 sticky_merge
+    bypass_prefix:
+      - B/S 先把开局上下两排各自转为 sticky group
+      - push_object:sticky#2 左移下条
+      - push_object:sticky#2 上推并 sticky_merge
+  why_non_equivalent: >-
+    这不是纯走位、exact 回返环或独立必要步骤换序。B/S 的先后直接改写材料身份、施力闭包与 merge 的发生原因：
+    canonical 中 B/S 在已排好的箱轮廓上生成完整刚体；旁路中 B/S 先完成并退休，玩家之后操纵两个 sticky group 才构造成 S。
+    对象职责和依赖因果不同，故属于第二个玩家逻辑类。
+  violated_claims:
+    - active construction 必须先产生候选，再由 B/S identity gate 生成 handoff 所需刚体。
+    - B/S 定位应保存刚形成的完整异形，而不是在构造前完成并退休。
+    - 所有胜族都应让前序构造与 identity gate 保持同一因果链。
+
+additional_handle_audit:
+  replay: canonical_without_optional_exact_return_loop
+  inputs: 73
+  is_win: true
+  classification: equivalent_loop_omission_but_submission_load_not_supported
+  reading: >-
+    删除 canonical 的 step63 pull:right 与 step64 push:left 后，其余输入仍直接胜利，最终状态相同。按 docs/21，
+    省略一个回到 exact state 的完整环本身可归入同一逻辑类，因此它不是主要唯一性反例；但它同时证明外侧 pull—跨侧回返
+    不是任一胜族必须实际承担的依赖步骤，只是可选试探，无法满足本 assignment 对父节点操作面生命周期由胜族实际承担的提交前提。
+
+designer_decision:
+  solution_uniqueness_written: false
+  submission_written: false
+  self_verdict: withdraw
+  reason: 已知非等价胜族；且外侧 exact-return 环可整体省略。

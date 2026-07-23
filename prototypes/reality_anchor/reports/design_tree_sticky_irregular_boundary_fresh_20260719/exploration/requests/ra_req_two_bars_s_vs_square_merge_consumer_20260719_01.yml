@@ -1,0 +1,36 @@
+request_id: ra_req_two_bars_s_vs_square_merge_consumer_20260719_01
+exploration_id: RA_EXP_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+
+design_space: >-
+  探索两条彼此分离的二格黏块横条在合并前拥有多种局部可行对齐的结构空间：
+  一种错位邻接合并为横置 S 形，另一种正对邻接合并为 2x2；合并后的近端操作关系都表面可用，
+  但紧邻后继中的远端斜趾、墙口或锚点边界 consumer 只接受其中一种具体占格关系。
+  重点是让合并前的选择由后继完整刚体足迹反向区分，而不是让某种对齐成为唯一合法的局部移动。
+
+sampling_axes:
+  - 两条横条的初始相对位置：同列分隔、错一列分隔，以及允许合并前横移一格的近邻摆法。
+  - 合并方式：正对形成 2x2、左错位形成 S、右错位形成镜像近邻；只收产生不同后继关系的非对称代表。
+  - 合并前可达操作面：两种目标对齐都能由非空合法输入到达，且不是同一强制通道的先后停位。
+  - 合并后的近端把手：S 与 2x2 都保留可执行的第一手或紧邻操作，避免错误形状只因无把手被表面淘汰。
+  - 后继 consumer：远端斜趾目标格放可移动对象、墙门或 B/S 边界责任对象；比较接触、避让、扫带与 force_blocked。
+  - 边界高度或方向：consumer 在关键动作前不提前拆散两条横条，关键差异只在合并后的刚体足迹被消费时出现。
+  - 动后局面：正确错位形状保留近端操作关系并产生远端作用；2x2 或另一错位形状产生不同且可读的后继状态。
+  - 近邻退化：移走 consumer、放宽墙口或把 consumer 横移一格后，两种合并对齐的差异应消失或明确改变。
+
+current_material_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#s-形折向斜趾跨线顶入一格箱袋
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md#bs-边界黏合箱组形成横条或-l-形黏块
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md#黏块过墙口的通过与回推条件
+
+do_not_repeat:
+  - 不重复只给预制 S 形并执行 left,down 的既有材料；必须从两条分离横条开始并实际比较合并对齐。
+  - 不把正对或错位之一做成唯一合法的局部移动、单行道动画或无选择的自动合并。
+  - 不只记录 sticky_merge、sticky_to_box、force_chain 或目标覆盖事件；必须保存后继 consumer 对两种完整占格的实际差异。
+  - 不补纯镜像、平移、换墙皮、换目标位置或增加走位的重复 case。
+  - 不制作完整关卡、候选包装、难度判断、设计树关系或 family 去留结论。
+
+materialization_target: >-
+  发布一组 runtime-backed 局面卡：从同一类两横条分离起态出发，至少给出一个可主动错位合并为 S 的正向 case、
+  一个可主动正对合并为 2x2 的局部可行对照，以及一个移走或错开后继 consumer 的退化对照；
+  每个 case 保存非空输入、合并前后渲染、关键动作事件、完整刚体占格、consumer 结果与工具边界，
+  并明确哪些站位或边界旋钮让玩家必须按后继远端足迹选择合并对齐。

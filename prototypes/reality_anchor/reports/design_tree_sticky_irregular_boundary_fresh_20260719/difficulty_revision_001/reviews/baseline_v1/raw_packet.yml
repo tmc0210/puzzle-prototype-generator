@@ -1,0 +1,175 @@
+review_attempt_id: RA_QUALITY_DIFFICULTY_BASELINE_V1_001
+prototype_id: reality_anchor
+review_target: baseline_root
+prototype_rules:
+  confirmed_rules:
+    - P/L 锚点把棋盘分成推世界与拉世界；没有 P/L 时全图为推世界。
+    - B/S 锚点把棋盘分成箱世界与黏世界；没有 B/S 时全图为箱世界，关卡作者不能直接放置独立 M。
+    - 两类锚点均为可移动的 1x2 或 2x1 刚体，只平移不旋转；同类型每关最多一个。
+    - 推与拉都对一个物体实例施力，力可沿运动方向传递；玩家与受力闭包同时平移。
+    - 黏块按四邻接组成刚体；相邻黏格自动合并，跨入箱世界的黏格变为独立箱子，剩余黏格按连通块分裂。
+    - 任一刚体的任一部分被墙、棋盘边界或不可移动结构阻挡时，整个动作失败且状态不变。
+  win_condition: 每步移动、箱黏归一化与黏块合并全部结算后，所有目标必须由箱子、黏块格或任一锚点格覆盖；玩家覆盖目标不计胜利。
+  object_and_event_semantics:
+    - sticky_block 的可见身份来自当前连通形状；整个连通块作为一个刚体受力和移动。
+    - push_object 与 pull_object 只陈述输入时的施力方式；不自动证明该操作具有玩家价值。
+    - move_sticky_rigid 只证明黏块刚体发生移动；形状是否承担核心责任仍需近邻反事实和玩家侧重读。
+    - anchor_boundary_shift 只证明锚点移动；P/L 或 B/S 是否改变异形的操作关系仍需由 exact 关卡证明。
+    - sticky_merge、sticky_split、box_to_sticky 与 sticky_to_box 只陈述结算事件，不能替代作品身份或难度。
+  player_prior:
+    - 玩家拥有全图视野、正常几何直觉和稳定操作能力。
+    - 玩家已充分熟悉规整小黏块组的可达性、可动性和基本腾挪。
+    - 玩家已充分熟悉黏块拼接、切分及其状态变化。
+    - 玩家已充分熟悉 B/S 锚点、固定或可移动 P/L 锚点及各类基础推拉、绕位与力链技巧。
+    - 玩家会迅速剪除一眼可见的形状二择、显然方向、基本站位和短死路；这些不计为后期谜题难度。
+    - 玩家不会因普通走路、执行唯一动作、规则回忆或输入精度而获得有效挑战。
+human_review_constraints:
+  - fresh Explorer 不读取归档、历史候选、旧 reports、旧 exact、旧审查或 Designer 设想。
+  - 每个新 exact version 使用 fresh evidence reviewer 与 fresh level reviewer。
+  - 同一 exact version 的阶段 A 与阶段 B 由同一 fresh level reviewer 连续完成，阶段 A verdict 写定后才能读取本 brief 和树关系。
+  - 不预设冻结节点数量，也不在本 brief 决定生长方向；由存活节点的阶段 B 判断下一关系与树的充分性。
+  - 独立审查从熟练后期玩家侧判断，不把机械必要性、普通腾挪基础、事件标签、solver 复杂度或 delayed reveal 当作难度。
+  - 阶段 A reviewer 自主完成归档校准，不接受本 Designer 代选的唯一 anchors。
+frozen_parent: null
+candidate:
+  node_id: baseline_001
+  candidate_id: RA_DIFFICULTY_BASELINE_L_KEYHOLE_V1
+  exact_version: v1
+  solve_instance:
+    layout: |-
+      ##############
+      #B###PL#######
+      #S############
+      ######.......#
+      #####.MM.....#
+      #####@M..GG..#
+      ######..#G#..#
+      ######.......#
+      ##############
+    player_start:
+      - 5
+      - 5
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+  canonical_solution:
+    exact_inputs:
+      - up
+      - right
+      - up
+      - right
+      - right
+      - right
+      - down
+      - right
+      - right
+      - down
+      - down
+      - down
+      - left
+      - left
+      - up
+      - down
+    mechanically_derived_trace:
+      - step: 1
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/0/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/0/after
+        visible_board_change: (5,4) .→@; (5,5) @→.
+      - step: 2
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/1/before
+        event: push_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/1/after
+        visible_board_change: (5,4) @→.; (6,4) M→@; (8,4) .→M; (6,5) M→.; (7,5) .→M
+      - step: 3
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/2/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/2/after
+        visible_board_change: (6,3) .→@; (6,4) @→.
+      - step: 4
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/3/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/3/after
+        visible_board_change: (6,3) @→.; (7,3) .→@
+      - step: 5
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/4/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/4/after
+        visible_board_change: (7,3) @→.; (8,3) .→@
+      - step: 6
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/5/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/5/after
+        visible_board_change: (8,3) @→.; (9,3) .→@
+      - step: 7
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/6/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/6/after
+        visible_board_change: (9,3) @→.; (9,4) .→@
+      - step: 8
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/7/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/7/after
+        visible_board_change: (7,4) M→.; (9,4) @→M; (10,4) .→@; (7,5) M→.; (8,5) .→M
+      - step: 9
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/8/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/8/after
+        visible_board_change: (8,4) M→.; (10,4) @→M; (11,4) .→@; (8,5) M→.; (9,5) G→m
+      - step: 10
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/9/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/9/after
+        visible_board_change: (11,4) @→.; (11,5) .→@
+      - step: 11
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/10/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/10/after
+        visible_board_change: (11,5) @→.; (11,6) .→@
+      - step: 12
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/11/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/11/after
+        visible_board_change: (11,6) @→.; (11,7) .→@
+      - step: 13
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/12/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/12/after
+        visible_board_change: (10,7) .→@; (11,7) @→.
+      - step: 14
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/13/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/13/after
+        visible_board_change: (9,7) .→@; (10,7) @→.
+      - step: 15
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/14/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/14/after
+        visible_board_change: (9,6) G→+; (9,7) @→.
+      - step: 16
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/15/before
+        event: pull_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json#/steps/15/after
+        visible_board_change: (9,4) M→.; (10,4) M→.; (10,5) G→m; (9,6) +→m; (9,7) .→@
+  artifact_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+artifact_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json

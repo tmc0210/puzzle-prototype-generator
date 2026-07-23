@@ -1,0 +1,88 @@
+runId: ra_task_s_fold_crate_pocket_20260719_02
+title: "S 形折向切分的斜趾箱袋"
+notes: "玩家从 S 形右肩窝左推进入 pull 侧，再下拉；下排跨固定 S/B 边界，左下斜趾是否顶到一格深箱袋决定动作成立或失败。"
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: s_fold_pushes_crate_into_open_pocket
+    family: s_fold_diagonal_toe_crate_pocket
+    variant: full_s_open_pocket
+    changed_variable: "完整 S 形左下斜趾目标格放旧箱，箱后留一格空位"
+    contrast_with:
+      - s_fold_crate_backed_by_wall_blocks
+      - s_fold_trimmed_toe_avoids_backed_crate
+    notes: "开始摆法：玩家在 S 形右肩窝；关键动作：left 后 down；动后局面：旧箱被斜趾向下顶一格，下排跨到 box side；最小用法：一格袋有容量时整步成立。"
+    layout: |
+      #############
+      #...........#
+      #.....LP....#
+      #...........#
+      #.....MM....#
+      #S...MM@....#
+      #B..C.......#
+      #...........#
+      #..........G#
+      #############
+    actions: ["left", "down"]
+
+  - id: s_fold_crate_backed_by_wall_blocks
+    family: s_fold_diagonal_toe_crate_pocket
+    variant: full_s_closed_pocket
+    changed_variable: "只在旧箱后方补一格墙，把箱袋容量从一格改为零格"
+    contrast_with:
+      - s_fold_pushes_crate_into_open_pocket
+      - s_fold_trimmed_toe_avoids_backed_crate
+    notes: "第一手 left 完成；第二手 down 时斜趾碰到旧箱，而旧箱下方是墙，整块受力闭包失败。"
+    layout: |
+      #############
+      #...........#
+      #.....LP....#
+      #...........#
+      #.....MM....#
+      #S...MM@....#
+      #B..C.......#
+      #...#.......#
+      #..........G#
+      #############
+    actions: ["left", "down"]
+
+  - id: s_fold_trimmed_toe_avoids_backed_crate
+    family: s_fold_diagonal_toe_crate_pocket
+    variant: trimmed_left_toe_closed_pocket
+    changed_variable: "去掉 S 形下排左格，只保留三格折角；箱位与袋底墙不变"
+    contrast_with: s_fold_crate_backed_by_wall_blocks
+    notes: "去趾后第二手目标格集合不含旧箱所在格；left、down 均成立，旧箱保持不动。"
+    layout: |
+      #############
+      #...........#
+      #.....LP....#
+      #...........#
+      #.....MM....#
+      #S....M@....#
+      #B..C.......#
+      #...#.......#
+      #..........G#
+      #############
+    actions: ["left", "down"]
+
+  - id: s_fold_shifted_pocket_outside_footprint
+    family: s_fold_diagonal_toe_crate_pocket
+    variant: full_s_pocket_shifted_left
+    changed_variable: "完整 S 形不变，把旧箱与袋底墙从斜趾目标列向左移一格"
+    contrast_with: s_fold_crate_backed_by_wall_blocks
+    notes: "箱袋不在斜趾第二手目标格内；left、down 均成立，旧箱不动。"
+    layout: |
+      #############
+      #...........#
+      #.....LP....#
+      #...........#
+      #.....MM....#
+      #S...MM@....#
+      #B.C........#
+      #..#........#
+      #..........G#
+      #############
+    actions: ["left", "down"]

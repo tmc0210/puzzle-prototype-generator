@@ -1,0 +1,84 @@
+runId: ra_task_t_shoulder_sweep_20260719_01
+title: "T 形肩窝二手侧拉的远臂扫带与远端墙"
+notes: "玩家从 T 形左肩窝右推进入 pull 侧，再向下拉；用 B/S anchor 目标和同格墙消费 T 形比 L 形多出的一格远臂。"
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: t_shoulder_sweeps_bs_to_goal
+    family: t_shoulder_orthogonal_pull_far_arm
+    variant: t_far_arm_sweeps_anchor
+    changed_variable: "第二手远端接触格放可移动 B/S anchor，并在 anchor 下移一格处放目标"
+    contrast_with:
+      - l_shoulder_misses_bs_goal
+      - t_shoulder_far_arm_wall_blocked
+    notes: "开始摆法：玩家在 T 形左肩窝；关键动作：right 后 down；动后局面：T 形远端横臂把 B/S anchor 向下带一格；最小用法：B 端覆盖单格目标。"
+    layout: |
+      ############
+      #..........#
+      #..PL......#
+      #..........#
+      #..MMM.....#
+      #..@M.SB...#
+      #......G...#
+      #..........#
+      ############
+    actions: ["right", "down"]
+
+  - id: l_shoulder_misses_bs_goal
+    family: t_shoulder_orthogonal_pull_far_arm
+    variant: l_without_far_arm_misses_anchor
+    changed_variable: "去掉 T 形右端一格，成为同肩窝站位的 L 形"
+    contrast_with: t_shoulder_sweeps_bs_to_goal
+    notes: "相同 right、down 都可移动 L 形，但第二手目标格不含 anchor 所在格，anchor 与目标保持不动。"
+    layout: |
+      ############
+      #..........#
+      #..PL......#
+      #..........#
+      #..MM......#
+      #..@M.SB...#
+      #......G...#
+      #..........#
+      ############
+    actions: ["right", "down"]
+
+  - id: t_shoulder_far_arm_wall_blocked
+    family: t_shoulder_orthogonal_pull_far_arm
+    variant: t_far_arm_hits_wall
+    changed_variable: "把 T 形远端横臂第二手要进入的格子换成墙"
+    contrast_with:
+      - t_shoulder_sweeps_bs_to_goal
+      - l_shoulder_same_wall_passes
+    notes: "第一手 right 完成；第二手 down 时 T 形远端横臂目标格为墙，整块不动。"
+    layout: |
+      ############
+      #B##########
+      #S.PL......#
+      #..........#
+      #..MMM.....#
+      #..@M.#....#
+      #..........#
+      #.........G#
+      ############
+    actions: ["right", "down"]
+
+  - id: l_shoulder_same_wall_passes
+    family: t_shoulder_orthogonal_pull_far_arm
+    variant: l_without_far_arm_avoids_wall
+    changed_variable: "同一墙位，去掉 T 形右端一格"
+    contrast_with: t_shoulder_far_arm_wall_blocked
+    notes: "L 形第二手目标格集合不包含远端墙格，因此 right、down 均完成。"
+    layout: |
+      ############
+      #B##########
+      #S.PL......#
+      #..........#
+      #..MM......#
+      #..@M.#....#
+      #..........#
+      #.........G#
+      ############
+    actions: ["right", "down"]

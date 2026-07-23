@@ -1,0 +1,55 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V4_INTEGRATION_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v3
+
+design_brief: >-
+  v4 family 的局部责任已由 task-local 材料支持，但上一 Designer 未把不同对象总量的“三格 L 与四格 2x2”整合进共享开局和统一 handoff，
+  因而没有 exact。当前 assignment 只处理这一个整合问题，不重新选择 identity-gate family、不做开放探索：玩家从同一组分离材料主动形成两种等格数、均合法的连体结果；
+  不得给 L 分支的多余第 4 箱另编职责。允许结合 input 中已发布的四格错位 S/2x2 主动合并材料，把比较改成同对象总量的 S 与 2x2，
+  B/S 身份门保证分离组件不能延后合体；两种完整形状都经历同一 B/S 推转拉与固定 P/L handoff；handoff 后保留外侧 pull、跨侧反推回 exact state、
+  以及下侧正交 pull；只有后段墙齿/交换格首次区分正确异形。父节点操作面生命周期不得删弱。
+  本轮只画 v4 layout 草案并跑 local/full runtime probes，确认共享开局与统一链成立；暂不跑 complete graph、不写 submission。
+  若无法整合，写清具体机械冲突并撤回 family，不继续扩图或补墙。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/node_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/design_reading.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/solution_uniqueness.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/submission.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/diagnostics
+
+exploration_request_root: null
+
+required_outputs:
+  - 一个共享开局、同一对象总量的 v4 layout 草案，以及两种等格数 active merge 与统一 B/S→P/L handoff 的 current runtime probe；不得残留独立多余组件。
+  - 证明正确构造后仍有外侧换把、exact-state 回返与另一面 pull；错误构造只在后段 consumer 首次失败。
+  - 若上述整合成立，标记 complete_graph_eligible 并保存 canonical draft；若不成立，更新 reasoning/design reading 为 family_failed 并停止，不写 uniqueness/submission。

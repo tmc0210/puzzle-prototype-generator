@@ -1,0 +1,67 @@
+node_id: construct_prefix_001
+exact_version: v1
+candidate_id: RA_DIFFICULTY_CONSTRUCT_PREFIX_UPPER_L_V1
+design_status: rejected_not_submitted
+
+intended_player_problem: >-
+  玩家先把经 B/S 变黏的单格接到双格条左下，主动构成上带三格 L；新生成的低阶格随即作为
+  P 侧启动把手，把同一 L 推过固定 P/L。之后仍要完成 parent 的外侧换把、两次水平 pull、
+  墙齿列判断与终段换到底侧 pull:down。另一个看似合理的下带 L 会在跨界后由远臂撞墙齿拒绝。
+
+retained_exact:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v1/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v1/canonical_replay.json
+  complete_graph_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v1/diagnostics/complete_graph_audit.json
+  lower_band_probe_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v1/diagnostics/lower_band_counterfactual.json
+
+what_the_canonical_path_proved:
+  - 最短解为 27 输入，raw shortest path count 为 1；canonical replay 非空且最终获胜。
+  - canonical 对象序列包含 B/S 转化、单格移动、sticky merge、由新低阶格发起的 push:right、两次 pull:right 与终段 pull:down。
+  - 下带 L 可以合法合体并跨入 P/L 关系；其远臂随后撞到 wall-mouth tooth，失败状态不在 win-backreach 中。
+  - 因而“错误构造在后继 wall mouth 才受消费”这一局部关系本身成立。
+
+complete_graph_result:
+  status: complete
+  reachable_states: 378281
+  legal_transitions: 1156809
+  terminal_winning_states: 1
+  states_that_can_reach_terminal_win: 273858
+  graph_budget: 500000
+  reproduction_status: fail
+
+non_equivalent_winning_family_diagnosis:
+  conclusion: true_non_equivalent_winning_families_exist
+  evidence:
+    - >-
+      正确上带构造位姿 `7,5;8,5;7,6` 不支配所有 terminal-win 路径；存在不经过该位姿仍可获胜的路径，
+      所以 active construct 不是所有胜族的必经玩家关系。
+    - >-
+      跨 P/L 后位姿 `8,5;9,5;8,6` 同时存在从同一上带 L 以 `push:right` 和 `pull:right`
+      首次进入的 win-corridor classes。这不是纯走位或可逆超调差异，而是启动把手、force mode 与跨界因果不同。
+    - >-
+      位姿 `9,5;10,5;9,6` 也不支配所有胜路，并存在由断开/异位组件经 push 进入、以及从右侧 pull:left
+      回入的多种 first-entry classes；组件可在合体前后分别搬运，再于 P/L 后段收敛。
+    - >-
+      只有墙齿正确列 `10,5;11,5;10,6` 与最终胜位姿 `10,6;11,6;10,7` 支配所有胜路；
+      这只能证明结尾收敛，不能证明前缀构造或 parent 的启动换把被保留。
+  player_meaning: >-
+    玩家可以先从可达的 L 侧外面牵动双格条，或把尚未合体的组件分别送过边界，再于后段合体/收敛；
+    因此无需先解决“在 P 侧构成正确 L，并由新低阶格启动跨界”这个设计题。
+  why_single_win_state_is_insufficient: >-
+    多个对象因果族最终都落到同一个目标位姿，所以 terminal winning state 数量为 1；
+    作品身份依赖到达过程中的构造与换把，而不是只依赖终局占格。
+
+family_failure_boundary:
+  failed_family: 两格条可独立移动、单格后接、开放外侧回路与固定竖 P/L 的并置 family
+  conflict: >-
+    为让正确 L 合体后真实取得 L 侧外部 pull 把手，外侧空间必须可达；但同一可达性也让未合体双格条
+    先被 pull 越界。用单纯静态墙封该外侧面又会同时封掉合体后的 parent 换把，或把另一构造提前泄题。
+  material_gap: >-
+    需要一种局部关系，使两个候选构造在合体前都可成立，但只有正确合体会开放/生成后继操作面，
+    且该面在未合体组件上不可提前使用；这应作为抽象 Explorer 请求由 Controller 另行决定是否 dispatch。
+
+designer_decision:
+  submission_created: false
+  solution_uniqueness_claim_created: false
+  verdict: withdraw_v1_from_review
+  reason: 当前 exact 绕过正确上带构造与 P/L 启动换把，违反 construct_prefix assignment 与 parent 难度保留条件。

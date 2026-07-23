@@ -1,0 +1,211 @@
+review_attempt_id: RA_HARD_CONSTRUCT_PREFIX_V1_001
+reviewer_instance_id: RA_EVIDENCE_REVIEWER_CONSTRUCT_PREFIX_V1_FRESH_001
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v1
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_no_wall_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_delete_remote_arm.txt
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REVIEW.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REVIEW.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_SQUARE.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_SQUARE.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_NO_WALL_SQUARE.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_NO_WALL_SQUARE.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_DELETE_ARM.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_DELETE_ARM.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_complete
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - 初始 SCC 内的纯走位、回退或搬动下条后恢复正确偏移。
+    - agency r1 中可回到胜路、但不产生另一不可逆构造出口的 detour。
+  equivalence_evidence_basis:
+    - >-
+      layout.txt 的实算 SHA-256 为
+      d4affc733071b977ddaf9f7207c3ba366fb5f7d2e45b19d8d874f4cf1b99d0d9，
+      与 review packet 和 solution_uniqueness.yml 的 candidate、v1 指纹一致；全部 exact replay 的
+      layoutSource 与初态也对齐该布局。
+    - >-
+      layout_analysis_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REVIEW.json
+      报告 complete graph：133 reachable states、350 legal transitions、1 winning state；
+      complete agency 有 12 regions、1 winning region，初始 4 commitments 中仅 1 viable。
+    - >-
+      同一 complete artifact 的 SCC 摘要报告 3 个 win-reachable SCC、0 个 branching win SCC、
+      0 个 merging win SCC，胜路压缩为单线 s0 -> s3 -> s4；s0 内的可逆搬动与走位因此不改变
+      不可逆胜利因果类。
+    - >-
+      HARD_REPLAY 的第 4 步进入同一四格占位
+      [[5,1],[6,1],[6,2],[7,2]]，第 8 步从右侧左推并到达唯一胜态；规则合同将黏块视为
+      四邻接刚体且语义上不可区分，现有可逆变体不改变对象职责、目标分配或不可逆因果顺序。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - >-
+      单一 winning state 本身不足以证明逻辑类唯一；本判定同时依赖 status=complete 的 agency/SCC
+      及其无 branching、无 merging 的单线 win-reachable 子图。
+    - >-
+      只核验当前 exact v1 的玩家逻辑类，不把同一完整状态内可逆走位、可恢复搬动或回返环计作新解族，
+      也不外推体验价值。
+
+claims:
+  - claim_id: exact_solvable
+    claim: 当前 exact layout 可由非空八步输入 right,down,right,up,right,right,up,left 全部合法通关。
+    status: supported
+    evidence_basis:
+      - >-
+        input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json 对齐 exact layoutSource
+        和初态，记录 8/8 步合法、completed=true，终态 isWin=true。
+      - >-
+        layout_analysis_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REVIEW.json 独立记录 found=true、
+        cost=8、depth=8 及相同八步 inputs。
+    limits:
+      - 仅证明所声明的 solve instance 可解。
+
+  - claim_id: canonical_construct_and_payoff_chain
+    claim: >-
+      第 4 步上推下条触发 sticky_merge:n1 并形成 connected 四格 S；终手左推同一刚体，触发
+      push_object:sticky#1、force_chain:n2、anchor_boundary_shift:box_sticky 与 move_sticky_rigid，B 左移覆盖唯一目标并胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        HARD_REPLAY 第 4 步合法，事件为 push_object:sticky#2、move_sticky_rigid、sticky_merge:n1，
+        after key 的黏格为 [5,1],[6,1],[6,2],[7,2]。
+      - >-
+        HARD_REPLAY 第 8 步合法并逐项记录所声明的四个事件；B/S 从 B:[3,1],S:[4,1]
+        左移到 B:[2,1],S:[3,1]，终态 isWin=true；layout 仅有目标 [2,1]。
+      - Reality Anchor 规则合同规定受力闭包同步平移、黏块四邻接合并成刚体，且锚点覆盖全部目标即获胜。
+    limits:
+      - 事件与状态链只核验 canonical exact trace，不由单条 trace外推所有胜路的事件必经性。
+
+  - claim_id: solution_logic_class_unique
+    claim: >-
+      完整 133-state / 350-transition 图只有一个 winning state；12 个 agency region 中初始四个 commitment 只有一个可胜，
+      可胜 SCC 子图无 branching 或 merging，未发现第二个非等价胜利逻辑类。
+    status: supported
+    evidence_basis:
+      - >-
+        complete graph 报告 reachableStateCount=133、legalTransitionCount=350、winStateCount=1；
+        complete agency 报告 compressedRegionCount=12、winningRegionCount=1，初始 commitmentCount=4、
+        viableCommitmentCount=1、deadCommitmentCount=3。
+      - >-
+        complete SCC 报告 winReachableSccCount=3、winContinuationBranchingSccCount=0、
+        winContinuationMergingSccCount=0，solution path 为 s0 -> s3 -> s4。
+      - solution_uniqueness_review 在玩家逻辑类定义下核验为 supported。
+    limits:
+      - 单一胜态不单独承担唯一性结论；结论同时依赖 complete SCC/agency 结构与 exact replay。
+
+  - claim_id: two_constructible_shapes_same_operation_side
+    claim: >-
+      exact 中两根分离二格横条既可合法合并成错位 S，也可合法合并成整齐 2x2；两个分支均能让玩家到达合并体右侧并尝试向左推，
+      构造动作本身不以非法输入直接宣判答案。
+    status: supported
+    evidence_basis:
+      - >-
+        HARD_REPLAY 第 4 步合法合并为 [5,1],[6,1],[6,2],[7,2] 的错位 S，随后玩家到达 [8,2]
+        并在第 8 步向左推。
+      - >-
+        V1_SQUARE replay 第 3 步合法合并为 [5,1],[6,1],[5,2],[6,2] 的 2x2，前 6 步均合法，
+        玩家到达 [7,2] 并在第 7 步向左尝试推体。
+    limits:
+      - 只证明这两条给定 exact 构造 trace 及其同向消费站位，不声明所有形状分支。
+
+  - claim_id: aligned_square_blocked_at_shared_consumer
+    claim: >-
+      2x2 分支的前六步全部合法；从其右侧执行与 S 分支同方向的终局左推时，exact 在第 7 步返回 force_blocked，且未胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_SQUARE.json 对齐 exact layout，记录 legalThroughStep=6；
+        第 7 步 left 为 legal=false、reason=force_blocked、状态不变且 final.isWin=false。
+      - 规则合同规定刚体任一部分被墙阻挡时整个动作失败且状态不变。
+    limits:
+      - 只核验给定 2x2 七步分支的共享方向消费动作。
+
+  - claim_id: wall_tooth_mechanical_responsibility
+    claim: >-
+      只把 exact 的墙齿 [4,2] 改为空地后，同一 2x2 七步分支全部合法；终手恢复相同类型的 force chain 与 B/S 左移，并获胜。
+    status: supported
+    evidence_basis:
+      - >-
+        counterfactual_no_wall_tooth.txt 与 exact layout 仅在 [4,2] 不同：该格由 # 改为 .；
+        对应 CF_NO_WALL_SQUARE replay 的 inputs 与 exact 2x2 分支完全相同。
+      - >-
+        CF_NO_WALL_SQUARE 第 7 步 left 合法，事件包含 push_object:sticky#1、force_chain:n2、
+        anchor_boundary_shift:box_sticky、move_sticky_rigid；B/S 左移至 B:[2,1],S:[3,1] 且 final.isWin=true。
+    limits:
+      - >-
+        该反事实也把 [4,2] 变成可走地面；只支持同一 2x2 消费动作由 blocked 恢复为合法并胜利，
+        不外推其它作品身份结论。
+
+  - claim_id: remote_upper_arm_mechanical_necessity
+    claim: >-
+      只删除预置上条远端格 [5,1] 后，canonical 八步仍全部合法且仍发生合并；终手只移动三格黏块，
+      不含 force_chain 或 B/S 位移，终态不胜。
+    status: supported
+    evidence_basis:
+      - >-
+        counterfactual_delete_remote_arm.txt 与 exact layout 仅在 [5,1] 不同：该 M 被改为 .；
+        CF_DELETE_ARM replay 使用与 canonical 相同的八步 inputs。
+      - >-
+        CF_DELETE_ARM 记录 8/8 步合法；第 4 步含 sticky_merge:n1，形成 [6,1],[6,2],[7,2] 三格连通体；
+        第 8 步仅有 push_object:sticky#1 与 move_sticky_rigid，B/S 保持 B:[3,1],S:[4,1]，final.isWin=false。
+    limits:
+      - 只证明 [5,1] 对同一 canonical 输入触发 B/S 位移和胜利的机械责任。
+
+  - claim_id: connected_irregular_body_participation
+    claim: >-
+      canonical 第 4 步后四格黏块四邻接合并为同一 S 形刚体；终手四格整体平移，且其上层远端格把 B/S 纳入力链。
+    status: supported
+    evidence_basis:
+      - >-
+        HARD_REPLAY 第 4 步 after key 将四格记录为同一黏块实例
+        M:[5,1;6,1;6,2;7,2]，坐标四邻接且构成错位 S；规则合同规定相邻黏格自动形成同一刚体。
+      - >-
+        第 8 步同一四格集合整体左移为 [4,1],[5,1],[5,2],[6,2]，并同时产生
+        force_chain:n2 与 anchor_boundary_shift:box_sticky；B/S 也整体左移一格。
+      - >-
+        删除远端格 [5,1] 的隔离反事实保留同一输入，却使终手不再出现 force_chain/B/S 位移，
+        支持该远端格对纳入 B/S 力链的机械责任。
+    limits:
+      - >-
+        layout analysis 未提供 instance-level objectParticipation；本判定只依据逐步 exact state、规则合同与隔离反事实，
+        不外推对象的体验价值。
+
+  - claim_id: no_winning_bypass_in_current_exact
+    claim: >-
+      当前 exact 的 complete graph 只有一个 winning state、一个 winning agency region 和一个初始可胜 commitment；
+      不合并上条、形成 2x2 或其他下条搬动均未形成第二个 win-reaching 构造出口。
+    status: supported
+    evidence_basis:
+      - >-
+        complete graph/agency 报告 1 winning state、1 winning region，初始 4 commitments 中 1 viable、3 dead。
+      - >-
+        complete SCC 的初始 s0 有 5 outgoing，其中仅 1 个 win-reachable、4 个 dead；全部 win-reachable SCC
+        构成无 branching/merging 的 s0 -> s3 -> s4 单线子图。
+      - >-
+        给定 2x2 exact replay 在共享消费动作 force_blocked 且不胜；canonical replay 的唯一 win-reaching
+        不可逆路径在第 4 步形成指定 S，并于第 8 步到达唯一胜态。
+    limits:
+      - 只排除当前 exact v1 完整状态图内的胜利旁路，不声明反事实布局或其它版本。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

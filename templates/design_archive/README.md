@@ -1,6 +1,6 @@
 # 设计归档模板
 
-这些模板连接 `docs/21` 的体验核心设计树工作室与人类引导的归档记录合约。
+这些模板连接 `docs/21` 的体验核心单关工作室与人类引导的归档记录合约。
 
 使用条件：某个原型已经具备基本 runtime / solver / analyzer 支持，人类设计师希望探索哪些规则事实、motif、能力或模式值得继续设计。
 
@@ -9,9 +9,9 @@
 ```text
 1. 编写或选择一个 experiment brief。
 2. 用 `EXPERIMENT_RUN_PROMPT.template.md` 提供本轮特有信息，并调用 `$sokoban-level-design-studio`。
-3. Designer 立即派遣后台 explorer，自己并行完成规则和人类归档校准；材料足够后先制作直白 baseline。
-4. 每个 exact version 强制填写送审包并完成独立硬证据审查；fresh reviewer 先盲读实际节点，通过后再作为体验核心教练给出一个自然语言宏观方向。
-5. 冻结 baseline 和合格子节点，直到教练判断设计树充分；再对每个冻结节点运行原型专属提交前工作流，按实际 artifact 加入待玩列表并重建 playable。
+3. Controller 派遣后台 Explorer，Designer 并行完成规则和人类归档校准；材料足够后制作唯一完整单关候选。
+4. 每个 exact version 强制填写送审包并完成独立硬证据审查；fresh reviewer 先盲读实际关卡，再作为体验核心教练接受当前候选或保护同候选修订方向。
+5. 候选被接受后运行原型专属提交前工作流，按实际 artifact 只加入一个 delivery version 并重建 playable。
 6. 收集人类设计师的试玩状态与自由评语。
 7. 只有 `ready_for_archive` 版本按 `docs/29-design-archive-contract.md` 运行 archive pass。
 8. 保存或更新 candidate record 和 archive index。

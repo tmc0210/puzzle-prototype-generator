@@ -1,0 +1,48 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V4_GRAPH_SUBMISSION_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v4
+layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/layout.txt
+declared_before_first_graph_run: true
+
+search_contract:
+  objective: 枚举 terminal-win state graph，并在首胜后继续寻找替代玩家逻辑类。
+  terminal_policy: 胜利状态计入 terminal wins，不以发现首胜停止搜索。
+  state_identity: current runtime 完整 state key，包含玩家、箱、黏块分组、P/L 与 B/S。
+  directions: [up, down, left, right]
+  layout_mutation: forbidden
+
+staged_budget:
+  phase_1_status_probe:
+    max_states: 300000
+    max_wall_clock_seconds: 300
+    purpose: 尽早报告首轮覆盖、是否已完整、是否已有胜态或非等价胜族。
+  phase_2_declared_ceiling:
+    max_states_total: 2000000
+    max_transitions_total: 8000000
+    max_wall_clock_seconds_total: 1800
+    max_recorded_terminal_wins: 50000
+    purpose: phase_1 未闭合时继续到预声明总上限；不因首胜停止。
+
+equivalence_policy:
+  equivalent_variants:
+    - 纯走位差异。
+    - 回到同一完整游戏状态且不改变后继关系的完整回返环。
+    - 相互独立的必要步骤换序，但对象职责、目标分配与依赖因果保持一致。
+  non_equivalent_if_any:
+    - 胜族不先主动形成四格错位 S。
+    - 分组件 handoff 后延迟 merge 仍可胜。
+    - 先动 B/S 后排形形成跳过 active construction/identity gate 的胜族。
+    - B/S 少扫、反扫或重复扫线绕过固定推转拉定位。
+    - 2x2 或其它轮廓绕过 (5,6) consumer 获胜。
+    - 胜族跳过完整 sticky 的固定 P/L handoff、外侧操作面关系或下侧正交 pull。
+
+result_policy:
+  complete_and_one_logic_class: unique_complete
+  incomplete_and_no_non_equivalent_within_declared_budget: unique_within_budget
+  any_known_non_equivalent: withdraw_without_submission
+  forbidden_inference:
+    - 不以唯一 terminal state 代替唯一解族。
+    - 不以最短解或首条胜解代替替代胜解搜索。
+    - 不以 solver success、状态数或目标覆盖代替作品身份与玩家侧判断。

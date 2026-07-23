@@ -1,0 +1,246 @@
+review_attempt_id: RA_HARD_APPLY_SUFFIX_V2_001
+reviewer_instance_id: RA_EVIDENCE_REVIEWER_APPLY_SUFFIX_V2_FRESH_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v2
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/counterfactual_remove_lower_target.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/counterfactual_win_at_core.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/counterfactual_remove_distal_toe_core_snapshot.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/counterfactual_manifest.yml
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_HARD_REVIEW.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_HARD_REVIEW.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_HARD_REPLAY.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_HARD_REPLAY.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_SQUARE_BYPASS.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_SQUARE_BYPASS.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_CF_REMOVE_LOWER_TARGET_SQUARE.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_CF_REMOVE_LOWER_TARGET_SQUARE.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_CF_WIN_AT_CORE_Z.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_CF_WIN_AT_CORE_Z.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_CF_WIN_AT_CORE_SQUARE.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_CF_WIN_AT_CORE_SQUARE.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/apply_suffix_v2/probe_remove_distal_toe_state.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/apply_suffix_v2/remove_distal_toe_state_probe.json
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: invalid_or_missing
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - >-
+      canonical 八步 raw replay：left,down,left,up,right,up,left,up；最终玩家 [6,3]，
+      对象终局 M:5,2;6,2;4,3;5,3|BS:B:4,1;S:4,2。
+    - >-
+      complete graph 报告第二个 winning state，且 canonical step-7 所在 s3 有两个可胜出边；
+      但白名单内没有该第二胜态的 actual input replay、winning transition 或对象终局。
+  equivalence_evidence_basis:
+    - >-
+      complete graph/agency/SCC 为 complete：176 states、441 legal transitions、2 winning states；
+      所有可胜路径先到 canonical step-7 所在的 s3，s3 有两个可胜出边。
+    - >-
+      canonical raw replay 给出其中一个胜态的完整对象终局；已提取的 solution_uniqueness 账户声称另一路
+      10 步输入只改变同一可达区内的玩家接触点，但白名单没有该路线的 actual replay 或第二胜态 raw state。
+  known_non_equivalent_win_refs: []
+  status: unknown
+  limits:
+    - >-
+      声明值 unique_logic_family_with_equivalent_player_handle_variants 不属于标准允许的
+      unique_complete、unique_within_budget、equivalent_variants_only，故按 invalid_or_missing 记录。
+    - >-
+      两个 winning states 的数量、同一 post-core SCC 的两条可胜出边以及一条 canonical 对象终局，
+      不能单独证明第二胜态保持相同对象职责、目标分配、因果顺序和对象终局。
+    - >-
+      白名单缺少第二条 10 步实际胜利 replay、第二 winning state 的 raw state key/object state，
+      或能明确列出两条 winning transitions 及终局对象状态的 complete-graph 明细。
+
+claims:
+  - claim_id: artifact_identity_alignment
+    claim: candidate、exact version、layout SHA 与当前实际 layout 及送审 raw artifacts 对齐。
+    status: supported
+    evidence_basis:
+      - >-
+        layout.txt 实算 SHA-256 为 6b537c3847a8abf968e184c2920445135755822eb81efc51da9f77a26d171d86，
+        与 review packet、solution_uniqueness.yml、counterfactual_manifest.yml、
+        counterfactual_remove_distal_toe_core_snapshot.yml 和 remove_distal_toe_state_probe.json 一致。
+      - >-
+        solution_uniqueness、counterfactual manifest/snapshot 与 state probe 均标记
+        candidate RA_STICKY_IRREGULAR_APPLY_SUFFIX_001、exact v2；hard analysis/replay 的内嵌初始布局
+        与当前 layout.txt 逐字符一致，layoutSource 指向当前 exact layout。
+    limits:
+      - 部分通用 report 未单列 candidate_id/exact_version/SHA，版本对应由其 V2 id、layoutSource 与内嵌布局交叉核验。
+
+  - claim_id: exact_solvable
+    claim: 当前 exact layout 可由非空八步输入 left,down,left,up,right,up,left,up 全部合法通关。
+    status: supported
+    evidence_basis:
+      - >-
+        input_replay_RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_HARD_REPLAY.json 记录 completed=true、
+        executedSteps=8、legalThroughStep=8，final.isWin=true。
+      - layout analysis 返回同一八步 shortest solution，solution.found=true、cost=8。
+    limits: []
+
+  - claim_id: canonical_construct_core_suffix_chain
+    claim: >-
+      第 4 步上推合并为四格错位 Z；第 7 步左推同一刚体并使 B/S 左移且未胜；
+      第 8 步上推再次移动该刚体与 B/S 并立即胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical raw replay step 4 为 legal，事件含 push_object:sticky#1、move_sticky_rigid、sticky_merge:n1；
+        after state 的 M 为 [6,3],[7,3],[5,4],[6,4]。
+      - >-
+        step 7 为 legal，事件含 push_object:sticky#1、force_chain:n2、anchor_boundary_shift:box_sticky、
+        move_sticky_rigid；after B:[4,2],S:[4,3] 且 isWin=false。
+      - >-
+        step 8 为 legal，含同类四个事件；M 整体上移到 [5,2],[6,2],[4,3],[5,3]，
+        B/S 上移到 B:[4,1],S:[4,2]，after.isWin=true。
+    limits: []
+
+  - claim_id: boundary_coverage_handoff_on_suffix
+    claim: >-
+      step 7 后 S 覆盖 [4,3]；step 8 后 B 覆盖 [4,1]，step-7 远趾 [4,4] 上移到 [4,3]
+      接替覆盖下端目标并在同拍胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical step-7 state key 为 M:5,3;6,3;4,4;5,4|BS:B:4,2;S:4,3，isWin=false。
+      - >-
+        canonical step-8 state key 为 M:5,2;6,2;4,3;5,3|BS:B:4,1;S:4,2，isWin=true；
+        当前规则规定 B/S 与 M 均可覆盖目标。
+    limits: []
+
+  - claim_id: same_immediate_core_for_z_and_square
+    claim: >-
+      错位 Z 与规整 2x2 都能从右侧左推完整黏块，触发同类型 force chain 与 B/S 左移；
+      当前 exact 中两者 core 后均未胜，B/S 均为 B:[4,2],S:[4,3]。
+    status: supported
+    evidence_basis:
+      - canonical raw replay step 7 左推含 force_chain:n2 与 anchor_boundary_shift:box_sticky，after.isWin=false。
+      - square raw replay step 6 左推含同样事件，after B:[4,2],S:[4,3] 且 isWin=false。
+    limits:
+      - 此项只支持 immediate core 动作与 B/S 结果相同，不支持两种构造的完整胜利能力等价。
+
+  - claim_id: square_cannot_complete_current_exact
+    claim: >-
+      2x2 十四步反击合法但不胜；complete graph 中该 2x2 初始构造承诺不在可胜子图，
+      当前 exact 无 2x2 胜利解族。
+    status: unknown
+    evidence_basis:
+      - >-
+        square raw replay 的 14 步全部合法；final B:[4,1],S:[4,2]，下端目标 [4,3] 未被对象覆盖，
+        final.isWin=false。
+      - >-
+        allowed complete graph 摘要只报告 initial s0 有 4 个出边、1 个可胜出边，并给出 canonical 可胜路径；
+        它未列出 2x2 step-3 状态所属 SCC/region 或从该状态到可胜子图的 reachability 标记。
+    limits:
+      - 单条十四步非胜 trace 不能排除其它 2x2 continuation。
+      - >-
+        白名单内没有把 2x2 构造状态明确映射为 dead SCC/region 的 raw graph state/edge 记录，
+        因而不能核验“当前 exact 无 2x2 胜利解族”的全称结论。
+
+  - claim_id: lower_handoff_target_mechanical_responsibility
+    claim: >-
+      相对 exact 只删除 [4,3] 下端目标后，同一 2x2 十四步反击合法并获胜；该目标对排除这个
+      “锚点上移但不做覆盖交接”的 2x2 完成态承担机械责任。
+    status: supported
+    evidence_basis:
+      - counterfactual_remove_lower_target.txt 与 exact layout 的唯一差异是 [4,3] 从 G 变为 .。
+      - >-
+        exact square replay 与 remove-lower-target replay 使用相同十四步输入并得到相同最终动态对象状态；
+        exact final.isWin=false，删除目标后 final.isWin=true。
+    limits:
+      - 只支持该目标对所示 2x2 完成态的机械筛除责任，不支持任何质量、自然性或包装判断。
+
+  - claim_id: core_equivalence_under_core_win_condition
+    claim: >-
+      将上端目标移到两种形态 core 后 B 所在的 [4,2]、保留下端目标 [4,3] 时，
+      Z 七步 core 与 2x2 六步 core 都在同一次 B/S 左移后获胜。
+    status: supported
+    evidence_basis:
+      - >-
+        counterfactual_win_at_core.txt 相对 exact 仅有 [4,1] G→. 与 [4,2] .→G 两处 ASCII 改动，
+        [4,3] 下端目标保留。
+      - >-
+        CF_WIN_AT_CORE_Z raw replay 七步全部合法，最后一步含 force_chain:n2、
+        anchor_boundary_shift:box_sticky，final B:[4,2],S:[4,3] 且 isWin=true。
+      - >-
+        CF_WIN_AT_CORE_SQUARE raw replay 六步全部合法，最后一步含相同类型事件，
+        final B:[4,2],S:[4,3] 且 isWin=true。
+    limits:
+      - 此反事实移动一个目标位置，表现为两个 ASCII 格变化；只支持指定 core 胜利条件下的机械结果。
+
+  - claim_id: distal_toe_mechanical_necessity
+    claim: >-
+      从 canonical step 7 后的忠实结构化状态只删除远趾 [4,4]，保留 goals、player、其余 M 与 B/S；
+      输入 up 合法并移动剩余黏块，但不触发 force_chain/anchor shift，B/S 不动且不胜。
+    status: supported
+    evidence_basis:
+      - >-
+        state probe 的 source key、canonical prefix 与 hard replay step 7 对齐：player [6,4]，
+        M [5,3],[6,3],[4,4],[5,4]，B:[4,2],S:[4,3]；source goals 独立记录为 [4,1],[4,3]。
+      - >-
+        probe 脚本 clone source 后只过滤 sticky cell [4,4]；输出 before key 保留
+        M [5,3],[6,3],[5,4]、player 与 B/S，并保留 goals [4,1],[4,3]。
+      - >-
+        注入后 up 为 legal；事件仅为 push_object:sticky#1、move_sticky_rigid、sticky_to_box:n2，
+        不含 force_chain 或 anchor_boundary_shift；after B/S 仍为 B:[4,2],S:[4,3]，isWin=false。
+    limits:
+      - 只支持 canonical step-7 指定状态与单次 up 的远趾机械责任，不扩张为所有可达状态或所有策略的 per-object necessity。
+
+  - claim_id: solution_logic_family_unique
+    claim: >-
+      complete graph 的两个胜态属于同一错位 Z 玩家逻辑类，只差同一可达区内的玩家接触点；
+      当前 exact 只有这一胜利逻辑族。
+    status: unknown
+    evidence_basis:
+      - >-
+        complete graph/agency 报告 176 states、441 legal transitions、2 winning states，initial s0 仅 1 个可胜出边；
+        canonical step-7 所在 s3 有 2 个可胜出边并通向 2 个 winning SCC。
+      - canonical raw replay 证明其中一个胜态的 Z/B/S 上移与对象终局。
+      - solution_uniqueness.yml 提供第二条 10 步 inputs 与等价性账户，但白名单内没有对应 actual replay 或第二胜态 raw state。
+    limits:
+      - 两个胜态的数量不能单独推出等价性。
+      - >-
+        现有 raw graph 摘要未暴露第二 winning transition、第二胜态对象终局或足以核对对象职责、
+        目标分配与因果顺序的完整路径；因此同逻辑类及唯一逻辑族均不能核验为 supported。
+
+  - claim_id: no_post_suffix_cleanup
+    claim: canonical step 8 同拍完成 B/S 上移与下端远趾补位并立即胜利，该 trace 无后续清理动作。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical raw replay 在 step 8 同时记录 sticky rigid 与 B/S 的上移事件，after.isWin=true；
+        replay completed=true、executedSteps=8，输入在该胜态结束。
+    limits:
+      - 只支持 canonical trace 在首个胜态结束，不声称 runtime 胜后不存在其它可输入状态。
+
+hard_failures:
+  - solution_uniqueness_review 未获 supported：声明结果枚举不合法，且第二胜态等价性缺 raw 证据。
+  - square_cannot_complete_current_exact 的“无 2x2 胜利解族”全称结论缺少 2x2 状态到 complete graph 不可胜子图的明确映射。
+
+evidence_gaps:
+  - >-
+    solution_logic_family_unique：需提供第二条实际胜利 replay 与第二 winning state 的 raw object state，
+    或提供完整列出两个 winning transitions、终局对象状态及其路径等价关系的 complete-graph artifact。
+  - >-
+    solution_uniqueness_review：需将声明结果改为标准允许的 unique_complete、unique_within_budget
+    或 equivalent_variants_only 之一，并使所选结果与实际证据形态一致。
+  - >-
+    square_cannot_complete_current_exact：需提供 complete graph 中 2x2 构造 state key 所属 SCC/region、
+    canReachWin=false 或等价的明确 raw reachability 映射；否则应把声明收窄为已执行十四步 trace 不胜。
+
+overall_hard_status: incomplete
+required_action: rerun_or_supply_evidence

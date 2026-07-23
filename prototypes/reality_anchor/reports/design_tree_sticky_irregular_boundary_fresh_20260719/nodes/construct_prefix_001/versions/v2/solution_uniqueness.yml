@@ -1,0 +1,67 @@
+assignment_id: RA_DESIGNER_CONSTRUCT_V2_OUTLINE_TRIM_REVISION_001
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v2
+layout_sha256: 7d55f2a77c99ce5bb4e0d75752b77f8d9d26b707a8e40531829e20b566f1606d
+
+result: unique_complete
+search_scope: complete
+search_budget: maxStates=300000; graphMaxStates=300000
+actual_search:
+  reachable_states: 133
+  legal_transitions: 350
+  winning_states: 1
+  compressed_regions: 12
+  commitment_transitions: 22
+  winning_regions: 1
+  initial_commitments: 4
+  initial_viable_commitments: 1
+  initial_dead_commitments: 3
+  win_reachable_sccs: 3
+  branching_win_sccs: 0
+  merging_win_sccs: 0
+
+logic_class_account: >-
+  完整图只支持一个玩家逻辑类：下条右移一格后上推合并成错位 S，再从右侧左推完整 S，
+  以缺口避墙并由远端上臂推动 B/S 覆盖目标。可胜 SCC 路径只有 s0->s3->s4；不存在第二可胜构造出口或胜态。
+
+known_raw_winning_variants:
+  - initial SCC 内可有走位、回退或搬动下条后恢复正确偏移；它们不改变最终 S、右把手、目标分配和因果先后。
+  - agency r1 的非最优可回胜路只是在合并前 detour，不形成另一构造答案。
+
+equivalence_account: >-
+  所有胜路最终必须形成同一四格 S [[4,1],[5,1],[5,2],[6,2]]，
+  再由同一右把手 left，使同一远端上臂推动同一 B/S 到唯一胜态。
+
+dead_alternative:
+  inputs: [down, right, up, right, right, up, left]
+  constructed_shape: aligned_2x2
+  construction_legal: true
+  right_handle_reachable: true
+  result: force_blocked_at_step_7
+  win: false
+  evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/square_branch_replay.json
+
+bypass_account:
+  direct_upper_bar_use: 完整图不存在不合并而胜利的分支。
+  direct_boundary_use: 玩家无 B/S 右侧把手；唯一胜态前的终局事件由合并 S 触发。
+  other_merges: 2x2、过度搬动和其它下条停位均不形成第二 win-reaching SCC 出口。
+
+outline_equivalence:
+  result: complete_graph_isomorphic_to_v1_after_coordinate_translation
+  mapping: "(x,y)->(x-1,y)"
+  state_keys_equal: true
+  labeled_edges_equal: true
+  winning_state_keys_equal: true
+  evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/outline_graph_isomorphism.json
+
+evidence_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/complete_graph_opening.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/square_branch_replay.json
+
+evidence_limits:
+  - 唯一性按玩家逻辑类声明，不把 initial SCC 内的可逆搬动和走位排列谎称为不同解。
+  - 一个胜态本身不足以排除同终态异路；这里同时引用无 branching/merging 的可胜 SCC 与精确事件链。
+  - 完整图证明 current exact 的状态级解族，不评价审美、难度或增长质量。
+
+designer_uniqueness_gate: passed

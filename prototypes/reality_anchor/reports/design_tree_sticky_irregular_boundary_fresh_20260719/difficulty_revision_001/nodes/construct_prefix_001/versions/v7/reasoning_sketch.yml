@@ -1,0 +1,97 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V7_MOBILE_BOUNDARY_REVISION_001
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version: v7
+design_status: local_probe_pending
+
+selected_family:
+  id: mobile_bs_cut_state_paired_with_irregular_residue
+  name: 移动_B_S_切深—边界位置与异形残体配对承诺—P_L_多面回收
+  one_sentence_relationship: >-
+    玩家从一个连通母体出发，主动移动 B/S 选择切深；正确切深留下连通小 L/阶梯残体，
+    同时把 B/S 停在维持该残体进入 P/L 后段所需的位置。切出 crate 不被静态封死：把 B/S 移回会让它晚粘回，
+    但这也撤销了正确残体与正确身份边界；玩家必须再把 B/S 恢复到同一切深，才重新得到可进入外换把、回返与多面终拉的配对状态。
+
+why_new_family:
+  versus_v1_to_v5: >-
+    本 family 开局和构造阶段始终从一个连通母体做减法，不依赖多个分离组件先合并，也不建立 access throat、
+    anchor-first gate、预开外回路、紧贴缺角连续 pull 或 P/L 旧半格即时 walk。
+  versus_v6_static_isolation: >-
+    不用死袋、三墙一口或独立封箱声称切出 crate 永不回粘。晚粘回被允许且被解释为撤销切分；
+    B/S 回到正确深度时，必须恢复相同残体占格与相同边界状态，之后才能继续同一异形的 P/L 操作链。
+
+player_visible_problem:
+  opening: >-
+    玩家看见一个完整连通母体、可移动 B/S 的多个停位，以及后方固定 P/L 与墙口。移动边界一格或两格
+    都能产生合法、仍可操作的连通残体；切分动作本身不直接宣布正确答案。
+  construction_judgment: >-
+    玩家要同时读取两件事：留下的残体是否保有后段外侧把手与远端突臂，以及 B/S 停位是否能让残体以连通 sticky 身份
+    穿过 P/L 操作区。形状和边界状态是同一个构造承诺，不能只选轮廓或只搬锚点。
+  feedback: >-
+    若玩家把 B/S 移回，crate 会重新 sticky 并与残体合为母体，清楚显示构造已撤销；重新移动到原切深应恢复原配对状态。
+    错误切深至少通过第一次外侧动作，差异留给更后的墙口或换面站位消费。
+
+late_remerge_as_state_management:
+  allowed_relation: >-
+    切出 crate 可以晚粘回，但只能通过撤回 B/S 边界；该动作同步消失正确异形残体和后段所需身份边界。
+    回粘态不是另一条构造路线，而是玩家可主动进入的可逆母体态。
+  required_recovery: >-
+    从回粘态再次把 B/S 送回同一切深后，残体占格、crate 占格、B/S 停位和后段可用对象身份必须完整恢复；
+    玩家随后仍需亲自取得残体外侧操作面，而不是由 crate 或 anchor 替代完成后段。
+  non_equivalence_guard: >-
+    若回粘母体能绕过正确切深直接进入胜利链，或 crate 能被单独搬成钥匙、目标覆盖物或另一构造材料，
+    即形成非等价玩家逻辑类，current family 立即失败。
+
+baseline_load_preservation:
+  pl_outside_handle_change: >-
+    正确配对态只提供进入父节点式 P/L 操作区的前提；残体仍须先从 P 侧作轴向 stroke，再由玩家实际绕到外侧，
+    从 L 侧拉动同一连通异形。移动 B/S 不能代替这次换把。
+  return_reading: >-
+    第一次外侧 pull 后必须保留反向输入回到同一完整 handoff 状态，或保留机械等价的可撤销状态；
+    该回返要由同一残体完成，不能只是 B/S 的切分—回粘循环。
+  multi_face_maneuvering: >-
+    玩家在轴向试探与回返后仍须取得另一正交面，完整残体的远端突臂或缺口同时接受墙口目标格检查；
+    正确切深的轮廓差异到这里才被消费。
+  parent_relation_not_replaced: >-
+    B/S 切深只增加前序状态管理。若正确切分后剩余操作退化为唯一 stroke、无需外侧换把、可跳过回返读取，
+    或无需第二操作面，便没有保存冻结 baseline 的玩家负担。
+
+minimal_runtime_probe_plan:
+  scope: local_only_no_complete_graph
+  gates:
+    - id: identity_cycle_exact_restore
+      requirement: >-
+        移动 B/S 后，同一连通母体留下连通小异形残体与 crate；撤回 B/S 时 crate 重新 sticky 并与残体 merge；
+        B/S 再回正确切深后，残体、crate 与 B/S 的非玩家状态精确恢复，且全程不单独操作 crate。
+    - id: paired_state_preserves_baseline_chain
+      requirement: >-
+        正确残体加正确 B/S 停位的配对态能以同一连通残体完成 P 侧轴向 stroke、外侧 L 侧 pull、
+        反向回到 handoff 状态并取得第二正交面；回粘母体不能替代该配对态完成同链。
+    - id: alternative_cut_and_crate_guard
+      requirement: >-
+        至少两个主动切深在切分当下均合法；错误残体至少通过首次外侧动作后才由局部 consumer 拒绝，
+        切出 crate 不成为独立钥匙、目标覆盖物、替代构造材料或晚粘成另一可胜对象。
+  stop_rule: >-
+    任一 gate 不成立即更新为 family_failed 并停止；局部链未完整前不写正式 layout、canonical replay、design reading 或解族结论。
+
+future_exact_obligations_if_probe_passes:
+  - 至少两个玩家主动可达的切深在切分当下合法，错误残体不被普通墙位或唯一站位提前删除。
+  - 所有胜族在首次进入 P/L 核心链前到达正确残体加正确 B/S 停位的配对状态。
+  - 回粘母体若被访问，必须再恢复正确配对态；不得直接胜利或改变目标分配、对象职责与因果先后。
+  - 切出 crate 不参与独立目标、钥匙、anchor 搬运或晚期替代构造，也不能晚粘成另一可胜异形。
+  - 所有胜族实际保留同一残体的外侧 pull、可撤销回返读取和另一正交操作面。
+  - 移除后段墙口 consumer 后错误残体恢复，证明后段反向约束切深，而非切分动作直接泄题。
+
+family_rejection_conditions:
+  - 正确切深只能由唯一合法 B/S 动作产生，或错误切深在切分当下即被普通墙/站位拒绝。
+  - B/S 回撤产生的晚粘回可直接越过正确配对态进入 P/L 后段或胜利。
+  - 切出 crate 必须被死袋、独立封箱或长路径隐藏，或成为独立钥匙/目标子题。
+  - 重新切分不能恢复同一残体与边界状态，晚粘回不再是可读的撤销—恢复关系。
+  - B/S 搬运取代异形成为主要操作对象，正确残体在切分后退休。
+  - P/L 外侧换把、回返读取或另一正交操作面任一被删除、可省略或显著简化。
+  - 回粘、过切、浅切或 crate 替代产生非等价获胜族。
+
+evidence_boundary: >-
+  当前只完成结构假设；尚未写正式 layout，尚无 v7 current-runtime replay、局部 probe、完整图、解族或 submission 证据。

@@ -1,0 +1,71 @@
+schema_version: 1
+node_id: construct_prefix_001
+exact_version: v4
+status: withdrawn_non_equivalent_winning_family
+
+player_opening_read:
+  visible_materials: 同一四箱分为上下两条，B/S 在右上，固定 P/L 在下方墙座，左下双目标紧邻一格墙齿。
+  active_choice: 下排先左错再逐箱上推形成 S，或直接逐箱上推形成 2x2；两种排形在 consumer 前均有完整合法链。
+  no_spare_object: true
+
+same_core_after_first_object_action:
+  survives: true
+  reading: >-
+    下排第一次左推只决定候选错位；之后玩家仍要逐箱排形、用 B/S 生成连体身份、处理 P/L 两侧的 push-to-pull 换面、
+    handoff 完整刚体、读取外侧可撤销分支，再取得下侧正交把手。第一次对象动作没有一次性解决关卡。
+
+handoff_read:
+  shared: true
+  s_state: "Ply:6,4|C:|M:4,4;5,4;3,5;4,5|PL:P:7,8;L:6,8|BS:B:2,1;S:3,1"
+  square_state: "Ply:6,4|C:|M:4,4;5,4;4,5;5,5|PL:P:7,8;L:6,8|BS:B:2,1;S:3,1"
+  interpretation: 玩家、近端右面、B/S 与 P/L 状态一致；仅远端下排的错位/填角不同。
+
+handle_lifecycle_read:
+  outside_pull: 两形状均可从 (6,4) right 拉出完整刚体。
+  exact_return: 玩家跨到 P 侧后 left 变成 push，并准确回到各自 handoff state。
+  lower_face: 两形状均可绕到 (4,6)，down 才由完整目标格集合区分。
+
+consumer_read:
+  wall: [5, 6]
+  goals: [[3, 6], [4, 6]]
+  correct_s: 下排错位为 (3,5),(4,5)，down 的新前沿只到 (3,6),(4,6)，避墙并胜利。
+  plausible_square: 下排为 (4,5),(5,5)，同一 down 的新前沿包含 (5,6)，force_blocked。
+  first_difference_boundary: 仅对两条已测 full chain 声明；完整图尚未运行。
+
+growth_read:
+  parent_load_preserved:
+    - 外侧换把真实移动同一完整异形。
+    - 回返需要读取跨 P/L 后 push/pull 语义改变。
+    - 最终从另一面执行正交 pull。
+    - merge 后同一异形继续承担 handoff、回返和 consumer。
+  added_construct_prefix: 玩家主动排出等格数的两种候选，并用 B/S 让非共线材料成为 handoff 所需刚体身份。
+
+current_risks:
+  - B/S 搬运较长，玩家体验上可能压过异形排形；这是后续玩家侧审查风险，不由 local probe 消除。
+  - 玩家可以先移动 B/S 再处理已转黏的两条；该次序是否形成削弱身份门的胜族须由完整图查明。
+  - prepass negative probe 只证明不会远程 merge，尚未排除更长的后续重排接回。
+  - 自然胜解是否会跳过外侧可逆试探、直接绕到下侧终拉，须结合完整解族和玩家侧重读判断。
+
+actual_solution_family_reading:
+  canonical_family: >-
+    玩家先以箱身份排出 S 候选，再移动 B/S 扫线 merge，随后完成固定 P/L handoff、外侧试探和下侧终拉。
+  non_equivalent_anchor_first_family: >-
+    玩家开局先把 B/S 一路送到结果位，使上下两排分别成为 sticky；之后才移动下条并上推 merge 成 S，再走同一 handoff 与终局。
+  why_player_logic_differs: >-
+    两条路线不是独立步骤换序：先后顺序改变玩家操作的是 crate force chain/独立箱，还是完整二格 sticky group，
+    也改变 merge 由 B/S 扫线生成还是由 sticky group 贴合生成。B/S 在旁路中构造前已退休，identity gate 的玩家因果不成立。
+  optional_handle_loop: >-
+    canonical 的外拉—跨侧反推两步可整体删除，73 步仍胜且终态相同。它可作为等价回返环，不额外制造解族，
+    但玩家无需发现或执行该操作面关系即可完成关卡，因此父节点负担没有被胜利依赖实际保存。
+
+graph_reading:
+  status: phase_1_budget_exhausted_then_counterexample_stop
+  coverage: 300000 full states recorded，157079 expanded，580105 legal transitions，0 BFS terminal wins。
+  evidence_limit: phase_1 未闭合；停止不是 unique_within_budget，而是已知非等价胜族直接使提交门失败。
+
+decision:
+  local_integration: mechanically_passed_but_invalidated_for_submission
+  complete_graph_eligible: false
+  complete_graph_run: false
+  uniqueness_or_submission: failed_known_non_equivalent_win
+  designer_self_verdict: withdraw

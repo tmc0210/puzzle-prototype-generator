@@ -1,0 +1,136 @@
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v2
+layout_sha256: e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6
+
+commands:
+  canonical_analysis: >-
+    npx tsx src/cli.ts explain-layout prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    --id RA_STICKY_IRREGULAR_BASELINE_001_v2_VERIFY --targets K_runtime_smoke
+    --max-states 300000 --graph-max-states 300000
+  canonical_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    --id RA_STICKY_IRREGULAR_BASELINE_001_v2_CANONICAL --inputs down,right,right,right,down
+  dead_upper_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    --id RA_STICKY_IRREGULAR_BASELINE_001_v2_DEAD_UPPER --inputs up,right,right,down
+  single_variable_bs_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable.txt
+    --id RA_STICKY_IRREGULAR_BASELINE_001_v2_CF_SHIFT_BS_SINGLE_VARIABLE
+    --inputs down,right,right,right,down
+
+shortest_solution:
+  found: true
+  cost: 5
+  depth: 5
+  explored_states_until_first_solution: 12
+  inputs: [down, right, right, right, down]
+  event_counts:
+    walk: 3
+    push_object_sticky_1: 1
+    pull_object_sticky_1: 1
+    move_sticky_rigid: 2
+    force_chain_n2: 1
+    anchor_boundary_shift_box_sticky: 1
+
+complete_graph:
+  status: complete
+  max_states_budget: 300000
+  reachable_states: 19
+  legal_transitions: 34
+  event_only_illegal_transitions: 0
+  winning_states: 1
+
+agency_graph:
+  status: complete
+  compression_rule: bidirectional_edges
+  compressed_regions: 3
+  bidirectional_transitions: 32
+  commitment_transitions: 2
+  winning_regions: 1
+  initial_region:
+    id: r0
+    states: 8
+    commitments: 2
+    viable_commitments: 1
+    dead_commitments: 1
+    progress_commitments: 1
+    optimal_commitments: 1
+  solution_region_path: [r0, r2]
+  forced_commitment_prefix_length: 0
+  forced_viable_prefix_length: 1
+  forced_optimal_prefix_length: 1
+  scc_shape:
+    sccs: 3
+    edges: 2
+    win_reachable_sccs: 2
+    winning_sccs: 1
+    branching_win_sccs: 0
+    merging_win_sccs: 0
+  tool_reading_hint: near-discovery shape
+  designer_boundary: >-
+    该提示只描述图结构，不是质量或难度 verdict；玩家侧判断仍须由实际可见操作面、错误动后状态和回报承担。
+
+dead_upper_commitment:
+  inputs: [up, right, right, down]
+  legal_through_step: 4
+  last_events: [push_object:sticky#1, move_sticky_rigid]
+  final_state_key: "Ply:4,3|C:|M:4,4;5,4;6,4;5,5|PL:P:4,1;L:5,1|BS:B:8,4;S:7,4"
+  win: false
+  complete_graph_reading: dead commitment from initial region
+
+identity_counterfactuals:
+  - id: delete_remote_right_arm
+    layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_l_shape.txt
+    inputs: [down, right, right, right, down]
+    legal_through_step: 5
+    final_events: [pull_object:sticky#1, move_sticky_rigid]
+    force_chain_present: false
+    anchor_boundary_shift_present: false
+    win: false
+    reading: 删除 T 的远端右臂后，近端两手仍成立，但无法触及 S；目标保持空置。
+  - id: shift_bs_one_cell_left_single_variable_audit
+    layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable.txt
+    replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable_replay.json
+    changed_variable: B/S 从 S:[7,4],B:[8,4] 整体左移到 S:[6,4],B:[7,4]
+    invariant_checks:
+      wall_mask_equal: true
+      goals_equal: true
+      player_start_equal: true
+      sticky_cells_equal: true
+      push_pull_anchor_equal: true
+    inputs: [down, right, right, right, down]
+    legal_through_step: 5
+    step_4_events: [push_object:sticky#1, force_chain:n2, anchor_boundary_shift:box_sticky, move_sticky_rigid]
+    final_events: [pull_object:sticky#1, force_chain:n2, anchor_boundary_shift:box_sticky, move_sticky_rigid]
+    win: true
+    reading: >-
+      该单变量邻位仍胜利：第 4 步先把 B/S 右推回原 exact 对齐位，第 5 步再下拉入目标。
+      因而撤回初始 B/S 横向对齐机械必要声明。
+    claim_effect: boundary_alignment_mechanical_necessity_withdrawn
+
+fixed_push_pull_probe:
+  raw_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/fixed_anchor_probe.md
+  budget: maxStates=300000; maxDepth=80
+  winning_bypass_results:
+    movable_box_sticky_shift: complete_no_bypass
+    fixed_push_pull_effect: complete_no_bypass
+    sticky_rigid_move: complete_no_bypass
+  reachable_scan:
+    status: complete
+    reachable_states: 19
+    legal_transitions: 34
+    forbidden_push_pull_anchor_shift_hits: 0
+  evidence_boundary: >-
+    strong_material profile 还要求 normalization、box_to_sticky、sticky_merge；这些不属于本节点作品身份，
+    因而不引用 combined probe 的总 bypass 布尔值，只引用上述三个逐项 complete 结果。
+
+evidence_limits:
+  - explain-layout 未返回 instance-level object participation；对象职责由逐步状态、事件和精确占格差异支持。
+  - 反事实只检验相同核心输入下的结构责任，不证明审美或独立玩家难度。
+  - 完整图支持状态级旁路与解族声明；图工具的 reading hint 不构成玩家侧质量 verdict。
+  - 旧 counterfactual_shifted_bs.txt 同时改目标与右侧墙界，不再作为单变量证据或 submission 引用。
+  - 真正单变量 B/S 左移反事实仍由同一五步胜利，故不再声明初始 B/S 横向坐标机械必要。

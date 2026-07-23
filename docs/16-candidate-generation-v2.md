@@ -15,7 +15,7 @@ level_specs_v2.yml
 
 ## 核心边界
 
-候选生成器不承担完整创作判断。当前主线是 `玩家体验核心 -> 作品身份 -> baseline -> 相对探索分支 -> 硬证据 -> 人类试玩`。本文件中的 seed factory 只提供局部结构和机制材料，不能自动承担 application / combination / challenge 的设计职责。详见 [Level Design Studio Standard](21-level-design-studio-standard.md)。
+候选生成器不承担完整创作判断。当前主线是 `玩家体验核心 -> 作品身份 -> 唯一单关候选 -> 独立评审与同候选修订 -> 人类试玩`。本文件中的 seed factory 只提供局部结构和机制材料，不能自动承担完整包装与设计职责。详见 [Level Design Studio Standard](21-level-design-studio-standard.md)。
 
 候选生成器当前分为两部分：
 

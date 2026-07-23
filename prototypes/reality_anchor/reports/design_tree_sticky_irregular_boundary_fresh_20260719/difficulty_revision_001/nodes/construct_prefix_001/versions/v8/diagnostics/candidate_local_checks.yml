@@ -1,0 +1,71 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V8_CANDIDATE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v8
+status: candidate_withdrawn_non_equivalent_win
+
+artifact_refs:
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/layout.txt
+  canonical_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/canonical_replay.json
+  review_actual_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/review_actual_replay.json
+  design_reading: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/design_reading.yml
+  directed_audit: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/candidate_directed_audit.json
+
+formalization:
+  dummy_target_removed: true
+  goals: [[8, 5], [9, 5], [8, 6]]
+  goal_count: 3
+  all_goals_in_canonical_h2_footprint: true
+  cut_crate_goal_count: 0
+  box_sticky_anchor_goal_count: 0
+  push_pull_anchor_goal_count: 0
+  canonical_first_win_step: 41
+  canonical_immediate_h2_win: true
+
+canonical_current_runtime:
+  runtime_id: RA_CONSTRUCT_PREFIX_V8_CANONICAL
+  completed: true
+  legal_through_step: 41
+  final_win: true
+  actual_replay_nonempty: true
+  exact_layout_sha256: 44bebf6cb8e3c9236f4e6bc46bffc9f78255e079c0f6bb0fd925821caec91658
+  required_object_actions_present:
+    bs_cut: true
+    p_side_h0_push: true
+    outside_l_side_non_identity_h1_pull: true
+    h2_orthogonal_pull: true
+    exact_loop_executed: false
+
+directed_audit:
+  full_graph_run: false
+  cases_run: 1
+  stop_on_first_non_equivalent_win: true
+  first_case:
+    id: RA_CONSTRUCT_PREFIX_V8_AUDIT_SAME_SIDE_PUSH
+    category: [skip_outside_h1, same_side_substitution, p_l_not_required_for_h1]
+    completed: true
+    legal_through_step: 35
+    final_win: true
+    canonical_h1_action: L-side right pull
+    alternative_h1_action: P-side immediate second right push
+    alternative_h1_non_player_state_equal_to_canonical_h1: true
+    verdict: non_equivalent_win_family
+  audits_not_run_due_mandatory_stop:
+    - 不切或回粘母体直胜
+    - 第二格深切
+    - cut crate 目标或替代
+    - B/S-first 后结构退休
+    - P/L 删除反事实
+    - 其它同侧替代
+
+designer_decision:
+  candidate_ready_for_graph: false
+  withdraw_exact_version: true
+  reason: >-
+    H0 后仍可在 P 侧立即再次 right push，把 L 送到与 canonical H1 相同的对象状态；随后 H2 获胜。
+    该胜族没有外换把或 L 侧非恒等 pull，机械删除本节点承诺的 P/L 操作关系，故属于非等价胜族。
+  uniqueness_written: false
+  submission_written: false
+  next_required_structure_if_revised: >-
+    必须由新 exact 的几何或 P/L 分区使 H0 后同侧第二次 push 失效，同时保持外侧 L pull 与 H2 正交消费。

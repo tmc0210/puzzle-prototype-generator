@@ -1,0 +1,100 @@
+runId: ra_task_bs_identity_handoff_component_filter_20260719_08
+title: "B/S identity handoff 后的外拉回返、正交面与填角墙齿"
+notes: >-
+  从 gate 已验证的 L/2x2 handoff 后 exact 状态出发；比较外侧 pull 后 exact 返回，
+  以及同一正交下拉面中一格左下墙齿只阻挡 2x2 填角。
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 26
+  maxStates: 50000
+  maxTransitions: 200000
+cases:
+  - id: l_outer_pull_exact_return
+    family: bs_identity_handoff_component_filter
+    variant: l_axis_pull_then_reverse_push_exact
+    changed_variable: handoff 后 L 从右外侧 pull 一格，再由新 P 侧反向 push
+    contrast_with: square_outer_pull_exact_return
+    notes: right 必须是 L 侧 pull sticky；随后 left 必须回到输入前同一完整 state。
+    layout: |
+      ##############
+      #.BS.........#
+      #............#
+      #....LP......#
+      #..MM........#
+      #...M@.......#
+      #............#
+      #...........G#
+      ##############
+    actions: [right, left]
+
+  - id: square_outer_pull_exact_return
+    family: bs_identity_handoff_component_filter
+    variant: square_axis_pull_then_reverse_push_exact
+    changed_variable: handoff 后 2x2 从相同右外侧 pull 一格，再由新 P 侧反向 push
+    contrast_with: l_outer_pull_exact_return
+    notes: 与 L 共用 LP/B/S 和玩家入口，检查 2x2 的 right,left 是否也返回 exact state。
+    layout: |
+      ##############
+      #.BS.........#
+      #............#
+      #....LP......#
+      #..MM........#
+      #..MM@.......#
+      #............#
+      #...........G#
+      ##############
+    actions: [right, left]
+
+  - id: l_orthogonal_notch_wall_pass
+    family: bs_identity_handoff_component_filter
+    variant: l_missing_lower_left_avoids_wall
+    changed_variable: handoff 后 L 取得下侧面，左下缺角对应目标格放墙
+    contrast_with: square_orthogonal_fill_corner_wall_block
+    notes: down,left 走到下侧外面；第三手 down 从 L 侧正交 pull，L 的缺角避开 x=3,y=6 墙。
+    layout: |
+      ##############
+      #.BS.........#
+      #............#
+      #....LP......#
+      #..MM........#
+      #...M@.......#
+      #..#.........#
+      #...........G#
+      ##############
+    actions: [down, left, down]
+
+  - id: square_orthogonal_fill_corner_wall_block
+    family: bs_identity_handoff_component_filter
+    variant: square_lower_left_target_hits_wall
+    changed_variable: 只把 L 的缺角填成 2x2；同一 x=3,y=6 墙进入填角目标格
+    contrast_with: [l_orthogonal_notch_wall_pass, square_orthogonal_without_wall_pass]
+    notes: 两步 walk 取得与 L 相同的下侧面；第三手 down 应因左下填角目标撞墙而 force_blocked。
+    layout: |
+      ##############
+      #.BS.........#
+      #............#
+      #....LP......#
+      #..MM........#
+      #..MM@.......#
+      #..#.........#
+      #...........G#
+      ##############
+    actions: [down, left, down]
+
+  - id: square_orthogonal_without_wall_pass
+    family: bs_identity_handoff_component_filter
+    variant: square_consumer_removed_recovers
+    changed_variable: 移除 x=3,y=6 墙齿
+    contrast_with: square_orthogonal_fill_corner_wall_block
+    notes: 其它格逐格相同；移墙后第三手 down 应恢复正交 pull sticky。
+    layout: |
+      ##############
+      #.BS.........#
+      #............#
+      #....LP......#
+      #..MM........#
+      #..MM@.......#
+      #............#
+      #...........G#
+      ##############
+    actions: [down, left, down]

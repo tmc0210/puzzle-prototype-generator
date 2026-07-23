@@ -1,0 +1,283 @@
+assignment_id: RA_PRE_CONSTRUCT_V1_OPENING_COMFORT
+workflow_id: opening_comfort_check
+node_id: construct_prefix_001
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version_basis: v1
+layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+layout_sha256: d4affc733071b977ddaf9f7207c3ba366fb5f7d2e45b19d8d874f4cf1b99d0d9
+
+opening_comfort_check:
+  status: clean
+  applicability: expected_difficulty_4_and_formal_start_comparison_requested
+  current_start_position: [4, 3]
+  current_shortest_cost: 8
+  enumeration:
+    original_graph_status: complete
+    original_graph_facts: {reachable_states: 133, legal_transitions: 350, winning_states: 1}
+    original_initial_scc_state_count: 24
+    player_positions_seen_in_initial_scc: 13
+    rule: >-
+      先按原始 initial SCC 内出现的玩家坐标去重；再把原对象、目标和地形保持不变，仅替换玩家起点，
+      只保留所得完整 state 仍属于原 initial SCC 的坐标。
+    accepted_candidate_count: 12
+    rejected_positions:
+      - player_position: [5, 3]
+        reason: >-
+          该坐标只在下横条已可逆移开的对象配置中出现；原对象配置下 [5,3] 被 M 占据，
+          不能作为仅调整玩家起点的候选。
+    all_candidates_rerun: true
+    rerun_result: 12/12 solver found; 12/12 graph complete; every graph 133 states / 350 transitions / 1 win
+
+  candidates:
+    - candidate_start_position: [5, 2]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_5_2.txt
+      shortest_solution_cost: 16
+      shortest_solution_delta: "+8"
+      initial_scc_size: 24
+      initial_exit_source_distances: [0, 1, 3, 5, 6, 9, 11, 11, 12, 12]
+      initial_win_exit_source_distances: [11, 12]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        down: {events: ["push_object:sticky#2", move_sticky_rigid], irreversible: true}
+        right: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 顶部左端贴住错误下推；首手 down 即不可逆死路，正确构造前还需长距离撤回下室。
+
+    - candidate_start_position: [6, 2]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_6_2.txt
+      shortest_solution_cost: 15
+      shortest_solution_delta: "+7"
+      initial_scc_size: 24
+      initial_exit_source_distances: [0, 1, 2, 4, 5, 8, 10, 10, 11, 11]
+      initial_win_exit_source_distances: [10, 11]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        down: {events: ["push_object:sticky#2", move_sticky_rigid], irreversible: true}
+        left: {events: [walk], irreversible: false}
+        right: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 顶部中央同样把错误下推放在距离 0；消费者虽醒目，但材料构造被十步以上回程隔开。
+
+    - candidate_start_position: [7, 2]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_7_2.txt
+      shortest_solution_cost: 14
+      shortest_solution_delta: "+6"
+      initial_scc_size: 24
+      initial_exit_source_distances: [1, 1, 2, 3, 4, 7, 9, 9, 10, 10]
+      initial_win_exit_source_distances: [9, 10]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        down: {events: [walk], irreversible: false}
+        left: {events: [walk], irreversible: false}
+        right: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 首步安全但从上方消费者侧远离可动下条；需要长空走返回，且正确出口前先接触四个死分支。
+
+    - candidate_start_position: [8, 2]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_8_2.txt
+      shortest_solution_cost: 15
+      shortest_solution_delta: "+7"
+      initial_scc_size: 24
+      initial_exit_source_distances: [2, 2, 3, 4, 5, 8, 10, 10, 11, 11]
+      initial_win_exit_source_distances: [10, 11]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        down: {events: [walk], irreversible: false}
+        left: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 最右上角提供缓冲却没有新增读题信息，只把回到构造材料的空走拉得更长。
+
+    - candidate_start_position: [4, 3]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_4_3.txt
+      is_current_start: true
+      shortest_solution_cost: 8
+      shortest_solution_delta: "0"
+      shortest_inputs: [right, down, right, up, right, right, up, left]
+      initial_scc_size: 24
+      initial_exit_source_distances: [1, 2, 3, 3, 3, 4, 4, 5, 7, 8]
+      initial_win_exit_source_distances: [3, 4]
+      dead_exits_before_first_win_exit: 2
+      first_step_legal_events:
+        down: {events: [walk], irreversible: false}
+        right: {events: ["push_object:sticky#2", move_sticky_rigid], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: >-
+        起点在可动下条左侧，玩家能同时看到上下两条材料、左上 B/S/目标消费者与墙齿；down 是纯观察走位，
+        right 虽开始移动材料但仍在 initial SCC 内可逆。正确不可逆构造出口距 3，既不贴脸，也不靠长回程隐藏。
+
+    - candidate_start_position: [7, 3]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_7_3.txt
+      shortest_solution_cost: 13
+      shortest_solution_delta: "+5"
+      initial_scc_size: 24
+      initial_exit_source_distances: [0, 2, 2, 3, 3, 6, 8, 8, 9, 9]
+      initial_win_exit_source_distances: [8, 9]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        up: {events: [walk], irreversible: false}
+        down: {events: [walk], irreversible: false}
+        left: {events: ["push_object:sticky#2", move_sticky_rigid], irreversible: true}
+        right: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 从下条右侧开局会自然诱导 left，把材料推入不可逆错误态；正确出口仍远达 8 步。
+
+    - candidate_start_position: [8, 3]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_8_3.txt
+      shortest_solution_cost: 14
+      shortest_solution_delta: "+6"
+      initial_scc_size: 24
+      initial_exit_source_distances: [1, 3, 3, 4, 4, 7, 9, 9, 10, 10]
+      initial_win_exit_source_distances: [9, 10]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        up: {events: [walk], irreversible: false}
+        down: {events: [walk], irreversible: false}
+        left: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 安全但偏离构造起点；长距离左移只是赶路，不增加两种合并与消费者关系的读取。
+
+    - candidate_start_position: [4, 4]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_4_4.txt
+      shortest_solution_cost: 9
+      shortest_solution_delta: "+1"
+      initial_scc_size: 24
+      initial_exit_source_distances: [1, 2, 2, 4, 4, 4, 5, 5, 6, 7]
+      initial_win_exit_source_distances: [4, 5]
+      dead_exits_before_first_win_exit: 2
+      first_step_legal_events:
+        up: {events: [walk], irreversible: false}
+        right: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: >-
+        这是唯一严肃近邻替代：首步只有 walk，出口谱仅比当前整体后移一拍；但全图可见下没有新增观察信息，
+        而当前起点本就允许玩家先 down 到此格，强制从这里开局只增加一拍回到材料左侧的空走。
+
+    - candidate_start_position: [5, 4]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_5_4.txt
+      shortest_solution_cost: 10
+      shortest_solution_delta: "+2"
+      initial_scc_size: 24
+      initial_exit_source_distances: [0, 1, 3, 3, 5, 5, 5, 6, 6, 6]
+      initial_win_exit_source_distances: [5, 6]
+      dead_exits_before_first_win_exit: 3
+      first_step_legal_events:
+        up: {events: ["push_object:sticky#2", move_sticky_rigid, "sticky_merge:n1"], irreversible: true}
+        left: {events: [walk], irreversible: false}
+        right: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 玩家正对直接上推成 2x2 的错误合并；自然首手 up 即不可逆，误触惩罚过于贴脸。
+
+    - candidate_start_position: [6, 4]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_6_4.txt
+      shortest_solution_cost: 11
+      shortest_solution_delta: "+3"
+      initial_scc_size: 24
+      initial_exit_source_distances: [0, 1, 2, 4, 4, 5, 6, 6, 7, 7]
+      initial_win_exit_source_distances: [6, 7]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        up: {events: ["push_object:sticky#2", move_sticky_rigid, "sticky_merge:n1"], irreversible: true}
+        left: {events: [walk], irreversible: false}
+        right: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 同样贴住错误上推，且正确构造出口更远；开局把方块误构造放大成默认动作。
+
+    - candidate_start_position: [7, 4]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_7_4.txt
+      shortest_solution_cost: 12
+      shortest_solution_delta: "+4"
+      initial_scc_size: 24
+      initial_exit_source_distances: [1, 1, 2, 3, 4, 5, 7, 7, 8, 8]
+      initial_win_exit_source_distances: [7, 8]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        up: {events: [walk], irreversible: false}
+        left: {events: [walk], irreversible: false}
+        right: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 首步安全，但从消费者右下方回到下条左侧需四拍额外走位，材料选择反而被赶路稀释。
+
+    - candidate_start_position: [8, 4]
+      layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_8_4.txt
+      shortest_solution_cost: 13
+      shortest_solution_delta: "+5"
+      initial_scc_size: 24
+      initial_exit_source_distances: [2, 2, 3, 4, 5, 6, 8, 8, 9, 9]
+      initial_win_exit_source_distances: [8, 9]
+      dead_exits_before_first_win_exit: 4
+      first_step_legal_events:
+        up: {events: [walk], irreversible: false}
+        left: {events: [walk], irreversible: false}
+      whether_core_chain_preserved: true
+      player_read: 最远下角只有数值缓冲，没有新的读图角度；五拍空走削弱紧凑 construct-prefix 的集中度。
+
+  selected_start_position: [4, 3]
+  selection: keep_current
+  selection_reason: >-
+    当前起点在材料左侧直接呈现“两个规整横条—墙齿—B/S/目标消费者”的完整问题；首步 right 是可撤回的材料试探，
+    并非不可逆承诺，down 又提供主动观察空间。它的最近不可逆出口距离为 1、最近可胜出口距离为 3，
+    正确出口前只接触 2 个 dead exit，优于所有远端候选的长回程与 4 个早期死分支。
+    [4,4] 虽把所有出口整体延后一拍，却不增加全图可见信息，而且当前起点已允许玩家自行走到该观察格；
+    强制增加这一步会成为包装空走。故没有候选在不泄露正确 S、不过度诱导错误合并且不增加赶路的前提下优于当前起点。
+
+core_chain_invariant:
+  preserved_by_selected_start: true
+  selected_shortest_inputs: [right, down, right, up, right, right, up, left]
+  selected_core_events:
+    - "sticky_merge:n1"
+    - "force_chain:n2"
+    - "anchor_boundary_shift:box_sticky"
+    - move_sticky_rigid
+  reachable_state_key_set_equal_across_candidates: true
+  graph_status: complete
+
+evidence_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/submission.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/construct_prefix_v1/evidence_review.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/reviews/construct_prefix_v1/quality_review.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/reviews/construct_prefix_v1/coach_note_corrected_001.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/goal_prune/goal_prune_check.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/enumerate_start_candidates.ts
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_5_2.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_6_2.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_7_2.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_8_2.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_4_3.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_7_3.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_8_3.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_4_4.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_5_4.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_6_4.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_7_4.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/candidate_start_8_4.txt
+  - prototypes/reality_anchor/docs/opening_comfort_check.md
+  - prototypes/reality_anchor/docs/design_handoff.yml
+
+tool_runs:
+  - id: initial_scc_candidate_enumeration
+    command: >-
+      npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/construct_prefix_v1/opening_comfort/enumerate_start_candidates.ts
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+    result: >-
+      complete; 24 SCC states -> 13 player positions -> 12 original-object candidate starts;
+      every candidate solver/graph/exit metric/first-step event completed within maxStates=300000
+  - id: cli_candidate_crosscheck
+    command: >-
+      npx tsx src/cli.ts explain-layout prototypes/reality_anchor <each-of-12-candidate-layouts>
+      --id <candidate-id> --max-states 300000 --graph-max-states 300000
+    result: 12/12 complete; costs and 133-state / 350-transition / 1-win graphs match enumeration artifact
+
+operation:
+  start_changed: false
+  reviewed_artifact_modified: false
+  new_delivery_exact_proposed: false
+  rereview_required: false
+  rationale: current [4,3] remains the strongest player-side start after exhaustive authority-defined candidate comparison
+
+version_effect: unchanged
+result_exact_version: v1
+controller_boundary: >-
+  本 artifact 只记录 Designer 的 construct_prefix opening_comfort 专业检查；未执行 apply opening 或任何
+  redundant_element_prune，未写冻结、delivery、playable queue、pre-submission 总状态或其它 Controller 状态。

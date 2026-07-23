@@ -1,0 +1,54 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V14_BS_TRACK_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v14_probe_only
+status: probe_failed_required_reverse_remerge_regression
+
+structure_hypothesis:
+  relation: static_two_cell_left_track_stop
+  statement: >-
+    在 v13 formal layout 的 `(3,6)`、`(3,7)` 各增加一格墙。切分后 B/S 位于 `(4,6)(4,7)`：
+    向左平移时新墙直接进入刚体目标格；向右平移所需的两个左侧施力格本身都成为墙。
+    该改动不占 canonical 使用的 x=5 纵向通道，也不改变右侧 L、H1、H2 或正式目标。
+
+exact_diff_from_v13:
+  added_walls: [[3,6],[3,7]]
+  removed_or_moved_elements: []
+  target_changes: []
+  object_or_start_changes: []
+
+responsibility_risk:
+  statement: >-
+    v13 的 deep-cut 墙 `(4,8)` 同时占住 B/S 留在 x=4 时向上回粘所需的玩家站位。
+    v13 的实际回粘 witness 先把 B/S 横移到 x=3，再从 `(3,8)` 向上推动；若本 probe 同时禁止左右横移，
+    这条换列回粘路线会消失。静态墙不能既封住同列向下 deep cut 的唯一外部目标 `(4,8)`，
+    又把同一格作为向上推动的玩家站位。
+  required_resolution: current_runtime_four_direction_enumeration
+
+observed_resolution:
+  canonical: {result: passed, legal_through_step: 21, first_win_step: 21}
+  after_cut_bs_motion:
+    left: force_blocked
+    right: both_player_faces_are_walls
+    down: force_blocked
+    up: required_player_face_is_wall
+  reverse_remerge:
+    result: failed
+    prior_witness_stops_at_step: 4
+    stop_reason: force_blocked
+  conclusion: >-
+    两格横向止挡确实消除了 B/S 漂移，但也移除了 v13 回粘必须先使用的换列动作；
+    因 `(4,8)` 仍需作为 deep-cut stop，原列不存在向上推动站位。当前静态墙 family 无法同时满足四向要求。
+
+p_l_counterfactual_reading:
+  all_push_solvability_is_not_failure: true
+  actual_relation: P-side H0 push -> L vacates gate -> pure-walk outside exchange -> L-side H1/H2 pulls
+  all_push_relation: consecutive same-side pushes without the same handle lifecycle
+  interpretation: P/L responsibility changed; do not infer actual-exact bypass from counterfactual solvability
+
+scope:
+  formal_candidate: false
+  full_graph: false
+  uniqueness: false
+  submission: false

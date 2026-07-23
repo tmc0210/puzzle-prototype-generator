@@ -1,0 +1,151 @@
+assignment_id: RA_PRE_APPLY_V3_GOAL_PRUNE
+workflow_id: invalid_goal_prune
+node_id: apply_suffix_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version_basis: v3
+layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+layout_sha256: 76379e4f0b029cab00feceefa1975712cad6ef6909b084077ea7379a2fff531d
+
+current_exact_baseline:
+  player_start: [8, 6]
+  shortest_cost: 9
+  graph_status: complete
+  reachable_states: 176
+  legal_transitions: 441
+  winning_states: 2
+  initial_commitments: 4
+  initial_viable_commitments: 1
+  canonical_inputs: [up, left, down, left, up, right, up, left, up]
+  canonical_final_win: true
+
+goal_prune_check:
+  status: clean
+  applicability: two_target_current_frozen_v3_formally_assigned
+  target_count: 2
+  targets_checked:
+    - target: [4, 1]
+      role: 上端 B 目标；要求第一次 B/S 左移只是 core 中间态，并迫使同一 Z/B/S 继续完成纵向 suffix。
+      action: keep
+      reason: >-
+        current v3 单删上端目标后最短成本从 9 降到 5，直接命中 authority 的必须保留条件。完整图为 complete，
+        初始 4 个 commitments 中有 2 个可胜；规整 2x2 用 left,up,right,up,left 在第一次 B/S 左移、S 覆盖唯一剩余的下端目标时即胜，
+        不需要正确 offset-Z、第二次纵向 force chain 或覆盖交接。current canonical 九拍仍全合法，已在第 8 拍提前胜并在第 9 拍后保持胜利，
+        不能抵消该非等价构造旁路。
+      counterfactual_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/goal_prune/counterfactual_remove_upper_target.txt
+      counterfactual_sha256: e613e90815823013669844fd07e89164985a33113016feb9eb0673dfc98bf103
+      single_cell_diff:
+        coordinate: [4, 1]
+        from: G
+        to: .
+      cost_delta: "9->5"
+      graph_status: complete
+      graph_facts:
+        reachable_states: 124
+        legal_transitions: 298
+        winning_states: 2
+        initial_commitments: 4
+        initial_viable_commitments: 2
+      expected_trace_win: true
+      expected_trace_boundary: canonical 9 拍全合法；第 8 拍已胜，第 9 拍后仍胜。
+      core_event_bypass:
+        - correct_offset_Z_construction
+        - second_vertical_force_chain
+        - boundary_coverage_handoff
+      bypass_witness:
+        construction: regular_2x2
+        inputs: [left, up, right, up, left]
+        legal_through_step: 5
+        final_win: true
+        final_state_key: "Ply:7,4|C:|M:5,3;6,3;5,4;6,4|PL:none|BS:B:4,2;S:4,3"
+        final_events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+      player_side_responsibility: >-
+        上端目标使第一次横推后 S 暂占下端目标只能是中间反馈；玩家必须预见并完成第二次正交上推，
+        因而它承担“后继继续消费 core 状态并反向筛选构造”的责任，不是顺路覆盖。
+
+    - target: [4, 3]
+      role: 下端覆盖交接目标；suffix 时由 Z 的左下远趾接替上移后的 S。
+      action: keep
+      reason: >-
+        current v3 单删下端目标后最短成本仍为 9，canonical 九拍仍合法获胜，完整图也 complete；但可胜初始 commitments 从 1 增至 2，
+        winning states 从 2 增至 3。规整 2x2 的十三拍深层反击全部合法并获胜：它可上抬后直接推动 B/S，
+        使 B 覆盖上端目标，却不需要 Z 的远趾接替 S 腾出的下端格。该非等价构造胜族命中 core/构造旁路必须保留条件。
+      counterfactual_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/goal_prune/counterfactual_remove_lower_target.txt
+      counterfactual_sha256: 1f136cb9b451ab198d8bff1b8baa5fd940a40dfbd29563ea0e767613c4cc37ae
+      single_cell_diff:
+        coordinate: [4, 3]
+        from: G
+        to: .
+      cost_delta: "9->9"
+      graph_status: complete
+      graph_facts:
+        reachable_states: 162
+        legal_transitions: 401
+        winning_states: 3
+        initial_commitments: 4
+        initial_viable_commitments: 2
+      expected_trace_win: true
+      expected_trace_boundary: canonical 9 拍全合法并在第 9 拍获胜。
+      core_event_bypass:
+        - correct_offset_Z_construction
+        - distal_toe_target_handoff
+        - canonical_second_force_chain_mode
+      bypass_witness:
+        construction: regular_2x2
+        inputs: [left, up, right, up, left, down, down, left, up, up, left, left, up]
+        legal_through_step: 13
+        final_win: true
+        final_state_key: "Ply:4,3|C:|M:5,2;6,2;5,3;6,3|PL:none|BS:B:4,1;S:4,2"
+        final_events: ["push_object:box_sticky_anchor", "anchor_boundary_shift:box_sticky", "box_to_sticky:n2", "sticky_merge:n1"]
+      player_side_responsibility: >-
+        下端目标把 B/S 上移时必然腾出的格继续留在同一边界应用中；只有正确 Z 的远趾能在同拍接替覆盖。
+        删除它会把规整 2x2 的直接推锚结果重新视为完成态，消除此前构造偏移的后继责任。
+
+  removed_targets: []
+  retained_targets:
+    - [4, 1]
+    - [4, 3]
+  combination_delete_test:
+    status: not_run
+    reason: 两个单删检查均未通过全部可删除条件；authority 只有在多个相邻目标单删均通过时才要求组合删除。
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/counterfactual_results.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/apply_suffix_v3/evidence_review.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/goal_prune/counterfactual_remove_upper_target.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/goal_prune/counterfactual_remove_lower_target.txt
+    - prototypes/reality_anchor/docs/goal_prune_check.md
+    - prototypes/reality_anchor/docs/design_handoff.yml
+
+tool_runs:
+  - id: remove_upper_explain_layout
+    command: >-
+      npx tsx src/cli.ts explain-layout prototypes/reality_anchor
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/goal_prune/counterfactual_remove_upper_target.txt
+      --id RA_PRE_APPLY_V3_GOAL_PRUNE_REMOVE_UPPER --max-states 300000 --graph-max-states 300000
+    result: complete; shortest 5; graph 124 states / 298 transitions / 2 wins
+  - id: remove_lower_explain_layout
+    command: >-
+      npx tsx src/cli.ts explain-layout prototypes/reality_anchor
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/goal_prune/counterfactual_remove_lower_target.txt
+      --id RA_PRE_APPLY_V3_GOAL_PRUNE_REMOVE_LOWER --max-states 300000 --graph-max-states 300000
+    result: complete; shortest 9; graph 162 states / 401 transitions / 3 wins
+  - id: actual_current_v3_replays
+    result: >-
+      两个单删版本均实际重放 current v3 九拍 canonical；另在删上端版本实际重放 5 拍 2x2 core 胜路，
+      在删下端版本实际重放 13 拍 2x2 深层胜路。所有声明 inputs 全程合法，胜负、状态与事件均按上文记录。
+
+operation:
+  target_deleted: false
+  reviewed_artifact_modified: false
+  new_delivery_exact_proposed: false
+  rereview_required: false
+  rationale: 两个目标分别承担 suffix 必须发生与远趾覆盖交接责任，均命中 authority 的必须保留条件。
+
+version_effect: unchanged
+result_exact_version: v3
+controller_boundary: >-
+  本 artifact 只记录 Designer 对 current frozen v3 的 invalid_goal_prune 专业检查；未执行 opening_comfort 或 redundant_element_prune，
+  未写冻结、delivery、playable queue、pre-submission 总状态或其它 Controller 状态。

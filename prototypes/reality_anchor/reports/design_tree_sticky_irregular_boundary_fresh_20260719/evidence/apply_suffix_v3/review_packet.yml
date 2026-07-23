@@ -1,0 +1,102 @@
+review_attempt_id: RA_HARD_APPLY_SUFFIX_V3_001
+required_skill: sokoban-evidence-reviewer
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+node_id: apply_suffix_001
+exact_version: v3
+layout_sha256: 76379e4f0b029cab00feceefa1975712cad6ef6909b084077ea7379a2fff531d
+prototype_id: reality_anchor
+
+solve_instance:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+  player_start: [8, 6]
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [up, left, down, left, up, right, up, left, up]
+
+solution_uniqueness_claim_extracted:
+  result: equivalent_variants_only
+  search_scope: complete
+  search_budget: maxStates=300000
+  known_raw_winning_variants:
+    - cost 9，末拍从右上把手上推同一 Z，玩家终位 [6,3]。
+    - cost 11，core 后在同一可达区域换到另一把手，上推同一 Z，玩家终位 [5,4]。
+  equivalence_account: >-
+    两条胜路在 core 后对象状态相同，最终都上推同一完整 Z、移动同一 B/S，并得到完全相同的对象终局；
+    只差玩家在同一可达区选择的下方接触点，不改变构造、对象职责、目标分配或不可逆因果顺序。
+
+mechanical_claims:
+  - claim_id: exact_solvable
+    claim: 当前 v3 exact 的九步 canonical 输入全部合法并获胜。
+  - claim_id: neutral_two_step_opening_commitments
+    claim: >-
+      正确 offset-Z 分支以 up,left 进入第一次对象承诺，错误 2x2 分支以 left,up 进入第一次对象承诺；
+      两者第一步都只 walk，第二步才移动黏块。前者承诺态 forward closure 52 states / 2 wins，
+      后者承诺态 forward closure 54 states / 0 wins。
+  - claim_id: canonical_construct_core_suffix_chain
+    claim: >-
+      第 5 步形成四格错位 Z；第 8 步左推同一 Z 并触发 force_chain 与 B/S 左移，尚未胜；
+      第 9 步上推同一 Z，再次触发 force_chain 与 B/S 上移并立即胜利。
+  - claim_id: boundary_coverage_handoff_on_suffix
+    claim: >-
+      第 8 步后 S 占下端目标 [4,3]；第 9 步后 B 覆盖上端目标 [4,1]，
+      同一 Z 的远趾由 [4,4] 上移到 [4,3] 接替 S，完成下端覆盖。
+  - claim_id: square_same_core_but_no_win
+    claim: >-
+      规整 2x2 能完成同类 B/S 左移 core，并能沿十三步反击把 B/S 上推到上端；
+      但最终下端目标只由玩家站住，不算覆盖，当前 exact 不胜。
+  - claim_id: square_cannot_complete_current_exact
+    claim: >-
+      complete graph 为 176 states / 441 transitions / 2 wins；2x2 承诺态全部 54 个 forward reachable states 中
+      没有胜态，因此当前 exact 无 2x2 胜利解族。
+  - claim_id: lower_handoff_target_mechanical_responsibility
+    claim: >-
+      相对 current v3 只删除下端目标 [4,3] 后，同一 2x2 十三步反击全部合法并获胜；
+      该目标对排除不做远趾覆盖交接的 2x2 结果承担机械责任。
+  - claim_id: core_equivalence_under_core_win_condition
+    claim: >-
+      把上端目标移到第一次 B/S 左移后 B 所在的 [4,2] 并保留下端目标时，
+      Z 的八步 core 与 2x2 的五步 core 都合法并在同类 B/S 左移后获胜。
+  - claim_id: distal_toe_mechanical_necessity
+    claim: >-
+      从 canonical 第 8 步后的 current-v3 状态只删除远趾 [4,4]，保留 goals、player、近端上推面与 B/S；
+      输入 up 合法并移动剩余黏块，但不产生 force_chain 或 anchor shift，B/S 不动且不胜。
+  - claim_id: solution_logic_family_unique
+    claim: >-
+      complete graph 有 2 个 winning states、1 个 winning object signature，初始 4 个 commitments 仅 1 个可胜；
+      两条实际胜利 replay 共享同一 offset-Z 构造、core 后对象状态、suffix 对象职责和对象终局。
+  - claim_id: no_post_suffix_cleanup
+    claim: canonical 第 9 步同拍完成 B/S 上移与远趾补位并立即进入胜态，没有后续清理。
+
+allowed_evidence_sources:
+  authority:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+  exact_and_raw_artifacts:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/alternate_handle_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/square_counterplay_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/counterfactual_results.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/counterfactual_remove_lower_target.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/counterfactual_win_at_core.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/probe_v3.ts
+
+forbidden_sources:
+  - designer 的 node_brief、design_reading、submission 与审美/难度自评；solution_uniqueness 仅作为本包明确提取声明的定位来源
+  - experience_brief、human_brief、archive calibration、design_tree、parent、growth_relation 与玩家质量 review
+  - task-local explorer 语料、旧 exact、旧 evidence/review、designer action、当前对话与 Controller 审美解释
+
+evidence_boundaries:
+  - winning states 数与对象签名不能单独证明玩家逻辑等价；须结合两条实际胜利 replay 与 complete graph。
+  - 删除下端目标只支持该目标的机械排旁路责任，不评价目标是否自然或优雅。
+  - win-at-core 反事实移动一个目标，改变两个 ASCII 格，只支持两种构造能完成同类 core 并满足该反事实胜利条件。
+  - 远趾反事实使用 current-v3 canonical 第 8 步后的结构化状态注入；须核验 source state、goals 和唯一删除格。
+  - 工具事实不支持审美、难度、包装或树关系判断。
+
+output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/apply_suffix_v3/evidence_review.yml

@@ -1,0 +1,84 @@
+assignment_id: RA_DESIGNER_APPLY_SUFFIX_001
+node_id: apply_suffix_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v2
+layout_sha256: 6b537c3847a8abf968e184c2920445135755822eb81efc51da9f77a26d171d86
+graph_evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/diagnostics/runtime_analysis.yml
+
+graph_scope:
+  status: complete
+  reachable_states: 176
+  legal_transitions: 441
+  winning_states: 2
+  initial_commitments: 4
+  initial_viable_commitments: 1
+  claim_boundary: >-
+    完整图覆盖当前 exact 的全部可达状态；以下唯一性结论是该 exact 内的机械解族结论，不把最短步数或 raw 胜态数当作品质量判断。
+
+logic_classes:
+  - id: z_offset_boundary_handoff
+    survives: true
+    required_construction: 下横条先左移一格，再上推与固定上横条合并成右上错位 Z。
+    required_core: 完整 Z 左推，同拍把竖直 B/S 左移，使 S 暂占下端目标。
+    required_suffix: 完整 Z 上推，同拍把 B/S 上移；B 覆盖上端目标，左下远趾接替 S 覆盖下端目标。
+    winning_state_count: 2
+    object_final_state: "M:5,2;6,2;4,3;5,3|BS:B:4,1;S:4,2"
+    variants:
+      - id: immediate_upper_right_handle
+        inputs: [left, down, left, up, right, up, left, up]
+        final_player: [6, 3]
+        cost: 8
+      - id: lower_right_handle_after_reposition
+        inputs: [left, down, left, up, right, up, left, down, left, up]
+        final_player: [5, 4]
+        cost: 10
+    variant_equivalence_reason: >-
+      两条输入在 core 后处于同一对象状态；差异只是玩家在同一可达区域内选择 Z 的两个下方接触点。
+      最后一拍都把同一完整 Z 上移一格，触发同一 anchor 事件并得到完全相同的对象终局，没有不同对象顺序、不同构造或不同边界解释。
+
+rejected_or_dead_families:
+  - id: direct_2x2_then_same_core
+    construction_inputs: [down, left, up]
+    core_inputs_after_construction: [right, up, left]
+    same_core_established: true
+    immediate_up_after_core: 仅 walk，不移动黏块或 B/S。
+    deepest_known_counterplay: [down, down, left, up, up, left, left, up]
+    counterplay_result: >-
+      2x2 可上抬、玩家可直接上推 B/S，使 B 到达上端目标；但下端目标裸露，终局不胜。
+    graph_result: dead_logic_family
+  - id: lower_bar_right_or_down_commitments
+    graph_result: dead
+    relevance: 不形成能完成同一双目标边界交接的构造。
+  - id: second_left_shift_before_merge
+    graph_result: dead
+    relevance: 失去与固定横条的有效合并/应用关系。
+
+bypass_audit:
+  player_direct_anchor_push:
+    reachable: true
+    only_after_square_lift: true
+    can_move_b_to_upper_target: true
+    can_complete_all_targets: false
+    reason: 直接推锚会腾空下端目标，且 2x2 最终轮廓不能补住该格。
+  square_full_win:
+    reachable: false
+    evidence: 完整图中直接 2x2 的初始构造承诺不在可胜子图。
+  win_without_first_anchor_left_shift:
+    reachable: false
+    evidence: 可胜解族的 core 都先触发 B/S 左移，再触发上移。
+  win_without_distal_toe_participation:
+    reachable: false
+    evidence: 删除远趾反事实中同一上推只移动黏块并产生 sticky_to_box，B/S 保持原位。
+  independent_cleanup_after_suffix:
+    present: false
+    evidence: canonical suffix 单拍同时完成 B/S 上移和下端补位，并立即进入胜态。
+
+uniqueness_verdict:
+  raw_input_unique: false
+  raw_winning_state_unique: false
+  winning_logic_class_unique: true
+  required_construction_unique: true
+  same_core_wrong_construction_exists: true
+  wrong_construction_full_win_exists: false
+  classification: unique_logic_family_with_equivalent_player_handle_variants
+  ready_for_independent_evidence_review: true

@@ -1,0 +1,135 @@
+artifact_id: RA_APPLY_SUFFIX_V3_FRESH_RUNTIME_ANALYSIS
+assignment_id: RA_DESIGNER_APPLY_SUFFIX_V3_PRE_SUBMISSION_REVISION_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v3
+layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+layout_sha256: 76379e4f0b029cab00feceefa1975712cad6ef6909b084077ea7379a2fff531d
+solve_instance:
+  player_start: [8, 6]
+  initial_state_key: "Ply:8,6|C:|M:6,3;7,3|6,5;7,5|PL:none|BS:B:5,2;S:5,3"
+  win_condition: all_targets_covered_by_objects
+
+complete_graph:
+  status: complete
+  budget:
+    max_states: 300000
+  reachable_states: 176
+  legal_transitions: 441
+  winning_states: 2
+  winning_object_signatures: 1
+  winning_state_details:
+    - shortest_cost: 9
+      player: [6, 3]
+      state_key: "Ply:6,3|C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2"
+      object_signature: "C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2"
+      shortest_inputs: [up, left, down, left, up, right, up, left, up]
+    - shortest_cost: 11
+      player: [5, 4]
+      state_key: "Ply:5,4|C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2"
+      object_signature: "C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2"
+      shortest_inputs: [up, left, down, left, up, right, up, left, down, left, up]
+
+agency:
+  status: complete
+  compression_rule: bidirectional_edges
+  compressed_regions: 15
+  initial_region:
+    state_count: 14
+    commitment_count: 4
+    viable_commitment_count: 1
+    dead_commitment_count: 3
+    optimal_commitment_count: 1
+  initial_scc:
+    state_count: 14
+    outgoing: 4
+    win_reachable_outgoing: 1
+    dead_outgoing: 3
+  solution_region_path: ["r0@0", "r1@2", "r5@5", "r9@8", "r12@9"]
+  claim_boundary: >-
+    SCC/region 数字只描述当前 exact 的可达与承诺结构，不作为玩家难度或作品质量指标。
+
+opening_commitment_probe:
+  correct_offset_z:
+    opening_inputs: [up, left]
+    first_input_events: [walk]
+    commitment_input_events: ["push_object:sticky#2", move_sticky_rigid]
+    commitment_state_index: 4
+    commitment_depth: 2
+    forward_reachable_states: 52
+    can_reach_win: true
+    forward_winning_states: 2
+  regular_square:
+    opening_inputs: [left, up]
+    first_input_events: [walk]
+    commitment_input_events: ["push_object:sticky#2", move_sticky_rigid, "sticky_merge:n1"]
+    commitment_state_index: 5
+    commitment_depth: 2
+    forward_reachable_states: 54
+    can_reach_win: false
+    forward_winning_states: 0
+  player_side_reading: >-
+    两个主题相关构造都先走一拍、第二拍才移动对象；起点不再把输入本身直接等同于正确或错误承诺。
+
+canonical_replay:
+  ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/canonical_replay.json
+  inputs: [up, left, down, left, up, right, up, left, up]
+  completed: true
+  legal_through_step: 9
+  final_win: true
+  key_steps:
+    - step: 2
+      role: offset_lower_bar
+      events: ["push_object:sticky#2", move_sticky_rigid]
+    - step: 5
+      role: merge_offset_z
+      events: ["push_object:sticky#1", move_sticky_rigid, "sticky_merge:n1"]
+    - step: 8
+      role: shared_core_left_shift
+      events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+      after_state_key: "Ply:6,4|C:|M:5,3;6,3;4,4;5,4|PL:none|BS:B:4,2;S:4,3"
+      win_after: false
+    - step: 9
+      role: suffix_vertical_handoff
+      events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+      after_state_key: "Ply:6,3|C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2"
+      win_after: true
+
+alternate_handle_replay:
+  ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/alternate_handle_replay.json
+  inputs: [up, left, down, left, up, right, up, left, down, left, up]
+  completed: true
+  legal_through_step: 11
+  final_win: true
+  final_state_key: "Ply:5,4|C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2"
+  object_terminal_equals_canonical: true
+
+square_counterplay:
+  ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/square_counterplay_replay.json
+  inputs: [left, up, right, up, left, down, down, left, up, up, left, left, up]
+  completed: true
+  legal_through_step: 13
+  shared_core_step: 5
+  shared_core_events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+  final_state_key: "Ply:4,3|C:|M:5,2;6,2;5,3;6,3|PL:none|BS:B:4,1;S:4,2"
+  final_win: false
+  failure_reading: B 覆盖上端目标，但下端目标只被玩家站住，按规则不算覆盖。
+
+counterfactual_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/counterfactual_results.yml
+reproduction:
+  probe_script_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/probe_v3.ts
+  commands:
+    - >-
+      npx tsx src/cli.ts explain-layout prototypes/reality_anchor
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+      --id RA_APPLY_SUFFIX_V3_DIAG --max-states 300000 --graph-max-states 300000
+    - >-
+      npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+      --id RA_APPLY_SUFFIX_V3_CANONICAL --inputs up,left,down,left,up,right,up,left,up
+    - >-
+      npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/probe_v3.ts
+
+evidence_limits:
+  - 完整图以当前 runtime、当前 win condition 与 300000 state budget 得到 complete；不外推到规则或布局变化后的实例。
+  - 工具不评价双目标交接是否优雅、难度是否正好或玩家是否会喜欢。
+  - raw input 串不唯一；唯一性声明只到玩家逻辑类。

@@ -1,0 +1,119 @@
+assignment_id: RA_DESIGNER_APPLY_V4_OUTLINE_TRIM_REVISION_001
+node_id: apply_suffix_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v4
+layout_sha256: 3516694d71bfeb0270fa2e4c787d07d9579bf042c3abdc4b99b0e2ef913b8c2e
+graph_evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/complete_graph_opening.json
+
+graph_scope:
+  status: complete
+  search_scope: complete
+  budget: 300000 states
+  reachable_states: 176
+  legal_transitions: 441
+  winning_states: 2
+  winning_object_signatures: 1
+  initial_commitments: 4
+  initial_viable_commitments: 1
+  claim_boundary: >-
+    完整图覆盖 current exact v4 的全部可达状态；唯一性结论只到玩家逻辑类，不把最短步数、胜态数或图形指标当作品质量。
+
+logic_classes:
+  - id: z_offset_boundary_handoff
+    survives: true
+    required_construction: 下横条先左移一格，再上推与固定上横条合并成右上错位 Z。
+    required_core: 完整 Z 左推，同拍把竖直 B/S 左移，使 S 暂占下端目标。
+    required_suffix: 完整 Z 上推，同拍把 B/S 上移；B 覆盖上端目标，左下远趾接替 S 覆盖下端目标。
+    winning_state_count: 2
+    winning_object_signature_count: 1
+    object_final_state: "C:|M:2,2;3,2;1,3;2,3|PL:none|BS:B:1,1;S:1,2"
+    variants:
+      - id: immediate_upper_right_handle
+        inputs: [up, left, down, left, up, right, up, left, up]
+        final_player: [3, 3]
+        cost: 9
+        replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/canonical_replay.json
+      - id: lower_right_handle_after_reposition
+        inputs: [up, left, down, left, up, right, up, left, down, left, up]
+        final_player: [2, 4]
+        cost: 11
+        replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/alternate_handle_replay.json
+    variant_equivalence_reason: >-
+      两条输入在 step 8 后处于同一完整对象状态；差异只是玩家在同一可达区域内选择 Z 的两个下方接触点。
+      最后一拍都把同一完整 Z 上移一格，触发同一 anchor 事件并得到完全相同的对象终局，没有不同构造、对象顺序、目标分配或边界解释。
+
+branch_proof:
+  correct_offset_z_commitment:
+    inputs_to_commitment: [up, left]
+    state_index: 4
+    forward_reachable_states: 52
+    forward_winning_states: 2
+  regular_square_commitment:
+    inputs_to_commitment: [left, up]
+    state_index: 5
+    forward_reachable_states: 54
+    forward_winning_states: 0
+  interpretation: >-
+    从第二拍已形成 2x2 的实际状态向前穷举全部可达状态，没有胜态；两个完整图胜态都来自 offset-Z 逻辑类。
+
+rejected_or_dead_families:
+  - id: direct_2x2_then_same_core
+    construction_inputs: [left, up]
+    same_core_inputs_after_construction: [right, up, left]
+    same_core_established: true
+    deepest_counterplay_inputs: [left, up, right, up, left, down, down, left, up, up, left, left, up]
+    counterplay_result: >-
+      2x2 可上抬、玩家可直接上推 B/S，使 B 到达上端目标；但下端目标只被玩家站住，按规则不胜。
+    graph_result: dead_logic_family
+    replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/square_counterplay_replay.json
+  - id: other_initial_commitments
+    graph_result: dead
+    relevance: 初始 4 个 commitment 中只有 offset-Z 分支可达胜态，其余三支不能完成双目标边界交接。
+
+bypass_audit:
+  player_direct_anchor_push:
+    reachable: true
+    only_after_square_lift: true
+    can_move_b_to_upper_target: true
+    can_complete_all_targets: false
+    reason: 直接推锚会腾空下端目标，2x2 最终轮廓不能补住该格。
+  square_full_win:
+    reachable: false
+    evidence: square commitment 的完整 forward closure 为 54 states / 0 wins。
+  win_without_first_anchor_left_shift:
+    reachable: false
+    evidence: 两个胜态都属于先左移 B/S、再上移 B/S 的 Z 解族。
+  win_without_distal_toe_participation:
+    reachable: false
+    evidence: 删除远趾反事实中同一上推只移动黏块并产生 sticky_to_box，不产生 force_chain 或 anchor shift。
+  independent_cleanup_after_suffix:
+    present: false
+    evidence: canonical suffix 单拍同时完成 B/S 上移和下端补位，并立即进入胜态。
+
+outline_equivalence:
+  basis_exact: v3
+  coordinate_mapping: "(x,y)->(x-3,y)"
+  state_keys_equal_after_translation: true
+  action_event_labeled_edges_equal_after_translation: true
+  winning_state_keys_equal_after_translation: true
+  evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/outline_graph_isomorphism.json
+  use_boundary: >-
+    同构只确认 v4 裁边没有新增逻辑类；v4 的唯一性结论仍由 current-exact fresh graph、replay 和分支闭包独立支持，不继承 v3 review。
+
+uniqueness_verdict:
+  result: equivalent_variants_only
+  raw_input_unique: false
+  raw_winning_state_unique: false
+  winning_logic_class_unique: true
+  required_construction_unique: true
+  same_core_wrong_construction_exists: true
+  wrong_construction_full_win_exists: false
+  classification: unique_logic_family_with_equivalent_player_handle_variants
+  ready_for_independent_evidence_review: true
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/complete_graph_opening.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/alternate_handle_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/square_counterplay_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_results.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/outline_graph_isomorphism.json

@@ -1,0 +1,68 @@
+assignment_id: RA_DESIGNER_CONSTRUCT_PREFIX_001
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v1
+layout_sha256: d4affc733071b977ddaf9f7207c3ba366fb5f7d2e45b19d8d874f4cf1b99d0d9
+
+result: unique_complete
+search_scope: complete
+search_budget: maxStates=300000; graphMaxStates=300000
+actual_search:
+  reachable_states: 133
+  legal_transitions: 350
+  winning_states: 1
+  compressed_regions: 12
+  commitment_transitions: 22
+  winning_regions: 1
+  initial_commitments: 4
+  initial_viable_commitments: 1
+  initial_dead_commitments: 3
+  win_reachable_sccs: 3
+  branching_win_sccs: 0
+  merging_win_sccs: 0
+
+logic_class_account: >-
+  完整图只支持一个玩家逻辑类：把下条右移一格，再从下方上推与固定上条合并成错位 S；
+  随后绕到下层右把手左推完整 S，缺口避开墙齿，远端上臂推动 B/S 左移覆盖目标。
+  可胜 SCC 路径只有 s0 -> s3 -> s4，分别由 S 合并和终局边界推动离开；不存在第二个可胜构造出口或第二个胜态。
+
+known_raw_winning_variants:
+  - 初始 SCC 内允许纯走位、回退或搬动下条后再恢复正确偏移；它们不改变最终 S 的占格、右把手、B/S 目标分配或因果先后。
+  - agency r1 有两个可回到胜路的 commitment，但只有一个 progress/optimal；额外者属于合并前 detour，不形成另一构造答案。
+
+equivalence_account: >-
+  只把合并前可逆搬动与走位顺序视为等价。所有胜路最终必须形成同一四格 S
+  [[5,1],[6,1],[6,2],[7,2]]，再从右侧左推，使同一上层远端格推动同一 B/S 到同一唯一胜态；
+  对象职责、目标分配和不可逆因果顺序完全相同。
+
+dead_alternative:
+  inputs: [down, right, up, right, right, up, left]
+  constructed_shape: aligned_2x2
+  construction_legal: true
+  right_handle_reachable: true
+  result: force_blocked_at_step_7
+  win: false
+  evidence: >-
+    实际 replay 前六步全部合法；第七步从相同方向左推时因左下墙齿原子阻塞。
+    完整图初始 SCC 的其他四个出口均不在可胜子图中。
+
+bypass_account:
+  direct_upper_bar_use: >-
+    上条左邻 B/S、右邻墙、上邻外墙；完整图没有不合并而到达胜态的分支。
+  direct_boundary_use: >-
+    玩家活动区不提供 B/S 右侧站位；唯一胜态前的终局事件由合并 S 的 force chain 触发 B/S 位移。
+  other_merge_or_over_shift: >-
+    过度横移、整齐 2x2 或其他下条搬动都存在于完整图，但没有形成第二个 win-reaching SCC 出口。
+
+evidence_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/runtime_analysis.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_no_wall_tooth.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_delete_remote_arm.txt
+
+evidence_limits:
+  - 唯一性按 docs/21 的玩家逻辑类声明，不把初始 SCC 内的可逆搬动和走位排列谎称为不同解。
+  - 一个 winning state 本身不足以排除同终态异路；这里同时引用无 branching/merging 的可胜 SCC 子图与精确合并/终局事件。
+  - 完整图证明当前 exact version 的状态级旁路与解族，不评价审美、首次玩家难度或父子增长质量。
+  - explain-layout 未提供 instance-level object participation，故对象职责由逐步状态和反事实支持。
+
+designer_uniqueness_gate: passed

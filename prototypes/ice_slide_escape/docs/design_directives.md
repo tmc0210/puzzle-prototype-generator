@@ -113,5 +113,5 @@ meta-first 作品。
 
 ## 人类待玩交接
 
-Base、meta reinterpretation 和 meta-first 若分别完成其所属的体验核心设计树流程，各自描述玩家体验、
+Base、meta reinterpretation 和 meta-first 若分别完成其所属的体验核心单关流程，各自描述玩家体验、
 共享结构、相对增量、已知风险与证据边界。LLM 不用 pair 数量、路线长度或图指标排序。

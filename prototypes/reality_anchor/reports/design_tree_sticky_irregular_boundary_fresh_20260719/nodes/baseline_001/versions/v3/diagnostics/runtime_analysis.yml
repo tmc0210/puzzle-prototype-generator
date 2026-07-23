@@ -1,0 +1,109 @@
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v3
+layout_sha256: 477d96ae46c2a683a6ec4073f89b724474c3d02cfdac1ef83af27efe26290b4a
+assignment_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/designer_baseline_v3_outline_trim_revision_001.yml
+
+commands:
+  canonical_analysis: >-
+    npx tsx src/cli.ts explain-layout prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/layout.txt
+    --id RA_STICKY_IRREGULAR_BASELINE_001_V3 --targets K_runtime_smoke
+    --max-states 300000 --graph-max-states 300000
+  canonical_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor <v3-layout>
+    --id RA_STICKY_IRREGULAR_BASELINE_001_V3_CANONICAL --inputs down,right,right,right,down
+  dead_upper_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor <v3-layout>
+    --id RA_STICKY_IRREGULAR_BASELINE_001_V3_DEAD_UPPER --inputs up,right,right,down
+  remote_arm_counterfactual_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor <v3-l-shape-counterfactual>
+    --id RA_STICKY_IRREGULAR_BASELINE_001_V3_CF_L_SHAPE --inputs down,right,right,right,down
+  identity_event_probe: >-
+    npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.ts
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/layout.txt
+  outline_graph_isomorphism: >-
+    npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/verify_outline_graph_isomorphism.ts
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/layout.txt
+
+shortest_solution:
+  found: true
+  cost: 5
+  depth: 5
+  explored_states_until_first_solution: 12
+  inputs: [down, right, right, right, down]
+  terminal_events: ["pull_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+
+complete_graph:
+  status: complete
+  budget: 300000
+  reachable_states: 19
+  legal_transitions: 34
+  event_only_illegal_transitions: 0
+  winning_states: 1
+
+opening_and_agency:
+  status: complete
+  initial_scc_size: 8
+  initial_scc_out: 2
+  initial_scc_win_out: 1
+  initial_scc_dead_out: 1
+  compressed_regions: 3
+  commitment_transitions: 2
+  initial_commitments: 2
+  initial_viable_commitments: 1
+  initial_dead_commitments: 1
+  forced_commitment_prefix_length: 0
+  player_read: >-
+    起点可逆区连通上下两条观察路；上路与下路都能产生合法首次对象动作，
+    但只有下路肩窝横推进入胜利逻辑类。
+
+dead_upper_commitment:
+  inputs: [up, right, right, down]
+  legal_through_step: 4
+  final_events: ["push_object:sticky#1", move_sticky_rigid]
+  final_state_key: "Ply:3,3|C:|M:3,4;4,4;5,4;4,5|PL:P:3,1;L:4,1|BS:B:7,4;S:6,4"
+  win: false
+  graph_classification: initial_region_unique_dead_commitment
+
+identity_counterfactual:
+  id: delete_remote_right_arm
+  changed_cell: [5, 3]
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape.txt
+  inputs: [down, right, right, right, down]
+  legal_through_step: 5
+  final_events: ["pull_object:sticky#1", move_sticky_rigid]
+  force_chain_present: false
+  anchor_boundary_shift_present: false
+  win: false
+  reading: 删去 T 的远端右臂后，近端两手仍成立，但不再接触 B/S，目标保持空置。
+
+identity_event_probe:
+  status: complete
+  movable_box_sticky_shift_bypass: false
+  fixed_push_pull_effect_bypass: false
+  sticky_rigid_move_bypass: false
+  forbidden_reachable_push_pull_anchor_shift: none
+  evidence_boundary: 不要求本节点作品身份未声明的 normalization、box_to_sticky 或 sticky_merge。
+
+outline_isomorphism:
+  status: complete
+  mapping: "v2 (x,y)->v3 (x-1,y)"
+  v2_graph: "19 states / 34 labeled edges / 1 win"
+  v3_graph: "19 states / 34 labeled edges / 1 win"
+  state_keys_equal_after_translation: true
+  action_event_labeled_edges_equal_after_translation: true
+  winning_state_keys_equal_after_translation: true
+
+raw_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/complete_graph_opening.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/dead_upper_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/outline_graph_isomorphism.json
+
+evidence_limits:
+  - explain-layout 未返回 instance-level object participation；对象职责由逐步状态、事件与删远臂反事实支持。
+  - 完整图支持当前 exact 的状态级旁路与解族声明，不评价难度或审美。
+  - 轮廓同构只证明裁边前后机械结构相同；玩家侧完成质量仍由 current-exact 重读承担。

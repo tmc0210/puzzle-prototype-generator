@@ -1,0 +1,59 @@
+runId: ra_task_connected_parent_subtractive_residue_alt_20260719_10
+title: "同一 S 形四格连通母体的浅切 / 深切最小对照"
+notes: "固定竖直 B/S 边界左箱右黏；同一母体由玩家选择向左推一格或两格，只核验切分后单连通残体与 crate 输出。"
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 10
+  maxStates: 4000
+  maxTransitions: 16000
+cases:
+  - id: shallow_cut_l_residue
+    family: connected_parent_subtractive_residue
+    variant: shallow_one_stroke
+    changed_variable: "向左跨线一格"
+    contrast_with: deep_cut_single_residue
+    notes: "S 形四格母体向左一格；预期边界外切出 1 crate，边界内直接留下三格 L 连通残体。"
+    layout: |
+      ##########
+      # #BS#  G#
+      #        #
+      #        #
+      # #  MM@ #
+      ##  MM   #
+      # #      #
+      ##########
+    actions: [left]
+  - id: deep_cut_single_residue
+    family: connected_parent_subtractive_residue
+    variant: deep_two_strokes
+    changed_variable: "同一路径再向左跨线一格"
+    contrast_with: shallow_cut_l_residue
+    notes: "同一 S 形四格母体向左两格；预期边界外切出 3 crates，边界内直接留下单格连通残体。"
+    layout: |
+      ##########
+      # #BS#  G#
+      #        #
+      #        #
+      # #  MM@ #
+      ##  MM   #
+      # #      #
+      ##########
+    actions: [left, left]
+  - id: shallow_l_external_axis
+    family: connected_parent_subtractive_residue
+    variant: shallow_l_then_external_down
+    changed_variable: "浅切后从上方外侧接触横趾，沿边界轴向下推一格"
+    contrast_with:
+      - shallow_cut_l_residue
+      - deep_cut_single_residue
+    notes: "浅切留下三格 L 后，玩家从右侧绕到上方外侧站位，接触 L 的右上横趾并向下推动整个残体；左侧三墙一口把切出 crate 的反向站位 x2,y5 隔离，同时仍允许深切时由残体受力链把 crate 推入该口。"
+    layout: |
+      ##########
+      # #BS#  G#
+      #        #
+      #        #
+      # #  MM@ #
+      ##  MM   #
+      # #      #
+      ##########
+    actions: [left, up, left, down]

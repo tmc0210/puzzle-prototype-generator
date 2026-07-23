@@ -1,0 +1,27 @@
+runId: ra_task_staggered_merge_pl_walk_exchange_20260719_07
+title: "两横条主动合并后同链移动 P/L：旧半格 walk gate"
+notes: >-
+  只执行 A/B 最小 gate。标准 replay 保存 active merge 后 merged sticky 直接带动 P/L；
+  gate_scan.json 枚举下一输入是否能以 walk 进入空旧半格。
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 28
+  maxStates: 60000
+  maxTransitions: 240000
+cases:
+  - id: active_s_merge_drives_pl_left
+    family: staggered_merge_pl_walk_gate
+    variant: active_s_direct_sticky_force_chain
+    changed_variable: 两横条先错位合并为 S，再由 S 右侧把手向左推动水平 LP
+    notes: 第四手出现 sticky_merge；第八手直接 push merged sticky，并在同一 chain 中让 LP 左移一格。
+    layout: |
+      ##############
+      #BS.........G#
+      #............#
+      #...LPMM.....#
+      #............#
+      #....@MM.....#
+      #............#
+      #............#
+      ##############
+    actions: [right, down, right, up, right, right, up, left]

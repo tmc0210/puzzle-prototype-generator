@@ -1,0 +1,150 @@
+schema_version: 1
+manifest_id: RA_BASELINE_001_V1_EVIDENCE_MANIFEST
+assignment_id: RA_DESIGNER_DIFFICULTY_BASELINE_V1_EVIDENCE_COMPLETION_001
+producer_role: sokoban-level-designer
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+purpose: >-
+  仅为 current baseline_001 v1 补齐可重跑的原始机械证据，供 Controller 从实物组装 fresh hard-review packet；
+  本 manifest 不产生 review verdict、冻结资格、设计树状态、提交前检查状态或待玩资格。
+
+exact_identity:
+  prototype_id: reality_anchor
+  candidate_id: RA_DIFFICULTY_BASELINE_L_KEYHOLE_V1
+  node_id: baseline_001
+  exact_version: v1
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  layout_sha256: 03b1881bcabb6e69452eb0bed06234a31e4c5831e4c46123d21b914c1eaa6f1d
+  solve_instance:
+    runtime_semantics: current src/prototypes/reality_anchor/mechanics.ts
+    win_condition: all_targets_covered_by_objects
+    inputs: [up, right, down, left]
+    input_cost: 1
+    terminal_win_expansion: disabled
+
+immutable_input_snapshot:
+  note: 本 assignment 未写入以下 current exact / Designer 送审输入。
+  files:
+    - ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+      sha256: 03b1881bcabb6e69452eb0bed06234a31e4c5831e4c46123d21b914c1eaa6f1d
+    - ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/canonical_replay.json
+      sha256: 8739bcbf9567b966a417e4281f57beb880fea634e12b40b243d7314434a2421e
+    - ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/solution_uniqueness.yml
+      sha256: 91fb49a0331e114bbb1d4a2351383275cb4fff331ab69058545d30ea2943610e
+    - ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/design_reading.yml
+      sha256: 1c4d79c6be83bc7c16535232a3a50aa7c54fa445e61afb1e47da4eb87d562a53
+    - ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/submission.yml
+      sha256: 5912fcd5056a707897c8b6479a668270a5afbbb11051cd870fa3bd3c36dccf8c
+
+reproduction_commands:
+  working_directory: D:/Developer/sokoban
+  commands:
+    - >-
+      npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/complete_graph_audit.ts --write
+    - >-
+      npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_audit.ts --write
+  stdout_mode: 去掉 --write 时，两支脚本把同一 raw report 输出到 stdout，不写文件。
+  failure_behavior: 任一既有声明不重现时脚本输出 reproduction_status=fail 并以非零 exit code 结束。
+
+budgets:
+  complete_graph:
+    max_states: 300000
+    graph_max_states: 300000
+  counterfactual_graph_per_case:
+    max_states: 300000
+    graph_max_states: 300000
+  shortest_raw_path_enumeration_cap_per_case: 1000
+  observed_shortest_raw_path_counts_below_cap: true
+
+artifacts:
+  - artifact_id: complete_graph_and_solution_family
+    implementation_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/complete_graph_audit.ts
+    implementation_sha256: b781a4443aa2ccda071ef9e12ed47c6be30ebe5594bd2b666da95db39ed1f48e
+    raw_result_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/complete_graph_audit.json
+    raw_result_sha256: f3705ab5d9696f93cbeda2aae1c2712ce845e76d3d1296ab83a1ea80504b8aeb
+    reproduction_status: pass
+    observed:
+      graph_status: complete
+      reachable_states: 227
+      legal_transitions: 610
+      terminal_winning_states: 1
+      shortest_cost: 16
+      raw_shortest_path_count: 2
+      shortest_object_signature_count: 1
+      shared_object_signature: ["push:right", "pull:right", "pull:right", "pull:down"]
+      all_four_milestone_poses_dominate_every_terminal_win_path: true
+      all_four_first_entry_source_mode_direction_match_claim: true
+      logical_object_family_count_under_declared_equivalence: 1
+
+  - artifact_id: canonical_replay_verification
+    source_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/canonical_replay.json
+    raw_result_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/canonical_replay_verification.json
+    raw_result_sha256: 2d39b1fd68e6a4c4335a7b25fdcc3b96355606bd765e0cb9bcb55c29e9e8bb3a
+    reproduction_status: pass
+    observed:
+      inputs: 16
+      all_steps_legal: true
+      every_claimed_step_field_matches_runtime: true
+      final_win: true
+
+  - artifact_id: overrun_exact_state_return
+    raw_result_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/overrun_return_replay.json
+    raw_result_sha256: f1bec67dfaa26340d78125be209d9a29fda2766ea2a71d69806ce1fbe13b8a0f
+    reproduction_status: pass
+    observed:
+      canonical_prefix_length: 9
+      overrun: "pull:right"
+      return_inputs: [up, left, left, left, down, left, up, right, right, right, down]
+      all_steps_legal: true
+      final_exact_state_equals_pre_overrun_state: true
+
+  - artifact_id: structural_counterfactuals
+    implementation_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_audit.ts
+    implementation_sha256: 374f2bfd7e8694df3bc7f0b50c772a262dea7f0031e4ae4a2491c15791aed546
+    raw_result_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_audit.json
+    raw_result_sha256: 039b8fede0c51b4d657befdcdfed9d96c767ae9c8b6e0c51fbfcfe9427aa671d
+    reproduction_status: pass
+    exact_layouts:
+      - counterfactual_id: remove_pl
+        ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_remove_pl.txt
+        sha256: a5cf100c50326a5405f6c5dd8e9d4e88c92a24bec1b39c9e0c05fefd451b9c4e
+        mutations: ["5,1 P->#", "6,1 L->#"]
+        graph: { status: complete, reachable_states: 577, legal_transitions: 1683, terminal_winning_states: 2 }
+        shortest: { cost: 7, raw_path_count: 4, object_signature: ["push:right", "push:right", "push:right", "push:down"] }
+      - counterfactual_id: remove_left_tooth
+        ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_remove_left_tooth.txt
+        sha256: 954455f4d5d3970a3a2d29a377d5631c4ec60b67b24545f1c3bd248447775258
+        mutations: ["8,6 #->."]
+        graph: { status: complete, reachable_states: 270, legal_transitions: 758, terminal_winning_states: 2 }
+        shortest: { cost: 10, raw_path_count: 1, object_signature: ["push:right", "pull:down", "pull:right", "pull:right"] }
+      - counterfactual_id: remove_right_tooth
+        ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_remove_right_tooth.txt
+        sha256: 95ae23d1ca6f3033eeeac00d3c53d822b123e0694b668ba40f294044fc43d56b
+        mutations: ["10,6 #->."]
+        graph: { status: complete, reachable_states: 270, legal_transitions: 760, terminal_winning_states: 3 }
+        shortest: { cost: 12, raw_path_count: 7, object_signature: ["push:right", "pull:right", "pull:right", "pull:down"] }
+        terminal_handle_on_all_shortest_paths:
+          before_player: [10, 5]
+          force_target_cell: [10, 4]
+          note: 缺少右墙齿后，终手从上臂格直接 pull:down；不再要求玩家站到低阶突出部下方牵引该突出部。
+      - counterfactual_id: remove_lower_toe
+        ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/diagnostics/counterfactual_remove_lower_toe.txt
+        sha256: 60e2257683186949c62dbefbf6f6d0058a2ca04b708d36e341f1e329069ad4c3
+        mutations: ["6,5 M->.", "9,6 G->."]
+        graph: { status: complete, reachable_states: 333, legal_transitions: 929, terminal_winning_states: 3 }
+        shortest: { cost: 11, raw_path_count: 1, object_signature: ["pull:right", "pull:right", "pull:right", "pull:down"] }
+
+evidence_boundaries:
+  supported:
+    - current exact 在 current runtime 与声明的 terminal-win 图语义下的可解性、图完整性和全部终止胜态。
+    - 两条最短 raw 路径的对象签名等价，以及所有胜路对四个位姿的支配和首次进入 source/mode/direction。
+    - 落盘 canonical replay 的逐步机械字段，以及一次 pull:right 超调后返回同一 exact state 的原始步骤。
+    - 四个指定删除反事实在各自 exact layout 上的完整图与最短解族变化。
+  not_supported:
+    - 不有限枚举含任意可逆环的所有 raw 输入串；对象胜族只按 raw JSON 中明示的因果等价关系归类。
+    - 不证明难度、审美、可读性、惊喜、玩家自然发现概率或最终应否入选。
+    - 不执行或替代 independent evidence review、fresh quality review、coach、pre-submission workflow 或人类试玩。
+    - 反事实只解释指定 cell 删除后的机械变化，不把其转换为通用关卡设计规则。
+
+overall_reproduction_status: pass
+assignment_stop_condition_triggered: false
+authorized_write_scope: diagnostics allowed_output_refs only

@@ -1,0 +1,83 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V11_CRATE_STATE_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v11_probe_only
+status: probe_failed
+
+scope:
+  geometry_changed: false
+  formal_candidate: false
+  graph_run: false
+  solver_run: false
+  uniqueness_written: false
+  submission_written: false
+
+artifact_refs:
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_state_layout.txt
+  intended_h2: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/intended_h2_replay.json
+  crate_displacement: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_displacement_probe.json
+  crate_restore_or_failure: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v11/diagnostics/crate_restore_or_failure_probe.json
+
+provisional_target:
+  cells: [[8, 5], [9, 5], [9, 6]]
+  role: H2_footprint_only
+  cut_crate_initial: [7, 6]
+  cut_crate_initially_on_target: false
+
+runtime:
+  runner: npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+  case_count: 3
+  cases:
+    - id: RA_V11_INTENDED_H2
+      result: intended_h2_immediate_win
+      completed: true
+      legal_through_step: 44
+      final_win: true
+    - id: RA_V11_CRATE_EAST
+      result: crate_east_pull_no_win
+      completed: true
+      legal_through_step: 43
+      final_win: false
+    - id: RA_V11_CRATE_RESTORE
+      result: no_restore_witness
+      completed: false
+      legal_through_step: 54
+      stopped_at_step: 55
+      stop_reason: destination_occupied
+      final_win: false
+
+gates:
+  intended_h2:
+    result: passed
+    statement: >-
+      v10 主链在同一几何与 provisional H2 footprint 上 44 步全合法；step 44 仍由同一三格 L 的 down
+      正交 pull 即时覆盖全部目标。cut crate 保持在 (7,6)，不在目标上。
+  first_crate_east_pull:
+    result: passed_as_nonwinning_branch
+    statement: >-
+      从同一 H1/H2 取面状态，right 合法把 crate 从 (7,6) 拉到 (8,6)，玩家到 (9,6)；该 crate
+      不覆盖目标，局面不胜，H1 L 不动。
+  crate_target_substitution:
+    result: partial_conflict
+    statement: >-
+      再 right 可把 crate 放到 H2 下目标 (9,6)，但只与 H1 已覆盖的 (9,5) 合计覆盖两个目标，仍不胜；
+      随后 B/S 下移会把 crate 回粘成四格母体，而 v10 mother contrast 已证明该母体的同一 H2 因 (9,7)
+      尾墙 force_blocked。因此 crate 没有独立直接胜，但已进入目标分工并改变恢复责任。
+  same_relation_restore:
+    result: failed
+    statement: >-
+      第三个 case 实际完成第二次 east pull 与同一 B/S 回粘；母体第一次向左 pull 后为
+      {(7,4),(8,4),(8,5),(8,6)}，玩家在 (7,5)，下一取面 up 为 destination_occupied。
+      在 3-case 上限内没有得到 B/S 再切回原状态并重新完整执行 P/L、纯 walk、H1→H2 的 witness。
+
+designer_decision:
+  gate: failed
+  statement: >-
+    provisional H2 主链成立，crate 首次东拉也不直接胜；但 crate 可进一步占用 H2 目标并回粘进同一母体，
+    而本轮没有 current-runtime 恢复 witness。按 assignment 的“无恢复 witness 即 fail”硬门，
+    v11 不得写 probe_passed_for_candidate，不形成 candidate、正式 layout、完整图、uniqueness 或 submission。
+  minimal_conflict: >-
+    crate 位移进入目标分工；同 B/S 回粘虽成立，恢复链在首次母体左移后的取面处停止，未能再切并重走完整 H1→H2。
+  evidence_limit: >-
+    结论只覆盖本 assignment 允许的三次 current-runtime case 与 v10 指定 witness；不声称全局不可恢复或解族结论。

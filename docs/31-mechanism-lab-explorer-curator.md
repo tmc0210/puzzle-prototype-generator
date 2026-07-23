@@ -184,7 +184,7 @@ Explorer 先写结构谱，再跑实验。结构谱必须包含：
 - 退化解释。
 - 建议裁决：`promote`、`merge`、`supplement`、`relabel`、`defer` 或 `reject`。
 
-`publication_scope=task_local` 时只发布正向结构材料、变体合并、采样轴与下一采样轴；完整候选评价、难度、审美和方向选择由 designer 负责。任务内目录、dispatch、request、正向 lexicon 与 batch record 以 `skills/sokoban-mechanism-lab/references/task-exploration-format.md` 为准。
+`publication_scope=task_local` 时只发布正向结构材料、变体合并、采样轴与下一采样轴；完整候选评价、难度、审美和方向选择由 designer 负责。任务内目录、dispatch、request、正向 lexicon 与 batch record 以 `.agents/skills/sokoban-mechanism-lab/references/task-exploration-format.md` 为准。
 
 ## Curator 要求
 

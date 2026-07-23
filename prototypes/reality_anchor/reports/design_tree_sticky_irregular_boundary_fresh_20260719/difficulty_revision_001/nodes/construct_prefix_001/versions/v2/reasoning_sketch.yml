@@ -1,0 +1,82 @@
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version: v2
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V2_REVISION_001
+design_status: family_failed_withdrawn
+
+selected_family: 竖条封门与上下肩位合体
+
+one_sentence_player_relationship: >-
+  双格竖条先堵住通往自身 L 侧外把手的唯一墙带开口，玩家把单格接到上肩或下肩都能形成局部合理的 L；
+  只有正确肩位既生成跨在 P 侧的近端推把手，又在整块跨 P/L 后以缺角释放通往外侧拉把手的通路，
+  让同一远臂继续接受墙口检验与终段换面。
+
+player_visible_problem:
+  opening: >-
+    玩家看见一根竖向二格黏条正好塞住墙带，右侧后继空间与外侧把手可见但不可达；
+    另一个单格可被送到竖条左侧的上、下两个肩位。
+  locally_plausible_constructions:
+    - 单格接上肩，形成一个朝向的三格 L。
+    - 单格接下肩，形成其竖向镜像；两种合体本身都合法，也都留下紧邻玩家的新凸格。
+  later_discriminator: >-
+    玩家不能只问“哪种 L 能合体”，而要预见整块被新凸格推出后，哪一个缺角会腾出跨墙带的玩家通路，
+    从而取得 L 侧外把手，并让远端那一格在后续墙口、回把和终段换面中仍有合法足迹。
+
+structure_hypothesis:
+  physical_gate: >-
+    未合体竖条本身占住墙带唯一通口；玩家位于构造侧，无法绕到其右侧提前 pull。
+    竖条左侧旧面落在 pull 侧或不是可用 push 面，所以不能重演 v1 的“未合体条先越界”。
+  generated_handle: >-
+    单格合体后伸到 P 侧，成为此前不存在的近端 push 把手。玩家从该格推动整个 L，动作后落入 L 侧；
+    construct 不是一段退休拼接，而是直接生成 parent handoff 的启动面。
+  generated_passage: >-
+    L 平移一格后，竖条原占格中的一个缺角被腾空。正确肩位让该缺角接通外侧回路；
+    错误肩位只腾出另一格，后继要么不能取得需要的外把手，要么远臂在真正进入 wall mouth 时受阻。
+  retained_parent_load: >-
+    正确构造之后仍必须由外侧 pull 继续搬运同一 L，保留至少两次水平对位、可逆回返读取和另一面终段 pull；
+    v2 不以删除 P/L、回路或多面腾挪来换取前序唯一性。
+
+structural_avoidance_of_v1:
+  v1_failure: >-
+    v1 的开放外回路在合体前已经可达，因此未合体双格条可先从 L 侧 pull 越界，延后合体并进入胜族。
+  v2_difference: >-
+    新 family 不用静态墙分别封某个动作，而让未合体竖条本身成为通路门闩；
+    外侧把手的可达性由“正确 L 平移后腾出的缺角”生成，合体前不存在同一条玩家路线。
+  required_non_bypass_claim: >-
+    后续 exact 必须实证所有胜路在首次跨 P/L 前已经完成正确肩位合体，且该跨界首次进入只有由新凸格发起的 P 侧 push，
+    不能再出现未合体组件 pull、延后 merge 或同一位姿的 push/pull 双 first-entry class。
+
+failed_local_probe:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v2/layout.txt
+  results_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v2/diagnostics/local_probe_results.yml
+  established:
+    - 上肩与下肩都能由玩家主动移动单格、触发 sticky_merge，再由新凸格从 P 侧把合并体推出。
+    - 下肩进入对侧上缺角后的 pull:up 被远臂目标格墙以 force_blocked 拒绝。
+    - 未合体竖条旧上肩面向右的尝试为 destination_occupied，竖条没有向后继侧移动。
+  decisive_failure: >-
+    上肩进入对侧下缺角后的第一次 pull:down 合法，但玩家仍处在同一刚体后方；原计划用作离开缺角的下一次 down
+    实际再次触发 pull_object 并把整个 L 继续下移，而不是 walk。此后尝试 right 为 destination_occupied，玩家没有取得
+    父节点所需的外侧换把、水平回返读取或后续多面腾挪。因此“竖条封门”与“pull 后恢复外侧操作面”没有在当前
+    compact geometry 中共存，局部正例不能扩写为 v2 exact。
+  evidence_boundary:
+    - 只运行三条 current runtime 非空输入 probe；未运行 complete graph。
+    - premerge probe 在首次 destination_occupied 时停止，未实际执行计划中的后续 pull:left 回撤输入。
+    - 当前 layout 是失败草案，不支持可解性、完整解族、无旁路或作品身份声明。
+
+family_rejection_conditions:
+  - 未合体竖条仍能被玩家从外侧 pull、从旧左面 push，或经其它通路先越过 P/L。
+  - 两种肩位中有一种在合体前就因普通墙位或站位不可达而明显非法，退化成局部唯一动画。
+  - 正确合体后没有由新凸格直接启动跨界，构造完成即退休。
+  - 跨界后只剩唯一兑现，parent 的外侧换把、回返读取或多面终段 pull 被删除或显著简化。
+  - 错误构造只由目标轮廓直接泄题，而不是由后继操作面与远臂墙口责任区分。
+
+current_decision:
+  choice: family_failed_withdrawn
+  reason: >-
+    上肩的即时正交 pull 不能恢复父节点式外侧换把；继续封门会困住玩家，打开逃生面又会重新引入合体前通路泄漏。
+    当前阶段不继续局部扩图或广搜，撤回这一 compact family。
+  layout_written: true
+  graph_run: false
+  exploration_request_needed_now: false
+  submission_allowed_now: false

@@ -1,0 +1,107 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V9_PL_TRANSITION_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v9_probe_only
+status: probe_failed
+
+scope:
+  changed_from_v8_stage1b: P/L 从 P(8,1)/L(9,1) 左移到 P(5,1)/L(6,1)
+  other_layout_cells_byte_role_preserved: true
+  formal_target: false
+  candidate: false
+  graph_run: false
+  solver_run: false
+  uniqueness_written: false
+  submission_written: false
+
+artifact_refs:
+  reasoning_sketch: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/reasoning_sketch.yml
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/pl_transition_layout.txt
+  l_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/pl_transition_l_replay.json
+  repeat_push: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/repeat_push_probe.json
+  mother_crate_regression: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v9/diagnostics/mother_crate_regression_probe.json
+
+runtime:
+  runner: npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+  case_count: 4
+  cases:
+    - id: RA_V9_PL_TRANSITION_L
+      purpose: 尝试完整正确 L 链
+      completed: true
+      legal_through_step: 41
+      progressive_chain_completed: false
+      first_conflict_step: 20
+      first_conflict: left 在 L 世界反拉 L 回切分初态
+    - id: RA_V9_REPEAT_RIGHT
+      purpose: H0 后连续 right
+      completed: false
+      legal_through_step: 19
+      stopped_at_step: 20
+      stop_reason: destination_occupied
+      state_unchanged: true
+    - id: RA_V9_H0_EXIT_UP
+      purpose: H0 上向退出与 cut crate 回归
+      completed: true
+      legal_through_step: 20
+      events_at_probe: [pull_object:crate#1, box_to_sticky:n1, sticky_merge:n1]
+      regression: true
+    - id: RA_V9_H0_EXIT_DOWN
+      purpose: H0 下向退出
+      completed: false
+      legal_through_step: 19
+      stopped_at_step: 20
+      stop_reason: destination_occupied
+
+parser_exception:
+  dummy_target: [13, 1]
+  isolated_by_walls: true
+  covered: false
+  triggered_win: false
+  design_role: none
+
+transition_gate:
+  first_push:
+    step: 19
+    input: right
+    mode_before: push
+    events: [push_object:sticky#1, move_sticky_rigid]
+    player_after: [6, 5]
+    player_world_after: pull
+    sticky_h0: [[7, 4], [8, 4], [7, 5]]
+    passed: true
+  repeat_right:
+    input: right
+    result: destination_occupied
+    events: []
+    state_unchanged: true
+    sticky_moved: false
+    passed: true
+  outside_route_and_pull:
+    passed: false
+    reason: >-
+      H0 落点的 left 会反拉 L 回初态，up 会独立拉动 cut crate 并合并进 L，down/right 都 destination_occupied；
+      没有保持 H0 与 cut crate 的无对象离场，因此玩家不能绕到右外侧执行 intended H1 pull。
+
+regression_gate:
+  cut_crate:
+    passed: false
+    case: RA_V9_H0_EXIT_UP
+    input_from_north_face: up
+    events: [pull_object:crate#1, box_to_sticky:n1, sticky_merge:n1]
+    result: cut crate 被独立施力并合并进入 L
+  mother_h1_like_tail_failure:
+    status: not_run_after_mandatory_stop
+  second_deep_cut:
+    status: not_run_after_mandatory_stop
+  remaining_crate_faces:
+    status: not_run_after_north_face_regression
+
+designer_decision:
+  gate: failed
+  statement: >-
+    P/L-only 左移确实让首次 P push 后的玩家进入 L 世界，并阻断连续 right push；但同一变化也让原 left 离场成为反向 pull，
+    且让 H0 北向退出独立 pull cut crate、触发 box_to_sticky 与 sticky_merge。外绕 H1 不再可达，v8 crate substitution 门同时退化。
+  stop_reason: assignment 规定 P/L 移位后任一退化即停止；未扩改墙体、对象或其它机制。
+  evidence_limit: >-
+    本产物只证明该 P/L-only 坐标方案失败；未证明不存在其它新 structure family，未形成目标、candidate、图、解族或 submission。

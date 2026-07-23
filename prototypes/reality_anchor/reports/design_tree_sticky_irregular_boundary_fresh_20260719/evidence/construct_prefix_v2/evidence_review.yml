@@ -1,0 +1,168 @@
+review_attempt_id: RA_HARD_CONSTRUCT_PREFIX_V2_001
+reviewer_instance_id: RA_FRESH_EVIDENCE_REVIEWER_CONSTRUCT_PREFIX_V2_001
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v2
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/complete_graph_opening.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/square_branch_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/counterfactual_no_wall_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/no_wall_tooth_square_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/counterfactual_delete_remote_arm.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/delete_remote_arm_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/outline_graph_isomorphism.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/verify_outline_graph_isomorphism.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_complete
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - initial SCC 内的纯走位、完整回返环与恢复正确偏移后的 detour
+  equivalence_evidence_basis:
+    - >-
+      complete_graph_opening.json 记录 max_states=300000 下完整枚举 133 个 reachable states、350 条
+      legal transitions、1 个 winning state，未 exhausted。
+    - >-
+      opening/agency 完整结果记录初始 4 个 commitment 中仅 1 个可胜；SCC 完整结果记录唯一可胜路径
+      s0@0 -> s3@4 -> s4@8，branching_win_sccs=0、merging_win_sccs=0。
+    - >-
+      canonical_replay.json 给出该可胜类的实际八步胜路；square_branch_replay.json 给出可构造并到右侧
+      consumer 的 aligned 2x2 分支，但其终手原子失败且不胜。
+    - >-
+      已知原始变体只位于可逆 SCC 内，回到相同完整游戏状态后仍使用同一四格 S、同一右侧 left、
+      同一远端上臂与同一 B/S 目标分配，符合玩家逻辑类等价定义。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - >-
+      1 个 winning state 本身不承担唯一性结论；本判定同时依赖完整 opening/agency 与 SCC 中唯一可胜
+      commitment、无可胜分叉/汇合及唯一可胜 SCC 路径。
+    - 此结论只支持 current v2 的状态级玩家逻辑类，不支持难度、审美、包装或树关系。
+
+claims:
+  - claim_id: exact_solvable
+    claim: current v2 八步 canonical 全部合法并获胜。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical_replay.json 与 packet 的 candidate_id、exact_version、layout_ref、layout_sha256 和
+        solve instance 一致，completed=true、legal_through_step=8，step 8 与 final 均 is_win=true。
+      - 实际 v2 layout SHA-256 与 packet/replay 记录的 7d55f2a77c99ce5bb4e0d75752b77f8d9d26b707a8e40531829e20b566f1606d 一致。
+    limits: []
+
+  - claim_id: active_s_construction
+    claim: 第 4 步把两根横条主动合并为四格错位 S，之后从右侧取得把手。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical_replay.json step 1 先把下横条右移，step 4 再向上推动并发出
+        sticky_merge:n1；step 4 state_key 的黏格为 [4,1],[5,1],[5,2],[6,2]。
+      - canonical steps 5-7 将玩家走到 [7,2] 的右侧把手，step 8 从右向左施力。
+    limits: []
+
+  - claim_id: shared_consumer_divergence
+    claim: >-
+      错位 S 与规整 2x2 都能实际构造并到达同一右侧 consumer 操作位；S 的最终 left 合法并触发
+      force_chain/B-S shift 获胜，2x2 的同一次 left 因墙齿阻挡而原子失败、不胜。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical_replay.json 证明错位 S 构造后到达右侧把手，终手 left 合法，发出 force_chain:n2、
+        anchor_boundary_shift:box_sticky 并获胜。
+      - >-
+        square_branch_replay.json 证明 aligned 2x2 在 step 3 已构造并合并、玩家到达其右侧把手，
+        但 step 7 的同向 left 为 force_blocked，events 为空、状态不变且不胜。
+      - >-
+        current layout 中 aligned 2x2 左移时其左下格将进入墙齿 [3,2]；错位 S 在该格留缺口，
+        与刚体任一格受墙阻挡则整次动作失败的规则一致。
+    limits:
+      - >-
+        “同一右侧 consumer 操作位”按同一结构接口解释，即从形状右侧执行最终 left；它不是同一绝对坐标：
+        S 的玩家把手为 [7,2]，2x2 的玩家把手为 [6,2]。
+
+  - claim_id: wall_tooth_responsibility
+    claim: >-
+      相对 current v2 只把墙齿 [3,2] 改为地面后，同一 2x2 七步路径终手恢复合法，触发同类
+      force_chain/B-S shift 并获胜。
+    status: supported
+    evidence_basis:
+      - counterfactual_no_wall_tooth.txt 与 current v2 layout 逐格相比只把 [3,2] 从墙改为地面。
+      - >-
+        no_wall_tooth_square_replay.json 的 layout SHA-256 与该反事实文件一致；同一七步输入
+        legal_through_step=7，终手发出 force_chain:n2、anchor_boundary_shift:box_sticky 并 final_win=true。
+    limits:
+      - 去墙齿同时开放一个可走格；该反事实只支持这条 shared-consumer 2x2 输入中的墙齿机械责任，不支持更广的全局必要性。
+
+  - claim_id: distal_upper_arm_necessity
+    claim: >-
+      相对 current v2 只删除 S 的远端上臂 [4,1] 后，canonical 八步仍合法且合并发生，但终手只移动黏块，
+      不产生 force_chain/B-S shift 且不胜。
+    status: supported
+    evidence_basis:
+      - counterfactual_delete_remote_arm.txt 与 current v2 layout 逐格相比只删除 [4,1] 的黏格。
+      - >-
+        delete_remote_arm_replay.json 的 layout SHA-256 与该反事实文件一致；canonical 八步
+        legal_through_step=8、merge_present=true，终手只有 push_object 与 move_sticky_rigid，
+        force_chain_present=false、anchor_boundary_shift_present=false、final_win=false。
+    limits:
+      - 该单变量反事实只支持 current canonical 终手中的远端上臂机械必要性，不支持所有可能路线的 per-object necessity。
+
+  - claim_id: solution_logic_unique
+    claim: complete graph 为 133 states / 350 transitions / 1 win；initial region 4 commitments 仅 1 viable。
+    status: supported
+    evidence_basis:
+      - >-
+        complete_graph_opening.json 对 current candidate/version/hash 记录 complete graph status=complete，
+        reachable_states=133、legal_transitions=350、winning_states=1。
+      - >-
+        同一 artifact 记录 agency status=complete，initial_region commitments=4、viable_commitments=1、
+        dead_commitments=3；SCC status=complete 且无 win-reaching branching/merging。
+    limits:
+      - 玩家逻辑类唯一性的完整判定见 solution_uniqueness_review；单独的 1 个胜态计数不足以证明所有胜路事件相同。
+
+  - claim_id: outline_trim_isomorphic
+    claim: >-
+      相对 frozen v1 只裁封闭纯墙外列后，按 (x,y)->(x-1,y) 平移，133 个状态、350 条
+      action/event-labeled edges 与唯一 winning state 全部一一相同。
+    status: supported
+    evidence_basis:
+      - >-
+        v1 layout 与 v2 layout 显示只移除了封闭纯墙外列，所有动态格与对象坐标按 x-1 对齐。
+      - >-
+        verify_outline_graph_isomorphism.ts 分别完整枚举两个 layout，并比较平移后的全量 state keys、
+        action/event-labeled edges 与 win state keys；比较失败会抛错。
+      - >-
+        outline_graph_isomorphism.json 记录 status=complete，双方均为 133 states / 350 edges / 1 win，
+        三项集合相等检查全部为 true。
+    limits:
+      - 该结论只证明 runtime 动态状态图的机械同构，不支持审美、难度、包装、玩家感受或树关系。
+
+  - claim_id: no_post_consumer_cleanup
+    claim: canonical 第 8 步推动 S 与 B/S 后立即胜利，无后续清理。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical_replay.json step 8 同时发出 sticky push、force_chain 与 box_sticky anchor shift 事件，
+        该步 is_win=true，final 亦 is_win=true，输入在第 8 步结束。
+    limits: []
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

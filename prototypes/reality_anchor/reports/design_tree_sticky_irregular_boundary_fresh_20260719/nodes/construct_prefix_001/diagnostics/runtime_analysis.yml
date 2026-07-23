@@ -1,0 +1,165 @@
+assignment_id: RA_DESIGNER_CONSTRUCT_PREFIX_001
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v1
+layout_sha256: d4affc733071b977ddaf9f7207c3ba366fb5f7d2e45b19d8d874f4cf1b99d0d9
+
+commands:
+  canonical_analysis: >-
+    npx tsx src/cli.ts explain-layout prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1 --targets K_runtime_smoke
+    --max-states 300000 --graph-max-states 300000
+  canonical_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CANONICAL
+    --inputs right,down,right,up,right,right,up,left
+  square_branch_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_SQUARE
+    --inputs down,right,up,right,right,up,left
+  no_wall_square_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_no_wall_tooth.txt
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_NO_WALL_SQUARE
+    --inputs down,right,up,right,right,up,left
+  delete_arm_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_delete_remote_arm.txt
+    --id RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_CF_DELETE_ARM
+    --inputs right,down,right,up,right,right,up,left
+
+shortest_solution:
+  found: true
+  cost: 8
+  depth: 8
+  explored_states_until_first_solution: 101
+  inputs: [right, down, right, up, right, right, up, left]
+  event_counts:
+    walk: 5
+    push_object_sticky_2: 2
+    push_object_sticky_1: 1
+    move_sticky_rigid: 3
+    sticky_merge_n1: 1
+    force_chain_n2: 1
+    anchor_boundary_shift_box_sticky: 1
+  construction_event:
+    step: 4
+    input: up
+    events: [push_object:sticky#2, move_sticky_rigid, sticky_merge:n1]
+    resulting_sticky_cells: [[5, 1], [6, 1], [6, 2], [7, 2]]
+    resulting_shape: horizontal_staggered_S
+  payoff_event:
+    step: 8
+    input: left
+    events: [push_object:sticky#1, force_chain:n2, anchor_boundary_shift:box_sticky, move_sticky_rigid]
+    resulting_box_sticky: {B: [2, 1], S: [3, 1]}
+    win: true
+
+complete_graph:
+  status: complete
+  max_states_budget: 300000
+  reachable_states: 133
+  legal_transitions: 350
+  event_only_illegal_transitions: 0
+  winning_states: 1
+
+agency_graph:
+  status: complete
+  compression_rule: bidirectional_edges
+  compressed_regions: 12
+  bidirectional_transitions: 328
+  commitment_transitions: 22
+  winning_regions: 1
+  initial_region:
+    id: r0
+    states: 12
+    distance_to_win: 3
+    commitments: 4
+    viable_commitments: 1
+    dead_commitments: 3
+    progress_commitments: 1
+    optimal_commitments: 1
+  solution_region_path: [r0, r1, r5, r10]
+  forced_commitment_prefix_length: 0
+  forced_viable_prefix_length: 1
+  forced_optimal_prefix_length: 3
+  note: >-
+    r1 内存在两个可最终回到胜路的 commitment，但只有一个 progress、一个 optimal；这些是合并前可逆搬动/回退差异，
+    不改变“右移一格后上推合并 S”的唯一进展关系。
+
+scc_graph:
+  status: complete
+  sccs: 10
+  edges: 11
+  win_reachable_sccs: 3
+  winning_sccs: 1
+  branching_win_sccs: 0
+  merging_win_sccs: 0
+  solution_path: [s0, s3, s4]
+  initial_scc:
+    states: 24
+    out: 5
+    win_out: 1
+    dead_out: 4
+  win_path_reading: >-
+    所有合并前搬动都在初始 SCC；唯一可胜离开边由 canonical 第 4 步上推合并错位 S 表示。
+    s3 的唯一出口是 canonical 第 8 步左推，触发远端 B/S 位移并直接进入唯一胜态。
+
+square_branch:
+  inputs: [down, right, up, right, right, up, left]
+  constructed_cells_after_step_3: [[5, 1], [6, 1], [5, 2], [6, 2]]
+  constructed_shape: aligned_2x2
+  handle_position_before_final_attempt: [7, 2]
+  legal_through_step: 6
+  stopped_at_step: 7
+  stop_reason: force_blocked
+  final_attempt_events: []
+  win: false
+  reading: >-
+    2x2 合并本身合法，玩家也能到达下层右把手；只有尝试与 S 相同的左推时，左下目标格碰到墙齿而原子阻塞。
+
+identity_counterfactuals:
+  - id: remove_wall_tooth
+    layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_no_wall_tooth.txt
+    layout_sha256: bed8a2bfe7c76cd800ca2f8249470e5e08a8474adee63c8593576140aedb0524
+    changed_variable: 将 exact 的墙齿 [4,2] 从墙改为空地，其余字符不变。
+    inputs: [down, right, up, right, right, up, left]
+    completed: true
+    legal_through_step: 7
+    final_events: [push_object:sticky#1, force_chain:n2, anchor_boundary_shift:box_sticky, move_sticky_rigid]
+    win: true
+    reading: >-
+      去掉墙齿后，2x2 的同一右把手左推恢复合法并推动 B/S 获胜；因此 S 的缺口与墙齿关系真实承担构造选择责任。
+  - id: delete_remote_upper_arm
+    layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/diagnostics/counterfactual_delete_remote_arm.txt
+    layout_sha256: f64a489eac41f6081c6d21e8d5605b3059586eee83c25a833becc99ebcd3df74
+    changed_variable: 删除上条左格 [5,1]，保留墙、目标、B/S、起点、下条及上条右格。
+    inputs: [right, down, right, up, right, right, up, left]
+    completed: true
+    legal_through_step: 8
+    merge_present: true
+    final_events: [push_object:sticky#1, move_sticky_rigid]
+    force_chain_present: false
+    anchor_boundary_shift_present: false
+    win: false
+    reading: >-
+      近端构造、合并、绕到右把手和终局左推仍全部成立，但删掉远端上臂后无法接触 S 端；B/S 不动且目标保持空置。
+
+bypass_and_solution_family_reading:
+  result: one_player_logic_class
+  support:
+    - 完整图只有一个 winning state 与一个 winning region。
+    - 可胜 SCC 子图无 branching 或 merging；初始 SCC 五个出口中只有 canonical S 合并出口可胜。
+    - 终局 SCC 只有 canonical 左推一个出口，且该动作同时包含 sticky 刚体移动与 B/S 边界位移。
+    - 2x2、过度搬动或其他合并结果可以合法出现，但不形成第二个可胜 SCC 分支。
+  raw_variants: >-
+    玩家可在初始 SCC 内走位、回退或多搬动下条后再恢复 canonical 对齐；这些不改变最终必须构造同一 S、
+    从同一右把手左推、由同一远端上臂移动同一 B/S 的对象职责与因果顺序。
+
+evidence_limits:
+  - explain-layout 未返回 instance-level object participation；对象职责由精确状态格、事件和单变量反事实支持。
+  - complete graph 支持当前 exact 的可达旁路和解族声明，不评价玩家是否觉得构造选择自然或困难。
+  - 去墙齿反事实证明墙齿/缺口的机械责任，但其开放格也改变局部可走区域；这里只引用同一 2x2 输入恢复合法并获胜的直接结果。
+  - 删远端上臂反事实只证明该格对相同核心输入的机械必要，不单独证明审美、难度或父子树关系。

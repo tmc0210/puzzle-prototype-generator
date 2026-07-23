@@ -1,0 +1,175 @@
+schema_version: 1
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version: v4
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V4_GRAPH_SUBMISSION_001
+design_status: family_failed_non_equivalent_winning_family
+
+stage_boundary:
+  completed: graph_budget_phase_1_and_targeted_solution_family_audit
+  local_material_supported: true
+  shared_opening_designed: true
+  layout_written: true
+  probe_run_by_designer: true
+  graph_search_run: true
+  complete_graph_run: false
+  solution_uniqueness_written: false
+  submission_written: false
+
+selected_family:
+  id: bs_identity_merge_fixed_pl_s_square_handoff
+  name: B_S_身份先合并—固定_P_L_刚体交接—S_与_2x2_后段填角墙齿
+  integration_change: >-
+    Controller 明确允许用已发布的四格错位 S/2x2 材料解决同一对象总量冲突；v4 不再给三格 L 分支另留第 4 箱。
+    共享开局始终只有同四只箱，玩家先把它们排成四格错位 S 或 2x2，再由同一 B/S 扫线转黏并合体。
+  one_sentence_relationship: >-
+    玩家从两条二箱材料主动排成错位 S 或 2x2；移动 B/S 从固定 P/L 的 P 侧左推，失去旧推面后绕到另一侧 pull，
+    将候选合为完整 sticky 并把身份边界留在 handoff 前方。两形状从同一近端入口通过固定 P/L，随后都能外侧 pull、
+    跨侧 push 回 exact state 并绕到下侧；只有最终正交 pull 时，墙齿进入 2x2 填角而位于 S 缺口。
+
+material_basis:
+  refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#两横条主动合并S缺口与2x2左下墙齿
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#BS身份交接分离组件过滤与L2x2后段填角墙齿
+  transformation: >-
+    取前者“同一两条材料形成四格错位 S/2x2”的等格数关系；把合体时机改成后续移动 B/S 扫线。
+    取后者的身份门、固定 P/L handoff、外拉—跨侧反推 exact return 与下侧填角墙齿；consumer 从三格 L 缺角
+    重构为四格 S 的右下错位缺口，并由 current runtime 重新验证。
+  evidence_boundary:
+    - 发布材料只提供局部关系；以下 exact 声明来自本 v4 layout 的 current runtime replay。
+    - 未读取 raw exploration run，未运行完整图或 solver，不能声明所有胜族都经过此链。
+
+shared_opening:
+  same_object_total: 四只箱，开局为 y=4 与 y=6 的两条二箱横排。
+  correct_s_construction: >-
+    下排先整体左推一格，再分别上推两箱，得到上排 (10,4)-(11,4)、下排 (9,5)-(10,5) 的错位 S 箱候选。
+  plausible_square_construction: >-
+    下排不横移，分别上推两箱，得到 (10,4)-(11,4)/(10,5)-(11,5) 的 2x2 箱候选。
+  local_legality: >-
+    两种排法均从 exact 同一开局合法到达；consumer 墙在 (5,6)，不接触排形、B/S 扫线、merge 或 handoff。
+
+bs_identity_gate:
+  canonical_relation: >-
+    B/S 初始 B=(13,1),S=(14,1)。两候选排好后，玩家回到右侧，在 P 模式连续向左 push；锚点到 B=(4,1),S=(5,1)
+    后玩家落到 L 侧，继续同向已不再推动。玩家经 y=2 绕到锚点左侧，再用两次 pull:left 到 B=(2,1),S=(3,1)。
+  merge_facts:
+    - S 扫线先转上臂，再转中列形成三格连体，最后把左下格并入，最终为一个四格 sticky S。
+    - 2x2 扫线按列转黏，两列均产生合并，最终为一个四格 sticky 2x2。
+  component_prepass_probe: >-
+    S 箱候选若先把上排两箱从统一入口左推六格，再扫 B/S，末态为两个相距 sticky 组件：
+    (4,4)-(5,4) 与 (9,5)-(10,5)。扫线没有远程合体，证明“同为 sticky”不替代四邻接刚体身份。
+  evidence_limit: >-
+    该 probe 只证明 exact 局部 prepass 后不会远程 merge；未运行完整图，尚未排除玩家在更长路线里重新移动两个组件并晚合体。
+
+fixed_pl_handoff:
+  anchor: L=(6,8), P=(7,8)，四面以墙固定。
+  common_input: 两形状均从玩家 (12,4) 连续六次 push:left。
+  s_exact_state: 玩家 (6,4)，sticky={(4,4),(5,4),(3,5),(4,5)}。
+  square_exact_state: 玩家 (6,4)，sticky={(4,4),(5,4),(4,5),(5,5)}。
+  preserved_identity: 两条 replay 的六次输入均移动同一个四格 sticky 刚体，没有 sticky_to_box 或 split。
+
+post_handoff_handle_lifecycle:
+  outside_pull: >-
+    在两种 handoff exact state 中，玩家位于 L 侧的右外面；right 均产生 pull_object:sticky#1 与 move_sticky_rigid。
+  cross_side_exact_return: >-
+    外拉后玩家到 (7,4) 的 P 侧；left 均改为 push_object:sticky#1，并把玩家、B/S、P/L、箱/黏占格完整恢复到 handoff state。
+  lower_face: >-
+    从 exact state 绕上方与左侧到 (4,6)，两形状都能取得下侧把手；路线在 consumer 前均为 walk，未提前删去 2x2。
+  consumer: >-
+    输入 down 时，S 的下排目标为 (3,6),(4,6)，避开墙 (5,6)，合法 pull 并覆盖两个目标；2x2 的下排目标含 (5,6)，
+    同一步以 force_blocked 失败且状态不变。墙齿第一次使两条完整链出现合法性分化。
+
+baseline_load_preservation_audit:
+  outside_handle_change: runtime_supported
+  reversible_return_reading: runtime_supported_as_pull_right_then_cross_side_push_left_exact_return
+  multi_face_final_pull: runtime_supported
+  continued_same_irregular_object: runtime_supported
+  judgment: >-
+    正确 S 在 merge 后仍需完成 B/S 推转拉定位、完整刚体 handoff、外侧换把、跨侧反推回返读取与下侧正交终拉；
+    第一次正确构造动作没有退休。当前 local exact 没有靠删除父节点 P/L、回返或多面操作取得表面生长。
+
+player_side_reading:
+  opening: >-
+    四箱分成上下两条，同一空间同时开放“下排先错一格”与“直接上推”两种整形；墙齿远在左下结果区，
+    不占任一构造格。玩家可先操作材料也可先观察 B/S，答案不是唯一合法动画。
+  after_construction: >-
+    排形只是把四箱放入候选轮廓；它们仍不是刚体。玩家必须回到 B/S，并在固定 P/L 前后更换施力语义，
+    亲自把候选变成一个完整 sticky 后才可让统一近端输入带走非共线远端格。
+  after_handoff: >-
+    玩家看见外侧 right 可试探且可跨侧反推回原状态，同时还能绕到下侧。最终墙齿读取的是完整下排目标集合，
+    2x2 直到这一步才失败，早期错位选择才被后段重新解释。
+  current_quality_risk: >-
+    B/S 需要九次 push:left、一次绕位和两次 pull:left，当前只证明它有身份与模式责任；完整图前仍须警惕其执行长度
+    是否让锚点搬运喧宾夺主，以及自然玩家是否会忽略外侧可逆试探而直接走终拉。
+
+local_probe_results:
+  correct_s_full_chain:
+    status: pass_win
+    legal_steps: 75
+    final_object_action: pull:down
+  square_same_chain:
+    status: pass_until_late_consumer_then_force_blocked
+    legal_steps_before_block: 72
+    blocked_step: 73
+  component_prepass_then_brush:
+    status: pass_separated_sticky_components
+    legal_steps: 54
+  exact_return:
+    status: pass_for_both_shapes
+  complete_graph:
+    status: not_run_by_assignment
+
+complete_graph_eligibility:
+  status: invalidated_by_non_equivalent_win
+  why: >-
+    同一 exact 开局、同一四箱总量、两种 active construction、B/S push-to-pull identity gate、固定 P/L handoff、
+    两形状同链外拉与 exact return、下侧把手和首次后段 consumer 分化均已由非空 current runtime replay 支持。
+  mandatory_next_checks:
+    - 所有胜族是否都在 handoff 前形成完整四格 sticky，排除分组件后续重排与延后 merge。
+    - 是否存在先移动 B/S、把两条先转黏后再排形的等价或非等价族，以及它是否削弱主动构造关系。
+    - B/S 少移、多移或反复扫线是否仍可保持连通并绕过固定 handoff。
+    - 2x2 是否可从其它面、其它位置避开 (5,6) 墙后覆盖目标。
+    - S 是否存在不经过外侧 handle/read-return 的更直白胜族，导致父节点负担未被实际承担。
+
+graph_and_solution_family_audit:
+  budget_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/diagnostics/graph_budget.yml
+  script_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/diagnostics/graph_solution_family_audit.ts
+  raw_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v4/diagnostics/graph_solution_family_raw.json
+  phase_1:
+    status: budget_exhausted
+    reachable_states_recorded: 300000
+    expanded_states: 157079
+    legal_transitions: 580105
+    terminal_winning_states_recorded: 0
+    interpretation: 只表示 300k full-state BFS 未触及胜态，不支持不可解或唯一性。
+  phase_2:
+    started: false
+    reason: 定向审计已找到非等价获胜反例，按 assignment 立即停止 current exact 的提交工作。
+  canonical:
+    is_win: true
+    inputs: 75
+    first_material_action_step: 9
+    first_bs_step: 27
+    first_full_sticky_step: 31
+  non_equivalent_anchor_first_win:
+    is_win: true
+    inputs: 59
+    first_bs_step: 1
+    first_material_action_step: 33
+    first_full_sticky_step: 36
+    structural_difference: >-
+      B/S 先把两条材料分别变成 sticky group 并完成最终定位，之后玩家才用 push_object:sticky#2 移条、上推与 merge。
+      这改变对象身份、受力闭包、merge 原因与 B/S 的职责，不是纯走位、回返环或独立步骤换序。
+  canonical_without_exact_return_loop:
+    is_win: true
+    inputs: 73
+    reading: >-
+      省略 pull:right—push:left 的完整 exact 回返环仍胜；按 docs/21 可视为同逻辑类中的省环，但证明外侧回返不是胜利依赖，
+      未满足本 assignment 要求父节点操作面生命周期由胜族实际承担的提交前提。
+
+current_decision:
+  choice: withdraw_current_v4
+  reason: >-
+    current runtime 已确认第二个非等价获胜逻辑类：canonical 先排箱再由 B/S merge，旁路先完成 B/S、把材料变成两条 sticky 后再构造。
+    单个非等价反例已使解族送审门失败；同时外侧 exact-return 环可整体省略。故不写 solution_uniqueness 或 submission，current v4 撤回。

@@ -1,0 +1,180 @@
+review_attempt_id: RA_QUALITY_CONSTRUCT_PREFIX_V1_001
+prototype_id: reality_anchor
+review_target: growth_child
+prototype_rules:
+  confirmed_rules:
+    - P/L 锚点把棋盘分成推世界与拉世界；没有 P/L 时全图为推世界。
+    - B/S 锚点把棋盘分成箱世界与黏世界；没有 B/S 时全图为箱世界，关卡作者不能直接放置独立 M。
+    - 两类锚点均为可移动的 1x2 或 2x1 刚体，只平移不旋转；同类型每关最多一个。
+    - 推与拉都对一个物体实例施力，力可沿运动方向传递；玩家与受力闭包同时平移。
+    - 黏块按四邻接组成刚体；相邻黏格自动合并，跨入箱世界的黏格变为独立箱子，剩余黏格按连通块分裂。
+    - 任一刚体的任一部分被墙、棋盘边界或不可移动结构阻挡时，整个动作失败且状态不变。
+  win_condition: 每步移动、箱黏归一化与黏块合并全部结算后，所有目标必须由箱子、黏块格或任一锚点格覆盖；玩家覆盖目标不计胜利。
+  object_and_event_semantics:
+    - sticky_block 的可见身份来自当前连通形状；整个连通块作为一个刚体受力和移动。
+    - push_object 与 pull_object 只陈述输入时的施力方式；不自动证明该操作具有玩家价值。
+    - move_sticky_rigid 只证明黏块刚体发生移动；形状是否承担核心责任仍需近邻反事实和玩家侧重读。
+    - anchor_boundary_shift 只证明锚点移动；锚点是否有机改变异形边界关系仍需由 exact 关卡证明。
+    - sticky_merge、sticky_split、box_to_sticky 与 sticky_to_box 只陈述结算事件，不能替代作品身份。
+  player_prior:
+    - 玩家拥有全图视野、正常几何直觉和稳定操作能力。
+    - 玩家已充分熟悉规整小黏块组的可达性、可动性和基本腾挪。
+    - 玩家已充分熟悉黏块拼接、切分及其状态变化。
+    - 玩家已充分熟悉 B/S 锚点推拉、P/L 锚点和各类基础推拉、绕位与力链技巧。
+    - 玩家会迅速剪除显然方向、基本站位和短死路；这些不计为谜题难度。
+human_review_constraints:
+  - fresh Explorer 不读取归档、历史候选、旧 reports、旧 exact、旧审查或 Designer 设想。
+  - 每个新 exact version 使用 fresh evidence reviewer 与 fresh level reviewer。
+  - 同一 exact version 的阶段 A 与阶段 B 由同一 fresh level reviewer 连续完成，阶段 A verdict 写定后才能读取本 brief 和树关系。
+  - 不预设冻结节点数量，也不在本 brief 决定生长方向；由存活节点的阶段 B 判断下一关系与树的充分性。
+  - 独立审查从熟练后期玩家侧判断，不把规整黏块基础腾挪、机械试错、事件标签或 solver 复杂度当作作品价值。
+  - 阶段 A 独立 reviewer 自主完成其归档校准，不接受本 Designer 代选的唯一 anchors。
+frozen_parent:
+  node_id: baseline_001
+  candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+  exact_version: v2
+  solve_instance:
+    layout: |-
+      #############
+      ####PL#######
+      ##...########
+      ##@#MMM.#####
+      ##...M.SB####
+      #####...G####
+      #############
+    player_start:
+      - 2
+      - 3
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+      description: |
+        After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.
+  canonical_solution:
+    exact_inputs:
+      - down
+      - right
+      - right
+      - right
+      - down
+    mechanically_derived_trace:
+      - step: 1
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/0/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/0/after
+        visible_board_change: (2,3) @→.; (2,4) .→@
+      - step: 2
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/1/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/1/after
+        visible_board_change: (2,4) @→.; (3,4) .→@
+      - step: 3
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/2/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/2/after
+        visible_board_change: (3,4) @→.; (4,4) .→@
+      - step: 4
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/3/before
+        event: push_object:sticky#1, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/3/after
+        visible_board_change: (4,3) M→.; (7,3) .→M; (4,4) @→.; (5,4) M→@; (6,4) .→M
+      - step: 5
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/4/before
+        event: pull_object:sticky#1, force_chain:n2, anchor_boundary_shift:box_sticky, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json#/steps/4/after
+        visible_board_change: (5,3) M→.; (6,3) M→.; (7,3) M→.; (5,4) @→M; (7,4) S→M; (8,4) B→.; (5,5) .→@; (6,5) .→M; (7,5) .→S; (8,5) G→B
+  artifact_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json
+candidate:
+  node_id: construct_prefix_001
+  candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+  exact_version: v1
+  solve_instance:
+    layout: |-
+      ############
+      ##GBSMM#####
+      #####....###
+      ####@MM..###
+      ####.....###
+      ############
+    player_start:
+      - 4
+      - 3
+    win_condition:
+      type: all_targets_covered_by_objects
+      target: goal
+      description: |
+        After movement, box/sticky normalization, and sticky merging settle, every target must be covered by a crate, sticky block cell, or anchor cell. The player standing on a target does not count.
+  canonical_solution:
+    exact_inputs:
+      - right
+      - down
+      - right
+      - up
+      - right
+      - right
+      - up
+      - left
+    mechanically_derived_trace:
+      - step: 1
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/0/before
+        event: push_object:sticky#2, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/0/after
+        visible_board_change: (4,3) @→.; (5,3) M→@; (7,3) .→M
+      - step: 2
+        input: down
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/1/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/1/after
+        visible_board_change: (5,3) @→.; (5,4) .→@
+      - step: 3
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/2/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/2/after
+        visible_board_change: (5,4) @→.; (6,4) .→@
+      - step: 4
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/3/before
+        event: push_object:sticky#2, move_sticky_rigid, sticky_merge:n1
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/3/after
+        visible_board_change: (6,2) .→M; (7,2) .→M; (6,3) M→@; (7,3) M→.; (6,4) @→.
+      - step: 5
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/4/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/4/after
+        visible_board_change: (6,3) @→.; (7,3) .→@
+      - step: 6
+        input: right
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/5/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/5/after
+        visible_board_change: (7,3) @→.; (8,3) .→@
+      - step: 7
+        input: up
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/6/before
+        event: walk
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/6/after
+        visible_board_change: (8,2) .→@; (8,3) @→.
+      - step: 8
+        input: left
+        before_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/7/before
+        event: push_object:sticky#1, force_chain:n2, anchor_boundary_shift:box_sticky, move_sticky_rigid
+        after_state_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json#/steps/7/after
+        visible_board_change: (2,1) G→B; (3,1) B→S; (4,1) S→M; (6,1) M→.; (5,2) .→M; (7,2) M→@; (8,2) @→.
+  artifact_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json
+artifact_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json

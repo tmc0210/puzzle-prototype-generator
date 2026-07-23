@@ -1,0 +1,64 @@
+import { readFile } from "node:fs/promises";
+import { loadPrototypePackage } from "../../../../../../../src/core/io.js";
+import { enumerateRuntimeGraph } from "../../../../../../../src/core/runtimeGraph.js";
+import { getRuntimeAdapter } from "../../../../../../../src/prototypes/runtimeAdapter.js";
+
+const [originalPath, trimmedPath] = process.argv.slice(2);
+if (!originalPath || !trimmedPath) throw new Error("usage: verify_outline_graph_isomorphism.ts <original> <trimmed>");
+
+const pkg = await loadPrototypePackage("prototypes/reality_anchor");
+const adapter = getRuntimeAdapter(pkg.mechanic);
+const runtime = adapter.createRuntime(pkg.mechanic);
+
+async function parse(path: string, id: string) {
+  const layout = (await readFile(path, "utf8")).replace(/\r/g, "").trimEnd();
+  return adapter.parseLevel({
+    id, title: id, role: "challenge", status: "candidate",
+    targets: ["K_runtime_smoke"], known_before: ["K_runtime_smoke"], target_learning: ["K_runtime_smoke"],
+    support_level: "none", expected_solver_evidence: ["solvable"], expected_llm_player_evidence: [], layout,
+  } as any);
+}
+
+function enumerate(initial: any) {
+  const graph: any = enumerateRuntimeGraph(
+    runtime as any, initial, pkg.mechanic.win, { winCondition: pkg.mechanic.win }, { maxStates: 300_000 },
+  );
+  if (graph.status !== "complete") throw new Error(`graph incomplete: ${graph.reason ?? "unknown"}`);
+  return graph;
+}
+
+function translate(key: string) {
+  return key.replace(/(^|[:;|])(\d+),(\d+)/g, (_match, prefix: string, x: string, y: string) =>
+    `${prefix}${Number(x) - 1},${y}`,
+  );
+}
+
+function edges(graph: any, mapKey: (key: string) => string) {
+  return graph.edges.map((edge: any) => [
+    mapKey(graph.keys[edge.from]), edge.action, edge.events.join("+"), mapKey(graph.keys[edge.to]),
+  ].join(" -> ")).sort();
+}
+
+const original = enumerate(await parse(originalPath, "RA_CONSTRUCT_V1_ORIGINAL"));
+const trimmed = enumerate(await parse(trimmedPath, "RA_CONSTRUCT_V2_TRIMMED"));
+const originalKeys = original.keys.map(translate).sort();
+const trimmedKeys = [...trimmed.keys].sort();
+const originalEdges = edges(original, translate);
+const trimmedEdges = edges(trimmed, (key) => key);
+const originalWins = [...original.winStateIndexes].map((index: number) => translate(original.keys[index])).sort();
+const trimmedWins = [...trimmed.winStateIndexes].map((index: number) => trimmed.keys[index]).sort();
+
+const report = {
+  status: "complete",
+  mapping: "original dynamic coordinates (x,y) -> (x-1,y)",
+  original: { states: original.keys.length, edges: original.edges.length, wins: originalWins.length },
+  trimmed: { states: trimmed.keys.length, edges: trimmed.edges.length, wins: trimmedWins.length },
+  state_keys_equal_after_translation: JSON.stringify(originalKeys) === JSON.stringify(trimmedKeys),
+  labeled_edges_equal_after_translation: JSON.stringify(originalEdges) === JSON.stringify(trimmedEdges),
+  winning_state_keys_equal_after_translation: JSON.stringify(originalWins) === JSON.stringify(trimmedWins),
+};
+
+if (!report.state_keys_equal_after_translation || !report.labeled_edges_equal_after_translation ||
+    !report.winning_state_keys_equal_after_translation) throw new Error(JSON.stringify(report));
+
+console.log(JSON.stringify(report, null, 2));

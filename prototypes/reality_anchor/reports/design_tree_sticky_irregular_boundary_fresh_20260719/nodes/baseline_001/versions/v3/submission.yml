@@ -1,0 +1,79 @@
+submission_id: SUB_RA_STICKY_IRREGULAR_BASELINE_001_V3
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: baseline_001
+parent_node_id: null
+growth_relation: baseline
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v3
+
+designer_claim:
+  player_experience_core: >-
+    小型 T 形把近端操作面与远端占格绑定在同一动作组；玩家必须选对肩窝并保留 pull 把手，
+    才能让远端右臂扫带边界口袋中的 B/S。
+  player_action: >-
+    比较上方直接下推与下方肩窝横推，选择后者把 T 向右推一格，再从左臂下方把完整 T 下拉。
+  visible_payoff: >-
+    下拉终手同时移动完整 T、触发二对象 force chain、使 B/S 下移一格并由 B 覆盖目标，立即结束。
+  why_this_level_exists: 用最小的可执行操作面分岔呈现“近端施力正确，但胜负由同一异形的远端足迹决定”。
+  work_identity_conditions:
+    - T 的中央脚、左臂和右臂分别承担横推近端、下拉把手和远端扫带，且必须属于同一刚体。
+    - B/S 位于玩家不可直接取得施力位的单向目标口袋，胜利必须发生远端 B/S 位移。
+    - 上下两个操作面都允许首次对象动作，但只有肩窝横推保留正确远端列与第二手 pull 关系。
+
+packaging_account:
+  opening: 玩家从 T 左侧观察区可走向上方左臂或下方肩窝，并看见右侧封闭 B/S 与目标。
+  preparation: 只需选择首次对象操作面；不要求构造、切割、回收或重复活塞操作。
+  reveal_or_use: 横推 T 对准远端右臂与 S，同时保留左臂 pull 面；错误下推留下清楚但不可胜的动后状态。
+  ending: 正确下拉把 B/S 扫入目标，终手立即胜利，没有清理尾巴。
+  every_major_element_role:
+    - 四格 T 是视觉主体与唯一近端/远端耦合刚体；删右臂后同一五步不再移动 B/S。
+    - B/S、目标和墙共同形成不可直接操作的单向落点口袋，并提供终手边界位移回报。
+    - 左侧上/下通路把两个不同操作面外显为一活一死的首次 commitment。
+    - 顶部 P/L 固定 push/pull 语义；所有胜路必须出现 pull，但 P/L 本体不移动。
+    - 单层外墙只围合可读矩形；v2 的无责任厚墙列已在 current v3 删除。
+  known_perceptible_defects:
+    - 正确 commitment 后只剩一次强制兑现，关卡没有持续多阶段推演；这是紧凑 baseline 的上限。
+    - 固定 P/L 与核心区空间分离，玩家侧反馈主要来自 T 与 B/S，而非 P/L 本体。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete
+    search_budget: maxStates=300000; graphMaxStates=300000; actual=19 states / 34 transitions / 1 winning state
+    known_raw_winning_variants:
+      - 唯一胜态前可有 initial SCC 内的纯走位排列或回退；它们不改变对象职责、目标分配或因果顺序。
+    equivalence_account: >-
+      两个 opening commitment 中只有肩窝横推可胜，上方下推为 dead；所有胜路都经过同一个 T 横推再下拉逻辑类。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/solution_uniqueness.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/complete_graph_opening.json
+    evidence_limits:
+      - 唯一性按玩家逻辑类声明；initial SCC 内的双向走位差异不计作非等价胜解。
+  bypass_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.json
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.json
+  outline_trim_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/outline_graph_isomorphism.json
+  withdrawn_mechanical_claims:
+    - claim: B/S 初始横向坐标机械必要
+      status: not_reasserted
+      reason: v2 有有效单变量反例；v3 的身份只依赖远端足迹、fixed pull 与 B/S 终局位移。
+  evidence_limits:
+    - explain-layout 未返回 instance-level object participation；对象职责由逐步状态、事件和删远臂反事实支持。
+    - 删远臂反事实只证明同一核心输入下右臂机械必要，不证明审美或独立玩家难度。
+    - complete graph、event probe 与裁边同构不构成质量 verdict；难度 3 由玩家侧一次真实操作面判断的下界主张。
+    - 本 exact 不声明 normalization、box_to_sticky 或 sticky_merge 必经。
+
+designer_self_verdict: submit_for_independent_review
+
+operation_boundary:
+  v2_overwritten: false
+  controller_state_modified: false
+  reviewer_state_modified: false
+  freeze_or_delivery_state_modified: false

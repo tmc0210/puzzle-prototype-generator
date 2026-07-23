@@ -1,0 +1,110 @@
+review_attempt_id: RA_HARD_BASELINE_V2_002
+reviewer_instance_id: fresh_evidence_reviewer_02
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v2
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_l_shape.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/evidence_fix_001.yml
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.json
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_L.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_L.md
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_SHIFT_BS_SINGLE.json
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_SHIFT_BS_SINGLE.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_complete
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - 完整图中的胜路可在初始可逆区域内包含纯走位排列、重定位或回到同一完整状态的回返，但只有一个 winning state 和一个 win-reaching commitment。
+  equivalence_evidence_basis:
+    - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.json：graph 与 agency 均为 complete，覆盖 19 个 reachable states、34 条 legal transitions、1 个 winning state；两个 opening commitments 中只有一个 viable，且 win continuation 无 branching 或 merging SCC。
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/canonical_replay.json：唯一可胜 commitment 的 exact 链保持先横推 connected T、再下拉 T 并带动 B/S 覆盖目标的对象职责与因果顺序。
+    - docs/21-level-design-studio-standard.md：纯走位差异及回到同一完整游戏状态且不改变后续关系的完整回返环属于同一玩家逻辑类。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 不以“只有一个 winning state”单独推出事件必经性；唯一逻辑类结论同时依赖 complete agency/SCC 中唯一 win-reaching commitment、无胜路分支或汇合，以及 exact replay 对该 commitment 的机械落点。
+    - 本结论只核验当前 candidate、v2、layout sha256 e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6；不评价玩家是否容易识别该逻辑类。
+
+claims:
+  - claim_id: exact_solvable
+    claim: 当前 exact layout 可由非空输入 down,right,right,right,down 合法通关。
+    status: supported
+    evidence_basis:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/canonical_replay.json：candidate、v2、layout ref 与 sha256 对齐；五步均 legal，终态 is_win=true。
+      - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json：同一 layout 与同一非空五步输入完整执行，legalThroughStep=5，final.isWin=true。
+    limits: []
+
+  - claim_id: canonical_event_chain
+    claim: 终手合法，包含 pull_object:sticky#1、force_chain:n2、anchor_boundary_shift:box_sticky 与 move_sticky_rigid，终态由 B 端覆盖唯一目标而胜利。
+    status: supported
+    evidence_basis:
+      - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json：第 5 步 down 合法并发出四个所声明事件；B/S 从 B:[8,4],S:[7,4] 移至 B:[8,5],S:[7,5]，终态 isWin=true。
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt：exact layout 只有一个 G，位于 [8,5]。
+      - prototypes/reality_anchor/README.md：全部目标在结算后须由箱、黏块或锚点箱格覆盖；锚点格可覆盖目标。
+    limits:
+      - 事件链按该条 canonical exact replay 核验，不把单条 trace 单独外推为全部胜路结论。
+
+  - claim_id: solution_logic_class_unique
+    claim: 在完整 19-state / 34-transition 图中只有一个 winning state；agency graph 的两个 opening commitment 只有一个可胜，且所有胜路只留下同一个玩家逻辑类。
+    status: supported
+    evidence_basis:
+      - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.json：graph.status=complete，reachableStateCount=19，legalTransitionCount=34，winStateCount=1；agency.status=complete，initial commitments=2、viable=1、dead=1，win continuation branching/merging SCC 均为 0。
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/solution_uniqueness.yml：candidate、v2 与 exact sha256 对齐，声明 complete search，并把初始可逆走位与完整回返限定为不改变对象职责和因果先后的等价变体。
+    limits:
+      - 等价性只覆盖纯走位排列、重定位及回到同一完整状态且不改变后续关系的回返；未发现非等价胜解。
+
+  - claim_id: no_direct_anchor_or_upper_face_win_bypass
+    claim: 完整图中唯一另一 opening commitment 是从上方操作面下推 T，进入 dead region；不存在不经 T 横推再下拉的胜利 commitment。
+    status: supported
+    evidence_basis:
+      - prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.json：complete agency 的初始 region 只有两条 commitment，其中仅一条 win-reaching，另一条 dead；全图只有一个 winning state 和一个 winning region。
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/solution_uniqueness.yml：将唯一 dead opening commitment 记录为 inputs [up,right,right,down] 的上方操作面下推 T，并将唯一 viable commitment 记录为横推 T 后下拉。
+      - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json：唯一 viable commitment 的 exact 落点为第 4 步横推 T 后、第 5 步下拉 T 入胜。
+    limits:
+      - “不存在胜利旁路”依赖当前 exact 的 complete graph；不外推到反事实 layout。
+
+  - claim_id: remote_arm_mechanical_necessity
+    claim: 删除 T 的远端右臂成为近邻 L 形后，同一五步仍全部合法，但终手不含 force_chain 或 B/S 位移，且不胜利。
+    status: supported
+    evidence_basis:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt 与 prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_l_shape.txt：反事实只删除 exact T 的远端右臂格 [6,3]，四格 connected T 变为三格 connected L。
+      - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_L.json：同一五步 legalThroughStep=5；第 5 步只有 pull_object:sticky#1 与 move_sticky_rigid，B/S 留在原位，final.isWin=false。
+      - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json：exact 对照的第 5 步含 force_chain:n2 与 anchor_boundary_shift:box_sticky，B/S 下移且胜利。
+    limits:
+      - 只支持远端右臂对“同一五步链触发 B/S 位移并获胜”的机械责任，不声称 L 形反事实在所有可能输入下不可解，也不产生审美结论。
+
+  - claim_id: connected_irregular_body_participation
+    claim: 当前 exact 中四格 T 在第 4、5 步作为同一 connected sticky rigid body 移动；第 5 步由其远端占格把 B/S 纳入力链。
+    status: supported
+    evidence_basis:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt：四个 M 位于 [4,3]、[5,3]、[6,3]、[5,4]，构成四邻接 T。
+      - prototypes/reality_anchor/mechanic.yml：sticky_block 为 rigid_group，四邻接黏格自动合并为同一刚体；推拉对对象实例施力并可沿运动方向传递。
+      - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json：第 4、5 步均记录同一 sticky#1 与 move_sticky_rigid；逐步 state key 显示四格整体各平移一格。第 5 步前远端格 [7,3] 正对 S:[7,4]，终手同时记录 force_chain:n2 和 B/S 下移。
+    limits:
+      - layout analyzer 的 objectParticipation 为空；本项只由 exact 逐步 state、对象实例事件与规则合同支持，不外推 per-object necessity。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

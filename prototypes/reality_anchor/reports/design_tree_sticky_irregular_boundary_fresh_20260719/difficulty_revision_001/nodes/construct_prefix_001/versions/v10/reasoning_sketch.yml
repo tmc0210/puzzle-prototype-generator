@@ -1,0 +1,60 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V10_FAR_LEG_EXIT_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version: v10_probe_only
+status: probe_failed
+
+selected_orientation:
+  name: 近端上横臂—远端下腿_L_与下尾母体
+  mother_initial: [[6, 4], [7, 4], [7, 5], [7, 6]]
+  l_after_cut: [[6, 4], [7, 4], [7, 5]]
+  cut_tail_crate: [7, 6]
+  p_l: {P: [5, 1], L: [6, 1]}
+  one_sentence_relationship: >-
+    玩家从近端上横臂左侧 P-push；落到 L 世界的 (6,4) 后，down 的前后都没有受力对象，故先纯 walk 离场，
+    再绕到右外侧 pull 到 H1，并从 H1 左下新面 down pull 到 H2；母体远端下尾则在同一 H2 多出唯一撞墙格。
+
+predicted_states:
+  h0:
+    player: [6, 4]
+    player_world: pull
+    sticky_l: [[7, 4], [8, 4], [8, 5]]
+  pure_walk_exit:
+    input: down
+    player_after: [6, 5]
+    object_state_unchanged: true
+  h1:
+    outside_player_before: [9, 4]
+    input: right
+    sticky_l_after: [[8, 4], [9, 4], [9, 5]]
+  h2:
+    orthogonal_player_before: [8, 5]
+    input: down
+    sticky_l_after_move: [[8, 5], [9, 5], [9, 6]]
+  mother_failure:
+    extra_tail_before_h2: [9, 6]
+    extra_tail_target: [9, 7]
+    responsible_wall: [9, 7]
+    player_destination: [8, 6]
+
+anchor_and_crate_risk:
+  bs_cut_and_reverse: 保留 v8/v9 的 B/S 一格上拉与反向下拉；第二格上拉仍由玩家目标墙阻断。
+  cut_crate: >-
+    新 cut crate 位于 (7,6)。西、南面以墙封闭；北、东面必须实际审计。
+    特别是 H2 取面路线会经过 (8,6)，不得假定该格只服务 H2；若它允许独立 pull crate，则立即失败停止。
+
+observed_runtime_result:
+  passed:
+    - 实际 B/S 切分后，step 18 首次 P-side right push 把玩家送到 (6,4) 的 L 世界。
+    - step 19 down 仅发出 walk，L、cut crate 与锚点均不动；玩家可由此外绕。
+    - step 34 外侧 right pull 到非恒等 H1，step 44 从新正交面 down pull 到 H2。
+    - 回粘母体完成相同前段，在同一 H2 down 因唯一额外尾格目标 (9,7) force_blocked，玩家目标 (8,6) 开放。
+    - 第二格深切从上侧 destination_blocked、从下侧 destination_occupied，state 均不变。
+  failed:
+    - H1 后取 H2 面的必经格 (8,6) 同时是 cut crate (7,6) 的东侧 L-world 操作面；right 合法 pull crate 到 (8,6)。
+  stop_reason: cut crate 全面 substitution 回归失败；按 assignment 停止，不扩改其它结构。
+
+evidence_boundary: 只支持 v10 主 progressive 链、母体/深切回归通过与 crate 东面退化事实；不形成目标、candidate、图、uniqueness 或 submission。

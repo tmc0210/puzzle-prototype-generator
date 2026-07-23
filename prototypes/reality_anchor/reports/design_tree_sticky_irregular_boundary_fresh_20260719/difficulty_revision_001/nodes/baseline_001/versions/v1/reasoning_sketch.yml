@@ -1,0 +1,70 @@
+node_id: baseline_001
+exact_version: v1
+target_difficulty: 3
+
+player_problem: >-
+  玩家不是只找一条对象路径，而要连续回答三个与同一异形相关的问题：第一次 push 后为何旧面不再能推；
+  怎样从外侧取得右牵把手；低阶突出部在哪一列才允许下牵，以及怎样换到底侧把手。
+
+visible_premises:
+  - 固定竖向 P/L 的分界位于玩家第一次右推后的落脚列之前，落脚立即变为 pull mode。
+  - 三格 L 的低阶突出部与三个 L 形目标清楚可见。
+  - 低阶目标左右各有一枚墙齿，只留下单列下移口。
+  - 上、下两条外侧回路都可见；旧左面没有被墙封死。
+
+expected_judgments:
+  - 第一次右推只是制造换把局面，不是直接重复到目标。
+  - 上回路通向上横臂右端外侧，可用 pull:right 继续同向搬运。
+  - 第一次右牵后低阶格仍在左墙齿上方；第二次右牵才与中间缺口对齐。
+  - 正确对齐后仍要离开上侧把手，沿下回路取得低阶格下方把手再 pull:down。
+  - 多牵右一格是可撤销试探：右墙齿拒绝下移，玩家可把对象与玩家完整状态恢复。
+
+operation_relationship:
+  canonical_object_signature:
+    - push:right
+    - pull:right
+    - pull:right
+    - pull:down
+  handle_lifecycle:
+    - P 侧左面启动把手
+    - L 侧上横臂右端外侧把手
+    - L 侧低阶突出部下方终手把手
+  reversibility: >-
+    终手前的搬运位于同一可逆子图；正确列右侧还保留一格超调空间。超调后可经上回路 pull:left，
+    再纯走位返回超调前完整状态，不形成另一胜向对象职责。
+
+feedback_and_payoff:
+  - 第一次 push 后玩家站到 L 侧，立即反馈“同向继续输入不再是 push”。
+  - 每次右牵都使低阶格相对两枚墙齿移动一列，目标与墙齿直接显示对齐变化。
+  - 终手从低阶格下方 pull:down，整个 L 同时覆盖三个目标并立刻胜利。
+
+structure_responsibilities:
+  fixed_pl_boundary: 关闭第一次 push 后的连续旧 push，并使后续对象动作统一从外侧 pull 发起。
+  l_top_arm: 提供第一次外侧换把后的右牵接触面。
+  l_lower_toe: 作为墙齿对齐读数与终手下牵把手。
+  left_tooth: 阻止第一次右牵前或低阶格仍在左列时提前下移。
+  right_tooth: 阻止从 L 缺角直接下牵，迫使玩家实际使用低阶突出部下方把手；同时拒绝右侧超调后的下移。
+  upper_loop: 允许真实绕到上横臂外侧，并保留超调后的可逆回返。
+  lower_loop: 允许正确对齐后取得低阶格下方把手，也保持旧面可达而非封死。
+  goals: 以 L 形轮廓显示唯一目标位姿，并把低阶目标放在墙齿缺口中。
+
+revision_history:
+  - attempt: compact_l3_pre_material
+    result: rejected
+    reason: 存在从外侧直接 pull:down 跳到终局前位姿的非等价旁路。
+  - attempt: u_cockpit
+    result: rejected
+    reason: 内槽可无成本切换推/牵接触面，P/L 退化成事件标签，玩家只是在三段直线驾驶轮廓。
+  - attempt: z_stair_handoff
+    result: rejected
+    reason: 开放空间留下旧侧 push 与新侧 pull 两个真实胜族；补静态墙又会退化成强制通道。
+  - attempt: task_local_explorer_request
+    result: material_gap_resolved
+    ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/requests/RA_REQ_FIXED_PL_HANDLE_CLOSURE_WITH_AGENCY_001.yml
+  - attempt: l3_double_tooth_keyhole
+    result: retained_as_v1
+    reason: 新材料的模式失配被后继墙齿对齐和第二次换把实际消费；完整图未发现非等价胜解。
+
+known_risk: >-
+  两次换把包含明显的上、下回路走位；若玩家未把它读成取得不同外侧把手，节奏可能显得偏稀。
+  该感受风险不由图指标裁决，留给 fresh 玩家侧审查。

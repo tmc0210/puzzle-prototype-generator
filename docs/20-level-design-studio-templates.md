@@ -6,17 +6,15 @@
 
 | 产物 | 唯一模板 | 写入者 |
 | --- | --- | --- |
-| task-local exploration dispatch、request、lexicon 与 batch record | `skills/sokoban-mechanism-lab/references/task-exploration-format.md` | designer/controller 写 dispatch 与 request；explorer 写 lexicon 与 runs |
-| experience brief | `skills/sokoban-level-design-studio/references/experience-brief-template.md` | designer |
-| 体验核心、冻结设计树、工作节点与尝试日志 | `skills/sokoban-level-design-studio/references/design-tree-template.md` | 主 agent（designer / controller） |
-| designer 送审包 | `skills/sokoban-level-design-studio/references/submission-packet-template.md` | designer；不提供给 level reviewer |
-| 独立硬证据审查 | `skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md` | fresh evidence reviewer |
-| 阶段 A 玩家侧质量门输入白名单 | `skills/sokoban-level-reviewer/references/review-packet.md` | 主 agent 按 controller 职责从实际产物组装 |
-| 阶段 A 玩家侧质量门 | `skills/sokoban-level-reviewer/references/review-template.md` | fresh level reviewer |
-| 阶段 B 教练 context | `skills/sokoban-level-reviewer/references/coach-context.md` | 阶段 A 存活后由 controller 组装 |
-| 阶段 B 自然语言教练意见 | `skills/sokoban-level-reviewer/references/coach-note.md` | 同一 fresh reviewer |
-| `designer_action_N` | `skills/sokoban-level-design-studio/references/designer-action-template.md` | designer |
-| 原型专属提交前工作流记录 | `skills/sokoban-level-design-studio/references/pre-submission-workflow-template.md` | 主 agent（controller 职责） |
-| 设计树人类待玩交接 | `skills/sokoban-level-design-studio/references/human-handoff-template.md` | 主 agent（controller 职责） |
+| task-local exploration dispatch、request、lexicon 与 batch record | `.agents/skills/sokoban-mechanism-lab/references/task-exploration-format.md` | Controller 写 dispatch；Designer 写 request；Explorer 写 lexicon 与 runs |
+| experience brief | `.agents/skills/sokoban-level-design-studio/references/experience-brief-template.md` | Designer |
+| Designer assignment | `.agents/skills/sokoban-level-design-studio/references/designer-assignment-template.md` | Controller |
+| 唯一候选、已发布 exact、review cycles 与尝试日志 | `.agents/skills/sokoban-level-design-studio/references/candidate-ledger-template.md` | Controller |
+| Designer 送审包 | `.agents/skills/sokoban-level-design-studio/references/submission-packet-template.md` | Designer；不提供给 Critic |
+| 独立硬证据审查 | `.agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md` | fresh Evidence reviewer |
+| Critic 两类校准 view、packet 与自然语言 verdict | `.agents/skills/sokoban-puzzle-critic/references/critic-contract.md` | Controller 生成校准 view 并组包；fresh Critic 一次读取后写最终批评 |
+| `designer_action_N` | `.agents/skills/sokoban-level-design-studio/references/designer-action-template.md` | Designer |
+| 原型专属提交前工作流记录 | `.agents/skills/sokoban-level-design-studio/references/pre-submission-workflow-template.md` | Controller；设计步骤由 Designer 产出原始 artifact |
+| 单关人类待玩交接 | `.agents/skills/sokoban-level-design-studio/references/human-handoff-template.md` | Controller |
 
-流程顺序、角色权限和失败后的动作只以 docs/21 为准；设计概念只以 docs/17 为准；原型专属检查只以当前原型 `docs/design_handoff.yml` 及其 authority docs 为准。
+流程顺序、角色权限和失败后的动作只以 docs/21 为准；设计概念只以 docs/17 为准；Critic 的输入防火墙与固定 verdict 只以 critic contract 为准；原型专属检查只以当前原型 `docs/design_handoff.yml` 及其 authority docs 为准。

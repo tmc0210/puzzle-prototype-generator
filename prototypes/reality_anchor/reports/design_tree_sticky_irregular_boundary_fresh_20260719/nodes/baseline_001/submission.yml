@@ -1,0 +1,82 @@
+submission_id: SUB_RA_STICKY_IRREGULAR_BASELINE_001_V2
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: baseline_001
+parent_node_id: null
+growth_relation: baseline
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v2
+
+designer_claim:
+  player_experience_core: >-
+    一个小型 T 形刚体把近端操作面与远端占格绑定在同一动作组；玩家必须选对肩窝并保留 pull 把手，
+    才能让远端右臂扫带边界口袋中的 B/S。
+  player_action: >-
+    玩家比较上方直接下推与下方肩窝横推，选择后者把 T 向右推一格，再从左臂下方把完整 T 下拉。
+  visible_payoff: >-
+    下拉终手同时移动完整 T、触发二对象 force chain、使 B/S 向下移一格并由 B 覆盖目标，立即结束。
+  why_this_level_exists: >-
+    用最小的可执行操作面分岔呈现“近端施力正确，但胜负由同一异形的远端足迹决定”。
+  work_identity_conditions:
+    - T 的中央脚、左臂和右臂分别承担横推近端、下拉把手和远端扫带，且必须属于同一刚体。
+    - B/S 位于玩家不可直接取得施力位的单向目标口袋，胜利只能由远端作用列触发。
+    - 上下两个操作面都允许首次对象动作，但只有肩窝横推保留正确远端列与第二手 pull 关系。
+
+packaging_account:
+  opening: 玩家从 T 左侧观察区可走向上方左臂或下方中央脚肩窝，并看见右侧封闭的 B/S 与目标。
+  preparation: 玩家只需选择首次对象操作面；不要求构造、切割、回收或重复活塞操作。
+  reveal_or_use: 横推 T 将远端右臂对准 S，同时让玩家落在左臂 pull 侧；错误下推留下可读的死局形状。
+  ending: 正确下拉把 B/S 扫入目标，终手立即胜利，没有清理尾巴。
+  every_major_element_role:
+    - 四格 T 是视觉主体与唯一近端/远端耦合刚体；缺少右臂时相同两手不能移动 B/S。
+    - B/S、目标和外墙共同形成不可直接操作的单向落点口袋，并提供终手边界位移回报。
+    - 左侧上/下通路把两个不同操作面外显为一活一死的首次 commitment。
+    - 顶部 P/L 固定原型的 push/pull 语义边界，不承担独立玩家操作。
+  known_perceptible_defects:
+    - 正确 commitment 后只剩一次强制兑现，关卡没有持续多阶段推演；这是紧凑 baseline 的上限。
+    - 固定 P/L 与核心区空间分离，玩家侧反馈主要来自 T 与 B/S，而非 P/L 本体。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete
+    search_budget: maxStates=300000; graphMaxStates=300000; actual=19 states / 34 transitions
+    known_raw_winning_variants:
+      - 唯一 winning state 之前可有初始可逆走位排列或回退；它们不改变对象职责、目标分配或因果顺序。
+    equivalence_account: >-
+      完整图的两个 opening commitment 中只有肩窝横推可胜，上方下推为 dead；
+      所有胜路都经过同一个 T 横推再下拉的玩家逻辑类。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/solution_uniqueness.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/runtime_analysis.yml
+    evidence_limits:
+      - 唯一性按玩家逻辑类声明；初始双向走位差异不计作非等价胜解。
+  bypass_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/fixed_anchor_probe.md
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_l_shape.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/evidence_fix_001.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/runtime_analysis.yml
+  withdrawn_mechanical_claims:
+    - claim_id: boundary_alignment_mechanical_necessity
+      prior_claim: 保持完整 T、只把 B/S 横移一格后，同一五步全合法但不胜利。
+      reason: >-
+        真正只把 B/S 左移一格的反事实仍由同一五步胜利；第 4 步先把 B/S 推回原对齐位。
+        旧右移 artifact 还同时改了目标和右侧墙界，不能作为单变量证据。
+      evidence_refs:
+        - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable_replay.json
+        - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/evidence_fix_001.yml
+  evidence_limits:
+    - explain-layout 未返回 instance-level object participation；对象职责由逐步状态、事件和精确占格差异支持。
+    - 删去 T 远端右臂的反事实只证明相同核心输入下右臂的机械必要，不证明审美或独立玩家难度。
+    - 不再声明 B/S 初始横向坐标机械必要；有效单变量左移反事实仍可由同一五步胜利。
+    - 旧 counterfactual_shifted_bs.txt 同时改目标和右侧墙界，已从 submission 引用移除。
+    - 图工具的 near-discovery reading hint 不是质量 verdict；难度 3 只按玩家侧一次操作面判断的下界主张。
+    - fixed-anchor 的 strong_material combined probe 还要求本作品身份未声明的 normalization、box_to_sticky、sticky_merge；只引用三个逐项 complete 的无旁路结果。
+
+designer_self_verdict: submit_for_independent_review

@@ -1,12 +1,12 @@
 # Design Archive Contract
 
 状态：当前 clean archive 合约。本文只定义归档入口、候选短卡、人类评语和
-检索索引；不定义体验核心设计树创作流程。
+检索索引；不定义体验核心单关创作流程。
 
 ## 权威边界
 
 ```text
-玩家体验核心、作品身份、baseline 与设计树生长：
+玩家体验核心、作品身份与唯一单关候选：
   以 docs/17-experience-core-level-design.md 和 docs/21-level-design-studio-standard.md 为准。
 
 工作室材料、独立硬证据审查、玩家侧审查与提交前工作流记录形状：
@@ -59,7 +59,7 @@ prototypes/*/mechanism_lab/runs/**
 ## 默认读取路径
 
 归档校准从 archive index / retrieval summaries 开始，不默认全量读取所有 layout、
-旧 reports 或 mechanism lab runs。Designer 和 independent level reviewer 的读取广度
+旧 reports 或 mechanism lab runs。Designer 和 independent Puzzle Critic 的读取广度
 不同，分别按下述入口执行。
 
 Designer 的校准入口：
@@ -73,7 +73,7 @@ Designer 的校准入口：
 - 只有需要防重复或判断人评边界时，才读候选卡里的完整 layout。
 ```
 
-Independent level reviewer 使用更小的独立校准集：先读 index / retrieval summaries，再自行选择至少一个相关正例和一个明确负例或边界例，读取人类原评语，必要时追加。Reviewer 不需要全量读取归档，不接受 designer 代选的唯一 anchors，也不读取 designer 送审包。
+Independent Puzzle Critic 由 Controller 独立提供 clean archive index / 人类原评语入口，不沿用 Designer 代选的唯一 anchors。Critic 先读完整 index / retrieval summaries，再自行选择至少一个相关正例和一个明确负例或边界例，读取人类原评语，必要时追加；不默认全量读取所有 layout，也不读取 Designer 送审包。归档只用于审美校准，archive metadata、分数与标签不能替代对当前关卡实物的判断。
 
 ## Candidate Record 最小内容
 

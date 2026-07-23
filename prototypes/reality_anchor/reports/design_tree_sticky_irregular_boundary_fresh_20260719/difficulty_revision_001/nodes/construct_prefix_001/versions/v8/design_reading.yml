@@ -1,0 +1,55 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V8_CANDIDATE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v8
+status: candidate_withdrawn_non_equivalent_win
+
+formal_layout_reading:
+  visible_setup: >-
+    玩家看见四格母体、可移动 B/S、固定 P/L、三格紧邻目标与负责母体尾格失败的墙。
+    目标只描出 H2 的动作后 footprint；cut crate、B/S 与 P/L 均没有独立目标。
+  intended_player_goal: >-
+    先主动移动 B/S 留下三格 L，再把同一 L 送入目标轮廓；完整母体的额外下尾会在最终正交动作撞墙。
+  canonical_intended_burden:
+    - B/S 身份管理：决定保留三格 L 还是回粘四格母体，并在 H2 继续结算下腿身份。
+    - P/L 换侧：H0 由 P 侧 push，预期 H1 由玩家绕到外侧后在 L 侧 pull。
+    - 非恒等外拉：H1 相对 H0 右移一格，开放下一正交操作面。
+    - H2 多面消费：同一 L 的近端新把手与远端完整 footprint 在 down pull 中共同覆盖三格目标。
+  deliberately_not_counted_as_difficulty:
+    - 普通 walking
+    - 输入数量或执行长度
+    - 规则回忆
+    - runtime 状态数
+
+player_side_reread_after_directed_audit:
+  first_failure: >-
+    H0 后玩家仍位于 P 侧的 (6,5)，并与 L 的下腿相邻；立即再次 right 会合法 push 同一 L 到与 canonical H1
+    完全相同的非玩家对象状态。玩家随后只需绕到 (9,5) 并执行 down pull，即可在 step 35 获胜。
+  lost_relationship: >-
+    胜利不要求玩家为 H1 绕到外侧，也不要求用 L 侧 right pull 产生非恒等进位。
+    因而 P/L 换侧、外侧把手获取与对应的可逆状态管理都不是获胜族机械条件。
+  equivalence_judgment: non_equivalent
+  basis: >-
+    canonical 的 H1 对象动作是 L 侧 pull；反例的 H1 对象动作是 P 侧连续第二次 push。
+    两者虽到达相同对象位置并共享 H2，却要求不同的玩家关系；反例删除了本节点明确承诺的核心负担，不能视为 walking 变体。
+
+target_reading:
+  goals: [[8, 5], [9, 5], [8, 6]]
+  canonical_first_win_step: 41
+  canonical_covering_result:
+    sticky_cells: [[8, 5], [9, 5]]
+    h2_leg_after_boundary_settle: [8, 6]
+  cut_crate_covers_target: false
+  box_sticky_anchor_covers_target: false
+  push_pull_anchor_covers_target: false
+  note: 目标责任本身成立，但目标不区分 canonical 外拉 H1 与同侧 push H1，因此不足以保护作品关系。
+
+designer_decision:
+  result: withdraw_v8
+  reason: 发现跳过外侧 H1 pull 的非等价胜族，违反 assignment 的即时停止条件。
+  graph_eligibility: false
+  uniqueness_or_submission_eligibility: false
+  next_structure_responsibility_if_controller_assigns_revision: >-
+    新 exact 必须让 H0 后的同侧第二次 push 机械失效，同时保留从外侧执行 L 侧非恒等 pull 与随后 H2 的通路；
+    不能只靠目标延迟、说明文字或把两条动作都称为 H1。

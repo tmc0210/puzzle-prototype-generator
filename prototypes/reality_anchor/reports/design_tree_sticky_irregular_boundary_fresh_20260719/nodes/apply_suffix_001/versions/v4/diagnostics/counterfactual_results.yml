@@ -1,0 +1,96 @@
+artifact_id: RA_APPLY_SUFFIX_V4_IDENTITY_COUNTERFACTUAL_RESULTS
+assignment_id: RA_DESIGNER_APPLY_V4_OUTLINE_TRIM_REVISION_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v4
+source_layout_sha256: 3516694d71bfeb0270fa2e4c787d07d9579bf042c3abdc4b99b0e2ef913b8c2e
+
+counterfactuals:
+  - id: remove_lower_handoff_target
+    kind: layout_single_cell_change
+    layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_remove_lower_target.txt
+    layout_sha256: 47ed7fd31b30a3858538d4b6a2181f8d56faf92e7c0e8e67b206f2aecabbbbf0
+    change:
+      coordinate: [1, 3]
+      from: G
+      to: .
+    graph:
+      status: complete
+      reachable_states: 162
+      legal_transitions: 401
+      winning_states: 3
+    square_witness:
+      inputs: [left, up, right, up, left, down, down, left, up, up, left, left, up]
+      completed: true
+      legal_through_step: 13
+      final_state_key: "Ply:1,3|C:|M:2,2;3,2;2,3;3,3|PL:none|BS:B:1,1;S:1,2"
+      final_events: ["push_object:box_sticky_anchor", "anchor_boundary_shift:box_sticky", "box_to_sticky:n2", "sticky_merge:n1"]
+      final_win: true
+    identity_result: >-
+      删除 S 上移后必须被接替的下端目标，规整 2x2 的深层路线恢复为胜解；suffix 不再反向筛选最初的偏移构造。
+
+  - id: move_upper_target_to_core_completion_cell
+    kind: layout_two_cell_target_move
+    layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_win_at_core.txt
+    layout_sha256: d36d8aec1bdd7ba1bd8ed87317cb0068ebd2d1137cfd49080919bbec9ed531b8
+    changes:
+      - coordinate: [1, 1]
+        from: G
+        to: .
+      - coordinate: [1, 2]
+        from: .
+        to: G
+    offset_z_witness:
+      inputs: [up, left, down, left, up, right, up, left]
+      completed: true
+      legal_through_step: 8
+      final_state_key: "Ply:3,4|C:|M:2,3;3,3;1,4;2,4|PL:none|BS:B:1,2;S:1,3"
+      final_win: true
+    square_witness:
+      inputs: [left, up, right, up, left]
+      completed: true
+      legal_through_step: 5
+      final_state_key: "Ply:4,4|C:|M:2,3;3,3;2,4;3,4|PL:none|BS:B:1,2;S:1,3"
+      final_win: true
+    shared_core_events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+    identity_result: >-
+      胜利若停在第一次横向 core，Z 与 2x2 都会获胜；当前作品身份来自 core 后继续上移同一边界并完成覆盖交接。
+
+  - id: remove_distal_toe_after_core
+    kind: injected_current_exact_state_change
+    source_state_key: "Ply:3,4|C:|M:2,3;3,3;1,4;2,4|PL:none|BS:B:1,2;S:1,3"
+    change:
+      remove_sticky_cell: [1, 4]
+    before_input_state_key: "Ply:3,4|C:|M:2,3;3,3;2,4|PL:none|BS:B:1,2;S:1,3"
+    input: up
+    legal: true
+    events: ["push_object:sticky#1", move_sticky_rigid, "sticky_to_box:n2"]
+    after_state_key: "Ply:3,3|C:2,2;3,2|M:2,3|PL:none|BS:B:1,2;S:1,3"
+    anchor_shift_event_present: false
+    force_chain_event_present: false
+    final_win: false
+    before_render:
+      - "#######"
+      - "#G#####"
+      - "#B..###"
+      - "#SMM.##"
+      - "#.M@..#"
+      - "##....#"
+      - "##....#"
+      - "#######"
+    after_render:
+      - "#######"
+      - "#G#####"
+      - "#BCC###"
+      - "#SM@.##"
+      - "#.....#"
+      - "##....#"
+      - "##....#"
+      - "#######"
+    identity_result: >-
+      保留近端上推面而删除左下远趾时，上推仍合法，却不再触碰或移动 B/S；远趾是转向传力和接替下端覆盖的因果部件。
+
+reproduction:
+  script_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/probe_v4.ts
+  actual_cli_replays_run: true
+evidence_boundary: >-
+  这些反事实只证伪作品身份中的机械责任，不对审美价值作正向证明；注入态反事实从 current v4 canonical core 后状态直接复制并只删除一个黏格。

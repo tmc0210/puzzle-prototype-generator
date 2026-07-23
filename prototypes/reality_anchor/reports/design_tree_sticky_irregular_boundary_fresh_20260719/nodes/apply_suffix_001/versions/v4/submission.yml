@@ -1,0 +1,131 @@
+submission_id: RA_SUBMISSION_APPLY_SUFFIX_V4_OUTLINE_TRIM_REVISION_001
+assignment_id: RA_DESIGNER_APPLY_V4_OUTLINE_TRIM_REVISION_001
+designer_instance_id: RA_IRREGULAR_DESIGNER_20260719
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: apply_suffix_001
+parent_node_id: construct_prefix_001
+growth_relation: apply_suffix
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v4
+submission_status: complete
+
+candidate:
+  target_difficulty: 4
+  stage: late_game
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/layout.txt
+  layout_sha256: 3516694d71bfeb0270fa2e4c787d07d9579bf042c3abdc4b99b0e2ef913b8c2e
+  dimensions: 7x8
+  solve_instance:
+    player_start: [5, 6]
+    win_condition: all_targets_covered_by_objects
+  canonical_inputs: [up, left, down, left, up, right, up, left, up]
+
+designer_claim:
+  player_experience_core: >-
+    玩家先构造右上错位 Z，而不是同样能完成眼前左推的 2x2。两种构造都能在 core 中把同一 B/S 左移、让 S 暂占下端目标；
+    只有 Z 在动后保留可上推的近端操作面和能接替 S 的远趾。suffix 上推同一刚体时，远趾把 B/S 向上转角，
+    B 覆盖上端目标，远趾原拍补住下端目标，后继因此反向决定此前的偏移构造。
+  player_action: >-
+    玩家必须从中立起点先走到操作位，主动选择偏移、合并 Z、用它左推同一 B/S，再从正交把手上推同一 Z 完成覆盖交接。
+  visible_payoff: >-
+    结尾同一拍中，B 登上上端目标，S 离开下端目标，Z 的左下远趾立即接替下端覆盖。
+  why_this_level_exists: >-
+    它让不规则轮廓的远端部分不只是形状标记，而成为后继边界转向和目标职责交接的必要执行部件；后继由此反向筛选看似同样合格的前序构造。
+  work_identity_conditions:
+    - 错误 2x2 必须也能完成第一次 B/S 左移，使选择不能靠眼前 core 判断。
+    - 正确 Z 必须保留右上近端操作面和左下远趾，并在连续两次动作中作用于同一 B/S。
+    - suffix 必须由远趾在同拍推动 B/S 并接替 S 腾出的下端目标。
+    - 所有胜解必须保持同一构造、对象职责、目标分配和边界动作因果顺序。
+
+parent_relation_claim:
+  inherited: >-
+    保留 parent 的主动两横条构造，以及近端操作面与远端不规则轮廓由同一刚体动作耦合的身份。
+  growth: >-
+    parent 在第一次边界动作就分出正确构造；本节点让 Z 与 2x2 都真实完成第一次 B/S 左移，
+    再由同一边界覆盖的 suffix 交接反向筛选前序构造，增加的是后继应用。
+  non_splicing: >-
+    suffix 没有新对象或独立清理；它继续移动 core 已触碰的同一 Z 与同一 B/S。上下目标是同一边界覆盖的连续职责，
+    core 时由 B/S 暂时承担，suffix 时由 B 与远趾原拍交接。
+
+packaging_account:
+  opening: >-
+    玩家从 [5,6] 开始；up 和 left 都先走一格，第二拍才分别承诺 offset-Z 与 2x2。起点不直接把首个输入标成正确答案。
+  preparation: >-
+    正确路线只多一次有意义的下横条左移，再从下方把两横条合并成 Z；没有与核心无关的前置对象。
+  reveal_or_use: >-
+    Z 与 2x2 都先左推 B/S；只有 Z 随后的正交上推能让远趾推动同一 B/S 并接替下端覆盖。
+  ending: >-
+    suffix 上推一拍同时完成上端 B 覆盖和下端远趾接替，立即胜利，无高潮后清理。
+  every_major_element_role:
+    - 固定上横条提供 Z 的上臂和 suffix 近端操作面。
+    - 可移动下横条的横向偏移决定远趾是否存在。
+    - B/S 是两次连续边界动作和覆盖迁移的同一 consumer。
+    - 上端目标要求 suffix 真正发生；下端目标要求远趾接替 S。
+    - 中央与下方活动室承担两种 opening、构造分流、core/suffix 把手和等价把手绕位。
+    - 单层外墙只界定目标通道和活动室；v3 的五列不可达纯墙已经删除。
+    - 起点 [5,6] 让正确与错误构造都先站位、后承诺。
+  known_perceptible_defects:
+    - none_identified
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: 300000 states; graph completed at 176 states / 441 legal transitions
+    known_raw_winning_variants:
+      - "cost 9: up,left,down,left,up,right,up,left,up; final player [3,3]"
+      - "cost 11: up,left,down,left,up,right,up,left,down,left,up; final player [2,4]"
+    equivalence_account: >-
+      两个胜态只有玩家位置不同，对象签名完全相同；两条路线在 core 后共享同一对象状态，最后都从下方上推同一 Z，
+      触发同一 B/S 上移和同一双目标覆盖，没有不同构造、职责、目标分配或因果顺序。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/solution_uniqueness.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/complete_graph_opening.json
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/alternate_handle_replay.json
+    evidence_limits:
+      - raw input 串与玩家终位不唯一；只声明一个玩家逻辑类。
+      - complete 结论只适用于 current layout、start、targets、runtime 与 win condition。
+  bypass_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/square_counterplay_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/complete_graph_opening.json
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_results.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_remove_lower_target.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_win_at_core.txt
+  outline_isomorphism_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/outline_graph_isomorphism.json
+  evidence_limits:
+    - 工具证明可解、完整图、解族、事件、反事实机械责任和裁边同构，不证明审美、乐趣或实际玩家难度。
+    - v4 是 pure outline trim 形成的新 exact；本文只引用 versions/v4 下 fresh 重跑证据，不继承 v3 review。
+    - 本 revision 不执行 redundant_element_prune 之外的其它 pre-submission workflow，也不更新既有 workflow 状态。
+
+revision_account:
+  exact_version_basis: v3
+  only_layout_change: >-
+    删除 v3 原 x=0..2 与 x=10..11 的五列不可达纯墙，保留原 x=3..9；所有动态坐标统一映射为 (x,y)->(x-3,y)。
+  dimensions_delta: 12x8->7x8
+  unchanged_relative_elements: [walls_inside_retained_rectangle, goals, sticky_cells, box_sticky_anchor, player_start]
+  unchanged_player_relation: >-
+    neutral two-step opening、offset-Z/2x2 分流、shared core、suffix 覆盖交接、等价把手和对象终局全部不变。
+  complete_labeled_graph_isomorphic: true
+  fresh_evidence_completed: true
+  review_inheritance_claimed: false
+
+submitted_files:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/canonical_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/design_reading.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/solution_uniqueness.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/submission.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/runtime_analysis.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/complete_graph_opening.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/alternate_handle_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/square_counterplay_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/counterfactual_results.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/outline_graph_isomorphism.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v4/diagnostics/probe_v4.ts
+
+designer_boundary_statement: >-
+  本提交只写 assignment 允许的 versions/v4；未覆盖 v3，未执行其它 pre-submission workflow，未写 Controller、reviewer、冻结、树、delivery 或 playable 状态。
+designer_self_verdict: submit_for_independent_review

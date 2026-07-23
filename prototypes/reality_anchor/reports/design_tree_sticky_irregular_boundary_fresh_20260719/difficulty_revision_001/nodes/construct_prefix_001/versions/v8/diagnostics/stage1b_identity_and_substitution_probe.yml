@@ -1,0 +1,214 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V8_PROBE_STAGE1B_IDENTITY_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v8_stage1b_combined_probe_only
+status: stage1b_passed
+
+scope:
+  artifact_role: combined_local_runtime_probe_not_candidate
+  current_runtime_case_count: 6
+  graph_run: false
+  solver_run: false
+  formal_goal: false
+  candidate_layout: false
+  submission_packet: false
+
+artifact_refs:
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_identity_progressive_layout.txt
+  l_progressive_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_l_progressive_replay.json
+  mother_contrast_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_mother_contrast_replay.json
+
+runtime:
+  runner: npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+  layout_source: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v8/diagnostics/stage1b_identity_progressive_layout.txt
+  cases:
+    - id: RA_V8_STAGE1B_L_PROGRESSIVE
+      inputs: [up, right, down, down, down, down, left, left, left, left, left, left, left, left, up, up, up, right, right, left, left, down, down, down, right, right, right, right, right, up, up, up, up, right, down, down, down, left, up, up, down]
+      completed: true
+      legal_through_step: 41
+      final_win: false
+    - id: RA_V8_STAGE1B_MOTHER_CONTRAST
+      inputs: [up, right, down, down, down, left, down, left, left, left, left, left, left, left, up, up, up, right, right, left, left, down, down, down, right, right, right, right, right, up, up, up, up, right, down, left, down]
+      completed: false
+      legal_through_step: 36
+      stopped_at_step: 37
+      stop_reason: force_blocked
+    - id: RA_V8_STAGE1B_DEEP_CUT
+      inputs: [up, up]
+      completed: false
+      legal_through_step: 1
+      stopped_at_step: 2
+      stop_reason: destination_blocked
+    - id: RA_V8_STAGE1B_DEEP_CUT_OPPOSITE_FACE
+      inputs: [up, right, down, down, down, left, up]
+      completed: false
+      legal_through_step: 6
+      stopped_at_step: 7
+      stop_reason: destination_occupied
+    - id: RA_V8_STAGE1B_CRATE_NORTH
+      inputs: [up, right, down, down, down, down, left, left, left, left, left, left, left, left, up, up, up, right, right, down]
+      completed: false
+      legal_through_step: 19
+      stopped_at_step: 20
+      stop_reason: force_blocked
+    - id: RA_V8_STAGE1B_CRATE_EAST
+      inputs: [up, right, down, down, down, down, left, left, left, left, left, left, left, left, up, up, up, right, right, left, left, down, down, down, right, right, right, up, up, left]
+      completed: false
+      legal_through_step: 29
+      stopped_at_step: 30
+      stop_reason: force_blocked
+
+parser_exception:
+  dummy_target: [13, 1]
+  isolation: 四邻均为墙，且与玩家、对象、动作路径和受力闭包完全隔离
+  covered_in_any_case: false
+  triggered_win_in_any_case: false
+  design_role: none
+
+identity_gate:
+  cut:
+    checkpoint_case: RA_V8_STAGE1B_L_PROGRESSIVE
+    checkpoint_step: 1
+    player_input: up
+    events: [pull_object:box_sticky_anchor, anchor_boundary_shift:box_sticky, sticky_to_box:n1]
+    box_sticky_anchor_before: {B: [11, 7], S: [11, 6]}
+    box_sticky_anchor_after: {B: [11, 6], S: [11, 5]}
+    mother_before: [[6, 4], [7, 4], [6, 5], [6, 6]]
+    sticky_l_after: [[6, 4], [7, 4], [6, 5]]
+    cut_crate_after: [6, 6]
+    reading: 玩家在 L 侧实际 pull B/S 上移一格，四格母体的下尾结算为 crate，留下同一连通三格 L。
+  reverse_remerge:
+    checkpoint_case: RA_V8_STAGE1B_MOTHER_CONTRAST
+    checkpoint_step: 7
+    player_input: down
+    events: [pull_object:box_sticky_anchor, anchor_boundary_shift:box_sticky, box_to_sticky:n1, sticky_merge:n1]
+    box_sticky_anchor_after: {B: [11, 7], S: [11, 6]}
+    sticky_mother_after: [[6, 4], [7, 4], [6, 5], [6, 6]]
+    crates_after: []
+    reading: 玩家绕到 B/S 下侧后反向 pull；原 cut crate 转回 sticky 并与 L 合并，恢复四格母体。
+  no_second_deep_cut:
+    cut_state: "Ply:11,4|C:6,6|M:6,4;7,4;6,5|PL:P:8,1;L:9,1|BS:B:11,6;S:11,5"
+    pull_from_above:
+      case: RA_V8_STAGE1B_DEEP_CUT
+      player: [11, 4]
+      input: up
+      player_destination: [11, 3]
+      result: destination_blocked
+      state_unchanged: true
+    input_from_below:
+      case: RA_V8_STAGE1B_DEEP_CUT_OPPOSITE_FACE
+      player: [11, 7]
+      input: up
+      result: destination_occupied
+      reason: 玩家处于 L 侧，不能从下方把 B/S 向上 push
+      state_unchanged: true
+    reading: >-
+      当前 cut anchor state 的两条竖向施力入口都由 runtime 实际否定：上侧继续 pull 的玩家目标格是墙，
+      下侧向上输入在 L 世界不能 push。故不存在第二格向上深切；反向 down pull 则由 mother case step 7 实际恢复。
+
+progressive_l_gate:
+  h0:
+    case: RA_V8_STAGE1B_L_PROGRESSIVE
+    step: 19
+    input: right
+    events: [push_object:sticky#1, move_sticky_rigid]
+    player: [6, 5]
+    sticky_l: [[7, 4], [8, 4], [7, 5]]
+    cut_crate: [6, 6]
+  h1:
+    step: 34
+    input: right
+    events: [pull_object:sticky#1, move_sticky_rigid]
+    player: [10, 4]
+    sticky_l: [[8, 4], [9, 4], [8, 5]]
+    non_player_state_equal_to_h0: false
+    box_sticky_anchor_unchanged_since_cut: true
+    cut_crate_unchanged_since_cut: true
+  h2:
+    step: 41
+    input: down
+    legal: true
+    events: [pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n1]
+    player: [9, 6]
+    moved_rigid_footprint_before_settle: [[8, 5], [9, 5], [8, 6]]
+    sticky_after_settle: [[8, 5], [9, 5]]
+    new_h2_leg_crate_after_settle: [8, 6]
+    cut_crate_unchanged: [6, 6]
+  reading: >-
+    step 1 由实际 B/S 动作切出的三格 L，step 19 在 P 侧完成 right push 到 H0；玩家换到 L 侧后，
+    step 34 right pull 同一刚体到非恒等 H1；玩家再取得 H1 新露的正交面，step 41 down 合法拉动同一 L 到 H2。
+    H2 后下腿按仍在 cut 停位的 B/S 结算成新 crate，不改变该输入由同一三格 L 承担的事实。
+
+mother_substitution_gate:
+  case: RA_V8_STAGE1B_MOTHER_CONTRAST
+  same_prefix:
+    h0_step: 19
+    h0_input: right
+    h0_events: [push_object:sticky#1, move_sticky_rigid]
+    h0_mother: [[7, 4], [8, 4], [7, 5], [7, 6]]
+    h1_step: 34
+    h1_input: right
+    h1_events: [pull_object:sticky#1, move_sticky_rigid]
+    h1_mother: [[8, 4], [9, 4], [8, 5], [8, 6]]
+  same_orthogonal_input:
+    step: 37
+    input: down
+    result: force_blocked
+    player_before: [9, 5]
+    player_destination: [9, 6]
+    player_destination_open: true
+    target_cells: [[8, 5], [9, 5], [8, 6], [8, 7]]
+    responsible_wall: [8, 7]
+    extra_tail_target: [8, 7]
+    state_unchanged: true
+  contrast_to_l: >-
+    正确 L 在同一 down 的目标集合只有 (8,5)(9,5)(8,6)，全部开放；回粘母体唯一多出的尾格目标 (8,7) 为墙。
+    因此母体承担相同 P 侧 stroke 与外侧非恒等进位，直到同一正交输入才由额外尾格失败。
+
+cut_crate_action_table:
+  cut_crate: [6, 6]
+  target_assignment: none
+  anchor_or_progressive_role: none
+  local_mode: push
+  faces:
+    north:
+      player_cell: [6, 5]
+      reachable: true
+      case: RA_V8_STAGE1B_CRATE_NORTH
+      force_input: down
+      crate_target: [6, 7]
+      responsible_wall: [6, 7]
+      result: force_blocked
+      state_unchanged: true
+    east:
+      player_cell: [7, 6]
+      reachable: true
+      case: RA_V8_STAGE1B_CRATE_EAST
+      force_input: left
+      crate_target: [5, 6]
+      responsible_wall: [5, 6]
+      result: force_blocked
+      state_unchanged: true
+    south:
+      player_cell: [6, 7]
+      reachable: false
+      blocker: wall
+    west:
+      player_cell: [5, 6]
+      reachable: false
+      blocker: wall
+  reading: >-
+    crate 的全部相邻操作面已枚举；两格可达面都位于 P 世界，向 crate 输入时分别由其对侧墙使 force_blocked，
+    另两面本身为墙。它不能被独立施力；在正 witness 中始终停于 (6,6)，未进入 L 的受力闭包、P/L 链、目标或 H2 footprint，
+    因而不能替代三格 L。H2 另行产生的 (8,6) crate 是同一 L 完成正交移动后的边界结算，不是 cut crate。
+
+designer_decision:
+  stage1b_gate: passed
+  statement: >-
+    combined local runtime 的六个最小 case 共同成立：玩家实际移动 B/S 切出 L+crate；同一 L 完成 H0→非恒等 H1→H2；
+    B/S 可反向回粘母体，而第二格深切从两个竖向入口均不可执行；母体完成相同前段后只因额外尾格在同一正交输入 force_blocked；
+    cut crate 的两格可达操作面均实测 force_blocked，另两面为墙，因此无独立施力或替代路线。
+  evidence_limit: >-
+    本结论只覆盖 assignment 指定的无胜利 combined local identity/substitution 门槛。
+    未形成 candidate、正式目标、solve instance、完整图、solver 解族、送审包或作品质量判断。

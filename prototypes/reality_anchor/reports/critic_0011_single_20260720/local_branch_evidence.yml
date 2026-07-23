@@ -1,0 +1,35 @@
+scope: requested_steps_only
+requested_steps:
+  - 7
+  - 8
+  - 14
+graph_ref: prototypes/reality_anchor/reports/layout_analysis_critic_0011_graph_20260720.json
+max_states: 100000
+max_depth: 200
+branches:
+  - canonical_step: 14
+    input: right
+    events:
+      - pull_object:push_pull_anchor
+      - anchor_boundary_shift:push_pull
+    before_key: Ply:3,2|C:2,3|M:|PL:P:1,2;L:2,2|BS:none
+    after_key: Ply:4,2|C:2,3|M:|PL:P:2,2;L:3,2|BS:none
+    after_layout: |-
+      ######
+      #....#
+      #.PL+#
+      #.CG##
+      #....#
+      ######
+    return_to_before:
+      found: false
+      status: complete
+      explored_states: 687
+    win_search:
+      outcome: win_reachable
+      found: true
+      search_status: found
+      explored_states: 59
+      budget:
+        maxStates: 100000
+        maxDepth: 200

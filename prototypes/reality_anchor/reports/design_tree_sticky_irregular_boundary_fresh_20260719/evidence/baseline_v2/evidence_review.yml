@@ -1,0 +1,119 @@
+review_attempt_id: "RA_HARD_BASELINE_V2_001"
+reviewer_instance_id: "codex_fresh_evidence_reviewer_baseline_v2_20260719"
+candidate_id: "RA_STICKY_IRREGULAR_BASELINE_001"
+exact_version: "v2"
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - "prototypes/reality_anchor/README.md"
+    - "prototypes/reality_anchor/mechanic.yml"
+    - "docs/21-level-design-studio-standard.md"
+    - ".agents/skills/sokoban-evidence-reviewer/SKILL.md"
+    - ".agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md"
+    - ".agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md"
+    - ".agents/skills/sokoban-evidence-reviewer/references/source-map.md"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/canonical_replay.json"
+    - "prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/solution_uniqueness.yml"
+    - "prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.json"
+    - "prototypes/reality_anchor/reports/layout_analysis_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REVIEW.md"
+    - "prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json"
+    - "prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.md"
+    - "prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_L.json"
+    - "prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_L.md"
+    - "prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_SHIFT_BS.json"
+    - "prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_CF_SHIFT_BS.md"
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_complete
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "down,right,right,right,down（canonical exact replay，5 步合法并胜利）"
+  equivalence_evidence_basis:
+    - "完整状态图：19 reachable states、34 legal transitions、1 winning state，status=complete，maxStates=300000。"
+    - "完整 agency graph：初始 region 有 2 个 commitment，只有 1 个 viable、1 个 dead；全图只有 1 个 winning region。"
+    - "完整 SCC 摘要：win-reaching 子图无 branching/merging，初始 SCC 只有 1 条 win-reachable outgoing；进入有效 commitment 前的差异位于双向可逆 region。"
+    - "canonical exact replay 固定对象职责和因果顺序：横推同一四格 sticky rigid body 后，下拉该刚体并使 B/S 入链覆盖目标。"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "单个 winning state 本身不证明所有胜路含同一事件；本结论同时依赖 complete agency/SCC 的唯一 win-reaching commitment 与 canonical exact replay。"
+    - "只核验玩家逻辑类唯一性，不把初始可逆走位、回退或回到同一完整状态的环视为非等价胜解。"
+
+claims:
+  - claim_id: "exact_solvable"
+    claim: "当前 exact layout 可由非空输入 down,right,right,right,down 合法通关。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json 与 HARD_REPLAY.json 均记录 5 步全部合法，终态 isWin=true。"
+      - "layout analysis 的 shortest solution 为同一 5 步输入，found=true。"
+    limits: []
+
+  - claim_id: "canonical_event_chain"
+    claim: "终手合法，包含 pull_object:sticky#1、force_chain:n2、anchor_boundary_shift:box_sticky 与 move_sticky_rigid，终态由 B 端覆盖唯一目标而胜利。"
+    status: supported
+    evidence_basis:
+      - "HARD_REPLAY step 5 legal=true，逐项记录所声明的四个事件，after.isWin=true。"
+      - "exact layout 只有一个 G；终态 state/render 将 B 从 (8,4) 移至原目标 (8,5)。"
+    limits:
+      - "事件链由这一条 exact replay 直接支持；全路径约束另由 complete agency/SCC 的唯一 win-reaching commitment 支持，未仅凭单一 winning state 推断。"
+
+  - claim_id: "solution_logic_class_unique"
+    claim: "在完整 19-state / 34-transition 图中只有一个 winning state；agency graph 的两个 opening commitment 只有一个可胜，且所有胜路只留下同一个玩家逻辑类。"
+    status: supported
+    evidence_basis:
+      - "layout analysis graph status=complete：19 states、34 transitions、1 win state。"
+      - "agency status=complete：2 commitment transitions、1 winning region；initial region 为 1 viable / 1 dead commitment。"
+      - "SCC 摘要为 one_win_continuation_per_scc，branchingWinSccs=0、mergingWinSccs=0。"
+    limits:
+      - "结论限于当前 v2 exact layout 与所记录的 complete graph；不评价唯一逻辑类的可见性或体验价值。"
+
+  - claim_id: "no_direct_anchor_or_upper_face_win_bypass"
+    claim: "完整图中唯一另一 opening commitment 是从上方操作面下推 T，进入 dead region；不存在不经 T 横推再下拉的胜利 commitment。"
+    status: supported
+    evidence_basis:
+      - "solution_uniqueness.yml 将 up,right,right,down 标为 push T down from upper face 的 dead alternative。"
+      - "complete agency graph 的初始 region 恰有 2 个 commitment，其中 1 viable、1 dead；canonical path 的唯一 viable commitment 由横推 T 后的下拉进入 winning region。"
+      - "complete SCC 摘要显示初始 SCC 只有 1 条 win-reachable outgoing，另有 1 条 dead outgoing。"
+    limits:
+      - "允许的 graph report 提供 commitment 聚合与 canonical decision-step 映射，不提供完整逐边清单；结论不扩张到当前 exact 之外。"
+
+  - claim_id: "remote_arm_mechanical_necessity"
+    claim: "删除 T 的远端右臂成为近邻 L 形后，同一五步仍全部合法，但终手不含 force_chain 或 B/S 位移，且不胜利。"
+    status: supported
+    evidence_basis:
+      - "CF_L 初态相对 exact 删除右臂 sticky cell，B/S、目标及其余版面保持对应位置。"
+      - "CF_L replay 的 5 步 legalThroughStep=5；终手事件只有 pull_object:sticky#1 与 move_sticky_rigid。"
+      - "CF_L 终态 B/S 仍为 B:(8,4),S:(7,4)，isWin=false。"
+    limits:
+      - "该反事实只支持同一五步链中的机械必要关系，不证明其它输入下该反事实整体不可解。"
+
+  - claim_id: "boundary_alignment_mechanical_necessity"
+    claim: "保持完整 T、只把 B/S 横移一格后，同一五步仍全部合法，但终手不含 force_chain 或 B/S 位移，且不胜利。"
+    status: contradicted
+    evidence_basis:
+      - "CF_SHIFT_BS 的原始布局不只横移 B/S：目标也由 (8,5) 移至 (9,5)。"
+      - "CF_SHIFT_BS 同时把第 4、5 行的右侧边界向右扩一格，改变了 floor/wall 占用；因此并非声明的单变量反事实。"
+      - "该 replay 确实记录 5 步全合法、终手无 force_chain/B/S 位移且 isWin=false，但这些结果来自一个同时改变 B/S、目标与边界的布局。"
+    limits:
+      - "现有 artifact 不能隔离 boundary alignment 的机械必要性；若保留原声明，需要提供只移动 B/S、其它格完全不变的反事实证据。"
+
+  - claim_id: "connected_irregular_body_participation"
+    claim: "当前 exact 中四格 T 在第 4、5 步作为同一 connected sticky rigid body 移动；第 5 步由其远端占格把 B/S 纳入力链。"
+    status: supported
+    evidence_basis:
+      - "exact state keys 显示同一四格连通 T 在 step 4 全体右移一格、step 5 全体下移一格；两步均记录 move_sticky_rigid。"
+      - "step 5 记录 pull_object:sticky#1、force_chain:n2 与 anchor_boundary_shift:box_sticky，B/S 从 y=4 同步移至 y=5。"
+      - "CF_L 删除远端右臂后，同一步骤仍移动 sticky rigid body，但不再出现 force_chain 或 B/S 位移。"
+    limits:
+      - "layout analyzer 的 objectParticipation 为空；本结论只依据逐步 exact state、instance-tagged 事件与配对反事实，不声称 analyzer 提供了 instance-level participation。"
+
+hard_failures:
+  - "boundary_alignment_mechanical_necessity 的反事实前提被原始 CF_SHIFT_BS 布局直接否定：除 B/S 外，目标和右侧边界/可走格也发生变化。"
+evidence_gaps:
+  - "缺少只横移 B/S、同时保持目标、墙体、地板与完整 T 全部不变的单变量 counterfactual replay。"
+overall_hard_status: contradicted
+required_action: rerun_or_supply_evidence

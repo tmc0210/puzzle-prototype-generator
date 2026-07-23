@@ -1,0 +1,82 @@
+runId: ra_task_connected_parent_subtractive_residue_20260719_09
+title: 连通六格母体的一格/两格主动减法 staged split gate
+notes: >-
+  只比较同一母体沿固定 B/S 边界的一格与两格主动切分，验证切分合法、单一连通残体、
+  残体外侧轴向动作，以及切出 crate 的直接晚粘回尝试。G 仅满足布局 parser。
+defaults:
+  maxExploreDepth: 0
+  maxReturnDepth: 0
+  maxStates: 1
+  maxTransitions: 1
+cases:
+  - id: depth1_connected_five_residue_axis
+    family: connected_parent_subtractive_residue_gate
+    variant: depth_1
+    changedVariable: 主动切分深度一格
+    contrastWith:
+      - depth2_connected_l_residue_axis
+    title: 一格减法留下连通五格异形并外侧轴向拉动
+    question: 第一格主动减法是否合法，且残体能否从右外侧整体轴向拉动？
+    notes: >-
+      首个 left 拉动六格母体越过固定 B/S，左上格转为 crate；随后绕到残体右侧，
+      最后一个 right 应拉动整个五格残体。
+    layout: |-
+      ############
+      #PL.......G#
+      #...BS.....#
+      #..........#
+      #....MMMM..#
+      #....@MM...#
+      #..........#
+      #..........#
+      #..........#
+      ############
+    actions: [left, down, right, right, right, up, right]
+
+  - id: depth2_connected_l_residue_axis
+    family: connected_parent_subtractive_residue_gate
+    variant: depth_2
+    changedVariable: 主动切分深度两格
+    contrastWith:
+      - depth1_connected_five_residue_axis
+    title: 两格减法留下连通三格 L 并外侧轴向拉动
+    question: 第二格主动减法是否仍合法，且唯一残体能否从右外侧整体轴向拉动？
+    notes: >-
+      连续两个 left 使既有 crate 参与闭包并继续向 box side 移动，同时新越界格转为 crates；
+      预期只留下三格 L 黏块，随后绕到其右侧完成轴向拉动。
+    layout: |-
+      ############
+      #PL.......G#
+      #...BS.....#
+      #..........#
+      #....MMMM..#
+      #....@MM...#
+      #..........#
+      #..........#
+      #..........#
+      ############
+    actions: [left, left, down, right, right, right, up, right]
+
+  - id: depth1_cut_crate_late_remerge_probe
+    family: connected_parent_subtractive_residue_gate
+    variant: late_remerge_probe
+    changedVariable: 切出 crate 的晚粘回探针
+    contrastWith:
+      - depth1_connected_five_residue_axis
+    title: 一格减法后切出 crate 的晚粘回探针
+    question: 把残体轴向移开两格后，玩家能否把切出 crate 拉回 sticky side 并与残体重粘？
+    notes: >-
+      先完成一格减法；down 把 crate 拉离原行，随后从残体下外侧连续两次 down 把残体移开，
+      再绕到 crate 右侧执行 right。若出现 box_to_sticky 与 sticky_merge，gate 失败。
+    layout: |-
+      ############
+      #PL.......G#
+      #...BS.....#
+      #..........#
+      #....MMMM..#
+      #....@MM...#
+      #..........#
+      #..........#
+      #..........#
+      ############
+    actions: [left, down, right, down, down, right, right, right, up, up, up, up, left, left, left, down, right]

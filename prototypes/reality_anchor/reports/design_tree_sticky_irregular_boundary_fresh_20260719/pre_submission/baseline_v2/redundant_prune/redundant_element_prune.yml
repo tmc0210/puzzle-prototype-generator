@@ -1,0 +1,442 @@
+assignment_id: RA_PRE_BASELINE_V2_REDUNDANT_PRUNE
+workflow_id: redundant_element_prune
+node_id: baseline_001
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version_basis: v2
+assignment_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/pre_baseline_redundant_prune.yml
+
+redundant_element_prune:
+  status: pruned
+  authority: prototypes/reality_anchor/docs/redundant_element_prune.md
+  sequence:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+  applicability: >-
+    v2 准备进入待玩交付，且 13x7 布局的左侧存在一列、右侧存在三列不承担任何
+    机制边界的额外纯墙外框；固定 P/L 也因不在 returned trace 中移动而需要实物反事实。
+
+  exact_baseline:
+    layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    layout_sha256: e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6
+    dimensions: 13x7
+    shortest_cost: 5
+    canonical_inputs: [down, right, right, right, down]
+    canonical_terminal_events:
+      - "pull_object:sticky#1"
+      - "force_chain:n2"
+      - "anchor_boundary_shift:box_sticky"
+      - move_sticky_rigid
+    graph_status: complete
+    reachable_states: 19
+    legal_transitions: 34
+    winning_states: 1
+    opening:
+      initial_scc_size: 8
+      commitment_count: 2
+      viable_commitment_count: 1
+      dead_commitment_count: 1
+      dead_upper_exit_source_distance: 3
+      win_core_exit_source_distance: 4
+
+  stage_results:
+    goal_prune:
+      status: clean
+      delegated_exact_artifact: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/goal_prune/goal_prune_check.yml
+      retained_targets:
+        - [8, 5]
+      removed_targets: []
+      routing_reason: 唯一目标按 authority 必须保留；本轮未改目标或其底层地面。
+
+    object_remove_prune:
+      status: clean
+      objects_screened:
+        - id: sticky_T
+          initial_cells: [[4, 3], [5, 3], [6, 3], [5, 4]]
+          result: keep
+          semantic_role: structural
+          reason: >-
+            完整 T 在 canonical 第 4、5 拍刚体移动；中央脚、左臂把手与远端右臂共同承担
+            近端操作—远端 B/S 扫带，不满足 remove 候选前提。
+        - id: B/S
+          initial_cells: [[8, 4], [7, 4]]
+          result: keep
+          semantic_role: structural
+          reason: >-
+            B/S 在终拍发生 anchor_boundary_shift:box_sticky 并由 B 覆盖唯一目标，直接参与核心事件。
+        - id: P/L
+          initial_cells: [[4, 1], [5, 1]]
+          result: keep
+          semantic_role: structural
+          reason: >-
+            虽然固定 P/L 本体不移动，但整体删除后原五拍第 5 拍退化为 walk 且不胜；另生八拍
+            push-only 胜解，移除了 fixed push/pull effect 与终拍 force-chain 关系。
+          counterfactual:
+            layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/counterfactual_remove_push_pull_anchor.txt
+            cost_delta: "5->8"
+            shortest_inputs: [up, right, right, down, right, right, right, down]
+            shortest_non_walk_events:
+              - "push_object:sticky#1"
+              - move_sticky_rigid
+              - "push_object:box_sticky_anchor"
+              - "anchor_boundary_shift:box_sticky"
+            graph_status: complete
+            reachable_states: 37
+            legal_transitions: 71
+            winning_states: 1
+            expected_trace_legal: true
+            expected_trace_win: false
+            core_event_bypass:
+              - fixed_push_pull_effect
+              - "pull_object:sticky#1"
+              - "force_chain:n2"
+      removed_objects: []
+
+    object_wallify_prune:
+      status: clean
+      objects_screened:
+        - id: sticky_T
+          result: keep
+          reason: 会移动并参与核心事件，不满足 wallify 前提。
+          semantic_role: structural
+        - id: B/S
+          result: keep
+          reason: 会移动并参与核心事件，不满足 wallify 前提。
+          semantic_role: structural
+        - id: P/L
+          result: keep
+          semantic_role: structural
+          reason: >-
+            将 P/L 两格整体墙化与删除版本一样消失 fixed push/pull 语义；原五拍不胜，另生八拍
+            push-only 胜解，证明它不是伪装成对象的静态 blocker。
+          counterfactual:
+            layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/counterfactual_wallify_push_pull_anchor.txt
+            cost_delta: "5->8"
+            shortest_inputs: [up, right, right, down, right, right, right, down]
+            graph_status: complete
+            reachable_states: 31
+            legal_transitions: 59
+            winning_states: 1
+            expected_trace_legal: true
+            expected_trace_win: false
+            core_event_bypass:
+              - fixed_push_pull_effect
+              - "pull_object:sticky#1"
+              - "force_chain:n2"
+      wallified_objects: []
+
+    space_prune:
+      status: clean
+      static_scan:
+        walkable_cells: 21
+        plain_floor_cells_checked: 11
+        degree_le_1_candidates: []
+        single_entry_pockets: []
+        edge_hole_candidates: []
+      path_and_read_consumption:
+        upper_dead_operation_route:
+          cells: [[2, 2], [3, 2], [4, 2]]
+          role: >-
+            把玩家送到上方直接下推的 dead commitment；与下方肩窝共同构成开局操作面比较，
+            不能因 canonical 不经过就删。
+        canonical_player_floor_cells:
+          - [2, 4]
+          - [3, 4]
+          - [4, 4]
+          - [5, 5]
+        sticky_object_path_floor_cells:
+          - [7, 3]
+          - [6, 4]
+          - [6, 5]
+        box_sticky_path_floor_cells:
+          - [7, 5]
+        start_cell:
+          cell: [2, 3]
+          role: opening_comfort_and_read_graph
+      result: keep
+      reason: >-
+        十一格 plain floor 均承担 canonical 玩家路径、T/B/S 运动路径或上方 dead 操作面的读图责任；
+        无 degree<=1 leaf、单入口 pocket 或无责任边缘空洞，因此没有合法 floor->wall 候选。
+      removed_spaces: []
+
+    wall_outline_prune:
+      status: pruned
+      wall_tooth_inspection:
+        cell: [3, 3]
+        result: keep
+        semantic_role: read_graph
+        diagnostic_only: true
+        diagnostic_action: wall_to_floor
+        layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/diagnostic_open_central_wall_tooth.txt
+        hard_facts:
+          cost_delta: "5->5"
+          graph_status: complete
+          graph_delta: "19/34/1->30/74/1"
+          expected_trace_win: true
+          core_event_bypass: none
+          opening_delta: "initial SCC 8->18; commitments 2->3; viable commitments 1->2"
+        reason: >-
+          打开该墙齿虽不破坏五拍回放，却把上下支路连成更大的可逆区并新增第二个 viable opening
+          commitment，削弱原版“一活一死操作面”的玩家读图；该动作不是 authority 的裁边结果，墙齿保留。
+      independent_outline_counterfactuals:
+        - id: trim_right_thick_border
+          source_columns_removed: [10, 11, 12]
+          source_column_retained_as_outer_wall: 9
+          layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/counterfactual_trim_right_outline.txt
+          result: trim
+          hard_facts:
+            cost_delta: "5->5"
+            graph_status: complete
+            graph_delta: "19/34/1->19/34/1"
+            expected_trace_win: true
+            canonical_events_unchanged: true
+            core_event_bypass: none
+            opening_delta: none
+            target_obligation_bypass: none
+          semantic_role: none
+        - id: trim_left_thick_border
+          source_columns_removed: [0]
+          source_column_retained_as_outer_wall: 1
+          coordinate_mapping: "(x,y)->(x-1,y)"
+          layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/counterfactual_trim_left_outline.txt
+          result: trim
+          hard_facts:
+            cost_delta: "5->5"
+            graph_status: complete
+            graph_delta: "19/34/1->19/34/1"
+            expected_trace_win: true
+            canonical_events_unchanged: true
+            core_event_bypass: none
+            opening_delta: none
+            target_obligation_bypass: none
+          semantic_role: none
+      combined_trim:
+        result: trim
+        source_rectangle_retained: "x=1..9, y=0..6"
+        source_columns_removed: [0, 10, 11, 12]
+        dimensions_delta: "13x7->9x7"
+        coordinate_mapping: "all dynamic cells (x,y)->(x-1,y)"
+        layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/proposed_exact_v3_trimmed_outline.txt
+        layout_sha256: 477d96ae46c2a683a6ec4073f89b724474c3d02cfdac1ef83af27efe26290b4a
+        rectangular_layout: true
+        outer_ring_all_walls: true
+        canonical:
+          inputs: [down, right, right, right, down]
+          cost: 5
+          win: true
+          terminal_events:
+            - "pull_object:sticky#1"
+            - "force_chain:n2"
+            - "anchor_boundary_shift:box_sticky"
+            - move_sticky_rigid
+          near_operation_remote_sweep_preserved: true
+        complete_graph:
+          status: complete
+          reachable_states: 19
+          legal_transitions: 34
+          winning_states: 1
+          isomorphism_mapping: "v2 state dynamic coordinates (x,y)->(x-1,y)"
+          state_keys_equal_after_translation: true
+          labeled_edges_equal_after_translation: true
+          winning_state_keys_equal_after_translation: true
+        core_event_probe:
+          profile: strong_material
+          relevant_individual_groups:
+            movable_box_sticky_shift: complete_no_winning_bypass
+            fixed_push_pull_effect: complete_no_winning_bypass
+            sticky_rigid_move: complete_no_winning_bypass
+          reachable_event_scan: "complete; 19 states / 34 transitions; forbidden hits none"
+          evidence_boundary: >-
+            strong_material 的 combined probe 还要求本作品身份未声明的 material_normalization、
+            box_to_sticky、sticky_merge；与 v2 一样，只采用上述三项 relevant individual 结果。
+        opening:
+          initial_scc_size: 8
+          commitment_count: 2
+          viable_commitment_count: 1
+          dead_commitment_count: 1
+          dead_upper_exit_source_distance: 3
+          win_core_exit_source_distance: 4
+          player_read: >-
+            仍从上下观察支路的共同门厅开局；裁去的只有不可达纯墙，观察空间、上方 dead 操作面、
+            下方肩窝和两个不可逆出口的距离关系完全不变。
+        player_side_reason: >-
+          原 v2 的活动构图被左一列、右三列无责任纯墙包在 13 格宽的墙板中。组合裁边不收窄任何
+          可见地面、站位或对象路线，只让两侧各留下承担机制边界的单层外墙，使 T、B/S 目标口袋
+          与上下操作面更集中；这是去除轮廓残留，不把 compact 本身当作价值。
+
+  candidates_checked:
+    - element: {kind: object, id_or_cell: P/L}
+      action_tested: remove
+      result: keep
+      reason: 原 canonical 不再胜利并出现 push-only winning bypass。
+      hard_facts:
+        cost_delta: "5->8"
+        graph_status: complete
+        expected_trace_win: false
+        core_event_bypass: [fixed_push_pull_effect, "pull_object:sticky#1", "force_chain:n2"]
+        opening_delta: not_needed_after_expected_trace_failure
+        target_obligation_bypass: alternate_push_only_win
+      semantic_role: structural
+    - element: {kind: object, id_or_cell: P/L}
+      action_tested: wallify
+      result: keep
+      reason: P/L 不是静态 blocker；墙化同样删掉 fixed push/pull 语义并产生 push-only 胜解。
+      hard_facts:
+        cost_delta: "5->8"
+        graph_status: complete
+        expected_trace_win: false
+        core_event_bypass: [fixed_push_pull_effect, "pull_object:sticky#1", "force_chain:n2"]
+        opening_delta: not_needed_after_expected_trace_failure
+        target_obligation_bypass: alternate_push_only_win
+      semantic_role: structural
+    - element: {kind: space, id_or_cell: all_plain_floor_cells}
+      action_tested: wall_prune_candidate_scan
+      result: keep
+      reason: 无 leaf/pocket 候选；全部 plain floor 被玩家路径、对象路径或上方 dead 操作面读取消费。
+      hard_facts:
+        cost_delta: not_run_no_candidate
+        graph_status: baseline_complete
+        expected_trace_win: baseline_true
+        core_event_bypass: none_in_exact_candidate
+        opening_delta: baseline_initial_scc_8
+        target_obligation_bypass: none
+      semantic_role: structural
+    - element: {kind: wall_outline, id_or_cell: [3, 3]}
+      action_tested: wall_to_floor_read_graph_diagnostic
+      result: keep
+      reason: 打开后 initial SCC 与 viable commitment 增长，破坏上下操作面的清晰分隔。
+      hard_facts:
+        cost_delta: "5->5"
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass: none
+        opening_delta: "SCC 8->18; commitments 2->3; viable 1->2"
+        target_obligation_bypass: none
+      semantic_role: read_graph
+    - element: {kind: wall_outline, id_or_cell: original_right_x10_to_x12}
+      action_tested: trim
+      result: trim
+      reason: 保留 x=9 单层外墙后，三列纯墙没有结构、机制、开局或审美责任。
+      hard_facts:
+        cost_delta: "5->5"
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass: none
+        opening_delta: none
+        target_obligation_bypass: none
+      semantic_role: none
+    - element: {kind: wall_outline, id_or_cell: original_left_x0}
+      action_tested: trim
+      result: trim
+      reason: 保留原 x=1 为新最左单层外墙后，x=0 纯墙没有责任。
+      hard_facts:
+        cost_delta: "5->5"
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass: none
+        opening_delta: none
+        target_obligation_bypass: none
+      semantic_role: none
+
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline:
+    - description: 删除 v2 原坐标 x=0 的整列纯墙；保留原 x=1 为新最左外墙。
+    - description: 删除 v2 原坐标 x=10..12 的三列纯墙；保留原 x=9 为新最右外墙。
+  retained_elements:
+    - kind: goal
+      id_or_cell: [8, 5]
+      reason: 唯一目标按 goal_prune authority 保留；拟议 v3 中平移为 [7,5]。
+    - kind: object
+      id_or_cell: sticky_T
+      reason: canonical 两次刚体移动并承担近端操作—远端扫带。
+    - kind: object
+      id_or_cell: B/S
+      reason: 终拍边界位移并覆盖唯一目标。
+    - kind: object
+      id_or_cell: P/L
+      reason: 固定全局 push/pull 语义；remove 与 wallify 均破坏原解并产生旁路。
+    - kind: space
+      id_or_cell: all_plain_floor_cells
+      reason: 全被玩家路径、对象路径或开局操作面比较消费。
+    - kind: wall_outline
+      id_or_cell: [3, 3]
+      reason: 分隔上下操作面并维持一活一死的 opening read graph。
+    - kind: wall_outline
+      id_or_cell: original_x1_and_x9
+      reason: 组合裁边后成为左右单层机制外墙，保证最外圈全墙。
+
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+    - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_BASELINE_001_V2_HARD_REPLAY.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/submission.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/baseline_v2/evidence_review_02.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/goal_prune/goal_prune_check.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/opening_comfort/opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/counterfactual_remove_push_pull_anchor.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/fixed_anchor_probe_remove_pl_core.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/counterfactual_wallify_push_pull_anchor.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/fixed_anchor_probe_wallify_pl_core.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/diagnostic_open_central_wall_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/fixed_anchor_probe_open_tooth_core.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/counterfactual_trim_right_outline.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/fixed_anchor_probe_trim_right_core.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/counterfactual_trim_left_outline.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/fixed_anchor_probe_trim_left_core.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/proposed_exact_v3_trimmed_outline.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/fixed_anchor_probe_trim_both_core.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/verify_outline_graph_isomorphism.ts
+
+proposed_result_exact:
+  exact_version: v3
+  change_scope: only_outline_trim
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/proposed_exact_v3_trimmed_outline.txt
+  layout_sha256: 477d96ae46c2a683a6ec4073f89b724474c3d02cfdac1ef83af27efe26290b4a
+  reviewed_v2_overwritten: false
+  relative_object_goal_player_structure_changed: false
+  canonical_inputs_changed: false
+  complete_labeled_graph_isomorphic: true
+  player_read_changed: false
+
+rereview:
+  rereview_required: true
+  authority_reason: >-
+    redundant_element_prune authority 允许在满足完整图、核心事件、opening 与最外圈全墙硬门后执行纯墙外框裁剪，
+    但没有明确授权 exact 改变后保留既有 evidence / 阶段 A / 阶段 B review。按 docs/21 与本 assignment，
+    只改轮廓仍形成新 exact v3，必须由 Controller 重新进入所需硬证据与 fresh A/B 链；本 artifact 不授予该状态。
+
+tool_runs:
+  - command: >-
+      npx tsx src/cli.ts explain-layout prototypes/reality_anchor <each-counterfactual-layout>
+      --id <case-id> --targets K_runtime_smoke --max-states 300000 --graph-max-states 300000
+    result: 6/6 complete; candidate graph facts recorded above
+  - command: >-
+      npx tsx src/cli.ts try-inputs prototypes/reality_anchor <each-counterfactual-layout>
+      --id <case-id> --inputs down,right,right,right,down
+    result: 6/6 exact replays read; remove/wallify P/L fail win, tooth and all outline trims preserve win and events
+  - command: >-
+      npx tsx prototypes/reality_anchor/reports/probe_fixed_anchor_candidate.ts <each-counterfactual-layout>
+      <case-id> push_pull 300000 80 strong_material
+    result: complete raw md/json artifacts retained in this assignment output directory
+  - command: >-
+      npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/verify_outline_graph_isomorphism.ts
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/proposed_exact_v3_trimmed_outline.txt
+    result: >-
+      complete; 19/34/1 on both sides; after (x,y)->(x-1,y), state keys, action/event-labeled edges,
+      and winning-state keys are all equal
+
+operation:
+  reviewed_v2_modified: false
+  new_exact_proposed: true
+  controller_state_modified: false
+  delivery_or_playable_state_modified: false
+  shared_prototype_files_modified: false
+
+version_effect: proposed_change
+result_exact_version: v3
+controller_boundary: >-
+  本 artifact 只记录 Designer 的 redundant_element_prune 专业判断与 task-local 原始反事实；未覆盖冻结 v2，
+  未写 design_tree、review verdict、冻结、pre-submission 总状态、delivery、levels 或 playable queue。

@@ -1,0 +1,63 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V7_CANDIDATE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v7
+status: family_failed_non_equivalent_winning_family
+
+artifact_refs:
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/layout.txt
+  canonical: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/canonical_replay.json
+  review_actual: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/review_actual_replay.json
+  directed_audit: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/candidate_directed_audit.json
+
+canonical:
+  status: pass_win
+  inputs: 28
+  required_actions_observed:
+    - B/S 上移一格切成 L+crate
+    - 三格 L 的 P 侧轴向 push
+    - 绕到外侧后的 L 侧 pull
+    - 反向 pull 回到 handoff exact state
+    - 第二正交 pull 与终局覆盖
+
+directed_checks:
+  skip_return:
+    status: winning_variant_found
+    inputs: 16
+    classification: equivalent_exact_loop_omission
+    consequence: canonical 的 exact 回返不是胜利依赖。
+  skip_outside_handle:
+    status: winning_variant_found
+    inputs: 16
+    classification: same_replay_as_skip_return
+    consequence: 玩家可从 handoff 直接取得第二正交面，外侧 pull 不是胜利依赖。
+  b_s_first_then_retire:
+    status: non_equivalent_win_found
+    witness: deep_cut_independent_crate_win
+    detail: B/S 连续上移两格后不再参与，20 步获胜。
+  crate_independent_target_or_key:
+    status: non_equivalent_win_found
+    witness: deep_cut_independent_crate_win
+    detail: 一只切出 crate 单独覆盖第三目标，另一只被单独拉开以清出横条路线。
+  alternative_deep_cut:
+    status: non_equivalent_win_found
+    witness: deep_cut_independent_crate_win
+    detail: 二格横条取代三格 L，并覆盖上方双目标。
+  no_cut_or_remerged_mother_direct:
+    status: not_run_after_fatal_counterexample
+  skip_second_operation_face:
+    status: not_run_after_fatal_counterexample
+
+graph:
+  run: false
+  reason: assignment 禁止无界完整图；定向审计已找到非等价胜族并触发停止。
+
+designer_decision:
+  candidate_ready_for_graph: false
+  solution_uniqueness_written: false
+  submission_written: false
+  self_verdict: withdraw_current_v7
+  reason: >-
+    深切横条 + 独立 crate 构成第二个获胜逻辑类，改变核心形状、身份、目标分配与 P/L 生命周期；
+    另有可整体省略外拉—exact 回返的等价胜路，父节点负担也未由胜利依赖保存。

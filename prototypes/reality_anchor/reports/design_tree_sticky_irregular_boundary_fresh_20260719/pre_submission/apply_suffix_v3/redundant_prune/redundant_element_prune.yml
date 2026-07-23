@@ -1,0 +1,460 @@
+assignment_id: RA_PRE_APPLY_V3_REDUNDANT_PRUNE
+workflow_id: redundant_element_prune
+node_id: apply_suffix_001
+parent_node_id: construct_prefix_001
+growth_relation: apply_suffix
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version_basis: v3
+assignment_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/pre_apply_v3_redundant_prune.yml
+
+redundant_element_prune:
+  status: pruned
+  authority: prototypes/reality_anchor/docs/redundant_element_prune.md
+  sequence:
+    - goal_prune
+    - object_remove_prune
+    - object_wallify_prune
+    - space_prune
+    - wall_outline_prune
+  applicability: >-
+    当前 reviewed v3 已完成目标枝剪、opening 调整与 fresh 重审。该 exact 的左右两侧仍有
+    多层纯墙外框，但中央/下方活动室同时承担中性两步开局、offset Z 与 2x2 的真实分流，
+    不能把 shortest trace 未站到的格子直接视为冗余。
+
+  exact_baseline:
+    layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+    layout_sha256: 76379e4f0b029cab00feceefa1975712cad6ef6909b084077ea7379a2fff531d
+    dimensions: 12x8
+    player_start: [8, 6]
+    targets: [[4, 1], [4, 3]]
+    shortest_cost: 9
+    canonical_inputs: [up, left, down, left, up, right, up, left, up]
+    canonical_chain:
+      neutral_opening:
+        steps: [1, 2]
+        inputs: [up, left]
+        first_step_event: walk
+        second_step_events: ["push_object:sticky#2", move_sticky_rigid]
+      offset_z_construction:
+        step: 5
+        events: ["push_object:sticky#1", move_sticky_rigid, "sticky_merge:n1"]
+        resulting_cells: [[6, 3], [7, 3], [5, 4], [6, 4]]
+      horizontal_core:
+        step: 8
+        input: left
+        events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+        win_after: false
+      vertical_suffix:
+        step: 9
+        input: up
+        events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+        win_after: true
+        coverage_handoff: >-
+          B 上移覆盖 [4,1]；S 上移离开 [4,3]，完整 Z 的左下远趾接替覆盖 [4,3]。
+    square_counterplay:
+      inputs: [left, up, right, up, left, down, down, left, up, up, left, left, up]
+      legal_through_step: 13
+      same_horizontal_core_type: true
+      B_S_vertical_shift_reached: true
+      final_win: false
+      failure_read: 下端目标最终只被玩家站位覆盖，2x2 不具备 Z 的远趾覆盖接力。
+    complete_graph:
+      status: complete
+      budget: 300000
+      reachable_states: 176
+      legal_transitions: 441
+      winning_states: 2
+      winning_object_signatures: 1
+    opening:
+      initial_scc_size: 14
+      initial_commitments: 4
+      viable_commitments: 1
+      dead_commitments: 3
+      correct_offset_opening:
+        inputs: [up, left]
+        first_step_reversible_walk: true
+        post_commitment_closure: "52 states / 2 wins"
+      wrong_square_opening:
+        inputs: [left, up]
+        first_step_reversible_walk: true
+        post_commitment_closure: "54 states / 0 wins"
+    solution_family:
+      classification: unique_logic_family_with_equivalent_player_handle_variants
+      canonical_cost: 9
+      alternate_handle_cost: 11
+      winning_state_count: 2
+      winning_object_signature_count: 1
+
+  stage_results:
+    goal_prune:
+      status: clean
+      delegated_exact_artifact: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/goal_prune/goal_prune_check.yml
+      retained_targets: [[4, 1], [4, 3]]
+      removed_targets: []
+      routing_reason: >-
+        上目标删除会让 2x2 在 core 获胜并消去 suffix；下目标删除会让同一 2x2
+        反事实获胜并消去远趾覆盖接力。本轮不改目标或其底层地面。
+
+    object_remove_prune:
+      status: clean
+      counterfactual_variants_run: []
+      objects_screened:
+        - id: upper_sticky_bar
+          initial_cells: [[6, 3], [7, 3]]
+          result: keep
+          semantic_role: structural
+          reason: 作为 offset Z 的上臂参与合并，并在横向 core 与竖向 suffix 中随同一完整 Z 连续移动。
+        - id: lower_sticky_bar
+          initial_cells: [[6, 5], [7, 5]]
+          result: keep
+          semantic_role: structural
+          reason: >-
+            它是 neutral opening 后 offset Z / 2x2 主动构造选择的材料；canonical 第 2、5、8、9 拍均被消费。
+        - id: B_S_pair
+          initial_cells: [[5, 2], [5, 3]]
+          result: keep
+          semantic_role: structural
+          reason: 同一 B/S 是横推 core 与竖推 suffix 的连续消费者，终局 B 覆盖上目标并触发覆盖交接。
+      removed_objects: []
+      routing_reason: 所有完整对象都参与构造、核心事件或目标覆盖，不成立 remove 候选。
+
+    object_wallify_prune:
+      status: clean
+      counterfactual_variants_run: []
+      wallified_objects: []
+      routing_reason: 所有对象均在 canonical 中移动，且承担 offset Z/2x2 分歧或连续 B/S 消费，不满足 wallify 前提。
+
+    space_prune:
+      status: clean
+      static_scan:
+        walkable_cells: 21
+        plain_floor_cells_checked: 12
+        plain_floor_cells:
+          - [4, 2]
+          - [6, 2]
+          - [4, 4]
+          - [5, 4]
+          - [6, 4]
+          - [7, 4]
+          - [8, 4]
+          - [5, 5]
+          - [8, 5]
+          - [5, 6]
+          - [6, 6]
+          - [7, 6]
+        degree_le_1_candidates: []
+        single_entry_pockets: []
+        edge_hole_candidates: []
+      role_groups:
+        neutral_two_step_standing:
+          cells: [[8, 5], [7, 6]]
+          reason: >-
+            [8,5] 是正确 opening 的首步站位，[7,6] 是 2x2 入口的首步站位；两边均先 walk 后承诺，
+            不得以“非对象格”误裁成首拍即推。
+        central_activity_row:
+          cells: [[4, 4], [5, 4], [6, 4], [7, 4], [8, 4]]
+          reason: 承担 Z 合并、横推 core、竖推 suffix 的把手重定位以及 alternate handle 的绕位。
+        lower_reposition_room:
+          cells: [[5, 5], [8, 5], [5, 6], [6, 6], [7, 6]]
+          reason: 承担两种开局进入、构造前回返与 core 后等价把手重定位。
+        target_lane_and_upper_handle:
+          cells: [[4, 2], [6, 2]]
+          reason: 分别属于 B/S 竖向目标通道和上臂/竖向 suffix 的贴邻操作空间。
+      serious_counterfactuals: []
+      removed_spaces: []
+      all_plain_floor_result: keep
+      all_plain_floor_reason: >-
+        静态扫描没有 leaf、单入口 pocket 或无责任边缘空洞；玩家侧重读又确认 12 格全部属于
+        两主题入口、构造分流、core/suffix 把手或覆盖通道。仅因某格未出现在 shortest trace 不构成枝剪依据。
+
+    wall_outline_prune:
+      status: pruned
+      structural_wall_inspection:
+        dual_target_pockets:
+          result: keep
+          semantic_role: structural
+          reason: >-
+            [4,1]/[4,3] 的竖向目标通道及其贴邻墙界限定 B/S 上移和 Z 远趾接力；当前 goal-prune 已证明
+            两目标责任不可替代，不能把围成该通道的墙齿当作纯轮廓。
+        central_lower_room_boundary:
+          result: keep
+          semantic_role: read_graph
+          reason: 它围出 offset Z/2x2 共用的活动室和 suffix 把手；没有可独立删除的普通墙齿或口袋墙。
+        top_and_bottom_outer_rows:
+          source_rows_retained: [0, 7]
+          result: keep
+          reason: 两行均已是单层矩形外墙；继续裁会破坏最外圈全墙硬门。
+      independent_outline_counterfactuals:
+        - id: trim_right_thick_border
+          source_columns_removed: [10, 11]
+          source_column_retained_as_outer_wall: 9
+          layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/counterfactual_trim_right_outline.txt
+          layout_sha256: 03e00b015aab49b5fe70f48b95e061f4269ae2a5ba95ab8c2817494c6055f5fa
+          result: trim
+          semantic_role: none
+          hard_facts:
+            cost_delta: "9->9"
+            graph_status: complete
+            graph_delta: "176/441/2->176/441/2"
+            canonical_replay: "9/9 legal; win"
+            alternate_handle_replay: "11/11 legal; win"
+            square_counterplay: "13/13 legal; no-win"
+            opening_delta: none
+            solution_family_delta: none
+            core_event_bypass: none
+            target_obligation_bypass: none
+          reason: 保留原 x=9 为单层右外墙后，x=10..11 是不可达纯墙板，不承担机制、opening、读图或美学责任。
+        - id: trim_left_thick_border
+          source_columns_removed: [0, 1, 2]
+          source_column_retained_as_outer_wall: 3
+          coordinate_mapping: "(x,y)->(x-3,y)"
+          layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/counterfactual_trim_left_outline.txt
+          layout_sha256: 1961c60e2d6043f19371979f747eabd68a5a0f11d511c78a21112d1d5b989948
+          result: trim
+          semantic_role: none
+          hard_facts:
+            cost_delta: "9->9"
+            graph_status: complete
+            graph_delta: "176/441/2->176/441/2"
+            canonical_replay: "9/9 legal; win"
+            alternate_handle_replay: "11/11 legal; win"
+            square_counterplay: "13/13 legal; no-win"
+            opening_delta: none
+            solution_family_delta: none
+            core_event_bypass: none
+            target_obligation_bypass: none
+          reason: 保留原 x=3 为单层左外墙后，x=0..2 是不可达纯墙板，不承担机制、opening、读图或美学责任。
+      combined_trim:
+        result: trim
+        source_rectangle_retained: "x=3..9, y=0..7"
+        source_columns_removed: [0, 1, 2, 10, 11]
+        dimensions_delta: "12x8->7x8"
+        coordinate_mapping: "all dynamic cells (x,y)->(x-3,y)"
+        layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/proposed_exact_v4_trimmed_outline.txt
+        layout_sha256: 3516694d71bfeb0270fa2e4c787d07d9579bf042c3abdc4b99b0e2ef913b8c2e
+        rectangular_layout: true
+        outer_ring_all_walls: true
+        canonical:
+          inputs: [up, left, down, left, up, right, up, left, up]
+          cost: 9
+          legal_through_step: 9
+          win: true
+          event_chain_unchanged: true
+          horizontal_core_then_vertical_suffix_preserved: true
+          coverage_handoff_preserved: true
+        construction_divergence:
+          offset_z_opening: [up, left]
+          offset_z_result: "canonical wins only after horizontal core then vertical suffix"
+          square_opening: [left, up]
+          square_counterplay_inputs: [left, up, right, up, left, down, down, left, up, up, left, left, up]
+          square_legal_through_step: 13
+          square_same_core_and_vertical_shift: true
+          square_win: false
+          preserved: true
+        solution_family:
+          canonical_handle: "9/9 legal; win"
+          alternate_handle: "11/11 legal; win"
+          winning_states: 2
+          winning_object_signatures: 1
+          classification_unchanged: true
+        complete_graph:
+          status: complete
+          budget: 300000
+          reachable_states: 176
+          legal_transitions: 441
+          winning_states: 2
+          isomorphism_mapping: "v3 dynamic coordinates (x,y)->(x-3,y)"
+          state_keys_equal_after_translation: true
+          action_event_labeled_edges_equal_after_translation: true
+          winning_state_keys_equal_after_translation: true
+          core_event_bypass: none_by_complete_labeled_graph_isomorphism
+        opening:
+          initial_scc_size: 14
+          commitments: 4
+          viable_commitments: 1
+          dead_commitments: 3
+          correct_and_wrong_first_steps_are_walks: true
+          correct_offset_closure: "52 states / 2 wins"
+          wrong_square_closure: "54 states / 0 wins"
+          opening_delta: none_by_complete_labeled_graph_isomorphism
+        player_side_reason: >-
+          合并裁边只去掉活动构图左右的五列不可达纯墙。起点与两条首步、中央/下方站位、
+          两种构造轮廓、同一 B/S 消费者、双目标口袋和 suffix 把手的相对关系完全不变；
+          读图只少了无责任墙板，没有用压缩玩家空间换 compact。
+
+  candidates_checked:
+    - element: {kind: goal, id_or_cell: [[4, 1], [4, 3]]}
+      action_tested: keep_by_prior_goal_prune
+      result: keep
+      reason: 两目标分别强制竖向 suffix 与远趾覆盖接力；删除任一都会放行 2x2 身份旁路。
+      hard_facts:
+        cost_delta: inherited_from_goal_prune
+        graph_status: baseline_complete
+        expected_trace_win: true
+        core_event_bypass: removal_creates_bypass
+        opening_delta: none_in_current_exact
+        target_obligation_bypass: forbidden
+      semantic_role: structural
+    - element: {kind: object, id_or_cell: upper_and_lower_sticky_bars_and_B_S}
+      action_tested: remove_and_wallify_candidate_screen
+      result: keep
+      reason: 全部对象都移动并直接参与 Z 构造、横/竖连续消费或目标覆盖。
+      hard_facts:
+        cost_delta: not_run_non_candidates
+        graph_status: baseline_complete
+        expected_trace_win: true
+        core_event_bypass: none_in_current_exact
+        opening_delta: none
+        target_obligation_bypass: none
+      semantic_role: structural
+    - element: {kind: space, id_or_cell: all_12_plain_floor_cells}
+      action_tested: wall_prune_candidate_scan
+      result: keep
+      reason: 无 leaf/pocket 候选；全部属于两主题入口、构造/消费路径、把手或覆盖通道。
+      hard_facts:
+        cost_delta: not_run_no_candidate
+        graph_status: baseline_complete
+        expected_trace_win: true
+        core_event_bypass: none_in_current_exact
+        opening_delta: standing_space_required_for_neutral_two_step_opening
+        target_obligation_bypass: none
+      semantic_role: structural_or_opening_comfort
+    - element: {kind: wall_outline, id_or_cell: dual_target_pockets_and_activity_room_boundary}
+      action_tested: structural_wall_screen
+      result: keep
+      reason: 围墙定义 B/S 目标通道、两构造共用活动室和 suffix 把手，不是纯轮廓残留。
+      hard_facts:
+        cost_delta: not_run_non_candidate
+        graph_status: baseline_complete
+        expected_trace_win: true
+        core_event_bypass: none_in_current_exact
+        opening_delta: none
+        target_obligation_bypass: none
+      semantic_role: structural
+    - element: {kind: wall_outline, id_or_cell: original_left_x0_to_x2}
+      action_tested: trim
+      result: trim
+      reason: 保留原 x=3 单层外墙后，三列纯墙没有责任。
+      hard_facts:
+        cost_delta: "9->9"
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass: none
+        opening_delta: none
+        target_obligation_bypass: none
+      semantic_role: none
+    - element: {kind: wall_outline, id_or_cell: original_right_x10_to_x11}
+      action_tested: trim
+      result: trim
+      reason: 保留原 x=9 单层外墙后，两列纯墙没有责任。
+      hard_facts:
+        cost_delta: "9->9"
+        graph_status: complete
+        expected_trace_win: true
+        core_event_bypass: none
+        opening_delta: none
+        target_obligation_bypass: none
+      semantic_role: none
+
+  removed_elements: []
+  wallified_objects: []
+  trimmed_outline:
+    - description: 删除 v3 原坐标 x=0..2 的三列纯墙；保留原 x=3 为新最左外墙。
+    - description: 删除 v3 原坐标 x=10..11 的两列纯墙；保留原 x=9 为新最右外墙。
+  retained_elements:
+    - kind: goal
+      id_or_cell: [[4, 1], [4, 3]]
+      reason: 分别强制 suffix 与远趾覆盖接力；拟议 v4 中平移为 [[1,1],[1,3]]。
+    - kind: object
+      id_or_cell: upper_and_lower_sticky_bars
+      reason: offset Z/2x2 构造材料与横推、竖推的同一完整刚体。
+    - kind: object
+      id_or_cell: B_S_pair
+      reason: 横向 core、竖向 suffix 的连续消费者与上目标完成对象。
+    - kind: space
+      id_or_cell: all_12_plain_floor_cells
+      reason: 中性两步 opening、两构造站位、core/suffix 把手与覆盖通道。
+    - kind: wall_outline
+      id_or_cell: original_x3_and_x9
+      reason: 组合裁边后的左右单层机制外墙。
+    - kind: wall_outline
+      id_or_cell: original_y0_and_y7
+      reason: 顶底单层矩形外墙。
+
+  evidence_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/submission.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/apply_suffix_v3/evidence_review.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/reviews/apply_suffix_v3/quality_review.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/goal_prune/goal_prune_check.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v2/opening_comfort/opening_comfort_check.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/counterfactual_trim_right_outline.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/counterfactual_trim_left_outline.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/proposed_exact_v4_trimmed_outline.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/verify_outline_graph_isomorphism.ts
+
+proposed_result_exact:
+  exact_version: v4
+  change_scope: only_outline_trim
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/proposed_exact_v4_trimmed_outline.txt
+  layout_sha256: 3516694d71bfeb0270fa2e4c787d07d9579bf042c3abdc4b99b0e2ef913b8c2e
+  reviewed_v3_overwritten: false
+  relative_object_goal_player_structure_changed: false
+  canonical_inputs_changed: false
+  opening_structure_changed: false
+  construction_divergence_changed: false
+  core_suffix_handoff_changed: false
+  solution_family_changed: false
+  complete_labeled_graph_isomorphic: true
+  player_read_changed: false
+
+rereview:
+  rereview_required: true
+  authority_reason: >-
+    redundant_element_prune authority 允许满足 expected trace、完整图、核心事件、opening、解族与最外圈全墙硬门的
+    纯墙外框裁剪，但未明确授权 exact 改变后沿用既有 evidence / fresh quality review。only-outline-trim 仍形成
+    新 exact v4，必须由 Controller 重新进入所需硬证据与 fresh 审查链；本 artifact 不写该状态。
+
+tool_runs:
+  - command: >-
+      npx tsx src/cli.ts explain-layout prototypes/reality_anchor <right-trim|left-trim|combined-trim>
+      --id <case-id> --targets K_runtime_smoke --max-states 300000 --graph-max-states 300000
+    result: >-
+      3/3 shortest cost 9; graph complete 176 states / 441 transitions / 2 wins；initial SCC 14，
+      4 commitments / 1 viable / 3 dead；canonical event chain 与 agency/SCC 摘要一致。
+  - command: >-
+      npx tsx src/cli.ts try-inputs prototypes/reality_anchor <three-layouts>
+      --id <case-id> --inputs up,left,down,left,up,right,up,left,up
+    result: 3/3 completed；9/9 legal；win。
+  - command: >-
+      npx tsx src/cli.ts try-inputs prototypes/reality_anchor <three-layouts>
+      --id <case-id> --inputs up,left,down,left,up,right,up,left,down,left,up
+    result: 3/3 completed；11/11 legal；win；等价把手保留。
+  - command: >-
+      npx tsx src/cli.ts try-inputs prototypes/reality_anchor <three-layouts>
+      --id <case-id> --inputs left,up,right,up,left,down,down,left,up,up,left,left,up
+    result: 3/3 completed；13/13 legal；no-win；2x2 错构造仍不能完成覆盖接力。
+  - command: >-
+      npx tsx prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/verify_outline_graph_isomorphism.ts
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+      prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/apply_suffix_v3/redundant_prune/proposed_exact_v4_trimmed_outline.txt
+    result: >-
+      complete；双方 176/441/2；按 (x,y)->(x-3,y) 后，state keys、action/event-labeled edges
+      与 winning-state keys 全部相等。
+
+operation:
+  reviewed_v3_modified: false
+  new_exact_proposed: true
+  controller_state_modified: false
+  review_state_modified: false
+  delivery_or_playable_state_modified: false
+  shared_prototype_files_modified: false
+
+version_effect: proposed_change
+result_exact_version: v4
+controller_boundary: >-
+  本 artifact 只记录 Designer 的 apply_suffix redundant_element_prune 判断与 task-local 反事实；
+  未覆盖 reviewed v3，未写 design_tree、review verdict、冻结、pre-submission 总状态、delivery、levels 或 playable queue。

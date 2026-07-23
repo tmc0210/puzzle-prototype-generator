@@ -1,0 +1,45 @@
+request_id: RA_REQ_STAGGERED_MERGE_PL_WALK_EXCHANGE_001
+exploration_id: RA_EXP_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+
+design_space: >-
+  展开一个由两根分离二格横条、一个可移动 P/L 锚点、局部站位边界与后段墙齿或交换格 consumer 组成的局部结构空间。
+  同一起态应允许玩家主动把横条合并为错位 S 或齐平 2x2，两种 merge 均真实合法；分离组件不能单独带动 P/L，
+  只有合并体能从玩家接触的近端把手把力传到远端接触格，并在同一 force chain 中带动 P/L 一格。
+  锚点移动后让出的旧半格必须位于合并体及受力闭包之外，玩家进入它的第一步为 walk，并可由此换到合并体外侧。
+  局部后继需采样外侧 pull、回到换把后同一 exact state 的可逆分支，以及再取得另一操作面作正交 pull 的可能性。
+  错误 2x2 不得在 merge 或 P/L 中继前被提前淘汰；差异应到后段墙齿或交换格 consumer 才出现，
+  由其填平的角占用刚体目标格、玩家交换格或回返所需格而失败，错位 S 则保留对应局部关系。
+
+sampling_axes:
+  - 两根横条的初始分离方向与可主动接入关系：错位 S merge、齐平 2x2 merge；两者合体前均可达且合法。
+  - 接收横条与驱动横条的施力面分配：分离时谁缺少独立把手，合并后哪个近端格可把力传到远端接触格。
+  - P/L 朝向及合并体接触 P/L 的相对方向；只采样能让整个锚点平移一格的合法受力闭包。
+  - 分离组件对 P/L 的负对照：驱动条单独、接收条单独、延后 merge；记录是否出现锚点位移或提前跨侧。
+  - 合并体对 P/L 的正对照：错位 S 与 2x2 是否都能带动锚点；记录 force chain、anchor shift 与动作后完整占格。
+  - P/L 让位旧半格相对合并体的关系：旧 P 半格或旧 L 半格、位于近端或侧端；要求玩家首次进入时为 walk。
+  - 让位前后的玩家可达性：移动前无外侧入口，移动后由旧半格接到至少一个外侧施力面；排除预先开放的外回路。
+  - 外侧第一手：不同外侧面上的轴向 pull；记录动作后玩家位置、合并体占格与仍可达操作面。
+  - exact-state 回返：外侧 pull 后的反向 pull 是否能回到换把后的同一完整状态，而非只回到同一对象位姿。
+  - 另一面操作：回返或继续后，玩家能否取得与第一手不共线的操作面并完成正交 pull。
+  - 后段 consumer 类型：远端墙齿、填角对应的玩家交换格、填角对应的刚体目标格；分别记录 S 与 2x2 的动作差异。
+  - consumer 删除对照：移除墙齿或开放交换格后，2x2 的对应后继动作是否恢复，用于定位差异责任。
+  - 误用对照：merge 前一形状已经非法、P/L 可被玩家单独搬动、旧半格第一步触发 pull、外侧面只有唯一连续兑现。
+
+current_material_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#两横条主动合并S缺口与2x2左下墙齿
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md#PL锚点移位腾出旧半格并改变推拉侧
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#三格L外侧换把旧推面越界失配与低阶格封向
+
+do_not_repeat:
+  - 不复采单纯的两横条 S/2x2 合并后向墙齿平移；新材料必须加入由合并体带动可移动 P/L 的同链关系。
+  - 不复采开放上下双带使对象绕到外侧的结构；外侧入口必须由锚点让出的旧半格生成。
+  - 不复采竖条封墙带、接上肩或下肩后在缺角内立即连续正交 pull 的结构。
+  - 不把左右、上下纯镜像、墙齿平移、普通走位长度或目标覆盖变化作为新材料。
+  - 不发布只有 anchor shift 事件、只有 sticky merge 事件、只有首个合法 pull 而没有动作后操作面事实的 witness。
+  - 不使用候选布局坐标、完整关卡包装、目标结构、完整解、难度判断或 structure family 去留结论。
+
+materialization_target: >-
+  发布若干极小、可运行的局面卡及近邻对照，分别给出开始摆法、非空输入、逐步事件、动作后玩家与对象占格、
+  P/L 位移、旧半格第一步动作类型、外侧 pull 后操作面、exact-state 回返结果与另一面 pull 结果。
+  至少保留一组“分离组件均不能带动 P/L、S 与 2x2 均可 merge 并由合并体带动 P/L”的正负对照，
+  以及一组“让位旧半格为 walk 出口、S 保留外拉/回返/换面可能，而 2x2 只在后段 consumer 失败；移除 consumer 后差异消失”的局部结构谱。

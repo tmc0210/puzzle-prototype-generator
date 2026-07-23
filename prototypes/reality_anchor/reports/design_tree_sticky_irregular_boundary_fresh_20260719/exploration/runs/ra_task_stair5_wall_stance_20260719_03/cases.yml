@@ -1,0 +1,84 @@
+runId: ra_task_stair5_wall_stance_20260719_03
+title: "阶梯五连块折向后的墙边侧拉站位"
+notes: "二二一阶梯先 left、down 折向；最低级留在玩家左侧，第三手 right 需要玩家右侧墙边站位，并同时检查最上一级右移目标格。"
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: stair5_fold_open_side_stance
+    family: stair5_fold_wall_side_stance
+    variant: open_player_stance
+    changed_variable: "折向后玩家右侧的第三手目标站位保持开放"
+    contrast_with:
+      - stair5_fold_player_stance_walled
+      - stair5_fold_far_step_target_walled
+    notes: "开始摆法：二二一阶梯和右下玩家；关键动作：left、down、right；动后局面：最低级在玩家左侧，第三手从开放站位侧拉整块；最小用法：一格墙边站位提供立即侧拉。"
+    layout: |
+      ############
+      #B##########
+      #S.LP......#
+      #...MM.....#
+      #..MM......#
+      #..M@......#
+      #..........#
+      #.........G#
+      ############
+    actions: ["left", "down", "right"]
+
+  - id: stair5_fold_player_stance_walled
+    family: stair5_fold_wall_side_stance
+    variant: player_stance_wall
+    changed_variable: "只在折向后玩家第三手要进入的右侧格补墙"
+    contrast_with: stair5_fold_open_side_stance
+    notes: "前两手均完成；第三手玩家目标格是墙，最低级虽在身后也不能发起侧拉。"
+    layout: |
+      ############
+      #B##########
+      #S.LP......#
+      #...MM.....#
+      #..MM......#
+      #..M@......#
+      #...#......#
+      #.........G#
+      ############
+    actions: ["left", "down", "right"]
+
+  - id: stair5_fold_far_step_target_walled
+    family: stair5_fold_wall_side_stance
+    variant: far_step_shape_wall
+    changed_variable: "玩家站位开放，墙改放到最上一级第三手向右要进入的远端格"
+    contrast_with:
+      - stair5_fold_open_side_stance
+      - stair4_trim_far_step_avoids_shape_wall
+    notes: "前两手完成；第三手玩家可进右侧站位，但五连块最上层远端格撞墙，整块失败。"
+    layout: |
+      ############
+      #B##########
+      #S.LP......#
+      #...MM.....#
+      #..MM#.....#
+      #..M@......#
+      #..........#
+      #.........G#
+      ############
+    actions: ["left", "down", "right"]
+
+  - id: stair4_trim_far_step_avoids_shape_wall
+    family: stair5_fold_wall_side_stance
+    variant: trimmed_far_step_same_wall
+    changed_variable: "去掉五连块最上排右端一格，同一远端墙保留"
+    contrast_with: stair5_fold_far_step_target_walled
+    notes: "四格近邻仍能完成 left、down；因少一格最上级，第三手目标集合避开远端墙并合法侧拉。"
+    layout: |
+      ############
+      #B##########
+      #S.LP......#
+      #...M......#
+      #..MM#.....#
+      #..M@......#
+      #..........#
+      #.........G#
+      ############
+    actions: ["left", "down", "right"]

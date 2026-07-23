@@ -1,0 +1,82 @@
+runId: ra_task_bs_identity_handoff_component_filter_20260719_08
+title: "B/S 身份交接：分离组件过滤与完整异形跨 P/L"
+notes: >-
+  L 与 2x2 候选由移动 B/S 扫到 LP 左侧后转黏 merge，再从相同右下入口整体左推跨固定 LP；
+  对照先把近端 box 组件越过 LP，再扫 B/S，检查延后 merge 与动作后身份。
+defaults:
+  maxExploreDepth: 20
+  maxReturnDepth: 30
+  maxStates: 70000
+  maxTransitions: 280000
+cases:
+  - id: l_merge_then_rigid_handoff
+    family: bs_identity_handoff_component_filter
+    variant: l_merge_before_fixed_pl
+    changed_variable: L 候选先由 B/S 扫线 merge，再从右下近端入口整体左推
+    contrast_with: l_component_prepass_then_brush
+    notes: 连续八次左推把 B/S 扫到 LP 左侧并形成完整 L；随后从下回路到右下入口，五次 left 把远端上臂与近端下格一起送过 LP。
+    layout: |
+      ##############
+      #.........BS@#
+      #............#
+      #....LP......#
+      #.......CC...#
+      #........C...#
+      #............#
+      #...........G#
+      ##############
+    actions: [left, left, left, left, left, left, left, down, left, left, left, up, left, down, right, right, right, right, right, right, right, right, right, down, down, down, left, left, left, left, left]
+
+  - id: square_merge_then_rigid_handoff
+    family: bs_identity_handoff_component_filter
+    variant: square_merge_before_fixed_pl
+    changed_variable: 2x2 候选先由 B/S 扫线 merge，再从相同右下入口整体左推
+    contrast_with: square_component_prepass_then_brush
+    notes: B/S 扫到 LP 左侧并形成 2x2 sticky；同一入口把上下两排全部带过 LP，末态右侧面应有 pull:right。
+    layout: |
+      ##############
+      #.........BS@#
+      #............#
+      #....LP......#
+      #.......CC...#
+      #.......CC...#
+      #............#
+      #...........G#
+      ##############
+    actions: [left, left, left, left, left, left, left, down, left, left, left, up, left, down, right, right, right, right, right, right, right, right, right, down, down, down, left, left, left, left, left]
+
+  - id: l_component_prepass_then_brush
+    family: bs_identity_handoff_component_filter
+    variant: l_near_single_box_crosses_before_brush
+    changed_variable: 不先扫 B/S，先从同一右下入口把 L 候选的近端单箱送过 LP
+    contrast_with: l_merge_then_rigid_handoff
+    notes: 近端下格单箱先左移五格；随后绕到 B/S 右侧左扫八格越过 LP，记录转黏后的近端单格与远端横条是否仍分离。
+    layout: |
+      ##############
+      #.........BS.#
+      #............#
+      #....LP......#
+      #.......CC...#
+      #........C@..#
+      #............#
+      #...........G#
+      ##############
+    actions: [left, left, left, left, left, down, right, right, right, right, right, right, right, up, up, up, up, up, left, left, left, left, left, left, left, down, left, left, left, up, left]
+
+  - id: square_component_prepass_then_brush
+    family: bs_identity_handoff_component_filter
+    variant: square_near_lower_row_crosses_before_brush
+    changed_variable: 不先扫 B/S，先从同一右下入口把 2x2 候选的下排箱链送过 LP
+    contrast_with: square_merge_then_rigid_handoff
+    notes: 下排 CC 先整链左移五格；随后把 B/S 左扫八格，近端与远端分别转成两条 sticky，仍不能延后形成 2x2。
+    layout: |
+      ##############
+      #.........BS.#
+      #............#
+      #....LP......#
+      #.......CC...#
+      #.......CC@..#
+      #............#
+      #...........G#
+      ##############
+    actions: [left, left, left, left, left, down, right, right, right, right, right, right, right, up, up, up, up, up, left, left, left, left, left, left, left, down, left, left, left, up, left]

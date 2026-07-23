@@ -1,0 +1,86 @@
+review_attempt_id: RA_QUALITY_APPLY_SUFFIX_V3_001
+prototype_id: reality_anchor
+review_target: growth_child
+prototype_rules:
+  confirmed_rules:
+    - P/L 锚点把棋盘分成推世界与拉世界；没有 P/L 时全图为推世界。
+    - B/S 锚点把棋盘分成箱世界与黏世界；没有 B/S 时全图为箱世界，关卡作者不能直接放置独立 M。
+    - 两类锚点均为可移动的 1x2 或 2x1 刚体，只平移不旋转；同类型每关最多一个。
+    - 推与拉都对一个物体实例施力，力可沿运动方向传递；玩家与受力闭包同时平移。
+    - 黏块按四邻接组成刚体；相邻黏格自动合并，跨入箱世界的黏格变为独立箱子，剩余黏格按连通块分裂。
+    - 任一刚体的任一部分被墙、棋盘边界或不可移动结构阻挡时，整个动作失败且状态不变。
+  win_condition: 每步移动、箱黏归一化与黏块合并全部结算后，所有目标必须由箱子、黏块格或任一锚点格覆盖；玩家覆盖目标不计胜利。
+  object_and_event_semantics:
+    - sticky_block 的可见身份来自当前连通形状；整个连通块作为一个刚体受力和移动。
+    - push_object、move_sticky_rigid、anchor_boundary_shift 与 sticky_merge 只陈述机械事件，不自动证明玩家价值或作品身份。
+  player_prior:
+    - 玩家拥有全图视野、正常几何直觉和稳定操作能力。
+    - 玩家已充分熟悉规整小黏块组的可达性、可动性、拼接切分、B/S 与 P/L 锚点、基础推拉和腾挪。
+    - 玩家会迅速剪除显然方向、基本站位和短死路；这些不计为谜题难度。
+
+fresh_review_firewall:
+  - 阶段 A 只读取规则、归档校准、以下 actual layouts 与非空机械 replay；不得读取体验简报、Designer 说明、v2、旧 review、hard review、opening workflow 或树状态。
+  - 阶段 A verdict 写定后，才可由 Controller 提供 Stage B coach context。
+  - 本 reviewer 必须从熟练后期玩家侧盲审，不把事件标签、solver 数字或基础腾挪当作品价值。
+
+frozen_parent:
+  node_id: construct_prefix_001
+  candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+  exact_version: v1
+  solve_instance:
+    layout: |-
+      ############
+      ##GBSMM#####
+      #####....###
+      ####@MM..###
+      ####.....###
+      ############
+    player_start: [4, 3]
+    win_condition: all_targets_covered_by_objects
+  canonical_solution:
+    exact_inputs: [right, down, right, up, right, right, up, left]
+    actual_replay_ref: prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json
+    nonempty: true
+    final_win: true
+
+candidate:
+  node_id: apply_suffix_001
+  candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+  exact_version: v3
+  layout_sha256: 76379e4f0b029cab00feceefa1975712cad6ef6909b084077ea7379a2fff531d
+  solve_instance:
+    layout: |-
+      ############
+      ####G#######
+      ####.B.#####
+      ####GSMM####
+      ####.....###
+      #####.MM.###
+      #####...@###
+      ############
+    player_start: [8, 6]
+    win_condition: all_targets_covered_by_objects
+  canonical_solution:
+    exact_inputs: [up, left, down, left, up, right, up, left, up]
+    actual_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/canonical_replay.json
+    nonempty: true
+    legal_through_step: 9
+    final_win: true
+    mechanical_steps:
+      - {step: 1, input: up, events: [walk], state_key: "Ply:8,5|C:|M:6,3;7,3|6,5;7,5|PL:none|BS:B:5,2;S:5,3", win: false}
+      - {step: 2, input: left, events: ["push_object:sticky#2", move_sticky_rigid], state_key: "Ply:7,5|C:|M:5,5;6,5|6,3;7,3|PL:none|BS:B:5,2;S:5,3", win: false}
+      - {step: 3, input: down, events: [walk], state_key: "Ply:7,6|C:|M:5,5;6,5|6,3;7,3|PL:none|BS:B:5,2;S:5,3", win: false}
+      - {step: 4, input: left, events: [walk], state_key: "Ply:6,6|C:|M:5,5;6,5|6,3;7,3|PL:none|BS:B:5,2;S:5,3", win: false}
+      - {step: 5, input: up, events: ["push_object:sticky#1", move_sticky_rigid, "sticky_merge:n1"], state_key: "Ply:6,5|C:|M:6,3;7,3;5,4;6,4|PL:none|BS:B:5,2;S:5,3", win: false}
+      - {step: 6, input: right, events: [walk], state_key: "Ply:7,5|C:|M:6,3;7,3;5,4;6,4|PL:none|BS:B:5,2;S:5,3", win: false}
+      - {step: 7, input: up, events: [walk], state_key: "Ply:7,4|C:|M:6,3;7,3;5,4;6,4|PL:none|BS:B:5,2;S:5,3", win: false}
+      - {step: 8, input: left, events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid], state_key: "Ply:6,4|C:|M:5,3;6,3;4,4;5,4|PL:none|BS:B:4,2;S:4,3", win: false}
+      - {step: 9, input: up, events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid], state_key: "Ply:6,3|C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2", win: true}
+
+artifact_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+  - prototypes/reality_anchor/reports/input_replay_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V1_HARD_REPLAY.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/versions/v3/canonical_replay.json
+
+stage_a_output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/reviews/apply_suffix_v3/quality_review.yml

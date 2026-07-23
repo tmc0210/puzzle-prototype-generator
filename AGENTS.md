@@ -8,5 +8,7 @@
 5. 任何泛化能力的流程改动、方案讨论都从第一性原理出发，不能哪漏补哪
 6. 任何泛化能力的流程、文档修复严格避免白熊效应，优先直接删除替换旧内容而非保留”兼容性“、”迁移说明“、”历史归档“
 
+7. 仓库级 skill 路由：完整的特定原型单关设计、体验核心审查与唯一候选待玩交付统一由 `$sokoban-level-design-studio` 作为唯一端到端 Controller 启动；`$sokoban-level-designer` 只接受 Controller 的正式 assignment，不作为端到端入口；只有明确的局部机制探索任务才直接使用 `$sokoban-mechanism-lab`；reviewer skills 只负责独立审查，不承担设计或流程控制。
+
 
 

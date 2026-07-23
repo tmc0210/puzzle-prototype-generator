@@ -1,0 +1,69 @@
+node_id: baseline_001
+exact_version: v1
+candidate_id: RA_DIFFICULTY_BASELINE_L_KEYHOLE_V1
+
+player_side_reading:
+  opening_view: >-
+    玩家看到一个上二下一的三格 L、紧邻其左侧的自身位置、固定竖 P/L、右侧三个 L 形目标，
+    以及低阶目标左右两枚墙齿。上下回路都显露，但没有一条通道直接连到目标。
+  opening_action_space: >-
+    玩家可从下格左面立即 push:right，也可先上走一格从上格左面做同一 push:right；两者移动同一刚体到同一完整对象位姿。
+    第一次 push 后玩家落入 L 侧，继续 right 不再推动前方对象。
+  central_read: >-
+    玩家要把“去右边”改读为“先绕到上横臂外侧再牵”。第一次 pull:right 只把低阶格送到左墙齿上方；
+    第二次才对准两齿之间。此时上侧把手也不直接完成目标，玩家必须沿下回路站到低阶格下方。
+  reversible_trial: >-
+    正确列右侧还可多 pull:right 一格，但低阶格会落到右墙齿上方而不能下移。该超调可经上回路 pull:left，
+    再纯走位返回超调前 exact state，因此错误试探不会制造另一胜族或强制重开。
+  ending: 从低阶格下方 pull:down，三格 L 同步覆盖三个目标并立即结束。
+
+difficulty_reading:
+  intended_band: 3
+  basis: >-
+    难点不是长推演，而是两次真实外侧换把、固定边界造成的旧面模式失配、低阶突出部对墙齿列的持续对齐，
+    以及可逆超调后的恢复。第一次正确对象动作后，玩家仍连续重读并操纵同一 L。
+  not_counted_as_difficulty:
+    - 最短 16 输入或完整图规模本身
+    - 上下回路的走位长度本身
+    - forced commitment 或状态指标
+
+major_element_roles:
+  - element: fixed P/L anchor
+    role: 第一次 push 后让玩家立即进入 pull side；旧左面仍可达但不再产生同向 push。
+  - element: three-cell L top arm
+    role: 提供上侧外部 pull:right 把手，并使玩家必须绕到对象右侧。
+  - element: three-cell L lower toe
+    role: 显示水平对齐列，且成为终手 pull:down 的实际身后对象。
+  - element: left tooth at (8,6)
+    role: 封住过早的低阶格下移；移除后出现先 pull:down 再横牵的 10 步非等价顺序。
+  - element: right tooth at (10,6)
+    role: 封住缺角处直接下牵与右侧超调下移，迫使终手使用低阶突出部下方把手。
+  - element: upper loop
+    role: 第一次外侧换把，并承担超调后的可逆回返。
+  - element: lower loop
+    role: 第二次换到底侧把手；也保证旧面是可达但模式失配，而不是被墙藏掉。
+  - element: three goals
+    role: 显示唯一 L 目标位姿与墙齿中间的正确低阶列。
+  - element: fixed B/S anchor
+    role: 仅提供预置黏块合法侧别；关键动作中不移动、不参与难度声明。
+
+counterfactual_reading:
+  - change: remove left tooth
+    observed: 最短降为 10，object signature 改为 push:right, pull:down, pull:right, pull:right。
+    responsibility: 左齿负责阻止过早正交下牵，维护“先完成外侧横牵再换到底侧”的因果顺序。
+  - change: remove right tooth
+    observed: 最短降为 12，动作方向相同，但玩家可从 L 缺角直接 pull:down。
+    responsibility: 右齿负责让低阶突出部成为终手真实把手，而不是让缺角提供捷径。
+  - change: remove fixed P/L
+    observed: 出现 7 步全 push 解，object signature 为 push:right, push:right, push:right, push:down。
+    responsibility: P/L 负责实际换把与旧面关闭，而非装饰标签。
+  - change: remove lower toe and corresponding goal
+    observed: 二格横条可用纯 pull 起手并在 11 步获胜。
+    responsibility: 低阶格同时承担开局 push 关系、墙齿读数与终手把手，是作品身份条件。
+
+known_perceptible_defects:
+  - 两次换把分别包含上、下回路走位；若玩家没有把走位理解为取得新把手，节奏可能显得偏稀。
+  - 目标轮廓清楚，熟练玩家可能较快看出低阶格应进入两墙齿之间；难度 3 的成立依赖实际 P/L/把手读取，不依赖隐藏目标。
+
+designer_player_verdict: >-
+  可送 fresh 独立审查。当前实物支持一个完整、清楚且可独立游玩的 baseline；是否确实达到审美与难度门槛不由 Designer 自授。

@@ -1,0 +1,83 @@
+assignment_id: RA_DESIGNER_BASELINE_V2_EVIDENCE_FIX_001
+review_attempt_id: RA_HARD_BASELINE_V2_001
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version_basis: v2
+
+handling_decision: withdraw_boundary_alignment_mechanical_necessity_claim
+decision_reason: >-
+  hard review 对旧 CF_SHIFT_BS 的单变量质疑成立。重新制作的真正单变量邻位反事实没有让核心链失败，
+  反而由第 4 步先把 B/S 推回原对齐位，再由第 5 步完成胜利；因此不能保留“初始 B/S 横向对齐机械必要”的声明。
+
+reviewed_contradiction:
+  old_artifact_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs.txt
+  old_claim: 保持完整 T、只把 B/S 横移一格后，同一五步全合法但不胜利。
+  defect:
+    - 旧 artifact 同时把目标从 [8,5] 移到 [9,5]。
+    - 旧 artifact 同时向右扩张第 4、5 行地板并改变右侧墙界。
+  artifact_status: invalid_for_single_variable_claim_and_removed_from_submission_refs
+
+single_variable_counterfactual:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable.txt
+  replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable_replay.json
+  layout_sha256: 77b6f6d3e112d727d2d6a9397e585e4f91dccd42f428ecac2714032e865a1ab4
+  variable: 水平 B/S 锚点整体左移一格
+  exact_positions:
+    before: {S: [7, 4], B: [8, 4]}
+    after: {S: [6, 4], B: [7, 4]}
+  cell_diff:
+    - {cell: [6, 4], from: floor, to: S}
+    - {cell: [7, 4], from: S, to: B}
+    - {cell: [8, 4], from: B, to: floor}
+  invariants:
+    wall_mask_equal: true
+    goals_equal: true
+    player_start_equal: true
+    sticky_cells_equal: true
+    push_pull_anchor_equal: true
+    board_dimensions_equal: true
+  inputs: [down, right, right, right, down]
+  legal_through_step: 5
+  step_4_events:
+    - push_object:sticky#1
+    - force_chain:n2
+    - anchor_boundary_shift:box_sticky
+    - move_sticky_rigid
+  step_4_result: B/S 被右推到 exact 的 S:[7,4],B:[8,4] 对齐位。
+  terminal_step: 5
+  terminal_events:
+    - pull_object:sticky#1
+    - force_chain:n2
+    - anchor_boundary_shift:box_sticky
+    - move_sticky_rigid
+  win: true
+  finding: counterexample_to_initial_boundary_alignment_necessity
+
+claim_scope_after_fix:
+  withdrawn_claim_id: boundary_alignment_mechanical_necessity
+  still_supported_bounded_statement: >-
+    当前 v2 exact 的 canonical 终手确实由 T 远臂把 B/S 纳入力链并覆盖目标；
+    但不再声明 B/S 的初始横向坐标本身是单变量机械必要条件。
+  unaffected_supported_claims:
+    - exact_solvable
+    - canonical_event_chain
+    - solution_logic_class_unique
+    - no_direct_anchor_or_upper_face_win_bypass
+    - remote_arm_mechanical_necessity
+    - connected_irregular_body_participation
+
+exact_immutability:
+  exact_layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+  expected_sha256: e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6
+  actual_sha256_after_fix: e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6
+  layout_changed: false
+  start_changed: false
+  goal_changed: false
+  objects_changed: false
+  player_relation_changed: false
+
+workflow_boundary:
+  stage_a_or_b_response_performed: false
+  review_artifacts_modified: false
+  design_tree_or_controller_state_modified: false
+
+designer_verdict_after_fix: submit_for_independent_evidence_rereview

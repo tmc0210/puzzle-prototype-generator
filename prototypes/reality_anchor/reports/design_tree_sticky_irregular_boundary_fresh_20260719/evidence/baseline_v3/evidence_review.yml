@@ -1,0 +1,210 @@
+review_attempt_id: RA_HARD_BASELINE_V3_001
+reviewer_instance_id: RA_EVIDENCE_REVIEWER_BASELINE_V3_FRESH_001
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v3
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/complete_graph_opening.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/dead_upper_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/outline_graph_isomorphism.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/verify_outline_graph_isomorphism.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_complete
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - >-
+      8-state initial SCC 内存在纯走位到达、回退和重定位差异；这些差异保持同一完整对象状态，
+      不改变对象职责、目标分配或“肩窝横推后下拉”的因果先后。
+  equivalence_evidence_basis:
+    - >-
+      complete_graph_opening.json 报告 complete 的 19-state / 34-transition 全图、1 个 winning state、
+      3 个压缩区、initial SCC 的 2 个 commitments 中 1 viable / 1 dead，且 win-reaching SCC
+      无 branching 或 merging。
+    - >-
+      canonical_replay.json 给出 viable commitment 后的五步实际胜路；dead_upper_replay.json
+      给出另一首次对象 commitment，并由 complete graph 分类为 unique dead commitment。
+    - graph_fact: >-
+        complete graph 的 initial SCC 有 8 states、2 个出边，恰为 1 win-out 与 1 dead-out；
+        solution SCC path 唯一且 branching_win_sccs=0、merging_win_sccs=0。
+      neutral_meaning: >-
+        完整枚举中只有一个能进入胜区的首次对象 commitment，没有第二条胜区分支或汇合出的玩家逻辑类。
+      player_facing_interpretation: >-
+        玩家可在开局可逆走位域内换路和回退，但一旦首次操纵对象，只有下方肩窝横推能继续到胜态，
+        随后必须保持先横推对位、再下拉扫带 B/S 的顺序。
+      verdict_effect: merit
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 结论只覆盖 candidate RA_STICKY_IRREGULAR_BASELINE_001 的 exact v3 与 packet 声明的 solve instance。
+    - 完整图与 SCC 只支持状态级解族和 commitment 事实，不产生难度、审美或质量判断。
+
+claims:
+  - claim_id: exact_solvable
+    claim: current v3 五步 canonical 全部合法并获胜。
+    status: supported
+    evidence_basis:
+      - >-
+        v3 layout 的独立 SHA256 核对为
+        477d96ae46c2a683a6ec4073f89b724474c3d02cfdac1ef83af27efe26290b4a，与 packet 及 replay 一致。
+      - >-
+        canonical_replay.json 的 inputs 为 [down, right, right, right, down]，legal_through_step=5，
+        五步逐步 legal=true，step 5 与 final 均 is_win=true。
+      - >-
+        complete_graph_opening.json 的 complete graph 报告 shortest solution cost/depth=5，输入与 canonical 一致。
+    limits: []
+
+  - claim_id: opening_two_faces_one_viable
+    claim: >-
+      complete opening 有 8-state initial SCC、2 个首次对象 commitments；上方下推为唯一 dead commitment，
+      下方肩窝横推为唯一 viable commitment。
+    status: supported
+    evidence_basis:
+      - >-
+        complete_graph_opening.json 报告 initial SCC 8 states、out=2、win_out=1、dead_out=1；
+        initial region 同时报 2 commitments、1 viable、1 dead，graph status=complete。
+      - >-
+        dead_upper_replay.json 的 [up,right,right,down] 在第 4 步合法下推 sticky T，
+        final_win=false，并被完整图分类为 initial_region_unique_dead_commitment。
+      - >-
+        canonical_replay.json 的下方路径在第 4 步向右推动同一 sticky T，并于下一步到达唯一胜态；
+        两个 commitments 的数量与 complete graph 一一闭合。
+      - graph_fact: >-
+          initial SCC 的两个出 commitment 恰为一条 win-reaching 与一条 dead。
+        neutral_meaning: >-
+          完整可达图没有第三个首次对象 commitment，也没有第二个 viable commitment。
+        player_facing_interpretation: >-
+          玩家从开局可逆走位域可接触上下两个首次操作面；上方下推进入死区，
+          下方肩窝横推是唯一还能到达胜态的首次对象操作。
+        verdict_effect: merit
+    limits:
+      - 此结论只描述 current v3 的可达结构，不评价两个操作面是否显眼或难辨。
+
+  - claim_id: canonical_remote_anchor_sweep
+    claim: >-
+      前四步把完整四格 T 向右对位并保留 pull 把手；第 5 步下拉同一 T，事件含 pull_object、force_chain:n2、
+      anchor_boundary_shift:box_sticky 与 move_sticky_rigid，使 B/S 下移并由 B 覆盖目标，立即胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical_replay.json 的 initial 与 step 4 state_key 显示四格 sticky T 从
+        {3,3;4,3;5,3;4,4} 整体右移至 {4,3;5,3;6,3;5,4}；step 4 事件为
+        push_object:sticky#1 与 move_sticky_rigid。
+      - >-
+        同一 replay 的 step 5 事件精确包含 pull_object:sticky#1、force_chain:n2、
+        anchor_boundary_shift:box_sticky、move_sticky_rigid；sticky T 与 B/S 均下移一格。
+      - >-
+        step 5 rendered_state 与 final changed_cells 显示 B 从 [7,4] 到目标 [7,5]，
+        该步 is_win=true，符合 README.md 与 mechanic.yml 的目标覆盖胜利规则。
+    limits:
+      - 事件与对象位移只支持机械过程，不支持其审美或高潮价值。
+
+  - claim_id: distal_right_arm_necessity
+    claim: >-
+      相对 current v3 只删除 T 的远端右臂后，同一五步仍全部合法，终手仍下拉剩余 L 形，
+      但不含 force_chain 或 B/S shift，目标未覆盖且不胜。
+    status: supported
+    evidence_basis:
+      - >-
+        对 v3 layout.txt 与 counterfactual_l_shape.txt 的逐格核对只有一处差异：
+        [5,3] 从 M 变为 .，其它格完全相同。
+      - >-
+        counterfactual_l_shape_replay.json 的同一五步 legal_through_step=5；step 5 仍为
+        pull_object:sticky#1 与 move_sticky_rigid，但 force_chain_present=false、
+        anchor_boundary_shift_present=false、final_win=false。
+      - >-
+        反事实终态保持 B/S 在 [7,4]/[6,4]，目标 [7,5] 未被覆盖，直接支持远端右臂在该五步动作组中的机械责任。
+    limits:
+      - 只证明该单格删除反事实与同一五步动作组，不外推为审美必要性或所有可能改版的必要性。
+
+  - claim_id: fixed_push_pull_role
+    claim: >-
+      current v3 所有胜路必经 fixed pull effect；可达图中 P/L 本体从不移动，
+      且不存在绕过 fixed P/L effect 的胜路。
+    status: supported
+    evidence_basis:
+      - >-
+        identity_event_probe.ts 对 complete runtime graph 删除所有含 pull_object 前缀的边后做胜态可达搜索；
+        identity_event_probe.json 报告 fixed_push_pull_effect status=complete、found=false、
+        reachable_without_group=18，而完整图共 19 states。
+      - >-
+        同一 probe 对全部可达边扫描 anchor_boundary_shift:push_pull，forbidden_hits=[]；
+        mechanic.yml 规定锚点移动发出 anchor_boundary_shift，故可达图中 P/L 本体未移动。
+      - >-
+        canonical_replay.json 的唯一胜态入路终步实际发出 pull_object:sticky#1，
+        与 complete graph 的无 pull_object 胜路搜索相互印证。
+    limits:
+      - fixed P/L effect 按 packet 边界具体核验为 pull_object 事件必经；不声称 P/L 是审美高潮。
+
+  - claim_id: solution_logic_unique
+    claim: >-
+      complete graph 为 19 states / 34 legal transitions / 1 winning state；两个 opening commitments 仅一个可胜。
+    status: supported
+    evidence_basis:
+      - >-
+        complete_graph_opening.json 报告 graph status=complete、budget max_states=300000、
+        reachable_states=19、legal_transitions=34、winning_states=1。
+      - >-
+        同一完整图报告 initial region 2 commitments、1 viable、1 dead；initial SCC 为
+        8 states、2 out、1 win_out、1 dead_out，并且 branching_win_sccs=0、merging_win_sccs=0。
+      - >-
+        canonical_replay.json 与 dead_upper_replay.json 分别实例化唯一 viable 和唯一 dead opening commitment。
+    limits:
+      - 逻辑类结论按 docs/21 的玩家逻辑类定义，不把同一完整状态域内的纯走位与完整回返当作非等价解。
+
+  - claim_id: outline_trim_isomorphic
+    claim: >-
+      相对 frozen v2 只裁封闭纯墙外列后，按 (x,y)->(x-1,y) 平移，19 个状态、34 条 action/event-labeled edges
+      与唯一 winning state 全部一一相同。
+    status: supported
+    evidence_basis:
+      - >-
+        对 baseline_001/layout.txt 与 versions/v3/layout.txt 的逐行核对显示：每行删除左侧 1 列和右侧 3 列后
+        精确等于 v3，所有被删格均为 #，动态格按 x-1 平移。
+      - >-
+        verify_outline_graph_isomorphism.ts 分别完整枚举两张 layout，把 v2 动态坐标平移 x-1，
+        并比较全部 state keys、action/event-labeled edges 与 winning state keys。
+      - >-
+        outline_graph_isomorphism.json 报告 status=complete；两图均为 19 states / 34 edges / 1 win，
+        state_keys_equal_after_translation、labeled_edges_equal_after_translation、
+        winning_state_keys_equal_after_translation 均为 true。
+    limits:
+      - 只支持 v2 到 v3 的机械图同构，不产生 review 保留、审美、难度或玩家质量结论。
+
+  - claim_id: no_post_sweep_cleanup
+    claim: canonical 第 5 步远端扫带 B/S 后立即胜利，无后续清理。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical_replay.json 在 step 5 发出 B/S 位移相关事件后当步 is_win=true，
+        legal_through_step=5、completed=true，final 与 step 5 为同一 winning state，且 replay 不含后续输入。
+      - >-
+        README.md 与 mechanic.yml 规定 movement、normalization 与 merge settle 后立即检查全部目标覆盖；
+        step 5 的 B 已覆盖唯一目标。
+    limits:
+      - “无后续清理”仅指 canonical 在获得胜态后无需额外输入。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

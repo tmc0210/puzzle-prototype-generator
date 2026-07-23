@@ -1,0 +1,91 @@
+assignment_id: RA_DESIGNER_BASELINE_V3_OUTLINE_TRIM_REVISION_001
+designer_instance_id: RA_IRREGULAR_DESIGNER_20260719
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: baseline_001
+parent_node_id: null
+growth_relation: baseline
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v3
+layout_sha256: 477d96ae46c2a683a6ec4073f89b724474c3d02cfdac1ef83af27efe26290b4a
+
+reasoning_sketch:
+  player_problem: >-
+    玩家看见封闭 B/S 目标口袋与一块预制 T，需要判断从哪个操作面移动 T，
+    才能既取得第二手 pull 把手，又让远端右臂进入 S 的作用列。
+  visible_premises:
+    - 上路可到达 T 左臂上方，下路可到达中央脚左侧肩窝。
+    - 两路首次对象动作都合法，但把 T 送到不同列并留下不同把手。
+    - B/S 侧面与下方均不可由玩家直接取得施力位，目标只能由远端扫带完成。
+  expected_judgment: >-
+    先从肩窝横推一格；T 的右臂会对准 S，玩家则停在左臂下方并进入 pull 侧。
+  operation_and_feedback: >-
+    down,right,right 到肩窝，right 横推完整 T，down 下拉完整 T；终手同时触发
+    sticky 刚体移动、二对象力链、B/S 下移和 B 覆盖目标，立即结束。
+
+player_side_reread:
+  opening_view: >-
+    9x7 裁边后所有可走格和对象关系不变。玩家仍从 T 左侧小观察区同时看见上下操作面、
+    右侧封闭 B/S 和其下方目标；减少的只是视野外纯墙板。
+  first_meaningful_choice: >-
+    上路直接下推与下路肩窝横推都是真实合法 commitment。前者把中央脚送入下袋且右臂仍错列；
+    后者把远臂送入 S 上方并保留左臂下方 pull 接触。
+  dead_read: >-
+    up,right,right,down 四步全合法，只移动 T，不移动 B/S；完整图把它确认为 initial region
+    唯一 dead commitment，而非撞墙假选项。
+  viable_read: >-
+    down,right,right,right 将 T 横移一格；紧接 down 从左臂下方拉完整 T，右臂扫带 S/B 下移。
+  payoff_and_ending: >-
+    终手事件与画面集中兑现近端把手—远端扫带；B 直接覆盖唯一目标，没有清理尾巴。
+
+difficulty_read:
+  target: 3
+  verdict: lower_bound_supported
+  player_reasoning_burden:
+    - 比较两个都合法的首次对象动作，而不是剪除非法方向。
+    - 同时投影 T 近端把手和远端右臂的下一格占位。
+    - 预见横推后由 push 侧进入 pull 侧，并由完整刚体把不可直接操作的 B/S 纳入力链。
+  limit: >-
+    核心仍是一次紧凑二选一；正确 commitment 后只剩一次强制兑现，故不主张高于难度 3 下界。
+
+structural_responsibility:
+  irregular_body: >-
+    中央脚提供首手横推面，左臂在横移后提供第二手 pull 面，右臂独占远端 S 作用列；
+    三项职责必须属于同一 T 刚体。
+  push_pull_boundary: >-
+    固定 P/L 不移动，但所有胜路必须包含 pull_object；完整事件 probe 未找到缺少 fixed push/pull effect 的胜路。
+  box_sticky_pocket: >-
+    B/S 与墙围成不可直接操作的单向目标口袋；所有胜路必须发生 B/S 位移，且 P/L 本体没有 reachable shift。
+  opening_fork: 上下路线把不同操作面外显为一活一死的两个 commitment。
+
+identity_checks:
+  delete_remote_right_arm:
+    result: fail_as_expected
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape_replay.json
+    observation: 同一五步全部合法，但终手无 force chain 或 B/S 位移且不胜，证明右臂远端足迹不可替代。
+  required_event_groups:
+    result: complete_no_bypass
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.json
+    groups: [movable_box_sticky_shift, fixed_push_pull_effect, sticky_rigid_move]
+  withdrawn_claim_retained:
+    claim: B/S 初始横向坐标机械必要
+    status: not_claimed
+    reason: v2 已有有效单变量反例；v3 不重新使用该错误身份声明。
+
+outline_trim_account:
+  change: 删除 v2 原 x=0 与 x=10..12 的纯墙列，保留原 x=1..9；所有动态坐标 x 减一。
+  current_exact_dimensions: 9x7
+  relative_structure_changed: false
+  complete_labeled_graph_isomorphic: true
+  player_read_changed: false
+  evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/outline_graph_isomorphism.json
+  aesthetic_read: >-
+    裁边让 T、B/S 口袋和上下操作面在较小画幅中更集中，没有收窄玩家活动区或删去错误分支；
+    compact 来自移除无责任墙板，而非牺牲 opening 或站位。
+
+known_perceptible_defects:
+  - 正确 commitment 后只剩一次强制兑现，没有持续多阶段推演；这是直白 baseline 的上限。
+  - 顶部固定 P/L 主要承担语义边界，局部视觉反馈弱于 T 与 B/S；本体不移动。
+
+designer_conclusion: >-
+  current v3 的非空 replay、complete graph、opening、事件必经、删远臂反事实与裁边全图同构均支持原玩家关系。
+  轮廓更集中且未引入可感缺点；机械声明保持在证据边界内，可以送交 fresh 独立审查。

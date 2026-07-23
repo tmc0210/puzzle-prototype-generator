@@ -1,0 +1,108 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V8_PROGRESSIVE_HANDLE_REVISION_001
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version: v8
+design_status: family_selected_local_probe_pending
+
+selected_family:
+  id: one_cell_bs_shuttle_progressive_pl_handle
+  name: 一格_B_S_母体_L_切换—P_L_外侧非恒等进位—新露面正交消费
+  one_sentence_relationship: >-
+    玩家在一格行程的可移动 B/S 上主动切换“四格母体”和“三格 L+crate”两种身份态；正确 L 先从 P 侧建立 handoff H0，
+    再从外侧于 L 侧 pull 到不同的前进状态 H1。H1 的一格位移同时让出旧占格、对齐远端墙口并开放新的正交把手，
+    玩家必须从 H1 继续第二正交动作；反向回到 H0 只表示该进位可撤销，不是 canonical 或任何胜利依赖。
+
+correction_from_v7:
+  exact_loop_boundary: >-
+    v7 的 H0→H1→H0 环回到完全相同 state，故从 H0 已可直接接同一 continuation；该环只能说明可逆，不能承担前进责任。
+    v8 canonical 固定为 H0→H1→H2：H1 与 H0 的异形位置、玩家接触面和远端墙口关系均不同，胜利 continuation 只从 H1 存在。
+  deep_cut_boundary: >-
+    B/S 使用只有一格有效行程的短轨，只能在母体态与 L+crate 配对态之间往返；第二格深切不是隐藏死路，而是不属于锚点可达状态。
+    玩家仍可选择保持/恢复母体并把它带入相同前段，因此正确切分不是开局唯一合法对象动画。
+  crate_allocation_boundary: >-
+    切出 crate 留在 B/S 的往返扫线中，不设目标，也不拥有通往后段目标或锚点施力线的独立操作面。
+    玩家若撤回 B/S，它回粘恢复母体；若保持切分，它只作为身份态的可见余料，不能被单独搬成钥匙、目标覆盖物或替代异形。
+
+player_visible_problem:
+  opening: >-
+    玩家看见四格连通母体、仅一格可逆行程的 B/S、固定 P/L，以及外拉前后才改变入口形状的紧凑墙口。
+    不切或切成 L 都能完成第一段 P 侧轴向 stroke；差异不会在 B/S 动作当下被普通墙位宣布。
+  sustained_judgment: >-
+    第一次切分后仍有三项更新判断：当前是母体还是 L、外侧 pull 后哪一格旧占位被让出、H1 的远臂和缺口能否同时提供下一正交面。
+    玩家可以把 H1 反拉回 H0 作为试探，但要通关必须保留 H1 的前进变化并从新面继续。
+  later_feedback: >-
+    正确 L 的外拉让近端旧格成为通往正交把手的入口，同时把远端突臂对齐墙口；母体也能到 H1-like 前进位，
+    却由额外尾格在随后正交目标集合中撞墙。错误读取发生在连续多面操作中，不是切分后的即时形状检查。
+
+state_progression:
+  h0_handoff:
+    relation: >-
+      B/S 停在 L+crate 配对位；三格 L 从 P 侧完成轴向 stroke。玩家尚不能从 H0 直接取得与 intended 终段等价的正交把手。
+  h1_progressive_outside_pull:
+    relation: >-
+      玩家实际换到 L 的外侧，从 L 侧轴向 pull 一格。L、玩家和远端轮廓进入不同 state；L 让出的旧占格接通跨面入口，
+      新位置的缺角保留玩家站位，远臂进入墙口读取区。该 pull 不是返回性演示，而是产生下一动作前提。
+  h2_orthogonal_consumer:
+    relation: >-
+      玩家从 H1 新取得的第二正交面继续拉动同一 L；B/S 边界在这一步继续决定下腿是 sticky 还是 crate，
+      墙口则读取完整 L 的远端目标集合。高潮由同一异形的近端换面与远端边界责任同时兑现并尽快结束。
+  optional_reverse:
+    relation: >-
+      H1 可反向恢复 H0，用于玩家验证状态可逆；若选择恢复，必须再次执行 H0→H1 才能继续。
+      设计不得把这段 exact 回环写成必经步骤、难度来源或胜利依赖。
+
+anchor_responsibility:
+  box_sticky_anchor: >-
+    B/S 的一格往返直接决定同一母体是否留下三格 L，并在 H1→H2 的正交动作中继续决定下腿身份；
+    它既不是开局按钮，也不能在切分后退休。撤回它会恢复母体并改变后续完整占格责任。
+  push_pull_anchor: >-
+    P/L 使 H0 的首段为 P 侧轴向 push、H1 的进位与下一正交操作为 L 侧 pull；玩家必须实际换到外侧，
+    且 pull 后的位移生成新把手。若删除或平移 P/L 后仍可用同侧连续动作完成 H0→H2，family 失败。
+  same_object_coupling: >-
+    B/S 选择的三格 L 是承担 P/L stroke、外侧进位与正交消费的同一连通对象；切出 crate、B/S 和 P/L 均不另起独立子题。
+
+baseline_load_preservation:
+  outside_handle_change: >-
+    玩家必须从 H0 实际走到异形外侧，并以 L 侧 pull 生成 H1；不能从 H0 直接取得等价终段，也不能用 B/S 搬运替代换把。
+  reversibility_reading: >-
+    H1→H0 可执行，说明外拉是可读、可撤销状态而非隐性承诺；但 canonical 保持 H1 继续向前，不执行 exact loop。
+  multi_face_maneuvering: >-
+    H1 新露出的第二面必须由玩家重新取得并对同一 L 正交施力；远端突臂在该动作中同时接受墙口检查。
+  difficulty_source: >-
+    玩家负担来自选择并维护 B/S 身份态、跨 P/L 取得外侧把手、判断是否撤销 H1，以及让非恒等 H1 的新面与远端墙口共同成立；
+    不来自执行长度、一次形状二择或 exact 环。
+
+minimal_runtime_gates_not_run:
+  - id: progressive_outside_handle
+    requirement: >-
+      正确 L 从 H0 经外侧 L pull 到 H1；H1 的非玩家 state 必须不同于 H0，且由该位移新露出的入口实际允许同一 L 从第二正交面继续到 H2。
+      另证 H1 可撤销回 H0，但 canonical 不走该回环。
+  - id: pre_shift_direct_finish_blocked
+    requirement: >-
+      从 H0 出发，玩家即使可在局部走动，也不能取得或执行与 H1→H2 等价的正交终段；失败必须由 H0 中 L 自身占格和墙口关系造成。
+      移除负责墙位或预先把 L 放到 H1 后动作恢复，证明外侧 pull 的非恒等位移是必要前提。
+  - id: mother_deep_cut_crate_substitution_blocked
+    requirement: >-
+      母体能通过与 L 相同的 P 侧 stroke 和外侧进位，随后才因额外尾格在 H1-like 正交目标集合中失败；B/S 第二格深切在可达状态中不存在；
+      切出 crate 无独立施力路线、目标或锚点职责；回粘母体、B/S-first 后退休、横条和 crate 目标重分均不能完成 H2。
+
+future_exact_obligations_if_gates_pass:
+  - canonical 的每次对象动作都从一个非恒等 state 推进到下一有责任 state；任何 exact 回环只作可选试探。
+  - 所有胜族在 H1→H2 前均保持正确 L 与正确 B/S 停位，且实际执行外侧 P/L pull。
+  - 不切母体不能因其它面、其它墙口或身份变化绕过额外尾格责任。
+  - 不存在第二格深切、切出 crate 独立目标分配、B/S 先完成后退休或规整横条替代族。
+  - 目标只消费 H2 中同一 L 的完整动作结果，不给切出 crate、B/S 或 P/L 独立覆盖任务。
+
+family_rejection_conditions:
+  - H0 已能直接取得 H2 的操作面，外侧 pull 可省略。
+  - H1 只是在空房间平移，没有新开放站位、改变远端责任或改变下一动作合法性。
+  - canonical 实际执行 H1→H0 exact 回环，并把它声称为必经前进步骤。
+  - B/S 一格轨把正确切分退化成开局唯一合法对象动作，母体无法进入同一前段接受后继读取。
+  - 深切横条、独立 crate、回粘母体或 B/S-first 退休形成获胜族。
+  - P/L 可删除、移到结果侧或由普通绕路替代，而 H0→H1→H2 仍保持相同操作关系。
+  - 正确 L 在切分后退休，后段主角变成 crate、B/S、P/L 或目标分配。
+
+evidence_boundary: >-
+  当前仅选择 structure family 并声明三个未运行的局部 runtime gates；尚无 v8 layout、目标、replay、probe、完整图、解族或 submission 证据。

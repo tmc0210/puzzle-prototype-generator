@@ -1,0 +1,82 @@
+review_attempt_id: RA_HARD_BASELINE_V3_001
+required_skill: sokoban-evidence-reviewer
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+node_id: baseline_001
+exact_version: v3
+layout_sha256: 477d96ae46c2a683a6ec4073f89b724474c3d02cfdac1ef83af27efe26290b4a
+prototype_id: reality_anchor
+solve_instance:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/layout.txt
+  player_start: [1, 3]
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [down, right, right, right, down]
+
+solution_uniqueness_claim_extracted:
+  result: unique_complete
+  search_scope: complete
+  search_budget: maxStates=300000
+  equivalence_account: initial SCC 内可有纯走位排列或回退，但两个对象 commitment 中只有肩窝横推可胜，所有胜路属于同一 T 横推再下拉逻辑类。
+
+mechanical_claims:
+  - claim_id: exact_solvable
+    claim: current v3 五步 canonical 全部合法并获胜。
+  - claim_id: opening_two_faces_one_viable
+    claim: >-
+      complete opening 有 8-state initial SCC、2 个首次对象 commitments；上方下推为唯一 dead commitment，
+      下方肩窝横推为唯一 viable commitment。
+  - claim_id: canonical_remote_anchor_sweep
+    claim: >-
+      前四步把完整四格 T 向右对位并保留 pull 把手；第 5 步下拉同一 T，事件含 pull_object、force_chain:n2、
+      anchor_boundary_shift:box_sticky 与 move_sticky_rigid，使 B/S 下移并由 B 覆盖目标，立即胜利。
+  - claim_id: distal_right_arm_necessity
+    claim: >-
+      相对 current v3 只删除 T 的远端右臂后，同一五步仍全部合法，终手仍下拉剩余 L 形，
+      但不含 force_chain 或 B/S shift，目标未覆盖且不胜。
+  - claim_id: fixed_push_pull_role
+    claim: >-
+      current v3 所有胜路必经 fixed pull effect；可达图中 P/L 本体从不移动，且不存在绕过 fixed P/L effect 的胜路。
+  - claim_id: solution_logic_unique
+    claim: complete graph 为 19 states / 34 legal transitions / 1 winning state；两个 opening commitments 仅一个可胜。
+  - claim_id: outline_trim_isomorphic
+    claim: >-
+      相对 frozen v2 只裁封闭纯墙外列后，按 (x,y)->(x-1,y) 平移，19 个状态、34 条 action/event-labeled edges
+      与唯一 winning state 全部一一相同。
+  - claim_id: no_post_sweep_cleanup
+    claim: canonical 第 5 步远端扫带 B/S 后立即胜利，无后续清理。
+
+allowed_evidence_sources:
+  authority:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+  exact_and_raw_artifacts:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/complete_graph_opening.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/dead_upper_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/counterfactual_l_shape_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/identity_event_probe.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/outline_graph_isomorphism.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/versions/v3/diagnostics/verify_outline_graph_isomorphism.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/layout.txt
+
+forbidden_sources:
+  - designer 的 node_brief、design_reading、submission 与审美/难度自评；solution_uniqueness 仅作为已提取硬声明的定位来源
+  - experience_brief、human_brief、design_tree、旧 evidence/review、designer action、当前对话与 Controller 审美解释
+  - task-local explorer 语料、其它候选或其它 exact
+
+evidence_boundaries:
+  - 完整图与 commitment 事实只支持 current v3 的可达/解族，不支持难度或质量。
+  - 删远臂只支持该五步动作组中远端右臂的机械责任，不支持审美结论。
+  - 裁边同构只支持机械等价；不直接产生 review 保留或玩家质量结论。
+  - fixed P/L 只声明所有胜路中的 pull effect 必经且锚点不移动，不声明 P/L 是审美高潮。
+
+output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/baseline_v3/evidence_review.yml

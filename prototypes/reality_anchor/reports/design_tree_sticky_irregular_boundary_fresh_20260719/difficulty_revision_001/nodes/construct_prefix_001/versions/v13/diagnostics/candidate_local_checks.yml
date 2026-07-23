@@ -1,0 +1,67 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V13_CANDIDATE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+candidate_id: RA_DIFFICULTY_CONSTRUCT_PREFIX_OPENING_ACCESS_V13
+exact_version: v13
+status: withdraw_current_exact
+
+exact:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v13/layout.txt
+  layout_sha256: 2cb53620662999275ef450892fea95cba516abe5617209d75cc474cec249dfd3
+  dummy_target_removed: true
+  targets: [[10,6],[9,7],[10,7]]
+  all_targets_are_h2_footprint: true
+
+formal_replay:
+  result: passed
+  legal_through_step: 21
+  canonical_first_win_step: 21
+  final_win: true
+  final_action: up
+  final_events: [pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n1]
+  includes:
+    p_side_bs_cut: true
+    first_p_push_crossing: true
+    l_vacated_gate: true
+    pure_walk_outer_exchange: true
+    h1_pulls: true
+    h2_up: true
+    exact_loop: false
+
+directed_audit:
+  method: directed_bounded_first_win_search
+  full_graph: false
+  budget_per_search: {max_states: 50000, max_depth: 30}
+  formal_first_win: {result: canonical_exact, explored_states: 897, depth: 21}
+  mandatory_stop_case:
+    id: RA_V13_BS_NOT_RETIRED_WIN
+    result: non_equivalent_win
+    explored_states: 1913
+    depth: 23
+    second_bs_motion_step: 5
+    winning_bs_final: [[3,6],[3,7]]
+    canonical_bs_final: [[4,6],[4,7]]
+  pl_counterfactual_already_started:
+    deletion: {result: non_equivalent_win, depth: 11}
+    all_active_push_side: {result: non_equivalent_win, depth: 11}
+
+local_regressions:
+  repeat_push: {result: passed_local_block, stop_reason: destination_occupied}
+  second_deep_cut: {result: passed_local_block, stop_reason: force_blocked, responsible_wall: [4,8]}
+  remerged_mother_h2: {result: passed_local_block, stop_reason: force_blocked, responsible_wall: [10,5]}
+
+designer_decision:
+  verdict: withdraw
+  candidate_ready_for_graph: false
+  graph_run: false
+  solution_uniqueness_written: false
+  submission_written: false
+  statement: >-
+    formal canonical 可复现，但定向 first-win 审计找到 B/S 切分后再次移动 B/S 仍可胜的非等价胜族；
+    该动作不是 pure-walk 差异、完整回返 loop 或必要步骤换序，且改变最终 B/S 对象状态。
+    同一已启动批还发现删除 P/L 或把活动区全置于 P-side 后的 11 步胜路，P/L 身份反事实也失败。
+    按 assignment mandatory stop 撤回 v13，不进入 graph，不写 uniqueness 或 submission。
+  evidence_limit: >-
+    未运行完整图。未找到反例的 directed case 只是在 max_states=50000、max_depth=30 范围内的 bounded 结果，
+    不构成全称旁路或唯一性声明。

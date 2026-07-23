@@ -1,0 +1,61 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V14_BS_TRACK_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v14_probe_only
+status: probe_failed_required_reverse_remerge_regression
+
+scope:
+  formal_candidate: false
+  full_graph: false
+  uniqueness_written: false
+  submission_written: false
+
+exact_diff:
+  basis: v13 formal layout
+  added_walls: [[3,6],[3,7]]
+  other_changes: []
+  responsibility: >-
+    `(3,6)(3,7)` 同时构成 B/S 左移目标墙与右移玩家施力面墙；canonical x=5 通道、L 区和 H2 targets 不变。
+
+artifact_refs:
+  reasoning_sketch: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v14/reasoning_sketch.yml
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v14/diagnostics/bs_track_layout.txt
+  canonical: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v14/diagnostics/canonical_replay.json
+  bs_motion_table: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v14/diagnostics/bs_motion_table.json
+  opening_access_regression: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v14/diagnostics/opening_access_regression.json
+  bounded_first_win: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v14/diagnostics/bounded_first_win_audit.json
+
+gates:
+  minimal_track_diff: {result: passed, added_wall_count: 2}
+  canonical_h2_win: {result: passed, first_win_step: 21}
+  opening_access: {result: passed, pre_h0_h1_face_reachable: false, post_h0_h1_face_reachable: true}
+  bs_left_motion: {result: passed, outcome: force_blocked}
+  bs_right_motion: {result: passed, outcome: both_driver_faces_are_walls}
+  second_deep_cut: {result: passed, outcome: force_blocked}
+  reverse_remerge:
+    result: failed
+    outcome: required_up_driver_face_is_wall
+    v13_witness_stopped_at_step: 4
+    mother_restored: false
+  repeat_push: {result: passed, outcome: destination_occupied}
+  crate_regression: {result: passed_with_bounded_state_scope}
+  bounded_actual_first_win:
+    result: no_actual_non_equivalent_win_found_within_budget
+    formal_first_win: canonical_exact
+    full_graph: false
+  p_l_relationship_counterfactual:
+    result: responsibility_changed
+    all_push_relation_is_same_as_actual: false
+    solvability_alone_used_as_failure: false
+
+designer_decision:
+  gate: fail_probe_no_candidate
+  statement: >-
+    最小两墙版本完整保留 21 步 canonical、H0 前后 access 差分、repeat、deep cut 和有界 crate 回归，
+    并关闭 v13 B/S 旁路；bounded actual first-win 未发现新的非等价胜族。然而它不能保留 assignment 要求的
+    反向回粘：两格墙禁止了 v13 唯一的换列路线，而 `(4,8)` deep-cut 墙又封住原列向上推动站位。
+    因必要关系回归失败，本 probe 不得标记 `probe_passed_for_candidate`。
+  evidence_limit: >-
+    只覆盖列出的 current-runtime replay、walk-only BFS、局部动作枚举和 max_states=50000/max_depth=30 的
+    bounded first-win；不形成 formal candidate、完整图、uniqueness 或 submission。

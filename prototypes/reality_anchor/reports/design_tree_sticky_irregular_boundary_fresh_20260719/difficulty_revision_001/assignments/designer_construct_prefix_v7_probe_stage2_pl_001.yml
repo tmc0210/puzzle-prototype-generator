@@ -1,0 +1,58 @@
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V7_PROBE_STAGE2_PL_001
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: RA_STUDIO_CONTROLLER_20260719
+task_root: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719
+design_tree_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/design_tree.yml
+
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version_basis: v6
+
+design_brief: >-
+  v7 stage1 已用 current runtime 证明：玩家移动 B/S 可把连通四格母体切成三格 L+crate，撤回 B/S 可回粘恢复母体，
+  再切后完整 state key 精确恢复。本阶段只验证该正确配对态能否有机接入冻结 baseline 的 P/L 操作面生命周期；
+  仍然不是正式 candidate，不跑完整图、不设胜利目标。必须由同一三格 L 完成 P 侧轴向 stroke、玩家换到外侧后 L 侧 pull、
+  反向回到同一 handoff 非玩家状态，并从第二正交面再次施力。B/S 不得替代任一步，也不得在 P/L 链前退休为无关按钮。
+  同一局部布局还要验证回粘四格母体不能完成等价 P/L 链；失败原因必须是完整占格/边界关系，而非简单封死玩家站位。
+
+runtime_parser_exception: >-
+  current CLI 要求至少一个 G；允许放置一个与玩家、对象、动作路径、受力闭包和结论完全隔离的 parser-only dummy target。
+  该 G 不得被 probe 覆盖、不得触发 win、不得参与站位或几何责任，产物必须显式标注其唯一用途。
+
+input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/experience_brief.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/reviews/baseline_v1/coach_note.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/review_actual_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/reasoning_sketch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage1_identity_cycle_probe.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/dispatch.yml
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md
+  - prototypes/reality_anchor/README.md
+  - prototypes/reality_anchor/mechanic.yml
+  - prototypes/reality_anchor/docs/design_handoff.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-designer/SKILL.md
+
+forbidden_input_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/runs
+  - 任一 archive candidate、reviewer packet、reviewer output 或旧树 exact
+
+allowed_output_refs:
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage2_paired_pl_layout.txt
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage2_paired_pl_replay.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage2_remerged_mother_probe.json
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v7/diagnostics/stage2_paired_pl_probe.yml
+
+required_outputs:
+  - 一个不评价目标条件的最小 combined runtime probe：先形成正确 B/S 配对态，再由同一 L 完成 P/L 轴向 stroke、外换把、反向回返与第二正交施力；可按 runtime_parser_exception 放置 dummy G。
+  - 记录 handoff 前后对象占格、P/L 与 B/S 占格、玩家站位，以及回返时非玩家状态 exact comparison。
+  - 同布局从回粘母体态出发运行等价首段探针；说明它为何不能替代正确配对态，且原因不是普通不可达或独立 crate 子题。
+  - 通过时只写 stage2_passed；任一门槛失败即写最小冲突并停止。不得写正式 layout、canonical、完整图或 submission。

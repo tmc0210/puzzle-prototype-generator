@@ -1,0 +1,48 @@
+request_id: RA_REQ_BS_IDENTITY_HANDOFF_COMPONENT_FILTER_001
+exploration_id: RA_EXP_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+
+design_space: >-
+  展开一个 B/S 身份变化与固定 P/L handoff 相邻的局部结构空间：若干分离的箱或黏块部件可由玩家主动安排成至少两种
+  连通异形近邻，随后通过固定 B/S 跨线或可移动 B/S 扫线完成同步转黏与 merge。采样一种只暴露单一近端施力入口的
+  P/L handoff，使分离部件在 box 身份或未合并 sticky 身份下只能移动近端单体、不能把非共线远端部件一起送过 handoff，
+  且先行移动近端部件后不能在 P/L 后段延后合体；完整连通 sticky 则能由同一近端输入把远端占格作为刚体一起带过。
+  合并体通过 handoff 后，局部空间还应允许玩家真实换到外侧 pull 面，保存一次可回到 handoff 后同一完整状态的反向分支，
+  并取得另一操作面作正交 pull。至少一个后段墙齿或交换格 consumer 应只在这些后续动作中区分两种均已合法 merge 的异形，
+  而不在构造或身份转换时提前删掉错误近邻。
+
+sampling_axes:
+  - B/S 作用方式：固定边界跨线转化、可移动 B/S 沿垂直于部件排列的方向扫线；记录转化与 merge 是否同一结算发生。
+  - 构造材料身份：分离 crates、分离 sticky components、混合 C+M；只保留能清楚比较 merge 前后受力传播的状态。
+  - 主动构造方式：移动一个桥接部件、改变两个短部件的相对错位、在 B/S 扫线前选择一个未填角；至少两种结果均合法连通。
+  - 连通异形谱：3—5 格 L/T/S/阶梯/带凹口小异形及其填角近邻；不把纯镜像或平移当新材料。
+  - P/L handoff 的入口方向：P 侧 push 后换到 L 侧 pull，或先从 L 侧单点抽取；比较近端单体与完整连体刚体的对象闭包。
+  - 分离组件先行反例：近端箱单独、近端 sticky 单独、两个未 merge 部件依次进入、先过 P/L 后再尝试 merge。
+  - 身份门责任：分离组件第一次对象动作后，剩余部件是否仍可从任一合法施力面取回并延后合体；只收录有明确动作后阻断关系的对照。
+  - 完整合并正例：同一入口输入是否移动完整异形的全部占格，并让远端突臂保持在 handoff 后局面中。
+  - 外侧换把：合并体通过后，玩家是否能以实际 walk 路线离开当前接触面并到达另一外侧 pull 面；不要求由可动 P/L 旧半格即时生成。
+  - 可逆回返：第一次外侧 pull 后，反向 pull 是否返回 handoff 后同一完整 state，而非只返回同一对象位姿。
+  - 多面后继：外侧轴向 pull 前后，是否仍可取得不共线的另一面并作正交 pull。
+  - 后段 consumer：远端墙齿、凹口交换格、非接触刚体目标格；比较两种均已 merge 的异形何时首次发生动作差异。
+  - consumer 删除对照：移除墙齿或开放交换格后，错误异形的对应后继动作是否恢复。
+  - B/S 锚点角色对照：若使用可移动 B/S，比较锚点预放结果位或可被单独搬运时，身份门关系是否退化。
+
+current_material_refs:
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md#BS边界黏合箱组形成横条或L形黏块
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md#固定BS切割二格黏块分成箱子和黏块
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md#BS移动边界箱组变为CCCM或黏块
+  - prototypes/reality_anchor/mechanism_lab/lexicon.md#PL边界交接从P侧推入再从L侧拉回
+  - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#三格L外侧换把旧推面越界失配与低阶格封向
+
+do_not_repeat:
+  - 不复采开放上下双带让分离组件从外侧提前越界、后段再合体的结构。
+  - 不复采竖条或构造体封住墙带、合体后只剩缺角内连续正交 pull 的结构。
+  - 不依赖可移动 P/L 让出的旧半格与动作后玩家立即相邻；该 immediate walk-exit 条件已是避重边界。
+  - 不把 B/S 转化、sticky_merge、P/L push/pull 或 anchor shift 事件本身当作正向材料；必须保存动作后对象身份、连通性与操作面差异。
+  - 不用普通墙在 merge 前封死某个构造选择，也不让目标轮廓提前给出唯一形状。
+  - 不发布 candidate 坐标、完整布局、完整解、目标包装、难度评价或 structure-family 去留答案。
+
+materialization_target: >-
+  发布极小、可运行的局面卡与近邻对照，逐项保存开始身份与连通图、非空输入、转化/merge 事件、受力闭包、动作后完整状态、
+  分离组件能否延后合体、完整连体能否通过 handoff、外侧面可达性、exact-state 回返结果及另一面 pull 动作表。
+  至少形成一组“两个构造结果均合法完成 B/S 转化与 merge；分离身份不能先行通过 P/L，连体身份可以”的身份门材料，
+  以及一组“正确与错误连体都通过 handoff，差异只在后段墙齿或交换格 consumer 首次出现；移除 consumer 后错误近邻恢复”的局部结构谱。

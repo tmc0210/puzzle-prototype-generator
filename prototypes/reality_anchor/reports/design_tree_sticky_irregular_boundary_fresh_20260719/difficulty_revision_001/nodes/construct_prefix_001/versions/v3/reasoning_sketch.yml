@@ -1,0 +1,126 @@
+schema_version: 1
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version: v3
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V3_CHANGE_FAMILY_001
+design_status: family_failed_withdrawn
+
+stage_boundary:
+  completed: family_withdrawal_after_partial_negative_material
+  layout_written: false
+  probe_run: false
+  graph_run: false
+  solution_uniqueness_written: false
+  submission_written: false
+  exploration_request_written: false
+
+selected_family:
+  id: staggered_two_bar_merge_movable_pl_relay
+  name: 双横条错位合并—可动_P_L_让位中继—S_形三面回收
+  one_sentence_relationship: >-
+    玩家把两根二格横条主动合成错位 S 或齐平 2x2；合并体不是拿来堵门，而是把近端施力面与远端接触趾连成
+    一根刚体受力桥，随后带动可移动 P/L 一格。锚点让出的旧半格才生成步行换把出口并重写同一异形的推拉侧，
+    玩家再从外侧拉动、回撤重读并换到另一面，让正确 S 的缺口与远趾共同通过后段墙口。
+
+latest_material_result:
+  refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon_index.md
+  publication_status: partial_negative_gate_not_positive_family
+  supported_part: >-
+    主动合并的 sticky S 可以在同一 force chain 中带动可移动 P/L；因此“合并体可作为锚点 driver”这一局部事实有 witness。
+  rejected_necessary_assumption: >-
+    本 family 还要求 P/L 让出的空旧半格在同一动作后与玩家四邻接，使玩家下一输入可直接以 walk 进入并由此开始外侧换把。
+    最新 task material 在水平 S、水平 Z、2x2、两种锚点朝向、标签互换与四向 push/pull 的 67,308 个枚举状态中，
+    找到 252 个合并 sticky 同链移动 P/L 的 witness；其中 120 个留下空旧半格，但与动作后玩家四邻接的旧半格为 0，
+    因而没有“下一输入 walk 进入旧半格”的 witness。
+  design_consequence: >-
+    P/L 位移事实不能替代换把出口事实。缺少相邻 walk 入口时，锚点让位没有把 active construction 接到父节点的外侧换把；
+    继续添加绕路会重新引入预存外回路，改成缺角相邻面又会退回即时正交 pull。该必要桥梁被否定后，本 family 不进入 layout 阶段。
+
+allowed_material_extraction:
+  - ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/exploration/lexicon.md#两横条主动合并S缺口与2x2左下墙齿
+    use: 只取“两种合并都合法、后继才消费错位缺口”的局部关系，不沿用材料坐标或短 witness 包装。
+  - ref: prototypes/reality_anchor/mechanism_lab/lexicon.md#PL锚点移位腾出旧半格并改变推拉侧
+    use: 只取“锚点移动后旧半格成为新操作位且边界侧别被重写”的局部关系。
+
+why_this_is_a_new_family:
+  versus_v1: >-
+    v1 依赖合体前已经开放的上下双带外回路，因此分离组件能提前取得 L 侧把手。v3 不预置通往后继外侧面的回路；
+    外侧入口来自异形实际带动 P/L 后让出的旧半格，且该格位于合并体目标集合之外，预期先产生 walk 出口再接外侧换把。
+  versus_v2: >-
+    v2 让竖条本体封住墙带，并以肩位对侧缺角立即正交 pull；玩家仍贴在刚体后方，下一步继续拉块而不能脱身。
+    v3 不用构造体当门闩；正确第一 stroke 的空间收益来自 P/L 本体让位，旧半格应是非接触步行交换格，先让玩家离开当前面，
+    再绕到真正的外侧把手，不把父节点换把压成缺角内连续正交拉。
+
+player_visible_problem:
+  opening: >-
+    一根接收横条位于浅导轨中，缺少可独立把它送向 P/L 的后方施力面；另一根驱动横条可被玩家横移后接入。
+    玩家至少能主动形成错位 S 与齐平 2x2，两种 merge 本身都合法，也都保留一个可见近端把手。
+  construction_choice: >-
+    玩家不能只问哪种形状能合并。需要预见合并体的近端把手怎样把力传到远端接触趾、P/L 让位后哪一个旧半格可作为换把出口，
+    以及外侧拉动、可逆回撤和墙口换面时缺口与远趾分别要保留什么空间。
+  later_discriminator: >-
+    错误 2x2 不能在 merge 时被普通墙或站位提前淘汰；它应至少能完成合并与 P/L 中继，最好也能取得第一次外侧把手，
+    最终才因填平的角同时占掉回返交换格或撞入墙口远端齿，无法把“外拉—可逆回撤—另一面终拉”连成完整生命周期。
+
+active_construction_as_necessary_cause:
+  force_bridge: >-
+    接收横条在浅导轨里没有独立后把手，驱动横条单独又接触不到 P/L；只有先 merge，玩家从驱动条留下的近端面施力时，
+    同一连通刚体才能把位移传到接收条远端趾并带动 P/L。构造因此生成后段边界动作的因果载体，而不是先做完再退休。
+  generated_exchange: >-
+    P/L 被异形带动后，让出的旧半格必须落在合并体占格和下一步受力闭包之外，成为真实 walk 格；该格接入外侧绕行，
+    同时移动后的 P/L 把原近端面重写到不再能用同一 push 继续推进的侧别，迫使玩家换到外面读取新把手。
+  downstream_memory: >-
+    最初选择的错位方向持续决定三件事：远端哪一格接触并移动 P/L、锚点让位后哪侧仍能绕出、以及后段墙口中哪一个缺口
+    留给玩家换面、哪一个远趾承担碰撞责任。若后段只读取终局轮廓而不再读取这三项，前序仍是拼接，family 应撤回。
+
+parent_load_preservation:
+  outside_handle_change: >-
+    P/L 中继后必须先通过让出的旧半格实走离开当前接触面，再绕到异形外侧发起 pull；不接受在构造缺角里原地连续拉。
+  return_reading: >-
+    第一次外侧 pull 后应保留一次可撤销的反向 pull，能回到同一完整换把状态；玩家需要判断何时回撤、何时继续，
+    不能把回返空间压成装饰走廊或只剩唯一动作。
+  multi_face_maneuvering: >-
+    通过墙口前后仍要从轴向外把手换到另一操作面作正交 pull，且正确 S 的近端缺口提供玩家站位、远端斜趾同时接受墙齿检查。
+    这至少保留父节点的外侧换把、回返读取与多面腾挪，并把 P/L 让位状态加入同一把手生命周期。
+  anchor_role_boundary: >-
+    可移动 P/L 只由正在构造和操纵的异形在同一 force chain 中带动；它的让位同时生成换把出口并改写该异形的 force mode。
+    若玩家可以先单独搬锚点，或锚点移动形成独立子题，作品主角便从异形漂移，当前 family 失败。
+
+later_local_probe_ladder_not_executed:
+  - >-
+    受力桥 probe：分别比较分离接收条、分离驱动条、错位 S 与 2x2；要求分离组件均不能带动 P/L，两种合法合并体可以完成中继。
+  - >-
+    让位出口 probe：确认 P/L 移动前不存在外侧入口；移动后旧半格的第一步确实是 walk，不会像 v2 一样再次触发正交 pull。
+  - >-
+    把手生命周期 probe：确认外侧 pull、反向回撤到同一完整状态和另一面再取得都真实存在；错误合并不能在 merge 前被提前删除。
+  - >-
+    墙口消费 probe：正确 S 同时保留近端交换位并避开远端齿；2x2 因填角失败；移除 consumer 后错误形状应恢复，证明后段在反约束构造。
+  - >-
+    只有上述局部关系成立，未来 assignment 才可进入 v3 exact；不得从本 sketch 直接跑完整大图。
+
+required_future_all_win_obligations:
+  - 所有胜族在 P/L 首次位移前已经完成指定错位 S 的 active merge。
+  - P/L 首次位移由该合并异形的远端接触造成，不存在玩家单独搬锚点、单条带动锚点或延后 merge 的胜族。
+  - 所有胜族实际使用让出的旧半格完成外侧换把，而不是从预存回路或其它组件旁路取得外把手。
+  - 所有胜族保留可辨认的外侧 pull、回返状态读取和至少一次另一面 pull；不能只在最短解保留父节点关系。
+  - 正确错位与墙口责任支配胜族；不能只有最终目标位姿收敛而前序因果族不同。
+
+family_rejection_conditions:
+  - 分离任一横条可以独立带动 P/L、提前越界或在后段再合体。
+  - 玩家可以不借异形先单独移动 P/L，或固定 P/L 在结果位仍保留同样的把手生命周期。
+  - 错位 S 与 2x2 中某一种在 merge 前因普通站位或明显墙位已经非法，退化成局部唯一动画。
+  - P/L 让位后的旧半格仍紧贴为 pull 接触面，玩家无法先 walk 离开，重演 v2 连续正交拉。
+  - 正确构造后只剩连续唯一兑现，父节点外侧换把、可逆回返或多面终拉任一被删除或显著简化。
+  - 错误形状只由目标轮廓泄题，或后段墙口移除后仍然失败，说明 consumer 没有反向约束构造。
+  - 为阻止旁路只能退回 v1 开放双带补墙或 v2 竖条封门缺角几何；出现此情况不修补本 family，改报新的材料缺口。
+
+current_decision:
+  choice: family_failed_withdrawn
+  reason: >-
+    “锚点让出的旧半格立即成为玩家下一步可进入的 walk 换把出口”是本 family 区别于 v1 预开回路与 v2 缺角连续 pull 的必要假设；
+    最新 partial/negative task material 已在声明的枚举范围内否定该假设。虽然合并 S 同链移动 P/L 本身成立，
+    它没有生成所需玩家操作面生命周期，不能支撑外侧 pull、exact-state 回返与另一面 pull 的后段关系。
+    因此撤回当前 family，不画 v3 layout、不继续局部修补、不运行 graph，也不写 solution_uniqueness 或 submission。

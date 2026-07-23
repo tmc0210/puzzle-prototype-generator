@@ -1,0 +1,86 @@
+submission_id: SUB_RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001_V2
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v2
+
+designer_claim:
+  player_experience_core: >-
+    玩家先从两根分离横条主动构造异形，再用近端右把手驱动完整形体；胜负由左下缺口避墙与远端上臂推动边界对象共同决定。
+  player_action: >-
+    先把下条右推一格，再从下方上推与固定上条合并成 S；绕到右侧 left，使完整 S 越过墙齿并推动 B/S。
+  visible_payoff: >-
+    终局左推同时移动四格 S、触发二对象 force chain、使 B/S 左移，并由 B 覆盖目标后立即结束。
+  why_this_level_exists: >-
+    把 baseline 的近端—远端联合读取向前生长：异形不再预制，玩家须依据后继完整运动主动选择合并偏移。
+  work_identity_conditions:
+    - 两横条开局分离，2x2 与 S 两种合并都合法且都保留同方向右把手。
+    - S 左下缺口避开墙齿，上层远端格在同一 left 中接触 S 端并推动 B/S。
+    - 上条在合并前不可单独操作，B/S 不能由玩家直接取得获胜把手。
+
+growth_account:
+  parent_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001
+  frozen_parent_core: 异形刚体把近端操作面与远端作用格绑定，远端作用不可直接操作的边界对象后立即结束。
+  added_construct_prefix: 从两个局部均可行且都保留后继把手的合并中，根据后继完整轮廓主动构造 S。
+  non_splicing_verdict: passed
+  non_splicing_reason: 构造无独立结算；紧接的同一 left 同时消费缺口与远端接触，并直接结束。
+  deliberately_not_inherited: 不继承 parent 地图、预制 T、P/L pull 或上下操作路；只保持体验身份。
+
+packaging_account:
+  opening: 玩家在下条左侧，同时看见目标、B/S、上条、下条与墙齿；右侧活动室完整保留。
+  preparation: 选择直接上推成 2x2，或先右移再上推成 S；两种合并都有真实动后状态和右把手。
+  reveal_or_use: 同向 left 中，2x2 原子撞墙，S 以缺口避墙并由远端臂推动 B/S。
+  ending: 正确终拍让 B 覆盖目标并立即胜利，无回收或清理。
+  every_major_element_role:
+    - 固定上条提供远端臂；其左格独占 B/S 接触责任。
+    - 可移动下条承担构造选择，并形成近端右把手与左下缺口。
+    - 墙齿是 S/2x2 shared consumer；移除会恢复 2x2 胜法。
+    - B/S 同时封住上条左操作面并充当终局边界对象；B 左移覆盖目标。
+    - 右侧活动室与下方回廊承担两种构造、观察和取把手换位，不提供直接 B/S 旁路。
+    - 单层外墙只围合矩形；v1 的无责任纯墙列已删除。
+  known_perceptible_defects:
+    - 2x2 撞墙后正确偏移高度透明，重玩难度明显下降。
+    - 正确合并后只有换位与一次兑现，没有第二次异形应用。
+    - 顶行关系紧凑且目标方向清楚，整体处于难度 4 低端。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete
+    search_budget: maxStates=300000; graphMaxStates=300000; actual=133 states / 350 transitions / 1 winning state
+    known_raw_winning_variants:
+      - initial SCC 内可有走位、回退或下条搬动后恢复；不改变最终 S、右把手、B/S 分工和因果顺序。
+    equivalence_account: >-
+      所有胜路形成同一四格 S，再由同一右把手 left，使同一远端臂推动同一 B/S；可胜 SCC 无 branching/merging。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/solution_uniqueness.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/complete_graph_opening.json
+    evidence_limits:
+      - initial SCC 内可逆搬动与纯走位不计作非等价胜解。
+  bypass_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/square_branch_replay.json
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/counterfactual_no_wall_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/no_wall_tooth_square_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/counterfactual_delete_remote_arm.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/delete_remote_arm_replay.json
+  outline_trim_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/outline_graph_isomorphism.json
+  evidence_limits:
+    - explain-layout 未返回 instance-level object participation；对象职责由逐步状态、事件与反事实支持。
+    - 去墙齿同时开放一格地面；只引用同一 2x2 left 恢复合法并获胜的直接事实。
+    - 删远端臂只证明该格对相同输入的机械必要，不证明审美或难度。
+    - 图、同构和事件标签只支持 current exact 机械声明，不构成质量 verdict。
+
+designer_self_verdict: submit_for_independent_review
+
+operation_boundary:
+  v1_overwritten: false
+  controller_state_modified: false
+  reviewer_state_modified: false
+  freeze_or_delivery_state_modified: false

@@ -1,0 +1,61 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V12_CANDIDATE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+candidate_id: RA_DIFFICULTY_CONSTRUCT_PREFIX_UPPER_TAIL_V12
+exact_version: v12
+status: candidate_withdrawn_non_equivalent_winning_family
+
+exact:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/layout.txt
+  layout_sha256: b5eb3fbb432d8b4eb231f7f7cd27ef621e11a8506b4d41efa60a6450fc73952
+  dummy_target_removed: true
+  targets: [[10,6],[9,7],[10,7]]
+  all_targets_are_h2_footprint: true
+
+formal_replay:
+  result: passed
+  legal_through_step: 30
+  final_win: true
+  final_action: up
+  final_events: [pull_object:sticky#1, move_sticky_rigid, sticky_to_box:n1]
+  includes:
+    bs_cut: true
+    p_l_crossing: true
+    pure_walk_exit: true
+    outside_h1: true
+    h2_up: true
+    exact_loop: false
+
+directed_audit:
+  cases_started: 1
+  first_case: RA_V12_DIRECT_L_SIDE_SUBSTITUTION
+  method: bounded_first_win_search
+  full_graph: false
+  budget: {max_states: 50000, max_depth: 30}
+  explored_states: 381
+  result: non_equivalent_win_found
+  winning_depth: 16
+  bypass: >-
+    B/S 切分后直接走到三格 L 右侧，在 L 世界连续三次 right pull；第一次 pull 直接产生 canonical
+    首次 P push 后的同一 H0 对象状态，随后复用 H1 与 H2。P/L 跨界、repeat push 阻断和其后的纯 walk 离场全部跳过。
+  mandatory_stop: true
+
+remaining_required_cases:
+  repeat_push: not_run_after_mandatory_stop
+  skip_h1: not_run_after_mandatory_stop
+  no_cut_or_remerged_mother: not_run_after_mandatory_stop
+  second_deep_cut: not_run_after_mandatory_stop
+  cut_crate_target_or_substitution: not_run_after_mandatory_stop
+  bs_first_then_retirement: failed_by_first_case
+  p_l_same_side_substitution_or_deletion: failed_by_first_case
+
+designer_decision:
+  verdict: withdraw
+  candidate_ready_for_graph: false
+  graph_run: false
+  uniqueness_written: false
+  submission_written: false
+  statement: >-
+    canonical 成立不能补偿非等价胜族。首个定向 case 已证明正式目标允许 L-side pull 同位替代 P-side first push，
+    construct_prefix 的核心 P/L 前序不再是胜族责任；按 assignment 立即停止并撤回当前 exact。

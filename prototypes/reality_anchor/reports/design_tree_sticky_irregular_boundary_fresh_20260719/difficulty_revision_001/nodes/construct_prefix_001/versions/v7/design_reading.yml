@@ -1,0 +1,60 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V7_CANDIDATE_001
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+exact_version: v7
+status: withdrawn_non_equivalent_winning_family
+
+player_opening_read:
+  visible_setup: >-
+    开局给出一个四格连通母体、可上下移动的 B/S、固定 P/L、三目标墙口与第二正交动作下方的墙齿。
+    玩家可以把 B/S 上移一格留下三格 L，也可以继续上移形成二格横条与两只 crate；两种切深在动作当下都合法。
+  intended_judgment: >-
+    正确读法应把 B/S 停位、残体轮廓、外侧把手和第二正交目标集合一起考虑，而不是只把锚点送到某个提示位。
+
+canonical_player_relation:
+  active_cut: 玩家上推 B/S 一格，由四格母体主动留下三格 L 与一只 crate。
+  p_l_handoff: 三格 L 从 P 侧轴向右推，玩家实际绕到右外侧后从 L 侧右拉。
+  exact_return: 玩家绕到移动后 L 的左面，以 pull:left 完整返回 handoff state；step 8 与 step 20 的完整 state key 相同。
+  second_face_payoff: >-
+    玩家取得右下正交面后 pull:down；L 的上横臂覆盖两个目标，下腿跨 B/S 转为 crate 并覆盖第三目标，随即胜利。
+  baseline_load_read: >-
+    canonical 表面保留了冻结 baseline 的 P/L 换侧、外侧拉动、回返读取与第二正交面，并让 B/S 在终拉身份变化中继续有责任。
+
+directed_solution_family_reading:
+  skip_outer_return:
+    inputs: 16
+    is_win: true
+    classification: equivalent_exact_loop_omission_but_parent_load_not_supported
+    reading: >-
+      从 handoff state 直接绕到右下正交面即可获胜，整段外拉—exact 回返可删除。它回到完全相同状态，按 docs/21 属于省略完整回返环的等价变体，
+      但证明玩家无需承担父节点的外侧换把与回返读取，canonical 中这段关系只是可选试探。
+  deep_cut_crate_win:
+    inputs: 20
+    is_win: true
+    classification: non_equivalent_winning_family
+    reading: >-
+      玩家连续上推 B/S 两格，留下二格横条与两只 crate；其中一只 crate 被独立推到下方目标，另一只在 L 侧被拉离上方路线。
+      二格横条随后只做一次 P 侧右推与一次正交下拉便覆盖上方双目标。B/S 在 step 2 后退休，三格 L 从未形成，
+      外侧 pull 与 exact 回返均未发生，第三目标由独立 crate 而非异形下腿承担。
+    why_non_equivalent: >-
+      该路线改变构造产物、对象身份、目标分配、依赖因果与 P/L 操作面生命周期，不是纯走位、对称重标号、独立必要步骤换序或 exact 环省略。
+
+growth_read:
+  intended_increment: 连通母体的主动减法切深应反向受 P/L 多面链与终局墙口约束。
+  actual_increment: >-
+    current exact 同时允许“L 残体承担完整链”和“深切横条 + 独立 crate 分配目标”两种获胜逻辑；后者把 active construction 降为目标分工，
+    并删除父节点外换把、回返和具体 L 远端责任。
+  verdict: family_failed_for_current_exact
+
+evidence_boundary:
+  - canonical 与两条定向 replay 均来自 current runtime。
+  - 找到首个非等价胜族后按 assignment 停止；未继续测试其它定向项，未运行 solver、完整图或解族枚举。
+  - 当前结论只撤回 v7 exact，不对其它尚未物化的 structure family 作全称判断。
+
+designer_decision:
+  candidate_ready_for_graph: false
+  solution_uniqueness_written: false
+  submission_written: false
+  self_verdict: withdraw_current_v7
+  reason: 已知 deep-cut + independent-crate 非等价获胜族；且 canonical 外拉—exact 回返环可整体省略。

@@ -1,0 +1,73 @@
+submission_id: SUB_RA_DIFFICULTY_BASELINE_L_KEYHOLE_V1
+tree_id: RA_TREE_STICKY_IRREGULAR_BOUNDARY_DIFFICULTY_REVISION_20260719
+node_id: baseline_001
+parent_node_id: null
+growth_relation: baseline
+candidate_id: RA_DIFFICULTY_BASELINE_L_KEYHOLE_V1
+exact_version: v1
+
+designer_claim:
+  player_experience_core: >-
+    玩家把三格 L 从 P 侧推出后，必须两次在外侧重取把手：先从上横臂右端连续右牵，
+    读取低阶突出部相对双墙齿的列；再绕到底侧，把该突出部下牵进单列钥匙孔。
+  player_action: >-
+    push:right 建立越界局面；沿上回路换面后 pull:right 两次；沿下回路取得低阶格下方把手并 pull:down。
+  visible_payoff: 低阶格穿过两枚墙齿之间，三格 L 同时覆盖 L 形目标并立即胜利。
+  why_this_level_exists: >-
+    用一个小型异形证明难度 3 可以来自真实换把、固定边界造成的旧面失配、异形对齐与可逆试探，
+    不必增加统一推演层，也不在第一次正确对象动作后退化成唯一兑现。
+  work_identity_conditions:
+    - 三格 L 的上横臂与低阶突出部必须同时存在。
+    - 第一次 push 后玩家必须落入 L 侧，旧左面可达但不能恢复同向 push。
+    - 左墙齿必须拒绝过早下牵，右墙齿必须拒绝缺角捷径与超调下牵。
+    - 正确水平列右侧保留可逆超调空间，上下回路分别承担两次真实外侧换把。
+    - 终手必须从低阶突出部下方 pull:down，而非从缺角或旧推面完成。
+
+packaging_account:
+  opening: 玩家、三格 L、固定 P/L、L 形目标与双墙齿同时可见；可从上/下两个等价旧面启动。
+  preparation: 第一次 push 让玩家越入 L 侧；上回路用于取得上横臂外侧把手。
+  reveal_or_use: 两次右牵逐列显示低阶格与墙齿关系；第二次对齐后再走下回路取得终手把手。
+  ending: 低阶格从两墙齿之间下移，上横臂同步覆盖其余目标并立即结束。
+  every_major_element_role:
+    - fixed P/L: 旧面模式失配与真实 push-to-pull 换把
+    - L top arm: 上侧 pull:right 把手
+    - L lower toe: 对齐读数与 pull:down 终手把手
+    - left tooth: 拒绝过早 pull:down
+    - right tooth: 拒绝缺角捷径和超调下移
+    - upper loop: 第一次外侧换把与超调回返
+    - lower loop: 第二次换到底侧把手
+    - three goals: 唯一 L 目标位姿与钥匙孔列
+    - fixed B/S: 只提供预置 M 的合法侧别，不参与关键动作
+  known_perceptible_defects:
+    - 两次换把含中等长度走位；若玩家不把回路读作取得新把手，节奏可能显得偏稀。
+    - 目标轮廓较清楚，熟练玩家可能较快识别正确列；难度依赖 P/L 与把手操作而非隐藏信息。
+
+hard_evidence:
+  solve_instance_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/layout.txt
+  canonical_replay_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete
+    search_budget: max_states=300000; graph_max_states=300000
+    known_raw_winning_variants:
+      - up right up right right right down right right down down down left left up down
+      - right up up right right right down right right down down down left left up down
+    equivalence_account: >-
+      两条最短 raw path 仅在第一次从上格或下格左面 push 及纯走位次序上不同；完整图中 227 states、
+      610 transitions、1 winning state。四个对象里程碑支配所有胜路，且各自首次进入动作依次唯一为
+      push:right、pull:right、pull:right、pull:down；额外超调可返回同一完整状态。
+    evidence_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/solution_uniqueness.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/canonical_replay.json
+    evidence_limits:
+      - 完整性只覆盖当前 runtime、当前 exact 与 terminal-win 图语义。
+      - 机械唯一性不证明审美、难度或自然发现性。
+  bypass_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/solution_uniqueness.yml
+  identity_counterfactual_refs:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/baseline_001/versions/v1/design_reading.yml
+  evidence_limits:
+    - explain-layout 不报告 instance-level object participation；当前只有一个 sticky group，参与由逐步事件与 state key 直接确认。
+    - 未执行原型 pre_submission_check；这些只在 Controller 后续正式分配时运行，不属于本次送审证据。
+
+designer_self_verdict: submit_for_independent_review

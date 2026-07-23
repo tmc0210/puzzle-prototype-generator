@@ -1,0 +1,73 @@
+review_attempt_id: RA_HARD_CONSTRUCT_PREFIX_V2_001
+required_skill: sokoban-evidence-reviewer
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+node_id: construct_prefix_001
+exact_version: v2
+layout_sha256: 7d55f2a77c99ce5bb4e0d75752b77f8d9d26b707a8e40531829e20b566f1606d
+prototype_id: reality_anchor
+solve_instance:
+  layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/layout.txt
+  player_start: [3, 3]
+  win_condition: all_targets_covered_by_objects
+  canonical_inputs: [right, down, right, up, right, right, up, left]
+solution_uniqueness_claim_extracted:
+  result: unique_complete
+  search_scope: complete
+  search_budget: maxStates=300000
+  equivalence_account: complete graph 仅一个胜态，初始 4 个 commitments 仅 S 构造分支可胜；initial SCC 内纯走位不构成新逻辑类。
+mechanical_claims:
+  - claim_id: exact_solvable
+    claim: current v2 八步 canonical 全部合法并获胜。
+  - claim_id: active_s_construction
+    claim: 第 4 步把两根横条主动合并为四格错位 S，之后从右侧取得把手。
+  - claim_id: shared_consumer_divergence
+    claim: >-
+      错位 S 与规整 2x2 都能实际构造并到达同一右侧 consumer 操作位；S 的最终 left 合法并触发 force_chain/B-S shift 获胜，
+      2x2 的同一次 left 因墙齿阻挡而原子失败、不胜。
+  - claim_id: wall_tooth_responsibility
+    claim: >-
+      相对 current v2 只把墙齿 [3,2] 改为地面后，同一 2x2 七步路径终手恢复合法，触发同类 force_chain/B-S shift 并获胜。
+  - claim_id: distal_upper_arm_necessity
+    claim: >-
+      相对 current v2 只删除 S 的远端上臂 [4,1] 后，canonical 八步仍合法且合并发生，但终手只移动黏块，
+      不产生 force_chain/B-S shift 且不胜。
+  - claim_id: solution_logic_unique
+    claim: complete graph 为 133 states / 350 transitions / 1 win；initial region 4 commitments 仅 1 viable。
+  - claim_id: outline_trim_isomorphic
+    claim: >-
+      相对 frozen v1 只裁封闭纯墙外列后，按 (x,y)->(x-1,y) 平移，133 个状态、350 条 action/event-labeled edges
+      与唯一 winning state 全部一一相同。
+  - claim_id: no_post_consumer_cleanup
+    claim: canonical 第 8 步推动 S 与 B/S 后立即胜利，无后续清理。
+allowed_evidence_sources:
+  authority:
+    - prototypes/reality_anchor/README.md
+    - prototypes/reality_anchor/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - .agents/skills/sokoban-evidence-reviewer/SKILL.md
+    - .agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md
+    - .agents/skills/sokoban-evidence-reviewer/references/scc-graph-reading.md
+    - .agents/skills/sokoban-evidence-reviewer/references/source-map.md
+  exact_and_raw_artifacts:
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/layout.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/canonical_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/solution_uniqueness.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/runtime_analysis.yml
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/complete_graph_opening.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/square_branch_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/counterfactual_no_wall_tooth.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/no_wall_tooth_square_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/counterfactual_delete_remote_arm.txt
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/delete_remote_arm_replay.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/outline_graph_isomorphism.json
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/verify_outline_graph_isomorphism.ts
+    - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/layout.txt
+forbidden_sources:
+  - designer 的 node_brief、design_reading、submission 与审美/难度自评；solution_uniqueness 仅作已提取硬声明定位
+  - experience_brief、human_brief、design_tree、旧 evidence/review、designer action、当前对话与 Controller 审美解释
+  - task-local explorer 语料、其它候选或其它 exact
+evidence_boundaries:
+  - 去墙齿反事实同时开放一个可走格，只支持该 shared-consumer 输入的墙齿机械责任。
+  - 删远端上臂只支持 current canonical 终手中的机械必要性。
+  - 完整图、opening 与裁边同构不支持难度、审美、包装或树关系。
+output_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/construct_prefix_v2/evidence_review.yml

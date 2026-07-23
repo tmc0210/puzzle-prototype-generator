@@ -1,0 +1,79 @@
+schema_version: 1
+probe_scope: current_runtime_local_and_full_draft
+layout_ref: ../layout.txt
+probe_plan_ref: local_probe_plan.yml
+runtime_semantics: current_reality_anchor
+complete_graph:
+  run: false
+  status: not_run
+  reason: compact family 已在上肩后续操作面恢复处失败，未获得进入完整图的资格。
+
+probes:
+  - id: upper_shoulder_full_draft_win
+    requested_inputs: [right, right, right, down, right, down, down, right, right, up, up, right, right, down, down, left, left, up, down]
+    completed: false
+    legal_through_step: 7
+    stopped_at_step: 8
+    stop_reason: destination_occupied
+    actual_steps:
+      - {step: 1, input: right, legal: true, events: [push_object:sticky#1, move_sticky_rigid]}
+      - {step: 2, input: right, legal: true, events: [push_object:sticky#1, move_sticky_rigid, sticky_merge:n1]}
+      - {step: 3, input: right, legal: true, events: [push_object:sticky#1, move_sticky_rigid]}
+      - {step: 4, input: down, legal: true, events: [walk]}
+      - {step: 5, input: right, legal: true, events: [walk]}
+      - {step: 6, input: down, legal: true, events: [pull_object:sticky#1, move_sticky_rigid]}
+      - {step: 7, input: down, legal: true, events: [pull_object:sticky#1, move_sticky_rigid]}
+      - {step: 8, input: right, legal: false, events: [], failure: destination_occupied}
+    final_win: false
+    fact_reading: >-
+      上肩主动合体、P 侧启动和第一次对侧缺角 pull 均成立；但下一次 down 仍拉动同一 L，未恢复 walk 面，
+      随后的 right 被刚体占位拒绝。外侧水平换把没有开始。
+
+  - id: lower_shoulder_far_arm_tooth
+    requested_inputs: [up, right, down, left, down, right, right, right, up, right, up]
+    completed: false
+    legal_through_step: 10
+    stopped_at_step: 11
+    stop_reason: force_blocked
+    actual_steps:
+      - {step: 1, input: up, legal: true, events: [walk]}
+      - {step: 2, input: right, legal: true, events: [walk]}
+      - {step: 3, input: down, legal: true, events: [push_object:sticky#1, move_sticky_rigid]}
+      - {step: 4, input: left, legal: true, events: [walk]}
+      - {step: 5, input: down, legal: true, events: [walk]}
+      - {step: 6, input: right, legal: true, events: [push_object:sticky#1, move_sticky_rigid]}
+      - {step: 7, input: right, legal: true, events: [push_object:sticky#1, move_sticky_rigid, sticky_merge:n1]}
+      - {step: 8, input: right, legal: true, events: [push_object:sticky#1, move_sticky_rigid]}
+      - {step: 9, input: up, legal: true, events: [walk]}
+      - {step: 10, input: right, legal: true, events: [walk]}
+      - {step: 11, input: up, legal: false, events: [], failure: force_blocked}
+    final_win: false
+    fact_reading: >-
+      下肩同样主动合体并跨 P/L；进入对侧上缺角后，pull:up 的远臂目标格撞墙，肩位差异得到 runtime 支持。
+
+  - id: premerge_old_face_no_forward_leak
+    requested_inputs: [up, right, down, left, down, up, up, right, right, down, right, right, left, left]
+    completed: false
+    legal_through_step: 11
+    stopped_at_step: 12
+    stop_reason: destination_occupied
+    actual_steps:
+      - {step: 1, input: up, legal: true, events: [walk]}
+      - {step: 2, input: right, legal: true, events: [walk]}
+      - {step: 3, input: down, legal: true, events: [push_object:sticky#1, move_sticky_rigid]}
+      - {step: 4, input: left, legal: true, events: [walk]}
+      - {step: 5, input: down, legal: true, events: [walk]}
+      - {step: 6, input: up, legal: true, events: [walk]}
+      - {step: 7, input: up, legal: true, events: [walk]}
+      - {step: 8, input: right, legal: true, events: [walk]}
+      - {step: 9, input: right, legal: true, events: [walk]}
+      - {step: 10, input: down, legal: true, events: [walk]}
+      - {step: 11, input: right, legal: true, events: [walk]}
+      - {step: 12, input: right, legal: false, events: [], failure: destination_occupied}
+    final_win: false
+    fact_reading: >-
+      单格已移到下肩准备位但尚未合体；玩家抵达裸竖条旧上肩面后，向后继方向的 right 没有移动竖条。
+      try-inputs 在该非法步停止，因此计划中的后续 left、left 没有执行，不能据此声明旧面回撤边界。
+
+overall_local_status: family_failed_withdrawn
+submission_allowed: false

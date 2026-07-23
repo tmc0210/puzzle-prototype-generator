@@ -1,0 +1,60 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V9_PL_TRANSITION_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+exact_version: v9_probe_only
+status: probe_failed
+
+revision_scope:
+  changed_element: P/L anchor position only
+  preserved_from_v8_stage1b:
+    - 墙、地板、玩家、B/S、四格母体和 dummy target 的全部坐标
+    - B/S 一格切分与回粘母体关系
+    - H0、H1、H2 的异形 footprint 与负责母体尾格失败的墙
+    - cut crate 的初始位置与四面几何
+  not_in_scope:
+    - 正式目标
+    - candidate
+    - 完整图或 solver
+    - uniqueness 或 submission
+
+structure_hypothesis:
+  p_l_before: {P: [8, 1], L: [9, 1]}
+  p_l_probe: {P: [5, 1], L: [6, 1]}
+  first_push_transition: >-
+    玩家从 (5,5) 在 P 世界 right push，动作后到 (6,5)；新边界应使 (6,5) 属于 L 世界。
+    因此 H0 后立即再次 right 不能从对象左侧 push L。
+  outside_pull_preservation: >-
+    玩家仍可绕到 H0 右外侧 (9,4)，在 L 世界 right pull 同一 L 到非恒等 H1，再从新正交面 down pull 到 H2。
+  organic_role: >-
+    P/L 不只是标记两次动作；它必须让第一次 push 的玩家落点跨界，从规则上撤销旧左侧 push 把手，
+    迫使玩家改取右外侧 pull 把手后才能产生 H1。
+
+explicit_regression_risk:
+  cut_crate: >-
+    P/L 左移也会把 cut crate (6,6) 的北面 (6,5) 与东面 (7,6) 放入 L 世界；
+    v8 依赖这些面处于 P 世界来阻断 pull，因此必须实际重跑，不能由旧 action table 背书。
+  stop_rule: P/L 移位后母体、深切或 cut crate 任一退化，即写最小冲突并停止，不扩改其它结构。
+
+planned_runtime_order:
+  - 正确 L：切分、首次 P push、外绕 L pull、H2
+  - H0 后立即 right 的 transition probe
+  - 回粘母体与 H1-like 尾格失败
+  - 第二格深切两侧入口
+  - cut crate 四面动作表；若首个可移动面成立即停止
+
+observed_runtime_result:
+  passed:
+    - step 19 的首次 right 是 P 侧 push，玩家动作后位于 (6,5) 的 L 世界。
+    - H0 后立即再次 right 返回 destination_occupied，L 与完整 state 不变。
+  failed:
+    - H0 后 left 在 L 世界直接把 L 反拉回切分初态，不是无副作用离场；原外绕路径失效。
+    - H0 后 up 在 L 世界直接 pull cut crate；crate 跨回 sticky 世界并与 L 合并，cut crate substitution 阻断退化。
+    - H0 后 down 被 cut crate 占据，right 被 L 占据；四向没有不移动 L 或 crate 的离场。
+  stop_reason: >-
+    P/L 左移虽阻断连续 right，却同时消灭 intended 外绕入口并使 cut crate 成为可施力对象；按 assignment 任一退化即停止，
+    未继续母体与第二格深切回归，也未形成 candidate、目标或图。
+
+evidence_boundary: 只支持 v9 P/L 跨界与首个局部退化诊断；不支持母体/深切回归通过、正式 candidate、目标、图、解族或 submission。

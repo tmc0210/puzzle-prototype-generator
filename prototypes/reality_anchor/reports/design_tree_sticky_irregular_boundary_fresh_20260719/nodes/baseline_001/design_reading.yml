@@ -1,0 +1,83 @@
+assignment_id: RA_DESIGNER_BASELINE_001
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: baseline_001
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+exact_version: v2
+layout_sha256: e62388836e8283e622868ce46b4a5890c3ee2c5bf2a978dd63de9dd4834617e6
+
+player_side_reread:
+  opening_view: >-
+    玩家位于 T 形左侧的小观察区；上路能到达左臂上方，下路能到达中央脚左侧。
+    右侧 B/S 和其下方目标被墙与对象自身封住，没有可见的直接操作位。
+  first_meaningful_choice: >-
+    上路可以合法地把整块 T 向下推，下路则可以从中央脚肩窝把整块向右推。
+    选择不是纯走位分叉：两条路分别使用不同操作面，并把远端右臂送往不同列。
+  viable_read: >-
+    从下路在中央脚左侧向右推一格，T 的右臂进入 S 的正上方；玩家同时停在左臂下方，保留 pull 接触。
+    随后下拉整块 T，远臂与 S/B 进入同一 force chain，使 B 向下覆盖目标。
+  dead_read: >-
+    从上路直接下推 T 也是合法的明确承诺，但右臂仍在 S 左侧，中央脚落入底袋。
+    实际 replay 不产生 force chain；完整图把该 commitment 归为 dead，不能回到可胜逻辑类。
+  payoff: >-
+    正确第二手同时出现 sticky 刚体下移、force_chain、B/S 边界位移和 B 覆盖目标，动作后立即结束。
+
+difficulty_read:
+  target: 3
+  verdict: lower_bound_supported
+  player_reasoning_burden:
+    - 必须把近端操作面与整个 T 的远端占格同时投影，而非只判断黏块能否移动。
+    - 必须比较两个都合法的首次对象动作及其动后把手；错误分支不是撞墙或无效输入。
+    - 必须预见先横移再下拉会把不可直接操作的 B/S 纳入远端 force chain。
+  calibration_limit: >-
+    核心只有一次二选一判断，读懂后第二个对象动作被强制；因此只主张紧凑 baseline 的难度 3 下界，
+    不以步数、状态数或图工具提示冒充更高难度。
+
+structural_responsibility:
+  irregular_body: >-
+    T 的中央脚提供第一手近端 push 面，左臂在横移后提供第二手 pull 面，右臂则独占第二手远端作用列；
+    三个职责必须属于同一刚体才能用两手完成。
+  boundary_and_pocket: >-
+    当前 exact 中 B/S 与周围墙把目标变成远端单向落点；玩家不能直接取得 B/S 的施力位。
+    这里不再主张 B/S 的初始横向坐标本身是单变量机械必要条件。
+  opening_fork: >-
+    上下两路把“选择哪个操作面”外显为可执行的两个 commitment，并留下不同动后状态。
+
+counterfactual_reading:
+  delete_remote_right_arm:
+    result: fail_as_expected
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_l_shape.txt
+    observation: 同一五步全部合法，但终手只有 pull sticky，没有 force_chain 或 B/S 位移，未胜利。
+  shift_bs_one_cell_left_single_variable:
+    result: original_claim_withdrawn
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/counterfactual_shifted_bs_single_variable_replay.json
+    observation: >-
+      只把 B/S 左移一格且保持墙、目标、T、起点与 P/L 不变后，同一五步仍全部合法并胜利；
+      第 4 步先把 B/S 推回原对齐位，第 5 步再下拉入目标。因此初始 B/S 横向对齐机械必要声明被反例否定并撤回。
+  upper_operation_face:
+    result: dead_as_expected
+    evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/runtime_analysis.yml
+    observation: up,right,right,down 合法下推 T；末态未移动 B/S，完整图证明该 commitment 不可达胜利。
+  direct_bs_bypass:
+    result: absent_in_complete_graph
+    observation: 完整 19-state 图只有一个 winning state 与一个 viable commitment；唯一胜利转移由 T 下拉触发 B/S 位移。
+
+revision_account:
+  v1_diagnosis: 初始 region 只有一个 viable/optimal commitment，关键 push 缺少可见的同题错误选择，太接近 discovery。
+  v2_change: 只扩展开局观察区，增加可合法下推左臂的上方操作面；T、B/S 口袋和核心两手关系不变。
+  v2_result: 初始 region 现有两个 commitment，一个 viable、一个 dead，forced commitment prefix 为 0。
+
+evidence_fix_account:
+  assignment_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/designer_baseline_v2_evidence_fix_001.yml
+  decision_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/baseline_001/diagnostics/evidence_fix_001.yml
+  withdrawn_claim: boundary_alignment_mechanical_necessity
+  exact_changed: false
+  player_relation_changed: false
+
+known_perceptible_defects:
+  - 正确 commitment 后只剩一次强制兑现，关卡没有持续多阶段推演；这是 baseline 紧凑性的代价。
+  - 顶部固定 P/L 只承担原型语义边界，玩家在本关不能独立操作它，局部反馈弱于 T 与 B/S。
+
+designer_conclusion: >-
+  v2 的实际布局、非空 replay、完整图和删去远臂的单变量反事实共同支持玩家关系与异形作品身份；
+  初始 B/S 横向对齐必要性已按有效反例撤回，不再用于送审；
+  缺点已限定在紧凑 baseline 的执行尾和固定 P/L 反馈，不足以触发同 family 再修订或材料请求。

@@ -1,0 +1,88 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V10_FAR_LEG_EXIT_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v10_probe_only
+status: probe_failed
+
+scope:
+  formal_target: false
+  candidate: false
+  graph_run: false
+  solver_run: false
+  uniqueness_written: false
+  submission_written: false
+
+artifact_refs:
+  reasoning_sketch: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/reasoning_sketch.yml
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_exit_layout.txt
+  l_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/far_leg_l_replay.json
+  repeat_and_exit: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/repeat_push_and_exit_probe.json
+  mother_deep_crate: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v10/diagnostics/mother_deep_crate_probe.json
+
+runtime:
+  runner: npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+  case_count: 6
+  cases:
+    - {id: RA_V10_FAR_LEG_L, result: main_chain_passed, legal_through_step: 44}
+    - {id: RA_V10_MOTHER_CONTRAST, result: expected_force_blocked, legal_through_step: 43, stopped_at_step: 44}
+    - {id: RA_V10_REPEAT_RIGHT, result: expected_destination_occupied, legal_through_step: 18, stopped_at_step: 19}
+    - {id: RA_V10_DEEP_ABOVE, result: expected_destination_blocked, legal_through_step: 1, stopped_at_step: 2}
+    - {id: RA_V10_DEEP_BELOW, result: expected_destination_occupied, legal_through_step: 6, stopped_at_step: 7}
+    - {id: RA_V10_CRATE_EAST, result: regression_crate_moved, legal_through_step: 43}
+
+parser_exception:
+  dummy_target: [13, 1]
+  isolated_by_walls: true
+  covered: false
+  triggered_win: false
+  design_role: none
+
+gates:
+  p_l_first_push_transition:
+    result: passed
+    h0_player: [6, 4]
+    h0_player_world: pull
+    repeat_right: destination_occupied
+    repeat_right_state_unchanged: true
+  pure_walk_exit:
+    result: passed
+    input: down
+    player: [[6, 4], [6, 5]]
+    events: [walk]
+    object_and_anchor_state_unchanged: true
+  progressive_chain:
+    result: passed
+    h0: [[7, 4], [8, 4], [8, 5]]
+    h1: [[8, 4], [9, 4], [9, 5]]
+    h2_before_settle: [[8, 5], [9, 5], [9, 6]]
+    exact_loop_executed: false
+  mother_tail:
+    result: passed
+    same_h1_like: [[8, 4], [9, 4], [9, 5], [9, 6]]
+    h2_input: down
+    unique_extra_target: [9, 7]
+    responsible_wall: [9, 7]
+    player_destination_open: true
+    failure: force_blocked
+  second_deep_cut:
+    result: passed
+    above: destination_blocked
+    below: destination_occupied
+  cut_crate_substitution:
+    result: failed
+    cut_crate: [7, 6]
+    reachable_east_face: [8, 6]
+    input: right
+    events: [pull_object:crate#1]
+    crate_after: [8, 6]
+
+designer_decision:
+  gate: failed
+  statement: >-
+    近端上横臂/远端下腿朝向成功同时实现 P/L 跨界、repeat push 阻断、纯 walk 离场、外侧 H1 pull、H2 正交消费，
+    并保留回粘母体的唯一远尾墙责任与第二格深切阻断；但 H2 取面路线使玩家实际到达 cut crate 东侧，
+    right 合法独立 pull crate，故全面 substitution 回归失败。
+  stop_reason: 按 assignment，cut crate 任一退化即停止；不扩改墙、对象或其它 family。
+  evidence_limit: >-
+    只证明该 v10 局部结构的主链与首个 crate 冲突；未形成目标、candidate、图、解族、uniqueness 或 submission。

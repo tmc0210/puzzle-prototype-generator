@@ -1,0 +1,26 @@
+design_task_id: CRITIC_STAGE_LOCAL_CALIBRATION_20260720
+prototype_context:
+  confirmed_rules:
+    - P/L 是可平移不可旋转的推拉锚点；P 侧为推世界，L 侧为拉世界
+    - 玩家推拉物体时，受力对象闭包与玩家同时平移；任何刚体受阻则整次动作失败
+    - 锚点覆盖目标计入胜利，玩家覆盖目标不计
+  win_condition: 所有目标均由箱子、黏块或锚点格覆盖
+  object_and_event_semantics:
+    - "# 墙；. 地面；@ 玩家；C 箱子；G 目标；P/L 推拉锚点；* 箱子在目标；+ 玩家在目标"
+player_context:
+  player_prior:
+    - 已完成 base packet 所列五个有序前序关卡
+  known_prior_level_refs:
+    - prototypes/reality_anchor/reports/llm_fill_player_benchmark_20260714_tmp/primer_f.md
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  dispatch_ref: prototypes/reality_anchor/reports/critic_0011_single_20260720/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/reality_anchor/reports/critic_0011_single_20260720/exploration/lexicon.md
+  task_index_ref: prototypes/reality_anchor/reports/critic_0011_single_20260720/exploration/index.md
+  first_material_batch_ref: prototypes/reality_anchor/reports/critic_0011_single_20260720/exploration/batch.yml
+  selected_material_refs:
+    - prototypes/reality_anchor/reports/critic_0011_single_20260720/exploration/material.md
+level_brief:
+  expected_difficulty: 4

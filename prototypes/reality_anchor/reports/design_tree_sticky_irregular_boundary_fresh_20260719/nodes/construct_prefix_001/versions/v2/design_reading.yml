@@ -1,0 +1,79 @@
+assignment_id: RA_DESIGNER_CONSTRUCT_V2_OUTLINE_TRIM_REVISION_001
+designer_instance_id: RA_IRREGULAR_DESIGNER_20260719
+tree_id: RA_STUDIO_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: construct_prefix_001
+parent_node_id: baseline_001
+growth_relation: construct_prefix
+candidate_id: RA_STICKY_IRREGULAR_CONSTRUCT_PREFIX_001
+exact_version: v2
+layout_sha256: 7d55f2a77c99ce5bb4e0d75752b77f8d9d26b707a8e40531829e20b566f1606d
+
+reasoning_sketch:
+  player_problem: >-
+    目标在 B 左侧，但 B/S 和上横条不可直接操作。下横条既能直接上推成 2x2，
+    也能先右移再上推成 S；玩家必须依据稍后的同一左推选择构造偏移。
+  visible_premises:
+    - 两种合并都合法，且都保留下层右侧把手。
+    - 左下墙齿只进入 2x2 左移的目标格，位于 S 的错位缺口。
+    - S 上层远端格会在同一次左推中接触 S 端；B 左移一格即覆盖目标。
+  expected_judgment: >-
+    主动破坏整齐对齐，把下条先右移一格；所构 S 同时留下墙齿缺口与远端 B/S 接触臂。
+  operation_and_feedback: >-
+    right 横移下条，绕下方 up 合并成 S，再绕到右侧 left；终手同时移动完整 S、推动 B/S 并胜利。
+  non_splicing_read: >-
+    构造完成时没有独立结算；S/2x2 差异只由紧接的同一 left 动作消费，且该动作同时检验缺口和远端接触。
+
+player_side_reread:
+  opening_view: >-
+    9x6 裁边后玩家仍从下条左侧看见顶行目标—B/S—上条、左下墙齿与完整右侧活动室；
+    删除的只有不可达纯墙列。
+  first_meaningful_choice: >-
+    可以直接绕下方上推成 2x2，也可先把下条右推一格再上推成 S。两种构造都成功 merge，
+    也都允许走到同一方向的右把手，答案不在构造合法性上提前泄露。
+  viable_read: >-
+    S 的错位左下缺口避开 [3,2] 墙齿，而上层左端仍能接触 S 端；终局 left 同时满足两项责任。
+  dead_read: >-
+    2x2 构造与取把手全合法，最后 left 才因左下格撞墙齿而 force_blocked，B/S 保持原位。
+  payoff_and_ending: >-
+    正确终拍由近端右把手驱动完整 S，远端臂将 B/S 左推，B 覆盖唯一目标后立即结束。
+
+difficulty_read:
+  target: 4
+  verdict: supported_at_lower_edge
+  player_reasoning_burden:
+    - 主动放弃整齐 2x2，选择一格错位合并。
+    - 两种构造都合法且都有同向把手，必须投影完整后继占格。
+    - 同时跟踪左下缺口避墙与上层远臂接触 B/S 两项远近责任。
+  limit: 2x2 试错会迅速暴露答案，且正确 S 合并后只有换位与一次兑现，故只主张难度 4 低端。
+
+structural_responsibility:
+  construction_prefix: 两根分离横条让玩家主动决定合并偏移；上条在合并前被边界与墙固定。
+  irregular_body: S 的右把手、左下缺口与上层远臂必须属于同一合并刚体，并在终拍同时兑现。
+  shared_consumer: >-
+    当前墙齿让 2x2 同向 left 原子阻塞；移墙后同一 2x2 输入恢复合法并推动 B/S 获胜，证明形状选择由 shared consumer 产生。
+  remote_arm: 删上层远臂后构造、merge、把手和左移全保留，但 B/S 不动且不胜。
+  activity_room: 右侧活动室保留合并后绕位、观察与取把手空间；本 revision 没有继续裁剪。
+
+growth_account:
+  parent_core_preserved: 同一异形刚体仍把近端操作面与远端边界作用绑定，并在作用 B/S 后立即结束。
+  added_construct_prefix: 异形不再预制；玩家必须根据后继完整运动，从两个均可行的合并中主动构造 S。
+  non_splicing_verdict: passed
+  reason: 构造差异没有独立结算，唯一后继对象动作直接读取并消费 S/2x2 轮廓。
+
+outline_trim_account:
+  change: 删除 v1 原 x=0、x=10..11 纯墙列，保留原 x=1..9；动态坐标 x 减一。
+  current_exact_dimensions: 9x6
+  right_activity_room_preserved: true
+  complete_labeled_graph_isomorphic: true
+  player_read_changed: false
+  evidence_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/construct_prefix_001/versions/v2/diagnostics/outline_graph_isomorphism.json
+  aesthetic_read: 画幅更集中，但没有压缩构造、绕位或观察空间，也没有改变 S/2x2 的相对轮廓。
+
+known_perceptible_defects:
+  - 2x2 终局撞墙后正确偏移会非常直接，重玩难度明显低于首次读取。
+  - 正确 S 合并后只有换位与一次兑现，没有第二次形态应用。
+  - 顶行目标、B/S 与上条紧密相邻，远端作用线较醒目，降低搜索负担。
+
+designer_conclusion: >-
+  current v2 的 replay、complete graph/opening、S/2x2 shared-consumer、远端臂反事实与裁边同构均支持原结构假设；
+  construct_prefix 非拼接关系保持，轮廓更集中且无新增可感缺点，可以送交 fresh 独立审查。

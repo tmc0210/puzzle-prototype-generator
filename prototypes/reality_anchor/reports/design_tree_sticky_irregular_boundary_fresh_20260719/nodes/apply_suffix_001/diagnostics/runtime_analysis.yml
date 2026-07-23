@@ -1,0 +1,117 @@
+assignment_id: RA_DESIGNER_APPLY_SUFFIX_001
+node_id: apply_suffix_001
+candidate_id: RA_STICKY_IRREGULAR_APPLY_SUFFIX_001
+exact_version: v2
+layout_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+layout_sha256: 6b537c3847a8abf968e184c2920445135755822eb81efc51da9f77a26d171d86
+prototype: reality_anchor
+win_condition: all_targets_covered_by_objects
+
+tool_invocations:
+  canonical_replay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+    --inputs left,down,left,up,right,up,left,up --id RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_CANONICAL
+  square_counterplay: >-
+    npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+    --inputs down,left,up,right,up,left,down,down,left,up,up,left,left,up
+    --id RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2_SQUARE_BYPASS
+  complete_graph: >-
+    npx tsx src/cli.ts explain-layout prototypes/reality_anchor
+    prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/nodes/apply_suffix_001/layout.txt
+    --id RA_STICKY_IRREGULAR_APPLY_SUFFIX_001_V2 --max-states 300000 --graph-max-states 300000
+
+canonical_replay:
+  inputs: [left, down, left, up, right, up, left, up]
+  legal_through_step: 8
+  completed: true
+  win: true
+  checkpoints:
+    - step: 1
+      input: left
+      reading: 下横条先左移一格，保留之后合并成错位 Z 的偏移。
+      events: ["push_object:sticky#2", move_sticky_rigid]
+    - step: 4
+      input: up
+      reading: 下横条上推并与固定上横条合并成右上错位 Z。
+      events: ["push_object:sticky#1", move_sticky_rigid, "sticky_merge:n1"]
+    - step: 7
+      input: left
+      reading: core；完整 Z 与竖直 B/S 同拍左移，B/S 到达上下目标所在边界。
+      events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+      state_key: "Ply:6,4|C:|M:5,3;6,3;4,4;5,4|PL:none|BS:B:4,2;S:4,3"
+    - step: 8
+      input: up
+      reading: suffix；近端把手上推同一 Z，远趾推动同一 B/S 并接替 S 腾出的下端目标。
+      events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+      state_key: "Ply:6,3|C:|M:5,2;6,2;4,3;5,3|PL:none|BS:B:4,1;S:4,2"
+
+square_counterplay:
+  construction: 2x2
+  inputs: [down, left, up, right, up, left, down, down, left, up, up, left, left, up]
+  legal_through_step: 14
+  completed: true
+  win: false
+  same_core_action:
+    step: 6
+    input: left
+    events: ["push_object:sticky#1", "force_chain:n2", "anchor_boundary_shift:box_sticky", move_sticky_rigid]
+    state_key: "Ply:7,4|C:|M:5,3;6,3;5,4;6,4|PL:none|BS:B:4,2;S:4,3"
+    reading: 2x2 真实完成与 Z 相同的 B/S 左移，且 S 同样暂时覆盖下端目标。
+  attempted_bypass:
+    sticky_lift_step: 11
+    sticky_lift_events: ["push_object:sticky#1", move_sticky_rigid, "sticky_to_box:n2"]
+    anchor_push_step: 14
+    anchor_push_events: ["push_object:box_sticky_anchor", "anchor_boundary_shift:box_sticky", "box_to_sticky:n2", "sticky_merge:n1"]
+    final_state_key: "Ply:4,3|C:|M:5,2;6,2;5,3;6,3|PL:none|BS:B:4,1;S:4,2"
+    reading: B 已到上端目标，但玩家站在裸露的下端目标上；规则 2x2 没有远趾可完成覆盖交接。
+
+complete_graph:
+  status: complete
+  reachable_states: 176
+  legal_transitions: 441
+  winning_states: 2
+  compressed_regions: 15
+  winning_regions: 2
+  initial_commitments: 4
+  initial_viable_commitments: 1
+  initial_dead_commitments: 3
+  initial_optimal_commitments: 1
+  forced_viable_prefix: 3
+  solution_region_path: [r0, r1, r5, r9, r10]
+  solution_scc_path: [s0, s1, s2, s3, s5]
+  canonical_cost: 8
+  canonical_inputs: [left, down, left, up, right, up, left, up]
+  winning_family_reading: >-
+    只有先把下横条左移、再合并成右上错位 Z 的构造承诺可达胜态。core 后有两个可胜承诺，
+    分别从 Z 的右上格下方立即上推，或绕到左下排右格下方再上推；两者移动同一完整 Z、推动同一 B/S、
+    覆盖同一两个目标并得到相同对象终局，只差玩家最后站位。
+
+counterfactuals:
+  - id: remove_lower_handoff_target
+    exact_change: 将边界下端目标恢复为普通地面，其余保持 v1 几何。
+    replay: [down, left, up, right, up, left, down, down, left, up, up, left, left, up]
+    result: 2x2 旁路 14 拍合法并获胜。
+    implication: 没有下端覆盖交接责任时，suffix 不再反向筛选前序构造。
+  - id: win_at_core
+    exact_change: 将上端目标移到 core 后 B 所在格，并保留下端目标。
+    z_result: Z 在 core 左推后获胜。
+    square_result: 2x2 也在相同 core 左推后获胜。
+    implication: 两种构造确实都完成眼前 core；区分来自后续覆盖迁移，不来自第一次 B/S 左移。
+  - id: remove_distal_toe
+    exact_change: 从 core 后正确 Z 快照删除位于 S 下方的远趾，保留近端上推面。
+    replay: [up]
+    result: 输入合法且黏块上移，但 B/S 不动、不胜。
+    events: ["push_object:sticky#1", move_sticky_rigid, "sticky_to_box:n2"]
+    implication: 远趾是把近端操作传递到 anchor 并接替下端覆盖的实际因果部件。
+
+runtime_verdict:
+  canonical_legal: true
+  same_immediate_core_for_z_and_square: true
+  square_can_win: false
+  logic_family_unique: true
+  raw_winning_state_unique: false
+  raw_variant_classification: equivalent_player_handle_variants
+  suffix_supported: true
+  exact_ready_for_designer_submission: true

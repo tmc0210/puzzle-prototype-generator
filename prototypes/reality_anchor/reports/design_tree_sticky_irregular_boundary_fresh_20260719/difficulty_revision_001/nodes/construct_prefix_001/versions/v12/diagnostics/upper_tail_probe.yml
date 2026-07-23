@@ -1,0 +1,81 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V12_UPPER_TAIL_UP_CONSUMER_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v12_probe_only
+status: probe_passed_for_candidate
+
+scope:
+  formal_target: false
+  candidate: false
+  graph_run: false
+  solver_run: false
+  uniqueness_written: false
+  submission_written: false
+
+artifact_refs:
+  reasoning_sketch: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/reasoning_sketch.yml
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/upper_tail_layout.txt
+  l_replay: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/upper_tail_l_replay.json
+  repeat_and_exit: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/repeat_push_exit_probe.json
+  mother_deep_crate: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v12/diagnostics/mother_deep_crate_probe.json
+
+parser_exception:
+  dummy_target: [13, 1]
+  isolated_by_walls: true
+  covered: false
+  triggered_win: false
+  design_role: none
+
+runtime:
+  runner: npx tsx src/cli.ts try-inputs prototypes/reality_anchor
+  observed_case_count: 6
+  cases:
+    - {id: RA_V12_UPPER_TAIL_L, result: main_chain_passed, legal_through_step: 30}
+    - {id: RA_V12_MOTHER_UP_H2_CONTRAST, result: expected_force_blocked, legal_through_step: 45, stopped_at_step: 46}
+    - {id: RA_V12_REPEAT_PUSH, result: expected_destination_occupied, legal_through_step: 11, stopped_at_step: 12}
+    - {id: RA_V12_SECOND_DEEP_CUT, result: expected_destination_blocked, legal_through_step: 1, stopped_at_step: 2}
+    - {id: RA_V12_CRATE_SOUTH, result: expected_destination_occupied}
+    - {id: RA_V12_CRATE_EAST, result: bounded_before_h2_footprint}
+
+gates:
+  upper_residue_cut: {result: passed, crate: [7,6]}
+  p_l_first_push_transition: {result: passed, step: 11}
+  repeat_push: {result: passed, stop_reason: destination_occupied}
+  pure_walk_exit: {result: passed, input: up, objects_unchanged: true}
+  outside_h1: {result: passed, pull_steps: [21,22]}
+  h2_up_from_below:
+    result: passed
+    step: 30
+    footprint: [[9,7],[10,7],[10,6]]
+    crate_in_footprint: false
+  mother_tail:
+    result: passed
+    same_h2_input: up
+    failure: force_blocked
+    unique_extra_target: [10,5]
+    responsible_wall: [10,5]
+    player_destination_open: true
+  second_deep_cut:
+    result: passed
+    verification: current_runtime_exact_final_layout
+    inputs: [down, down]
+    legal_through_step: 1
+    stopped_at_step: 2
+    stop_reason: destination_blocked
+    state_unchanged_at_stop: true
+    blocking_wall: [12,9]
+  cut_crate_substitution:
+    result: passed_with_state_boundary
+    h2_face_route_touches_forceable_crate_face: false
+    crate_entered_h2_footprint: false
+
+designer_decision:
+  gate: passed_for_candidate_only
+  statement: >-
+    当前 exact probe 的组合正链实际到达从下侧执行的 up H2；同前段回粘母体在同一输入仅因上尾目标
+    (10,5) 撞墙而失败，玩家目标格开放。repeat push、纯 walk 离场与 cut crate 旁路均保持。
+    最终 exact layout 的第二格深切已由 current-runtime 复核：step 1 合法切分，step 2 因 (12,9)
+    墙 destination_blocked，事件为空且状态不变。Designer 不据此形成正式 candidate。
+  evidence_limit: >-
+    只覆盖列出的 current-runtime trace 与静态 exact-layout 检查；不声称完整图、解族唯一性或待玩质量。

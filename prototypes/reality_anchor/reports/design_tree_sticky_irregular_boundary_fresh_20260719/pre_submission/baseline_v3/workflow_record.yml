@@ -1,0 +1,61 @@
+tree_id: RA_TREE_STICKY_IRREGULAR_BOUNDARY_FRESH_20260719
+node_id: baseline_001
+candidate_id: RA_STICKY_IRREGULAR_BASELINE_001
+reviewed_exact_version: v3
+delivery_exact_version: v3
+workflow_results:
+  - workflow_id: invalid_goal_prune
+    designer_assignment_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/pre_baseline_goal_prune.yml
+    applicability: applicable
+    applicability_basis: 候选准备进入人类待玩列表；虽只有一个目标且禁止删除，仍需确认其唯一终局责任。
+    authority_docs:
+      - prototypes/reality_anchor/docs/goal_prune_check.md
+    operations_performed:
+      - 核对唯一目标、规范胜解、终局 B/S 覆盖与禁止删除唯一目标的硬约束。
+    artifact_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/goal_prune/goal_prune_check.yml
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: 此步未修改 v2；随后 v2 到 v3 的外框裁剪及其 review 影响由 redundant_element_prune 单独登记。
+    status: completed
+  - workflow_id: opening_comfort_check
+    designer_assignment_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/pre_baseline_opening_comfort.yml
+    applicability: applicable
+    applicability_basis: 难度 3 的根节点需要显式核对开局观察、两操作面与首次不可逆承诺。
+    authority_docs:
+      - prototypes/reality_anchor/docs/opening_comfort_check.md
+    operations_performed:
+      - 枚举完整 initial SCC 的 8 个状态，比较合法同对象起点并保留 current 起点。
+    artifact_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/opening_comfort/opening_comfort_check.yml
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: 起点与 v2 exact 未改变；后续纯外框平移裁剪不在本步声明 review 继承。
+    status: completed
+  - workflow_id: redundant_element_prune
+    designer_assignment_ref: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/assignments/pre_baseline_redundant_prune.yml
+    applicability: applicable
+    applicability_basis: 候选含外框、固定 P/L、中央墙齿及边界空地，进入待玩前必须逐项核责。
+    authority_docs:
+      - prototypes/reality_anchor/docs/redundant_element_prune.md
+      - prototypes/reality_anchor/docs/goal_prune_check.md
+      - prototypes/reality_anchor/docs/opening_comfort_check.md
+    operations_performed:
+      - 按 goal、对象 remove、对象 wallify、空地、外框的固定顺序检查。
+      - 保留固定 P/L 与中央墙齿；仅裁去封闭外墙之外的纯墙列，形成 v3。
+      - 复验 v2/v3 完整状态图平移同构、规范输入、核心事件、opening 与最外圈闭墙。
+    artifact_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/redundant_element_prune.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/proposed_exact_v3_trimmed_outline.txt
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/pre_submission/baseline_v2/redundant_prune/verify_outline_graph_isomorphism.ts
+    version_effect: changed
+    review_effect: rereview_required
+    review_effect_basis: v2 到 v3 改变 exact，未主张旧 review 保留；v3 已重新完成 fresh 硬证据、Stage A 与 Stage B。
+    post_change_rereview_refs:
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/evidence/baseline_v3/evidence_review.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/reviews/baseline_v3/quality_review.yml
+      - prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/reviews/baseline_v3/coach_note.md
+    status: completed
+overall_status: completed
+return_to_design_required: false
+return_resolution: v3 所需重新送审已经完成，当前 reviewed 与 delivery exact 均为 v3。

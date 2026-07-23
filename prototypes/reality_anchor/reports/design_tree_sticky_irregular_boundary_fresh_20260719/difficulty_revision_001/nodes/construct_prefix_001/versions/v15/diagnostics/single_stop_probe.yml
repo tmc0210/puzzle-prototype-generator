@@ -1,0 +1,67 @@
+schema_version: 1
+assignment_id: RA_DESIGNER_DIFFICULTY_CONSTRUCT_PREFIX_V15_SINGLE_STOP_PROBE_001
+prototype_id: reality_anchor
+node_id: construct_prefix_001
+exact_version: v15_probe_only
+status: probe_failed_required_reverse_remerge_regression
+
+scope:
+  formal_candidate: false
+  full_graph: false
+  uniqueness_written: false
+  submission_written: false
+
+exact_diff:
+  basis: v13 formal layout
+  added_walls: [[3,6]]
+  other_changes: []
+  layout_sha256: 7b83a032e626de5fa8da02181c83ebd36800aac83231265ec154143cd1e0fe3f
+
+artifact_refs:
+  reasoning_sketch: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v15/reasoning_sketch.yml
+  layout: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v15/diagnostics/single_stop_layout.txt
+  canonical: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v15/diagnostics/canonical_replay.json
+  bs_motion_and_remerge: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v15/diagnostics/bs_motion_and_remerge.json
+  opening_regression: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v15/diagnostics/opening_regression.json
+  bounded_first_win: prototypes/reality_anchor/reports/design_tree_sticky_irregular_boundary_fresh_20260719/difficulty_revision_001/nodes/construct_prefix_001/versions/v15/diagnostics/bounded_first_win_audit.json
+
+gates:
+  single_wall_exact_diff: {result: passed, added_wall_count: 1, wall: [3,6]}
+  canonical_h2_win: {result: passed, first_win_step: 21}
+  opening_access: {result: passed, pre_h0_h1_faces_reachable: false, post_h0_h1_face_reachable: true}
+  bs_left_motion: {result: passed, outcome: force_blocked}
+  bs_right_commitment:
+    result: passed_bounded_nonwin
+    outcome: legal_to_x5
+    explored_states: 35
+    core_or_goal_role_found: false
+    recovered: false
+  second_deep_cut: {result: passed, outcome: force_blocked}
+  reverse_remerge:
+    result: failed
+    v13_witness_stopped_at_step: 4
+    bounded_restore_found: false
+    mother_restored: false
+  repeat_push: {result: passed, outcome: destination_occupied}
+  v13_bs_left_win_family: {result: passed_closed, stopped_at_step: 5, outcome: force_blocked}
+  bounded_actual_first_win:
+    result: no_actual_non_equivalent_win_found_within_budget
+    formal_first_win: canonical_exact
+    full_graph: false
+  p_l_relationship_counterfactual:
+    result: responsibility_changed
+    counterfactual_relation_is_same_as_actual: false
+    solvability_alone_used_as_failure: false
+
+designer_decision:
+  gate: fail_probe_no_candidate
+  statement: >-
+    单墙版本保留 21 步 canonical、opening pre/post access、H1×2、up H2、repeat 与 deep-cut，
+    并实际关闭 v13 B/S-left 胜族。保留的 `(3,7)` 让 B/S-right 合法，但该分支只把锚点
+    塞入 x=5 通道；bounded reachability 中没有 sticky motion、H0/H1/H2、目标覆盖、胜利或恢复。
+    然而 reverse remerge 仍失败：原列上推必须站在 `(4,8)`，右移后可用的 `(5,8)` 不可达，
+    下推又把反推站位落到 `(5,9)` 墙。因为 assignment 的必要可逆关系没有回归，本 probe
+    不能标记 `probe_passed_for_candidate`。
+  evidence_limit: >-
+    只覆盖 current-runtime exact replay、walk-only BFS、局部动作与 max_states=50000/max_depth=30
+    的 bounded directed search；不形成 formal candidate、完整图、uniqueness 或 submission。
