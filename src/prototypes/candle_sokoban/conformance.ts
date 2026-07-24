@@ -77,41 +77,89 @@ function checkExposureAudit(pkg: PrototypePackage): CandleConformanceCheck {
   try {
     const sequencePath = path.join(pkg.root, "docs", "mechanic_exposure_sequence.yml");
     const { sequence, raw } = loadCandleExposureSequence(sequencePath);
+    const fixtureSpecs = [
+      {
+        levelId: "CANDLE_PROBE_02_SIDE_ROLL",
+        branch: "basic_candle_manipulation",
+        targetEvent: "roll_candle",
+      },
+      {
+        levelId: "CANDLE_EXPOSURE_02_WALL_DOUSE",
+        branch: "wall_dousing",
+        previousBranch: "basic_candle_manipulation",
+        targetEvent: "extinguish_by_wall",
+      },
+      {
+        levelId: "CANDLE_PROBE_04_RECURSIVE_IGNITION",
+        branch: "shared_fire_and_reignition",
+        previousBranch: "wall_dousing",
+        targetEvent: "ignite_from_wick",
+      },
+      {
+        levelId: "CANDLE_PROBE_08_BODY_CONCEALMENT",
+        branch: "body_concealment_and_reexposure",
+        previousBranch: "shared_fire_and_reignition",
+        targetEvent: "wick_reexposed_unlit",
+      },
+      {
+        levelId: "CANDLE_PROBE_06_BURN_SHRINK",
+        branch: "retreating_flame_transfer",
+        previousBranch: "body_concealment_and_reexposure",
+        targetEvent: "shrink_ignite",
+      },
+      {
+        levelId: "CANDLE_PROBE_03_CONCEALED_FLAME",
+        branch: "rolling_contact_chain",
+        previousBranch: "retreating_flame_transfer",
+        targetEvent: "roll_reignite_after_extinguish",
+      },
+    ] as const;
+
+    for (const spec of fixtureSpecs) {
+      const level = pkg.levels.levels.find((candidate) => candidate.id === spec.levelId);
+      if (!level) {
+        throw new Error(`Missing Candle exposure audit fixture '${spec.levelId}'.`);
+      }
+      const passing = auditCandleExposure(pkg, level, sequence, raw, {
+        allowedExposureThrough: spec.branch,
+        maxStates: 20_000,
+      });
+      if (
+        passing.verdict !== "pass" ||
+        passing.graph.status !== "complete" ||
+        passing.raw_graph.edges.length === 0 ||
+        (passing.reachable_event_counts[spec.targetEvent] ?? 0) === 0
+      ) {
+        throw new Error(
+          `Exposure fixture '${spec.levelId}' did not produce a complete '${spec.branch}' pass with '${spec.targetEvent}'.`,
+        );
+      }
+
+      if (!("previousBranch" in spec)) {
+        continue;
+      }
+      const failing = auditCandleExposure(pkg, level, sequence, raw, {
+        allowedExposureThrough: spec.previousBranch,
+        maxStates: 20_000,
+      });
+      if (
+        failing.verdict !== "fail" ||
+        !failing.forbidden_hits.some((hit) => hit.pattern === spec.targetEvent)
+      ) {
+        throw new Error(
+          `Exposure fixture '${spec.levelId}' did not fail the previous gate on '${spec.targetEvent}'.`,
+        );
+      }
+    }
+
     const baseline = pkg.levels.levels.find(
-      (level) => level.id === "CANDLE_SMOKE_01_LIGHT_BRAZIER",
+      (level) => level.id === "CANDLE_PROBE_02_SIDE_ROLL",
     );
-    const lateExposure = pkg.levels.levels.find(
-      (level) => level.id === "CANDLE_PROBE_03_CONCEALED_FLAME",
-    );
-    if (!baseline || !lateExposure) {
-      throw new Error("Missing Candle exposure audit fixtures.");
+    if (!baseline) {
+      throw new Error("Missing Candle basic exposure fixture.");
     }
-
-    const passing = auditCandleExposure(pkg, baseline, sequence, raw, {
-      allowedExposureThrough: "flame_lights_brazier",
-      maxStates: 20_000,
-    });
-    if (
-      passing.verdict !== "pass" ||
-      passing.graph.status !== "complete" ||
-      passing.raw_graph.edges.length === 0
-    ) {
-      throw new Error("Early exposure fixture did not produce a complete passing raw graph.");
-    }
-
-    const failing = auditCandleExposure(pkg, lateExposure, sequence, raw, {
-      allowedExposureThrough: "wall_extinguish",
-      maxStates: 20_000,
-    });
-    if (
-      failing.verdict !== "fail" ||
-      !failing.forbidden_hits.some((hit) => hit.pattern === "ignite_from_brazier")
-    ) {
-      throw new Error("Later reachable ignition was not rejected by the exposure hard gate.");
-    }
-
     const incomplete = auditCandleExposure(pkg, baseline, sequence, raw, {
-      allowedExposureThrough: "flame_lights_brazier",
+      allowedExposureThrough: "basic_candle_manipulation",
       maxStates: 1,
     });
     if (incomplete.verdict !== "unknown" || incomplete.graph.status !== "exhausted") {
@@ -122,7 +170,7 @@ function checkExposureAudit(pkg: PrototypePackage): CandleConformanceCheck {
       id: "mechanic_exposure_hard_gate",
       status: "pass",
       reason:
-        "Verified complete pass, reachable-later-event fail, incomplete-graph unknown, and raw edge event output.",
+        "Verified six adjacent family boundaries with complete pass/current-event reachability, previous-gate fail, incomplete-graph unknown, and raw edge events.",
     };
   } catch (error) {
     return fail("mechanic_exposure_hard_gate", error);

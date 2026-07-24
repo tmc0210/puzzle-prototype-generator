@@ -62,18 +62,36 @@ U R D L 单格已点燃蜡烛
 每个设计任务必须声明 `allowed_exposure_through`，其值来自
 `mechanic_exposure_sequence.yml` 的一个 `branch`。
 
-- 该 branch 及之前的事件允许可达；
-- 所有更晚 branch 的事件在当前 exact version 的全部可达边上必须完全不可达；
+- 每个 branch 表示一个玩家可理解、可独立设计的机制家族，不表示单个诊断事件；
+- 同一家族中自然共现的来源标签、边界结算标签和组合摘要合并在同一 branch；
+- 该 branch 及之前家族的事件允许可达；
+- 所有更晚 branch 家族的事件在当前 exact version 的全部可达边上必须完全不可达；
 - 只检查规范解、最短解或抽样路径不构成通过；
 - 只有 graph `complete` 且没有 later-event hit 才是 `pass`；
 - graph `exhausted` 且未命中只能是 `unknown`；
 - 任意 later event 已命中时，即使图未完整也可直接判 `fail`。
+
+当前家族顺序固定为：`basic_candle_manipulation`、`wall_dousing`、
+`shared_fire_and_reignition`、`body_concealment_and_reexposure`、
+`retreating_flame_transfer`、`rolling_contact_chain`。
+
+侧滚属于基础操控，不单独占据课程门；基础阶段允许用一步终局、火盆实体挡块或无墙边界
+短暂遮蔽墙体灭火，但 `wall_dousing` 必须紧随其后，不得要求多个后续阶段长期规避这一
+自然边界结果。墙体灭火与烛身灭火分别放置：前者是封闭地图中轴推的早期自然结果，后者
+要求多蜡烛空间关系，并进一步带来可逆遮蔽和未燃重曝。
+
+详细 runtime 事件仍保留作机械证据，但只有上述六个玩家知识家族取得课程阶段身份。
 
 使用 Candle 专属 exposure audit 保存 JSON。送交 Evidence Reviewer 的 artifact 必须
 包含 exact version、layout digest、暴露序列 digest、完整节点键与原始边事件。
 
 事件出现只证明机制可达，不证明它必经、被有效使用、有难度或值得做成关卡。
 这些更强声明必须由当前 exact 的解族、对象参与、作品身份证据和独立审查分别支持。
+
+## 原型专属审美校准
+原型机制和步数计算相关，因此：
+1. 长步行或解法中高步行比例不构成负面审美
+2. 原地来回移动消耗倒计时不构成负面审美
 
 ## 设计来源边界
 

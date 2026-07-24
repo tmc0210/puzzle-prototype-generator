@@ -9,12 +9,13 @@ import { getRuntimeAdapter } from "../runtimeAdapter.js";
 export type CandleExposureSequenceBranch = {
   branch: string;
   title?: string;
-  source_rule: string;
+  player_rule?: string;
+  source_rules: string[];
   new_events: string[];
 };
 
 export type CandleExposureSequence = {
-  schema_version: number;
+  schema_version: 2;
   prototype: "candle_sokoban";
   event_authority: string;
   event_exposure_sequence: CandleExposureSequenceBranch[];
@@ -90,7 +91,7 @@ export function loadCandleExposureSequence(
   const parsed = YAML.parse(raw) as Partial<CandleExposureSequence> | null;
   if (
     !parsed ||
-    parsed.schema_version !== 1 ||
+    parsed.schema_version !== 2 ||
     parsed.prototype !== "candle_sokoban" ||
     typeof parsed.event_authority !== "string" ||
     !Array.isArray(parsed.event_exposure_sequence)
@@ -102,7 +103,9 @@ export function loadCandleExposureSequence(
     if (
       !entry ||
       typeof entry.branch !== "string" ||
-      typeof entry.source_rule !== "string" ||
+      !Array.isArray(entry.source_rules) ||
+      entry.source_rules.length === 0 ||
+      entry.source_rules.some((rule) => typeof rule !== "string") ||
       !Array.isArray(entry.new_events) ||
       entry.new_events.length === 0 ||
       entry.new_events.some((event) => typeof event !== "string")
@@ -112,7 +115,8 @@ export function loadCandleExposureSequence(
     return {
       branch: entry.branch,
       ...(typeof entry.title === "string" ? { title: entry.title } : {}),
-      source_rule: entry.source_rule,
+      ...(typeof entry.player_rule === "string" ? { player_rule: entry.player_rule } : {}),
+      source_rules: [...entry.source_rules],
       new_events: [...entry.new_events],
     };
   });
@@ -134,7 +138,7 @@ export function loadCandleExposureSequence(
 
   return {
     sequence: {
-      schema_version: 1,
+      schema_version: 2,
       prototype: "candle_sokoban",
       event_authority: parsed.event_authority,
       event_exposure_sequence: branches,
@@ -286,8 +290,9 @@ function validateSequenceAuthority(
   sequence: CandleExposureSequence,
 ): void {
   const rules = new Map(pkg.mechanic.rules.map((rule) => [rule.id, rule]));
-  const declaredEvents = new Set<string>();
+  const declaredEventsByRule = new Map<string, Set<string>>();
   for (const rule of pkg.mechanic.rules) {
+    const declaredEvents = new Set<string>();
     for (const event of rule.emits ?? []) {
       declaredEvents.add(event);
     }
@@ -296,18 +301,24 @@ function validateSequenceAuthority(
         declaredEvents.add(event);
       }
     }
+    declaredEventsByRule.set(rule.id, declaredEvents);
   }
 
   for (const branch of sequence.event_exposure_sequence) {
-    if (!rules.has(branch.source_rule)) {
-      throw new Error(
-        `Exposure branch '${branch.branch}' references unknown rule '${branch.source_rule}'`,
-      );
+    for (const sourceRule of branch.source_rules) {
+      if (!rules.has(sourceRule)) {
+        throw new Error(
+          `Exposure branch '${branch.branch}' references unknown rule '${sourceRule}'`,
+        );
+      }
     }
     for (const event of branch.new_events) {
-      if (!declaredEvents.has(event)) {
+      const declaredBySource = branch.source_rules.some((sourceRule) =>
+        declaredEventsByRule.get(sourceRule)?.has(event),
+      );
+      if (!declaredBySource) {
         throw new Error(
-          `Exposure branch '${branch.branch}' references undeclared event '${event}'`,
+          `Exposure branch '${branch.branch}' references event '${event}' outside its source_rules`,
         );
       }
     }

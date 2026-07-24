@@ -17,23 +17,58 @@ levels:
       flame onto the only brazier.
 
   - id: CANDLE_PROBE_02_SIDE_ROLL
-    title: Side Roll Until Blocked
+    title: One-Step Side Roll
     global_burn_cycle: 5
     layout: |-
-      ########
-      #..1...#
-      #.@1...#
-      #..D.###
-      #...o..#
-      ########
+      #######
+      #.#1.##
+      ##@1.##
+      #.#D.##
+      #...o##
+      #######
     expected_trace:
       - input: right
         events: [roll_candle, light_brazier, countdown, win_all_braziers_lit]
     expected_events: [roll_step, roll_candle, light_brazier, win_all_braziers_lit]
     design_notes: >
-      The vertical candle rolls right by one small step, then its lower body
-      would hit the wall. Its projected flame lands on the only brazier, so the
-      same roll demonstrates the mechanism and completes a formal objective.
+      Closed full-graph boundary witness for basic side rolling. The only legal
+      transition rolls the vertical candle exactly one cell and wins; later
+      wall dousing and per-substep contact summaries are unreachable.
+
+  - id: CANDLE_EXPOSURE_02_WALL_DOUSE
+    title: Wall Douse Then Light
+    global_burn_cycle: 5
+    layout: |-
+      #########
+      #########
+      ##@11R.##
+      ###.#####
+      ###D#####
+      ###.#####
+      ###o#####
+      #########
+    expected_trace:
+      - input: right
+        events:
+          - push_axis
+          - extinguish_by_wall
+          - countdown
+      - input: down
+        events: [walk, countdown]
+      - input: down
+        events: [push_axis, light_brazier, countdown, win_all_braziers_lit]
+    expected_events:
+      - push_axis
+      - extinguish_by_wall
+      - light_brazier
+      - countdown
+      - win_all_braziers_lit
+    design_notes: >
+      Earliest post-basic exposure boundary. One axial push places candle#1's
+      projected wick in the wall and irreversibly douses it. The player then
+      walks to a separate singleton candle and pushes its flame into the brazier.
+      The complete graph has a normal win but cannot reach reignition, body
+      concealment, retreating fire, or rolling contact summaries.
 
   - id: CANDLE_PROBE_03_CONCEALED_FLAME
     title: Wall Conceals Flame
@@ -77,8 +112,7 @@ levels:
     layout: |-
       ##########
       #@111R.o.#
-      #......u.#
-      #........#
+      ##.....u.#
       ##########
     expected_trace:
       - input: right
@@ -88,6 +122,8 @@ levels:
       After the push, candle#1's flame and the singleton candle wick share one
       logical cell while the same cell overlaps the only brazier. The singleton
       ignites during the contact closure and the brazier provides a formal win.
+      The closed fixture has one legal edge, so no later concealment or rolling
+      contact family is reachable anywhere in its complete graph.
 
   - id: CANDLE_PROBE_05_FIRE_DEATH
     title: Walk Around the Flame
@@ -116,20 +152,19 @@ levels:
       during the normal global burn boundary.
 
   - id: CANDLE_PROBE_06_BURN_SHRINK
-    title: Global Burn Shrinks Every Lit Candle
+    title: Isolated Retreating-Flame Ignition
     global_burn_cycle: 5
     layout: |-
       ###########
-      #@........#
-      #.#111R.o.#
-      #.....u..##
-      #.....2..##
-      #.........#
+      ######o####
+      ###111R.###
+      ######u####
+      #@.....####
       ###########
     expected_trace:
-      - input: down
+      - input: right
         events: [walk, countdown]
-      - input: down
+      - input: right
         events: [walk, countdown]
       - input: right
         events: [walk, countdown]
@@ -137,16 +172,26 @@ levels:
         events: [walk, countdown]
       - input: right
         events: [walk, countdown, shrink, shrink_ignite]
-      - input: right
-        events: [walk, countdown]
-      - input: right
-        events: [roll_candle, roll_multi_cell_one_turn, light_brazier, countdown, win_all_braziers_lit]
-    expected_events: [countdown, shrink, shrink_ignite, roll_candle, roll_multi_cell_one_turn, light_brazier, win_all_braziers_lit]
+      - input: up
+        events:
+          - push_axis
+          - extinguish_by_candle_body
+          - light_brazier
+          - countdown
+          - win_all_braziers_lit
+    expected_events:
+      - countdown
+      - shrink
+      - shrink_ignite
+      - push_axis
+      - extinguish_by_candle_body
+      - light_brazier
+      - win_all_braziers_lit
     design_notes: >
-      The fifth valid turn shortens the lit horizontal candle. Its retreating
-      flame exposes and ignites the vertical candle's formerly concealed wick.
-      The player must then roll that newly lit candle right to light the only
-      brazier and complete a formal objective.
+      Five corridor walks trigger the burn boundary. The horizontal candle
+      shrinks and its retreating flame exposes and ignites the singleton candle.
+      One axial push then moves that candle's wick into the brazier for a normal
+      win. The complete graph contains no side-roll contact summary.
 
   - id: CANDLE_PROBE_07_UNLIT_COUNTDOWN
     title: Countdown Advances Before Ignition
@@ -188,33 +233,39 @@ levels:
       and then lights the only unlit brazier for a formal win.
 
   - id: CANDLE_PROBE_08_BODY_CONCEALMENT
-    title: 烛身遮住烛芯后再释放
+    title: 轴推烛身遮芯后再释放
     global_burn_cycle: 5
     layout: |-
-      ########
-      #.1..#.#
-      #@1..#.#
-      #.D..#.#
-      #..r...#
-      ########
-    win:
-      type: event_occurs
-      event: wick_reexposed_unlit
+      #########
+      ####1####
+      ####D####
+      ##@l....#
+      ####D####
+      ####.####
+      ####o####
+      #########
     expected_trace:
       - input: right
         events:
+          - push_axis
           - extinguish_by_candle_body
+      - input: right
+        events:
+          - push_axis
           - wick_reexposed_unlit
-          - roll_candle
-          - roll_multi_cell_one_turn
+      - input: down
+        events: [push_axis, light_brazier, countdown, win_all_braziers_lit]
     expected_events:
+      - push_axis
       - extinguish_by_candle_body
       - wick_reexposed_unlit
-      - roll_candle
-      - roll_multi_cell_one_turn
+      - light_brazier
+      - win_all_braziers_lit
     design_notes: >
-      第一个滚动小步让已燃烛芯进入另一根蜡烛的烛身，明确区分烛身遮蔽与
-      墙体遮蔽。第二个小步让烛芯重新外露，但附近没有任何点火源。
+      第一次轴推让未燃单格蜡烛的烛身盖住竖直蜡烛的已燃烛芯；第二次轴推
+      移开烛身，使目标烛芯重新外露但保持未燃。第三次轴推使用另一根已燃
+      单格蜡烛点盆并正常获胜。全图不需要多格侧滚，因此不会提前触发退焰
+      点火或滚动途中接触链。
 
   - id: CANDLE_PROBE_09_INTERMEDIATE_LAST_BRAZIER
     title: 最后一个火盆在滚动终点前点亮

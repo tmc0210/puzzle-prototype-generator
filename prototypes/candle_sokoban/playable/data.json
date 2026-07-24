@@ -593,7 +593,7 @@
           "design_task_id": "candle_roll_reignite_multicandle_lategame_20260724",
           "candidate_id": "CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001",
           "exact_version": "workbench-v18",
-          "allowed_exposure_through": "roll_reignite_after_extinguish"
+          "allowed_exposure_through": "rolling_contact_chain"
         }
       },
       {
@@ -801,13 +801,13 @@
           "candidate_id": "CANDLE_ROLL_REIGNITE_CONSUMED_001",
           "exact_version": "v1",
           "layout_sha256": "ba56a810b8618dcf92e54d70e55aa1a03ee5bba7a194357f6d9f1c9c1d473169",
-          "allowed_exposure_through": "roll_reignite_after_extinguish"
+          "allowed_exposure_through": "rolling_contact_chain"
         }
       }
     ]
   },
   "evaluation": {
-    "generatedAt": "2026-07-24T03:13:37.327Z",
+    "generatedAt": "2026-07-24T07:15:58.588Z",
     "prototype": "candle_sokoban",
     "results": [
       {
@@ -847,7 +847,7 @@
       },
       {
         "levelId": "CANDLE_PROBE_02_SIDE_ROLL",
-        "title": "Side Roll Until Blocked",
+        "title": "One-Step Side Roll",
         "solvable": true,
         "shortestCost": 1,
         "solutionInputs": [
@@ -867,13 +867,62 @@
           "countdown:5->4",
           "win_all_braziers_lit"
         ],
-        "exploredStates": 5,
+        "exploredStates": 2,
         "graphAnalysis": {
           "status": "complete",
-          "reachableStateCount": 269,
-          "legalTransitionCount": 754,
+          "reachableStateCount": 2,
+          "legalTransitionCount": 1,
           "eventOnlyTransitionCount": 0,
-          "winStateCount": 7,
+          "winStateCount": 1,
+          "budget": {
+            "maxStates": 100000,
+            "terminalizeWins": true
+          }
+        },
+        "status": "pass",
+        "notes": []
+      },
+      {
+        "levelId": "CANDLE_EXPOSURE_02_WALL_DOUSE",
+        "title": "Wall Douse Then Light",
+        "solvable": true,
+        "shortestCost": 3,
+        "solutionInputs": [
+          "right",
+          "down",
+          "down"
+        ],
+        "solutionEvents": [
+          "push_axis:candle#1",
+          "extinguish:candle#1:concealed",
+          "extinguish_by_wall:candle#1",
+          "countdown:5->4",
+          "walk",
+          "countdown:4->3",
+          "push_axis:candle#single2",
+          "light_brazier:3,6",
+          "countdown:3->2",
+          "win_all_braziers_lit"
+        ],
+        "probeEvents": [
+          "push_axis:candle#1",
+          "extinguish:candle#1:concealed",
+          "extinguish_by_wall:candle#1",
+          "countdown:5->4",
+          "walk",
+          "countdown:4->3",
+          "push_axis:candle#single2",
+          "light_brazier:3,6",
+          "countdown:3->2",
+          "win_all_braziers_lit"
+        ],
+        "exploredStates": 6,
+        "graphAnalysis": {
+          "status": "complete",
+          "reachableStateCount": 34,
+          "legalTransitionCount": 51,
+          "eventOnlyTransitionCount": 0,
+          "winStateCount": 2,
           "budget": {
             "maxStates": 100000,
             "terminalizeWins": true
@@ -963,13 +1012,13 @@
           "countdown:5->4",
           "win_all_braziers_lit"
         ],
-        "exploredStates": 3,
+        "exploredStates": 2,
         "graphAnalysis": {
           "status": "complete",
-          "reachableStateCount": 1301,
-          "legalTransitionCount": 3681,
+          "reachableStateCount": 2,
+          "legalTransitionCount": 1,
           "eventOnlyTransitionCount": 0,
-          "winStateCount": 11,
+          "winStateCount": 1,
           "budget": {
             "maxStates": 100000,
             "terminalizeWins": true
@@ -1037,17 +1086,16 @@
       },
       {
         "levelId": "CANDLE_PROBE_06_BURN_SHRINK",
-        "title": "Global Burn Shrinks Every Lit Candle",
+        "title": "Isolated Retreating-Flame Ignition",
         "solvable": true,
-        "shortestCost": 7,
+        "shortestCost": 6,
         "solutionInputs": [
-          "down",
-          "down",
           "right",
           "right",
           "right",
           "right",
-          "right"
+          "right",
+          "up"
         ],
         "solutionEvents": [
           "walk",
@@ -1061,15 +1109,12 @@
           "walk",
           "countdown:1->5",
           "shrink:candle#1:len3",
-          "shrink_ignite:candle#2",
-          "walk",
+          "shrink_ignite:candle#single2",
+          "push_axis:candle#single2",
+          "extinguish:candle#1:concealed",
+          "extinguish_by_candle_body:candle#1",
+          "light_brazier:6,1",
           "countdown:5->4",
-          "roll_step:candle#2:d1",
-          "roll_step:candle#2:d2",
-          "light_brazier:8,2",
-          "roll_candle:candle#2:d2",
-          "roll_multi_cell_one_turn:candle#2:d2",
-          "countdown:4->3",
           "win_all_braziers_lit"
         ],
         "probeEvents": [
@@ -1084,24 +1129,21 @@
           "walk",
           "countdown:1->5",
           "shrink:candle#1:len3",
-          "shrink_ignite:candle#2",
-          "walk",
+          "shrink_ignite:candle#single2",
+          "push_axis:candle#single2",
+          "extinguish:candle#1:concealed",
+          "extinguish_by_candle_body:candle#1",
+          "light_brazier:6,1",
           "countdown:5->4",
-          "roll_step:candle#2:d1",
-          "roll_step:candle#2:d2",
-          "light_brazier:8,2",
-          "roll_candle:candle#2:d2",
-          "roll_multi_cell_one_turn:candle#2:d2",
-          "countdown:4->3",
           "win_all_braziers_lit"
         ],
-        "exploredStates": 68,
+        "exploredStates": 16,
         "graphAnalysis": {
           "status": "complete",
-          "reachableStateCount": 22428,
-          "legalTransitionCount": 68427,
+          "reachableStateCount": 133,
+          "legalTransitionCount": 235,
           "eventOnlyTransitionCount": 0,
-          "winStateCount": 15,
+          "winStateCount": 3,
           "budget": {
             "maxStates": 100000,
             "terminalizeWins": true
@@ -1175,43 +1217,47 @@
       },
       {
         "levelId": "CANDLE_PROBE_08_BODY_CONCEALMENT",
-        "title": "烛身遮住烛芯后再释放",
+        "title": "轴推烛身遮芯后再释放",
         "solvable": true,
-        "shortestCost": 1,
+        "shortestCost": 3,
         "solutionInputs": [
-          "right"
+          "right",
+          "right",
+          "down"
         ],
         "solutionEvents": [
-          "roll_step:candle#1:d1",
+          "push_axis:candle#single2",
           "extinguish:candle#1:concealed",
           "extinguish_by_candle_body:candle#1",
-          "roll_step:candle#1:d2",
+          "countdown:5->4",
+          "push_axis:candle#single2",
           "wick_reexposed_unlit:candle#1",
-          "roll_candle:candle#1:d2",
-          "roll_multi_cell_one_turn:candle#1:d2",
-          "roll_intermediate_extinguish:candle#1:d1",
-          "countdown_without_lit_candle:5",
-          "countdown:5->4"
+          "countdown:4->3",
+          "push_axis:candle#single3",
+          "light_brazier:4,6",
+          "countdown:3->2",
+          "win_all_braziers_lit"
         ],
         "probeEvents": [
-          "roll_step:candle#1:d1",
+          "push_axis:candle#single2",
           "extinguish:candle#1:concealed",
           "extinguish_by_candle_body:candle#1",
-          "roll_step:candle#1:d2",
+          "countdown:5->4",
+          "push_axis:candle#single2",
           "wick_reexposed_unlit:candle#1",
-          "roll_candle:candle#1:d2",
-          "roll_multi_cell_one_turn:candle#1:d2",
-          "roll_intermediate_extinguish:candle#1:d1",
-          "countdown_without_lit_candle:5",
-          "countdown:5->4"
+          "countdown:4->3",
+          "push_axis:candle#single3",
+          "light_brazier:4,6",
+          "countdown:3->2",
+          "win_all_braziers_lit"
         ],
-        "exploredStates": 4,
+        "exploredStates": 6,
         "graphAnalysis": {
           "status": "complete",
-          "reachableStateCount": 1017,
-          "legalTransitionCount": 2824,
+          "reachableStateCount": 115,
+          "legalTransitionCount": 197,
           "eventOnlyTransitionCount": 0,
-          "winStateCount": 0,
+          "winStateCount": 3,
           "budget": {
             "maxStates": 100000,
             "terminalizeWins": true
