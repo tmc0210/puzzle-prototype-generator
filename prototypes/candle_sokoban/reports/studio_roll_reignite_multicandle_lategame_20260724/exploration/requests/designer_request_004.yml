@@ -1,0 +1,79 @@
+request_id: designer_request_004
+exploration_id: candle_reignite_multicandle_task_local_20260724
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+
+design_space: >-
+  探索一个从“靠烛芯端触发核心滚动”开始的紧凑双蜡烛连续接力。核心蜡烛 A 由玩家从靠近
+  烛芯的一段侧面触发多格滚动，在同一动作中先被墙遮芯熄灭、再由伙伴 B 的已燃烛芯复燃并
+  继续；该接触高度应让玩家在核心后沿墙齿近侧短路取得 B 的轴推侧。玩家用少量轴推把 B 的
+  烛芯与 A 终态对齐，再从近侧取得 B 的侧滚位，使 B 在跨界滚动中被 A 身体剥火并避烧。
+  重点探索 B 在这一 consumer 后如何立即或短窗内继续承担终局责任，而不是回到 producer 的旧换侧路线。
+
+material_gap: >-
+  Designer runtime probe 已确认一个此前三批都未采样的正向连续关系：改变 A 的侧滚接触高度后，
+  A 核心到 B 首次轴推只需四输入，随后同一 replay 内可完成 B 对齐、B 被 A 烛身熄灭、B 边界避烧
+  与 A 缩短。当前缺口已从“producer 能否接 consumer”转为“consumer 后 B 如何保持终局责任”。
+  直接让 B 滚到远侧边界会产生回程；固定火盆会把末段退化成独立取火；第三根移位火窗又可能形成
+  互相遮芯或退休对象。需要局部结构谱判断能否把 B 的保存长度、熄灭投影、终点站位或 A 的缩短
+  直接转成一次短末段合法性、复燃或点盆责任。
+
+local_objects:
+  - 已燃多格 A；从靠近烛芯端的身体段触发侧滚，必须墙熄灭、由 B 复燃并继续至少一小步。
+  - 已燃多格 B；既提供 A 的 producer 火焰，又在 A 核心后接受少量轴推与一次被 A 烛身剥火的边界侧滚。
+  - 只用于限定 A/B 终点、保留操作侧或形成一个末段火盆/火源对照的最少静态对象。
+  - 默认不增加第三根蜡烛；只有它同时改变 A 终点、B consumer 和 B 末段三者时才可作为严格对照采样。
+
+local_boundaries:
+  - 从 A 核心后的实际玩家原位到 B 首次轴推优先至多四输入；路线应利用 A 接触高度而非增加通道长度。
+  - 从首次 B 轴推到 B 被 A 身体剥火的 consumer 保持同一连续 replay，并逐输入记录边界与长度。
+  - consumer 后到 B 的下一项必要责任优先不超过一个共享燃烧周期；不得用远侧边界回程、等待或三次以上新增推动凑相位。
+  - B 的保存长度、熄灭状态、烛芯投影或终点占格必须改变末段；若 B 同时缩短或保持点燃仍可原样完成，则该接法不成立。
+  - A 的复燃与终态必须仍是 B 被剥火、末段操作侧或终局合法性的原因；只保留墙齿事件不算消费。
+
+standing_positions:
+  - 记录玩家触发 A 时所接触的身体段，以及核心后相对墙齿与 B 轴推侧的实际原位。
+  - 记录首次 B 轴推、最终对齐、B 侧滚 consumer 与 consumer 后末段操作侧的最短连续输入。
+  - 若 B 滚动终点在远侧，明确报告返回任一有意义操作侧的动作数；超过一周期的版本只作负对照。
+
+post_action_state:
+  - B consumer 必须产生 `extinguish_by_candle_body:B`，并在边界留下与 A 不同的燃烧参与或长度状态。
+  - 优先利用 B 保留下来的额外长度、熄灭烛芯的安全格、A 缩短后腾出的格或 A 新火焰位置，直接形成 B 的下一责任。
+  - 可采样“B consumer 停得更近”“B 的熄灭投影成为 A/B 必需操作位”“A 缩短释放 B 轴推或侧滚”与
+    “B 避烧后才够长/够短完成末段”的结构；必须用保持点燃或同步缩短对照证明差异。
+  - 末段应尽快点盆或形成紧邻点盆动作，不另起独立取火子题。
+
+sampling_axes:
+  - A 的接触段位：靠烛芯端、次靠烛芯端；比较核心后玩家到 B 轴推侧的真实距离。
+  - A/B 长度二至四、A 终点一格差、B 对齐轴推一至三次，以及 consumer 的边界相位。
+  - B consumer 的滚动方向与终点止挡：近侧停止、越过 A 后停止、边界停止；比较末段操作侧输出。
+  - B consumer 后的责任类型：保存长度门、熄灭火焰安全格、A 缩短开放的轴推位、短窗复燃后点盆。
+  - 身份对照：B 保持点燃并同步缩短、A 终点移开而不剥火、固定火盆替换 B producer、删除末段 B 责任。
+
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_002_boundary_route_compression/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_003_consumer_self_handoff_axes/batch.yml
+
+do_not_repeat:
+  - 从 A 中段触发核心后再绕墙取得 B 操作侧的 batch_002 路线。
+  - 只把 B consumer 压到四输入，却让 A 火焰总在 B 熄灭前经过或与其投影正交分离的 batch_003 轴。
+  - 让 B 被剥火后滚到远侧，再用超过一个周期的空走返回或取固定火源。
+  - 增加只提供一次火焰、只充当终点墙或在 consumer 后退休的第三根蜡烛。
+  - 末段在 B 保持点燃、同步缩短或 A 不复燃时仍可原样完成的事件展示。
+
+materialization_target: >-
+  发布极小 runtime-backed 连续局面卡：从靠烛芯端触发 A 核心开始，包含核心后玩家原位、B 轴推接管、
+  B 被 A 烛身剥火的边界 consumer，以及 consumer 后一个周期内由 B 的保存长度、熄灭状态、投影或操作侧
+  直接承担的末段责任。每张正向卡须带 B 保持点燃/同步缩短与固定火源身份对照；若末段短窗均不成立，
+  发布结构化负结果并明确是终点距离、操作侧、长度等价还是复燃来源导致失败。只做局部材料，不制作候选。
+
+request_boundary:
+  candidate_coordinates: forbidden
+  complete_layout: forbidden
+  packaging: forbidden
+  difficulty_tradeoff: forbidden
+  candidate_family_choice: forbidden

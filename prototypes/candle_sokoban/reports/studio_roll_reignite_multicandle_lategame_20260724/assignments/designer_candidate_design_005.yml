@@ -1,0 +1,46 @@
+assignment_id: candle_multicandle_lategame_candidate_design_005
+required_skill: sokoban-level-designer
+assignment_kind: candidate_design
+controller_instance_id: studio_controller_root_multicandle_20260724
+task_root: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724
+candidate_ledger_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/candidate_ledger.yml
+
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001
+exact_version_basis: null
+
+design_brief: >-
+  继续同一 Designer 工作台。读取 designer_request_005 的 batch_005 与增量 task lexicon。
+  该批 `new_material_refs` 为空：隔离的外伸尾段止挡、B 烛身剥火与三输入末段可以发生，
+  但从核心前 B 配置开始的完整连续 replay 跨越两个燃烧边界后 A/B 投影退离，目标核心没有发生，
+  因此隔离卡不得作为候选依据。由 Designer 自主决定重构、继续请求其它坐标无关局部空间或撤回；
+  Controller 不采用 Explorer 的 next_sampling_axes 替 Designer 选择结构方向。
+input_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/assignments/designer_candidate_design_004.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/human_brief.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/experience_brief.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/requests/designer_request_005.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_005_overhang_shared_stop/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_005_overhang_shared_stop/results.json
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_005_overhang_shared_stop/report.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_005_overhang_shared_stop/explorer_notes.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_005_overhang_shared_stop/proposed_families.md
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - src/prototypes/candle_sokoban/exposureAuditCli.ts
+  - src/cli.ts
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/designer/workbench
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/candidate
+exploration_request_root: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/requests
+required_outputs:
+  - 继续保持 experience_brief 与难度 5 门槛；不得把 batch_005 的隔离动画当作完整连续正例。
+  - Designer 自主选择后续结构路径；如需更多材料，写新的坐标无关 request 后返回 Controller。
+  - 只有完整玩家路线、解族、身份反事实、对象参与和 complete exposure audit 全部通过时才发布不可变 exact 与 submission。
+  - 不写 candidate_ledger、Critic packet/review、levels、playable_queue 或人类 handoff。

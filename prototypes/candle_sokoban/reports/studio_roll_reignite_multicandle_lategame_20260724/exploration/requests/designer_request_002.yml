@@ -1,0 +1,72 @@
+request_id: designer_request_002
+exploration_id: candle_reignite_multicandle_task_local_20260724
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+
+design_space: >-
+  探索一个紧凑的双蜡烛连续换手窗口。玩家必须先主动改变伙伴蜡烛 B 的位置、长度、朝向或火焰投影，
+  才能让核心蜡烛 A 在同一次多格侧滚中先被墙遮芯熄灭、再由 B 的已知外露火焰复燃，并在复燃后
+  至少继续一个小步。A 的滚后具体状态随后必须在很短的连续动作窗内反向改变 B 的合法移动、遮芯、
+  复燃、燃烧参与或终局用途；不要靠延长蜡烛、长走廊或重复轴推提供等待时间。
+
+material_gap: >-
+  已有材料证明了生产端和“B 被 A 剥火”的局部关系，但把它接入完整连续路线时，玩家从生产动作后的
+  原位取得 B 的后继操作侧、再取得 A 的消费侧，容易超过一个燃烧周期。工作台可以用超长 A 和长距离
+  搬运补足时间，但这会把机制洞见退化成路线税，并使状态空间与 exposure audit 不稳定。需要新的局部谱
+  证明：在不加长计时尺的前提下，动作后的站位、一次边界结算或一次相互遮芯/再外露，怎样把生产端、
+  A 的后继消费和 B 的末段责任压进相邻短窗。
+
+local_objects:
+  - 已燃多格核心蜡烛 A；侧滚中必须出现墙熄灭、重新外露、由 B 火焰复燃、复燃后继续滚动。
+  - 可移动伙伴蜡烛 B；核心动作前必须由玩家主动构造其火焰窗口，核心动作后仍保留实际操作职责。
+  - 只用于墙遮芯、短距离止挡、操作侧分流或一个局部火源/火盆对照的最少静态对象。
+
+local_boundaries:
+  - 从玩家完成 B 的主动配置，到触发 A 核心滚动，必须是同一条短连续路线；不得把玩家瞬移到 producer 起点。
+  - 从 A 核心滚动后的实际玩家原位，到首次消费 A/B 反向关系，优先不超过一个共享燃烧周期。
+  - A 的后继消费若需要第二操作侧，从首次反向关系到取得该操作侧也优先不超过一个共享燃烧周期。
+  - B 在反向关系后不能立即退休；至少保留一次决定火盆、复燃、长度或末段合法性的后继动作。
+  - 不用长于机制所需的蜡烛长度、重复同向轴推、空地往返或等待闭环制造相位。
+
+standing_positions:
+  - 记录 B 主动配置前后的玩家格、A 核心侧滚接触格、核心动作后的玩家原位。
+  - 记录玩家取得 B 首个后继操作侧和 A 后继消费侧的最短连续输入；标明每次燃烧边界。
+  - 若一次 A/B 接触同时改变明灭和下一操作侧，记录接触前、结算中、结算后的对象占格与烛芯投影。
+
+post_action_state:
+  - B 的预配置决定 A 的有效复燃小步；固定火盆替换不得保留完整后继。
+  - A 的滚后身体、烛芯、长度或明灭必须在短窗内被 B 的下一操作实际消费。
+  - 优先寻找相互遮芯、边界避免燃烧、缩短后重新外露、或一次多格滚动内“先复燃再点盆”的压缩接法。
+  - 最终局部状态应留下仍有职责的 B，而不是只留下已经完成展示的事件标签。
+
+sampling_axes:
+  - A/B 的朝向组合、长度 2 至 4 的最小变体，以及核心滚动前后的共享倒计时相位。
+  - B 的主动配置类型：一次轴推、一次侧滚、一次缩短后定位，或两步以内的组合。
+  - A 滚后终点相对 B 身体/烛芯的一格差，以及该差异是否压缩玩家换边距离。
+  - 反向消费类型：B 侧滚被 A 烛身剥火、B 烛身先遮 A 后因缩短让 A 再外露、A 作为临时实体闩后被消费、或 B 在同次滚动中先回火再点盆。
+  - producer 后玩家原位到 consumer 侧的最短距离，以及边界发生在 consumer 动作前、动作中或动作后。
+
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/proposed_families.md
+
+do_not_repeat:
+  - 只复刻已有 producer 与 consumer 分段 probe，却不验证二者之间实际玩家路线。
+  - 用长度大于局部关系所需的 A 当作计时尺，让玩家穿越长走廊后再消费。
+  - 用三次以上同向轴推或空地往返仅为推进倒计时，不产生新的对象关系。
+  - A 只点一个独立火盆、B 只点另一个独立火盆，二者没有反向约束。
+  - B 被固定火盆替换后仍能保留相同核心与末段职责的退化结构。
+
+materialization_target: >-
+  发布若干极小、runtime-backed 的连续局面卡。每张卡从 B 的主动配置开始，包含 A 核心滚动、动作后玩家
+  原位到首次反向消费的完整输入、逐步状态与事件、共享倒计时边界、至少一个 A/B 身份退化对照，
+  并明确报告 producer-to-consumer 的实际动作数。只发布局部材料，不制作候选、不评价难度或家族取舍。
+
+request_boundary:
+  candidate_coordinates: forbidden
+  complete_layout: forbidden
+  packaging: forbidden
+  difficulty_tradeoff: forbidden
+  candidate_family_choice: forbidden

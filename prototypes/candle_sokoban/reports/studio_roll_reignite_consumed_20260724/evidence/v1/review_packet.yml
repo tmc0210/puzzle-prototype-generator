@@ -1,0 +1,81 @@
+review_attempt_id: CANDLE_ROLL_REIGNITE_V1_HARD_001
+candidate_id: CANDLE_ROLL_REIGNITE_CONSUMED_001
+exact_version: v1
+prototype_id: candle_sokoban
+reviewer_role: independent_hard_evidence_only
+output_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/evidence/v1/evidence_review.yml
+
+exact_artifact:
+  manifest_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/exact_manifest.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/layout.txt
+  layout_sha256: ba56a810b8618dcf92e54d70e55aa1a03ee5bba7a194357f6d9f1c9c1d473169
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/solve_instance.yml
+
+mechanical_claims:
+  - claim_id: normal_win_and_replay
+    claim: 17 步 canonical replay 全部合法，并在完整回合结算后玩家存活且 all_braziers_lit。
+  - claim_id: exposure_gate
+    claim: >-
+      v1 对 allowed_exposure_through=roll_reignite_after_extinguish 的 exposure audit 为 complete/pass，
+      layout 与 sequence digest 匹配，forbidden_hits 为空，raw graph 完整保存。
+  - claim_id: same_roll_same_object_reignite
+    claim: >-
+      首次关键滚动中同一 candle#1 先在 d1 产生 extinguish_by_wall 与 roll_intermediate_extinguish，
+      再在 d2 从已点亮火盆产生 ignite_from_brazier、roll_intermediate_ignite 与
+      roll_reignite_after_extinguish；这些事件属于同一输入且滚动继续到终点。
+  - claim_id: post_roll_consumption_all_wins
+    claim: >-
+      完整 first-win product graph 的全部首次胜利 product states 都含复燃后的 shrink、第二滚动点亮下盆并墙熄、
+      玩家穿过旧退焰门取得 candle 下方操作侧、再由下盆复燃向上滚并点亮顶部终盆的有序历史。
+  - claim_id: single_milestone_family
+    claim: >-
+      完整 first-win product graph 的 5 个 winning product states 只有一个 11 项里程碑签名；
+      已列出的 6 条最短 raw inputs 仅交换独立走位，保持对象职责、目标分配与依赖因果。
+  - claim_id: identity_counterfactuals
+    claim: >-
+      删除左列独占盆会产生不含首次墙熄—复燃的胜态；删除顶部 consumer 会在第 8 步提前胜；
+      删除第二遮芯墙或承担下盆/止挡/复燃三责的火盆会使关卡无胜。
+
+solution_uniqueness_claim:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  search_budget: >-
+    base reachable graph max_states=500000，实际 complete 2088 states / 5734 transitions；
+    first-win product graph 无截断，complete 2458 product states / 6789 legal edges。
+  known_raw_winning_variants:
+    - left up left down down down down down left left left down down down right right up
+    - left up left down down down down left down left left down down down right right up
+    - left up left down down down left down down left left down down down right right up
+    - left up left down down left down down down left left down down down right right up
+    - left up left down left down down down down left left down down down right right up
+    - left up left left down down down down down left left down down down right right up
+  equivalence_account: >-
+    六条最短串只交换一次必要左移与相邻独立竖直走位；全部保持同一 candle、三次滚动、
+    目标分配、退焰门和 11 项里程碑顺序。完整产品图的全部首次胜态只有一个签名。
+  extracted_from: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/submission.yml#hard_evidence.solution_uniqueness
+
+allowed_evidence_sources:
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/exact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/layout.txt
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/layout_analysis.json
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/solution_family.json
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/identity_counterfactuals.json
+
+forbidden_inputs:
+  - Designer 的体验核心、包装、自评、已知审美缺点或为什么值得存在的叙事字段
+  - Explorer lexicon 或设计材料
+  - archive、Critic 校准、难度或待玩判断
+  - 任何旧 exact/review（当前不存在）
+
+review_contract:
+  - 只使用 `$sokoban-evidence-reviewer` 输出结构化硬证据审查。
+  - 不替 Designer 补跑 solver、图、反事实或事件 probe；证据不足写 unknown/incomplete。
+  - 不评价审美、难度、包装或待玩资格。

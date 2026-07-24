@@ -1,0 +1,135 @@
+runId: batch_001
+title: "滚烛终点遮住截停竖烛烛芯的双向局部关系"
+notes: >-
+  二格明横烛向下滚动：d1 右端烛芯进墙而熄灭，d2 与已点火盆重合而复燃，
+  d3 横烛身体覆盖朝上明竖烛的烛芯；竖烛身体挡住 d4。对照逐一删除双向关系或灭后复燃链。
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 12
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: terminal_body_cover_positive
+    family: terminal_body_cover_bidirectional
+    variant: positive_up_lit_candle_stop_and_extinguish
+    changed_variable: base_positive
+    contrast_with:
+      - static_wall_stop_degenerate
+      - opposite_wick_degenerate
+      - unlit_up_wick_degenerate
+      - no_extinguish_degenerate
+      - no_reignite_degenerate
+    notes: >-
+      开始为二格明横烛、d1 烛芯墙格、d2 已点火盆、终点下一行朝上明竖烛。
+      向下滚动三格后，横烛明火保留，竖烛被横烛身体遮芯而熄灭；竖烛身体截停下一小步。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #...O..#
+      #......#
+      #..U...#
+      #......#
+      ########
+    actions: [down]
+
+  - id: static_wall_stop_degenerate
+    family: terminal_body_cover_bidirectional
+    variant: same_endpoint_static_wall
+    changed_variable: replace_other_candle_with_wall
+    contrast_with: [terminal_body_cover_positive]
+    notes: >-
+      用墙占据竖烛身体所在格；横烛仍在同一行停止并完成墙灭火后火盆复燃，
+      但不存在被横烛终点改变明灭或用途的第二根蜡烛。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #...O..#
+      #......#
+      #..#...#
+      #......#
+      ########
+    actions: [down]
+
+  - id: opposite_wick_degenerate
+    family: terminal_body_cover_bidirectional
+    variant: same_body_stop_wick_faces_away
+    changed_variable: flip_other_wick_up_to_down
+    contrast_with: [terminal_body_cover_positive]
+    notes: >-
+      同位明竖烛改为朝下；其烛身仍截停横烛 d4，但烛芯投影在另一侧，
+      横烛终点不会覆盖烛芯，因而竖烛保持点燃。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #...O..#
+      #......#
+      #..D...#
+      #......#
+      ########
+    actions: [down]
+
+  - id: unlit_up_wick_degenerate
+    family: terminal_body_cover_bidirectional
+    variant: same_stop_and_cover_already_unlit
+    changed_variable: other_candle_starts_unlit
+    contrast_with: [terminal_body_cover_positive]
+    notes: >-
+      朝上竖烛的位置、朝向与截停作用不变，但预先熄灭；横烛终点仍覆盖其烛芯，
+      却不再删掉一个明火或改变该竖烛的明灭状态。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #...O..#
+      #......#
+      #..u...#
+      #......#
+      ########
+    actions: [down]
+
+  - id: no_extinguish_degenerate
+    family: terminal_body_cover_bidirectional
+    variant: no_wall_at_first_wick_step
+    changed_variable: remove_d1_concealing_wall
+    contrast_with: [terminal_body_cover_positive]
+    notes: >-
+      竖烛仍决定终点并被横烛终点熄灭，但 d1 没有墙；横烛从始至终保持点燃，
+      已点火盆不再承担复燃责任。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #......#
+      #...O..#
+      #......#
+      #..U...#
+      #......#
+      ########
+    actions: [down]
+
+  - id: no_reignite_degenerate
+    family: terminal_body_cover_bidirectional
+    variant: wall_extinguish_without_later_source
+    changed_variable: remove_d2_lit_brazier_source
+    contrast_with: [terminal_body_cover_positive]
+    notes: >-
+      d1 墙熄灭保留，d2 火盆改为空地；无关未点盆只满足局部实验 parser。
+      横烛到终点时仍熄灭，因而没有“灭后复燃并留下明火”的输出。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #......#
+      #......#
+      #..U...#
+      #......#
+      ########
+    actions: [down]

@@ -1,0 +1,42 @@
+iteration: v18
+status: rejected
+layout_ref: candidate_v18.layout
+canonical_probe:
+  completed: true
+  cost: 59
+  required_events:
+    - roll_reignite_after_extinguish:candle#1:d1->d8
+    - roll_intermediate_extinguish:candle#2:d3
+    - light_brazier:3,1
+    - ignite_from_brazier:candle#2:2,7
+    - roll_intermediate_light_brazier:candle#2:d3
+    - win_all_braziers_lit
+  observed_chain: >-
+    玩家先轴推 B 并用两次边界缩短构造火焰列；A 在同次九格滚动中墙熄、由 B 回焰、再继续一格。
+    B 随后下滚并被 A 身体剥火，以熄灭二格状态保存。玩家绕到九格 A 尾端，跨一个缩短边界连续上推，
+    用 A 点亮上方专属火盆并让 A 烧尽；最后将 B 换列，绕过止挡后向上多格滚动，先回火、下一小步点末盆。
+self_check:
+  depth_30_probe:
+    explored_states: 163914
+    winning_solution_found: false
+    status: depth_budget_exceeded
+  depth_40_probe:
+    explored_states: 500001
+    winning_solution_found: false
+    status: state_budget_exceeded
+  full_search_500k:
+    winning_solution_found: false
+    status: state_budget_exceeded
+  high_budget_attempt:
+    max_states: 2000000
+    status: failed
+    reason: Node heap out of memory near 4GB
+  exposure_audit_attempt:
+    allowed_exposure_through: roll_reignite_after_extinguish
+    status: failed
+    reason: Maximum call stack size exceeded
+rejection_reason: >-
+  机械身份成立但依赖九格 A、长距离绕行和连续上推来制造时间；这是路线税和计时尺扩张，
+  不是难度 5 所需的因果压缩。状态空间和 exposure audit 也无法形成可提交的 complete/pass 原始证据。
+followup_request: >-
+  prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/requests/designer_request_002.yml

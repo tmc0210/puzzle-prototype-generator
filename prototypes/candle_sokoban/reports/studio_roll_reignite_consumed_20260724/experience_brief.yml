@@ -1,0 +1,269 @@
+design_task_id: candle_roll_reignite_consumed_20260724
+assignment_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/assignments/designer_experience_brief_002.yml
+
+prototype_context:
+  confirmed_rules:
+    - 成功行动推进固定为 5 的全局燃烧倒计时；无效输入不推进倒计时。
+    - 沿蜡烛长轴只能推动一格；从侧面推动会完整滚动至下一实体步被阻挡。
+    - 多格滚动只消耗一个行动，但每个滚动小步都会先结算遮芯灭火，再递归结算已知火源点火与点盆。
+    - 燃烧边界让所有此刻仍点燃的蜡烛同时从烛芯端缩短一格；单格蜡烛会燃尽消失。
+    - 玩家进入外露火焰会死亡；死亡结算后才检查胜利。
+  win_condition: 玩家存活，并在完整回合结算后点亮全部火盆（all_braziers_lit）。
+  object_and_event_semantics:
+    - 多格蜡烛是刚体；烛芯方向外一格是非实体火焰投影，蜡烛大小写表示是否点燃。
+    - 墙可遮住已燃烛芯并立即触发 extinguish_by_wall；烛芯重新外露不会自行复燃。
+    - 已点亮火盆是永久火源；外露烛芯在同格接触该火源时可触发 ignite_from_brazier。
+    - roll_reignite_after_extinguish 只表示同一次滚动内先灭后燃真实发生，不证明它必经、被后继使用或具有难度。
+    - 正式候选不得使用 event_occurs 胜利条件。
+  allowed_mechanisms:
+    - global_countdown
+    - axis_push
+    - flame_lights_brazier
+    - exposed_flame_danger
+    - candle_shrink
+    - wall_extinguish
+    - countdown_without_fire
+    - wick_reexposed_unlit
+    - candle_burn_out
+    - side_roll
+    - multi_cell_roll_one_turn
+    - ignite_from_brazier
+    - ignite_from_wick
+    - candle_body_extinguish
+    - simultaneous_burn
+    - midcycle_ignition
+    - boundary_extinguish_avoids_burn
+    - boundary_ignite_participates
+    - roll_intermediate_lights_brazier
+    - roll_intermediate_ignition
+    - roll_intermediate_extinguish
+    - roll_reignite_after_extinguish
+  tool_boundary:
+    - 已实现 runtime adapter、ASCII parser/renderer、solver、完整图枚举、layout analyzer、诊断 probe、exposure audit 与 runtime-backed playable。
+    - Candle 专属 miner、candidate factory 与 PuzzleScript exporter/checker 未实现，不得用其它原型结果替代 Candle runtime 证据。
+    - 后续 exact 必须以当前布局的非空 replay、完整解族/可达图与 exposure audit 支撑；graph exhausted 不能当作 complete。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - 玩家已掌握 roll_intermediate_extinguish 及之前的全部 Candle 机制。
+    - 玩家已掌握这些机制衍生的技巧和计算，具有全图视野、正常几何直觉与稳定操作能力。
+  prerequisite_mechanisms:
+    - side_roll
+    - multi_cell_roll_one_turn
+    - wall_extinguish
+    - wick_reexposed_unlit
+    - ignite_from_brazier
+    - candle_shrink
+    - exposed_flame_danger
+    - roll_intermediate_extinguish
+  known_prior_level_refs: []
+
+experience_seed:
+  human_seed: >-
+    玩家必须规划一次多格滚动，使同一根蜡烛在滚动途中先被墙熄灭、再从已知火源重新点燃，
+    并在滚动结束后继续消费这个结果才能获胜；同次滚动中的熄灭后复燃不能只是自动 witness
+    或一次性动画。
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  dispatch_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/lexicon.md
+  task_index_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/runs/batch_001_reignite_shrink_door/batch.yml
+  selected_material_refs:
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/lexicon.md#material-roll-reignite-endpoint-retreating-flame-gate
+  selected_material_evidence:
+    material_name: 复燃终点的退焰火门槛
+    positive_case_id: reignite_then_shrink_leaves_flame_gate
+    contrast_case_ids:
+      - extinguished_no_source_keeps_solid_gate
+      - no_extinguish_same_flame_gate
+      - no_endpoint_stop_makes_gate_ordinary
+    nonempty_inputs: [down, up, left, down, right, down, down]
+    raw_results_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/runs/batch_001_reignite_shrink_door/results.json
+    human_read_report_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/runs/batch_001_reignite_shrink_door/report.md
+    proposed_material_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/runs/batch_001_reignite_shrink_door/proposed_families.md
+    supported_relation: >-
+      三格横向已燃蜡烛向下滚动时，d1 被墙遮芯熄灭，d2 从既燃火盆复燃并由止挡停在门位；
+      到燃烧边界后缩短，原实体格变成致命退焰投影。无火源时同一门位仍是实体阻挡，无止挡
+      时只是安全空路；去掉遮芯墙则后继火门槛相同，说明 consumer 只读取终点点燃状态，
+      不能单独证明先熄后复燃历史。
+    evidence_boundary: >-
+      首批只支撑三格、横向、左烛芯、向下两格滚动、d1 墙熄、d2 既燃火盆复燃、固定初始
+      倒计时 5 与退焰火门槛生成；它不是完整关卡，也尚未支撑安全解决该门槛的完整后继。
+
+archive_calibration:
+  full_index_or_retrieval_summaries_read: true
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  related_positive_records_read:
+    - RA_CAND_0025
+    - RA_CAND_0022
+    - RA_CAND_0029
+    - RA_CAND_0011
+  related_lower_bound_or_boundary_records_read:
+    - RA_CAND_0006
+    - RA_CAND_0019
+    - RA_CAND_0020
+    - RA_CAND_0023
+    - RA_CAND_0026
+  additional_human_reviewed_records_read:
+    - RA_CAND_0001
+    - RA_CAND_0002
+    - RA_CAND_0003
+    - RA_CAND_0004
+    - RA_CAND_0005
+    - RA_CAND_0007
+    - RA_CAND_0008
+    - RA_CAND_0009
+    - RA_CAND_0010
+    - RA_CAND_0012
+    - RA_CAND_0013
+    - RA_CAND_0014
+    - RA_CAND_0015
+    - RA_CAND_0016
+    - RA_CAND_0017
+    - RA_CAND_0018
+    - RA_CAND_0021
+    - RA_CAND_0028
+  human_comment_refs:
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0025.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0029.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0011.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0006.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0019.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0020.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0023.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0026.md
+  calibration_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/designer/archive_calibration.yml
+  boundary: >-
+    Candle 没有阶段内 clean archive 或已交付课程关；Reality Anchor 只作跨阶段审美参照，
+    其结构化难度分不用于 Candle 难度判断。归档校准要求兑现可见 affordance、让核心对象贯穿并
+    被后继消费，拒绝事件覆盖、单行道演出、割裂子题和路线税冒充玩家内容。
+
+experience_core:
+  experience_statement: >-
+    玩家从滚后必经的退焰火门槛倒推一次侧滚：同一根已燃多格蜡烛必须在一个输入中先让烛芯
+    被墙熄灭，再经过玩家预先可知的火源复燃，并以正确终点、点燃状态与倒计时关系停下。
+    滚动不是高潮后的自动动画；玩家随后还必须利用或解除这个终点点燃状态生成的退焰火门槛，
+    才能取得最终操作位并点亮全部火盆。
+  visible_setup: >-
+    全图让玩家同时看见核心多格蜡烛、滚动路径中的遮芯墙、墙后已知火源、决定终点的止挡，
+    以及滚后门位与最终火盆或其必要操作侧之间的关系；不依赖隐藏信息或操作失误制造谜题。
+  player_action: >-
+    玩家先从后继门位需要的终点、火态与节拍反推滚动路径和站位，再亲自执行一次多格侧滚，
+    观察同一烛芯在滚动中先灭后燃；滚后继续管理站位与燃烧边界，主动处理复燃留下的火门槛，
+    而不是让事件发生后直接胜利。
+  visible_payoff: >-
+    同一次滚动中，蜡烛火焰在墙位可见熄灭、在已知火源处重新点燃并继续滚动；终点仍点燃的
+    蜡烛到燃烧边界后从烛芯端缩短，原实体门格虽腾空却被退焰投影覆盖。玩家此前对终点和节拍的
+    规划由这个从实体阻挡转为致命火格的变化兑现，并在后继解法中被真正消费。
+  why_level_exists: >-
+    这关把玩家已掌握的“滚动途中会熄灭”推进为一个新的规划关系：墙熄不是失败结论，玩家可在
+    同次不可中断的滚动中借已知火源恢复火焰；恢复后的状态又立刻成为后继必须预见和处理的约束。
+    它展示的是跨越滚动内部事件与滚后局面的双层计划，不是新事件的 witness。
+  core_boundary:
+    central_objects:
+      - 同一根在关键滚动开始前已点燃的多格蜡烛
+      - 滚动中先于火源接触烛芯投影的遮芯墙
+      - 滚动中位于墙后的已知且已点亮火源
+      - 让核心蜡烛落到特定门位的终点止挡
+      - 核心蜡烛的终点点燃状态、燃烧边界缩短与退焰投影
+      - 必须读取并处理该退焰门槛的后继操作位或通路
+    supporting_objects:
+      - 承担 all_braziers_lit 正常胜利反馈的火盆
+      - 只用于建立必要站位、滚动终点与短收束的墙和地面
+      - 仅在不抢走核心时用于节拍或点火关系的最少支持对象
+
+work_identity:
+  conditions:
+    - 核心蜡烛在关键滚动开始前必须点燃，且墙熄、从已知火源复燃、继续滚动和到达终点发生在同一个输入内。
+    - 遮芯墙必须先于已知火源出现在同一烛芯的滚动轨迹上；玩家必须通过火源克服墙熄造成的终点失火风险。
+    - 已知火源在关键滚动前已可被玩家确认，不得由同一滚动中的偶然事件临时生成而替代规划。
+    - 核心蜡烛滚动后必须以点燃状态停在一个对后继有具体责任的终点；事件发生本身不得立即满足胜利。
+    - 后继必须消费核心蜡烛的终点点燃状态及其位置或节拍后果，并把约束传回滚动前的终点、站位或时机选择。
+    - 删除后继后，原本需要区分的滚动终点或火态必须重新等价；否则后继只是附加子题。
+    - 所有允许胜解都必须由同一根核心蜡烛承担同次墙熄—复燃与滚后消费责任，不能由另一火源或无关段落代替。
+    - 高潮后只保留兑现该消费与完成 all_braziers_lit 所需的短收束，不追加清理劳动。
+  counterfactuals:
+    - id: remove_wall_extinguish
+      result: >-
+        删除或绕开遮芯墙后，蜡烛无需克服途中熄灭即可保持终点点燃；已知火源不再承担“恢复失去的火”责任，
+        即使后继火门槛仍可能相同，也已不是本关体验。
+    - id: remove_or_unlight_known_source
+      result: >-
+        删除、熄灭或让火源不可在墙后接触烛芯时，核心蜡烛滚后保持熄灭，不发生预期缩短并继续实体堵门；
+        后继关系不能按作品身份完成。
+    - id: split_reignition_into_another_action
+      result: >-
+        若墙熄与复燃分属两次滚动或另一次行动，玩家不再规划不可中断滚动内部的先灭后燃顺序，作品身份消失。
+    - id: remove_endpoint_stop
+      result: >-
+        若终点止挡被删除或失职，蜡烛滚离指定门位，后继格退化为普通安全空路，滚动终点不再被消费。
+    - id: remove_post_roll_consumer
+      result: >-
+        若滚后门位、必要操作侧或最终通路不再读取点燃结果，墙熄—复燃只剩事件 witness 或一次性动画，
+        不能构成完整关卡。
+    - id: allow_always_lit_or_other_object_bypass
+      result: >-
+        若玩家可让核心蜡烛始终点燃、换另一对象提供同一后继效果，或从别路取得最终操作位，
+        同次墙熄—复燃不再是作品的玩家责任。
+    - id: replace_consumer_with_unrelated_endgame
+      result: >-
+        若后段只是独立点盆、搬运或计时题而不改变滚动前选择，它是拼接子题，不能作为滚后消费。
+
+level_brief:
+  packaging_intent: complete_single_level
+  expected_difficulty: 4
+  expected_scale: >-
+    紧凑至中等；围绕一根核心蜡烛、一处墙熄—已知火源复燃轨迹、一个终点止挡和一个滚后
+    consumer 建立完整单关，只加入使选择、回报与正常胜利成立所需的最少支持结构。
+  expected_player_load: >-
+    在已掌握前序规则的前提下，难点来自两层相互传递的计划：先由后继门位反推正确终点、火态与
+    倒计时，再计算一次不可中断滚动内墙熄—复燃的接触顺序。至少要有多个局部看似可行的滚动或
+    节拍选择，只有预见后继消费才能剪除；不得用长走位、重复动作、额外对象或反馈迟缓 deadend
+    冒充难度 4。
+
+allowed_design_sources:
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/human_brief.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/prior_course.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/designer/archive_calibration.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/exploration/runs/batch_001_reignite_shrink_door
+
+prototype_specific_routing:
+  - allowed_exposure_through 固定为 roll_reignite_after_extinguish；该分支之后没有更晚事件。
+  - 正式候选只使用 all_braziers_lit；event_occurs 禁止。
+  - 每个未来 exact 必须重跑 Candle exposure audit，且 graph.status=complete、verdict=pass、forbidden_hits 为空。
+  - 任何布局、胜利条件或核心机制关系变化都会使旧 replay、graph、exposure 与 review 失效。
+  - 当前阶段不建立 candidate_id、不画布局、不发布 exact；后续只允许 Controller 建立的唯一 candidate_id。
+
+human_review_constraints:
+  - 目标难度固定为 4，最低不得低于 4；当前没有 Candle 阶段内 clean archive，不能借用其它原型 difficulty_score 校准。
+  - 玩家已掌握 roll_intermediate_extinguish 及之前机制；识别旧规则、基本走位、唯一显然操作与执行负担不计作难度。
+  - 事件出现、完整图、唯一解或 Designer 叙事只能约束硬事实，不能证明关卡有趣或值得待玩。
+  - 从玩家侧拒绝未兑现 affordance、单行道机制演出、开局对象退休、割裂后段、高潮后清理与路线税。
+  - 首批材料只证明局部生成器；未来候选必须另行证明安全可解、后继真实消费、解族唯一性与作品身份在全部允许胜解中成立。
+
+stage_boundary:
+  candidate_id: null
+  exact_version: null
+  formal_layout_started: false
+  experience_brief_complete: true

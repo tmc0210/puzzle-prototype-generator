@@ -1,0 +1,29 @@
+schema_version: "sokoban.designer.workbench_note.v1"
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001
+from_version: v1
+disposition: rejected
+reason: >-
+  全局最短解 16 步只在 A 左侧往返等待三次同步燃烧，再让已经缩到两格的 A 直接横滚
+  点终点；A 从未被墙齿熄灭或从 B 重燃，B 从未参与移动，更没有反向剥火。轴推止挡
+  只删掉了 v0 的 B 点火旁路，没有建立 B 的必要职责。
+shortest_bypass_inputs:
+  - up
+  - up
+  - up
+  - up
+  - down
+  - up
+  - down
+  - up
+  - down
+  - up
+  - down
+  - up
+  - down
+  - up
+  - down
+  - right
+first_principles_transformation: >-
+  v2 不继续封等待格。B 改为三格寿命：第一次共同燃烧后只剩两格；若第二次燃烧前
+  没有在 A 的火焰/实体边界中熄灭，B 会继续缩成一格，并在 A 达到终局所需两格前
+  烧尽导致失败。因此反向剥火和边界避燃成为生存条件，而非可删除的演示。

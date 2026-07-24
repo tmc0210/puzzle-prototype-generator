@@ -143,12 +143,6 @@ event_exposure_sequence:
     new_events:
       - roll_reignite_after_extinguish
 
-  - branch: last_brazier_before_roll_endpoint
-    title: 最后一个火盆在滚动终点前已点亮
-    source_rule: move_candle
-    new_events:
-      - roll_last_brazier_before_endpoint
-
 runtime_witnesses:
   declared_trace_levels:
     global_countdown: CANDLE_SMOKE_01_LIGHT_BRAZIER
@@ -169,7 +163,6 @@ runtime_witnesses:
     roll_intermediate_ignition: CANDLE_PROBE_03_CONCEALED_FLAME
     roll_intermediate_extinguish: CANDLE_PROBE_03_CONCEALED_FLAME
     roll_reignite_after_extinguish: CANDLE_PROBE_03_CONCEALED_FLAME
-    last_brazier_before_roll_endpoint: CANDLE_PROBE_09_INTERMEDIATE_LAST_BRAZIER
   conformance_checks:
     candle_burn_out: global_countdown_semantics
     simultaneous_burn: global_countdown_semantics
@@ -189,7 +182,7 @@ explicitly_excluded:
   - id: wick_only_negative_rule
     reason: “烛身接触火焰不会点燃”是负规则，没有不造伪事件即可使用的正向扳机。
   - id: same_step_recursive_chain
-    reason: 当前 F5 没有区别于普通直接传火的新来源坐标，也没有独立可观察结果。
+    reason: 没有区别于普通直接传火的新来源坐标，也没有独立可观察结果。
   - id: invalid_input_does_not_tick
     reason: 无效输入不产生 runtime edge 或事件，属于操作语义核验，不适合作为事件暴露 gate。
   - id: undo

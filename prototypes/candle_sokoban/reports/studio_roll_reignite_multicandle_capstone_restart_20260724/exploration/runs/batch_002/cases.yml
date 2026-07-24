@@ -1,0 +1,132 @@
+runId: batch_002
+title: "复燃横烛在燃烧边界退焰点亮截停竖烛，再轴推重新遮芯"
+notes: >-
+  连续输入 down,left,down,down,down,right：核心先完成墙灭后复燃滚动；玩家沿左侧最短路线到轴推侧；
+  第五次行动的燃烧边界令核心从烛芯端缩短，退焰点亮刚被重新暴露的竖烛；最后轴推核心重新遮住竖烛烛芯。
+defaults:
+  maxExploreDepth: 7
+  maxReturnDepth: 12
+  maxStates: 50000
+  maxTransitions: 200000
+cases:
+  - id: boundary_relight_then_recover_positive
+    family: boundary_relight_recover_continuity
+    variant: positive_roll_reignite_shrink_ignite_then_cover
+    changed_variable: base_positive
+    contrast_with:
+      - no_reignite_no_boundary_relight
+      - always_lit_output_equivalent
+      - static_wall_no_receiver
+      - receiver_preunlit_still_relights
+      - delete_recover_push
+    notes: >-
+      核心 d1 墙灭、d2 火盆复燃、d3 被朝上明竖烛身体截停且遮芯熄灭竖烛；三步最短换侧后，
+      第四个滚后行动进入燃烧边界，核心缩为单格，退焰在腾出的 (3,5) 点亮竖烛；随后向右轴推核心重新占住 (3,5) 并熄灭竖烛。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #...O..#
+      #......#
+      #..U...#
+      #......#
+      ########
+    actions: [down, left, down, down, down, right]
+
+  - id: no_reignite_no_boundary_relight
+    family: boundary_relight_recover_continuity
+    variant: remove_d2_source_core_stays_unlit_and_long
+    changed_variable: remove_reignite_source
+    contrast_with: [boundary_relight_then_recover_positive]
+    notes: >-
+      删除 d2 已点火盆。核心滚后保持未明，燃烧边界不缩短，竖烛烛芯持续被二格核心身体覆盖；
+      同一最终轴推虽合法，却既不先点亮也不再熄灭竖烛。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #......#
+      #......#
+      #..U...#
+      #......#
+      ########
+    actions: [down, left, down, down, down, right]
+
+  - id: always_lit_output_equivalent
+    family: boundary_relight_recover_continuity
+    variant: remove_d1_wall_core_never_extinguishes
+    changed_variable: core_always_lit_history_counterfactual
+    contrast_with: [boundary_relight_then_recover_positive]
+    notes: >-
+      删除 d1 遮芯墙，核心始终点燃；若滚后逐步状态与正例在 d3 后等价，说明后段消费者读取的是“核心此刻点燃并将在边界缩短”的输出，
+      而非 roll_reignite_after_extinguish 事件标签本身。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #......#
+      #...O..#
+      #......#
+      #..U...#
+      #......#
+      ########
+    actions: [down, left, down, down, down, right]
+
+  - id: static_wall_no_receiver
+    family: boundary_relight_recover_continuity
+    variant: replace_receiver_candle_with_wall
+    changed_variable: receiver_identity_candle_to_wall
+    contrast_with: [boundary_relight_then_recover_positive]
+    notes: >-
+      以墙替代截停竖烛身体。核心终点、复燃、边界缩短和最终轴推均保留，但没有第二根蜡烛接收退焰点亮与重新遮芯熄灭。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #...O..#
+      #......#
+      #..#...#
+      #......#
+      ########
+    actions: [down, left, down, down, down, right]
+
+  - id: receiver_preunlit_still_relights
+    family: boundary_relight_recover_continuity
+    variant: receiver_starts_unlit
+    changed_variable: receiver_initial_lit_to_unlit
+    contrast_with: [boundary_relight_then_recover_positive]
+    notes: >-
+      竖烛预先未明但仍用身体截停核心。若边界仍由退焰点亮并在最终轴推中再熄灭，说明后段接法不依赖滚动当步先把竖烛从明变灭。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #...O..#
+      #......#
+      #..u...#
+      #......#
+      ########
+    actions: [down, left, down, down, down, right]
+
+  - id: delete_recover_push
+    family: boundary_relight_recover_continuity
+    variant: stop_after_boundary_relight
+    changed_variable: delete_final_consumption_action
+    contrast_with: [boundary_relight_then_recover_positive]
+    notes: >-
+      保留核心滚动、最短换侧与燃烧边界，只删除最后向右轴推；用于确认“重新遮芯熄灭竖烛”来自实际后继动作，而不是边界后的静态状态。
+    layout: |
+      ########
+      #.@...o#
+      #.1R...#
+      #...#..#
+      #...O..#
+      #......#
+      #..U...#
+      #......#
+      ########
+    actions: [down, left, down, down, down]

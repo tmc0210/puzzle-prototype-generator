@@ -1,0 +1,47 @@
+assignment_id: candle_multicandle_capstone_restart_material_sufficiency_004
+required_skill: sokoban-level-designer
+assignment_kind: material_sufficiency_and_candidate_entry
+controller_instance_id: studio_controller_root_multicandle_restart_20260724
+task_root: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_002
+exact_version_basis: null
+
+design_brief: >-
+  读取 batch_003 与增量 task lexicon。TL-MC-003 已用连续 replay 分离正例、删除复燃和始终点燃三侧：
+  中间无火窗口由火盆明灭保存，复燃输出由对象燃尽/存续与最终动作合法性保存。由 Designer 自主判断当前材料
+  是否足以进入唯一候选工作台；若不足，自行提交下一份坐标无关 request。Controller 不采用 Explorer 的
+  next_sampling_axes，不指定是否使用该材料、后继用途、对象数、family、几何或机制组合。
+input_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/assignments/designer_material_sufficiency_003.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/human_brief.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/experience_brief.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/requests/designer_request_003.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/runs/batch_003/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/runs/batch_003/results.json
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/runs/batch_003/report.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/runs/batch_003/explorer_notes.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/runs/batch_003/proposed_families.md
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - src/prototypes/candle_sokoban/exposureAuditCli.ts
+  - src/cli.ts
+forbidden_input_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/experience_brief.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/designer/workbench
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/requests
+required_outputs:
+  - 独立判断材料充分性；保持 Designer 自主设计与探索需求权。
+  - 若进入工作台，从首个正式布局制作完整终局关；局部材料不能直接成为 candidate exact。
+  - 只有完整路线、玩家逻辑解族、身份反事实、对象参与与 complete exposure audit 全部通过才发布 immutable exact/submission。
+  - 若需要更多探索，只写 Designer-authored、坐标无关且与候选包装隔离的 request 后返回 Controller。
+  - 不写 candidate_ledger、dispatch、review、levels、playable_queue 或人类 handoff。

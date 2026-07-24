@@ -1,0 +1,132 @@
+review_attempt_id: CANDLE_ROLL_REIGNITE_V1_HARD_001
+reviewer_instance_id: EVIDENCE_REVIEWER_FRESH_V1_20260724_01
+candidate_id: CANDLE_ROLL_REIGNITE_CONSUMED_001
+exact_version: v1
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - docs/21-level-design-studio-standard.md
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/exact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/layout.txt
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/layout_analysis.json
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/identity_counterfactuals.json
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "left up left down down down down down left left left down down down right right up"
+    - "left up left down down down down left down left left down down down right right up"
+    - "left up left down down down left down down left left down down down right right up"
+    - "left up left down down left down down down left left down down down right right up"
+    - "left up left down left down down down down left left down down down right right up"
+    - "left up left left down down down down down left left down down down right right up"
+  equivalence_evidence_basis:
+    - "solution_family.json#graph：complete；2088 base states、2458 product states、6789 legal edges、5 winning product states。"
+    - "solution_family.json#requiredHistory：11 个历史标志全部为 allWinningTraces=true，violatingWinningTraceCount 均为 0。"
+    - "solution_family.json#winningMilestoneSignatures：唯一 11 项签名覆盖全部 5 个 winning product states。"
+    - "solution_family.json#shortestWinningFamily：最短成本 17，rawShortestInputCount=6，六条实例仅把一次必要 left 与相邻 down 走位换序，其余动作及里程碑不变。"
+    - "canonical_replay.json：其中一条 17 步实际胜路完整合法并正常获胜。"
+    - "docs/21-level-design-studio-standard.md#唯一候选与内层-Design-Studio：纯走位差异、完整回返环和相互独立必要步骤换序可属于同一玩家逻辑类，但须保持对象职责、目标分配与依赖因果。"
+    - "solution_family.json#layoutSha256 对无尾换行的内嵌 layout 计算且匹配；内嵌 layout 与 exact layout.txt 去掉末尾换行后逐字一致，manifest/exposure 的原始文件 SHA-256 均为 ba56a810b8618dcf92e54d70e55aa1a03ee5bba7a194357f6d9f1c9c1d473169。"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "六条列举串是全部最短 raw inputs；更长纯走位回环与同一 product state 的输入合流按证据中明示的等价边界处理。"
+    - "本审查只核验已有 complete artifact，没有重跑 solver、图枚举、事件 probe 或反事实。"
+
+claims:
+  - claim_id: normal_win_and_replay
+    claim: "17 步 canonical replay 全部合法，并在完整回合结算后玩家存活且 all_braziers_lit。"
+    status: supported
+    evidence_basis:
+      - "exact_manifest.yml、layout.txt 与 solve_instance.yml：candidate_id=CANDLE_ROLL_REIGNITE_CONSUMED_001、exact_version=v1、正常胜利条件 all_braziers_lit、global_burn_cycle=5；layout.txt 原始 SHA-256 与 manifest 的 ba56a810...d473169 一致。"
+      - "canonical_replay.json#replay：completed=true、executedSteps=17、legalThroughStep=17；17 个 step 的 legal 均为 true，before/after 状态连续。"
+      - "canonical_replay.json#final：isWin=true；最终 key 为 D:0，四个 brazier 位均为 :1，最后一步含 win_all_braziers_lit。"
+      - "mechanics.ts#step/isWin：每次合法行动先完成倒计时与燃烧结算，再以玩家未死亡且全部火盆点亮判断正常胜利。"
+    limits:
+      - "canonical replay 只证明该实际规范路径；全部首次胜路的历史条件由 solution_family.json 的 complete product graph 另行支持。"
+
+  - claim_id: exposure_gate
+    claim: >-
+      v1 对 allowed_exposure_through=roll_reignite_after_extinguish 的 exposure audit 为 complete/pass，
+      layout 与 sequence digest 匹配，forbidden_hits 为空，raw graph 完整保存。
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json#level/exposure_gate：exact_version=v1，level id 匹配；layout_sha256=ba56a810...d473169 与 exact 文件一致；sequence_sha256=15a890d0...0aade2 与当前 mechanic_exposure_sequence.yml 原始文件一致。"
+      - "exposure_audit.json#graph/verdict：status=complete、verdict=pass、forbidden_hits=[]；摘要为 2088 reachable states、5734 legal transitions、5 win states。"
+      - "exposure_audit.json#raw_graph 全量结构核验：2088 节点与 5734 边的 index 连续，2088 个 state key 全部唯一，全部节点从 index 0 可达，记录 depth 与原始边 BFS 深度逐项一致；边端点均有效，5 个终止胜态均 D:0 且全部 brazier lit。"
+      - "exposure_audit.json#raw_graph/reachable_event_counts：逐条原始边重计得到 24 类事件，所有类型与计数均和摘要逐项一致；3 条 roll_reignite_after_extinguish 边均保存完整原始事件。"
+    limits:
+      - "roll_reignite_after_extinguish 是当前暴露序列最后一个 branch，因此 forbidden_branches 与 forbidden_event_patterns 本来就是空集；pass 在此核验的是 exact/digest、complete graph、raw edge 保存和空 forbidden_hits，不扩张为任何未定义机制声明。"
+
+  - claim_id: same_roll_same_object_reignite
+    claim: >-
+      首次关键滚动中同一 candle#1 先在 d1 产生 extinguish_by_wall 与 roll_intermediate_extinguish，
+      再在 d2 从已点亮火盆产生 ignite_from_brazier、roll_intermediate_ignite 与
+      roll_reignite_after_extinguish；这些事件属于同一输入且滚动继续到终点。
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json#steps[4]：单个 down 输入内按序出现 roll_step:candle#1:d1、extinguish_by_wall:candle#1、roll_step:candle#1:d2、ignite_from_brazier:candle#1:1,4，随后继续 d3、d4 并以 roll_candle:candle#1:d4 结束。"
+      - "同一步事件尾部含 roll_intermediate_extinguish:candle#1:d1、roll_intermediate_ignite:candle#1:d2、roll_reignite_after_extinguish:candle#1:d1->d2，事件实例与参与对象均为同一 candle#1。"
+      - "exposure_audit.json#raw_graph.edges[13] 保存与规范第 4 步相同的完整原始边事件；另外两条可达复燃边也保持同对象 d1->d2。"
+      - "mechanics.ts#step/settleContacts/emitRollingExposureEvents：滚动逐小步结算，复燃事件只在同一 candle id 的较早 extinguish 与较后 ignite 出现在同一滚动记录时发出。"
+    limits: []
+
+  - claim_id: post_roll_consumption_all_wins
+    claim: >-
+      完整 first-win product graph 的全部首次胜利 product states 都含复燃后的 shrink、第二滚动点亮下盆并墙熄、
+      玩家穿过旧退焰门取得 candle 下方操作侧、再由下盆复燃向上滚并点亮顶部终盆的有序历史。
+    status: supported
+    evidence_basis:
+      - "solution_family.json#graph：first-win product graph 为 complete，含 2458 product states、6789 legal edges、5 winning product states。"
+      - "solution_family.json#requiredHistory：shrinkAfterReignite、lowerLit、postShrinkExtinguish、gateCrossedAfterClear、belowCoreReached、returnReignite、finalLitAfterReturn 在全部胜路上均为 true，违规胜态计数均为 0。"
+      - "solution_family.json#winningMilestoneSignatures：全部 5 个胜态共享按上述关系排序的唯一 11 项签名。"
+      - "canonical_replay.json#steps[5,8,9-17]：实际代表胜路依次显示 shrink、下盆点亮与墙熄、越过已清空门位到达 candle 下方、由下盆点燃并向上滚至顶部终盆。"
+    limits:
+      - "全胜路结论限定于 artifact 定义的首次正常胜利 product graph 及其 11 项历史标志，不将里程碑名称解释为审美或难度。"
+
+  - claim_id: single_milestone_family
+    claim: >-
+      完整 first-win product graph 的 5 个 winning product states 只有一个 11 项里程碑签名；
+      已列出的 6 条最短 raw inputs 仅交换独立走位，保持对象职责、目标分配与依赖因果。
+    status: supported
+    evidence_basis:
+      - "solution_family.json#winningMilestoneSignatures：签名数组长度为 1，该签名覆盖全部 5 个 winning product states，minimumDepth=17。"
+      - "solution_family.json#shortestWinningFamily：rawShortestInputCount=6，确实列出 6 条长度均为 17 的输入；它们都保持固定 left/up/left 前缀、同一组五个 down 与一次 left 的相邻换序，以及相同后缀。"
+      - "solution_family.json#requiredHistory：11 项对象/目标/依赖标志对全部胜路成立，没有 violating winning trace。"
+      - "docs/21-level-design-studio-standard.md 的玩家逻辑类等价定义允许纯走位和相互独立必要步骤换序，前提是对象职责、目标分配与依赖因果不变；该完整 product graph 的单一签名正提供这三项机械边界。"
+    limits:
+      - "等价结论只覆盖当前 complete artifact 所枚举的首次胜路；不把单一签名解释为质量判断。"
+
+  - claim_id: identity_counterfactuals
+    claim: >-
+      删除左列独占盆会产生不含首次墙熄—复燃的胜态；删除顶部 consumer 会在第 8 步提前胜；
+      删除第二遮芯墙或承担下盆/止挡/复燃三责的火盆会使关卡无胜。
+    status: supported
+    evidence_basis:
+      - "identity_counterfactuals.json：candidate_id/exact_version 与 v1 匹配，六个单格反事实的 reachable graph 均为 complete。"
+      - "remove_exclusive_first_track_brazier：完整图有 5 个胜态；firstReigniteProduct 报告 winsWithoutFirstReignite=5，并给出实际 representativeWithoutFirstReignite。"
+      - "remove_final_consumer_brazier：完整图有 5 个胜态，实际 solve found=true、cost=8，第 8 步含 win_all_braziers_lit。"
+      - "remove_post_shrink_extinguishing_wall：complete 1713-state graph，winStateCount=0、solve found=false。"
+      - "remove_endpoint_stop_and_return_source：complete 2161-state graph，winStateCount=0、solve found=false；changed cell (2,7) 在基线布局和实际 replay 中同时承担首次下滚止挡、第二滚动下盆目标及最终回程点火源。"
+      - "作为交叉核验，known_source_unlit 亦为 complete 且 0 胜；remove_first_concealing_wall 的 complete 图则有 5 个全部不含首次同滚动复燃的胜态。"
+    limits:
+      - "这些反事实只支持对应单格与机械关系，不支持审美、难度或待玩价值。"
+      - "hasGateCrossingConsumer 只用于规范最短解提示；exact 全胜路的门位历史以 solution_family.json 的 complete product graph 为准。"
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

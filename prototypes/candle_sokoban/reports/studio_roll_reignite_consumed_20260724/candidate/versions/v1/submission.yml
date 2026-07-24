@@ -1,0 +1,86 @@
+submission_id: SUB_CANDLE_ROLL_REIGNITE_CONSUMED_001_V1
+design_task_id: candle_roll_reignite_consumed_20260724
+candidate_id: CANDLE_ROLL_REIGNITE_CONSUMED_001
+exact_version: v1
+
+designer_claim:
+  player_experience_core: >-
+    玩家先把同一根三格 candle 对齐，使一次不可中断的向下滚动在 d1 被墙熄灭、d2 从已知火盆
+    复燃并以点燃状态停在门位；边界缩短后产生的退焰门又必须被玩家用同一 candle 主动清掉并穿过，
+    才能从下方借刚点亮的火盆回程点亮末目标。
+  player_action: >-
+    玩家反推两列烛芯轨迹、三格与两格 body 对同一止挡的不同关系、滚动操作侧和五拍边界，亲自
+    执行对齐、首次墙熄—复燃滚动、缩短后清门滚动、穿门绕位与最终复燃回程。
+  visible_payoff: >-
+    首次滚动中火焰先灭后燃；缩短后旧 body 门格变成火格；第二滚动让该门格重新安全并熄灭 core；
+    玩家穿门到底部后，长距离向上滚动从新火源复燃并在顶部末盆即时获胜。
+  why_this_level_exists: >-
+    它把已知的“滚动途中会熄灭”改写为跨三次滚动的双列计划：首次已知火源不是自动动画，而是
+    保证缩短、生成后继门槛的必要条件；后继又要求清门、保存形状并用新火源把同一对象送回顶部。
+  work_identity_conditions:
+    - 核心 candle 在首次滚动前点燃，且 d1 墙熄、d2 已知火盆复燃发生在同一输入。
+    - 首次复燃后的终点点燃状态必须在燃烧边界缩短并生成退焰门。
+    - 缩短后的同一 candle 必须点亮下方火盆、在更低墙位熄灭并移开旧退焰门。
+    - 玩家必须在清门之后经过旧门位，取得核心 candle 下方操作侧。
+    - 最终回程必须由下方新点亮火盆复燃同一 candle，并点亮顶部末盆获胜。
+    - 全部允许胜解保持同一对象职责、目标分配和里程碑顺序。
+
+packaging_account:
+  opening: >-
+    全图同时暴露三格 candle、两列火盆/墙关系和底部回程操作侧；开局轴推把刚体对齐到这两列共同结构。
+  preparation: >-
+    玩家在五拍内绕到正确 body 上方；提前缩短或错误轴向位置会错失左列独占目标或后继形状。
+  reveal_or_use: >-
+    首次同滚动墙熄—复燃后，点燃终点缩短成退焰门；第二滚动清门并灭火，玩家穿门取得下方操作侧。
+  ending: >-
+    最后一次向上滚动从下方火盆复燃并直接点亮顶部末盆，正常胜利与高潮同回合完成。
+  every_major_element_role:
+    - core candle#1：贯穿全部构造、揭示、consumer 与结尾。
+    - (1,3) 墙与 (1,4) 既燃火盆：首次同滚动先灭后燃的有序轨迹。
+    - (1,5) 火盆：锁定首次三格左烛芯轨迹，阻断提前缩短旁路。
+    - (2,7) 火盆：三格止挡、两格点盆、最终回程火源。
+    - (2,8) 墙：第二滚动灭火并保存两格形状供绕行后回程。
+    - (4,9) 墙：固定第二终点并留下下方操作位。
+    - (2,1) 火盆：要求穿门回程，避免 consumer 前提前胜利。
+    - 走廊墙：把旧退焰格固定为通往下方操作侧的唯一门位。
+  known_perceptible_defects:
+    - none_identified
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: >-
+      layout graph max_states=500000，实际完整 2088 states / 5734 transitions；task-local 首次胜利产品图
+      无截断，完整 2458 product states / 6789 legal edges。
+    known_raw_winning_variants:
+      - left up left down down down down down left left left down down down right right up
+      - left up left down down down down left down left left down down down right right up
+      - left up left down down down left down down left left down down down right right up
+      - left up left down down left down down down left left down down down right right up
+      - left up left down left down down down down left left down down down right right up
+      - left up left left down down down down down left left down down down right right up
+    equivalence_account: >-
+      六条最短串只交换一次必要左移与相邻的独立竖直走位；全部使用同一 candle、同一三次滚动、
+      相同目标分配、相同退焰门和完全相同的 11 项里程碑顺序。全部 5 个首次胜利 product states
+      只有一个签名，没有发现非等价胜解。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/layout_analysis.json
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/designer_reading.yml
+    evidence_limits:
+      - 产品图把相同 runtime state、历史 mask 与里程碑顺序合流；不以 raw 输入串数量定义逻辑解数。
+      - 等价性是 Designer 自查声明，仍须独立 Evidence Reviewer 核验。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/identity_counterfactuals.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/identity_counterfactuals.json
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/candidate/versions/v1/designer_reading.yml
+  evidence_limits:
+    - exposure audit 已为 complete/pass/0 forbidden hits，但事件必经与作品身份由 solution_family 另证。
+    - 自动分析不产生审美或难度 verdict；该判断留给独立 Puzzle Critic。
+
+designer_self_verdict: submit_for_independent_review

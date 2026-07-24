@@ -1,0 +1,111 @@
+schema_version: 1
+artifact_kind: designer_withdrawal_assessment
+assignment_ref: >-
+  prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/assignments/designer_candidate_design_006.yml
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001
+exact_version_basis: null
+
+designer_decision: withdraw
+withdrawal_scope: unique_candidate_before_exact
+decision_boundary: >-
+  撤回当前唯一候选，不发布 exact，不提交独立审查。该决定只说明在本任务固定的体验核心、
+  作品身份、难度 5 与紧凑无路线税边界内，当前 Designer 没有得到合格完整单关；不外推为
+  candle_sokoban 中多蜡烛滚中复燃机制普遍不可设计。
+
+reasoning_sketch:
+  required_player_relation: >-
+    玩家在核心前主动把 B 同时配置为 A 的晚段复燃火窗和滚后 consumer 对齐对象；A 在一次
+    多格滚动中先被墙熄灭、再由 B 烛芯复燃并继续；A 的燃烧终态随后剥掉 B 的火或改变 B 的
+    合法动作 / 燃烧参与，B 继续承担紧邻终局责任。删除任一后继应让核心前配置不再等价。
+  strongest_mechanical_chain_found:
+    - >-
+      batch_004 / workbench v20：完整连续 replay 可实现 A 墙熄灭、由 B 复燃并继续，随后 B 在
+      边界被 A 烛身剥火并避烧保长；但 B 停在远侧，取得下一操作侧已耗尽一个周期，保存长度、
+      熄灭投影和 A 剩余火焰都没有转成末段责任。
+    - >-
+      batch_005：隔离核心后状态可实现 B d2 被 A 烛身剥火、外伸尾段被共享墙近停、B 让出
+      操作格，玩家三输入回滚仍燃 A 并点盆；这是最强末段几何，但不是从核心前配置开始的
+      连续玩家路线。
+  closure_relation: >-
+    batch_006 收口了把上述隔离末段接回核心前配置的四个邻接类。B 位于 A 核心来侧时，A d1
+    墙齿会阻挡 B 的配置；移除墙齿则 B 在配置当步先以烛身熄灭 A，破坏“墙先熄灭”的身份。
+    B 位于墙齿去侧时，短侧滚只把玩家留在 A 的错误输入侧；最近合法轴推版在到达正确侧前
+    已跨首个燃烧边界并改变 A/B 长度。旋转与镜像只重命名方向，不改变该邻接二分。
+
+family_outcome:
+  family: partner_wick_window_to_reverse_consumer
+  status: ended_without_candidate
+  why_not_continue_same_family:
+    - 六批 task-local 探索后，正向材料仍只有 producer、隔离 consumer 与隔离末段；没有一条同时保留玩家、相位、长度与对象身份的完整连续路线。
+    - 当前收口失败发生在 A 核心之前；继续修改末段、火盆或 consumer 终点不能修复核心前玩家侧冲突。
+    - 普通镜像、长度补偿、远端回程、重复轴推或等待只会复刻已记录的失败边界，并把难度转成路线税或计时尺。
+  why_not_open_another_request:
+    - >-
+      要绕过 batch_006 的边界，必须实质改变 request 的对象数、配置次数、首界预算或
+      producer / consumer 正交关系；这不再是当前双蜡烛紧凑换手 family 的未采样局部轴。
+    - >-
+      引入第三根蜡烛作为动态止挡或移动火窗，会新增一个高 affordance 对象来修补两根刚体的
+      玩家侧冲突。workbench v21 已出现互相遮芯；即使换坐标，也尚无理由相信第三根不会成为
+      一次性止挡、固定替代火源或独立目标处理器，从而违反当前作品身份。
+    - >-
+      允许两次以上配置或跨界后用加长蜡烛补偿，会把核心前难点变成长路线、重复搬运和倒计时
+      校表，正是 human brief 与 archive calibration 明确排除的难度来源。
+
+failed_path_summary:
+  workbench:
+    - range: v0-v10
+      outcome: 旁路、非法几何、消费阻塞、玩家侧错误或身份失败，未形成完整作品。
+    - version: v18
+      outcome: 有 59 输入机械连续路线，但主要内容是路线税与状态爆炸，玩家侧审读失败。
+    - version: v19
+      outcome: 旋转后 producer 与 consumer 身体关系分离，B 退化为单向火源。
+    - version: v20
+      outcome: 最强连续局部；A→B 反向剥火真实成立，但 B 没有紧邻终局责任。
+    - version: v21
+      outcome: 第三根移动火窗在 consumer 处互相遮芯，B/C 均避烧，第三对象没有稳定终局身份。
+  exploration_batches:
+    - batch: batch_001_partner_window_handle_strip
+      outcome: producer 与反向 consumer 的隔离正向材料成立。
+    - batch: batch_002_boundary_route_compression
+      outcome: 原朝向连续接入在取得 B 操作侧前缩短或燃尽。
+    - batch: batch_003_consumer_self_handoff_axes
+      outcome: 旋转版出现先过 A 火焰后被墙熄灭，或 producer 行与 A 终点正交分离。
+    - batch: batch_004_consumer_terminal_responsibility
+      outcome: 连续剥火成立，但远端停止、固定晚火源、静态近停和熄灭投影都没有末段责任。
+    - batch: batch_005_overhang_shared_stop
+      outcome: 隔离近停 / 三输入点盆成立；完整配置路线跨两界后丢失目标核心。
+    - batch: batch_006_config_to_core_topology_closure
+      outcome: 一次配置到正确核心输入侧的来侧 / 去侧、轴推 / 短滚四类全部在核心前收口失败。
+
+player_side_verdict:
+  target_difficulty: 5
+  minimum_acceptable_difficulty: 5
+  verdict: does_not_reach_candidate_bar
+  reasons:
+    - 机械连续的版本要么没有 B 终局责任，要么把主要负荷放在长走位、重复推移或倒计时等待上。
+    - 隔离末段虽有清楚的角色反转回报，却没有合法紧凑的上游配置；把两段拼接会隐藏真实玩家位置和燃烧相位。
+    - 当前没有多个可信核心前计划收敛到同一精彩解法，不能证明明显超过玩家已认为“不够难”的“回焰门”。
+
+evidence_boundary:
+  exact_published: false
+  complete_candidate_layout: false
+  canonical_replay: false
+  solution_family_audit: false
+  identity_counterfactuals_complete: false
+  complete_exposure_audit: false
+  submission_packet: false
+  note: >-
+    没有完整候选，因此不运行或伪造 exact 级 solve、解族唯一性、对象参与和 complete exposure
+    audit。各 batch 的 complete 局部图只用于局部机械诊断，不能替代这些候选级证据。
+
+controller_handoff:
+  requested_outcome: withdraw_candidate_without_exact
+  ledger_write_by_designer: false
+  review_requested: false
+  preserved_artifacts:
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/designer/workbench
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon.md
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs
+  future_boundary: >-
+    若未来另开任务，应重新固定体验核心，而不是把本候选恢复为“加第三根蜡烛 / 加长路线”的兼容版本；
+    当前 candidate_id 不产生 exact，也不进入 Evidence Reviewer 或 Puzzle Critic。

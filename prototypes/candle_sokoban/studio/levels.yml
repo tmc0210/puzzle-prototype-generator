@@ -1,2 +1,266 @@
 mechanic: candle_sokoban
-levels: []
+levels:
+  - id: CANDLE_REIGNITE_MULTICANDLE_V18_WORKBENCH
+    title: 长焰接力（v18 工作台）
+    global_burn_cycle: 5
+    layout: |-
+      ...............
+      ...o#.......U..
+      ....L22222@#1..
+      ..#.........1..
+      ............1..
+      ............1..
+      ..o.........1..
+      ..O.........1..
+      ............1..
+      ............1..
+      .....#.........
+      ...............
+      ###############
+    win:
+      type: all_braziers_lit
+    expected_trace:
+      - input: left
+      - input: up
+      - input: up
+      - input: right
+      - input: right
+      - input: right
+      - input: right
+      - input: down
+      - input: down
+      - input: down
+      - input: left
+      - input: left
+      - input: left
+      - input: left
+      - input: up
+      - input: left
+      - input: left
+      - input: left
+      - input: up
+      - input: left
+      - input: down
+      - input: left
+      - input: left
+      - input: left
+      - input: left
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: right
+      - input: right
+      - input: up
+      - input: up
+      - input: up
+      - input: up
+      - input: up
+      - input: up
+      - input: up
+      - input: right
+      - input: right
+      - input: right
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: left
+      - input: right
+      - input: down
+      - input: down
+      - input: left
+      - input: left
+      - input: up
+      - input: up
+    expected_events:
+      - roll_reignite_after_extinguish
+      - roll_intermediate_extinguish
+      - extinguish_by_candle_body
+      - ignite_from_brazier
+      - roll_intermediate_light_brazier
+      - win_all_braziers_lit
+    design_notes: >-
+      人类于 2026-07-24 直接要求加入待玩列表的 v18 工作台版本。已有一条经过 runtime probe 的
+      59 输入胜路；尚未完成 exact 发布、80-100 步替代解搜索、solution uniqueness review 或
+      complete exposure audit。该试玩入口不表示正式 Design Studio 审查通过。
+    lineage:
+      source: studio
+      created_by: human_requested_workbench_playtest
+      created_at: 2026-07-24T00:00:00+08:00
+      design_task_id: candle_roll_reignite_multicandle_lategame_20260724
+      candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001
+      exact_version: workbench-v18
+      allowed_exposure_through: roll_reignite_after_extinguish
+
+  - id: CANDLE_ROLL_REIGNITE_CONSUMED_001_V1
+    title: 回焰门
+    global_burn_cycle: 5
+    layout: |-
+      ########
+      ##o...##
+      #..L11@#
+      ##...###
+      #O...###
+      #o...###
+      #....###
+      #.o..###
+      #.#..###
+      #...####
+      ########
+    win:
+      type: all_braziers_lit
+    expected_trace:
+      - input: left
+        events:
+          - push_axis:candle#1
+          - countdown:5->4
+      - input: up
+        events:
+          - walk
+          - countdown:4->3
+      - input: left
+        events:
+          - walk
+          - countdown:3->2
+      - input: down
+        events:
+          - roll_step:candle#1:d1
+          - extinguish:candle#1:concealed
+          - extinguish_by_wall:candle#1
+          - roll_step:candle#1:d2
+          - ignite:candle#1
+          - ignite_from_brazier:candle#1:1,4
+          - ignite_midcycle:candle#1:t2
+          - roll_step:candle#1:d3
+          - light_brazier:1,5
+          - roll_step:candle#1:d4
+          - roll_candle:candle#1:d4
+          - roll_multi_cell_one_turn:candle#1:d4
+          - roll_intermediate_extinguish:candle#1:d1
+          - roll_intermediate_ignite:candle#1:d2
+          - roll_intermediate_light_brazier:candle#1:d3
+          - roll_reignite_after_extinguish:candle#1:d1->d2
+          - countdown:2->1
+      - input: down
+        events:
+          - walk
+          - countdown:1->5
+          - shrink:candle#1:len2
+      - input: down
+        events:
+          - walk
+          - countdown:5->4
+      - input: down
+        events:
+          - walk
+          - countdown:4->3
+      - input: down
+        events:
+          - roll_step:candle#1:d1
+          - light_brazier:2,7
+          - roll_step:candle#1:d2
+          - extinguish:candle#1:concealed
+          - extinguish_by_wall:candle#1
+          - roll_candle:candle#1:d2
+          - roll_multi_cell_one_turn:candle#1:d2
+          - roll_intermediate_light_brazier:candle#1:d1
+          - countdown_without_lit_candle:3
+          - countdown:3->2
+      - input: left
+        events:
+          - walk
+          - countdown_without_lit_candle:2
+          - countdown:2->1
+      - input: left
+        events:
+          - walk
+          - countdown_without_lit_candle:1
+          - countdown:1->5
+      - input: left
+        events:
+          - walk
+          - countdown_without_lit_candle:5
+          - countdown:5->4
+      - input: down
+        events:
+          - walk
+          - countdown_without_lit_candle:4
+          - countdown:4->3
+      - input: down
+        events:
+          - walk
+          - countdown_without_lit_candle:3
+          - countdown:3->2
+      - input: down
+        events:
+          - walk
+          - countdown_without_lit_candle:2
+          - countdown:2->1
+      - input: right
+        events:
+          - walk
+          - countdown_without_lit_candle:1
+          - countdown:1->5
+      - input: right
+        events:
+          - walk
+          - countdown_without_lit_candle:5
+          - countdown:5->4
+      - input: up
+        events:
+          - roll_step:candle#1:d1
+          - ignite:candle#1
+          - ignite_from_brazier:candle#1:2,7
+          - ignite_midcycle:candle#1:t4
+          - roll_step:candle#1:d2
+          - roll_step:candle#1:d3
+          - roll_step:candle#1:d4
+          - roll_step:candle#1:d5
+          - roll_step:candle#1:d6
+          - roll_step:candle#1:d7
+          - light_brazier:2,1
+          - roll_candle:candle#1:d7
+          - roll_multi_cell_one_turn:candle#1:d7
+          - roll_intermediate_ignite:candle#1:d1
+          - countdown:4->3
+          - win_all_braziers_lit
+    expected_events:
+      - push_axis
+      - countdown
+      - walk
+      - roll_step
+      - extinguish
+      - extinguish_by_wall
+      - ignite
+      - ignite_from_brazier
+      - ignite_midcycle
+      - light_brazier
+      - roll_candle
+      - roll_multi_cell_one_turn
+      - roll_intermediate_extinguish
+      - roll_intermediate_ignite
+      - roll_intermediate_light_brazier
+      - roll_reignite_after_extinguish
+      - shrink
+      - countdown_without_lit_candle
+      - win_all_braziers_lit
+    design_notes: >-
+      Design Studio delivery CANDLE_ROLL_REIGNITE_CONSUMED_001 v1；canonical inputs:
+      left,up,left,down,down,down,down,down,left,left,left,down,down,down,right,right,up。
+      体验核心、完整硬证据和审查 provenance 见 task-local human handoff。
+    lineage:
+      source: studio
+      created_by: design_studio_controller
+      created_at: 2026-07-24T00:00:00+08:00
+      design_task_id: candle_roll_reignite_consumed_20260724
+      candidate_id: CANDLE_ROLL_REIGNITE_CONSUMED_001
+      exact_version: v1
+      layout_sha256: ba56a810b8618dcf92e54d70e55aa1a03ee5bba7a194357f6d9f1c9c1d473169
+      allowed_exposure_through: roll_reignite_after_extinguish

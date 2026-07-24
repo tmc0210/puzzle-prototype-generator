@@ -1,0 +1,79 @@
+exploration_id: candle_reignite_multicandle_task_local_20260724
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件，并以 designer_request_ref 为唯一设计空间来源；读取当前 task lexicon 避免重复。"
+dispatch_round: 6
+designer_request_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/requests/designer_request_006.yml
+experience_seed: >-
+  收口检验“配置动作把玩家直接交给核心输入侧”的双蜡烛连续拓扑。玩家先用一次有对象变化的
+  轴推或短侧滚配置伙伴 B，使 B 的外露火焰成为核心 A 的滚中复燃窗口，并同时确定 B 后继
+  consumer 的接触轴与外伸尾段止挡关系；该配置结束后的玩家原位必须在不穿过 A/B 身体、
+  不进入外露火焰的前提下，于至多两个合法输入内到达 A 的核心侧滚接触格。A 核心须在初始
+  第一个燃烧边界之前发生，随后连续进入 B 被 A 烛身剥火、尾段近停、B 让出操作格与 A 回滚
+  点盆的同一 replay。优先采样真正改变玩家侧拓扑的旋转、镜像和配置方向，不再增加长蜡烛
+  抵消走路燃烧。
+player_prior:
+  - 玩家已掌握 roll_intermediate_extinguish 及之前全部机制。
+  - 玩家已掌握相关衍生技巧与计算。
+  - 玩家已玩过单蜡烛的回焰门，本次材料服务于明显更深的后期组合。
+allowed_mechanisms:
+  - global_countdown
+  - axis_push
+  - flame_lights_brazier
+  - exposed_flame_danger
+  - candle_shrink
+  - wall_extinguish
+  - countdown_without_fire
+  - wick_reexposed_unlit
+  - candle_burn_out
+  - side_roll
+  - multi_cell_roll_one_turn
+  - ignite_from_brazier
+  - ignite_from_wick
+  - candle_body_extinguish
+  - simultaneous_burn
+  - midcycle_ignition
+  - boundary_extinguish_avoids_burn
+  - boundary_ignite_participates
+  - roll_intermediate_lights_brazier
+  - roll_intermediate_ignition
+  - roll_intermediate_extinguish
+  - roll_reignite_after_extinguish
+allowed_tools:
+  - npx tsx src/cli.ts mechanism-lab-run prototypes/candle_sokoban <cases.yml> --run-id <batch_id> --write
+  - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+  - npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write
+source_boundary:
+  allowed:
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/requests/designer_request_006.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - src/cli.ts
+    - src/workflows/localExperimentRunner.ts
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration
+  forbidden:
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/designer
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/experience_brief.yml
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/candidate
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - prototypes/reality_anchor/design_archive
+    - prototypes/ice_slide_escape/design_archive
+    - C:/Users/ASUS/Downloads/CANDLE_SOKOBAN_KNOWLEDGE.md
+    - 任何正式候选、Designer 工作布局、送审包、review 或审美归档
+task_lexicon_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon_index.md
+controller_boundary_check:
+  request_source_is_designer: true
+  coordinate_free: true
+  local_structure_space_only: true
+  candidate_or_difficulty_choice_present: false
+  controller_added_structure_direction: false

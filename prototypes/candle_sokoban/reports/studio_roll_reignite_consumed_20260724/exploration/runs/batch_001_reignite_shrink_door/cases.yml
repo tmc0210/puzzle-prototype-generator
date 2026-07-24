@@ -1,0 +1,90 @@
+runId: batch_001_reignite_shrink_door
+title: "墙熄—火盆复燃后的终点退焰火门槛"
+notes: >-
+  三格横蜡烛向下滚动；比较火源、遮芯墙与终点止挡，观察滚动后点燃状态是否在
+  固定燃烧边界从烛芯端缩短，并把后续单格门位从实体阻挡变成可进入但致死的退焰格。
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: reignite_then_shrink_leaves_flame_gate
+    family: roll_reignite_endpoint_retreating_flame_gate
+    variant: positive_wall_extinguish_lit_brazier_reignite_endpoint_stop
+    changed_variable: baseline_positive
+    contrast_with:
+      - extinguished_no_source_keeps_solid_gate
+      - no_extinguish_same_flame_gate
+      - no_endpoint_stop_makes_gate_ordinary
+    notes: >-
+      向下滚两格：d1 时左向烛芯被墙遮住而熄灭，d2 时落到既燃火盆上复燃；
+      止挡使烛芯端停在门格。四次走动到燃烧边界后从烛芯端缩短，实体格腾空但新烛芯
+      投影退到该格；最后向下输入合法进入该格并立即死亡。
+    layout: |
+      ###########
+      #...@.....#
+      #...L11...#
+      #..#......#
+      #..O......#
+      #.....#...#
+      #.......o.#
+      ###########
+    actions: [down, up, left, down, right, down, down]
+
+  - id: extinguished_no_source_keeps_solid_gate
+    family: roll_reignite_endpoint_retreating_flame_gate
+    variant: unlit_brazier_no_reignite
+    changed_variable: endpoint_fire_source_lit_to_unlit
+    contrast_with: reignite_then_shrink_leaves_flame_gate
+    notes: >-
+      同样墙熄与终点止挡，但把既燃火盆换成未燃火盆；蜡烛保持熄灭，边界不缩短，
+      最后向下输入撞到仍占门格且无法继续侧滚的蜡烛。
+    layout: |
+      ###########
+      #...@.....#
+      #...L11...#
+      #..#......#
+      #..o......#
+      #.....#...#
+      #.......o.#
+      ###########
+    actions: [down, up, left, down, right, down, down]
+
+  - id: no_extinguish_same_flame_gate
+    family: roll_reignite_endpoint_retreating_flame_gate
+    variant: no_wall_always_lit
+    changed_variable: remove_intermediate_wick_concealing_wall
+    contrast_with: reignite_then_shrink_leaves_flame_gate
+    notes: >-
+      去掉 d1 的遮芯墙；蜡烛没有中途熄灭但终点仍点燃，故同样在边界缩短并留下退焰火门槛。
+      该对照把“终点点燃状态被消费”与“中途熄灭—复燃历史”分开。
+    layout: |
+      ###########
+      #...@.....#
+      #...L11...#
+      #.........#
+      #..O......#
+      #.....#...#
+      #.......o.#
+      ###########
+    actions: [down, up, left, down, right, down, down]
+
+  - id: no_endpoint_stop_makes_gate_ordinary
+    family: roll_reignite_endpoint_retreating_flame_gate
+    variant: remove_stop_rolls_past_door
+    changed_variable: remove_endpoint_body_stop
+    contrast_with: reignite_then_shrink_leaves_flame_gate
+    notes: >-
+      保留 d1 墙熄和 d2 火盆复燃，但去掉终点止挡；蜡烛继续向下滚离门位，
+      后续穿过原门格不再依赖缩短且不会死亡，consumer 退化为普通空路。
+    layout: |
+      ###########
+      #...@.....#
+      #...L11...#
+      #..#......#
+      #..O......#
+      #.........#
+      #.......o.#
+      ###########
+    actions: [down, up, left, down, right, down, down]

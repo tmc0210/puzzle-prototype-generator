@@ -1,0 +1,83 @@
+request_id: designer_request_006
+exploration_id: candle_reignite_multicandle_task_local_20260724
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+
+design_space: >-
+  收口检验“配置动作把玩家直接交给核心输入侧”的双蜡烛连续拓扑。玩家先用一次有对象变化的
+  轴推或短侧滚配置伙伴 B，使 B 的外露火焰成为核心 A 的滚中复燃窗口，并同时确定 B 后继
+  consumer 的接触轴与外伸尾段止挡关系；该配置结束后的玩家原位必须在不穿过 A/B 身体、
+  不进入外露火焰的前提下，于至多两个合法输入内到达 A 的核心侧滚接触格。A 核心须在初始
+  第一个燃烧边界之前发生，随后连续进入 B 被 A 烛身剥火、尾段近停、B 让出操作格与 A 回滚
+  点盆的同一 replay。优先采样真正改变玩家侧拓扑的旋转、镜像和配置方向，不再增加长蜡烛
+  抵消走路燃烧。
+
+material_gap: >-
+  batch_005 已隔离证明外伸尾段共享止挡、`extinguish_by_candle_body:B`、B 近停让位和三输入
+  A 回滚点盆可以组成紧邻 consumer/末段；失败只发生在完整卡的配置后站位：玩家绕到 A 输入侧
+  用了九个空走输入，跨两次同步燃烧边界，使 A 烛芯列与 B producer 投影行同时退离。尚未检验
+  的关键问题不是再补长度或止挡，而是两根刚体在合法不重叠初态下，能否让一次 B 配置的玩家
+  落点与 A 核心输入侧共享同一局部操作区。该拓扑若不存在，现有外伸尾段 family 应收口；若存在，
+  必须用从配置到点盆的完整连续 replay 证明，而不能再由隔离卡拼接。
+
+local_objects:
+  - 已燃多格 A；一次侧滚中必须先由墙遮芯熄灭、再由 B 外露烛芯复燃，并在复燃后继续至少一小步。
+  - 已燃多格 B；核心前只接受一次必要配置动作，配置同时决定 producer 火窗、consumer 接触轴与近停尾段。
+  - 位于 A 实际扫掠区外、只接 B 外伸尾段的最少止挡；可与 A 终点墙是同一静态对象。
+  - consumer 后由 A 回滚或等价的 A/B 紧邻动作点亮的一个未亮火盆；不加入固定晚火源或第三根蜡烛。
+
+local_boundaries:
+  - 初始 countdown 固定为 5；B 配置、至多两个换位输入与 A 核心必须都发生在首个燃烧边界之前。
+  - B 配置结束后玩家到 A 核心接触格的最短合法路线至多两个输入；路线不得穿越火焰、等待或绕过整根蜡烛。
+  - 初态、配置中间态与核心前状态都必须无 A/B 身体重叠；不得用 parser 接受不了的理论接法。
+  - 从 B 配置开始到最终点盆只用一个 layout、一个初始相位和一条非空连续 replay，不重置玩家、长度、明灭或倒计时。
+  - B consumer 必须读取 A 的复燃终态并产生 `extinguish_by_candle_body:B`；外伸尾段近停后，玩家至多三输入触发 A/B 的末段点盆动作。
+  - 若必须靠超过一次配置、三次以上补推、首界前长走位或加长 A/B 抵消缩短，直接记为拓扑负结果。
+
+standing_positions:
+  - 对每个旋转/镜像记录：配置前玩家接触 B 的哪一段、配置后玩家原位、A 核心接触格，以及两者间最短合法输入。
+  - 记录 B 配置后 producer 火焰、A 墙齿、A 终点、B consumer 轴与尾段止挡是否仍同时对齐。
+  - 记录 A 核心后玩家原位到 B consumer 侧，以及 consumer 后玩家原位到 A 回滚侧；不能用重摆玩家的 probe 补缺口。
+
+post_action_state:
+  - 完整正例必须保留 batch_005 隔离链的职责：A 复燃终态剥掉 B 的火，B 外伸尾段令 consumer 近停并让出格，玩家随即回滚仍燃 A 点盆。
+  - B 的核心前配置必须是全链必要条件；删除配置或改成普通 walk 后，A 复燃窗口、consumer 对齐或末段至少一项失败。
+  - A 不复燃时，B consumer 后的回滚点盆必须失败或实质改变；B 保持点燃/同步缩短时，同一末段也不得原样成立。
+  - 末段点盆后立即结束，不追加搬运、等待或独立目标处理。
+
+sampling_axes:
+  - A 横/B 竖、A 竖/B 横的四个侧滚方向及镜像；只比较配置后玩家落点拓扑，不做普通坐标平移补谱。
+  - B 配置类型：一次轴推或被单格止挡限制的一次短侧滚；配置结束玩家到 A 接触格距离为零、一、二。
+  - A 核心接触 B 的靠 cap 端、中段或尾端；比较是否能避免初态身体重叠并保留 producer 火焰列。
+  - 共享止挡接 B 的单段或双段外伸尾部；止挡必须始终避开 A 的实际核心身体扫掠格。
+  - 完整 replay 的边界位置：A 核心后、B consumer 当步或 consumer 后末段；核心前不得触界。
+  - 反事实：删除 B 配置、B 熄灭、A 不复燃、B consumer 保持点燃、移除外伸尾段止挡。
+
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_004_consumer_terminal_responsibility/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_005_overhang_shared_stop/batch.yml
+
+do_not_repeat:
+  - batch_005 中 B 配置后九步绕到 A 输入侧、跨两次边界再用初始坐标触发核心的连续负例。
+  - 通过给 A/B 各加两格来抵消配置路线燃烧；长度不能替代局部玩家侧拓扑。
+  - 只复现隔离的 B 剥火、近停或 A 回滚点盆，而没有从 B 配置开始的完整连续 replay。
+  - 采用 Explorer 上一批 next_sampling_axes 里的普通镜像作为理由；只有配置后玩家侧距离真正降至两输入内的版本才计入。
+  - 固定晚火源、第三根一次性对象、远端边界回程、等待相位或核心后多次轴推补对齐。
+
+materialization_target: >-
+  若存在，发布一张极小 runtime-backed 完整连续卡：一次必要 B 配置结束后，玩家至多两输入抵达 A
+  核心侧；A 在首个燃烧边界前完成墙熄灭、由 B 复燃并继续；随后 B 被 A 烛身剥火并由外伸尾段
+  近停，让出操作格；玩家至多三输入回滚仍燃 A 并点亮唯一火盆。正向卡须带删除 B 配置、A 不复燃、
+  B 保持点燃与无尾段止挡对照。若所有合法旋转/镜像均因初态重叠、B 阻断到 A 的短路、producer
+  投影不对齐或核心后操作侧断裂而失败，发布结构化负结果并明确收口原因；只做局部材料，不制作候选。
+
+request_boundary:
+  candidate_coordinates: forbidden
+  complete_layout: forbidden
+  packaging: forbidden
+  difficulty_tradeoff: forbidden
+  candidate_family_choice: forbidden

@@ -1,0 +1,16 @@
+schema_version: "sokoban.designer.workbench_note.v1"
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001
+from_version: v2
+disposition: rejected
+reason: >-
+  求解器 16 步最短解确认 candle_burned_out 不是即时失败：玩家仍可让 B 连续同步燃烧至消失，
+  随后用两格 A 点终点。因而“B 必须避燃才能生存”的前提错误，B 的反向剥火仍可删除。
+first_principles_transformation: >-
+  v3 让保留下来的 B 承担正向终局消费。B 在边界横滚后停在 A 帽端旁；下一次燃烧
+  A 从三格缩两格，退去的帽端恰好把 A 火焰暴露到 B 灯芯上，B 再次点燃；终点位于
+  上层 B 的轴推方向，只有仍存在且被重新点燃的 B 能完成。
+intended_handoff_chain:
+  - B 在 A 长滚中重燃 A。
+  - A 的实体在 B 横滚中熄灭 B，B 于边界避过缩短。
+  - A 再缩短时，其新火焰在原帽端位置重燃 B。
+  - B 以保住的两格长度完成上层终点。

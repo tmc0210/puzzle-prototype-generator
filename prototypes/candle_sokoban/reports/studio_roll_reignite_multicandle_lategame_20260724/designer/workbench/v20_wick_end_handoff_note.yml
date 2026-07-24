@@ -1,0 +1,23 @@
+iteration: v20
+status: positive_local_not_candidate
+layout_ref: candidate_v20.layout
+structural_change: >-
+  玩家从 A 靠近烛芯的一端触发核心侧滚，而不是从 A 中段触发；核心动作后的玩家原位因此
+  与墙齿上方通道及 B 的轴推侧相邻。
+continuous_probe:
+  inputs: [right, right, right, down, right, right, right, down, right, up]
+  producer_event: roll_reignite_after_extinguish:candle#1:d1->d7
+  producer_continues_after_reignite: true
+  first_B_axis_push_after_core_inputs: 4
+  reverse_consumer_event: extinguish_by_candle_body:candle#2
+  boundary_split:
+    B: boundary_extinguish_avoids_burn:candle#2
+    A: shrink:candle#1:len2
+  continuous_route_verified: true
+positive_read: >-
+  旧 family 的路线缺口并非只能靠长蜡烛修补。改变 A 的接触高度后，玩家可在核心后沿墙齿上方
+  三步取得 B 的轴推侧，第四步推动并结算第一次缩短；两次后继轴推与两步换侧后，B 的上滚
+  在同一连续 replay 中先经过 A 火焰、再被 A 身体剥火，并在边界避烧，A 同时缩短。
+remaining_gap: >-
+  当前局部 B 上滚后停在远侧且熄灭；尚未证明 B 能在不依赖长回程、独立固定火源或第三根退休对象的
+  情况下继续承担终局责任。v20 因此不是完整候选、不是 exact，也不支持难度判断。

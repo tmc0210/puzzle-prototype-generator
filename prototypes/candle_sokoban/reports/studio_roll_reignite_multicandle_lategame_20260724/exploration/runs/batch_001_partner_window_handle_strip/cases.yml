@@ -1,0 +1,172 @@
+runId: batch_001_partner_window_handle_strip
+title: "伙伴火焰窗口与终点一格偏移的后继把手谱"
+notes: >-
+  A 的生产动作、B 的轴推接管和 B 的侧滚消费拆成相邻局部 probe；消费 probe 直接复刻前一 probe 的对象占格，
+  只把玩家放到下一处操作位。它们验证局部结构接法，不声称是完整关卡或完整回放。
+defaults:
+  maxExploreDepth: 7
+  maxReturnDepth: 16
+  maxStates: 20000
+  maxTransitions: 80000
+  win:
+    type: event_occurs
+    event: __local_probe_never__
+
+cases:
+  - id: core_terminal_x10
+    family: partner_window_handle_strip
+    variant: terminal_x10_blocked__producer
+    changed_variable: "A 的终止墙在 x11，使 A 停于 x10"
+    contrast_with: [core_terminal_x11, core_partner_flame_x9, core_partner_unlit, core_lit_brazier]
+    notes: >-
+      竖直三格 A 从左向右滚动；d1 的墙齿遮芯熄灭，越过 B 的三格烛身后在 B 的 x8 外露火焰处复燃，
+      再滚两格停于 x10。只回放生产动作；后继由 handoff_x10_axis_push 与 consumer_x10_roll_block 复刻消费。
+    layout: |
+      ..............
+      ..1........#..
+      .@1...........
+      ..D...........
+      ...#.22R......
+      ..............
+    actions: [right]
+
+  - id: core_terminal_x11
+    family: partner_window_handle_strip
+    variant: terminal_x11_strip__producer
+    changed_variable: "终止墙只右移一格，使 A 从 x10 改停 x11"
+    contrast_with: [core_terminal_x10]
+    notes: >-
+      与 core_terminal_x10 相同的墙熄灭、B 火焰窗口和滚动方向；只把终止墙右移一格，
+      令动作后 A 的身体列与烛芯列整体右移一格。
+    layout: |
+      ..............
+      ..1.........#.
+      .@1...........
+      ..D...........
+      ...#.22R......
+      ..............
+    actions: [right]
+
+  - id: core_partner_flame_x9
+    family: partner_window_handle_strip
+    variant: partner_flame_x9_late__producer
+    changed_variable: "B 整体右移一格，火焰投影从 x8 改到 x9"
+    contrast_with: [core_terminal_x10]
+    notes: >-
+      A 仍停于 x10；B 的长度和朝向不变，只把 B 的烛身与火焰窗口右移一格，
+      使 A 的复燃从 d6 推迟到 d7，复燃后只剩一个滚动小步。
+    layout: |
+      ..............
+      ..1........#..
+      .@1...........
+      ..D...........
+      ...#..22R.....
+      ..............
+    actions: [right]
+
+  - id: core_partner_unlit
+    family: partner_window_handle_strip
+    variant: partner_unlit_control__producer
+    changed_variable: "保留 B 的三格身体与后继操作，只令 B 初始熄灭"
+    contrast_with: [core_terminal_x10]
+    notes: >-
+      墙齿、B 烛身、A 终点与所有实体碰撞不变；B 没有外露火焰，A 越过 B cap 后仍不复燃，
+      用于把 B 到 A 的火焰职责从 A 到 B 的实体约束中拆开。
+    layout: |
+      ..............
+      ..1........#..
+      .@1...........
+      ..D...........
+      ...#.22r......
+      ..............
+    actions: [right]
+
+  - id: core_lit_brazier
+    family: partner_window_handle_strip
+    variant: lit_brazier_control__producer
+    changed_variable: "以 x8 的固定已点火盆替换 B 的身体、火焰与后继操作"
+    contrast_with: [core_terminal_x10]
+    notes: >-
+      A 仍在 x8 复燃并停于 x10，但动作后没有伙伴蜡烛可轴推、侧滚、遮芯或被 A 约束；
+      该 case 只作为固定火源退化对照，不发布为正向材料。
+    layout: |
+      ..............
+      ..1........#..
+      .@1...........
+      ..D...........
+      ...#....O.....
+      ..............
+    actions: [right]
+
+  - id: handoff_x10_axis_push
+    family: partner_window_handle_strip
+    variant: terminal_x10_blocked__axis_handoff
+    changed_variable: "复刻 core_terminal_x10 的动作后占格，玩家位于 B 尾端操作位"
+    contrast_with: [handoff_x11_axis_push]
+    notes: >-
+      连续把 B 向右轴推三格；前两推让 B 火焰靠近并重合 A 火焰，第三推使 B 的 cap 占住 A 在 x10,y4 的烛芯格，
+      检查 A 是否被 B 烛身熄灭。
+    layout: |
+      ..............
+      ..........1...
+      ..........1...
+      ..........D...
+      ....@22R......
+      ..............
+    actions: [right, right, right]
+
+  - id: handoff_x11_axis_push
+    family: partner_window_handle_strip
+    variant: terminal_x11_strip__axis_handoff
+    changed_variable: "A 的终态列相对 handoff_x10_axis_push 右移一格"
+    contrast_with: [handoff_x10_axis_push]
+    notes: >-
+      相同三次 B 轴推后，B 身体停在 x8..x10、火焰到 x11；A 身体和火焰也在 x11 列，
+      检查 B 身体是否仍会遮住 A，或两根火焰保持外露重合。
+    layout: |
+      ..............
+      ...........1..
+      ...........1..
+      ...........D..
+      ....@22R......
+      ..............
+    actions: [right, right, right]
+
+  - id: consumer_x10_roll_block
+    family: partner_window_handle_strip
+    variant: terminal_x10_blocked__roll_consumer
+    changed_variable: "复刻 handoff_x10_axis_push 后占格，玩家已在 B 下侧操作位"
+    contrast_with: [consumer_x11_roll_strip]
+    notes: >-
+      A 已被 B 第三推遮芯而熄灭；玩家从 B 下侧尝试向上侧滚。B 的第一小步目标 x8..x10,y3
+      与 A 身体的 x10,y3 重合，应没有合法位移。先在下方做四步闭环把倒计时从 5 推到 1，
+      使最后一次侧滚尝试也覆盖共享燃烧边界；illegal 输入不应推进该边界。
+    layout: |
+      ..............
+      ..........1...
+      ..........1...
+      ..........d...
+      ........22R...
+      ........@.....
+      ..............
+    actions: [down, left, up, right, up]
+
+  - id: consumer_x11_roll_strip
+    family: partner_window_handle_strip
+    variant: terminal_x11_strip__roll_consumer
+    changed_variable: "A 终态列右移后，B 第一小步不再实体碰撞而改为烛芯进入 A 身体"
+    contrast_with: [consumer_x10_roll_block]
+    notes: >-
+      两根蜡烛在 x11,y4 保持外露火焰重合；玩家从 B 下侧向上侧滚。
+      B 身体应能进入 y3，但 B 的 x11,y3 烛芯投影会被 A 的 x11,y3 身体遮住，随后继续滚动。
+      先在下方做四步闭环把倒计时从 5 推到 1；侧滚完成后应由仍燃 A 参加边界缩短，
+      已在第一小步熄灭的 B 避开本次燃烧。
+    layout: |
+      ..............
+      ...........1..
+      ...........1..
+      ...........D..
+      ........22R...
+      ........@.....
+      ..............
+    actions: [down, left, up, right, up]

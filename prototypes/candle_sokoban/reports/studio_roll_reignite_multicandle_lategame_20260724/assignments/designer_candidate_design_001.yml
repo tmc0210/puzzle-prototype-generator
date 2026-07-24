@@ -1,0 +1,51 @@
+assignment_id: candle_multicandle_lategame_candidate_design_001
+required_skill: sokoban-level-designer
+assignment_kind: candidate_design
+controller_instance_id: studio_controller_root_multicandle_20260724
+task_root: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724
+candidate_ledger_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/candidate_ledger.yml
+
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001
+exact_version_basis: null
+
+design_brief: >-
+  按已由 Designer 固定的 experience_brief，在同一连续工作台中制作唯一完整单关。
+  目标与最低接受难度均为 5；玩家已掌握前序全部机制、技巧并玩过回焰门。
+  候选必须以 all_braziers_lit 获胜，并保持 experience_brief 中可证伪的作品身份：
+  B 负责 A 同次多格滚动中的墙熄后复燃窗口，A 的滚后具体状态反向改变 B 的合法操作、明灭、
+  燃烧责任或终局用途。局部材料不是指定 family；Designer 自主选择、变形、重构或更换结构。
+  若发现新的局部材料缺口，先写坐标无关 request 交 Controller 调度，不由 Controller补设计答案。
+input_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/human_brief.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/prior_course.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/experience_brief.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/designer/archive_calibration.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/results.json
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/report.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/proposed_families.md
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - src/prototypes/candle_sokoban/exposureAuditCli.ts
+  - src/cli.ts
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/designer/workbench
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/candidate
+exploration_request_root: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/requests
+required_outputs:
+  - 难度 5 的简短 reasoning_sketch，只在结构命题实质变化时更新。
+  - 一个完成自查后发布的不可变 exact version；发布前工作布局和中间 replay 不编号。
+  - 当前 exact 的 layout、all_braziers_lit solve instance、非空 canonical replay 全逐步状态与事件。
+  - 完整连续 replay 必须重新证明生产端到 B 后继操作位的路线、倒计时与对象状态，不得把分段 probe 当成作品事实。
+  - 当前 exact 的完整解族唯一性自查、bypass、作品身份反事实、对象参与和 exposure audit 原始 artifact。
+  - exposure audit 使用 allowed_exposure_through=roll_reignite_after_extinguish，graph complete、verdict pass、forbidden_hits 为空。
+  - 证明至少两根蜡烛双向参与；固定火盆替换、B 退休、A 不复燃或滚后消费删除等反事实必须破坏作品身份或胜解。
+  - 完整玩家侧 design reading 与 Designer submission packet；若存在非等价胜解、目标难度明显不成立或体验身份失败则继续工作而不发布。
+  - 不写 candidate_ledger、Critic packet/review、levels、playable_queue 或人类 handoff。

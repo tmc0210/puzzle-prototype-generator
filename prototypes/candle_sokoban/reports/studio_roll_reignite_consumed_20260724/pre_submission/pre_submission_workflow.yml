@@ -1,0 +1,97 @@
+design_task_id: candle_roll_reignite_consumed_20260724
+candidate_id: CANDLE_ROLL_REIGNITE_CONSUMED_001
+reviewed_exact_version: v1
+delivery_exact_version: v1
+workflow_results:
+  - workflow_id: strict_exposure_gate_recheck
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 当前唯一候选已通过 Critic，准备进入待玩列表；handoff 要求始终重跑。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    operations_performed:
+      - >-
+        npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts
+        candidate/versions/v1/layout.txt --id CANDLE_ROLL_REIGNITE_CONSUMED_001_V1
+        --exact-version v1 --allowed-exposure-through roll_reignite_after_extinguish
+        --max-states 300000 --out pre_submission/strict_exposure_gate_recheck.json
+      - 核对 exact_version、level id、layout_sha256 与 delivery v1 一致。
+      - 核对 graph.status=complete、verdict=pass、forbidden_hits=[]、raw graph 已保存。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_consumed_20260724/pre_submission/strict_exposure_gate_recheck.json
+    result_summary:
+      exact_version: v1
+      layout_sha256: ba56a810b8618dcf92e54d70e55aa1a03ee5bba7a194357f6d9f1c9c1d473169
+      sequence_sha256: 15a890d00f46cc79aadb6903b338159b2fb0957bef3153bbd4ac85e3eb0aade2
+      graph_status: complete
+      reachable_states: 2088
+      legal_transitions: 5734
+      verdict: pass
+      forbidden_hits: 0
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: design_handoff 明确规定该 workflow 为只读、version unchanged、review preserved。
+    status: completed
+
+  - workflow_id: runtime_conformance_recheck
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 当前唯一候选准备进入待玩列表；handoff 要求始终重跑。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    operations_performed:
+      - npm run check
+      - npm run candle:conformance
+      - 记录 unavailable 工具边界，不把它们伪报为已实现或失败。
+    artifact_refs:
+      - package.json#scripts.check
+      - package.json#scripts.candle:conformance
+      - prototypes/candle_sokoban/reports/evaluation.json
+    result_summary:
+      typescript_check: pass
+      implemented_conformance_checks: all_pass
+      conformance_command_status: warning_due_to_unavailable_capabilities
+      unavailable_capabilities:
+        - raw_sampler
+        - candidate_seed_factories
+        - curated_miner
+        - puzzlescript_exporter
+        - puzzlescript_checker
+      boundary: 这些缺口由权威合同标为 unavailable，不阻塞人工设计或 runtime-backed playable。
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: 只读构建与一致性检查，没有改变 layout、start、win 或核心机制用法。
+    status: completed
+
+  - workflow_id: playable_delivery_build
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: delivery v1 已写入 studio/levels.yml 并以唯一 entry 加入 playable_queue.yml。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    operations_performed:
+      - 写入唯一 studio source CANDLE_ROLL_REIGNITE_CONSUMED_001_V1。
+      - 加入唯一 source=studio、status=pending_playtest queue entry。
+      - npm run candle:playable:build
+      - 核对 playable/data.json 可解析该 source/id、正常胜利条件和 17 步 replay。
+      - npm run candle:playable:check-replays（由 build 串行执行）。
+    artifact_refs:
+      - prototypes/candle_sokoban/studio/levels.yml
+      - prototypes/candle_sokoban/playable_queue.yml
+      - prototypes/candle_sokoban/playable/data.json
+      - prototypes/candle_sokoban/playable/index.html
+    result_summary:
+      playable_build: pass
+      queue_source: studio
+      queue_level_id: CANDLE_ROLL_REIGNITE_CONSUMED_001_V1
+      queue_status: pending_playtest
+      resolved_playable_level_count: 1
+      expected_trace_steps: 17
+      replay_coverage: pass
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: 只把已审 v1 原样接入 delivery source/queue 并重建 playable，没有改变 exact。
+    status: completed
+overall_status: completed
+return_to_design_required: false

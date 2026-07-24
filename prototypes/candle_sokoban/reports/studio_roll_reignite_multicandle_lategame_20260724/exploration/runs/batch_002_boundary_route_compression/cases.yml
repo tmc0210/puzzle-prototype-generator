@@ -1,0 +1,87 @@
+runId: batch_002_boundary_route_compression
+title: "双蜡烛边界换侧连续路线"
+notes: "B 配置 / 必经换侧边界 / A 墙熄灭再由 B 复燃 / A 后实际玩家路线 / B 后继消费。"
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 30000
+  maxTransitions: 100000
+  win:
+    type: event_occurs
+    event: roll_reignite_after_extinguish
+cases:
+  - id: active_roll_then_boundary_core
+    family: boundary_route_compression
+    variant: active_boundary_shrink_position
+    changed_variable: "玩家沿 A 接触侧的五步必经接近路线触发边界，把 B 从四格缩为三格并把火焰退近一列"
+    contrast_with: [short_partner_continuous, short_partner_fixed_brazier]
+    notes: "从 B 的一次缩短后定位开始；玩家不等待，边界动作本身落在 A 的左侧接触格，下一输入直接触发核心滚动。"
+    layout: |
+      .............
+      ...1......#..
+      ...1.........
+      ...1.........
+      @..D#222R....
+      .............
+      .............
+    actions: [up, right, up, right, down, right, down, down, right, right, up]
+
+  - id: existing_geometry_continuous_x11
+    family: boundary_route_compression
+    variant: existing_geometry_with_real_route
+    changed_variable: "把 batch 001 的分段摆法合并为从 A 原接触格出发的连续输入，并允许途中自然燃烧边界"
+    contrast_with: short_partner_continuous
+    notes: "A 核心滚后从实际原位绕过 d1 墙齿，取得 B 左侧并继续推 / 换下侧；用于测量而非直接发布旧关系。"
+    layout: |
+      ..............
+      ..1.........#.
+      .@1...........
+      ..D...........
+      ...#.22R......
+      ..............
+    actions: [right, down, down, down, right, right, up, right, right, right, down, up]
+
+  - id: short_partner_continuous
+    family: boundary_route_compression
+    variant: length2_one_gap_continuous
+    changed_variable: "B 从三格改为两格并只在 d1 墙齿后留一个空格；A 的复燃后续步缩为一格"
+    contrast_with: [existing_geometry_continuous_x11, short_partner_fixed_brazier]
+    notes: "测量更短 producer-to-consumer 路线；边界前后分别记录 A/B 长度、火焰列与 B 操作侧。"
+    layout: |
+      .............
+      ...1......#..
+      ..@1.........
+      ...D.........
+      ....#.2R.....
+      .............
+    actions: [right, down, down, down, right, right, up, right, right, down, right, up]
+
+  - id: short_partner_terminal_plus_one
+    family: boundary_route_compression
+    variant: terminal_plus_one
+    changed_variable: "只把 A 终止墙右移一格"
+    contrast_with: short_partner_continuous
+    notes: "保持相同实际玩家路线，比较终点右移一格后 B 后继合法动作和遮芯事件。"
+    layout: |
+      ..............
+      ...1.......#..
+      ..@1..........
+      ...D..........
+      ....#.2R......
+      ..............
+    actions: [right, down, down, down, right, right, up, right, right, down, right, up]
+
+  - id: short_partner_fixed_brazier
+    family: boundary_route_compression
+    variant: fixed_fire_control
+    changed_variable: "用固定已点火盆替换 B 的复燃火焰"
+    contrast_with: short_partner_continuous
+    notes: "保留墙熄灭、复燃列和终止墙；检验固定火源是否还能保留后继移动对象。"
+    layout: |
+      .............
+      ...1......#..
+      ..@1.........
+      ...D.........
+      ....#..O.....
+      .............
+    actions: [right, down, down, down, right, right, up]

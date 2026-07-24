@@ -1,0 +1,93 @@
+schema_version: "sokoban.designer.reasoning_sketch.v1"
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001
+workbench_version: v0
+prototype_id: candle_sokoban
+difficulty_target: 5
+difficulty_minimum: 5
+status: exploratory_not_frozen
+
+experience_hypothesis:
+  central_sentence: >-
+    玩家必须让 B 在 A 第一次长滚中把已经被墙齿灭掉的 A 重新点燃，随后又把 B
+    推入 A 的火焰/实体双层边界，使 B 在跨燃烧横滚时被 A 剥火、由 A 代替它承受
+    缩短；只有继续保持燃烧的 A 再缩到两格，才穿得过旧止挡并点亮终点火盆。
+  player_construction:
+    - 第一次 A 长滚的正确时机决定它能否在越过墙齿后从 B 借火并继续保持点燃。
+    - 两次轴推把 B 的灯芯对到 A 的终端列；随后必须从 B 中段下方横滚上行，才能让灯芯先接触 A 火焰、再进入 A 实体而剥火。
+    - B 的横滚必须落在倒计时 1；该步里 B 先灭，故 B 避过本轮缩短，而 A 继续缩短。
+    - A 还必须带火跨过下一次燃烧，从三格变两格，才不被终点火盆的实体高度挡住。
+  player_visible_causal_chain:
+    - 墙齿先熄灭 A。
+    - A 的灯芯随后接触 B 的火焰，A 重新点燃，并仍向右多滚一格才停。
+    - B 的灯芯上滚时先碰 A 火焰，下一子步又进入 A 实体，B 熄灭。
+    - 同一动作跨燃烧：B 不缩，A 缩短。
+    - A 下一次燃烧后只剩两格，终于能从终点火盆下方穿过并点火。
+
+tentative_canonical_inputs:
+  sequence:
+    - right
+    - right
+    - right
+    - down
+    - right
+    - right
+    - down
+    - right
+    - right
+    - up
+    - up
+    - up
+    - up
+    - up
+    - right
+    - right
+    - right
+  phase_annotations:
+    - phase: A_long_roll_reignite
+      actions: [1]
+    - phase: B_axis_configuration
+      actions: [2, 3, 4, 5, 6]
+    - phase: B_boundary_roll_and_extinguish
+      actions: [7, 8, 9, 10]
+    - phase: A_final_shrink_and_goal_roll
+      actions: [11, 12, 13, 14, 15, 16, 17]
+
+difficulty_5_argument:
+  demanded_reasoning:
+    - 必须同时追踪 A、B 的朝向、灯芯端、长度、点燃状态和共享倒计时。
+    - A 第一次滚动同时包含墙齿灭火、B 借火和借火后续滚三个阶段，不能只按终点推理。
+    - B 的上滚入口不是灯芯端，玩家要反推中段接触点、上滚各子步与 A 火焰/实体的先后关系。
+    - B 是否在燃烧边界前灭火会反转两根蜡烛的后续长度关系，并决定 A 能否越过终点火盆。
+    - 单看局部事件都不足以得解，必须把连续路线与倒计时一起排到第 17 步。
+  current_risks:
+    - 开局 A 的正确长滚入口可能过于直白，若解族显示几乎强制，则达不到难度 5。
+    - 目前地形开放，可能存在等待、提前移动 A、绕过 B 剥火或让 A 在别处缩短的旁路。
+    - B 配置只有两次同向轴推，若没有可信替代计划，构造感可能不足。
+    - 终局转场虽承担一次必要燃烧，但仍需玩家侧重读确认不是路线税。
+  acceptance_rule: >-
+    只有在完整求解、连续精确回放、解族/旁路检查、对象参与反事实和玩家侧重读都支持
+    难度至少 5 后，才允许冻结 immutable exact version；v0 不构成送审候选。
+
+identity_counterfactuals_to_test:
+  - id: replace_B_with_lit_brazier
+    expected: A 可借火但失去 B 后续剥火与责任交接，作品身份应实质改变或不可解。
+  - id: leave_B_unlit_before_A_roll
+    expected: A 不能重燃，不能继续缩短到终局高度，应不可解。
+  - id: omit_B_boundary_extinguish
+    expected: 若 B 不在燃烧步灭火，B 与 A 同时缩短，后续职责关系和解应失败或实质改变。
+  - id: remove_post_consumer
+    expected: 删除终局火盆或让 A 无需缩到两格即可点火，会使重燃后的持续燃烧失去消费，身份应失败。
+  - id: replace_A_with_brazier
+    expected: B 可能仍可被点火，但不存在 A 的终端实体剥火和终局长度门，应不可视为同一作品。
+
+self_check_boundary:
+  exact_version_published: false
+  all_braziers_proven: false
+  continuous_route_and_timer_proven: false
+  solution_family_checked: false
+  bypass_checked: false
+  identity_counterfactuals_checked: false
+  object_participation_checked: false
+  exposure_audit_complete: false
+  player_side_read_complete: false
+  designer_submission_published: false

@@ -1,0 +1,77 @@
+request_id: designer_request_003
+exploration_id: candle_reignite_multicandle_task_local_20260724
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+
+design_space: >-
+  探索一个“consumer 动作自身完成换手”的紧凑双蜡烛窗口。玩家先主动配置伙伴蜡烛 B，
+  随后核心蜡烛 A 在一次多格侧滚中先被墙遮芯熄灭、再由 B 的外露火焰复燃，并在复燃后
+  至少继续一个小步。A 动作后的实际玩家路线直接接入 B 的一次侧滚或轴推；该 B 动作本身
+  发生在共享燃烧边界，并在动作中先熄灭 B，再由 A 的具体终态决定 B 是否复燃、避燃、
+  点盆或保留下一项必要操作。不要把 producer 与 consumer 分成两个需再次绕侧的 probe。
+
+material_gap: >-
+  batch_002 已证明当前竖 A／横 B family 中，压缩长度或只移动 A 终止墙不能修复连续换手：
+  玩家到 B 操作侧之前对象已缩短或燃尽，最早的 B 操作也不接触 A。Designer 的旋转局部 probe
+  又表明，只把朝向旋转时，A 与供火 B 的身体仍会被共享火焰列天然分隔，缺少一次新的对象变换。
+  尚缺 runtime-backed 的短窗材料来判断：能否让首次 B consumer 输入自身建立接触、熄灭与边界分流，
+  从而避免第二次换侧和长蜡烛计时尺。
+
+local_objects:
+  - 已燃、长度二至四格的核心蜡烛 A；核心侧滚必须包含墙熄灭、由 B 复燃、复燃后继续。
+  - 可移动伙伴蜡烛 B；核心前由玩家主动改变其位置、投影、长度或相位，核心后仍承担 consumer 与末段责任。
+  - 只为一次遮芯、一次短止挡、一个局部火源或一个火盆消费所需的最少静态对象。
+
+local_boundaries:
+  - 从 B 配置到 A 核心滚动、再到首次 B consumer，必须使用同一 layout 与同一连续 replay。
+  - 从 A 核心后的实际玩家原位到 B consumer，优先至多四个输入；consumer 输入可以是第一个边界动作。
+  - B consumer 输入内部必须出现可定位的熄灭、复燃、点盆、实体阻挡或边界避燃差异，不能只在动作后站到 A 附近。
+  - consumer 后 B 至少保留一次决定火盆、长度、复燃或合法性的责任；固定火源替换不得保留完整责任链。
+  - 不使用长于四格的蜡烛、三次以上同向轴推、空地往返或等待闭环制造相位。
+
+standing_positions:
+  - 记录 B 配置前后玩家格、A 核心接触格、核心后的玩家原位，以及最短 B consumer 输入。
+  - 逐输入标明倒计时，尤其区分边界发生在 consumer 动作开始前、滚动子步中还是动作末结算。
+  - 若 consumer 同时改变 B 的操作侧，记录动作前后可达侧，不允许把玩家瞬移到下一侧。
+
+post_action_state:
+  - B 的配置必须决定 A 的有效复燃小步或复燃后终点，不能由固定初始摆法自动给出全部答案。
+  - A 的滚后身体、火焰、长度或占格必须在首次 B consumer 中被实际读取。
+  - 优先观察 B 在同一次动作中“先被墙或 A 身体遮芯、后由 A 终态火焰复燃、再点盆”，
+    或“先熄灭并在边界避燃，使 A 的缩短/烧尽开放 B 的下一项必要动作”的压缩关系。
+  - 反向关系必须改变对象状态或后继合法性；单纯少走一格不算消费。
+
+sampling_axes:
+  - 水平 A／竖直 B、水平 A／水平 B，以及它们的镜像；不再采当前 batch_002 的同朝向长度补丁。
+  - consumer 类型：一次侧滚、一次轴推后立即结算，或两输入以内的轴推加侧滚；比较是否需要第二操作侧。
+  - consumer 前 B 的明灭与倒计时一格差：动作中先灭后避燃、先灭后由 A 复燃、复燃后再点盆。
+  - A 终态一格差与长度差；只保留能改变 B 接触顺序、明灭、合法性或燃烧参与的对照。
+  - 用固定已点火盆替换 A 终态火焰、用固定已点火盆替换 B producer 火焰，以及移除 A 终态身体的身份对照。
+
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_001_partner_window_handle_strip/proposed_families.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_002_boundary_route_compression/batch.yml
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_lategame_20260724/exploration/runs/batch_002_boundary_route_compression/proposed_families.md
+
+do_not_repeat:
+  - 继续给 batch_002 的当前朝向增加长度、终止墙距离或换侧走廊。
+  - 只复现 A 的墙熄灭与 B 回焰，却没有同一连续 replay 中的 B consumer。
+  - consumer 首次操作没有 A/B 接触事件，只凭动作计数声称已经反向消费。
+  - 用固定火盆保留相同 producer 与 terminal consumer，令伙伴对象可以被完整替换。
+  - 用长蜡烛、长通道、重复推动或无对象变化的走位承担当量计时。
+
+materialization_target: >-
+  发布极小的 runtime-backed 连续局面卡。每张正向卡从 B 的主动配置开始，包含 A 核心动作、
+  核心后玩家原位到首次 B consumer 的完整输入、consumer 子步事件、边界结算、consumer 后 B 的
+  一项必要责任，以及固定火源或 A 终态一格差对照。若所有短窗轴均不成立，发布结构化负结果，
+  明确是操作侧、对象分隔、熄灭顺序还是边界结算导致失败；不制作完整候选或评价难度。
+
+request_boundary:
+  candidate_coordinates: forbidden
+  complete_layout: forbidden
+  packaging: forbidden
+  difficulty_tradeoff: forbidden
+  candidate_family_choice: forbidden

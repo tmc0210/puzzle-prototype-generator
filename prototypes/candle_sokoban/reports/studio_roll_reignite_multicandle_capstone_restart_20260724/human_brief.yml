@@ -1,0 +1,62 @@
+design_task_id: candle_roll_reignite_multicandle_capstone_restart_20260724
+task_type: prototype_specific_single_level_design
+prototype_id: candle_sokoban
+source:
+  kind: human_message
+  recorded_at: 2026-07-24
+  relation_to_prior_task: fresh_designer_restart_after_pre_exact_withdrawal
+
+human_request:
+  target_difficulty: 5
+  minimum_acceptable_difficulty: 5
+  introduced_mechanism: roll_reignite_after_extinguish
+  allowed_exposure_through: roll_reignite_after_extinguish
+  player_prior:
+    - 玩家已掌握 roll_intermediate_extinguish 及之前的全部机制及衍生技巧和计算。
+    - 玩家已试玩“回焰门”，认为关卡不差但不够难。
+  preserved_experience_seed: >-
+    玩家必须规划一次多格滚动，使同一根蜡烛在滚动途中先被墙熄灭、再从已知火源重新点燃，
+    并在滚动结束后继续消费这个结果才能获胜。熄灭可以是直接滚动会遇到的阻碍，玩家必须让它在
+    同一次滚动中复燃；不能只是自动 witness 或一次性动画。
+  new_creative_goal: >-
+    探索 candle_sokoban 后期难度与解法精彩程度的上限；尽可能多地有效使用当前可用机制，
+    并让多根蜡烛发生不可拆分的互相作用。
+
+hard_design_requirements:
+  candle_count_minimum: 2
+  multicandle_interaction: >-
+    至少两根蜡烛必须处于同一因果链。另一根不能只是额外火源、独立目标处理器或旁观道具；
+    它的长度、位置、明灭、烛芯投影、身体占格或操作顺序必须改变核心蜡烛的滚动、复燃、停止、
+    计时或后继消费，核心蜡烛的结果也必须反过来改变至少一根其它蜡烛的后继用途。
+  core_roll:
+    same_candle: true
+    multi_cell_one_turn: true
+    first_extinguished_by_wall: true
+    then_reignited_from_known_fire_source: true
+    occurs_within_same_roll: true
+  post_roll_consumption: >-
+    复燃后的明火、位置、长度、朝向、倒计时相位或腾出的操作位必须在滚动结束后继续被玩家使用；
+    删掉这次复燃时，原胜解必须失败或实质改变。
+  effective_mechanism_use: >-
+    机制以玩家决策和因果职责为准，不以事件标签数量为准。优先把烛芯互点、烛身遮芯熄灭、
+    同时燃烧、周期缩短、周期中点燃、明火危险、边界避烧/参与燃烧与滚动中事件接成同一结构；
+    只有移除机制或对象会改变合法计划、顺序判断、身份职责或胜解时，才算有效使用。
+
+quality_bar:
+  desired_player_experience:
+    - 初看有多种可信计划，玩家需要同时追踪几何、火源、长度和倒计时相位。
+    - 核心滚动是此前准备的结算点，但滚动后仍有反向约束，解释早先的火源和对象摆位。
+    - 精彩性来自反直觉关系、对象复用和紧凑因果链，不来自路线税。
+    - 每根高 affordance 蜡烛在终局前后持续承担职责，不能开场用完即退休。
+  anti_goals:
+    - 不串联多个独立子谜题制造机制覆盖或步数。
+    - 不用更多对象、目标、长走路、重复搬运或迟缓 deadend 伪造难度。
+    - 不让另一根蜡烛固定提供一次火源后永不再用。
+    - 不以 solver 指标、事件覆盖或唯一 witness 取代玩家侧判断。
+
+delivery_request:
+  unique_candidate: true
+  complete_hard_evidence: true
+  independent_evidence_reviewer: true
+  independent_critic: true
+  final_status: pending_playtest

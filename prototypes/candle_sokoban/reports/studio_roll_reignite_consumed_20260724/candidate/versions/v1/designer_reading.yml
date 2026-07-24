@@ -1,0 +1,74 @@
+design_task_id: candle_roll_reignite_consumed_20260724
+candidate_id: CANDLE_ROLL_REIGNITE_CONSUMED_001
+exact_version: v1
+
+player_side_reading:
+  opening: >-
+    玩家同时看到三格左烛芯 candle、左侧墙—既燃火盆—未燃火盆纵列、右移一列的下方火盆与
+    遮芯墙，以及最上方末目标。开局第一推只是把刚体放到两列关系的共同起点；若少推、过推或
+    从错误 body 列触发，首次轨迹与缩短后轨迹不能同时成立。
+  preparation: >-
+    玩家要在五拍边界前从 candle 上方触发第一次向下滚动。接触右体格时滚后下一步缩短，接触
+    中体格时滚动行动本身触发缩短；两者只是在同一因果解里的站位/时序等价变体。提前让 candle
+    缩短会把烛芯改到右列，无法点亮左列独占目标。
+  core_reveal: >-
+    第一次滚动的 d1 左烛芯被墙遮住并熄灭，d2 在玩家开局即可确认的既燃火盆上复燃，d3 点亮
+    左列目标，d4 停在门位。随后的燃烧边界删去左端 body，原实体门格成为新烛芯的致命退焰格。
+  consumer: >-
+    三格 body 被下方火盆止住；缩成两格后，玩家才可从上方让它继续向下。新烛芯在 d1 点亮该
+    火盆，在 d2 被更低墙遮住而熄灭；核心 candle 因此既离开旧门位又停止燃烧。玩家实际踏过
+    坐标 (2,6) 的旧退焰门，沿左侧绕到 candle 下方，证明 consumer 不是事件后的口头叙述。
+  ending: >-
+    最后一次向上滚动在 d1 借刚点亮的 (2,7) 火盆复燃，沿已经走过的竖直空间返回，并在顶部
+    点亮最后火盆后立即以 all_braziers_lit 获胜；没有高潮后的清理动作。
+
+difficulty_reading:
+  expected: 4
+  counted_reasoning:
+    - 从顶部末目标和底部操作侧反推两格 candle 的回程烛芯列。
+    - 从下方火盆兼具三格止挡、两格点盆和回程火源三重责任，反推首次终点必须保持点燃并缩短。
+    - 在同一计划中结合轴向对齐、不可中断滚动的墙熄—复燃顺序、正确接触列与五拍边界。
+    - 预见第二滚动必须主动熄灭 candle，才能在绕行期间保存两格形状并从下方复燃回程。
+  not_counted_as_difficulty:
+    - 开局第一步的显然轴推。
+    - 穿门后的单格走位执行。
+    - 玩家已掌握的墙熄、滚动、缩短和火盆点火规则本身。
+  calibration_boundary: >-
+    当前 Candle 阶段没有 clean human-reviewed difficulty archive；难度 4 是 Designer 基于玩家先验与
+    实际完整作品的阶段内判断，不借用 Reality Anchor 的结构化难度分，也不由图统计代替。
+
+major_element_responsibility:
+  - element: core candle#1
+    responsibility: 唯一承担轴推对齐、首次同滚动墙熄—复燃、缩短、清门、保存形状与回程点终盆。
+  - element: wall (1,3)
+    responsibility: 首次滚动 d1 遮芯熄灭；删除后全部胜解不再包含同滚动复燃。
+  - element: initially lit brazier (1,4)
+    responsibility: 玩家预先可知的首次复燃火源；改为未燃后完整图无胜态。
+  - element: brazier (1,5)
+    responsibility: 只可由首次三格 candle 的左烛芯轨迹点亮；删除后完整图出现不经首次复燃的胜解。
+  - element: brazier (2,7)
+    responsibility: 同时阻挡三格 candle、允许两格 candle 通过时点亮，并作为最终回程 d1 火源。
+  - element: wall (2,8)
+    responsibility: 第二滚动遮芯熄灭，阻止 candle 在玩家绕行期间继续缩短或燃尽。
+  - element: wall (4,9)
+    responsibility: 固定第二滚动终点，同时保留 (3,9) 作为下方操作位。
+  - element: brazier (2,1)
+    responsibility: 强制玩家穿门取得下方操作侧并完成向上回程；删除后第 8 步即提前胜利。
+  - element: corridor walls
+    responsibility: 让旧退焰门 (2,6) 成为通往下方操作侧的唯一通道，并保持两列关系可读。
+
+solution_family_reading:
+  result: equivalent_variants_only
+  logical_family_count: 1
+  raw_shortest_input_count: 6
+  equivalence: >-
+    六条最短输入只把玩家从 x=4 左移到 x=3 的一次走位，交换到首次滚动之后、缩短之后或第二次
+    滚动前后；它们使用同一 candle、相同三次滚动、相同目标分配、相同门位与相同依赖顺序。
+    完整产品图的 5 个首次胜利 product states 也只有一个里程碑签名。
+  non_equivalent_winning_family_found: false
+
+known_perceptible_defects:
+  - none_identified
+evidence_limits:
+  - 玩家侧判断与难度判断仍需独立 Puzzle Critic；完整图和 Designer 自评不能证明审美质量。
+  - task-local 产品图把回环与同一 product state 合流；原始输入差异的等价判断由上述对象与因果责任说明。

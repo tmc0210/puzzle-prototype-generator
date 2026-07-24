@@ -1,0 +1,19 @@
+schema_version: "sokoban.designer.player_side_note.v1"
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_001
+from_version: v5
+mechanical_status:
+  solvable: true
+  shortest_cost: 21
+  reachable_states: 150996
+  winning_states: 7
+  graph_complete: true
+  canonical_core_events_present: true
+player_side_disposition: rejected_too_scripted
+reason: >-
+  v5 的机械依赖已经成立，但起点三面封闭，A 首滚被物理强制；此后到 B 的边界横滚为止，
+  图分析给出连续 10 个 forced viable / forced optimal commitment。玩家不会在可信方案之间
+  构造窗口，只会顺着单通路重放机制见证，因此不满足目标难度 5。
+transformation: >-
+  v6 打开起始左侧、上侧和 A 左侧纵向通路，使玩家可先读 A、先接近 B、或改变相位；
+  保留墙齿、B 提供火源、A 终端列、B 下层止挡与双火盆消费关系，再由全图搜索判断
+  新自由度是有效计划还是实质旁路。

@@ -1,0 +1,144 @@
+runId: batch_003
+title: "滚中无火窗口保留未点火盆，复燃核心在滚后点亮截停烛并共同燃尽"
+notes: >-
+  连续输入 down,left,down,down,down,down,down,down,right,right,up。第一步让二格横向核心向下滚四格：
+  d1 墙遮芯熄灭，d2 无火越过未点火盆，d3 从已点火盆复燃，d4 由未明朝上单烛身体截停并覆盖其烛芯。
+  玩家走最短安全路线；第一次燃烧边界令核心从覆盖端缩短，以退焰点亮接收烛；随后绕到接收烛下方，
+  第二次燃烧边界让两根单烛共同燃尽，再立即上移进入接收烛腾出的格。
+defaults:
+  maxExploreDepth: 12
+  maxReturnDepth: 18
+  maxStates: 50000
+  maxTransitions: 200000
+cases:
+  - id: midwindow_memory_burnout_passage_positive
+    family: roll_dark_window_persistent_memory
+    variant: positive_dark_window_reignite_receiver_burnout_then_enter
+    changed_variable: base_positive
+    contrast_with:
+      - no_reignite_objects_persist
+      - always_lit_lights_memory
+      - static_wall_no_receiver
+      - receiver_prelit_converges_after_cover
+      - stop_before_first_boundary_consume
+    notes: >-
+      d1 墙灭核心；d2 核心未明，因此 (4,4) 火盆保持未点；d3 (4,5) 已点火盆复燃核心；
+      d4 核心右端身体覆盖 (3,7) 未明朝上单烛的烛芯，该单烛身体阻止 d5。
+      第一次边界核心缩为单格并 shrink_ignite 接收烛；第二次边界两根单烛共同燃尽；最后 up 走入腾空格。
+    layout: |
+      ##########
+      #.@......#
+      #.1R.....#
+      #...#....#
+      #...o....#
+      #...O....#
+      #........#
+      #..u.....#
+      #........#
+      ##########
+    actions: [down, left, down, down, down, down, down, down, right, right, up]
+
+  - id: no_reignite_objects_persist
+    family: roll_dark_window_persistent_memory
+    variant: remove_d3_source_core_long_and_receiver_persist
+    changed_variable: d3_source_lit_to_unlit
+    contrast_with: midwindow_memory_burnout_passage_positive
+    notes: >-
+      把 d3 火源由 O 改为 o。核心 d1 熄灭后不复燃，第一次边界不缩短也不点亮接收烛；
+      第二次边界仍不燃烧。最终 up 接触仍在 (3,7) 的未明单烛；它向上轴推会撞上仍在 (3,6) 的长核心，因而非法。
+    layout: |
+      ##########
+      #.@......#
+      #.1R.....#
+      #...#....#
+      #...o....#
+      #...o....#
+      #........#
+      #..u.....#
+      #........#
+      ##########
+    actions: [down, left, down, down, down, down, down, down, right, right, up]
+
+  - id: always_lit_lights_memory
+    family: roll_dark_window_persistent_memory
+    variant: remove_d1_wall_core_lights_d2_memory_brazier
+    changed_variable: remove_d1_wick_concealer
+    contrast_with: midwindow_memory_burnout_passage_positive
+    notes: >-
+      删除 d1 遮芯墙。核心全程点燃，在 d2 实际点亮 (4,4) 火盆；其余滚动和滚后消费与正例相同，
+      但中途火盆在滚动终点、两次边界和最终进格后均保持已点，正例则保持未点。
+    layout: |
+      ##########
+      #.@......#
+      #.1R.....#
+      #........#
+      #...o....#
+      #...O....#
+      #........#
+      #..u.....#
+      #........#
+      ##########
+    actions: [down, left, down, down, down, down, down, down, right, right, up]
+
+  - id: static_wall_no_receiver
+    family: roll_dark_window_persistent_memory
+    variant: replace_receiver_candle_body_with_wall_stop
+    changed_variable: receiver_candle_to_static_wall
+    contrast_with: midwindow_memory_burnout_passage_positive
+    notes: >-
+      用 (3,7) 墙替换接收烛，仍阻止核心 d5；核心保留墙灭后复燃与两次边界燃尽，
+      但没有第二根蜡烛在第一次边界受火、在第二次边界燃尽，最终 up 被墙阻挡。
+    layout: |
+      ##########
+      #.@......#
+      #.1R.....#
+      #...#....#
+      #...o....#
+      #...O....#
+      #........#
+      #..#.....#
+      #........#
+      ##########
+    actions: [down, left, down, down, down, down, down, down, right, right, up]
+
+  - id: receiver_prelit_converges_after_cover
+    family: roll_dark_window_persistent_memory
+    variant: receiver_starts_lit_is_covered_then_reignited
+    changed_variable: receiver_initial_unlit_to_lit
+    contrast_with: midwindow_memory_burnout_passage_positive
+    notes: >-
+      接收烛初始已明。d4 核心右端身体先实际熄灭它；第一次边界仍从核心退焰复燃，
+      第二次边界与核心共同燃尽。用于区分后段接收与初始明灭，把初始点燃视为可删除条件。
+    layout: |
+      ##########
+      #.@......#
+      #.1R.....#
+      #...#....#
+      #...o....#
+      #...O....#
+      #........#
+      #..U.....#
+      #........#
+      ##########
+    actions: [down, left, down, down, down, down, down, down, right, right, up]
+
+  - id: stop_before_first_boundary_consume
+    family: roll_dark_window_persistent_memory
+    variant: positive_roll_then_stop_at_countdown_one
+    changed_variable: delete_both_boundary_consumption_segments
+    contrast_with: midwindow_memory_burnout_passage_positive
+    notes: >-
+      保留正例滚动并沿最短路线走到第一次边界动作前，停在倒计时 1；核心仍是明二格，
+      接收烛仍未明且烛芯被覆盖，证明下一步 down 的边界缩芯承担滚后点亮，后段第二边界承担共同燃尽。
+    layout: |
+      ##########
+      #.@......#
+      #.1R.....#
+      #...#....#
+      #...o....#
+      #...O....#
+      #........#
+      #..u.....#
+      #........#
+      ##########
+    actions: [down, left, down, down]

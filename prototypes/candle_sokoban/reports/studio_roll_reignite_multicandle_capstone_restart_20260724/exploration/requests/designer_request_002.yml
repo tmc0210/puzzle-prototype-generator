@@ -1,0 +1,55 @@
+request_id: designer_request_002
+exploration_id: candle_roll_reignite_multicandle_capstone_restart_20260724
+design_space: >-
+  展开“同次滚动墙熄灭后复燃”之后的连续局部消费关系。开始局面需允许一根多格核心蜡烛完成距离大于一格的侧滚，
+  在中间小步先因墙遮芯熄灭、再从玩家预先可辨认的火源复燃；至少另一根蜡烛以自身长度、位置、明灭、烛芯投影、
+  身体占格、操作侧或行动顺序改变核心滚动的可触发性、复燃窗口、终点、相位或滚后状态。核心滚动结束后，
+  必须继续执行至少一个涉及这些蜡烛的合法非空动作，使核心滚烛复燃后留下的明火、身体、长度、朝向、相位或空位
+  实际改变另一根蜡烛的可推、可滚、可点燃、可熄灭、可避烧、可参与燃烧、可点盆或可作为火路的局部用途；
+  另一根蜡烛此前对核心滚动的作用与这一后继用途必须在同一连续因果链中。可以取用、变形或不采用 TL-MC-001，
+  但探索对象始终是局部连续关系，不是完整候选、关卡包装、目标难度或 family 取舍。
+sampling_axes:
+  - >-
+    滚后被消费的具体状态：核心滚烛的明火/烛芯投影、身体占格或腾空格、燃烧后长度、朝向、倒计时相位；
+    只区分会让另一根蜡烛下一合法用途发生变化的输出。
+  - >-
+    其它蜡烛的连续后继用途：由遮芯变为外露、由未明变为复燃、被允许或禁止轴推/侧滚、在燃烧边界避烧或参与、
+    以保留或改变的长度/占格继续供火、截停、开路或点盆；不预先指定哪一种用途必须成立。
+  - >-
+    双向责任载体：其它蜡烛在核心滚动前通过身体、烛芯、长度、位置、操作侧或相位改变核心，
+    核心滚烛在滚动后通过不同或相同载体反向改变其它蜡烛；比较单向退化与真正连续双向关系。
+  - >-
+    复燃来源：已点火盆、其它蜡烛的外露明烛芯或递归火链；若其它蜡烛参与供火，仍需承担供火以外的滚前职责并接收滚后影响。
+  - >-
+    倒计时位置：普通中途复燃与燃烧边界上的复燃/熄灭，比较边界参与、边界避烧、同时燃烧、长度变化或燃尽
+    是否产生可被下一动作消费的不同局面；不把额外事件本身视为新材料。
+  - >-
+    玩家站位与操作连续性：核心滚动结束后，玩家是否能以局部紧凑路线到达必要操作侧；
+    区分结构性换侧与纯走路等待，不用长路线或空转倒计时制造接法。
+  - >-
+    形态谱：核心与其它蜡烛的长度类别、相对轴向、烛芯朝向、墙口、火源接触面和动作后空位；
+    不固定绝对坐标、完整几何、对象总数上限或候选 structure family。
+  - >-
+    连续反事实：删除核心复燃、让核心始终点燃、把其它蜡烛换成墙/火盆、预先满足其它蜡烛的滚后状态、
+    或删除后继动作时，验证原局部动作序列和对象用途怎样失败或实质改变。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/exploration/runs/batch_001/results.json
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+do_not_repeat:
+  - 只回放一次核心滚动并把动作后的静态明灭差异称为“后继用途”。
+  - 动作后 action table 只有普通 walk，未实际执行另一根蜡烛或核心滚烛的连续消费动作。
+  - 另一根蜡烛只负责静态截停或一次供火，核心滚烛结果不改变其后续合法用途。
+  - 后继动作即使删除复燃或把核心始终点燃也完全不变，因而只消费终点几何而未消费复燃结果。
+  - 把核心滚动 witness 与另一个独立点盆、搬烛或计时段拼接，或用长走路/空转补足倒计时。
+  - 仅采样普通镜像、平移、滚距或重复次数变化，以及任何完整候选、难度、审美、对象上限或 family 结论。
+materialization_target: >-
+  每张正向材料必须提供一个可运行开始局面和连续非空输入串，至少包含核心滚动与其后的实际消费动作；
+  逐步保存每个动作前后 layout、滚动各小步事件、倒计时、蜡烛长度/明灭/烛芯投影、玩家站位和合法性。
+  明确写出其它蜡烛如何在滚前改变核心，以及核心复燃输出如何在滚后改变该蜡烛的具体合法用途；
+  同时提供删除复燃、静态对象替换、预先满足滚后状态和删除后继动作等近邻对照及原始 runtime evidence。
+  只发布具有新连续操作关系的局部卡片，不制作完整关卡。

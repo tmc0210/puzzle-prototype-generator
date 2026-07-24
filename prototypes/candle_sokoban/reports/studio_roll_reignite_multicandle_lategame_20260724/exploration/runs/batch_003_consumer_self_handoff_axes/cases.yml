@@ -1,0 +1,146 @@
+runId: batch_003_consumer_self_handoff_axes
+title: "consumer 动作自身完成换手的短窗结构轴"
+notes: >-
+  所有连续 case 都先用第 5 个合法走步触发共享边界，把 A/B 从三格缩成两格并把 B 火焰投影配置到 A 的核心扫掠线；
+  下一输入滚动 A，随后从 A 的实际原位在四输入内触发 B consumer。对照只改变 A 终点一格、B 朝向或固定火源身份。
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 18
+  maxStates: 12000
+  maxTransitions: 48000
+cases:
+  - id: parallel_terminal_d3
+    family: consumer_self_handoff_short_window
+    variant: horizontal_partner_terminal_row6
+    changed_variable: "水平 B 的 consumer 先在 d1 经过 A 终态火焰，再在 d2 被墙遮芯"
+    contrast_with: parallel_terminal_d4
+    notes: >-
+      玩家五步到 A 上侧的最后一步触发边界，A/B 同时由三格缩成两格；A 向下滚时 d1 被墙熄灭、d2 由 B 复燃、d3 继续并停在 y6。
+      三个走步后第 4 输入从 B 上侧向下滚，consumer 是边界动作。
+    layout: |
+      #############
+      #...........#
+      #@..........#
+      #....11R....#
+      #......#....#
+      #......L22..#
+      #...........#
+      #....#.#....#
+      #...........#
+      #........#o.#
+      #...........#
+      #############
+    actions: [right, right, right, right, right, down, right, right, down, down]
+
+  - id: parallel_terminal_d4
+    family: consumer_self_handoff_short_window
+    variant: horizontal_partner_terminal_row7
+    changed_variable: "A 终点与 consumer 遮芯墙各下移一格，A 火焰接触由 B d1 改为 d2"
+    contrast_with: parallel_terminal_d3
+    notes: >-
+      生产与玩家路线保持一致；A 在 B 复燃后多继续一格停在 y7。B consumer 先经过空的 y6，再在 d2 经过 A 火焰，d3 才进入遮芯墙。
+    layout: |
+      #############
+      #...........#
+      #@..........#
+      #....11R....#
+      #......#....#
+      #......L22..#
+      #...........#
+      #...........#
+      #....#.#....#
+      #...........#
+      #........#o.#
+      #...........#
+      #############
+    actions: [right, right, right, right, right, down, right, right, down, down]
+
+  - id: perpendicular_terminal_d5
+    family: consumer_self_handoff_short_window
+    variant: vertical_partner_terminal_row7
+    changed_variable: "把 B 旋转为竖直；consumer 第一小步的烛芯沿横向进入侧墙"
+    contrast_with: perpendicular_terminal_d6
+    notes: >-
+      第 5 个走步把竖直 B 从三格缩成两格；A 向下滚时先过墙、再过 B 身体、由 B 下端火焰复燃并继续到 y7。
+      A 原位到 B 左侧是三步，第四输入向右滚 B 并触发边界。
+    layout: |
+      #############
+      #...........#
+      #@...11R....#
+      #......#....#
+      #......2..#.#
+      #......2....#
+      #......D#...#
+      #...........#
+      #....#......#
+      #.........o.#
+      #...........#
+      #############
+    actions: [up, right, right, right, right, down, right, down, down, right]
+
+  - id: perpendicular_terminal_d6
+    family: consumer_self_handoff_short_window
+    variant: vertical_partner_terminal_row8
+    changed_variable: "只把 A 的滚动终点下移一格；B consumer 的侧墙与路线不变"
+    contrast_with: perpendicular_terminal_d5
+    notes: >-
+      A 由 B 火焰复燃后再多走一格；B consumer 仍在第 1 小步被 x8,y6 的墙遮芯，用于检查 A 终点一格差是否进入该动作。
+    layout: |
+      #############
+      #...........#
+      #@...11R....#
+      #......#....#
+      #......2..#.#
+      #......2....#
+      #......D#...#
+      #...........#
+      #...........#
+      #....#....o.#
+      #...........#
+      #############
+    actions: [up, right, right, right, right, down, right, down, down, right]
+
+  - id: perpendicular_axis_push_side_lock
+    family: consumer_self_handoff_short_window
+    variant: vertical_partner_axis_push_operation_sides
+    changed_variable: "把首次 B consumer 从侧滚改为沿轴向下推；上侧操作格与核心遮芯墙重合"
+    contrast_with: perpendicular_terminal_d5
+    notes: >-
+      生产端与 perpendicular_terminal_d5 完全一致。A 核心后玩家尝试在四输入内取得 B 上端轴推位；
+      该位置的下一格正是 A d1 所需墙，动作序列在进入操作位前以 destination_blocked 停止。B 下端另一侧则是其外露火焰格。
+    layout: |
+      #############
+      #...........#
+      #@...11R....#
+      #......#....#
+      #......2..#.#
+      #......2....#
+      #......D#...#
+      #...........#
+      #....#......#
+      #.........o.#
+      #...........#
+      #############
+    actions: [up, right, right, right, right, down, right, right, down, down]
+
+  - id: fixed_brazier_producer_control
+    family: consumer_self_handoff_short_window
+    variant: fixed_fire_without_partner_consumer
+    changed_variable: "用固定已点火盆替换水平 B 的 producer 火焰与可移动对象"
+    contrast_with: parallel_terminal_d3
+    notes: >-
+      保留 A 在同一行的复燃位置与终止墙，但删除 B；相同后半输入只能走入空格，不能产生伙伴 consumer。
+    layout: |
+      #############
+      #...........#
+      #@..........#
+      #....11R....#
+      #......#....#
+      #......O....#
+      #...........#
+      #....#......#
+      #...........#
+      #.........o.#
+      #...........#
+      #############
+    actions: [right, right, right, right, right, down, right, right, down, down]
