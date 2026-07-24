@@ -6,6 +6,14 @@
 
 轮次是唯一并发单位。轮次控制器先固定整轮输入和允许写入范围，再启动本轮全部子 Agent；启动后不得追加 assignment，也不得因为某个 Agent 提前完成而启动下一轮。
 
+任务初始化时，轮次控制器必须把 task root 固定为：
+
+```text
+reports/single-controller-level-design/<prototype-id>/<task-id>/
+```
+
+并运行 `git check-ignore` 确认该路径被现有规则忽略。检查失败时任务保持 `briefing`，不得退回到 `prototypes/<prototype-id>/reports/` 或其它可被 Git 跟踪的临时路径。
+
 ```text
 round_open
   -> assignments_frozen
@@ -112,12 +120,14 @@ Evidence Reviewer 不补跑证据，证据不足必须保留为 `unknown`。
 
 提交前检查全部完成后：
 
-1. 启动一个 fresh Delivery Operator，接入唯一 delivery version、更新 queue 并执行原型指定构建。
+1. 启动一个 fresh Delivery Operator；它从忽略的 task root 读取唯一 delivery version，只向当前原型 authority 指定的最终 `levels.yml`、`studio/levels.yml`、`playable_queue.yml`、playable 数据或构建目标写入。
 2. 该轮收口后，下一轮启动不同实例的 fresh Delivery Verifier。
 3. Verifier 只读核验 source/id、queue entry、playable build、版本引用和证据新鲜度。
 4. 通过后，轮次控制器登记 `pending_playtest` 并生成人类交接。
 
 Delivery Verifier 失败时不得由轮次控制器直接修复。根据失败类型返回提交前 workflow 或重新启动 fresh Delivery Operator。
+
+人类交接、delivery record、构建日志和 verification 仍保存在忽略的 task root；它们不是最终关卡数据，不得复制进原型目录。交付完成后，提交 Git 时必须使用 authority 目标白名单，且不得使用 `git add -f`。
 
 ## 决策规则
 

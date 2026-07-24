@@ -4,7 +4,19 @@
 
 ## 任务目录
 
-每个实际设计任务在当前原型允许的 reports 或 studio 区域建立独立 `<task-root>`：
+每个实际设计任务固定使用仓库根目录下的独立、被 Git 忽略的工作区：
+
+```text
+<task-root> = reports/single-controller-level-design/<prototype-id>/<task-id>/
+```
+
+不得把 `<task-root>` 改为旧流程使用的 `prototypes/<prototype-id>/reports/`，不得在 `prototypes/<prototype-id>/studio/` 中保存中间文档。开始任务前必须通过：
+
+```text
+git check-ignore -v -- reports/single-controller-level-design/<prototype-id>/<task-id>/orchestration/manifest.yml
+```
+
+目录结构为：
 
 ```text
 <task-root>/
@@ -54,6 +66,21 @@
 ```
 
 可以按原型 authority 改用其它具体 artifact 文件名，但轮次、exact、review、delivery 和 verification 的版本边界必须保留。
+
+上述整棵目录都是可丢弃、可重建但需在任务期间保持 provenance 的中间工作区，不加入 Git。
+
+## 最终发布路径
+
+只有 Delivery Verifier 能够核验的最终关卡和原型相关数据写回原型原有路径。目标必须逐项来自当前原型 `docs/design_handoff.yml` 及 required authority docs，例如：
+
+```text
+prototypes/<prototype-id>/studio/levels.yml
+prototypes/<prototype-id>/levels.yml
+prototypes/<prototype-id>/playable_queue.yml
+prototypes/<prototype-id>/playable/<authority-defined-output>
+```
+
+示例不是默认写入清单。原型没有声明的路径一律不可写；不得为了保存流程 provenance 在原型目录新增 report、review、handoff 或 ledger。
 
 ## 编号规则
 
@@ -193,11 +220,13 @@ Agent 被污染、纠偏失败或实例不可恢复时，下一轮分配新 ID�
 
 ## 引用与交付门禁
 
-所有 artifact 使用相对仓库根目录或相对 task root 的规范化路径；同一文件内不得混用两种基准。引用必须指向真实文件，不得依赖聊天消息、临时终端输出或未保存的内存状态。
+所有中间 artifact 使用相对仓库根目录或相对 task root 的规范化路径；同一文件内不得混用两种基准。最终发布引用使用相对仓库根目录路径。引用必须指向真实文件，不得依赖聊天消息、临时终端输出或未保存的内存状态。
 
 交付前至少检查：
 
 ```text
+task root 位于 reports/single-controller-level-design/
+git check-ignore 确认整个 task root 被忽略
 当前轮 decision 已关闭
 候选账本只有一个 candidate 对象
 delivery exact 唯一且与 current exact 合法对应
@@ -205,6 +234,7 @@ delivery exact 唯一且与 current exact 合法对应
 Delivery Operator 与 Verifier 实例不同
 levels、queue、playable source/id 可解析
 human handoff 指向 verification supported 的 delivery
+Git 待提交路径不包含 task root、旧 Studio reports 或其它中间产物
 ```
 
 人类试玩后的 `defer`、`needs_revision`、`ready_for_archive` 或 `reject` 是后续人工状态，不由本流程中的任何 Agent 预填。

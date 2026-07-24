@@ -32,6 +32,14 @@ completion_contract:
 
 轮次控制器必须把 assignment 自身加入子 Agent 输入。`input_refs` 是完整读取白名单，不代表对其父目录的读取授权；`allowed_output_refs` 之外的写入一律无效。
 
+除 Delivery Operator 的最终发布目标外，所有 `allowed_output_refs` 必须位于：
+
+```text
+reports/single-controller-level-design/<prototype-id>/<task-id>/
+```
+
+Delivery Operator 的工作记录仍写在该 task root；只有 assignment 从原型 authority 逐项抄录的最终关卡和相关数据路径可以位于 `prototypes/<prototype-id>/`。任何子 Agent 都不得把中间文档写入 `prototypes/<prototype-id>/reports/`。
+
 ## 复用现有专业角色
 
 ### 持续 Designer
@@ -159,11 +167,12 @@ role: delivery_operator
 
 - 已完成的 pre-submission record；
 - 唯一 delivery exact 及当前证据；
-- authority 指定的 levels、queue 和 playable 目标；
+- authority 指定的最终 levels、queue 和 playable 数据目标；
 - 精确 source/id；
-- 允许写入路径与构建命令。
+- task root 内的 delivery record 输出位置；
+- 逐项列出的最终发布写入路径与构建命令。
 
-它只接入一个 delivery version，交付版本化 delivery record、queue entry、构建日志和 playable refs。不得改变关卡设计；若操作要求改变 exact，必须停止并返回 `blocked`。
+它只接入一个 delivery version。版本化 delivery record、构建日志和审计引用留在被忽略的 task root；原型目录只写 authority 要求的最终关卡与相关数据。不得改变关卡设计，不得创建新的 report 目录；若操作要求改变 exact，必须停止并返回 `blocked`。
 
 ### Delivery Verifier
 
@@ -197,3 +206,9 @@ role: delivery_verifier
 | Delivery Verifier | 交付实物与门禁引用 | 任何写入权限 |
 
 发生意外污染时，子 Agent 必须停止并以 `failed` 交付，不得自行过滤后继续作专业结论。
+
+## Git 边界
+
+- 原型上下文、探索、Designer 工作台、exact 快照、送审包、review、workflow record、delivery record、验证和人类交接全部属于忽略的中间产物。
+- 只有 Delivery Operator assignment 中由原型 authority 明确列出的最终关卡与相关数据路径可以进入 Git。
+- 子 Agent 不执行 `git add`、`git commit` 或 `git add -f`；版本控制由任务外层在交付验证通过后按最终路径白名单处理。

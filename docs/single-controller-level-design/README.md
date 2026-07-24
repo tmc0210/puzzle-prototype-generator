@@ -13,6 +13,27 @@ scope: specific_prototype_single_level
 
 设计本体仍以 [玩家体验核心与单关包装方法论](../17-experience-core-level-design.md) 为准，专业角色的原始职责仍以 [关卡设计工作室执行标准](../21-level-design-studio-standard.md) 和对应 skill 为准。本目录只重新规定单一入口、轮次屏障、文件交付和版本化编排，不取代专业合同。
 
+## 独立工作区
+
+本流程的全部中间文档、assignment、Agent 结果、exact 快照、review 和交付审计统一写入：
+
+```text
+reports/single-controller-level-design/<prototype-id>/<task-id>/
+```
+
+该仓库根目录 `reports/` 已由现有 `.gitignore` 忽略。新流程不得把中间产物写入旧 Studio 使用的 `prototypes/<prototype-id>/reports/`，也不得写入原型的 `studio/` 目录，从而避免与原 skill 的任务目录、账本和版本文件冲突。禁止使用 `git add -f` 添加本工作区。
+
+只有通过全部门禁的最终关卡和原型规定的相关数据可以写出工作区；具体目标继续由当前原型 `docs/design_handoff.yml` 和 authority docs 决定，通常是：
+
+```text
+prototypes/<prototype-id>/studio/levels.yml
+prototypes/<prototype-id>/levels.yml
+prototypes/<prototype-id>/playable_queue.yml
+原型规定的 playable 数据或构建产物
+```
+
+流程文档不自行选择其中哪个目标，也不改变原型既有文件格式。
+
 ## 唯一主 Agent
 
 整个任务只有一个主 Agent，角色名为 **轮次控制器**。只有轮次控制器可以：
@@ -64,6 +85,7 @@ flowchart TD
 8. 越权、版本错配或信息污染的产物不进入权威状态；纠偏失败后必须更换 fresh Agent。
 9. 提交前操作改变 exact 时，除非原型 authority 明确允许保留 review 且所有复验条件均满足，否则形成新 exact 并重跑硬证据和 Critic。
 10. Delivery Operator 与 Delivery Verifier 必须是不同实例；只有人类试玩可以填写最终去留状态。
+11. 所有中间产物只能位于根目录 `reports/single-controller-level-design/`；Git 变更只能来自获准写出的最终关卡及原型相关数据。
 
 ## 固定阶段
 
