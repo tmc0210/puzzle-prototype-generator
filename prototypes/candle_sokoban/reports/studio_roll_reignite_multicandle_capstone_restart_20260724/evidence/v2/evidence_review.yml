@@ -1,0 +1,128 @@
+review_attempt_id: "CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_002_V2_HARD_001"
+reviewer_instance_id: "fresh_sokoban_evidence_reviewer_v2_20260724_001"
+candidate_id: "CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_002"
+exact_version: "v2"
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - "docs/21-level-design-studio-standard.md"
+    - "prototypes/candle_sokoban/docs/designer_contract.md"
+    - "prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml"
+    - "prototypes/candle_sokoban/mechanic.yml"
+    - "src/prototypes/candle_sokoban/mechanics.ts"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/exact_manifest.yml"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/layout.txt"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/solve_instance.yml"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/canonical_replay.json"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/complete_graph.json"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/layout_analysis.json"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/solution_family.json"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/exposure_audit.json"
+    - "prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/identity_counterfactuals.json"
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "up right up right right down down down down right right right right right down left left down left up down left left down left down down down right"
+    - "up right up right right down down down down right right right right right down left left down left up down left left left down down down down right"
+    - "up right up right right down down down down right right right right right down left left down left up left down left down left down down down right"
+  equivalence_evidence_basis:
+    - "complete_graph.json：terminalize_wins=true 的完整 base graph，45726 states、133307 legal edges、1 个 winning base state，预算 max_states=300000 / max_transitions=1000000。"
+    - "solution_family.json#shortest_solutions：最短代价 29，动态规划记录 63 条最短输入、40 条物化示例和 1 个最短里程碑签名。"
+    - "solution_family.json#first_win_product_graph：完整产品图含 87607 product states、254986 legal product edges、1 个 winning product state、1 个首次里程碑顺序，且 winningMissingMilestones 为空。"
+    - "solution_family.json#required_on_all_winning_paths：核心轴推、核心同滚灭火复燃、接收烛点燃、核心燃尽、供火烛两次轴推、两个目标分配与正常胜利十项里程碑均为 required=true。"
+    - "canonical_replay.json：提供一条实际 29 步胜路；packet 所列三条 raw variant 均出现在 solution_family.json 的物化最短输入示例中。"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "支持的是 docs/21 定义的玩家逻辑类唯一，不是原始输入串唯一；普通走位换序与完整回返环不另算逻辑类。"
+    - "solution_family.json 只物化 63 条最短输入中的 40 条示例；63 的精确计数与全胜路首次里程碑结论分别依赖该 artifact 的动态规划和 complete first-win product graph。"
+    - "产品图按相同 runtime state、已见里程碑集合与首次出现顺序合并；重复普通走位和已见里程碑不会生成新逻辑类。"
+
+claims:
+  - claim_id: "normal_win_and_replay"
+    claim: "v2 的 29 步 canonical replay 全部合法，并在完整回合结算后玩家存活且以 all_braziers_lit 正常获胜。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json：candidate_id/exact_version/level_id 对齐，completed=true、legal_through_step=29，29 步均 legal=true。"
+      - "canonical_replay.json#steps[28]：末步事件含 light_brazier:6,10 与 win_all_braziers_lit；final.dead=false、两个火盆均 lit=true、final.win=true。"
+      - "complete_graph.json：canonical replay 的 29 个 before/after state key、action 与 events 均逐步匹配 raw graph edge，终态为唯一 winning_state_indexes[0]=8255。"
+      - "mechanics.ts#isWin 与 mechanic.yml#check_win：死亡先排除，完整行动与燃烧结算后全部火盆点亮才产生正常胜利。"
+    limits: []
+
+  - claim_id: "complete_graph_and_single_winning_state"
+    claim: "当前 exact 的完整可达图为 complete，包含 45726 states、133307 legal transitions 与 1 个 winning state，且所有图证据与 layout digest、candidate id、exact version 对齐。"
+    status: supported
+    evidence_basis:
+      - "complete_graph.json：artifact_kind=complete_runtime_graph_raw、candidate_id=CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_002、exact_version=v2、status=complete。"
+      - "complete_graph.json：state_keys/depths 各 45726 项、legal_edges 133307 项、winning_state_indexes=[8255]；预算为 300000 states / 1000000 transitions 且 terminalize_wins=true。"
+      - "layout_analysis.json：同一 candidate/exact 报告 complete、45726 states、133307 transitions、1 个 winning state，最短胜路代价 29。"
+      - "exact_manifest.yml 与实际文件哈希：layout SHA-256 为 a5c0b38053f51a246b8fdfe6c0e415530f32c3fff86a7459931a4d22e399e887；complete_graph.json、layout_analysis.json、canonical_replay.json 等白名单 artifact 的实际 SHA-256 均与 manifest 登记值一致。"
+    limits:
+      - "单一 winning state 本身不推出所有胜路含同一事件；相关全胜路结论另由 complete first-win product graph 支持。"
+
+  - claim_id: "exposure_gate"
+    claim: "v2 对 allowed_exposure_through=rolling_contact_chain 的 exposure audit 为 complete/pass，layout 与 exposure sequence digest 匹配，forbidden_hits 为空，raw graph nodes/edges 完整保存。"
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json：prototype=candle_sokoban、exact_version=v2、allowed_exposure_through=rolling_contact_chain、graph.status=complete、verdict=pass、forbidden_hits=[]。"
+      - "exposure_audit.json#level.layout_sha256 与 layout.txt 实际 SHA-256 同为 a5c0b38053f51a246b8fdfe6c0e415530f32c3fff86a7459931a4d22e399e887。"
+      - "exposure_audit.json#exposure_gate.sequence_sha256 与 mechanic_exposure_sequence.yml 实际 SHA-256 同为 f5f0b771ed6b3c5f2b55955bf47f9b2f8196a6f9db88313063b600ce6123266e。"
+      - "exposure_audit.json#raw_graph 保存 45726 nodes 与 133307 edges；逐项核对 complete_graph.json 后，node key/depth/winning 与 edge from/to/action/events 的不一致数均为 0。"
+    limits:
+      - "rolling_contact_chain 是当前 exposure sequence 的最后一支，因此 forbidden_branches 与 forbidden_event_patterns 均为空；pass 只证明该 exact 在完整图上的暴露门事实，不证明事件必经或任何体验价值。"
+
+  - claim_id: "same_roll_wall_douse_then_reignite"
+    claim: "核心 candle#1 在同一次五格侧滚中先于 d1 因墙遮芯熄灭，在 d2 未点亮历史盆，后于 d4 从 candle#3 的外露烛芯复燃；滚动继续至由 candle#2 身体形成的终点。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json#steps[5]：同一动作依次记录 roll_step:candle#1:d1、extinguish_by_wall:candle#1、d2、wick_reexposed_unlit、d3、d4、ignite_from_wick:candle#1:4,6、d5、roll_candle:candle#1:d5。"
+      - "canonical_replay.json#steps[5]：聚合事件含 roll_intermediate_extinguish:candle#1:d1、roll_intermediate_ignite:candle#1:d4、roll_reignite_after_extinguish:candle#1:d1->d4，且该步没有 light_brazier 事件。"
+      - "canonical replay 第 6 步后 candle#1 位于 (2,7),(3,7)，下一格下移会与仍占 (3,8) 的 candle#2 身体冲突；mechanics.ts#canTranslateCandle 规定其他蜡烛身体阻挡继续平移。"
+    limits:
+      - "这是 canonical exact trace 的事件实例结论；全胜路中该核心里程碑的必经性另由 solution_family.json 的产品图字段支持。"
+
+  - claim_id: "cross_object_post_roll_consumption"
+    claim: "candle#1 滚后仍点燃，后续缩短退焰点亮 candle#2 并最终燃尽；candle#3 后段回滚点亮历史盆并被原墙熄灭；candle#2 保存至终局并侧滚点亮末盆。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json#steps[5,9,14]：candle#1 在五格滚后 lit=true；第 10 步 shrink_ignite:candle#2；第 15 步 burn_out:candle#1。"
+      - "canonical_replay.json#steps[15,16,19]：candle#3 两次 push_axis 后四格侧滚，第 20 步在 d2 触发 light_brazier:4,4，在 d3 触发 extinguish_by_wall:candle#3，结算后 lit=false。"
+      - "canonical_replay.json#steps[9,14,19,24,28]：candle#2 自 shrink_ignite 后保持点燃并依次缩至 3、2、1 格；末步三格侧滚触发 light_brazier:6,10 与正常胜利，终局仍存在且 lit=true。"
+      - "solution_family.json#required_on_all_winning_paths 与唯一 winning base state 固定三根蜡烛的上述职责里程碑和终局对象分配。"
+    limits:
+      - "事件 pattern、具体实例、对象参与与对象删除后的必要性分开取证；删除对象的必要性只由 identity_counterfactuals.json 支持。"
+
+  - claim_id: "single_first_win_milestone_family"
+    claim: "完整首次胜利产品图包含 87607 product states、254986 legal product edges、1 个 winning product state 与 1 个首次里程碑顺序；63 条最短输入只存在普通走位换序，不改变三根蜡烛职责、目标分配或依赖因果。"
+    status: supported
+    evidence_basis:
+      - "solution_family.json#graph：base graph complete，45726 states、133307 legal edges、1 个 winning base state，实际规模未触及 300000 / 1000000 预算。"
+      - "solution_family.json#first_win_product_graph：status=complete、product_state_count=87607、legal_product_edges=254986、winning_product_state_count=1、winningOrderSignatures 仅 1 项、winningMissingMilestones=[[]]。"
+      - "solution_family.json#shortest_solutions：shortest_cost=29、raw_shortest_input_count=63、milestone_signatures 仅 1 项；packet 的三条 raw variants 均在物化示例中。"
+      - "solution_family.json#required_on_all_winning_paths：10 个对象/目标/因果里程碑全部 required=true。"
+    limits:
+      - "63 条最短输入未全部物化，artifact 仅保存 40 条示例；全量计数与逻辑类结论依赖同一 artifact 的动态规划及 complete 产品图。"
+      - "首次里程碑签名只记录里程碑第一次出现；同一必要事件的重复发生不构成新的首次顺序。"
+
+  - claim_id: "identity_counterfactuals"
+    claim: "删除复燃、删除接收烛、用静态火源替代供火烛、或让核心滚后立即退休，四个反事实均在各自完整图中无胜；删除 d1 墙的对照仍可解，但最短解缩为 27 步且历史盆提前点亮，因而不保持当前作品身份的机械关系。"
+    status: supported
+    evidence_basis:
+      - "identity_counterfactuals.json#cases[source_unlit_no_reignite]：search_status=complete、explored_states=48374、solvable=false。"
+      - "identity_counterfactuals.json#cases[receiver_removed]：search_status=complete、explored_states=31926、solvable=false。"
+      - "identity_counterfactuals.json#cases[source_replaced_by_static_fire]：search_status=complete、explored_states=3830、solvable=false。"
+      - "identity_counterfactuals.json#cases[core_retires_immediately_after_reignite_roll]：以 canonical 第 6 步后的 exact state 作 mutation，search_status=complete、explored_states=10594、solvable=false。"
+      - "identity_counterfactuals.json#cases[always_lit_core_without_douse_wall]：solvable=true、shortest_cost=27；实际 shortest_events 在核心五格滚动 d2 记录 light_brazier:4,4，早于原 exact 第 20 步由 candle#3 点亮该盆。"
+    limits:
+      - "这些反事实只支持机械身份关系，不支持审美、难度、包装或待玩价值。"
+      - "移除 d1 墙的正对照在找到 27 步最短胜路后状态为 found，不承担该反事实全解族完备性声明；本 claim 只要求它可解、最短代价和目标时序发生改变。"
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

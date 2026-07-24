@@ -1,0 +1,81 @@
+design_task_id: candle_roll_reignite_multicandle_capstone_restart_20260724
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_002
+exact_version: v2
+
+player_side_reading:
+  opening: >-
+    玩家开局同时看见三根不同长度与朝向的蜡烛、两只未点火盆、核心下方的墙—盆—空层—供火烛纵列，
+    以及下方接收烛与末盆。玩家先从核心无火的尾端轴推；这一步既把核心烛芯送到纵列，也让第一次
+    五拍边界同时缩短核心与供火烛，使两者的烛芯轨迹在 (4,6) 会合。
+  preparation: >-
+    轴推后玩家绕到核心上侧，在第 5 步触发第一次燃烧边界。核心由三格缩成二格，供火烛由四格缩成
+    三格；若不先轴推、提前侧滚或错过这个边界，核心的墙灭列、历史盆列、复燃点和接收烛止挡不能
+    同时成立。
+  core_reveal: >-
+    第 6 步向下侧滚五格：d1 在 (4,3) 被墙遮芯熄灭，d2 以未明状态经过 (4,4) 而保留历史盆为 o，
+    d3 穿过空层，d4 从 candle#3 的外露明烛芯复燃，d5 落到接收烛上方；candle#2 的身体阻止 d6。
+    同一输入把“真实无火窗口”“已知复燃源”和“另一根蜡烛的止挡”收束成一个连续可见动作。
+  consumer: >-
+    核心滚后仍明。下一边界把它缩成单格，腾出的退焰点亮 candle#2；再下一边界令核心燃尽，同时
+    candle#2 与 candle#3 缩到后继所需长度。玩家把已成单格的 candle#3 连推两格后向上侧滚：
+    d2 点亮此前暗越的 (4,4)，d3 又被核心用过的同一面墙熄灭，因此它避开该边界并退出火路。
+  ending: >-
+    candle#2 从“核心止挡”变成“核心退焰接收者”，又在共享时钟上缩成单格。玩家沿下方操作道到其
+    左侧，最终向右侧滚三格，在 (6,10) 点亮末盆并立即以 all_braziers_lit 获胜；高潮后没有清理动作。
+
+difficulty_reading:
+  expected: 5
+  counted_reasoning:
+    - 从两个末目标反推三根蜡烛各自的末段烛芯列、剩余长度与共享五拍相位。
+    - 理解开局轴推不是搬运，而是同时构造核心轨道和第一次同步缩短后的供火烛芯位置。
+    - 在一次五格滚动中预演墙灭、暗越历史盆、穿过空层、外部烛芯复燃和另一根烛身止挡。
+    - 用核心滚后的明火与缩短结果反推 candle#2 必须先作为止挡、再接收退焰、最后承担末盆。
+    - 预见 candle#3 必须在单格时回滚点历史盆，并借原墙在同一动作中熄灭以避开边界。
+  not_counted_as_difficulty:
+    - 玩家已掌握的基础轴推、侧滚、墙灭、烛芯点火与倒计时规则本身。
+    - 核心动作之后沿上、下连接道的普通走位。
+    - 关卡拥有三根蜡烛、两只火盆或 29 步最短解这些数量事实。
+  calibration_boundary: >-
+    难度 5 来自三根对象在同一因果链中的多层反推、历史盆与始终点燃侧的区分、以及共享时钟上的
+    角色交接；不由图规模、事件数量或路线长度代替。最终难度仍留给独立 Puzzle Critic 判断。
+
+major_element_responsibility:
+  - element: core candle#1
+    responsibility: 轴推构造轨道，执行同滚动墙灭—暗越—复燃，借 candle#2 止挡，并以缩短退焰点亮 candle#2 后燃尽。
+  - element: source candle#3
+    responsibility: 首次同步缩短后提供 d4 复燃火源；后续缩成单格、两次轴推并回滚点亮历史盆，再由原墙熄灭退出。
+  - element: receiver candle#2
+    responsibility: 身体阻止核心 d6，烛芯接收核心退焰，长度记录共享边界，最终单格侧滚点亮末盆。
+  - element: wall (4,3)
+    responsibility: 核心 d1 墙灭并制造真实无火窗口；后段再次熄灭 candle#3，使其点历史盆后避开燃烧边界。
+  - element: memory brazier (4,4)
+    responsibility: 保存核心 d2 是否实际无火的持久差异，并要求 candle#3 后段回填；删墙侧会在核心滚动中提前点亮。
+  - element: empty row y=5
+    responsibility: 把暗越历史盆与 d4 复燃分开一格，使事件次序和可见状态不压成同一接触。
+  - element: final brazier (6,10)
+    responsibility: 把 candle#2 的存续、长度和最终侧滚设为正式胜利所需，而不是仅作核心止挡。
+  - element: wall (7,11)
+    responsibility: 固定 candle#2 最终三格侧滚终点，让其上向烛芯在 d3 对准末盆。
+  - element: connector walls
+    responsibility: 保留三次角色交接所需的操作侧与安全路线，同时限制不经核心关系直接处理目标的旁路。
+
+solution_family_reading:
+  result: equivalent_variants_only
+  logical_family_count: 1
+  raw_shortest_input_count: 63
+  shortest_milestone_signature_count: 1
+  first_win_product_state_count: 87607
+  winning_product_state_count: 1
+  equivalence: >-
+    63 条最短输入只交换上部连接道与下部连接道中的普通走位次序；全部恰好执行一次核心轴推、同一
+    同步缩短、同一 d1->d4 核心复燃、candle#2 退焰受火、核心燃尽、candle#3 两次轴推与历史盆回填，
+    最后由 candle#2 点末盆。完整首次胜利产品图只有一个胜态和一个里程碑顺序，没有不同目标分配、
+    不同对象职责或不同依赖因果。
+  non_equivalent_winning_family_found: false
+
+known_perceptible_defects:
+  - 核心揭示后的两段换侧路线局部选择较窄，若玩家未把走位视为共享时钟的一部分，执行段可能略显走廊化。
+  - 原始最短输入有 63 条走位换序；逻辑解族唯一，但输入串层面的规范感不强。
+evidence_limits:
+  - complete graph、产品图与反事实只承担机械否定和解族自查，不能证明审美质量或人类难度。
+  - 产品图以对象里程碑的首次出现顺序归并普通回环；等价性声明仍须独立 Evidence Reviewer 核验。

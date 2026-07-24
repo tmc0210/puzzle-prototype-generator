@@ -1,0 +1,88 @@
+submission_id: SUB_CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_002_V2
+design_task_id: candle_roll_reignite_multicandle_capstone_restart_20260724
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_002
+exact_version: v2
+
+designer_claim:
+  player_experience_core: >-
+    玩家先用核心轴推同时构造滚动轨道与共享时钟相位，再触发一次五格侧滚：核心 d1 墙灭、
+    d2 暗越未点火盆、d4 从另一根蜡烛复燃，并由第三根蜡烛截停。滚后复燃结果依次点亮接收烛、
+    驱动供火烛回填历史盆，并把接收烛保存为末盆执行者。
+  player_action: >-
+    玩家从两个终局目标反推三根蜡烛的长度、烛芯列与五拍相位，亲自完成开局轴推、核心同滚动
+    墙灭—复燃、两次跨对象退焰交接、供火烛回滚历史盆和接收烛终局侧滚。
+  visible_payoff: >-
+    核心滚动时火焰先消失、暗越火盆后从可见烛芯回来；随后核心燃尽，但它点亮的接收烛继续缩短并
+    负责末盆。供火烛又回到旧轨道点亮暗盆，并被同一面墙熄灭，形成清晰的跨对象回收。
+  why_this_level_exists: >-
+    它把前序单烛“回焰门”提升为三烛互相塑形的后期综合题：无火窗口由历史盆持久记录，复燃输出
+    改变另一根蜡烛的最终职责，原供火对象也必须回到核心轨道偿还目标。
+  work_identity_conditions:
+    - candle#1 必须先轴推对齐并在第一次边界与 candle#3 同步缩短。
+    - candle#1 必须在同一五格侧滚中 d1 墙灭、d2 暗越历史盆、d4 从 candle#3 烛芯复燃。
+    - candle#2 必须以身体截停核心，并由核心后续缩短的退焰点亮。
+    - candle#1 必须在点亮 candle#2 后燃尽；让它滚后立即退休则完整无解。
+    - candle#3 必须后段两次轴推、回滚点亮历史盆，并由原 d1 墙熄灭退出火路。
+    - candle#2 必须在共享边界上缩到单格，最终侧滚点亮末盆。
+    - 全部允许胜解保持同一三烛职责、两盆目标分配与里程碑顺序。
+
+packaging_account:
+  opening: >-
+    三根蜡烛、两只未点盆和核心纵向接触序列全部可见；玩家从安全尾端轴推核心，不需要穿过明火。
+  preparation: >-
+    五步内把核心送入轨道并触发同步缩短；供火烛缩短后才把外露明烛芯送到核心 d4。
+  reveal_or_use: >-
+    核心五格滚动当场结算墙灭、暗越、复燃和截停；接下来两个边界把复燃输出变为接收烛明火、
+    核心退休和供火烛单格回填。
+  ending: >-
+    供火烛点亮历史盆并退出火路后，接收烛从下方走廊被侧滚三格点亮末盆，获胜与最后职责兑现同回合发生。
+  every_major_element_role:
+    - candle#1：轨道构造者、同滚动墙灭—复燃核心、candle#2 的退焰点火者。
+    - candle#3：同步缩短后的复燃火源、历史盆回填者、原墙复用的后段受灭对象。
+    - candle#2：核心止挡、退焰接收者、共享时钟长度载体与末盆执行者。
+    - (4,3) 墙：先熄核心，后熄 candle#3。
+    - (4,4) 历史盆：记录 d2 无火窗口并要求 candle#3 回填。
+    - y=5 空层：分开暗越与 d4 复燃的观察点。
+    - (6,10) 末盆与 (7,11) 止挡墙：固定 candle#2 的最终职责和滚动终点。
+    - 连接墙：提供必要操作侧并封住不经角色交接的直接旁路。
+  known_perceptible_defects:
+    - 核心揭示后的两段换侧路线局部选择较窄，可能略显走廊化。
+    - 63 条最短输入存在普通走位换序，输入串层面的规范感不强。
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: >-
+      terminalized layout graph max_states=300000 / max_transitions=1000000，实际完整 45726 states /
+      133307 legal edges；首次胜利产品图完整 87607 product states / 254986 legal product edges。
+    known_raw_winning_variants:
+      - up right up right right down down down down right right right right right down left left down left up down left left down left down down down right
+      - up right up right right down down down down right right right right right down left left down left up down left left left down down down down right
+      - up right up right right down down down down right right right right right down left left down left up left down left down left down down down right
+    equivalence_account: >-
+      动态规划精确计得 63 条最短输入，全部只有一个完整里程碑签名；产品图覆盖全部首次胜利路径，
+      仅有一个 winning product state 与一个首次里程碑顺序。差异只来自连接道普通走位换序，
+      不改变三根蜡烛的操作次数、职责、目标分配或依赖因果。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/complete_graph.json
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/layout_analysis.json
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/designer_reading.yml
+    evidence_limits:
+      - 产品图按 runtime state、已见对象里程碑集合和首次出现顺序合流；不以原始输入串数量定义逻辑解数。
+      - 等价性为 Designer 自查结论，仍须独立 Evidence Reviewer 核验。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/identity_counterfactuals.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/identity_counterfactuals.json
+    - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/candidate/versions/v2/designer_reading.yml
+  evidence_limits:
+    - exposure audit 为 complete/pass/0 forbidden hits；事件必经、顺序与对象职责另由 solution_family 证明。
+    - 无复燃、删接收烛、静态火源替代和核心滚后退休反事实均完整无解；删墙侧仍可解但缩为 27 步并提前点亮历史盆。
+    - 自动证据不产生审美或难度 verdict。
+
+designer_self_verdict: submit_for_independent_review

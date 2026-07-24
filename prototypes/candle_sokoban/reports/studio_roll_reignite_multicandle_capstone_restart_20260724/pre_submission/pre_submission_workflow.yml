@@ -1,0 +1,60 @@
+design_task_id: candle_roll_reignite_multicandle_capstone_restart_20260724
+candidate_id: CANDLE_REIGNITE_MULTICANDLE_CAPSTONE_002
+reviewed_exact_version: v2
+delivery_exact_version: v2
+workflow_results:
+  - workflow_id: strict_exposure_gate_recheck
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 当前唯一候选已通过 Critic，准备进入待玩列表。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    operations_performed:
+      - 对 delivery exact v2 重跑 Candle exposure audit。
+      - 核对 exact、layout digest、sequence digest 与 delivery version 一致。
+      - 核对 graph.status=complete、verdict=pass、forbidden_hits 为空。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_roll_reignite_multicandle_capstone_restart_20260724/pre_submission/exposure_audit_delivery_v2.json
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: authority workflow 明确规定只读复验，且结果与 reviewed exact v2 完全对齐。
+    status: completed
+  - workflow_id: runtime_conformance_recheck
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 当前唯一候选准备进入待玩列表。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    operations_performed:
+      - npm run check 通过。
+      - npm run candle:conformance 的全部已实现检查通过，整体 warning 仅来自明确 unavailable 的工具。
+      - 记录 unavailable：raw_sampler、candidate_seed_factories、curated_miner、puzzlescript_exporter、puzzlescript_checker。
+    artifact_refs:
+      - prototypes/candle_sokoban/docs/design_handoff.yml
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: 只读 typecheck 与 conformance 复验未改变 exact。
+    status: completed
+  - workflow_id: playable_delivery_build
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 唯一 delivery version 已写入 studio/levels.yml 并加入 playable_queue.yml。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    operations_performed:
+      - npm run candle:playable:build 成功。
+      - queue entry 的 source=studio、level id 与 delivery version 可解析。
+      - npm run candle:playable:check-replays 通过，覆盖 3 个 playable levels。
+    artifact_refs:
+      - prototypes/candle_sokoban/studio/levels.yml
+      - prototypes/candle_sokoban/playable_queue.yml
+      - prototypes/candle_sokoban/playable/data.json
+      - prototypes/candle_sokoban/playable/index.html
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: delivery build 只消费已接受 v2，没有改变 layout、胜利条件或核心机制用法。
+    status: completed
+overall_status: completed
+return_to_design_required: false
