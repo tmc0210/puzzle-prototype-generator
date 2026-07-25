@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
@@ -23,6 +24,12 @@ async function write(name, content) {
   const target = path.join(fixtureRoot, name);
   await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, content, "utf8");
+}
+
+async function digest(name) {
+  return createHash("sha256")
+    .update(await readFile(path.join(fixtureRoot, name)))
+    .digest("hex");
 }
 
 function run(args, expectedStatus = 0) {
@@ -437,6 +444,279 @@ try {
     "--action", ref("designer-action.yml"),
   ]);
 
+  await write("workflow-authority.md", "# workflow authority\n");
+  await write("workflow-artifact.yml", "status: pass\n");
+  await write("workflow-record.yml", yaml({
+    design_task_id: "task-1",
+    record_version: "v001",
+    supersedes_ref: null,
+    completed_through: "pre_delivery",
+    candidate_id: "candidate-1",
+    reviewed_exact_version: "exact-1",
+    delivery_exact_version: "exact-1",
+    workflow_results: [{
+      workflow_id: "fixture-check",
+      execution_phase: "pre_delivery",
+      designer_assignment_ref: null,
+      applicability: "applicable",
+      applicability_basis: "authority 要求交付前执行",
+      authority_docs: [ref("workflow-authority.md")],
+      operations_performed: ["read-only fixture check"],
+      artifact_refs: [ref("workflow-artifact.yml")],
+      version_effect: "unchanged",
+      review_effect: "preserved",
+      review_effect_basis: "只读检查",
+      status: "completed",
+    }],
+    overall_status: "completed",
+    return_to_design_required: false,
+  }));
+  run(["validate-workflow-record", "--record", ref("workflow-record.yml")]);
+  run([
+    "validate-workflow-record",
+    "--record", ref("workflow-record.yml"),
+    "--through", "pre_delivery",
+  ]);
+  await write("workflow-record-invalid.yml", yaml({
+    design_task_id: "task-1",
+    record_version: "v001",
+    supersedes_ref: null,
+    completed_through: "pre_delivery",
+    candidate_id: "candidate-1",
+    reviewed_exact_version: "exact-1",
+    delivery_exact_version: "exact-1",
+    workflow_results: [{
+      workflow_id: "missing-phase",
+      applicability: "not_applicable",
+      applicability_basis: "fixture",
+      authority_docs: [ref("workflow-authority.md")],
+      operations_performed: [],
+      artifact_refs: [],
+      version_effect: "unchanged",
+      review_effect: "preserved",
+      review_effect_basis: "fixture",
+      status: "not_applicable",
+    }],
+    overall_status: "completed",
+    return_to_design_required: false,
+  }));
+  const invalidWorkflowOutput = run([
+    "validate-workflow-record",
+    "--record", ref("workflow-record-invalid.yml"),
+  ], 1);
+  if (!invalidWorkflowOutput.includes("execution_phase 非法")) {
+    throw new Error("Controller 未拒绝缺少 execution_phase 的 workflow");
+  }
+
+  await write("delivery-record.yml", yaml({
+    candidate_id: "candidate-1",
+    delivery_exact_version: "exact-1",
+    operator_instance_id: "delivery-operator-1",
+    commit_status: "completed",
+  }));
+  await write("pre-commit-verification.yml", yaml({
+    candidate_id: "candidate-1",
+    delivery_exact_version: "exact-1",
+    verifier_instance_id: "delivery-pre-verifier-1",
+    verification_stage: "pre_commit",
+    overall_status: "supported",
+    delivery_record_ref: ref("delivery-record.yml"),
+  }));
+  await write("post-commit-verification.yml", yaml({
+    candidate_id: "candidate-1",
+    delivery_exact_version: "exact-1",
+    verifier_instance_id: "delivery-post-verifier-1",
+    verification_stage: "post_commit",
+    overall_status: "supported",
+    delivery_record_ref: ref("delivery-record.yml"),
+  }));
+  await write("queue-activation.yml", yaml({
+    candidate_id: "candidate-1",
+    delivery_exact_version: "exact-1",
+    activation_status: "completed",
+    post_commit_verification_ref: ref("post-commit-verification.yml"),
+    staged_queue_sha256: "a".repeat(64),
+    final_queue_sha256: "a".repeat(64),
+    source: "fixture-levels",
+    level_id: "candidate-1",
+    queue_status: "pending_playtest",
+  }));
+  const readyCandidate = {
+    ...acceptedCandidate,
+    delivery_exact_version: "exact-1",
+    pre_submission_check_ref: ref("workflow-record.yml"),
+    pre_submission_state: "completed",
+    delivery_state: "queue_activated",
+    delivery_record_ref: ref("delivery-record.yml"),
+    pre_commit_verification_ref: ref("pre-commit-verification.yml"),
+    post_commit_verification_ref: ref("post-commit-verification.yml"),
+    queue_activation_ref: ref("queue-activation.yml"),
+    playtest_status: "pending_playtest",
+  };
+  await write("ready-ledger.yml", yaml({
+    design_task_id: "task-1",
+    experience_brief_ref: ref("brief.yml"),
+    ...criticCalibration,
+    task_state: "ready_for_playtest",
+    candidate: readyCandidate,
+    review_cycles: [{
+      cycle_id: "cycle-1",
+      exact_version: "exact-1",
+      review_attempt_id: "review-1",
+      critic_instance_id: "critic-1",
+      critic_base_ref: ref("critic-base.yml"),
+      critic_review_ref: ref("critic-review.md"),
+      evidence_review_refs: [ref("evidence.yml")],
+      designer_action_ref: null,
+      controller_recorded_outcome: "accept_candidate",
+    }],
+    attempts: [{
+      attempt_id: "attempt-1",
+      exact_version: "exact-1",
+      status: "accepted",
+      artifact_refs: [ref("critic-review.md")],
+    }],
+  }));
+  run(["validate", "--ledger", ref("ready-ledger.yml")]);
+
+  await write("premature-ledger.yml", yaml({
+    design_task_id: "task-1",
+    experience_brief_ref: ref("brief.yml"),
+    ...criticCalibration,
+    task_state: "pre_submission",
+    candidate: {
+      ...acceptedCandidate,
+      playtest_status: "pending_playtest",
+    },
+    review_cycles: [{
+      cycle_id: "cycle-1",
+      exact_version: "exact-1",
+      review_attempt_id: "review-1",
+      critic_instance_id: "critic-1",
+      critic_base_ref: ref("critic-base.yml"),
+      critic_review_ref: ref("critic-review.md"),
+      evidence_review_refs: [ref("evidence.yml")],
+      designer_action_ref: null,
+      controller_recorded_outcome: "accept_candidate",
+    }],
+    attempts: [],
+  }));
+  const prematureOutput = run(["validate", "--ledger", ref("premature-ledger.yml")], 1);
+  if (!prematureOutput.includes("post-commit verification 通过前不得登记 pending_playtest")) {
+    throw new Error("Controller 未拒绝提前登记 pending_playtest");
+  }
+
+  await write("round-input.yml", "value: frozen\n");
+  await write("round-output.yml", "value: produced\n");
+  await write("round-summary.md", "# summary\n");
+  const inputDigest = await digest("round-input.yml");
+  const outputDigest = await digest("round-output.yml");
+  await write("round-assignment.yml", yaml({
+    contract_version: 2,
+    task_id: "task-1",
+    round_id: "round-0001",
+    assignment_id: "assignment-001",
+    agent_instance_id: "fixture-agent-1",
+    role: "fixture_role",
+    required_skill: null,
+    candidate_id: null,
+    exact_version_basis: null,
+    instance_policy: "fresh_for_assignment",
+    subagent_spawn_allowed: false,
+    objective: "fixture",
+    dependency_decision_refs: [],
+    input_refs: [ref("round-input.yml")],
+    input_digests: [{ ref: ref("round-input.yml"), sha256: inputDigest }],
+    allowed_output_refs: [ref("round-output.yml")],
+    forbidden_inputs: [],
+    required_outputs: ["round output"],
+    completion_contract: {
+      result_ref: ref("round-result.yml"),
+      allowed_statuses: ["completed", "failed", "blocked", "needs_input"],
+    },
+  }));
+  await write("round-result.yml", yaml({
+    contract_version: 2,
+    task_id: "task-1",
+    round_id: "round-0001",
+    assignment_id: "assignment-001",
+    agent_instance_id: "fixture-agent-1",
+    role: "fixture_role",
+    status: "completed",
+    result_version: "v001",
+    candidate_id: null,
+    exact_version_basis: null,
+    produced_exact_version: null,
+    consumed_refs: [ref("round-input.yml")],
+    consumed_digests: [{ ref: ref("round-input.yml"), sha256: inputDigest }],
+    produced_refs: [ref("round-output.yml")],
+    produced_digests: [{ ref: ref("round-output.yml"), sha256: outputDigest }],
+    authoritative_claim_refs: [ref("round-output.yml")],
+    requested_next_inputs: [],
+    blocking_issues: [],
+    provenance: {
+      required_skill: null,
+      assignment_ref: ref("round-assignment.yml"),
+      authority_refs: [],
+      commands_or_tools: [],
+    },
+    boundary_check: {
+      read_within_allowlist: true,
+      wrote_within_allowlist: true,
+      spawned_subagents: false,
+      contamination_detected: false,
+    },
+  }));
+  await write("round-dispatch.yml", yaml({
+    contract_version: 2,
+    task_id: "task-1",
+    round_id: "round-0001",
+    objective: "fixture",
+    dependency_decision_refs: [],
+    state_snapshot: {},
+    assignment_refs: [ref("round-assignment.yml")],
+    write_set: [ref("round-output.yml")],
+    barrier: {
+      expected_results: [ref("round-result.yml")],
+      all_terminal_before_decision: true,
+    },
+  }));
+  await write("round-decision.yml", yaml({
+    contract_version: 2,
+    task_id: "task-1",
+    round_id: "round-0001",
+    dispatch_ref: ref("round-dispatch.yml"),
+    result_refs: [ref("round-result.yml")],
+    accepted_result_refs: [ref("round-result.yml")],
+    rejected_result_refs: [],
+    summary_ref: ref("round-summary.md"),
+    state_before: {},
+    state_after: {},
+    decision: "accept fixture",
+    decision_basis_refs: [ref("round-output.yml")],
+    unlocked_dependency_keys: [],
+    barrier_check: {
+      all_expected_results_present: true,
+      all_results_terminal: true,
+      all_accepted_results_contract_valid: true,
+    },
+    round_status: "closed",
+  }));
+  run([
+    "validate-round",
+    "--dispatch", ref("round-dispatch.yml"),
+    "--decision", ref("round-decision.yml"),
+  ]);
+  await write("round-input.yml", "value: tampered\n");
+  const tamperedRoundOutput = run([
+    "validate-round",
+    "--dispatch", ref("round-dispatch.yml"),
+    "--decision", ref("round-decision.yml"),
+  ], 1);
+  if (!tamperedRoundOutput.includes("digest 已变化")) {
+    throw new Error("Controller 未拒绝 digest 已变化的轮次");
+  }
+
   passed = true;
 } finally {
   const resolved = path.resolve(fixtureRoot);
@@ -445,4 +725,4 @@ try {
   }
 }
 
-if (passed) console.log("level-design-controller Critic tests passed");
+if (passed) console.log("level-design-controller tests passed");

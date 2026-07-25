@@ -1,16 +1,14 @@
 # Agent 输入输出合同
 
-本文由 [唯一入口](README.md) 路由，不可单独作为主流程入口。所有角色都由轮次控制器调度，且不得创建子 Agent。
+本文由 [唯一入口](README.md) 路由。所有角色由唯一 Controller 调度，且不得创建子 Agent。
 
 ## 通用 assignment
 
-每个 assignment 至少包含：
-
 ```yaml
-contract_version: 1
+contract_version: 2
 task_id: ""
 round_id: round-0001
-assignment_id: ""
+assignment_id: assignment-001
 agent_instance_id: ""
 role: ""
 required_skill: null
@@ -21,7 +19,11 @@ instance_policy: persistent_for_task | fresh_for_exact | fresh_for_assignment
 subagent_spawn_allowed: false
 
 objective: ""
+dependency_decision_refs: []
 input_refs: []
+input_digests:
+  - ref: ""
+    sha256: ""
 allowed_output_refs: []
 forbidden_inputs: []
 required_outputs: []
@@ -30,40 +32,44 @@ completion_contract:
   allowed_statuses: [completed, failed, blocked, needs_input]
 ```
 
-轮次控制器必须把 assignment 自身加入子 Agent 输入。`input_refs` 是完整读取白名单，不代表对其父目录的读取授权；`allowed_output_refs` 之外的写入一律无效。
+规则：
 
-除 Delivery Operator 的最终发布目标外，所有 `allowed_output_refs` 必须位于：
+- assignment 自身必须作为 Agent 的控制信封；它不列入自身的 `input_refs`，避免自引用 digest。
+- `input_refs` 只授权逐项文件，不授权父目录。
+- `input_digests` 与 `input_refs` 一一对应，使用调度时 SHA-256。
+- 依赖 decision 必须已关闭，输入 digest 必须在启动前和结果采用前复验。
+- `allowed_output_refs` 可授权具体文件或独立目录；目录授权只覆盖其后代。
+- 除 Delivery commit assignment 的最终目标外，全部输出位于 task root。
+- 写出白名单、候选、exact 或角色错配都会使结果无效。
 
-```text
-reports/single-controller-level-design/<prototype-id>/<task-id>/
-```
+## 结果信封
 
-Delivery Operator 的工作记录仍写在该 task root；只有 assignment 从原型 authority 逐项抄录的最终关卡和相关数据路径可以位于 `prototypes/<prototype-id>/`。任何子 Agent 都不得把中间文档写入 `prototypes/<prototype-id>/reports/`。
+结果信封使用 [文件与版本协议](artifact-versioning.md) 的 v2 合同。专业结论保存在角色专属 artifact；结果信封只声明终态、引用、digest 和边界。
 
-## 复用现有专业角色
+污染时 Agent 立即停止并返回 `failed`。Controller 可以用新 assignment 向原实例短纠偏一次；再次失败必须更换 fresh 实例。
+
+## 复用专业角色
 
 ### 持续 Designer
-
-复用 [`sokoban-level-designer`](../../.agents/skills/sokoban-level-designer/SKILL.md) 和现有 [Designer assignment 模板](../../.agents/skills/sokoban-level-design-studio/references/designer-assignment-template.md)。
 
 ```yaml
 instance_policy: persistent_for_task
 required_skill: sokoban-level-designer
 ```
 
-输入随阶段变化，但必须包括正式 assignment、当前 authority、允许的 archive/lexicon、唯一 `candidate_id` 和最近已发布 exact 依据。它可以交付：
+复用现有 Designer assignment 模板。输入按阶段包含冻结 human brief、authority、experience brief、允许 archive/lexicon snapshot、唯一候选和最近 exact 依据。
 
-- 体验简报、归档校准和持续工作台文件；
+可交付：
+
+- 体验简报、归档校准与持续工作台；
 - 局部 exploration request；
-- 新 exact、canonical replay、原始工具 artifact 和送审包；
-- Critic 退回后的 Designer action；
-- 设计类提交前检查结果。
+- 新 exact、canonical replay、原始工具 artifact、玩家侧重读和 submission packet；
+- Critic 退回响应；
+- 会进行设计判断或改变 exact 的提交前检查。
 
-它不得写 dispatch、轮次 decision、候选账本、Critic packet、独立 verdict、levels、queue 或人类状态。Critic 接受后不得继续提出增强方案。
+不得写 Controller 状态、Critic packet、独立 verdict、最终 levels/queue 或人类状态。Critic 接受后除正式 `pre_submission_design_check` 外停止设计。
 
 ### 持续 task-local Explorer
-
-复用 [`sokoban-mechanism-lab`](../../.agents/skills/sokoban-mechanism-lab/SKILL.md) 和 [task-local exploration 合同](../../.agents/skills/sokoban-mechanism-lab/references/task-exploration-format.md)。
 
 ```yaml
 instance_policy: persistent_for_task
@@ -72,54 +78,48 @@ intent: mechanism_explore
 publication_scope: task_local
 ```
 
-输入只允许体验种子、玩家前序、规则、允许机制、工具入口、source boundary、当前 task lexicon 和合法局部 request。输出只能是 task lexicon、索引和 runs。
+输入只允许体验种子、玩家前序、规则、机制、工具、source boundary、冻结 task lexicon snapshot 和合法局部 request。
 
-禁止输入审美归档、正式 exact、review、Designer 设想或完整候选坐标。Explorer 不判断难度、审美、family 去留或候选状态。
+禁止 archive、exact、review、Designer 设想、完整候选坐标和 family 去留。输出仅为 lexicon、索引和 runs。
 
 ### fresh Evidence Reviewer
-
-复用 [`sokoban-evidence-reviewer`](../../.agents/skills/sokoban-evidence-reviewer/SKILL.md) 和 [Evidence Reviewer 模板](../../.agents/skills/sokoban-evidence-reviewer/references/evidence-reviewer-template.md)。
 
 ```yaml
 instance_policy: fresh_for_exact
 required_skill: sokoban-evidence-reviewer
 ```
 
-每个 exact 使用一个未参与设计、未核验过其它 exact 的 fresh 实例。输入必须包含：
+每个 exact 使用一个未参与设计、未审查其它 exact 的 fresh 实例。输入包括：
 
-- `candidate_id`、`exact_version`、layout 与 solve instance；
-- 从规则合同提取的机械声明；
-- 送审包中单独抽取的 uniqueness 声明；
-- allowed evidence sources；
-- solve、replay、graph、bypass、counterfactual、event 与 object artifacts；
-- 搜索预算和 graph completeness。
+- candidate/exact、layout、solve instance；
+- 规则合同中的机械声明；
+- submission packet 中抽取的 uniqueness 和作品身份机械声明；
+- solve、replay、graph、bypass、counterfactual、event/object 原始 artifact；
+- 搜索预算、graph completeness、允许证据来源；
+- 所有 exact-bound 输入 digest。
 
-输出是版本对应的 evidence review。它不评价审美、难度、包装或待玩价值，不补跑缺失证据。
+Reviewer 不补跑证据，不评价审美、难度、包装或待玩价值。
 
 ### fresh Puzzle Critic
-
-复用 [`sokoban-puzzle-critic`](../../.agents/skills/sokoban-puzzle-critic/SKILL.md) 和 [Critic 输入合同](../../.agents/skills/sokoban-puzzle-critic/references/critic-contract.md)。
 
 ```yaml
 instance_policy: fresh_for_exact
 required_skill: sokoban-puzzle-critic
 ```
 
-每个 exact 只允许一名 Critic。它只能读取轮次控制器生成的白名单 packet：
+每个 exact 只允许一名 Critic。只读 Controller 生成的白名单 packet：
 
-- 规则、胜利条件与玩家规则前提；
-- 全部有序前序关卡；
+- 规则、胜利条件、玩家规则前提；
+- 全部有序前序；
 - 目标难度；
-- 阶段内难度校准 view；
-- 跨阶段审美校准 view；
-- 当前实际布局、非空 canonical inputs 和逐步实际 layout；
-- 硬证据已获独立支持的事实。
+- 已通过 projection audit 的阶段内难度 view；
+- 已通过 projection audit 的跨阶段审美 view；
+- 当前实际布局、非空 inputs 和逐步 layout；
+- 硬证据独立 supported 的事实。
 
-禁止读取体验核心、作品身份、送审包、Designer 解释、Explorer 材料、旧 review、SCC/graph 或自动质量指标。输出只能是一篇固定首句的自然语言 verdict。
+禁止体验核心、作品身份、送审包、Designer/Explorer 材料、旧 review、SCC/graph、修改说明或自动指标。输出只能是一篇固定首句的自然语言 verdict。
 
-## 新增临时角色
-
-这些角色只由本流程 assignment 定义，不新增 skill。
+## 临时角色
 
 ### 原型上下文审计员
 
@@ -128,16 +128,27 @@ instance_policy: fresh_for_assignment
 role: prototype_context_auditor
 ```
 
+只读：
+
+- `authority-manifest-vNNN.yml`；
+- manifest 逐项列出的 handoff、required docs、authority docs；
+- 完整冻结的 `human-brief-vNNN.yml`；
+- 输出位置。
+
+交付 `context-vNNN.yml`，记录规则、胜利条件、对象/事件语义、玩家前序、允许机制、工具、source boundary、workflow phase、最终写入目标、冲突和 provenance。它不提出布局、体验核心或作品评价。
+
+### Critic 校准投影器
+
+该工作属于 Controller-owned 确定性组包，不是审美角色。若委派只读临时 Agent，Controller 仍必须独立选择来源并机械验证结果。
+
 输入：
 
-- 原型根目录；
-- `docs/design_handoff.yml`；
-- handoff 声明的 required docs；
-- 人类体验种子；
-- 允许的 source boundary；
-- 上下文输出位置。
+- 全部有序前序；
+- clean archive index/retrieval summaries；
+- Controller source selection；
+- projection schema。
 
-交付 `context-vNNN.yml`，至少记录规则、胜利条件、对象/事件语义、玩家前序、允许机制、工具入口、pre-submission workflows、authority refs、未解决冲突和 provenance。它只做事实提取与一致性审计，不提出布局、体验核心或作品评价。
+输出 source selection、两类 view 和 projection audit。不得接收 Designer anchors、当前体验核心或 Critic 历史。
 
 ### 提交前 Workflow Worker
 
@@ -146,15 +157,15 @@ instance_policy: fresh_for_assignment
 role: pre_submission_workflow_worker
 ```
 
-仅用于不属于 Designer 的 pre-submission workflow。输入必须逐项限定：
+只用于不涉及设计判断且不会语义性改变 exact 的 workflow。输入逐项限定：
 
-- `workflow_id`、依赖 workflow 和 applicability；
-- 当前 accepted candidate 与 reviewed exact；
+- workflow id、execution phase、依赖和 applicability；
+- accepted candidate、reviewed exact；
 - authority docs；
-- 允许操作、允许写入路径和必需命令；
-- 必需复验、版本影响与完成条件。
+- 允许操作、命令、读写路径；
+- 版本影响、复验和完成条件。
 
-输出必须包含实际操作、artifact refs、`version_effect`、建议的 `review_effect`、证据和阻塞。轮次控制器只按 authority 合同登记 review 是否保留。
+若实际操作会影响 layout、start、goal、胜利条件、核心机制使用或玩家关系，必须停止并返回 `blocked`，由 Controller 路由给持续 Designer。
 
 ### Delivery Operator
 
@@ -163,16 +174,17 @@ instance_policy: fresh_for_assignment
 role: delivery_operator
 ```
 
-输入：
+Stage assignment 只向 task-local 中保持仓库相对结构的 prototype package mirror/staging 写入，并复制校验所需只读 schemas；执行 `delivery_staging` workflow，并必须生成：
 
-- 已完成的 pre-submission record；
-- 唯一 delivery exact 及当前证据；
-- authority 指定的最终 levels、queue 和 playable 数据目标；
-- 精确 source/id；
-- task root 内的 delivery record 输出位置；
-- 逐项列出的最终发布写入路径与构建命令。
+- 唯一 delivery exact；
+- 最终目标白名单；
+- 每个目标旧 digest、新 digest；
+- commit manifest；
+- recovery 包；
+- source/id 与 queue 计划；
+- build 记录。
 
-它只接入一个 delivery version。版本化 delivery record、构建日志和审计引用留在被忽略的 task root；原型目录只写 authority 要求的最终关卡与相关数据。不得改变关卡设计，不得创建新的 report 目录；若操作要求改变 exact，必须停止并返回 `blocked`。
+pre-commit supported 后，commit assignment 只能执行已验证 manifest。使用同目录临时文件和原子替换；任一步失败必须补偿恢复。不得改变设计或创建第二入口。
 
 ### Delivery Verifier
 
@@ -181,34 +193,26 @@ instance_policy: fresh_for_assignment
 role: delivery_verifier
 ```
 
-必须与 Delivery Operator 使用不同 `agent_instance_id`，且只读。输入为 Operator 结果、交付门禁、目标 levels/queue、构建产物和当前证据引用。
+pre-commit 与 post-commit 各使用一个 fresh 实例；二者与 Operator 的 ID 互不相同且只读。
 
-它核验：
+pre-commit 核验 staging、唯一性、source/id、queue 计划、build、证据新鲜度、写入白名单和 recovery。
 
-- delivery exact 与 reviewed/current exact 的合法对应；
-- levels 中只有一个目标条目；
-- queue entry 为目标 source/id 且状态为 `pending_playtest`；
-- playable 构建成功且 source/id 可解析；
-- submission、uniqueness、硬证据、Critic 和 pre-submission 引用仍然新鲜。
-
-输出 `supported`、`contradicted` 或 `unknown` 及逐项事实，不修改交付文件。
+post-commit 核验已提交 levels/playable、预验证 queue staging、digest、唯一性、source/id、build 与全部门禁引用；输出 `supported | contradicted | unknown`，不修改文件。通过后 Operator 只能原子激活该 queue staging，Controller 再机械核验最终 queue digest。
 
 ## 输入防火墙
 
 | 接收者 | 允许输入 | 明确禁止 |
 |---|---|---|
-| Explorer | 局部结构空间、规则、工具、task lexicon | exact、archive、review、完整候选 |
-| Designer | 当前 assignment 白名单内的设计材料 | Controller 状态写权限、独立 verdict |
+| Explorer | 局部空间、规则、工具、lexicon snapshot | exact、archive、review、完整候选 |
+| Designer | 当前 assignment 的设计材料 | Controller 写权限、独立 verdict |
 | Evidence Reviewer | exact 与原始硬证据 | 审美、亮点和包装叙事 |
-| Puzzle Critic | 白名单 Critic packet | Designer claims、旧 review、graph/SCC、自动指标 |
-| Workflow Worker | 单个 workflow authority 与目标 artifact | 其它 workflow 的隐式写权限 |
-| Delivery Operator | 已批准的唯一 delivery exact | 新设计、第二 delivery 入口 |
-| Delivery Verifier | 交付实物与门禁引用 | 任何写入权限 |
-
-发生意外污染时，子 Agent 必须停止并以 `failed` 交付，不得自行过滤后继续作专业结论。
+| Critic | 白名单 Critic packet | Designer claims、旧 review、graph/SCC、自动指标 |
+| Workflow Worker | 单 workflow authority 与目标 artifact | 隐式写权、语义性 exact 修改 |
+| Delivery Operator | 已批准 delivery exact、写入白名单、旧 digest | 新设计、第二入口、未验证写集 |
+| Delivery Verifier | staging 或最终实物与门禁 | 任何写入 |
 
 ## Git 边界
 
-- 原型上下文、探索、Designer 工作台、exact 快照、送审包、review、workflow record、delivery record、验证和人类交接全部属于忽略的中间产物。
-- 只有 Delivery Operator assignment 中由原型 authority 明确列出的最终关卡与相关数据路径可以进入 Git。
-- 子 Agent 不执行 `git add`、`git commit` 或 `git add -f`；版本控制由任务外层在交付验证通过后按最终路径白名单处理。
+- authority、context、探索、工作台、exact、送审包、review、calibration、workflow record、delivery record、verification 和 handoff 都是忽略的中间产物。
+- 只有 authority 明确列出且经过两阶段 delivery 的最终关卡与相关数据可以进入 Git。
+- 子 Agent 不执行 `git add`、`git commit` 或 `git add -f`。

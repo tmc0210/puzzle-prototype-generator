@@ -16,6 +16,11 @@ candidate:
   evidence_review_refs: []
   critic_review_ref: ""
   pre_submission_workflow_record_ref: ""
+  delivery_record_ref: ""
+  pre_commit_verification_ref: ""
+  post_commit_verification_ref: ""
+  queue_activation_ref: ""
+  delivery_state: queue_activated
   pre_submission_state: completed
   playtest_status: pending_playtest
   playable_delivery:

@@ -29,6 +29,11 @@ candidate:
   delivery_exact_version: null
   pre_submission_check_ref: null
   pre_submission_state: not_started | incomplete | completed
+  delivery_state: not_started | staged | precommit_verified | committed | postcommit_verified | queue_activated
+  delivery_record_ref: null
+  pre_commit_verification_ref: null
+  post_commit_verification_ref: null
+  queue_activation_ref: null
   playtest_status: not_queued | pending_playtest | defer | needs_revision | ready_for_archive | reject
 
 review_cycles:
@@ -52,3 +57,5 @@ attempts:
 账本始终只有一个 `candidate` 对象。每个 exact version 只使用一名 fresh Critic，一次读取后写一篇最终批评，不增加投票轮。Critic 接受时由 Controller 直接登记 `accept_candidate`，不要求 Designer 伪造确认动作；Critic 退回时才产生 `designer_action_ref`。
 
 `attempts` 登记已经发布并得到明确结果的 exact。候选被接受后才能进入提交前流程；最终只能有一个 `delivery_exact_version`。
+
+`pre_submission_check_ref` 只能指向包含全部 workflow 的聚合记录。`pending_playtest` 只允许与 `delivery_state: queue_activated` 同时出现；pre-commit verification 前不得写最终目标，post-commit verification 通过前不得激活最终 queue。

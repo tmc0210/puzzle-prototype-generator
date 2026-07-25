@@ -14,6 +14,7 @@ tool_commands:
   exposure_audit: "npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts <layout-file|-> --id <id> --exact-version <exact> --allowed-exposure-through <branch> --max-states 300000 --out <report.json>"
   playable_build: "npm run candle:playable:build"
   playable_replay_check: "npm run candle:playable:check-replays"
+  playable_staging_build: "npx tsx src/cli.ts evaluate <staged-repo-root>/prototypes/candle_sokoban --write && npx tsx src/playable/exportPlayable.ts <staged-repo-root>/prototypes/candle_sokoban && npx tsx src/playable/checkReplayCoverage.ts <staged-repo-root>/prototypes/candle_sokoban"
 
 design_corpus:
   allowed_design_sources:
@@ -57,6 +58,7 @@ hard_evidence_requirements:
 prototype_specific_workflows:
   - id: strict_exposure_gate_recheck
     kind: pre_submission_check
+    execution_phase: pre_delivery
     default_status: always_run_before_delivery
     trigger:
       - "当前唯一候选已经通过 Critic，准备进入待玩列表。"
@@ -72,6 +74,7 @@ prototype_specific_workflows:
 
   - id: runtime_conformance_recheck
     kind: pre_submission_check
+    execution_phase: pre_delivery
     default_status: always_run_before_delivery
     trigger:
       - "当前唯一候选准备进入待玩列表。"
@@ -86,13 +89,14 @@ prototype_specific_workflows:
 
   - id: playable_delivery_build
     kind: pre_submission_check
+    execution_phase: delivery_staging
     default_status: always_run_before_delivery
     trigger:
-      - "唯一 delivery version 已写入 studio/levels.yml 并加入 playable_queue.yml。"
+      - "task-local staging repo mirror 已复制 schemas，并写入唯一 delivery version 和待激活 queue entry。"
     authority_docs:
       - prototypes/candle_sokoban/docs/designer_contract.md
     hard_checks:
-      - "重建 runtime-backed playable。"
+      - "仅在 staging mirror 中重建 runtime-backed playable，不写最终原型目录。"
       - "queue entry 的 source、level id 与 delivery version 可解析。"
       - "playable replay coverage 检查通过。"
     version_effect: unchanged

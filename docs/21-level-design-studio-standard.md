@@ -61,10 +61,10 @@ Critic 一次读取允许材料并写一篇自然语言 verdict。它把实际�
 
 ## 启动与探索
 
-1. Controller 建立任务目录和单候选账本，按 task exploration 合同写 `dispatch.yml`，用不继承设计对话的 fresh agent 启动 `$sokoban-mechanism-lab`。
+1. Controller 从固定 handoff 入口生成逐文件 authority manifest，冻结包含完整人类请求、目标难度、全部前序和 prototype routing 的 human brief；不得授权读取整个原型根目录。随后建立任务目录和单候选账本，按 task exploration 合同写 `dispatch.yml`，用不继承设计对话的 fresh agent 启动 `$sokoban-mechanism-lab`。
 2. Explorer 只收到体验种子、玩家前序、允许机制、规则、工具入口、source boundary 和任务目录；不得收到审美归档、正式 exact、review 或 Designer 设想。
 3. Designer 在 Explorer 工作期间独立完成归档校准：读完整 clean archive index / retrieval summaries、所有明确审美 1 分样本的人类原评语，并自行选择相关正例和边界例。未归档 report、旧 Critic、Designer 自评和工具结论不能校准审美。
-4. Explorer 首批已验证材料发布后，Designer 建立体验简报并开始唯一候选。每个设计 assignment 开始时读取最新 task lexicon；结构方向实质改变时按需重读。正在送审的 exact 保持冻结。
+4. Explorer 首批已验证材料发布后，Controller 立即冻结 lexicon snapshot，Designer 建立体验简报并开始唯一候选，不等待其它无依赖探索。每个设计 assignment 开始时读取最新已冻结 snapshot；结构方向实质改变时按需重读。正在送审的 exact 保持冻结。
 5. Designer 可写与当前候选坐标、包装无关的局部探索 request；Controller 校验边界后调度 Explorer。完整候选、难度和 family 判断留在 Designer 内层循环。
 
 ## 唯一候选与内层 Design Studio
@@ -93,7 +93,7 @@ Controller 从实际 exact、规则合同和原始 artifact 组装硬证据包�
 
 ### 2. Critic：一次完整作品阅读
 
-Controller 独立选择 clean archive 来源，不采用 Designer 代选的唯一 anchors。它把当前目标之前的课程关生成为阶段内难度 view，保留布局、难度分、审美分和人类原评语；其余 clean archive 生成为跨阶段审美 view，保留布局、审美分和人类原评语，不携带结构化难度元数据。原始 archive 来源只留在账本，不进入 Critic packet。Base packet 只包含：
+Evidence Reviewer 工作期间，Controller 可以并行独立选择 clean archive 来源，不采用 Designer 代选的唯一 anchors。它保存来源选择、阶段内难度 view、跨阶段审美 view 和 projection audit；audit 证明来源互斥、合计覆盖所选 clean archive，且阶段内 view 覆盖全部有序前序。硬证据与投影审计都通过后才可生成 Base packet。当前目标之前的课程关保留布局、难度分、审美分和人类原评语；其余 clean archive 只保留布局、审美分和人类原评语，不携带结构化难度元数据。原始 archive 来源只留在账本，不进入 Critic packet。Base packet 只包含：
 
 - 规则、胜利条件与玩家规则前提；
 - 全部有序前序关卡；
@@ -131,7 +131,7 @@ Critic 只写一篇短的自然语言批评。第一行必须严格为：
 
 ## 提交前工作流与待玩交付
 
-候选被接受后，Controller 逐项处理当前原型 `design_handoff.yml` 中所有 `kind: pre_submission_check` workflow。只读 workflow 保留 review；若 workflow 改变 exact，只有 authority docs 明确允许且实际满足全部边界、复验和不变量时才保留，否则形成新 exact 并重跑硬证据与 Critic。
+候选被接受后，Controller 逐项处理当前原型 `design_handoff.yml` 中所有 `kind: pre_submission_check` workflow。每项必须声明 `execution_phase: pre_delivery | delivery_staging | delivery_transaction | post_delivery_verification`。只读 workflow 保留 review；可能语义性改变 exact 的 workflow 只能交给持续 Designer，重新完成玩家侧重读、canonical replay、解族自查和送审包后发布新 exact，再重跑硬证据与 Critic。只有 authority 预先声明为语义保持的确定性变换且全部复验满足时才保留 review。全部结果按阶段汇总为唯一当前 workflow record 快照；后续阶段创建下一版本，不覆盖旧记录。开始 staging 前所有 `pre_delivery` 项完成，激活 queue 前最终快照整体完成。
 
 交付前检查：
 
@@ -144,7 +144,9 @@ pre_submission_checks = completed_or_recorded_not_applicable
 delivery_version_evidence = current
 ```
 
-满足后，只把一个 delivery version 写入 `studio/levels.yml` 或 `levels.yml`，加入 `playable_queue.yml` 并设为 `pending_playtest`，重建 playable 并确认 source/id 可解析。人类交接只介绍该关的体验核心、已知风险和 artifact refs，不比较其它设计。
+满足后执行两阶段 delivery：先在 task-local staging 生成唯一版本、目标旧/新 digest、queue 计划与 recovery 包；fresh pre-commit Verifier 支持后原子提交非 queue 目标；另一名 fresh post-commit Verifier 核验已提交实物和预验证 queue staging。通过后只原子激活同一 queue staging，并机械核验 digest、source/id 与状态。激活前保持 `not_queued`，匹配后才登记 `pending_playtest`。人类交接只介绍该关的体验核心、已知风险和 artifact refs，不比较其它设计。
+
+并发以依赖为边界：Explorer 与归档校准、Evidence Reviewer 与 Critic 校准投影、互不依赖且写集不交叠的 workflow 可以并行；共享候选状态、同一 exact、Evidence→Critic 和 delivery 事务必须串行。
 
 ## 状态
 

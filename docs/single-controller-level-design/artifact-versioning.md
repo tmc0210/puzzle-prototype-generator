@@ -1,25 +1,28 @@
-# 文件交付与版本协议
+# 文件、digest 与版本协议
 
-本文由 [唯一入口](README.md) 路由，不可单独作为主流程入口。文件是流程状态和 Agent 交付的唯一权威载体。
+本文由 [唯一入口](README.md) 路由。文件、内容 digest 和关闭的 decision 是流程状态的唯一权威载体。
 
 ## 任务目录
-
-每个实际设计任务固定使用仓库根目录下的独立、被 Git 忽略的工作区：
 
 ```text
 <task-root> = reports/single-controller-level-design/<prototype-id>/<task-id>/
 ```
 
-不得把 `<task-root>` 改为旧流程使用的 `prototypes/<prototype-id>/reports/`，不得在 `prototypes/<prototype-id>/studio/` 中保存中间文档。开始任务前必须通过：
+开始前：
 
 ```text
-git check-ignore -v -- reports/single-controller-level-design/<prototype-id>/<task-id>/orchestration/manifest.yml
+git check-ignore -v -- <task-root>/orchestration/manifest.yml
 ```
 
-目录结构为：
+目录结构：
 
 ```text
 <task-root>/
+  authority/
+    human-brief-v001.yml
+    authority-manifest-v001.yml
+  context/
+    context-v001.yml
   orchestration/
     manifest.yml
     candidate_ledger.yml
@@ -27,17 +30,14 @@ git check-ignore -v -- reports/single-controller-level-design/<prototype-id>/<ta
       round-0001/
         dispatch.yml
         assignments/
-          assignment-001.yml
         results/
-          assignment-001-result-v001.yml
         summary.md
         decision.yml
-  context/
-    context-v001.yml
   exploration/
     dispatch.yml
     lexicon.md
     lexicon_index.md
+    snapshots/
     requests/
     runs/
   designer/
@@ -51,6 +51,11 @@ git check-ignore -v -- reports/single-controller-level-design/<prototype-id>/<ta
       canonical-replay.yml
       submission-packet.yml
       evidence/
+  calibration/
+    source-selection-v001.yml
+    stage-local-difficulty-v001.md
+    cross-stage-aesthetic-v001.md
+    projection-audit-v001.yml
   reviews/
     exact-v001/
       evidence-review-v001.yml
@@ -60,67 +65,78 @@ git check-ignore -v -- reports/single-controller-level-design/<prototype-id>/<ta
     workflow-record-v001.yml
     workflows/
   delivery/
+    staging-v001/
+    recovery-v001/
     delivery-record-v001.yml
-    verification-v001.yml
+    pre-commit-verification-v001.yml
+    post-commit-verification-v001.yml
+    queue-activation-v001.yml
     human-handoff-v001.yml
 ```
 
-可以按原型 authority 改用其它具体 artifact 文件名，但轮次、exact、review、delivery 和 verification 的版本边界必须保留。
+原型可按 authority 改用其它具体 artifact 名，但必须保留 authority、exact、review、聚合 workflow、staging、recovery 和两次 verification 边界。
 
-上述整棵目录都是可丢弃、可重建但需在任务期间保持 provenance 的中间工作区，不加入 Git。
+整棵 task root 是可重建但任务期间必须保留 provenance 的中间工作区，不加入 Git。
 
 ## 最终发布路径
 
-只有 Delivery Verifier 能够核验的最终关卡和原型相关数据写回原型原有路径。目标必须逐项来自当前原型 `docs/design_handoff.yml` 及 required authority docs，例如：
+最终目标逐项来自 `design_handoff.yml` 与 required authority docs。示例路径不是默认授权。不得在原型目录新增 report、review、handoff 或 ledger。
 
-```text
-prototypes/<prototype-id>/studio/levels.yml
-prototypes/<prototype-id>/levels.yml
-prototypes/<prototype-id>/playable_queue.yml
-prototypes/<prototype-id>/playable/<authority-defined-output>
-```
-
-示例不是默认写入清单。原型没有声明的路径一律不可写；不得为了保存流程 provenance 在原型目录新增 report、review、handoff 或 ledger。
-
-## 编号规则
+## 编号
 
 | 对象 | 格式 | 规则 |
 |---|---|---|
-| 工作流合同 | `workflow_version: 1.0.0` | 本目录文档版本 |
-| 文件合同 | `contract_version: 1` | assignment/result 字段合同 |
-| 轮次 | `round-0001` | 每写一个有效 decision 后单调递增 |
-| assignment | `assignment-001` | 在轮次内唯一；重试使用新轮次和新 assignment |
-| 上下文 | `context-v001` | authority 事实获授权变化时递增 |
-| exact | `exact-v001` | Designer 发布不可变快照时递增 |
-| review artifact | `*-v001` | 在对应 exact 目录内唯一且不可覆盖 |
-| workflow record | `workflow-record-v001` | 每次完整提交前编排递增 |
-| delivery record | `delivery-record-v001` | 每次合法交付尝试递增 |
+| 工作流合同 | `workflow_version: 2.0.0` | 本目录流程版本 |
+| 文件合同 | `contract_version: 2` | assignment/result/dispatch/decision 合同 |
+| 轮次 | `round-0001` | 每个事务组唯一 |
+| assignment | `assignment-001` | 轮次内唯一；重试使用新 assignment |
+| authority/context | `*-v001` | authority 或 human brief 获授权变化时递增 |
+| lexicon snapshot | `lexicon-snapshot-v001` | Designer 可消费的冻结材料集合 |
+| exact | `exact-v001` | Designer 发布完整不可变快照时递增 |
+| review | `*-v001` | 对应 exact 内不可覆盖 |
+| workflow record | `workflow-record-v001` | 每个 phase 后的当前聚合快照；新版本替代旧指针 |
+| delivery | `delivery-record-v001` | 每次合法 commit 尝试 |
 
-编号只表达不可变发布顺序，不表达质量、派生树或候选分支。更换 structure family 仍沿用同一个 `candidate_id`；不得出现 `candidate-a`、`candidate-b` 或平行 exact。
+编号只表达发布顺序，不表达质量或候选分支。更换 structure family 仍使用同一 `candidate_id`。
 
-## 不可变与可覆盖文件
+## 可覆盖与不可变
 
 可以覆盖：
 
-- `designer/workbench/` 内明确标记为工作态的布局、probe 和 replay；
-- task-local Explorer 的当前 `lexicon.md` 与 `lexicon_index.md`，但其 run provenance 保留；
-- 尚未关闭轮次中的临时日志。
+- `designer/workbench/` 中明确标记的工作态；
+- Explorer 当前 `lexicon.md`/`lexicon_index.md`，但 run 保留；
+- 尚未交付的临时日志和未发布 staging。
 
 不得覆盖：
 
-- 已发布 exact 目录；
-- 已交付 result、decision、evidence review、Critic review；
-- 已完成 workflow、delivery、verification 或 human handoff record；
-- 任何被后续 decision 引用的 artifact。
+- authority manifest、human brief 和 context；
+- lexicon snapshot；
+- exact；
+- result、decision、evidence review、Critic review；
+- calibration selection/view/audit；
+- 完成的 workflow、delivery、verification、handoff；
+- 被后续 decision 引用的任何 artifact。
 
-需要修正不可变文件时，创建下一个版本，并在新文件中引用被替代版本和原因。旧文件保留 provenance，但不得继续为新 exact 背书。
+修正不可变文件时创建下一版本；旧文件保留 provenance，不继续为新 exact 背书。
+
+## 内容身份
+
+所有跨 assignment 输入使用：
+
+```yaml
+input_digests:
+  - ref: path/to/file
+    sha256: 64位小写十六进制
+```
+
+目录不能直接作为输入。需要读取目录集合时，Controller 先生成列出每个文件及 digest 的 manifest，再把 manifest 与列出的文件逐项授权。
+
+exact 至少冻结 layout、solve instance、canonical replay、submission packet、规则合同和原始证据 digest。Critic packet 冻结两类 calibration view 和全部前序 digest。Delivery manifest 冻结旧目标、新 staging 和 recovery digest。
 
 ## 结果信封
 
-每个 assignment 必须交付一个 YAML 结果信封：
-
 ```yaml
-contract_version: 1
+contract_version: 2
 task_id: ""
 round_id: round-0001
 assignment_id: assignment-001
@@ -134,7 +150,13 @@ exact_version_basis: null
 produced_exact_version: null
 
 consumed_refs: []
+consumed_digests:
+  - ref: ""
+    sha256: ""
 produced_refs: []
+produced_digests:
+  - ref: ""
+    sha256: ""
 authoritative_claim_refs: []
 requested_next_inputs: []
 blocking_issues: []
@@ -152,38 +174,37 @@ boundary_check:
   contamination_detected: false
 ```
 
-专业结论必须保存在 `authoritative_claim_refs` 指向的角色专属 artifact 中；结果信封只声明交付位置和终态，不复制长篇结论。
+采用条件：
 
-以下任一情况使结果不可采用：
+- task/round/assignment/agent/candidate/exact 对应正确；
+- consumed refs 与 assignment 白名单相同，digest 未变；
+- produced refs 存在、digest 正确且位于写集；
+- authoritative claims 是 produced refs 的子集；
+- `completed` 具备所有 required outputs；
+- 未创建子 Agent、未污染、未越权。
 
-- assignment、任务、候选或 exact 对应错误；
-- `produced_refs` 不存在或超出允许写入范围；
-- `spawned_subagents` 不是 `false`；
-- 输入超出白名单或发现污染；
-- 声称 `completed` 但缺少 required outputs；
-- 聊天声称完成但没有结果信封。
-
-## dispatch 与 decision
-
-`dispatch.yml` 冻结当前轮：
+## dispatch
 
 ```yaml
-contract_version: 1
+contract_version: 2
 task_id: ""
 round_id: round-0001
-based_on_decision_ref: null
 objective: ""
+dependency_decision_refs: []
+state_snapshot: {}
 assignment_refs: []
+write_set: []
 barrier:
   expected_results: []
   all_terminal_before_decision: true
-  next_round_before_decision: forbidden
 ```
 
-`decision.yml` 是本轮唯一控制结论：
+所有 dependency decision 必须关闭。`write_set` 必须覆盖本轮 assignments 的允许写入，且组内不能相交。
+
+## decision
 
 ```yaml
-contract_version: 1
+contract_version: 2
 task_id: ""
 round_id: round-0001
 dispatch_ref: ""
@@ -196,7 +217,7 @@ state_before: {}
 state_after: {}
 decision: ""
 decision_basis_refs: []
-next_round_intent: null
+unlocked_dependency_keys: []
 
 barrier_check:
   all_expected_results_present: true
@@ -205,36 +226,57 @@ barrier_check:
 round_status: closed
 ```
 
-`summary.md` 可以用自然语言方便人类阅读，但不能新增 result artifacts 中不存在的专业结论。`decision_basis_refs` 必须直接指向所采用的专业产物或 authority。
+`summary.md` 不得新增专业结论。`decision_basis_refs` 直接指向采用的专业 artifact 或 authority。
 
 ## 实例身份
 
-- 持续 Designer：一个任务固定一个 `agent_instance_id`；恢复调用不改 ID。
-- 持续 Explorer：一个任务固定一个 `agent_instance_id`；不同 batch 不改 ID。
-- Evidence Reviewer：每个 exact 使用新的 ID；该 ID 不得出现在其它 exact。
-- Puzzle Critic：每个 exact 一个新的唯一 ID；同一 exact 不得登记第二个。
-- Workflow Worker：每个 assignment fresh；多个独立 workflow 可在同轮使用不同 ID。
-- Delivery Operator 与 Delivery Verifier：必须 fresh 且 ID 不同。
+- Designer、Explorer：任务内持续；污染替换时记录新 ID。
+- Evidence Reviewer、Critic：每个 exact fresh；ID 不得跨 exact。
+- Workflow Worker：每 assignment fresh。
+- Delivery Operator、pre-commit Verifier、post-commit Verifier：fresh 且三个 ID 互不相同。
 
-Agent 被污染、纠偏失败或实例不可恢复时，下一轮分配新 ID，并在 decision 中记录替换原因。持续角色更换实例不改变 `candidate_id`。
+## 交付事务记录
 
-## 引用与交付门禁
+Delivery staging record 至少包含：
 
-所有中间 artifact 使用相对仓库根目录或相对 task root 的规范化路径；同一文件内不得混用两种基准。最终发布引用使用相对仓库根目录路径。引用必须指向真实文件，不得依赖聊天消息、临时终端输出或未保存的内存状态。
-
-交付前至少检查：
-
-```text
-task root 位于 reports/single-controller-level-design/
-git check-ignore 确认整个 task root 被忽略
-当前轮 decision 已关闭
-候选账本只有一个 candidate 对象
-delivery exact 唯一且与 current exact 合法对应
-所有 evidence/review/workflow 引用版本一致
-Delivery Operator 与 Verifier 实例不同
-levels、queue、playable source/id 可解析
-human handoff 指向 verification supported 的 delivery
-Git 待提交路径不包含 task root、旧 Studio reports 或其它中间产物
+```yaml
+candidate_id: ""
+delivery_exact_version: ""
+targets:
+  - final_ref: ""
+    old_sha256: absent | ""
+    staged_ref: ""
+    staged_sha256: ""
+recovery_manifest_ref: ""
+queue_plan:
+  source: ""
+  id: ""
+  final_status_after_post_commit_verification: pending_playtest
 ```
 
-人类试玩后的 `defer`、`needs_revision`、`ready_for_archive` 或 `reject` 是后续人工状态，不由本流程中的任何 Agent 预填。
+post-commit verification 通过前，不得把最终 queue 状态或账本状态设为 `pending_playtest`。通过后只允许原子激活 pre-commit 已验证的 queue staging；激活记录保存预期/实际 digest、source/id 和状态，两者完全一致后才能更新账本。
+
+## 最终门禁
+
+至少验证：
+
+```text
+task root 被 Git 忽略
+所有依赖 decision 已关闭
+输入/输出 digest 正确
+候选账本只有一个 candidate
+workflow-record 是聚合记录且通过验证
+delivery exact 唯一并与 current/reviewed exact 合法对应
+Evidence Reviewer 与 Critic 身份满足 freshness
+两类 Critic calibration 通过 projection audit
+Delivery 三个角色实例互不相同
+pre-commit verification supported
+atomic commit 完成或已补偿恢复
+post-commit verification supported
+queue activation 与预验证 staging digest 完全一致
+levels、queue、playable source/id 可解析
+human handoff 指向 post-commit supported 的 delivery
+Git 待提交路径不含 task root 或中间产物
+```
+
+人类试玩后的去留状态不由任何 Agent 预填。

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { access, mkdir, readFile, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 
 import YAML from "yaml";
@@ -53,6 +54,20 @@ const REQUIRED_DESIGNER_SKILL = "sokoban-level-designer";
 const REQUIRED_EXPLORATION_SKILL = "sokoban-mechanism-lab";
 const REQUIRED_EXPLORATION_INTENT = "mechanism_explore";
 const REQUIRED_PUBLICATION_SCOPE = "task_local";
+const VALID_WORKFLOW_PHASES = new Set([
+  "pre_delivery",
+  "delivery_staging",
+  "delivery_transaction",
+  "post_delivery_verification",
+]);
+const WORKFLOW_PHASE_ORDER = [
+  "pre_delivery",
+  "delivery_staging",
+  "delivery_transaction",
+  "post_delivery_verification",
+];
+const VALID_RESULT_STATUSES = new Set(["completed", "failed", "blocked", "needs_input"]);
+const SHA256_PATTERN = /^[a-f0-9]{64}$/;
 const DESIGNER_FORBIDDEN_CONTROL_FIELDS = new Set([
   "task_state",
   "candidate_state",
@@ -91,6 +106,12 @@ try {
       break;
     case "validate-designer-action":
       await validateDesignerAction(args);
+      break;
+    case "validate-workflow-record":
+      await validateWorkflowRecordCommand(args);
+      break;
+    case "validate-round":
+      await validateRoundCommand(args);
       break;
     default:
       printUsage();
@@ -250,6 +271,267 @@ async function assertCriticCalibrationView(ref, expectedKind, priorCourseRefs, l
   if (structuredDifficulty.test(body)) {
     throw new Error(`${label} 的跨阶段审美 view 含结构化难度元数据`);
   }
+}
+
+async function validateWorkflowRecordCommand(options) {
+  const recordRef = requireArg(options, "record");
+  const record = await readYamlRef(recordRef);
+  await assertValidWorkflowRecord(record, recordRef);
+  if (options.through) assertWorkflowReadyThrough(record, options.through, recordRef);
+  console.log(`提交前聚合记录校验通过：${normalizeRef(recordRef)}`);
+}
+
+function assertWorkflowReadyThrough(record, phase, label) {
+  const targetIndex = WORKFLOW_PHASE_ORDER.indexOf(phase);
+  if (targetIndex < 0) throw new Error(`${label} 请求了非法 workflow phase：${phase}`);
+  for (const [index, result] of record.workflow_results.entries()) {
+    const resultIndex = WORKFLOW_PHASE_ORDER.indexOf(result.execution_phase);
+    if (resultIndex <= targetIndex && !["completed", "not_applicable"].includes(result.status)) {
+      throw new Error(`${label}.workflow_results[${index}] 尚未完成 ${phase} 前置阶段`);
+    }
+  }
+}
+
+async function assertValidWorkflowRecord(record, label) {
+  requireString(record.design_task_id, `${label}.design_task_id`);
+  requireString(record.record_version, `${label}.record_version`);
+  if (!VALID_WORKFLOW_PHASES.has(record.completed_through)) {
+    throw new Error(`${label}.completed_through 非法`);
+  }
+  if (record.supersedes_ref !== null && record.supersedes_ref !== undefined) {
+    await assertRefExists(record.supersedes_ref, `${label}.supersedes_ref`);
+  }
+  requireString(record.candidate_id, `${label}.candidate_id`);
+  requireString(record.reviewed_exact_version, `${label}.reviewed_exact_version`);
+  requireString(record.delivery_exact_version, `${label}.delivery_exact_version`);
+  const workflowResults = requireArray(record.workflow_results, `${label}.workflow_results`);
+  let requiresRereview = false;
+  for (const [index, rawResult] of workflowResults.entries()) {
+    const result = asObject(rawResult, `${label}.workflow_results[${index}]`);
+    requireString(result.workflow_id, `${label}.workflow_results[${index}].workflow_id`);
+    if (!VALID_WORKFLOW_PHASES.has(result.execution_phase)) {
+      throw new Error(`${label}.workflow_results[${index}].execution_phase 非法`);
+    }
+    if (!["applicable", "not_applicable"].includes(result.applicability)) {
+      throw new Error(`${label}.workflow_results[${index}].applicability 非法`);
+    }
+    requireString(result.applicability_basis, `${label}.workflow_results[${index}].applicability_basis`);
+    const authorityDocs = requireStringArray(
+      result.authority_docs,
+      `${label}.workflow_results[${index}].authority_docs`,
+    );
+    for (const [refIndex, ref] of authorityDocs.entries()) {
+      await assertRefExists(ref, `${label}.workflow_results[${index}].authority_docs[${refIndex}]`);
+    }
+    const artifactRefs = requireStringArray(
+      result.artifact_refs,
+      `${label}.workflow_results[${index}].artifact_refs`,
+    );
+    for (const [refIndex, ref] of artifactRefs.entries()) {
+      await assertRefExists(ref, `${label}.workflow_results[${index}].artifact_refs[${refIndex}]`);
+    }
+    if (!["unchanged", "changed"].includes(result.version_effect)) {
+      throw new Error(`${label}.workflow_results[${index}].version_effect 非法`);
+    }
+    if (!["preserved", "rereview_required"].includes(result.review_effect)) {
+      throw new Error(`${label}.workflow_results[${index}].review_effect 非法`);
+    }
+    requireString(result.review_effect_basis, `${label}.workflow_results[${index}].review_effect_basis`);
+    if (!["completed", "not_applicable", "incomplete"].includes(result.status)) {
+      throw new Error(`${label}.workflow_results[${index}].status 非法`);
+    }
+    if (result.applicability === "not_applicable" && result.status !== "not_applicable") {
+      throw new Error(`${label}.workflow_results[${index}] 不适用时 status 必须为 not_applicable`);
+    }
+    if (result.version_effect === "changed" && result.review_effect !== "preserved") {
+      requiresRereview = true;
+    }
+  }
+  const completed = workflowResults.every((result) => ["completed", "not_applicable"].includes(result.status));
+  if ((record.overall_status === "completed") !== completed) {
+    throw new Error(`${label}.overall_status 与 workflow_results 完成情况不一致`);
+  }
+  if (!["completed", "incomplete"].includes(record.overall_status)) {
+    throw new Error(`${label}.overall_status 非法`);
+  }
+  if (typeof record.return_to_design_required !== "boolean") {
+    throw new Error(`${label}.return_to_design_required 必须是布尔值`);
+  }
+  if (requiresRereview && record.return_to_design_required !== true) {
+    throw new Error(`${label} 含需重审的版本变化，必须 return_to_design_required=true`);
+  }
+  if (record.overall_status === "completed" && record.return_to_design_required !== false) {
+    throw new Error(`${label} 完成时必须 return_to_design_required=false`);
+  }
+  assertWorkflowReadyThrough(record, record.completed_through, label);
+}
+
+async function validateRoundCommand(options) {
+  const dispatchRef = requireArg(options, "dispatch");
+  const decisionRef = requireArg(options, "decision");
+  const dispatch = await readYamlRef(dispatchRef);
+  const decision = await readYamlRef(decisionRef);
+  if (dispatch.contract_version !== 2 || decision.contract_version !== 2) {
+    throw new Error("validate-round 只接受 contract_version: 2");
+  }
+  const taskId = requireString(dispatch.task_id, `${dispatchRef}.task_id`);
+  const roundId = requireString(dispatch.round_id, `${dispatchRef}.round_id`);
+  if (decision.task_id !== taskId || decision.round_id !== roundId) {
+    throw new Error("dispatch 与 decision 的 task_id / round_id 不一致");
+  }
+  if (normalizeRef(decision.dispatch_ref) !== normalizeRef(dispatchRef)) {
+    throw new Error("decision.dispatch_ref 未引用当前 dispatch");
+  }
+  const dependencyRefs = requireStringArray(
+    dispatch.dependency_decision_refs,
+    `${dispatchRef}.dependency_decision_refs`,
+  );
+  for (const [index, ref] of dependencyRefs.entries()) {
+    const dependency = await readYamlRef(ref);
+    if (dependency.round_status !== "closed") {
+      throw new Error(`${dispatchRef}.dependency_decision_refs[${index}] 未关闭`);
+    }
+  }
+  const assignmentRefs = requireStringArray(dispatch.assignment_refs, `${dispatchRef}.assignment_refs`);
+  const expectedResults = requireStringArray(
+    asObject(dispatch.barrier, `${dispatchRef}.barrier`).expected_results,
+    `${dispatchRef}.barrier.expected_results`,
+  );
+  if (assignmentRefs.length !== expectedResults.length) {
+    throw new Error("assignment_refs 与 expected_results 数量不一致");
+  }
+  const dispatchWriteSet = requireStringArray(dispatch.write_set, `${dispatchRef}.write_set`);
+  const expectedResultSet = new Set(expectedResults.map(normalizeRef));
+  const assignmentById = new Map();
+  const allWritePaths = [];
+  for (const assignmentRef of assignmentRefs) {
+    const assignment = await readYamlRef(assignmentRef);
+    if (assignment.contract_version !== 2) throw new Error(`${assignmentRef}.contract_version 必须为 2`);
+    if (assignment.task_id !== taskId || assignment.round_id !== roundId) {
+      throw new Error(`${assignmentRef} 与 dispatch 身份不一致`);
+    }
+    if (assignment.subagent_spawn_allowed !== false) {
+      throw new Error(`${assignmentRef}.subagent_spawn_allowed 必须为 false`);
+    }
+    const assignmentDependencies = requireStringArray(
+      assignment.dependency_decision_refs,
+      `${assignmentRef}.dependency_decision_refs`,
+    );
+    if (!assignmentDependencies.every(
+      (ref) => dependencyRefs.map(normalizeRef).includes(normalizeRef(ref)),
+    )) {
+      throw new Error(`${assignmentRef} 引用了 dispatch 外的依赖 decision`);
+    }
+    const assignmentId = requireString(assignment.assignment_id, `${assignmentRef}.assignment_id`);
+    if (assignmentById.has(assignmentId)) throw new Error(`重复 assignment_id：${assignmentId}`);
+    assignmentById.set(assignmentId, { assignment, assignmentRef });
+    await assertDigestListMatchesRefs(
+      assignment.input_refs,
+      assignment.input_digests,
+      `${assignmentRef}.input`,
+    );
+    const outputRefs = requireStringArray(assignment.allowed_output_refs, `${assignmentRef}.allowed_output_refs`);
+    for (const outputRef of outputRefs) {
+      const outputPath = resolveRepoRef(outputRef);
+      for (const prior of allWritePaths) {
+        if (pathsOverlap(outputPath, prior.path)) {
+          throw new Error(`本轮写集相交：${outputRef} 与 ${prior.ref}`);
+        }
+      }
+      allWritePaths.push({ path: outputPath, ref: outputRef });
+    }
+    const completion = asObject(assignment.completion_contract, `${assignmentRef}.completion_contract`);
+    const resultRef = normalizeRef(
+      requireString(completion.result_ref, `${assignmentRef}.completion_contract.result_ref`),
+    );
+    if (!expectedResultSet.has(resultRef)) {
+      throw new Error(`${assignmentRef} 的 result_ref 不在 dispatch expected_results`);
+    }
+    const allowedStatuses = requireStringArray(
+      completion.allowed_statuses,
+      `${assignmentRef}.completion_contract.allowed_statuses`,
+    );
+    if (!allowedStatuses.every((status) => VALID_RESULT_STATUSES.has(status))) {
+      throw new Error(`${assignmentRef}.completion_contract.allowed_statuses 非法`);
+    }
+  }
+  if (!sameNormalizedStringSet(dispatchWriteSet, allWritePaths.map((entry) => entry.ref))) {
+    throw new Error("dispatch.write_set 必须等于本轮 assignments 的允许写集");
+  }
+  const resultRefs = requireStringArray(decision.result_refs, `${decisionRef}.result_refs`);
+  if (!sameNormalizedStringSet(resultRefs, expectedResults)) {
+    throw new Error("decision.result_refs 必须等于 dispatch expected_results");
+  }
+  const validResultRefs = new Set();
+  for (const resultRef of resultRefs) {
+    const result = await readYamlRef(resultRef);
+    if (result.contract_version !== 2) throw new Error(`${resultRef}.contract_version 必须为 2`);
+    if (result.task_id !== taskId || result.round_id !== roundId) {
+      throw new Error(`${resultRef} 与 dispatch 身份不一致`);
+    }
+    if (!VALID_RESULT_STATUSES.has(result.status)) throw new Error(`${resultRef}.status 非法`);
+    const assignmentEntry = assignmentById.get(result.assignment_id);
+    if (!assignmentEntry) throw new Error(`${resultRef} 未对应本轮 assignment`);
+    const { assignment, assignmentRef } = assignmentEntry;
+    if (!assignment.completion_contract.allowed_statuses.includes(result.status)) {
+      throw new Error(`${resultRef}.status 不在 assignment 允许终态中`);
+    }
+    if (result.agent_instance_id !== assignment.agent_instance_id || result.role !== assignment.role) {
+      throw new Error(`${resultRef} 的 Agent 身份与 assignment 不一致`);
+    }
+    const boundary = asObject(result.boundary_check, `${resultRef}.boundary_check`);
+    if (
+      boundary.read_within_allowlist !== true
+      || boundary.wrote_within_allowlist !== true
+      || boundary.spawned_subagents !== false
+      || boundary.contamination_detected !== false
+    ) {
+      throw new Error(`${resultRef} 的边界检查不允许采用`);
+    }
+    if (!sameNormalizedStringSet(result.consumed_refs, assignment.input_refs)) {
+      throw new Error(`${resultRef}.consumed_refs 与 assignment.input_refs 不一致`);
+    }
+    await assertDigestListMatchesRefs(result.consumed_refs, result.consumed_digests, `${resultRef}.consumed`);
+    if (!sameDigestEntries(result.consumed_digests, assignment.input_digests)) {
+      throw new Error(`${resultRef}.consumed_digests 与 assignment 冻结输入不一致`);
+    }
+    await assertDigestListMatchesRefs(result.produced_refs, result.produced_digests, `${resultRef}.produced`);
+    const producedRefs = requireStringArray(result.produced_refs, `${resultRef}.produced_refs`);
+    const allowedOutputs = requireStringArray(assignment.allowed_output_refs, `${assignmentRef}.allowed_output_refs`);
+    for (const producedRef of producedRefs) {
+      if (!allowedOutputs.some((allowed) => pathIsWithinOrEqual(resolveRepoRef(producedRef), resolveRepoRef(allowed)))) {
+        throw new Error(`${resultRef} 写出未授权路径：${producedRef}`);
+      }
+    }
+    const claimRefs = requireStringArray(result.authoritative_claim_refs, `${resultRef}.authoritative_claim_refs`);
+    if (!claimRefs.every((ref) => producedRefs.map(normalizeRef).includes(normalizeRef(ref)))) {
+      throw new Error(`${resultRef}.authoritative_claim_refs 必须是 produced_refs 子集`);
+    }
+    validResultRefs.add(normalizeRef(resultRef));
+  }
+  const acceptedRefs = requireStringArray(decision.accepted_result_refs, `${decisionRef}.accepted_result_refs`);
+  const rejectedRefs = requireStringArray(decision.rejected_result_refs, `${decisionRef}.rejected_result_refs`);
+  if (![...acceptedRefs, ...rejectedRefs].every((ref) => validResultRefs.has(normalizeRef(ref)))) {
+    throw new Error("decision 的采用/拒绝结果必须来自已验证 result_refs");
+  }
+  if (new Set([...acceptedRefs, ...rejectedRefs].map(normalizeRef)).size !== resultRefs.length) {
+    throw new Error("每个 result 必须恰好被采用或拒绝一次");
+  }
+  if (decision.round_status !== "closed") throw new Error("decision.round_status 必须为 closed");
+  await assertRefExists(decision.summary_ref, `${decisionRef}.summary_ref`);
+  const basisRefs = requireStringArray(decision.decision_basis_refs, `${decisionRef}.decision_basis_refs`);
+  for (const [index, ref] of basisRefs.entries()) {
+    await assertRefExists(ref, `${decisionRef}.decision_basis_refs[${index}]`);
+  }
+  const barrierCheck = asObject(decision.barrier_check, `${decisionRef}.barrier_check`);
+  if (
+    barrierCheck.all_expected_results_present !== true
+    || barrierCheck.all_results_terminal !== true
+    || barrierCheck.all_accepted_results_contract_valid !== true
+  ) {
+    throw new Error("decision.barrier_check 未全部通过");
+  }
+  console.log(`事务轮次校验通过：${normalizeRef(dispatchRef)}`);
 }
 
 async function validateCandidateLedger(options) {
@@ -468,6 +750,10 @@ async function validateCurrentCandidate(candidate, ledger, ledgerRef, errors) {
     );
   }
 
+  if (ledger.task_state !== "ready_for_playtest" && candidate.playtest_status === "pending_playtest") {
+    errors.push("post-commit verification 通过前不得登记 pending_playtest");
+  }
+
   if (ledger.task_state === "ready_for_playtest") {
     if (candidate.candidate_state !== "accepted") errors.push("ready_for_playtest 要求 accepted 候选");
     if (candidate.pre_submission_state !== "completed") {
@@ -478,20 +764,21 @@ async function validateCurrentCandidate(candidate, ledger, ledgerRef, errors) {
     } else if (candidate.delivery_exact_version !== exactVersion) {
       errors.push("ready_for_playtest 的 delivery_exact_version 必须等于当前 exact_version");
     }
-    if (candidate.playtest_status === "not_queued") {
-      errors.push("ready_for_playtest 候选必须已进入待玩流程");
+    if (candidate.playtest_status !== "pending_playtest") {
+      errors.push("ready_for_playtest 要求 playtest_status=pending_playtest");
+    }
+    if (candidate.delivery_state !== "queue_activated") {
+      errors.push("ready_for_playtest 要求 delivery_state=queue_activated");
     }
     try {
       const record = await readYamlRef(candidate.pre_submission_check_ref);
+      await assertValidWorkflowRecord(record, candidate.pre_submission_check_ref);
       if (record.candidate_id !== candidateId) errors.push("提交前记录的 candidate_id 不一致");
       if (record.reviewed_exact_version !== candidate.reviewed_exact_version) {
         errors.push("提交前记录的 reviewed_exact_version 不一致");
       }
       if (record.delivery_exact_version !== candidate.delivery_exact_version) {
         errors.push("提交前记录的 delivery_exact_version 不一致");
-      }
-      if (record.overall_status !== "completed" || record.return_to_design_required !== false) {
-        errors.push("ready_for_playtest 要求提交前记录完整且无需回到设计");
       }
       const workflowResults = requireArray(record.workflow_results, "pre_submission.workflow_results");
       const changedResults = workflowResults.filter((result) => result?.version_effect === "changed");
@@ -512,6 +799,73 @@ async function validateCurrentCandidate(candidate, ledger, ledgerRef, errors) {
     } catch (error) {
       errors.push(`提交前记录无法验证：${errorMessage(error)}`);
     }
+    try {
+      await assertValidDeliveryChain(candidate, candidateId);
+    } catch (error) {
+      errors.push(`delivery chain 无法验证：${errorMessage(error)}`);
+    }
+  }
+}
+
+async function assertValidDeliveryChain(candidate, candidateId) {
+  const deliveryRef = requireString(candidate.delivery_record_ref, "candidate.delivery_record_ref");
+  const preRef = requireString(
+    candidate.pre_commit_verification_ref,
+    "candidate.pre_commit_verification_ref",
+  );
+  const postRef = requireString(
+    candidate.post_commit_verification_ref,
+    "candidate.post_commit_verification_ref",
+  );
+  const activationRef = requireString(candidate.queue_activation_ref, "candidate.queue_activation_ref");
+  const delivery = await readYamlRef(deliveryRef);
+  const pre = await readYamlRef(preRef);
+  const post = await readYamlRef(postRef);
+  const activation = await readYamlRef(activationRef);
+  const exactVersion = candidate.delivery_exact_version;
+  for (const [label, value] of [["delivery", delivery], ["pre-commit", pre], ["post-commit", post]]) {
+    if (value.candidate_id !== candidateId || value.delivery_exact_version !== exactVersion) {
+      throw new Error(`${label} 的 candidate / delivery exact 不一致`);
+    }
+  }
+  if (delivery.commit_status !== "completed") throw new Error("delivery commit_status 不是 completed");
+  if (pre.verification_stage !== "pre_commit" || pre.overall_status !== "supported") {
+    throw new Error("pre-commit verification 未 supported");
+  }
+  if (post.verification_stage !== "post_commit" || post.overall_status !== "supported") {
+    throw new Error("post-commit verification 未 supported");
+  }
+  const operatorId = requireString(delivery.operator_instance_id, `${deliveryRef}.operator_instance_id`);
+  const preId = requireString(pre.verifier_instance_id, `${preRef}.verifier_instance_id`);
+  const postId = requireString(post.verifier_instance_id, `${postRef}.verifier_instance_id`);
+  if (new Set([operatorId, preId, postId]).size !== 3) {
+    throw new Error("Delivery Operator 与两个 Verifier 的实例身份必须互不相同");
+  }
+  if (normalizeRef(pre.delivery_record_ref) !== normalizeRef(deliveryRef)) {
+    throw new Error("pre-commit verification 未引用 delivery record");
+  }
+  if (normalizeRef(post.delivery_record_ref) !== normalizeRef(deliveryRef)) {
+    throw new Error("post-commit verification 未引用 delivery record");
+  }
+  if (
+    activation.candidate_id !== candidateId
+    || activation.delivery_exact_version !== exactVersion
+    || activation.activation_status !== "completed"
+  ) {
+    throw new Error("queue activation 与候选版本不一致或未完成");
+  }
+  if (normalizeRef(activation.post_commit_verification_ref) !== normalizeRef(postRef)) {
+    throw new Error("queue activation 未引用 post-commit verification");
+  }
+  const stagedDigest = requireString(activation.staged_queue_sha256, `${activationRef}.staged_queue_sha256`);
+  const finalDigest = requireString(activation.final_queue_sha256, `${activationRef}.final_queue_sha256`);
+  if (!SHA256_PATTERN.test(stagedDigest) || stagedDigest !== finalDigest) {
+    throw new Error("queue activation 的最终 digest 与预验证 staging 不一致");
+  }
+  requireString(activation.source, `${activationRef}.source`);
+  requireString(activation.level_id, `${activationRef}.level_id`);
+  if (activation.queue_status !== "pending_playtest") {
+    throw new Error("queue activation 的最终状态不是 pending_playtest");
   }
 }
 
@@ -1083,6 +1437,45 @@ function assertPathWithin(candidatePath, parentPath, label) {
   if (relative.startsWith("..") || path.isAbsolute(relative)) throw new Error(label);
 }
 
+function pathIsWithinOrEqual(candidatePath, parentPath) {
+  const relative = path.relative(parentPath, candidatePath);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+function pathsOverlap(left, right) {
+  return pathIsWithinOrEqual(left, right) || pathIsWithinOrEqual(right, left);
+}
+
+async function assertDigestListMatchesRefs(refsValue, digestsValue, label) {
+  const refs = requireStringArray(refsValue, `${label}_refs`).map(normalizeRef);
+  const digests = requireArray(digestsValue, `${label}_digests`);
+  if (refs.length !== digests.length) throw new Error(`${label} refs 与 digests 数量不一致`);
+  const seen = new Set();
+  for (const [index, rawEntry] of digests.entries()) {
+    const entry = asObject(rawEntry, `${label}_digests[${index}]`);
+    const ref = normalizeRef(requireString(entry.ref, `${label}_digests[${index}].ref`));
+    const sha256 = requireString(entry.sha256, `${label}_digests[${index}].sha256`);
+    if (!SHA256_PATTERN.test(sha256)) throw new Error(`${label}_digests[${index}].sha256 非法`);
+    if (seen.has(ref)) throw new Error(`${label}_digests 含重复引用：${ref}`);
+    seen.add(ref);
+    if (!refs.includes(ref)) throw new Error(`${label}_digests 含白名单外引用：${ref}`);
+    const actual = await sha256Ref(ref);
+    if (actual !== sha256) throw new Error(`${label} digest 已变化：${ref}`);
+  }
+}
+
+function sameDigestEntries(leftValue, rightValue) {
+  if (!Array.isArray(leftValue) || !Array.isArray(rightValue)) return false;
+  const normalizeEntries = (entries) => entries
+    .map((entry) => `${normalizeRef(entry?.ref)}:${String(entry?.sha256)}`)
+    .sort();
+  return JSON.stringify(normalizeEntries(leftValue)) === JSON.stringify(normalizeEntries(rightValue));
+}
+
+async function sha256Ref(ref) {
+  return createHash("sha256").update(await readFile(resolveRepoRef(ref))).digest("hex");
+}
+
 function findForbiddenControlFields(value, prefix = "") {
   if (!value || typeof value !== "object") return [];
   const found = [];
@@ -1148,5 +1541,7 @@ function printUsage() {
   console.error("  node level-design-controller.mjs prepare-critic --ledger <candidate_ledger.yml> --attempt <id> --out <base.yml>");
   console.error("  node level-design-controller.mjs validate-designer-action --ledger <candidate_ledger.yml> --action <designer_action.yml>");
   console.error("  node level-design-controller.mjs validate-exploration --brief <experience_brief.yml>");
+  console.error("  node level-design-controller.mjs validate-workflow-record --record <workflow-record.yml> [--through <phase>]");
+  console.error("  node level-design-controller.mjs validate-round --dispatch <dispatch.yml> --decision <decision.yml>");
   console.error("  node level-design-controller.mjs validate --ledger <candidate_ledger.yml>");
 }

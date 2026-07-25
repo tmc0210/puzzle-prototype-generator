@@ -26,6 +26,7 @@ design_corpus:
 prototype_specific_workflows:
   - id: invalid_goal_prune
     kind: pre_submission_check
+    execution_phase: pre_delivery
     default_status: run_before_submission_or_when_requested
     trigger:
       - "A Reality Anchor candidate is being prepared for human review or the playable queue."
@@ -40,6 +41,7 @@ prototype_specific_workflows:
       - "Do not silently mutate a human-reviewed ready_for_archive version; if target cleanup changes layout, create a new candidate version and re-enter the playable queue."
   - id: opening_comfort_check
     kind: pre_submission_check
+    execution_phase: pre_delivery
     default_status: run_before_submission_when_opening_is_flagged_or_start_changes
     trigger:
       - "起点影响 opening commitment、可读性、核心机制覆盖或 bypass。"
@@ -54,6 +56,7 @@ prototype_specific_workflows:
       - "起点诊断不是独立通过条件。"
   - id: redundant_element_prune
     kind: pre_submission_check
+    execution_phase: pre_delivery
     default_status: run_before_submission_or_when_feedback_flags_redundancy
     trigger:
       - "人类反馈指出冗余空地、无用墙体、无用箱子、无用黏块、无用锚点或外框过厚。"

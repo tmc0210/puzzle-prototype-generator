@@ -69,10 +69,10 @@ Controller 建立任务、dispatch 与单候选账本
 
 ## 启动、探索与 Designer assignment
 
-1. 确认任务是特定原型关卡设计，读取规则、胜利条件、对象语义、玩家前序、允许机制、工具边界和 handoff；建立任务目录、单候选账本和唯一活动版本槽位。
+1. 确认任务是特定原型关卡设计。先从固定 handoff 入口生成逐文件 authority manifest，并冻结完整 human brief；读取规则、胜利条件、对象语义、玩家前序、允许机制、工具边界和 handoff。不得把原型根目录当作宽泛读取授权。建立任务目录、单候选账本和唯一活动版本槽位。
 2. 按 task exploration 合同写 `dispatch.yml`，用 fresh agent 显式调用 `$sokoban-mechanism-lab`，固定 `mechanism_explore` 与 `task_local`。只给体验种子、玩家前序、允许机制、规则、工具入口、source boundary 和任务目录。
 3. 不把审美归档、正式 exact、review 或 Designer 设想传给 Explorer。
-4. 向 Designer 发 `experience_brief` assignment，使其在 Explorer 工作期间独立完成归档校准。首批已验证 task lexicon 发布后，发一份 `candidate_design` assignment，授权当前阶段的 Designer 工作目录和最终发布位置。
+4. 向 Designer 发 `experience_brief` assignment，使其在 Explorer 工作期间独立完成归档校准。首批已验证 task lexicon 发布后立即冻结 lexicon snapshot 并发 `candidate_design` assignment，不等待 Explorer 的其它无依赖采样。
 5. 同一活动 assignment 可以恢复调用持续 Designer，覆盖其内部全部草稿、probe 和修订。阶段切换、已发布 exact 被退回或提交前设计动作开始时，才写下一份 assignment 并运行 `validate-assignment`。Designer 的局部探索 request 由 Controller 校验抽象边界后再调度 Explorer。
 
 Controller 只验收 assignment 边界、发布 artifact 的存在性、candidate/exact 对齐和流程前置条件。Designer 发布可送审 exact 后，Controller 才登记版本并进入硬证据链。
@@ -80,7 +80,7 @@ Controller 只验收 assignment 边界、发布 artifact 的存在性、candidat
 ## 硬证据与单次 Critic
 
 1. 从当前已发布 exact、规则合同和原始 artifact 组装硬证据输入，调用 fresh `$sokoban-evidence-reviewer`。它可读完整 SCC / graph；`overall_hard_status` 不是 `supported` 时，发一份以该 exact 为依据的 `revision` assignment，让持续 Designer 回到工作台。
-2. 登记 `hard_validated`。Controller 独立选择 clean archive 来源并生成两类投影：当前目标之前课程阶段的难度校准保留难度分；其余跨阶段样本只保留布局、审美分和人类原评语。两类原始来源与 Critic 可读 view 分别登记到账本，不沿用 Designer 代选的唯一 anchors。
+2. Evidence Reviewer 工作期间，Controller 可并行独立选择 clean archive 来源并生成两类投影：当前目标之前课程阶段的难度校准保留难度分；其余跨阶段样本只保留布局、审美分和人类原评语。来源选择、两类 view 与 projection audit 分别保存；audit 证明来源互斥、覆盖完整且未沿用 Designer anchors。登记 `hard_validated` 后，必须同时具备投影审计通过才能准备 Critic。
 3. 运行 `prepare-critic`。Packet 只含规则、全部有序前序关卡、目标难度、阶段内难度校准 view、跨阶段审美校准 view、当前实际布局、canonical replay 的全部逐步 layout，以及机械证据已经 supported 的事实；不含原始 archive 来源、体验核心、作品身份、送审包、Designer 解释、旧 review、SCC / graph 或自动质量指标。
 4. 调用 fresh `$sokoban-puzzle-critic`。它一次读取完整作品并只写一篇自然语言结论；不把 replay 递归拆成逐局面选择，不请求第二阶段机械材料。首句必须严格为 `当前 exact 值得进入待玩。` 或 `当前 exact 应退回同一候选继续设计。`。
 
@@ -102,9 +102,11 @@ Controller 只验收 assignment 边界、发布 artifact 的存在性、candidat
 
 ## 提交前工作流与交付
 
-候选被接受后，逐项处理 `design_handoff.yml` 中所有 `kind: pre_submission_check`。设计判断或 artifact 变换逐项发 `pre_submission_design_check` assignment；机械、构建或只读检查按 authority routing 调度。
+候选被接受后，逐项处理 `design_handoff.yml` 中所有 `kind: pre_submission_check`。每项 authority 必须明确 `execution_phase: pre_delivery | delivery_staging | delivery_transaction | post_delivery_verification`；缺失时阻塞，不猜测。设计判断或可能语义性改变 exact 的动作逐项发 `pre_submission_design_check` assignment；Workflow Worker 遇到语义性变化必须停止。机械、构建或只读检查按 authority routing 调度。
 
-只读 workflow 保留 review。若 workflow 改变 exact，只有 authority docs 明确允许且本次满足全部操作边界、必需复验和不变量时，才能直接成为 delivery version；其它变化形成新 exact，重跑必要硬证据与 Critic。
+只读 workflow 保留 review。若 workflow 语义性改变 exact，持续 Designer 必须重新完成玩家侧重读、canonical replay、解族自查和送审包，发布新 exact 并重跑硬证据与 Critic。只有 authority 预先声明为语义保持的确定性变换，且本次满足全部结果契约、必需复验和不变量时，才能直接成为 delivery version。
+
+全部 workflow 结果按阶段汇总到唯一当前聚合快照；进入下一 delivery phase 时创建下一版本快照，账本 `pre_submission_check_ref` 只指向最新聚合快照，不能指向单项结果。开始 staging 前所有 `pre_delivery` 项必须完成；激活 queue 前最终聚合快照必须整体完成。
 
 交付前验证：
 
@@ -117,4 +119,6 @@ pre_submission_checks = completed_or_recorded_not_applicable
 delivery_version_evidence = current
 ```
 
-满足后，只把一个 delivery version 写入 `studio/levels.yml` 或 `levels.yml`，加入 `playable_queue.yml` 并设为 `pending_playtest`，重建 playable，确认 source/id 可解析，再按 human handoff 交接。只有人类试玩可以填写最终去留状态。
+满足后执行两阶段 delivery：Operator 先在 task-local staging 生成完整目标树、旧/新 digest 和 recovery 包；fresh pre-commit Verifier 通过后才原子提交非 queue 最终目标并执行 delivery transaction；再由另一名 fresh post-commit Verifier 核验已提交实物和预验证 queue staging。通过后只原子激活同一 queue staging，并机械核验 digest、source/id 与状态。激活前，账本和最终 queue 都保持 `not_queued`；匹配后才设置唯一入口为 `pending_playtest` 并按 human handoff 交接。只有人类试玩可以填写最终去留状态。
+
+调度以依赖屏障为准：一个已验证结果可以立即解锁直接消费者，无需等待无依赖慢任务；共享候选状态、同一 exact、写集相交和 Evidence→Critic→delivery 链仍严格串行。
