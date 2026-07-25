@@ -1,0 +1,52 @@
+runId: batch_001_roll_screen_relight_boundary_transfer
+title: "滚动侧轨先灭后复燃接边界退焰点火"
+notes: "横烛侧滚的烛芯侧轨依次经过烛身遮蔽、重曝和火盆复燃；边界缩短后以腾出的端帽格点燃兼作终点挡块的朝上单格烛。"
+cases:
+  - id: case_a_integrated_boundary_chain
+    family: roll_screen_relight_boundary_transfer
+    variant: integrated_boundary_chain
+    changed_variable: baseline
+    contrast_with: [case_b_phase_not_boundary, case_c_no_body_screen, case_d_no_relight_source, case_e_target_one_cell_left, case_f_endpoint_relight]
+    notes: "四次往返后向下侧滚；预期途中烛身灭火、未燃重曝、火盆复燃，随后边界缩短并退焰点燃目标烛。"
+    layout_ref: layouts/case_a_integrated_boundary_chain.txt
+    actions: [left, right, left, right, down]
+  - id: case_b_phase_not_boundary
+    family: roll_screen_relight_boundary_transfer
+    variant: phase_not_boundary
+    changed_variable: "侧滚前只消耗 2 次倒计时而非 4 次"
+    contrast_with: case_a_integrated_boundary_chain
+    notes: "几何不变但侧滚不跨燃烧边界；预期目标烛仍被横烛端帽遮住。"
+    layout_ref: layouts/case_a_integrated_boundary_chain.txt
+    actions: [left, right, down]
+  - id: case_c_no_body_screen
+    family: roll_screen_relight_boundary_transfer
+    variant: no_body_screen
+    changed_variable: "删除烛芯侧轨前段的固定单格烛身"
+    contrast_with: case_a_integrated_boundary_chain
+    notes: "保留边界、火盆与退焰目标；用于排除没有先灭后复燃依赖的普通边界缩短 shortcut。"
+    layout_ref: layouts/case_c_no_body_screen.txt
+    actions: [left, right, left, right, down]
+  - id: case_d_no_relight_source
+    family: roll_screen_relight_boundary_transfer
+    variant: no_relight_source
+    changed_variable: "删除烛芯侧轨后段的已点火盆"
+    contrast_with: case_a_integrated_boundary_chain
+    notes: "横烛途中被烛身熄灭并重曝，但不能在边界前复燃。"
+    layout_ref: layouts/case_d_no_relight_source.txt
+    actions: [left, right, left, right, down]
+  - id: case_e_target_one_cell_left
+    family: roll_screen_relight_boundary_transfer
+    variant: target_one_cell_left
+    changed_variable: "朝上目标烛及终点挡块从 x=6 左移到 x=5"
+    contrast_with: case_a_integrated_boundary_chain
+    notes: "滚动终点不变；边界缩短后目标烛芯仍处在横烛剩余端帽格，不会形成退焰点火。"
+    layout_ref: layouts/case_e_target_one_cell_left.txt
+    actions: [left, right, left, right, down]
+  - id: case_f_endpoint_relight
+    family: roll_screen_relight_boundary_transfer
+    variant: endpoint_relight
+    changed_variable: "已点火盆从终点前一格移到终点烛芯格"
+    contrast_with: case_a_integrated_boundary_chain
+    notes: "复燃延迟到最后一个滚动小步；检验边界缩短和退焰目标是否仍接通。"
+    layout_ref: layouts/case_f_endpoint_relight.txt
+    actions: [left, right, left, right, down]

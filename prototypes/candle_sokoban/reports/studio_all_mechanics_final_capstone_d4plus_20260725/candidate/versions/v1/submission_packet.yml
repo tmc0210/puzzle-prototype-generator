@@ -1,0 +1,81 @@
+submission_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001_v1_submission
+design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version: v1
+
+designer_claim:
+  player_experience_core: >-
+    玩家把第 5 动作的一次不可中止长侧滚编排成“烛身灭火—关键钥匙烛芯未燃重曝—
+    后段亮盆复燃—同动作边界缩短—旧端帽退焰点亮终点单格烛”的连续状态程序。
+  player_action: >-
+    玩家必须保留兼任屏体和终盆钥匙的左向单格烛，按正确相位提交长滚，再用端点双火源取得竖烛火，
+    把火接回同一钥匙并横推点亮最后火盆。
+  visible_payoff: >-
+    同一核心动作里长烛先熄灭后复燃，立刻缩短并把兼作挡块的 u 点成 U；后段竖烛从该末端双火源取火，
+    开局屏体最终变成终盆执行者。
+  why_this_level_exists: >-
+    它把熟练玩家已知的滚动逐步结算、烛身遮蔽、未燃重曝、共享相位、复燃与退焰重新解释成
+    “为了把火送到终点，必须先让火在正确区间死去”，并让同一屏体对象在高潮后继续承担责任。
+  work_identity_conditions:
+    - 全部终局必经 roll_reignite_after_extinguish:candle#1:d1->d4。
+    - 唯一核心事件边同时含 boundary_ignite_participates:candle#1、shrink:candle#1:len1 与 shrink_ignite:candle#single4。
+    - x7,y3 左向单格烛既是长烛 d1 的烛身屏体，其烛芯又在 d2 未燃重曝，且全部终局必经其后段侧滚和横推。
+    - x7,y6 已点火盆必须在受保护接触之后复燃长烛；改为未点火盆的完整图无终局。
+    - x6,y7 上向单格烛同时挡停长滚并在旧端帽格接受退焰；其点亮与缩短长烛形成末端双火源。
+    - 全部终局必经 ignite:candle#2，竖烛在 x6,y6 直接消费末端双火源，并把火接回屏体钥匙。
+    - 全部终局保持相同对象职责、目标分配和核心因果链，不存在对象替代或无屏体胜解。
+
+packaging_account:
+  opening: >-
+    小地图同时露出已燃横向长烛、竖烛、左向屏体钥匙、后段亮盆、端点 u 与左侧终盆；
+    出生通道让最短核心接近恰落第 5 动作，错误回返会先缩短长烛并破坏核心长度。
+  preparation: >-
+    核心前的准备是保留屏体钥匙与长烛长度并选择正确接近相位；核心后由竖烛取走末端火，
+    再以退焰或直接烛芯两种局部等价准备之一点亮同一钥匙。
+  reveal_or_use: >-
+    第 5 动作完整展示暗窗、复燃、同动作边界和 u->U；第 10 动作竖烛在末端双火源格点燃，
+    明确证明输出继续被使用。
+  ending: 屏体钥匙侧滚到终局行并横推三次点亮唯一未点火盆；没有新的机制子题或替代对象。
+  every_major_element_role:
+    - 横向长烛：承载同次滚动内的灭火、未燃区间、复燃、边界缩短与旧端帽输出。
+    - 左向单格烛：核心烛身屏体、暗窗内未燃关键接触、后段受火钥匙和唯一终盆执行者。
+    - x7,y6 亮盆：核心后段复燃源，同时物理参与长滚末端几何。
+    - x6,y7 上向单格烛：长滚挡块、退焰受火体和末端双火源的一半。
+    - 竖向长烛：直接消费末端双火源并把取得的火传回开局屏体钥匙。
+    - x3,y4 未点火盆：固定终局方向，使竖烛无法替代左向钥匙完成目标。
+    - 墙与窄通道：限制滚停位置、保留操作位并把正确核心接近绑定到第 5 动作。
+  known_perceptible_defects:
+    - 竖烛取火后的局部相位整理含可见回返；虽承担倒计时与站位准备，Critic 可能认为反馈偏弱。
+    - 端点烛不是 x6,y6 唯一火源；其价值是挡块、u->U 和末端双火源关系，固定墙反事实仍可借长烛残火获胜。
+
+hard_evidence:
+  solve_instance_ref: solve_instance.yml
+  canonical_replay_ref: canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: max_states=300000,max_transitions=1000000,terminalize_wins=true
+    known_raw_winning_variants:
+      - 5 个终局状态；BFS 最短代表深度依次为 23、23、25、25、25。
+      - 3 个终局代表使用 shrink_ignite:candle#single2 点亮钥匙。
+      - 2 个终局代表使用 ignite:candle#single2 直接点亮钥匙。
+    equivalence_account: >-
+      全部终局都必经同一核心事件边、端点退焰、竖烛取火、竖烛下推、钥匙侧滚、钥匙横推和同一终盆；
+      差异只含走位/相位回返，以及钥匙从同一已取得竖烛火源接受退焰或直接点火的局部实现，
+      不改变对象职责、目标分配或核心因果。
+    evidence_refs:
+      - diagnostics/complete_graph_and_solution_family.json
+      - diagnostics/exposure_audit.json
+    evidence_limits:
+      - 完整图与事件屏蔽只证明机械必经和解族边界，不证明审美或目标难度。
+      - 终局代表是每个 terminal state 的 BFS 代表；完整 raw node/edge 另在 exposure_audit.json。
+  bypass_refs:
+    - diagnostics/complete_graph_and_solution_family.json
+  identity_counterfactual_refs:
+    - diagnostics/counterfactuals.yml
+  evidence_limits:
+    - 端点烛与缩短长烛共享 x6,y6 火源格，故只声明末端双火源被消费，不声明端点烛是唯一必要火源。
+    - 删除/固定墙反事实同时移除双责任对象的终局钥匙职责，证明不能无损替换整个对象，不隔离更窄的单事件效应。
+    - 目标难度 5 与作品价值仍须由独立 Critic 依据完整前序和实际回放判断。
+
+designer_self_verdict: submit_for_independent_review

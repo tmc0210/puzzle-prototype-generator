@@ -35,6 +35,7 @@ export function checkCandleSokobanToolConformance(
     checkParseRender(pkg),
     checkExpectedTraceReplay(pkg),
     checkGlobalCountdownSemantics(pkg),
+    checkZeroCandleLossTerminal(pkg),
     checkExposureAudit(pkg),
     checkSolverSmoke(pkg),
     checkGraphSmoke(pkg),
@@ -352,6 +353,73 @@ function checkGlobalCountdownSemantics(pkg: PrototypePackage): CandleConformance
     };
   } catch (error) {
     return fail("global_countdown_semantics", error);
+  }
+}
+
+function checkZeroCandleLossTerminal(pkg: PrototypePackage): CandleConformanceCheck {
+  try {
+    const adapter = getRuntimeAdapter(pkg.mechanic);
+    const winCondition = pkg.mechanic.win;
+    const level: LevelDoc = {
+      id: "CONFORMANCE_ZERO_CANDLE_LOSS_TERMINAL",
+      title: "Conformance: zero candle loss terminal",
+      global_burn_cycle: 5,
+      layout: "########\n#@.....#\n#R....o#\n########",
+    };
+    let state = adapter.parseLevel(level);
+    for (const input of ["right", "left", "right", "left", "right"] as const) {
+      const result = adapter.step(pkg.mechanic, state, input, { winCondition });
+      if (!result.legal) {
+        throw new Error(`Burnout setup rejected '${input}'.`);
+      }
+      state = result.state;
+    }
+
+    if (state.candles.length !== 0 || adapter.isWin(state, winCondition)) {
+      throw new Error("Burnout setup did not reach a non-winning zero-candle state.");
+    }
+    const runtime = adapter.createRuntime(pkg.mechanic);
+    if (runtime.actions(state, { winCondition }).length !== 0) {
+      throw new Error("Normal-win search expanded a non-winning zero-candle state.");
+    }
+
+    const diagnostic = adapter.step(pkg.mechanic, state, "right", { winCondition });
+    if (
+      !diagnostic.legal ||
+      eventsMatchPattern(diagnostic.events, "countdown_without_lit_candle")
+    ) {
+      throw new Error(
+        "Explicit zero-candle diagnostics were blocked or emitted a vacuous no-lit-candle event.",
+      );
+    }
+
+    const eventWin = { type: "event_occurs", event: "countdown" };
+    if (runtime.actions(state, { winCondition: eventWin }).length === 0) {
+      throw new Error("event_occurs diagnostics were incorrectly terminalized at zero candles.");
+    }
+
+    const graph = analyzeGraphWithRuntime(runtime, state, {
+      winCondition,
+      maxStates: 100,
+    });
+    if (
+      graph.status !== "complete" ||
+      graph.reachableStateCount !== 1 ||
+      graph.legalTransitionCount !== 0
+    ) {
+      throw new Error(
+        `Zero-candle terminal graph was not a complete sink: ${graph.status}, states=${graph.reachableStateCount}, edges=${graph.legalTransitionCount}.`,
+      );
+    }
+
+    return {
+      id: "zero_candle_loss_terminal",
+      status: "pass",
+      reason:
+        "Verified normal-win search/graph terminalization, explicit-step diagnostics, event-win bypass, and no empty-set countdown exposure.",
+    };
+  } catch (error) {
+    return fail("zero_candle_loss_terminal", error);
   }
 }
 

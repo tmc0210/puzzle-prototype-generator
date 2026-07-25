@@ -1,0 +1,56 @@
+review_attempt_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_V4_HARD_01
+prototype_id: candle_sokoban
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v4
+level_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_V4
+
+exact:
+  layout_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/layout.txt
+  layout_sha256: 6ec66ddea0f71e077904bc3e6b85561e99ad890a6be8e16062cbe37a03b380ad
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/canonical_replay.json
+  graph_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/layout_analysis.json
+  solution_family_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/solution_family.json
+  exposure_audit_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/exposure_audit.json
+  identity_counterfactuals_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/identity_counterfactuals.json
+
+mechanical_contract:
+  rules_ref: prototypes/candle_sokoban/mechanic.yml
+  exposure_sequence_ref: prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  allowed_exposure_through: shared_fire_and_reignition
+  later_branches_forbidden:
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+    - rolling_contact_chain
+  normal_win_condition: all_braziers_lit
+  player_must_survive: true
+  required_hard_checks:
+    - canonical replay is non-empty, legal and wins normally
+    - complete reachable graph and raw edge events are present
+    - solution uniqueness/equivalence is independently supported
+    - wall dousing, reignition timing, countdown participation and terminal object responsibilities are supported by current exact artifacts
+    - exposure graph is complete, verdict pass, and forbidden_hits is empty
+
+solution_uniqueness_claim:
+  result: unique_complete
+  search_scope: complete
+  evidence_refs:
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/layout_analysis.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/canonical_replay.json
+  equivalence_claim: 所有胜利产品状态共享同一完整里程碑签名；差异仅为必要站位与走位等价变体，不改变墙灭火、C2 先完成并燃尽、C1 t2 复燃和 C1 终局责任。
+
+allowed_evidence_sources:
+  - prototypes/candle_sokoban/mechanic.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4
+  - 当前 Evidence Reviewer 自己读取的完整 SCC/graph 与原始 edge artifacts
+forbidden_inputs:
+  - experience_brief.yml
+  - archive_calibration.yml
+  - Reality Anchor archive
+  - Explorer lexicon
+  - Designer self-evaluation or packaging narrative
+  - old reports, old reviews, Critic packet

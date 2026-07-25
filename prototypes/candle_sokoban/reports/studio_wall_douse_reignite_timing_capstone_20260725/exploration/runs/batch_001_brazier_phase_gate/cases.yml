@@ -1,0 +1,66 @@
+runId: batch_001_brazier_phase_gate
+title: "火盆静态复燃的保长/立即缩短操作面门"
+notes: "墙灭火跳过边界后，用复燃相位改变二格/一格占格；同一个向下输入由末端挡墙消费。"
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 14
+  maxStates: 30000
+  maxTransitions: 120000
+  win:
+    type: event_occurs
+    event: __probe_never_wins__
+cases:
+  - id: brazier_midcycle_keep_len2
+    family: brazier_reignite_footprint_gate
+    variant: midcycle_keep_len2
+    changed_variable: "墙灭火后的操作侧接近为 2 步，侧滚接触火盆发生在 countdown=3"
+    contrast_with:
+      - brazier_boundary_shrink_len1
+      - brazier_boundary_survivor_wall_blocks
+    notes: "四步上行把倒数送到 1；右推使烛芯入墙并在边界前熄灭；上、右到达左端上方，向下单格滚到火盆，t=3 中途复燃保留二格。"
+    layout: |
+      ###########
+      #.......o.#
+      #..1R.#...#
+      #.....O...#
+      #....#....#
+      #...#.....#
+      #.@.......#
+      ###########
+    actions: [up, up, up, up, right, up, right, down]
+
+  - id: brazier_boundary_shrink_len1
+    family: brazier_reignite_footprint_gate
+    variant: boundary_shrink_len1
+    changed_variable: "墙灭火后的操作侧接近为 4 步，侧滚接触火盆发生在 countdown=1"
+    contrast_with:
+      - brazier_midcycle_keep_len2
+      - brazier_boundary_survivor_wall_blocks
+    notes: "同样在 t=1 右推墙灭火；改走左、上、右、右到达左端上方，向下单格滚到火盆并在边界复燃，立即从烛芯端缩成一格。"
+    layout: |
+      ###########
+      #.......o.#
+      #..1R.#...#
+      #.....O...#
+      #....#....#
+      #...#.....#
+      #.@.......#
+      ###########
+    actions: [up, up, up, up, right, left, up, right, right, down]
+
+  - id: brazier_boundary_survivor_wall_blocks
+    family: brazier_reignite_footprint_gate
+    variant: survivor_wall_blocks
+    changed_variable: "把 y=4 挡墙从被烧掉的 x=5 末端格下方移到 x=4 幸存格下方"
+    contrast_with: brazier_boundary_shrink_len1
+    notes: "仍走长操作侧并在 t=1 火盆复燃缩成一格；由于挡墙位于幸存格下方，最终向下输入重新成为 roll_blocked。"
+    layout: |
+      ###########
+      #.......o.#
+      #..1R.#...#
+      #.....O...#
+      #...#.....#
+      #...#.....#
+      #.@.......#
+      ###########
+    actions: [up, up, up, up, right, left, up, right, right, down]

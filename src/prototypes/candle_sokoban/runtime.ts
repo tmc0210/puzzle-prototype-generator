@@ -23,6 +23,7 @@ import {
   type VisualTile,
 } from "../runtimeAdapter.js";
 import {
+  isCandleSearchTerminal,
   isEventWin,
   isWin,
   parseLevel,
@@ -43,8 +44,10 @@ export function createCandleSokobanRuntime(
   return {
     defaultWin: mechanic.win,
     key: stateKey,
-    actions: (state) =>
-      state.dead || isWin(state, mechanic.win) ? [] : legalInputs(mechanic),
+    actions: (state, options) => {
+      const winCondition = options.winCondition ?? mechanic.win;
+      return isCandleSearchTerminal(state, winCondition) ? [] : legalInputs(mechanic);
+    },
     step: (state, action, options) => {
       const result = step(mechanic, state, action, options);
       return {

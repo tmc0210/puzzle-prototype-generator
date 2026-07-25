@@ -345,6 +345,16 @@ export function isWin(
   return false;
 }
 
+export function isCandleSearchTerminal(
+  state: CandleSokobanState,
+  winCondition: WinCondition = { type: "all_braziers_lit" },
+): boolean {
+  if (state.dead || isWin(state, winCondition)) {
+    return true;
+  }
+  return winCondition.type === "all_braziers_lit" && state.candles.length === 0;
+}
+
 export function isEventWin(events: string[], winCondition?: WinCondition): boolean {
   const event = winCondition?.event;
   return winCondition?.type === "event_occurs" && event !== undefined
@@ -571,7 +581,10 @@ function advanceGlobalBurnCountdown(
   events: string[],
 ): void {
   const previous = state.globalBurnCountdown;
-  if (state.candles.every((candle) => !candle.lit)) {
+  if (
+    state.candles.length > 0 &&
+    state.candles.every((candle) => !candle.lit)
+  ) {
     events.push(`countdown_without_lit_candle:${previous}`);
   }
   if (previous > 1) {

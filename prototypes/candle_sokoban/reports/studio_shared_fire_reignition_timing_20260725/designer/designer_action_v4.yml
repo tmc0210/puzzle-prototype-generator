@@ -1,0 +1,14 @@
+assignment_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/assignments/assignment_review_response_v4.yml
+designer_instance_id: candle_shared_fire_reignition_timing_designer_continuous
+review_round_answered: 4
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version_answered: v4
+evidence_review_refs:
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/evidence/attempt_v4/evidence_review.yml
+critic_review_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/critic/attempt_v4/critic_review.md
+response: revise_candidate
+design_response_and_refs:
+  - "接受 Critic 对 v4 中段的玩家侧退回：C2 先完成并燃尽后，连续无亮回程使 shared countdown 失去选择，t2 复燃成为固定路线的相位结果；依据 critic_review.md。"
+  - "保留同一 candidate 与 shared_fire_and_reignition 暴露门，重构对象责任的重叠窗口：墙灭火仍须改变 C1 是否参与首个边界，复燃时机将改写 C1 与仍燃 C2 的下一次共同边界，而不是在 C2 燃尽后才复燃；依据 assignment_review_response_v4.yml 的 design_brief。"
+  - "至少加入两个可读 timing decisions：第一处决定何时从墙口回到共享火盆，改变 C1 是否参加当前边界并改变 C2 下一次目标/让路责任；第二处在 C1 已复燃后选择继续保留 C2 或先消费 C2 目标，改变下一边界的可达区域与终局对象责任；不以额外路线税或上下往返充当难度。"
+  - "v5 将重新运行完整图、唯一逻辑解族、非空逐步 eventWin 回放、identity counterfactuals 与 complete exposure audit；若无法同时形成两个有后果的主动时机选择，则 withdraw_exact，不创建第二 candidate。"

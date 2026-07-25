@@ -1,0 +1,154 @@
+design_task_id: candle_shared_fire_reignition_timing_20260725
+
+prototype_context:
+  confirmed_rules:
+    - 每次合法行动推进 global_burn_cycle=5 的共享倒计时；倒计时从 1 进入边界时，所有当时已燃蜡烛同时从烛芯端缩短一格。
+    - 蜡烛可沿轴推动，也可从侧面滚动到下一次被阻挡的位置；滚动仍只消耗一次行动。
+    - 墙体遮住已燃烛芯时立即灭火；灭火不会暂停共享倒计时，且边界时已熄灭蜡烛避开本次缩短。
+    - 已点亮火盆和外露已燃烛芯都能点燃外露未燃烛芯；点火不重置倒计时。
+    - 在倒计时边界发生的复燃会让该蜡烛立即参加本次缩短；中周期复燃则等待下一次边界。
+    - 玩家进入外露火焰会死亡；正式候选必须保持玩家存活并在完整结算后点亮全部火盆。
+    - 无效输入不产生合法 runtime edge，也不推进倒计时。
+  win_condition: 玩家存活，并在完整回合结算后点亮全部火盆；不得使用 event_occurs 胜利条件。
+  object_and_event_semantics:
+    - wall 是实体墙与 wick_concealer；candle 是多格、刚性、可推动、可滚动、投影烛芯且可燃对象。
+    - brazier 点亮后永久成为火源；wick_projection 非实体但可重叠，并在已燃时成为火源。
+    - 当前 exact 允许的事件族止于 basic_candle_manipulation、wall_dousing、shared_fire_and_reignition。
+    - 当前 exact 禁止 body_concealment_and_reexposure、retreating_flame_transfer、rolling_contact_chain 的事件。
+  allowed_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+  tool_boundary:
+    - runtime adapter、ASCII parser/renderer、solver、complete reachable graph、layout analyzer
+    - try-inputs、explain-layout、exposure-audit
+    - Candle 没有专属 miner 或 PuzzleScript exporter；不以其它原型工具替代 runtime 事实。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - 玩家已掌握 basic_candle_manipulation 及其滚动、燃烧、玩家死亡和共享倒计时计算。
+    - 玩家已掌握 wall_dousing，理解墙灭火不停止倒计时，以及边界灭火可避开本次缩短。
+    - 玩家已掌握 shared_fire_and_reignition 及此前机制的衍生技巧和计算。
+  prerequisite_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+  known_prior_level_refs: []
+
+experience_seed:
+  human_seed: 玩家需要通过分析主动使用墙灭火和重燃机制来控制蜡烛的参与倒数时机。
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  dispatch_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/lexicon.md
+  task_index_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/runs/wall_douse_reignite_timing_20260725a/batch.yml
+  selected_material_refs:
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/lexicon.md
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/lexicon_index.md
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/runs/wall_douse_reignite_timing_20260725a/proposed_families.md
+
+archive_calibration:
+  calibration_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/archive_calibration.yml
+  full_index_or_retrieval_summaries_read: true
+  all_aesthetic_1_records_read:
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md
+  related_positive_records_read:
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0025.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0026.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0028.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0029.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0001.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0005.md
+  related_lower_bound_or_boundary_records_read:
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0026.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0028.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0015.md
+  additional_human_reviewed_records_read: []
+  human_comment_refs:
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md#HP_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0025.md#HP_RA_FRESH_2026_07_09_ACTIVE_L_REBIND_v4_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0026.md#HP_RA_FRESH_2026_07_08_VACATE_INTERLOCK_v10_left_column_trimmed_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0028.md#HP_RA_FRESH_2026_07_10_ANCHOR_BRAID_DOCK_v6_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0029.md#HP_STUDIO_L_1_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md#HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md#HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md#HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md#HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md#HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001
+
+experience_core:
+  experience_statement: 玩家先把四格主蜡烛送进左侧墙口并让它熄灭，使它跨过共享倒数边界而保留原长；右侧多格蜡烛在早段和复燃后的边界持续收缩，随后玩家在中周期 t2 从左侧已亮火盆复燃主蜡烛，主动让两根蜡烛重新加入下一次缩短。复燃后的两个边界分别改变 C1/C2 长度、下方 staging 的可达位置和右侧 wick 责任，玩家先用 C2 点亮右火盆，再用继续缩短到单格的 C1 点亮左火盆。
+  visible_setup: 紧凑空间中可见一根四格左烛芯主蜡烛、右侧四格亮蜡烛、左侧已亮共享火盆、上方两个待点火火盆和一枚遮住主蜡烛左烛芯的墙口；C2 的收缩方向、两个目标 wick、下方 staging 与五拍相位都应从开局几何中读出。
+  player_action: 玩家必须先主动向下推入墙口灭火，再向右进入 C2 的边界轨道并绕到主蜡烛下方；不能把熄灭后的原长当成自动保存，而要在倒数降到中周期 t2 时向上回滚，从已亮火盆复燃 C1。此后玩家沿下方 staging 走位，使第一、第二个复燃后边界分别消费 C1/C2；C2 收到单格后从下方点亮右火盆，随后玩家回收 C1 的单格位置并点亮左火盆。
+  visible_payoff: 玩家看到 C1 先在墙口内保持原长，C2 在早段收缩；t2 复燃后两个连续边界同时重写两根蜡烛长度与玩家站位，C2 的单格 wick 先点亮右火盆，之后 C1 的单格 wick 点亮左火盆，说明玩家控制的是参与倒数的时机，而非单纯走到终点。
+  why_level_exists: 让玩家把已知的墙灭火和共享火焰从被动规则提升为主动时机工具；这关只保留一条紧凑的“保长—中周期复燃—逐拍消耗—终端点火”因果链，使倒数相位、火源来源、墙口和最终烛芯共同构成独立体验。
+  core_boundary:
+    central_objects:
+      - 需要被墙口保留长度、按中周期复燃并逐边界消耗的四格主蜡烛
+      - 在早段和复燃后边界持续收缩、在单格状态承担右侧目标火盆责任的多格蜡烛
+      - 精确遮住主蜡烛左烛芯的单格墙口与两侧操作位
+      - 负责第一次复燃和最终点火反馈的已点亮火盆与待点火火盆
+      - 共享 global_burn_cycle 与边界参与集合
+    supporting_objects:
+      - 仅用于形成紧凑玩家可达性的外围墙
+      - 玩家安全走位所需的最小地面缓冲
+      - 下方 staging 作为复燃后边界之间的最小安全走位，不承担独立机制
+
+work_identity:
+  conditions:
+    - 主蜡烛必须主动进入墙口并熄灭，且在熄灭期间跨过至少一次共享倒数边界而不缩短，保住墙口前的四格长度。
+    - 主蜡烛必须在墙灭火后于中周期 t2 从已亮火盆复燃，并参加紧接着的边界缩短；不执行这次复燃不能复现同一终局。
+    - 右侧多格蜡烛必须参加早段及复燃后的边界消费，并在 len1 状态从下方点亮右侧目标火盆；它不引入后续机制分支。
+    - 规范解必须消费主蜡烛的 4→3→2→1 三次缩短；复燃后的前两个边界必须分别改变两根蜡烛的长度、玩家可达位置或下一操作责任。
+    - 主蜡烛最终 len1 wick 必须点亮左侧目标火盆；两个目标火盆共同消费墙灭火与 t2 复燃留下的长度和火源关系。
+    - 终局必须消费由墙灭火与中周期复燃留下的蜡烛长度、火源位置和操作位；高潮后不得另起独立子题。
+  counterfactuals:
+    - 若把墙口向右错开，主蜡烛不会在第一步得到“熄灭但保长”的状态，规范复燃相位与后续三次缩短关系消失。
+    - 若把复燃改为边界复燃，主蜡烛会立即参加该边界，后续终局所需的 4→3→2→1 窗口不再与规范解相同。
+    - 若删去已亮火盆或把它改成未亮，墙灭火后没有规范的中周期复燃来源；若删去墙口，主蜡烛无法保留初始长度，作品身份消失。
+    - 若删去右侧亮单格，首边界不再改变中段责任，前段的玩家因果链退化为纯走位。
+    - 若删去任一目标火盆，分别会移除 C1 或 C2 的终端消费；若删去 C2，复燃后的第二条责任链与右侧 staging 关系消失。
+    - 若把终局改成与前段无关的普通点盆子题，前段保长与复燃相位不再被消费，则构成拼接式机制展示而非本关。
+
+level_brief:
+  packaging_intent: complete_single_level
+  expected_difficulty: 4
+  expected_scale: 紧凑中型封闭图；一根四格主蜡烛、一根四格共享倒数蜡烛、两个目标火盆共用一条短而密的墙口—火源—staging—倒数链，不用大地图填充路线。
+  expected_player_load: 玩家需同时记住共享倒数相位、两根蜡烛明灭与剩余长度、t2 复燃窗口、两个边界后的可达位置、C2 右 wick 与 C1 左 wick 的责任；关键选择少但每次都要预见后续参与集合。
+
+allowed_design_sources:
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/prior_course.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/archive_calibration.yml
+
+prototype_specific_routing:
+  allowed_exposure_through: shared_fire_and_reignition
+  forbidden_branches:
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+    - rolling_contact_chain
+  required_pre_exact_checks:
+    - 完整非空 canonical replay 使用 all_braziers_lit 胜利条件。
+    - exposure audit 必须在完整图上验证 later-event absence；graph.status=complete 且 forbidden_hits 为空。
+    - exact、layout digest、replay、图和送审包必须指向同一不可变版本。
+
+human_review_constraints:
+  - 不把 Reality Anchor 的难度分、课程位置或规则带入 Candle；目标难度来自当前 brief 的玩家先验和本 exact 的关系。
+  - 不以事件覆盖、解数、SCC 数量或工具指标替代玩家侧判断。
+  - 送审包只交给 Controller，不组装 Critic packet，不写 review verdict、ledger、levels、queue 或 handoff。
+  - 后续只维护 candidate_id=CANDLE_SHARED_FIRE_REIGNITION_TIMING_001，不创建候选数组或第二个候选。

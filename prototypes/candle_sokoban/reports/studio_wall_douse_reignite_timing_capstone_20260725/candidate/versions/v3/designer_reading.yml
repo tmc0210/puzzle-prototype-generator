@@ -1,0 +1,91 @@
+design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+exact_version: v3
+exact_version_basis: v2
+
+player_side_reading:
+  opening: >-
+    玩家从右侧竖道连续上行，必须在首个五拍边界把四格左向目标烛向左轴推一格；新烛芯正好进入
+    `(2,2)` 墙而熄灭。目标因此主动缺席首轮燃烧，保住四格；横止挡和辅助烛则同时缩短。
+  preparation: >-
+    墙灭后玩家既能接近上方辅助烛，也能从目标右上方把它向下滚到 `(2,3)` 已亮火盆。真正的计划
+    不是单纯等待：目标必须在第二轮边界前复燃并参加该轮，辅助烛还要在自身燃尽前跨轮送到上盆。
+  core_reveal: >-
+    规范最短解在倒数 t1 把目标滚下一格：静态火盆复燃目标，复燃与边界同一输入结算，目标立刻从
+    四格缩成三格。完整全胜解只有 t1/t3 两类首次复燃倒数；二者都让目标参加同一个第二轮边界。
+  consumer: >-
+    row4 三只既燃火盆是统一可读的实体 footprint 筛：二格以上目标的身体必撞 x5/x4/x3，只有
+    缩成单格、身体仅占 x6 的目标能向下滚。五格横止挡同时从左侧退烧，第四轮只剩 x6 单格；
+    及时目标会被它截停在 row5。晚一轮复燃者等到单格时止挡已消失，只能滚到 row6，其右侧与
+    下侧操作位都是墙，无法回收。
+  ending: >-
+    目标停在 row5 后，玩家用三步取得其右侧；第四步左推令单格目标的左烛芯点亮 `(4,5)`，同一
+    边界上目标与横止挡一起燃尽并立即获胜，没有高潮后的清理。
+
+difficulty_reading:
+  expected: 5
+  counted_reasoning:
+    - 从最终 `(4,5)` 反推目标必须以单格停在 `(6,5)`，再反推横止挡第四轮必须仍保留 x6 单格。
+    - 从 row4 footprint 筛反推目标在第四轮必须恰好从二格缩到一格，不能早也不能晚。
+    - 由目标长度链推出首轮墙灭保长、第二轮复燃参燃，并把辅助烛上盆塞进同一四轮长度表。
+    - 区分“火源仍在”与“已经错过止挡窗口”：晚复燃表面上仍能点火，却已在空间上不可逆失败。
+  not_counted_as_difficulty:
+    - 开局竖道的四次上行。
+    - 玩家已经掌握的轴推、侧滚、墙灭火、静态复燃与五拍倒数规则本身。
+    - raw 输入串中相邻独立走位的交换数量。
+  calibration_boundary: >-
+    难度 5 是 Designer 根据玩家先验、四轮反推深度和跨对象同步作出的送审预期；图规模与解串数量
+    不作为难度证据。
+
+major_element_responsibility:
+  - element: target candle#1
+    responsibility: 贯穿首轮墙灭保长、第二轮静态复燃、len3/len2/len1 三次参燃、止挡停位与终盆交付。
+  - element: wall (2,2)
+    responsibility: 目标首轮边界的主动墙灭火点；删除后完整反事实无胜态。
+  - element: lit brazier (2,3)
+    responsibility: 墙后重曝的静态复燃源；删除后完整反事实无胜态。
+  - element: auxiliary candle#4 and brazier (12,1)
+    responsibility: 跨前两轮缩短后仍需三次轴推完成的上盆责任；删除辅助烛后完整反事实无胜态。
+  - element: fire grate braziers (3,4), (4,4), (5,4)
+    responsibility: >-
+      分别挡住四格、三格、二格目标身体，只放行 x6 单格；其中前两盆替墙在完整图上行为中性，
+      但按人类决定保留为统一、可读的三盆 footprint 构图；(5,4) 还必须保持为火格供单格烛芯安全通过。
+  - element: transient stopper candle#3
+    responsibility: 左端逐轮退烧而右端固定；第四轮留下 x6 单格，把及时目标截停在唯一终点行。
+  - element: lit brazier (1,6) and wall (7,6)
+    responsibility: 分别固定横止挡的左烛芯与右轴操作面，使它只承担倒数止挡而不能被玩家搬运。
+  - element: brazier (4,5)
+    responsibility: 只由 row5 单格目标最后左推点亮；删除后胜利退化为只完成上盆。
+  - element: row7 wall and right corridor
+    responsibility: row7 墙锁死晚到目标；右廊让正确目标在剩余四拍内取得终推操作侧。
+  - element: lit brazier (5,1) and upper walls
+    responsibility: 作为上层安全实体锚；替墙仍可解但扩大 losing wall-douse interaction，因此保留火盆。
+
+solution_family_reading:
+  result: equivalent_variants_only
+  logical_family_count: 1
+  raw_shortest_input_count: 306
+  winning_runtime_states: 1
+  winning_product_states: 2
+  reignite_countdown_classes: [t1, t3]
+  equivalence: >-
+    306 条最短输入来自相邻独立步交换及目标首次接触火源为 t1 或 t3；两类都赶上同一第二轮边界，
+    并共享唯一里程碑签名、同一三根蜡烛职责、同一目标分配与同一唯一 winning runtime state。
+  non_equivalent_winning_family_found: false
+
+revision_reading:
+  from_v2: 删除底部两行机械不可达空区，并整体裁掉左侧两列冗余外墙；对象和相对操作关系不变。
+  brazier_wall_audit_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactual_summary.yml
+  retained_wall_equivalent_braziers:
+    - original_coordinate: {x: 5, y: 4}
+      v3_coordinate: {x: 3, y: 4}
+    - original_coordinate: {x: 6, y: 4}
+      v3_coordinate: {x: 4, y: 4}
+  decision: Controller 选择纯裁边并保留全部 8 盆；没有火盆替换或主体结构变化。
+
+known_perceptible_defects:
+  - t1 与 t3 都能加入同一个第二轮边界；关卡锁定的是参燃边界，不是唯一接触倒数。
+  - row4 前两盆的火焰属性不是机械必要条件，但保留后形成统一的三盆 footprint 筛读法。
+evidence_limits:
+  - 玩家侧重读与难度判断不由完整图自动证明；本轮没有读取或重跑 Critic。
+  - 产品图把相同 runtime state、单调历史与首次复燃倒数类合流；不以 raw 输入串数量定义逻辑解数。

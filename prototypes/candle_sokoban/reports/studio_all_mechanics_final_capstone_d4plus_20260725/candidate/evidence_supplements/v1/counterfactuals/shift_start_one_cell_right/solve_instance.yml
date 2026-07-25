@@ -1,0 +1,40 @@
+schema_version: 1
+artifact_kind: counterfactual_solve_instance
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version_basis: v1
+counterfactual_id: shift_start_one_cell_right
+is_exact_version: false
+layout_ref: layout.txt
+layout_sha256: 87626b8fbd0502f9ca50687a44a99624ae7f0cbf034d48a4cdd8b2788a06182c
+change_from_v1:
+  - { x: 2, y: 2, before: "@", after: "#" }
+  - { x: 3, y: 2, before: ".", after: "@" }
+change_scope_note: >-
+  这是“起点右移一格并将旧起点封墙”的复合扰动，不是只改变初始相位的单变量反事实；
+  因此其结果不得用于单独归因于起点相位。
+global_burn_cycle: 5
+win_condition: { type: all_braziers_lit }
+search_contract_ref: ../../search_contract.yml
+expected_from_prior_summary:
+  result: solvable_complete
+  shortest_cost: 20
+  reachable_states: 57391
+  legal_transitions: 164657
+  winning_states: 4
+canonical_inputs: [up, right, right, down, up, left, left, down, right, up, right, right, right, down, down, right, down, left, left, left]
+raw_graph_ref: raw_complete_graph.json
+canonical_replay_ref: canonical_replay.json
+shortest_win_path_ref: shortest_win_path.json
+observed_result:
+  result: solvable_complete
+  graph_status: complete
+  shortest_cost: 20
+  reachable_states: 57391
+  legal_transitions: 164657
+  winning_states: 4
+  max_observed_depth: 82
+  raw_graph_sha256: ee7d9da9ee03dc37a9a8785550a3ae7ffea8be9f68080799864219d53573f5dc
+  raw_graph_bytes: 49160098
+  raw_nodes_and_edges_embedded: true
+  runtime_replay_validation: { completed: true, legal_through_step: 20, final_is_win: true }
+  structural_validation: pass

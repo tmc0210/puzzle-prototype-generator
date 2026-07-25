@@ -1,0 +1,55 @@
+exploration_id: candle_all_mechanics_final_capstone_materials_20260725
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件。"
+experience_seed: >-
+  面向全部六个机制家族已经掌握的终局熟练玩家，从后期知识中任取一个可运行的小结构，
+  探索它如何把滚动途中接触链、退焰点火、烛身遮蔽/重曝、共享火焰与全局倒计时的
+  前后依赖压进同一个局部关系；只发布局部材料，不规定完整候选、难度或作品取舍。
+player_prior:
+  - 已掌握基础蜡烛轴推、侧滚、火焰危险、共享倒计时、燃烧缩短与多烛同时燃烧。
+  - 已掌握墙体遮芯灭火、边界灭火避烧、无燃烛倒计时。
+  - 已掌握火盆/烛芯复燃、midcycle 点火与边界点火立即参与缩短。
+  - 已掌握烛身遮蔽灭火、移开后的未燃重曝与可逆遮蔽。
+  - 已掌握退焰点火及其站位、时序和共享倒计时计算。
+  - 已掌握滚动途中逐小步接触、途中点盆/点火/灭火、终点前点最后火盆与先灭后复燃。
+allowed_mechanisms:
+  - basic_candle_manipulation
+  - wall_dousing
+  - shared_fire_and_reignition
+  - body_concealment_and_reexposure
+  - retreating_flame_transfer
+  - rolling_contact_chain
+allowed_tools:
+  - npx tsx src/cli.ts tool-maturity prototypes/candle_sokoban
+  - npm run candle:conformance
+  - npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write
+  - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+  - npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts <layout-file|-> --id <id> --exact-version <exact> --allowed-exposure-through rolling_contact_chain --max-states 300000 --out <report.json>
+source_boundary:
+  allowed:
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - src/prototypes/candle_sokoban
+    - src/cli.ts
+    - .agents/skills/sokoban-mechanism-lab
+    - docs/31-mechanism-lab-explorer-curator.md
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration
+  forbidden:
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - prototypes/candle_sokoban/studio/levels.yml
+    - prototypes/candle_sokoban/playable_queue.yml
+    - prototypes/candle_sokoban/reports
+    - prototypes/reality_anchor/design_archive
+    - prototypes/ice_slide_escape/design_archive
+    - 任何正式 exact、review、Designer 设想、审美归档或旧 Candle 候选
+task_lexicon_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/lexicon_index.md

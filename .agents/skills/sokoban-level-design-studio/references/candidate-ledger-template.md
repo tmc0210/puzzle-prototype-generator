@@ -51,4 +51,4 @@ attempts:
 
 账本始终只有一个 `candidate` 对象。每个 exact version 只使用一名 fresh Critic，一次读取后写一篇最终批评，不增加投票轮。Critic 接受时由 Controller 直接登记 `accept_candidate`，不要求 Designer 伪造确认动作；Critic 退回时才产生 `designer_action_ref`。
 
-`attempts` 登记已经发布并得到明确结果的 exact。候选被接受后才能进入提交前流程；最终只能有一个 `delivery_exact_version`。
+`attempts` 登记已经发布并得到明确结果的 exact。候选被接受后才能进入提交前流程；最终只能有一个 `delivery_exact_version`。若提交前规范化使 delivery 与 reviewed exact 不同，`submission_packet_ref`、`evidence_review_refs` 和 Critic refs 仍绑定 `reviewed_exact_version`，delivery 的 layout、replay 与保持证据只由 `pre_submission_check_ref` 承担。

@@ -1,0 +1,77 @@
+design_task_id: candle_shared_fire_reignition_timing_20260725
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v1
+allowed_exposure_through: shared_fire_and_reignition
+
+player_side_reading:
+  opening: >-
+    开局只给玩家一个真正可行的承诺：向下把四格左烛芯主蜡烛送入 (1,4) 的墙口。该动作看似
+    让火焰和长度都失去控制，实际让左烛芯在墙上立刻熄灭，并让主蜡烛在下一次及其后的等待边界
+    完全不参加缩短；玩家因此得到一根仍保持四格的“暂停参与”蜡烛。
+  preparation: >-
+    熄灭后玩家从上方绕到右下操作位，倒数从 4/5 走到 2/5。此段不是路线税：绕行把玩家带到
+    主蜡烛正下方，同时让相位落到已知火盆可在中周期接入的窗口；提前向上、错过相位或从别的格
+    触碰都不能复现后续形态。
+  core_reveal: >-
+    在 t2 向上推动主蜡烛时，(1,3) 的已亮火盆让它中周期复燃，事件顺序明确显示“墙灭火后复燃”，
+    且该行动把倒数推进到 t1。下一行动边界立即把四格缩成三格，玩家看到复燃时机改变了它何时
+    重新加入参与集合。
+  consumption: >-
+    主蜡烛随后在三个共享边界消费为 3、2、1 格；玩家只在相邻的安全操作位之间移动，保持烛火不
+    接触玩家。任一阶段提前上推、错过最终单格形态，都会把最终烛芯送到错误的长度或操作状态。
+  ending: >-
+    单格主蜡烛位于 (5,3) 时，玩家从 (5,4) 向上推动；其烛芯到达 (4,2)，同时点亮待点火火盆和
+    终端单格蜡烛。共享火盆全部点亮后立即以 all_braziers_lit 胜利，没有高潮后的清理子题。
+
+difficulty_reading:
+  expected: 4
+  counted_reasoning:
+    - 识别第一步必须用墙灭火保存四格，而不是把初始已亮蜡烛直接送入燃烧链。
+    - 记住墙灭火不暂停全局倒数，并在 2/5 的中周期窗口把主蜡烛重新接回左侧火盆。
+    - 在同一条计划中预见三次边界缩短，判断最终只能由单格主蜡烛的烛芯抵达目标。
+    - 让安全走位服务于相位控制，不能把反复等待误读成新的物件或后续事件。
+  not_counted_as_difficulty:
+    - 玩家已经掌握的基本推动、墙灭火、共享火盆点火和五拍倒数规则。
+    - 终端单格蜡烛只作最终共享烛芯反馈，不承担独立子题。
+  calibration_boundary: >-
+    当前 Candle 阶段没有 clean human-reviewed difficulty archive；难度 4 是 Designer 依据本 assignment
+    的玩家先验、完整 exact 和玩家侧因果链所作的阶段内判断，不借用 Reality Anchor 难度分或图指标。
+
+major_element_responsibility:
+  - element: candle#1 四格左烛芯主蜡烛
+    responsibility: 贯穿墙灭火、保长、中周期火盆复燃、三次共享边界缩短和终端点火，是唯一核心责任对象。
+  - element: wall (1,4)
+    responsibility: 第一步遮住 candle#1 的左烛芯并立即灭火；位置错一格会使第一步无法成立。
+  - element: brazier (1,3) initially lit
+    responsibility: 提供墙灭火后的唯一规范中周期复燃来源；删除后完整图无胜态。
+  - element: brazier (4,2) initially unlit
+    responsibility: 只由主蜡烛最终单格烛芯点亮，消费前段保长与复燃相位。
+  - element: candle#single1 (4,1) vertical
+    responsibility: 与 (4,2) 共享终端烛芯接触，作为多蜡烛火源接力的可见反馈；它不是另一个独立锁。
+  - element: lower wall pocket and right loop
+    responsibility: 同时保证墙灭火后的安全绕行、主蜡烛下方操作位和等待边界的玩家存活。
+
+solution_family_reading:
+  result: equivalent_variants_only
+  logical_family_count: 1
+  raw_shortest_input_count: "31505"
+  equivalence: >-
+    完整产品图共 984 个 product states、2261 条合法边，5 个首次胜利 product states；所有胜利只有
+    一个必经里程碑签名：wall_douse > midcycle_reignite > shrink_len3 > shrink_len2 > shrink_len1
+    > terminal_transfer。31505 个最短原始输入只是在安全短走位和相位等待中合流，没有发现非等价
+    的对象责任、目标分配或里程碑顺序。
+
+identity_counterfactual_reading:
+  - remove_wall_douse: 删除墙后出现 cost=16 的不经墙灭火捷径，证明墙口不是装饰；当前 exact 的所有胜利仍都含墙灭火。
+  - shift_wall_right: 墙口错位后完整图只有初始状态且无胜态。
+  - unlit_reignite_source: 删除已亮火盆后完整图无胜态，证明中周期复燃来源是责任而非动画。
+  - remove_target_brazier: 删除终局火盆后初始即满足胜利，证明终局火盆消费前段状态。
+  - remove_terminal_receiver: 主链仍可解，说明终端蜡烛是可见共享烛芯 payoff，不应被包装成独立硬门。
+
+known_perceptible_defects:
+  - 终端单格蜡烛的删除反事实仍保留主链可解性；它强化最终共享烛芯的可见反馈，但不是硬解锁。
+  - 中段必须用短走位跨过三个五拍边界，玩家侧体验可能感到重复；该重复直接服务于参与集合的相位控制，仍交由独立审美审查判断。
+
+evidence_limits:
+  - 完整图、产品图和反事实只证明机械可达、必经历史与对象责任边界，不产生审美或难度 verdict。
+  - 该 Designer reading 不替代 Evidence Reviewer 或 Puzzle Critic，也不写入 Controller 的流程状态。

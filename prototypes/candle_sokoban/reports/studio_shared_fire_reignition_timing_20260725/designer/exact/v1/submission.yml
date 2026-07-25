@@ -1,0 +1,83 @@
+submission_id: SUB_CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_V1
+design_task_id: candle_shared_fire_reignition_timing_20260725
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v1
+
+designer_claim:
+  player_experience_core: >-
+    玩家主动把四格主蜡烛送进墙口使其熄灭，从而让它跨过共享倒数边界而不缩短；随后在 t2 从已亮
+    火盆中周期复燃，让它参加下一边界，再用三个边界把主蜡烛消费到单格，最后用最终烛芯同时点亮
+    待点火火盆和终端单格蜡烛。核心是玩家重排“谁参加哪一次倒数”，不是路线或事件收集。
+  player_action: >-
+    玩家必须向下执行墙灭火，再绕到主蜡烛下方，在 2/5 的相位向上复燃；之后在安全短走位中识别
+    3、2、1 三个缩短边界，最后从单格主蜡烛下方上推到 (4,2)。
+  visible_payoff: >-
+    同一主蜡烛清楚经历熄灭保长、中周期复燃、三次边界缩短和最终烛芯接触；终端接收蜡烛与目标火盆
+    在同一回合被点亮，形成可见的共享火焰接力。
+  why_this_level_exists: >-
+    这关把 wall_dousing 与 shared_fire_and_reignition 提升为主动的倒数参与集合工具，并用一个紧凑
+    的主蜡烛责任链消费复燃留下的长度与操作位；它不引入 body concealment_and_reexposure 或更后续事件。
+  work_identity_conditions:
+    - 所有当前 exact 的胜利轨迹都先发生 candle#1 的墙灭火，再发生来自 (1,3) 火盆的中周期复燃。
+    - 所有当前 exact 的胜利轨迹都消费 candle#1 的 len3、len2、len1 三个共享边界。
+    - 所有当前 exact 的胜利轨迹都以 (4,2) 火盆点亮和终端单格蜡烛点燃收束。
+    - 删除墙口、复燃火源或终局火盆分别破坏规范链；终端蜡烛是可见 relay，删除它不会被夸大为独立硬门。
+
+packaging_account:
+  opening: >-
+    开局只需读出左烛芯、左侧已亮火盆、墙口和右下安全操作区的共同关系；唯一可行的第一承诺是
+    向下墙灭火。
+  preparation: >-
+    熄灭后绕到右下侧，利用走位把倒数带到 2/5；主蜡烛仍保持四格，墙口与火盆责任在视觉上持续可读。
+  reveal_or_use: >-
+    2/5 向上复燃立刻把主蜡烛重新加入共享倒数，下一边界缩短；玩家随后重复读取同一小空间而不是
+    开启新的机制分支。
+  ending: >-
+    单格主蜡烛从正下方上推，(4,2) 目标火盆和终端单格蜡烛在共享烛芯处一起点亮，正常胜利立即发生。
+  every_major_element_role:
+    - candle#1：唯一核心对象，贯穿墙灭火、保长、复燃、缩短和终端点火。
+    - (1,4) 墙：初始左烛芯墙灭火的精确位置。
+    - (1,3) 已亮火盆：墙灭火后的中周期复燃火源。
+    - (4,2) 待点火火盆：消费单格终端烛芯并触发正常胜利。
+    - candle#single1：共享终端烛芯的可见接收反馈，不承担第二个独立子题。
+    - 下方墙口与短走位区：保证玩家安全并承载三个边界的相位控制。
+  known_perceptible_defects:
+    - 终端接收蜡烛不是硬解锁；删除它仍能保留主链，送审时需判断该可见反馈是否足够有价值。
+    - 三次边界之间的短走位有重复风险，但每次都消费同一主蜡烛的参与时机。
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: >-
+      layout graph max_states=300000，实际完整 984 states / 2261 transitions / 5 winning states；
+      task-local 单调历史产品图完整 984 product states / 2261 legal edges / 5 winning product states，
+      shortest raw input count=31505。
+    known_raw_winning_variants:
+      - down right right right right down down left up down up down up down up down up down up down up up
+    equivalence_account: >-
+      所有胜利轨迹共享唯一里程碑签名 wall_douse > midcycle_reignite > shrink_len3 > shrink_len2
+      > shrink_len1 > terminal_transfer；原始输入差异只来自同一安全相位走位的合流，未发现非等价
+      的对象责任、目标分配或机制顺序。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/layout_analysis.json
+      - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/designer_reading.yml
+    evidence_limits:
+      - 产品图把相同 runtime state 与相同里程碑历史合流；31505 不是 31505 个不同逻辑解。
+      - 等价性是 Designer 自查声明，仍须独立 Evidence Reviewer 核验。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/identity_counterfactuals.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/identity_counterfactuals.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/identity_counterfactuals.md
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/designer_reading.yml
+  exposure_gate_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v1/exposure_audit.json
+  evidence_limits:
+    - exposure audit 已验证 allowed_exposure_through=shared_fire_and_reignition、graph=complete、forbidden_hits=0，但它不证明审美质量。
+    - 事件必经、解族等价和对象责任由当前 exact 的 solution_family 与反事实报告补充，仍不替代独立审查。
+
+designer_self_verdict: submit_for_independent_review

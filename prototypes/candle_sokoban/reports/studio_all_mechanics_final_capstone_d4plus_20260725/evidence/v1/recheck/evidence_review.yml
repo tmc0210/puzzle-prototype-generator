@@ -1,0 +1,154 @@
+review_attempt_id: candle_all_mechanics_v1_hard_recheck
+reviewer_instance_id: candle_all_mechanics_v1_hard_recheck_fresh_reviewer_001
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version: v1
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/evidence/v1/review_packet.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/artifact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/level.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/layout.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/complete_graph_and_solution_family.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/runtime_checks.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - 完整图共有 5 个 terminal winning states；代表深度依次为 23、23、25、25、25。
+    - 其中 3 个终局代表以 shrink_ignite:candle#single2 点亮同一钥匙，2 个以 ignite:candle#single2 直接点亮同一钥匙。
+  equivalence_evidence_basis:
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/exposure_audit.json：raw graph 实数为 57,796 nodes、164,149 edges、5 winning nodes，status=complete；节点与边索引连续、节点 key 唯一、边端点有效，5 个 winning nodes 均 terminalized。
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/complete_graph_and_solution_family.json：5 个 winning_state_representatives 各自的 edge_indexes、inputs、final_state_key 均与 raw graph 逐边一致，并恰好覆盖全部 5 个 winning nodes。
+    - 对 complete raw graph 独立执行事件规避可达检查，所有胜路均必经核心复燃同边、端点退焰、ignite_from_wick:candle#2:6,6、push_axis:candle#2、roll_candle:candle#single2:d1、push_axis:candle#single2 与 light_brazier:3,4；相邻里程碑次序均无 winning order violation。
+    - 单独规避 shrink_ignite:candle#single2 或 ignite:candle#single2 时各仍存在胜路，但同时规避二者时无胜路；差异只落在同一钥匙的局部点火实现。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 完整图按 terminal state 聚合胜局，不把纯走位、完整回返或同一因果链内的局部输入串差异误计为新的玩家逻辑类。
+    - 本结论只核验 v1 的机械解族，不支持任何审美、难度或待玩判断。
+
+claims:
+  - claim_id: canonical_solve
+    claim: 规范 23 输入 replay 全部合法，完整回合结算后玩家存活且全部火盆点亮。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/solve_instance.yml 与 canonical_replay.json 的 candidate、v1、layout、23 个 inputs 一致。
+      - canonical_replay.json 记录 completed=true、executedSteps=23、legalThroughStep=23；23 步均 legal，终态 key 含 D:0，两只火盆状态均为 1，final.isWin=true，末步含 win_all_braziers_lit。
+      - 该 23 步路径与 complete raw graph 中 win node 4636 的 23 条 edge_indexes 逐边 action、before key、after key 一致。
+    limits:
+      - 单条 canonical replay 只支持该见证；解族结论另由 complete graph 核验。
+
+  - claim_id: complete_graph_shape
+    claim: 在统一声明预算内完整枚举 57,796 个状态、164,149 条边与 5 个终局状态；graph status 为 complete。
+    status: supported
+    evidence_basis:
+      - exposure_audit.json 的 graph.status=complete、reason=null，预算为 max_states=300000、max_transitions=1000000、terminalize_wins=true。
+      - 独立读取 raw_graph 得到 nodes.length=57,796、edges.length=164,149、winning nodes=5，与 graph 汇总完全一致；节点/边索引连续、节点 key 无重复、全部边端点有效、winning nodes 无出边。
+      - exposure_audit.json 内 layout digest 为 5cc8271b9ffdf5ce81130e7ef7c4392d5b491068aea9ee8e8dde32134e924005，与实际 v1 layout.txt 一致。
+    limits:
+      - complete 仅指该 runtime、胜利条件与记录预算下可达状态图已完整闭合。
+
+  - claim_id: solution_family
+    claim: 5 个终局只含走位/相位回返，以及同一已取得竖烛火源对同一钥匙的退焰或直接点火局部实现差异；对象职责、目标分配和核心因果相同。
+    status: supported
+    evidence_basis:
+      - 5 个终局代表覆盖 complete graph 的全部 winning nodes，深度为 23、23、25、25、25；3 个使用钥匙 shrink_ignite，2 个使用钥匙 direct ignite。
+      - complete graph 上对共享核心事件逐项做规避搜索均得不到胜局；对里程碑先后做增广状态检查也没有 winning order violation。
+      - 所有代表都保持同一终盆 light_brazier:3,4、同一 candle#2 接力和推动、同一 candle#single2 侧滚与横推；只有钥匙局部点火事件及无因果变化的回返/换序不同。
+    limits:
+      - 等价性只按 docs/21 的玩家逻辑类定义判断，不要求原始输入串唯一。
+
+  - claim_id: exposure_gate
+    claim: allowed_exposure_through=rolling_contact_chain 的当前 exact exposure audit 为 pass、graph complete、forbidden_hits 为空，exact/layout/sequence digest 完整。
+    status: supported
+    evidence_basis:
+      - exposure_audit.json 标识 exact_version=v1、allowed_exposure_through=rolling_contact_chain、verdict=pass、forbidden_hits=[]、graph.status=complete。
+      - artifact 中 layout SHA-256 与实际 v1 layout.txt 均为 5cc8271b9ffdf5ce81130e7ef7c4392d5b491068aea9ee8e8dde32134e924005。
+      - artifact 中 sequence SHA-256 与实际 mechanic_exposure_sequence.yml 均为 f5f0b771ed6b3c5f2b55955bf47f9b2f8196a6f9db88313063b600ce6123266e。
+    limits:
+      - rolling_contact_chain 是当前序列最后一个 branch，因此 forbidden branch/event 集为空；pass 不证明任一事件必经或具有体验价值。
+
+  - claim_id: core_roll_edge
+    claim: 所有终局都必经同一核心边；该边包含 roll_reignite_after_extinguish:candle#1:d1->d4、boundary_ignite_participates:candle#1、shrink:candle#1:len1 与 shrink_ignite:candle#single4。
+    status: supported
+    evidence_basis:
+      - complete raw graph 中只有 edge 13 同时包含四个指定事件；该边 action=down、from=8、to=11。
+      - 在 complete raw graph 中删除含 roll_reignite_after_extinguish:candle#1:d1->d4 的边后无 winning state 可达；该事件仅见于 edge 13，因此所有胜路必经此同一边。
+      - canonical replay 第 5 步逐事件复现该边，并与 raw edge 13 的 before/after state 对齐。
+    limits: []
+
+  - claim_id: screen_key_participation
+    claim: x7,y3 左向单格烛既在核心滚动 d1 充当烛身屏体、d2 未燃重曝，又在所有终局中执行后段侧滚与横推并点最后火盆；不存在无屏体胜解。
+    status: supported
+    evidence_basis:
+      - v1 layout 与 parser 对象顺序把 x7,y3 的 l 对应为 candle#single2；raw edge 13 在 d1 记录 candle#1 的 extinguish_by_candle_body，在 d2 记录 wick_reexposed_unlit:candle#1，几何位置与 x7,y3 烛身遮挡/移离一致。
+      - complete graph 上规避 roll_candle:candle#single2:d1、push_axis:candle#single2 或 light_brazier:3,4 任一事件均无胜局，且三者在所有胜路上的次序固定。
+      - remove_dual_role_screen_key 只把 x7,y3 从 l 改为 .；其 complete raw graph 为 4,751 nodes、13,656 edges、0 wins。
+    limits:
+      - 删除 x7,y3 是同时移除屏体、钥匙与实体占位的复合干预；零胜局不单独归因于其中某一个子职责。
+
+  - claim_id: relight_source_necessity
+    claim: x7,y6 已点火盆是 v1 核心后段复燃源；只把该格 O 改为 o 的反事实在统一预声明预算内 complete 枚举 11,436 个状态、30,878 条边且零终局。必要性只限定于 v1 与此单变量反事实。
+    status: supported
+    evidence_basis:
+      - baseline raw edge 13 明确记录 ignite_from_brazier:candle#1:7,6，随后同边出现核心复燃、边界参与、缩短与端点退焰事件。
+      - supplement search_contract.yml 的 SHA-256 为 5efc5a0354d8f307ebfda8ed712ad657c0f1b018329c248e93fcffcc463aee75，并记录 declared_before_supplement_graph_generation=true；manifest 同时记录 declared_before_graph_generation=true。
+      - remove_late_relight_source layout SHA-256 为 f8f52e01754f64853b3f074890e3018ef9d93e5a508084c9ba2c7a6b1079a20b；相对 v1 的实际逐格差分仅为 x7,y6 O→o。
+      - 其 raw graph SHA-256 为 e8f5e03906314ada3ea90d7f82c9785ae60d1cf2fd6f804ae3a26c2e2e1db6f9；实际内嵌 11,436 nodes、30,878 edges、0 winning nodes，索引/key/端点结构有效，status=complete，预算为 300000/1000000/terminalize_wins=true。
+    limits:
+      - 必要性只覆盖 v1 与该单格 O→o 反事实，不外推到其它布局或其它复燃源配置。
+
+  - claim_id: endpoint_and_relay_participation
+    claim: x6,y7 上向单格烛挡停长滚并在旧端帽格接受退焰；竖烛随后在 x6,y6 消费末端双火源，且所有终局都必经 ignite:candle#2。
+    status: supported
+    evidence_basis:
+      - v1 layout 中 x6,y7 的 u 对应 candle#single4；核心边以该实体阻挡下一滚动小步，并记录 shrink_ignite:candle#single4，complete graph 上规避该事件无胜局。
+      - 核心边后状态同时保留 lit candle#1 与 lit candle#single4；两者烛芯均投影到 x6,y6。后续 raw edge 166 记录 ignite_from_wick:candle#2:6,6 与 simultaneous_burn:candle#1+candle#2+candle#single4。
+      - complete graph 上规避 ignite_from_wick:candle#2:6,6 时无胜局；该接力先于所有胜路的 push_axis:candle#2，且没有顺序违例。
+    limits:
+      - 本声明支持 v1 内的对象参与；supplement 的可解变体直接表明不应把 x6,y7 原端点单格烛外推为可解性的单独必要条件。
+
+  - claim_id: counterfactual_boundaries
+    claim: 删除 x7,y3 双职责对象、以墙替代该对象、或把 x7,y6 已点火盆改为未点火盆，三者的 raw graph 均 complete 且零终局。把 x6,y7 端点单格烛改成墙或左移一格仍可解，所以只声明 v1 中端点参与，不声明它对可解性单独必要。名为 shift_start_one_cell_right 的实际变体同时封墙旧起点且仍可解，不是纯相位反事实，不支持“错相位必然破坏”。
+    status: supported
+    evidence_basis:
+      - 六份 raw graph 均实际记录统一预算 max_states=300000、max_transitions=1000000、terminalize_wins=true 和 status=complete；每份 nodes/edges 数组实数与汇总一致，索引连续、node key 唯一、边端点有效。
+      - remove_dual_role_screen_key：layout digest 7473e39c8731773f4521dfbf3637d1e92c8c4278bd0b27d8e59e45d84e367dda，唯一 delta=x7,y3 l→.；raw digest be87b89773cc3e2a0514f223f1b6c37d56fff72975d4c5b912ccbea77666041f，4,751 nodes / 13,656 edges / 0 wins。
+      - replace_dual_role_screen_key_with_wall：layout digest 029ce29594f6616856786a7238b88cdecef7496245b4746a4afa844acc7a1904，唯一 delta=x7,y3 l→#；raw digest 8a7f73459eec98dd79899dbabc029bea03f85d85f6db793480cd9a73c45e1312，2,288 nodes / 6,176 edges / 0 wins。
+      - remove_late_relight_source：layout digest f8f52e01754f64853b3f074890e3018ef9d93e5a508084c9ba2c7a6b1079a20b，唯一 delta=x7,y6 O→o；raw digest e8f5e03906314ada3ea90d7f82c9785ae60d1cf2fd6f804ae3a26c2e2e1db6f9，11,436 nodes / 30,878 edges / 0 wins。
+      - replace_endpoint_singleton_with_wall：layout digest 76588430cc7682b394b0940d8ffd9428022a63e2039b9d882dd17b27e40e5990，唯一 delta=x6,y7 u→#；raw digest eb41e97ad74ec5454fe56d55daa590e02c0dca8549c94c0785621c41dd707ce0，45,158 nodes / 130,183 edges / 5 wins；23 步 shortest path 与 runtime replay 逐 edge/state 对齐，全部合法、玩家存活且终态获胜。
+      - shift_endpoint_one_cell_left：layout digest 892810c9e68a0b70bb9160c3aa7e22e89e5d9dcd00a8fb2ad330679f5464556e，delta 为 x5,y7 #→u 与 x6,y7 u→.；raw digest 78cef1b62c79d91549b04b401b3eaa222f23afb35b66e0f04c904011c688dd4f，49,827 nodes / 142,625 edges / 5 wins；23 步 shortest path 与 runtime replay 逐 edge/state 对齐，全部合法、玩家存活且终态获胜。
+      - shift_start_one_cell_right：layout digest 87626b8fbd0502f9ca50687a44a99624ae7f0cbf034d48a4cdd8b2788a06182c，实际 delta 为 x2,y2 @→# 与 x3,y2 .→@；raw digest ee7d9da9ee03dc37a9a8785550a3ae7ffea8be9f68080799864219d53573f5dc，57,391 nodes / 164,657 edges / 4 wins；20 步 shortest path 与 runtime replay 逐 edge/state 对齐，全部合法、玩家存活且终态获胜。
+    limits:
+      - 两个 x7,y3 干预均是复合对象干预，不把零胜局拆解归因给屏体、钥匙或占位中的单一因素。
+      - shift_start_one_cell_right 含旧起点封墙这一混杂改动，不能支持纯起点相位的因果声明。
+      - 两个端点变体的可解见证否定端点单格烛的单独必要性外推，但不否定 v1 原版中的对象参与事实。
+
+  - claim_id: supplement_version_identity
+    claim: supplement 只增加 v1 的反事实证据；v1 layout、solve instance 与 canonical replay digest 前后不变，没有发布新 exact。
+    status: supported
+    evidence_basis:
+      - 实际 v1 layout.txt SHA-256 为 5cc8271b9ffdf5ce81130e7ef7c4392d5b491068aea9ee8e8dde32134e924005，与 artifact_manifest、search_contract 和 supplement manifest 的冻结值一致。
+      - 实际 v1 solve_instance.yml SHA-256 为 7e817a94ca773bbcd7709c9b5d30d815134b5bdff61884bef2a290397ae886b3，与 search_contract 和 supplement manifest 的冻结值一致。
+      - 实际 v1 canonical_replay.json SHA-256 为 f779e07fb152dc168e84c73e982f92c4a37a617442687278f2edba5ac6a00090，与 search_contract 和 supplement manifest 的冻结值一致。
+      - supplement manifest 标识 exact_version_basis=v1、is_new_exact_version=false；六份 solve instance 均标识 is_exact_version=false，raw graph exact_version 均为 v1_basis__<counterfactual_id>。
+    limits:
+      - 此结论只核验白名单中冻结 artifact 与 supplement 身份，不判断版本取舍。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

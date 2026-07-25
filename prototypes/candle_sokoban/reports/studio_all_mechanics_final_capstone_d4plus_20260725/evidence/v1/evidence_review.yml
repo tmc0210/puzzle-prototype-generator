@@ -1,0 +1,154 @@
+review_attempt_id: candle_all_mechanics_v1_hard_review
+reviewer_instance_id: fresh_evidence_reviewer_v1_20260725_01
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version: v1
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/artifact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/level.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/layout.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/complete_graph_and_solution_family.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/counterfactuals.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/runtime_checks.yml
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "win_state_index=4636, depth=23, key_ignition=shrink_ignite:candle#single2"
+    - "win_state_index=4785, depth=23, key_ignition=ignite:candle#single2"
+    - "win_state_index=6639, depth=25, key_ignition=shrink_ignite:candle#single2"
+    - "win_state_index=6763, depth=25, key_ignition=ignite:candle#single2"
+    - "win_state_index=6775, depth=25, key_ignition=shrink_ignite:candle#single2"
+  equivalence_evidence_basis:
+    - >-
+      exposure_audit.json 的 current exact/layout digest 匹配，graph status=complete，
+      budget 为 max_states=300000、max_transitions=1000000、terminalize_wins=true；
+      原始图含 57,796 个唯一节点、164,149 条连续编号合法边和 5 个无出边终局。
+    - >-
+      complete_graph_and_solution_family.json 的五个 winning_state_representatives
+      均以记录的 edge_indexes 从 node 0 连续到对应终局，输入数、边数、终局 key 与深度一致。
+    - >-
+      五个代表均含同一核心滚动、边界参与、端点退焰、ignite:candle#2、
+      push_axis:candle#2、roll_candle:candle#single2:d1、push_axis:candle#single2
+      与 light_brazier:3,4；三条以 shrink_ignite 点钥匙，两条以 ignite 直接点钥匙。
+    - >-
+      required_event_audit、required_event_group_audit 与 milestone_order_audit 记录所有胜路
+      必经相同对象职责和里程碑顺序，且未记录顺序违例或已知非等价胜解。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 终局代表按 terminal state 聚合；结论是玩家逻辑类等价，不是原始输入串唯一。
+    - 完整回返、走位或相位等待差异不单列为非等价解；未发现改变对象职责、目标分配或核心因果的胜路证据。
+
+claims:
+  - claim_id: canonical_solve
+    claim: 规范 23 输入 replay 全部合法，完整回合结算后玩家存活且全部火盆点亮。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/solve_instance.yml
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/canonical_replay.json
+      - canonical_replay.json 记录 completed=true、executedSteps=23、legalThroughStep=23，final.isWin=true 且 D:0。
+    limits:
+      - 该 replay 是单条规范 trace；解族结论另由 complete graph 与 solution-family artifact 支持。
+
+  - claim_id: complete_graph_shape
+    claim: 在声明预算内完整枚举 57,796 个状态、164,149 条边与 5 个终局状态；graph status 为 complete。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/exposure_audit.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/complete_graph_and_solution_family.json
+      - 原始 nodes/edges 数量分别为 57,796/164,149，索引连续、节点 key 唯一、边端点均有效；5 个 winning nodes 与汇总一致。
+    limits:
+      - terminalize_wins=true，终局节点无出边；图完备性只适用于当前 exact 与该搜索合同。
+
+  - claim_id: solution_family
+    claim: 5 个终局代表只含走位/相位回返，以及同一已取得竖烛火源对同一钥匙的退焰或直接点火局部实现差异；对象职责、目标分配和核心因果相同。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/complete_graph_and_solution_family.json
+      - 五条终局代表的原始 edge path 均可在 exposure_audit.json 中连续解析；feature signature 与 3 条退焰点火、2 条直接点火的分组一致。
+      - required_event_audit 与 milestone_order_audit 对全部胜路记录相同的核心事件、对象参与和顺序约束。
+    limits:
+      - 等价性结论限定于 packet 声明的对象职责、目标分配与核心因果边界。
+
+  - claim_id: exposure_gate
+    claim: allowed_exposure_through=rolling_contact_chain 的当前 exact exposure audit 为 pass、graph complete、forbidden_hits 为空，exact/layout/sequence digest 完整。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/exposure_audit.json
+      - layout.txt 实算 SHA-256 为 5cc8271b9ffdf5ce81130e7ef7c4392d5b491068aea9ee8e8dde32134e924005，与 exact、manifest、solve instance 和 audit 一致。
+      - mechanic_exposure_sequence.yml 实算 SHA-256 为 f5f0b771ed6b3c5f2b55955bf47f9b2f8196a6f9db88313063b600ce6123266e，与 audit 一致。
+      - audit 记录 exact_version=v1、graph.status=complete、forbidden_hits=[]、verdict=pass，原始边事件计数与 reachable_event_counts 全部一致。
+    limits:
+      - rolling_contact_chain 是当前序列最后一个 branch，因此 forbidden_branches 与 forbidden_event_patterns 本来即为空；pass 不构成额外的后续机制缺席声明。
+
+  - claim_id: core_roll_edge
+    claim: 所有终局都必经同一核心边；该边包含 roll_reignite_after_extinguish:candle#1:d1->d4、boundary_ignite_participates:candle#1、shrink:candle#1:len1 与 shrink_ignite:candle#single4。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/complete_graph_and_solution_family.json
+      - required_event_audit 对核心 roll、boundary participation 与 endpoint shrink-ignite 均记录 required_on_every_win=true、win_without_event=false。
+      - reachable_event_edges 显示三个已审计核心事件各只出现在 edge 13；exposure_audit.json 原始 edge 13 同时含声明的四个事件。
+    limits: []
+
+  - claim_id: screen_key_participation
+    claim: x7,y3 左向单格烛既在核心滚动 d1 充当烛身屏体、d2 未燃重曝，又在所有终局中执行后段侧滚与横推并点最后火盆；不存在无屏体胜解。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/layout.txt
+      - src/prototypes/candle_sokoban/mechanics.ts
+      - 原始初态把 x7,y3 左向单格烛标识为 candle#single2；edge 13 的 d1/d2 接触序列含 extinguish_by_candle_body:candle#1 与 wick_reexposed_unlit:candle#1/candle#single2。
+      - required_event_audit 对 roll_candle:candle#single2:d1、push_axis:candle#single2 与 light_brazier:3,4 均记录所有胜路必经；里程碑顺序无违例。
+      - 核心 roll 事件只在 edge 13 可达且对所有胜路必经，故当前 exact 不存在绕过该屏体接触关系的胜路。
+    limits:
+      - 该结论证明当前 exact 内无屏体旁路；不替代“删除对象”反事实的独立版本核验。
+
+  - claim_id: relight_source_necessity
+    claim: x7,y6 已点火盆在受保护接触之后复燃长烛；将其改为未点火盆的完整反事实图无终局。
+    status: unknown
+    evidence_basis:
+      - 当前 exact 的唯一核心 edge 13 含 ignite_from_brazier:candle#1:7,6，且该 edge 对所有胜路必经，支持基线中的复燃来源参与和无旁路。
+      - counterfactuals.yml 汇总 remove_late_relight_source 为 graph.status=complete、winning_states=0。
+    limits:
+      - remove_late_relight_source 的 layout_ref 未列入 allowed evidence sources，且汇总未给反事实 layout digest、搜索预算或原始 nodes/edges；无法独立确认“改为未点火盆”与零终局完整图属于同一反事实 exact。
+
+  - claim_id: endpoint_and_relay_participation
+    claim: x6,y7 上向单格烛挡停长滚并在旧端帽格接受退焰；竖烛随后在 x6,y6 消费末端双火源，且所有终局都必经 ignite:candle#2。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/canonical_replay.json
+      - edge 13 含 shrink_ignite:candle#single4；step 5 后 x6,y7 单格烛已燃，且 candle#1 的已燃烛芯与该单格烛烛芯同在 x6,y6。
+      - step 10 的竖烛滚动在 x6,y6 触发 ignite:candle#2 与 ignite_from_wick:candle#2:6,6；required_event_audit 记录 ignite:candle#2 对所有胜路必经。
+      - required_event_audit 与 milestone_order_audit 还记录端点退焰先于竖烛点火，且无胜路顺序违例。
+    limits:
+      - 双火源结论只表示同格来源共同存在并参与该 relay；不表示端点烛是唯一或单独必要火源。
+
+  - claim_id: counterfactual_boundaries
+    claim: 删除屏体、删除复燃源、错开终点与错相位均破坏声明关系；固定墙替换仍可能借缩短长烛残火获胜，所以不声明端点烛是 x6,y6 唯一火源或单独必要火源。
+    status: unknown
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/counterfactuals.yml
+      - counterfactuals.yml 为六个变体记录 graph status、状态/边/终局计数及声明的事件缺失或局部 replay 摘要。
+    limits:
+      - 六个 counterfactual layout_ref 均未进入 allowed evidence sources，且没有各自 layout digest、solve instance、搜索预算或原始图 artifact。
+      - 现有 YAML 只能作为反事实结果汇总，不能独立核验实际改动、complete 范围、零终局或固定墙仍可胜的 exact 对应关系。
+
+hard_failures: []
+evidence_gaps:
+  - 反事实布局未获白名单授权且无 digest，无法核对 counterfactuals.yml 中每项 change 对应的实际布局身份。
+  - 反事实条目仅给 graph 汇总，没有搜索预算与原始 nodes/edges 或可追溯 solve artifact，无法独立支持其 complete、unsolvable 或 solvable 边界声明。
+overall_hard_status: incomplete
+required_action: rerun_or_supply_evidence

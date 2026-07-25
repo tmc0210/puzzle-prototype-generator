@@ -7,20 +7,19 @@ reviewed_exact_version: ""
 delivery_exact_version: ""
 workflow_results:
   - workflow_id: ""
-    designer_assignment_ref: null
     applicability: applicable | not_applicable
     applicability_basis: ""
     authority_docs: []
+    candidate_discovery: null  # 只有规范化 workflow 填 { method, candidate_units }
     operations_performed: []
     artifact_refs: []
-    version_effect: unchanged | changed
-    review_effect: preserved | rereview_required
-    review_effect_basis: ""
+    version_effect: unchanged | review_preserving_change
+    acceptance_preserved: true
+    preservation_basis: ""
     status: completed | not_applicable | incomplete
 overall_status: completed | incomplete
-return_to_design_required: true | false
 ```
 
-只读 workflow 的 `version_effect` 为 `unchanged`。只要 exact version 发生变化，必须写明 authority docs 中预先定义的结果契约；只有该契约明确允许保留 review，且本次满足全部边界、必需复验和不变量时，才能写 `review_effect: preserved`。否则写 `rereview_required` 和 `return_to_design_required: true`，返回同一候选的 Design Studio 与完整评审链。
+只读 workflow 与所有未应用的反事实都写 `version_effect: unchanged`。只有 authority docs 预先定义的候选单元、允许操作和全部保持条件均得到当前 artifact 证明时，才可写 `review_preserving_change`；`acceptance_preserved` 始终为 `true`。反事实失败或证明不足时保留该候选单元，不应用变换；工具运行本身没有完成时写 `status: incomplete`，重跑当前 workflow。
 
-本模板不规定 workflow 检查什么、修改什么或如何判断完成；这些内容只来自当前原型的 `design_handoff.yml` 和 authority docs。候选被接受后由 Controller 为唯一候选生成一份记录。
+规范化 workflow 的 `candidate_discovery` 记录 authority docs 指定的算法及其候选单元；只读 workflow 保持 `null`。它不能填写 Designer 的职责判断，也不能把全部普通空格逐格列为默认候选。本模板不规定具体原型检查什么；这些内容只来自当前原型的 `design_handoff.yml` 和 authority docs。候选被接受后由 Controller 为唯一候选生成一份记录。

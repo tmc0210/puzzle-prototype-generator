@@ -378,6 +378,110 @@ try {
   }));
   run(["validate", "--ledger", ref("ledger.yml")]);
 
+  await write("pre-submission.yml", yaml({
+    design_task_id: "task-1",
+    candidate_id: "candidate-1",
+    reviewed_exact_version: "exact-1",
+    delivery_exact_version: "exact-2",
+    workflow_results: [{
+      workflow_id: "fixture-structural-normalization",
+      applicability: "applicable",
+      applicability_basis: "固定结构算法发现一个可裁剪外框单元。",
+      authority_docs: [ref("material.md")],
+      candidate_discovery: {
+        method: "fixture-maximal-outer-band",
+        candidate_units: ["outer-band-1"],
+      },
+      operations_performed: ["裁剪已证明无行为影响的外框。"],
+      artifact_refs: [ref("raw.json")],
+      version_effect: "review_preserving_change",
+      acceptance_preserved: true,
+      preservation_basis: "规范解、完整图和玩家关系保持。",
+      status: "completed",
+    }],
+    overall_status: "completed",
+  }));
+  const readyCandidate = {
+    ...acceptedCandidate,
+    exact_version: "exact-2",
+    delivery_exact_version: "exact-2",
+    pre_submission_check_ref: ref("pre-submission.yml"),
+    pre_submission_state: "completed",
+    playtest_status: "pending_playtest",
+  };
+  await write("ready-ledger.yml", yaml({
+    design_task_id: "task-1",
+    experience_brief_ref: ref("brief.yml"),
+    ...criticCalibration,
+    task_state: "ready_for_playtest",
+    candidate: readyCandidate,
+    review_cycles: [{
+      cycle_id: "cycle-1",
+      exact_version: "exact-1",
+      review_attempt_id: "review-1",
+      critic_instance_id: "critic-1",
+      critic_base_ref: ref("critic-base.yml"),
+      critic_review_ref: ref("critic-review.md"),
+      evidence_review_refs: [ref("evidence.yml")],
+      designer_action_ref: null,
+      controller_recorded_outcome: "accept_candidate",
+    }],
+    attempts: [],
+  }));
+  run(["validate", "--ledger", ref("ready-ledger.yml")]);
+
+  await write("pre-submission-invalid.yml", yaml({
+    design_task_id: "task-1",
+    candidate_id: "candidate-1",
+    reviewed_exact_version: "exact-1",
+    delivery_exact_version: "exact-2",
+    workflow_results: [{
+      workflow_id: "unpreserved-change",
+      applicability: "applicable",
+      applicability_basis: "测试不满足保持条件的变换。",
+      authority_docs: [ref("material.md")],
+      candidate_discovery: {
+        method: "fixture-maximal-outer-band",
+        candidate_units: ["outer-band-1"],
+      },
+      operations_performed: ["未保持 acceptance 的变换"],
+      artifact_refs: [ref("raw.json")],
+      version_effect: "review_preserving_change",
+      acceptance_preserved: false,
+      preservation_basis: "保持条件失败。",
+      status: "completed",
+    }],
+    overall_status: "completed",
+  }));
+  await write("ready-ledger-invalid.yml", yaml({
+    design_task_id: "task-1",
+    experience_brief_ref: ref("brief.yml"),
+    ...criticCalibration,
+    task_state: "ready_for_playtest",
+    candidate: {
+      ...readyCandidate,
+      pre_submission_check_ref: ref("pre-submission-invalid.yml"),
+    },
+    review_cycles: [{
+      cycle_id: "cycle-1",
+      exact_version: "exact-1",
+      review_attempt_id: "review-1",
+      critic_instance_id: "critic-1",
+      critic_base_ref: ref("critic-base.yml"),
+      critic_review_ref: ref("critic-review.md"),
+      evidence_review_refs: [ref("evidence.yml")],
+      designer_action_ref: null,
+      controller_recorded_outcome: "accept_candidate",
+    }],
+    attempts: [],
+  }));
+  const invalidPreSubmissionOutput = run([
+    "validate", "--ledger", ref("ready-ledger-invalid.yml"),
+  ], 1);
+  if (!invalidPreSubmissionOutput.includes("acceptance_preserved=true")) {
+    throw new Error("Controller 未拒绝不保持 acceptance 的提交前变换");
+  }
+
   await write("critic-review-return.md", "当前 exact 应退回同一候选继续设计。\n\nstep 1 没有形成高于前序的计划关系，且能够确认低于目标难度。\n");
   await write("review-response-assignment.yml", yaml({
     assignment_id: "review-response-1",
@@ -445,4 +549,4 @@ try {
   }
 }
 
-if (passed) console.log("level-design-controller Critic tests passed");
+if (passed) console.log("level-design-controller tests passed");

@@ -5,7 +5,7 @@ Controller 每次只向同一个活动 Designer 分配一个明确阶段。Assig
 ```yaml
 assignment_id: ""
 required_skill: sokoban-level-designer
-assignment_kind: experience_brief | candidate_design | revision | review_response | pre_submission_design_check
+assignment_kind: experience_brief | candidate_design | revision | review_response
 controller_instance_id: ""
 task_root: ""
 candidate_ledger_ref: ""
@@ -30,4 +30,4 @@ required_outputs: []
 - `exact_version_basis` 指向本阶段所依据的最近一次已发布 exact；它不预先命名工作草稿或下一版本。
 - `candidate_ledger_ref` 只供 Controller 校验候选与版本依据，不授予 Designer 写控制状态的权限。
 - `review_response` 只有当前 exact 的 Critic 已明确退回后才能发出；Critic 接受时不创建该 assignment。
-- `pre_submission_design_check` 一次只处理唯一候选的一项 workflow，并把 authority docs 放入 `input_refs`。
+- 候选被接受后不再创建 Designer assignment；提交前检查与规范化由 Controller 按原型 authority docs 执行。

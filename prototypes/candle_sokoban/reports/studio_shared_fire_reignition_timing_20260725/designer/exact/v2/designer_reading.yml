@@ -1,0 +1,58 @@
+task: studio_shared_fire_reignition_timing_20260725
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v2
+allowed_exposure_through: shared_fire_and_reignition
+forbidden_exposure:
+  - body_concealment_and_reexposure
+  - retreating_flame_transfer
+  - rolling_contact_chain
+player_side_reading:
+  opening: 玩家从上方未点燃的 terminal singleton 下方起步，看到 C1、左火盆和灭火墙口同处近旁；第一拍的 down 是主动把 C1 压入墙而保存它。
+  preparation: 右移与 C2 的近旁关系把右侧亮单格推入首边界燃尽责任，玩家随后转入下方通道。
+  core_reveal: 无亮蜡烛的倒数让玩家在下方通道作短位移，回到左火盆时选择 t2 中周期复燃，而不是等到新的机制分支。
+  consumption: 复燃后的每个边界都改变 C1 长度；t2→t1 先收窄，下一边界循环并压缩为 len2，再至 len1，玩家必须持续读位置与终端负担。
+  ending: 最后 singleton 的 wick 把同一共享火焰转交给目标火盆和终端接收端，形成可见闭环。
+difficulty_reading:
+  expected: 4
+  counted_reasoning:
+    - 识别墙灭火是保存主 C1 而非失败。
+    - 读 C2 的首边界燃尽责任，选择下方通道而不是回到开局回路。
+    - 在无亮火倒数中决定回到左火盆的 t2 窗口。
+    - 把每次 C1 缩短后的新长度/站位当作下一步终点规划。
+  not_counted:
+    - 长路线本身
+    - 重复往返本身
+    - 后续机制事件
+  calibration_boundary: v2 以同一 shared_fire_and_reignition 核心提高中段密度；若实玩仍把上下换位读成等待，应继续压缩布局，而不是添加机制。
+major_element_responsibility:
+  - element: C1
+    responsibility: 主保存—复燃—缩短链
+  - element: C2
+    responsibility: 短时门槛与中段可达性改变
+  - element: terminal_singleton
+    responsibility: 终端等待与最后 relay
+  - element: wall
+    responsibility: 第一拍主动灭火
+  - element: left_brazier
+    responsibility: 共享中周期复燃源
+  - element: terminal_singleton
+    responsibility: 终端可见 relay
+solution_family_reading:
+  status: complete
+  milestone_signature_count: 1
+  required_history_all_wins: true
+  evidence_ref: solution_family.json
+identity_counterfactual_reading:
+  variants_read: 6
+  evidence_ref: identity_counterfactuals.json
+  conclusion: 墙、共享火盆、C2、终端 relay 各自承担可观察责任；反事实结果只用于限定 identity，不等于审美 verdict。
+exposure_audit_reading:
+  status: pass
+  allowed_exposure_through: shared_fire_and_reignition
+  forbidden_hit_count: 0
+  evidence_ref: exposure_audit.json
+known_defects:
+  - 中段上下换位仍需要 Critic 检查是否被体验成等待；本版本已经把 C2 的首边界燃尽和下方通道纳入因果链。
+  - 终端接收端是 relay 而非 hard lock。
+evidence_limits:
+  - 本文件是 Designer 侧玩家重读，不是独立 review verdict。

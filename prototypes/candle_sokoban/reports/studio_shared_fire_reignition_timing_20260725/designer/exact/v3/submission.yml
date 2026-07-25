@@ -1,0 +1,57 @@
+submission_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_v3_designer_submission
+design_task_id: studio_shared_fire_reignition_timing_20260725
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v3
+allowed_exposure_through: shared_fire_and_reignition
+designer_claim:
+  player_experience_core: 玩家先主动把主 C1 压入墙而熄灭，再在 t2 从左共享火盆复燃；复燃后的第一个边界同时收窄 C1、缩短 C2 并迫使玩家从上方横线转入下方 staging，第二个边界再次收窄并把 C2 变成可执行的单格火源，玩家随后用同一倒数窗口先点右目标，再回收 C1 点左目标。
+  player_action: 以墙灭火保存 C1，以右移和下行把 t2 前的站位压到共享火盆；复燃后每个边界都改变 C1/C2 的长度与可达位置，玩家必须沿下方 staging 走位，在 C2 变成 len1 后从下方点亮右火盆，再回到 C1 的新长度下点亮左火盆。
+  visible_payoff: 墙灭火立即保存 C1；t2 后第一个边界让两根仍在燃烧的蜡烛分别进入 len3/len2，第二个边界把 C2 收到 len1 并释放其目标 wick；右火盆先亮，最后 C1 收到 len1 后点亮左火盆，边界消费直接改写下一步。
+  why_this_level_exists: 把 Critic 指出的等待感压缩成对象责任的连续变化：同一个 shared fire 被墙灭火保存、被中周期重新接入，再通过多根蜡烛的边界职责完成终局。
+  work_identity_conditions:
+    - 主 C1 必须先由墙灭火，再从左侧共享火盆于 t2 中周期复燃。
+    - 复燃后的两个连续边界必须分别消费 C1/C2，改变 staging 可达位置与右火盆的可用 wick。
+    - C2 必须先在 len1 状态点亮右火盆，C1 再在 len1 状态点亮左火盆；不引入后续机制分支。
+packaging_account:
+  opening: 玩家、C1、左共享火盆、墙灭火口和右侧多格 C2 在同一紧凑横线上；两个目标火盆分别露出在 C1/C2 的上方，终局责任一开始就可读。
+  preparation: 第一拍把 C1 压入墙，向右走到首边界，再下行绕过收窄中的两根蜡烛，回到左火盆把复燃锁在 t2。
+  reveal_or_use: t2 后边界连续消费 C1/C2；玩家不靠原地上下换位，而沿下方 staging 走到 C2 的 len1 wick，先点右火盆。
+  ending: C2 先把共享火焰交给右火盆，随后 C1 继续缩到 len1 并把同一链收束到左火盆。
+  every_major_element_role:
+    - C1：墙灭火—t2 复燃—连续缩短—左目标。
+    - C2：复燃后持续参与倒数，len3→len2→len1 并承担右目标。
+    - 下方 staging：每个边界后的玩家位置与下一操作选择。
+    - 左火盆：唯一中周期复燃源。
+    - 墙：第一拍主动灭火的因果锚点。
+    - 两个目标火盆：两根蜡烛边界责任的可见终端。
+  known_perceptible_defects:
+    - 中段的下方 staging 仍有回返，但每个位置都服务于下一次边界后的 C2/C1 操作，不以原地等待充数。
+    - C2 在点亮右火盆后于下一边界燃尽；燃尽是同一 shared_fire_and_reignition 核心的终端消费，不是后续 branch。
+hard_evidence:
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/canonical_replay.json
+  layout_analysis_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/layout_analysis.json
+  solution_family_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/solution_family.json
+  identity_counterfactual_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/identity_counterfactuals.json
+  exposure_audit_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/exposure_audit.json
+  replay_is_complete: true
+  replay_is_nonempty: true
+  reachable_graph_is_complete: true
+  solution_family_is_complete: true
+  identity_counterfactuals_are_complete: true
+  exposure_audit_is_complete: true
+solution_uniqueness:
+  result: single_candidate_shared_core_with_timing_variants
+  winning_milestone_signature_count: 4
+  raw_shortest_input_count: "3596"
+  required_history_all_wins: true
+  interpretation: 所有胜利轨迹都保有墙灭火、共享火盆复燃和两根蜡烛的连续边界消费；目标消费的相对时点存在 runtime timing variants，但仍属于同一 shared_fire_and_reignition 核心，不新增后续 branch。
+bypass_refs:
+  - v3 exposure audit 完整图覆盖所有可达状态，并对 forbidden event patterns 做零命中检查。
+  - identity counterfactuals 记录删除/错位墙、复燃火源、C2 与两个目标火盆后的结构变化。
+identity_counterfactual_refs:
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/identity_counterfactuals.json
+exposure_gate_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/exposure_audit.json
+evidence_limits:
+  - Designer 证据包不替代 fresh Evidence Reviewer 的独立硬证据核验。
+  - Designer 证据包不替代 Puzzle Critic 对中段等待感和实际玩家体验的判断。
+designer_self_verdict: submit_for_independent_review

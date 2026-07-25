@@ -1,0 +1,42 @@
+design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
+prototype_id: candle_sokoban
+request_source: human_message_2026-07-25
+task_kind: specific_prototype_single_level_design
+
+target:
+  minimum_difficulty: 4
+  controller_selected_target_difficulty: 5
+  allowed_exposure_through: shared_fire_and_reignition
+  delivery_count: 1
+
+player_assumption:
+  mastered_prior_branches:
+    - basic_candle_manipulation
+    - wall_dousing
+  includes_all_derived_skills_and_calculations: true
+  full_board_information: true
+  execution_accuracy_assumed: true
+
+experience_seed: >-
+  玩家需要通过分析，主动把已燃蜡烛的烛芯送到墙后灭火，并在计划好的共享倒计时相位把它重新
+  送到火盆或外露火焰处复燃，以控制这根蜡烛究竟参加哪一次燃烧边界缩短。正确计划要利用“灭火
+  避开本轮缩短”与“边界复燃立即参加本轮缩短”的差异，把长度、占格、火源位置和后续操作位
+  统一进同一个高难计划；不能退化成等待固定步数或被动动画。
+
+design_preferences:
+  - 鼓励尽量多且复杂地组合 basic_candle_manipulation、wall_dousing 与 shared_fire_and_reignition。
+  - 可以很难，但难度必须来自玩家对共享相位、灭火、复燃、长度与空间责任的联合推理。
+  - 墙灭火与复燃必须由玩家主动选择时机，并对后继操作产生可感的结构后果。
+  - 不以事件数量、步数、路线税、倒计时空耗或对象堆叠替代玩家洞见。
+
+source_boundary:
+  allowed:
+    - 当前原型权威规则、runtime 与工具。
+    - 当前任务正式发布的 task-local mechanism lexicon 与原始 evidence。
+    - Controller 为当前任务提供的完整玩家前提与 clean archive 校准视图。
+  forbidden:
+    - 旧 Candle 报告、旧候选、旧 Designer 工作台或未归档 review。
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml

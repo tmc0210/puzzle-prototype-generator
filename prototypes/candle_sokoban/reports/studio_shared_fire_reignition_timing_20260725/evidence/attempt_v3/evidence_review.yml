@@ -1,0 +1,180 @@
+review_attempt_id: "CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_V3_HARD_01"
+reviewer_instance_id: "sokoban-evidence-reviewer-fresh-v3-20260725"
+candidate_id: "CANDLE_SHARED_FIRE_REIGNITION_TIMING_001"
+exact_version: "v3"
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - "prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/evidence/attempt_v3/input.yml"
+    - "prototypes/candle_sokoban/mechanic.yml"
+    - "prototypes/candle_sokoban/docs/designer_contract.md"
+    - "prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml"
+    - "prototypes/candle_sokoban/docs/design_handoff.yml"
+    - "prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/layout.txt"
+    - "prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/solve_instance.yml"
+    - "prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/canonical_replay.json"
+    - "prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/layout_analysis.json"
+    - "prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/solution_family.json"
+    - "prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/exposure_audit.json"
+    - "prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v3/identity_counterfactuals.json"
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - signature: "wall_douse>midcycle_reignite>shrink_len3>shrink_len2>shared_target_transfer>shrink_len1"
+      winning_product_states: 5
+      minimum_depth: 22
+      observed_order: "第 1 步 C1 墙灭火；第 9 步 C1 由左共享火盆 t2 复燃；第 10 步 C1/C2 缩至 len3/len2；第 15 步 C1/C2 缩至 len2/len1；第 18 步 C2 点亮右目标 8,2；第 20 步 C2 燃尽且 C1 缩至 len1；第 22 步 C1 点亮左目标 4,2 并胜利。"
+      trace_ref: "solution_family.json#winningMilestoneSignatures[0]；沿 exposure_audit.json#raw_graph 追踪其 representativeInputs"
+    - signature: "wall_douse>midcycle_reignite>shrink_len3>shrink_len2>shrink_len1>shared_target_transfer"
+      winning_product_states: 1
+      minimum_depth: 24
+      observed_order: "第 20 步 C2 点亮右目标 8,2，同时 C1 缩至 len1、C2 燃尽；第 24 步 C1 点亮左目标 4,2 并胜利。相对签名 1，目标转移与 C1 len1/C2 terminal burn 的因果先后不同。"
+      trace_ref: "solution_family.json#winningMilestoneSignatures[1]；沿 exposure_audit.json#raw_graph 追踪其 representativeInputs"
+    - signature: "wall_douse>midcycle_reignite>shrink_len3>shared_target_transfer>shrink_len2>shrink_len1"
+      winning_product_states: 5
+      minimum_depth: 26
+      observed_order: "第 15 步 C1 在燃烧边界复燃且 C2 缩至 len1；第 18 步 C2 点亮右目标 8,2；随后第 20/25 步分别发生 C2 燃尽/C1 缩至 len2 和 C1 缩至 len1；第 26 步 C1 点亮左目标 4,2 并胜利。"
+      trace_ref: "solution_family.json#winningMilestoneSignatures[2]；沿 exposure_audit.json#raw_graph 追踪其 representativeInputs"
+    - signature: "wall_douse>shared_target_transfer>midcycle_reignite>shrink_len3>shrink_len2>shrink_len1"
+      winning_product_states: 5
+      minimum_depth: 36
+      observed_order: "第 20 步 C2 先点亮右目标 8,2 并燃尽；第 25 步才发生 C1 由左共享火盆的复燃（含 boundary_ignite_participates）；第 35 步 C1 缩至 len1；第 36 步 C1 点亮左目标 4,2 并胜利。"
+      trace_ref: "solution_family.json#winningMilestoneSignatures[3]；沿 exposure_audit.json#raw_graph 追踪其 representativeInputs"
+  equivalence_evidence_basis:
+    - "solution_family.json graph.status=complete，baseStateCount=11643，productStateCount=14541，winningProductStateCount=16。"
+    - "requiredHistory.everyWinningTraceHasAllRequiredFlags=true 只证明所有胜路包含六个宽粒度 required flags，不证明不同 milestone signature 等价。"
+    - "shortestWinningFamily.rawShortestInputCount=3596 只覆盖原始输入差异，不能消除上述对象责任、目标顺序和因果时序差异。"
+    - "对四条已提供 representativeInputs 的只读 raw_graph 追踪均到达 winning=true 终止节点，且观察到不同的目标点亮、复燃、缩短和燃尽顺序。"
+  known_non_equivalent_win_refs:
+    - "solution_family.json#winningMilestoneSignatures[1]：目标 8,2 的点亮与 C1 len1/C2 燃尽在同一终局边，区别于签名 1 的先目标转移、后 len1。"
+    - "solution_family.json#winningMilestoneSignatures[2]：C2 len1 后才转移到右目标，且 C1 在边界复燃，区别于签名 1 的中周期复燃与后续缩短顺序。"
+    - "solution_family.json#winningMilestoneSignatures[3]：C2 先完成右目标并燃尽，C1 后续才复燃，反转了签名 1/2/3 中的复燃—目标—消费因果关系。"
+  status: contradicted
+  limits:
+    - "完整产品图证明了四个 raw milestone signature 的存在和胜利，不提供把它们合并为同一玩家逻辑类的等价性关系。"
+    - "本结论不评价路线长度、自然发现难度、审美或待玩价值。"
+
+claims:
+  - claim_id: exact_identity
+    claim: "当前所有机械 artifact 与 candidate_id、exact_version=v3、level_id 和 layout_sha256 一致，没有发现 stale version。"
+    status: supported
+    evidence_basis:
+      - "input.yml exact/version/hash"
+      - "solution_family.json candidateId/exactVersion/layoutSha256"
+      - "exposure_audit.json level.id/exact_version/level.layout_sha256"
+      - "identity_counterfactuals.json candidateId/exactVersion/layoutSha256"
+      - "solve_instance.yml candidate_id/exact_version/level_id"
+    limits: []
+
+  - claim_id: normal_win
+    claim: "canonical replay 非空且 24 步均标记 legal=true；最终玩家存活、全部火盆点亮，并由 all_braziers_lit 胜利。"
+    status: supported
+    evidence_basis:
+      - "solve_instance.yml input_count=24、complete=true、win=true、final_state 中 D:0 且三个 brazier 均为 1"
+      - "canonical_replay.json replay.completed=true、executedSteps=24、legalThroughStep=24、final.isWin=true"
+      - "canonical_replay.json 第 24 步含 win_all_braziers_lit，layout_analysis.json level.winCondition.type=all_braziers_lit"
+    limits:
+      - "canonical_replay.json 第 24 步的 eventWin=false 与同一步 win_all_braziers_lit 及 final.isWin=true 不一致；胜利事实由 solve_instance、最终状态和胜利事件共同支持，但该字段应被修正或收窄解释。"
+
+  - claim_id: complete_reachable_graph
+    claim: "当前 exact 的完整可达图和原始边事件存在且内部一致。"
+    status: supported
+    evidence_basis:
+      - "layout_analysis.json graph.status=complete，reachableStateCount=11643，legalTransitionCount=31793，winStateCount=5"
+      - "exposure_audit.json graph.status=complete，raw_graph.nodes=11643，raw_graph.edges=31793"
+      - "独立只读校验：节点/边索引唯一、节点键唯一、端点合法、11643 个节点全部从节点 0 可达、5 个胜态均无出边"
+      - "raw graph 的各事件模式计数与 exposure_audit.json reachable_event_counts 逐项一致"
+    limits: []
+
+  - claim_id: wall_dousing
+    claim: "当前 exact 实际发生墙体遮芯灭火，且该里程碑出现在所有 winning traces。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json 第 1 步含 extinguish_by_wall:candle#1"
+      - "solution_family.json requiredHistory.flags.wall_douse.allWinningTraces=true，violatingWinningTraceCount=0"
+      - "exposure_audit.json 完整 raw graph 中 extinguish_by_wall 计数为 24"
+      - "identity_counterfactuals.json remove_wall_douse 与 shift_wall_right 均为当前 exact 结构的完整反事实检查"
+    limits:
+      - "事件必经性由 solution_family 的 requiredHistory 支持；对象必要性仅由所列反事实覆盖，不扩展到未测试的对象删除。"
+
+  - claim_id: shared_fire_reignition_timing
+    claim: "当前 exact 实际发生由共享火盆触发的中周期复燃；该 required milestone 出现在所有 winning traces。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json 第 9 步含 ignite_from_brazier:candle#1:1,3 与 ignite_midcycle:candle#1:t2"
+      - "solution_family.json requiredHistory.flags.midcycle_reignite_from_shared_brazier.allWinningTraces=true，violatingWinningTraceCount=0"
+      - "exposure_audit.json 完整 raw graph 中 ignite_from_brazier=38、ignite_midcycle=31"
+      - "identity_counterfactuals.json remove_reignite_source 图完整且无胜态"
+    limits:
+      - "不同 winning milestone signatures 还包含边界复燃等不同具体时序；这些差异不能被合并为唯一逻辑解。"
+
+  - claim_id: countdown_and_terminal_consumption
+    claim: "全局倒计时参与当前 exact；合法行动推进 countdown，燃烧边界发生缩短/燃尽，并存在无已燃蜡烛时仍推进倒计时的可达边。"
+    status: supported
+    evidence_basis:
+      - "mechanic.yml 与 designer_contract.md 固定 global burn cycle=5、每次合法行动推进并在边界缩短/燃尽"
+      - "canonical_replay.json 多个步骤含 countdown、simultaneous_burn、shrink 与 burn_out"
+      - "exposure_audit.json 完整 raw graph 中 countdown_without_lit_candle=11706、boundary_ignite_participates=7、shrink=3237、burn_out=2842"
+      - "raw graph 独立事件计数扫描与 audit 声明一致"
+    limits:
+      - "工具事件证明机械参与，不产生审美或难度结论。"
+
+  - claim_id: terminal_object_participation
+    claim: "canonical 与四条代表胜路中可观察到 C1/C2 的不同终端责任：C2 点亮右目标后燃尽，C1 最终点亮左目标并保留；删除 C2 或共享复燃源会使对应反事实无胜解。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json 第 18/20/24 步分别记录 light_brazier:8,2、burn_out:candle#2、light_brazier:4,2"
+      - "四条 winning milestone signature 的 raw_graph 追踪显示 C2/C1 终端责任和时序发生实际变化"
+      - "identity_counterfactuals.json remove_gate_candle 与 remove_reignite_source 均 graph.status=complete、winStateCount=0、solve.found=false"
+      - "layout_analysis.json counterfactuals.no_candle_movement.solvable=false 且 searchStatus=complete"
+    limits:
+      - "layout_analysis.json 的 solution.objectParticipation 为空；因此只支持上述已追踪的参与和反事实责任，不支持未测对象的全面 per-object necessity。"
+      - "删除 primary/secondary target 会改变胜利条件，且两个反事实仍可解；不能据此声称每个目标在修改后的布局中分别不可替代。"
+
+  - claim_id: required_milestone_bypass_absence
+    claim: "在完整产品图覆盖的所有胜路中，没有省略 wall_douse、shared-brazier reignition、len3/len2/len1 shrink 或 shared-target milestone 的 bypass。"
+    status: supported
+    evidence_basis:
+      - "solution_family.json graph.status=complete"
+      - "solution_family.json requiredHistory.everyWinningTraceHasAllRequiredFlags=true"
+      - "六个 required flags 的 violatingWinningTraceCount 均为 0"
+    limits:
+      - "这只是否定所声明 required flags 的 bypass，不等同于唯一逻辑解，也不否定四个非等价 milestone signatures。"
+
+  - claim_id: exposure_later_event_absence
+    claim: "allowed_exposure_through=shared_fire_and_reignition 的当前 exact exposure audit 通过；完整可达图的 forbidden_hits 为空，后三个 branch 的 later events 未命中。"
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json exact_version=v3、level.layout_sha256 与当前 exact 一致"
+      - "exposure_audit.json exposure_gate.allowed_exposure_through=shared_fire_and_reignition，forbidden_branches 为后三家族"
+      - "exposure_audit.json graph.status=complete，verdict=pass，forbidden_hits=[]，raw_graph.nodes=11643、edges=31793"
+      - "独立 raw edge 扫描中 8 个 forbidden event pattern 命中数为 0"
+      - "mechanic_exposure_sequence.yml review_contract 要求 complete graph + raw edge events；本 artifact 满足该边界"
+    limits:
+      - "事件缺席只支持暴露门机械条件，不支持审美、难度或玩家可理解性。"
+
+  - claim_id: solution_uniqueness_equivalence
+    claim: "声明 equivalent_variants_only 已被独立支持。"
+    status: contradicted
+    evidence_basis:
+      - "solution_family.json 明确列出 4 个不同 winningMilestoneSignatures，minimumDepth 分别为 22、24、26、36"
+      - "四条 representativeInputs 沿当前 exact raw_graph 均到达 winning=true 终止节点"
+      - "不同签名保持了不同的 C1/C2 责任、目标 8,2/4,2 的点亮顺序，以及复燃/缩短/燃尽的因果先后"
+    limits:
+      - "本 verdict 不评价这些胜路的长度、隐蔽性、审美或难度。"
+
+hard_failures:
+  - "solution_uniqueness_claim.result=equivalent_variants_only 与当前完整产品图中的四个非等价 milestone signatures 冲突；至少签名 2、3、4 相对签名 1 是已知 raw non-equivalent winning variants。"
+
+evidence_gaps:
+  - "solution_family.json 没有提供把不同 milestone signatures 合并为同一玩家逻辑类的对象责任/目标分配/因果等价证明；Evidence Reviewer 不替 Designer 补写该证明。"
+  - "layout_analysis.json solution.objectParticipation=[]，全面 per-object necessity 仍未被当前 artifact 直接覆盖；本 review 只保留 canonical/代表路径和已有 counterfactual 能支持的窄声明。"
+  - "canonical_replay.json 第 24 步 eventWin=false 与最终胜态字段冲突，需修正 artifact 或明确字段语义。"
+
+overall_hard_status: contradicted
+required_action: revise_candidate

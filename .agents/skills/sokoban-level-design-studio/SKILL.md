@@ -1,6 +1,6 @@
 ---
 name: sokoban-level-design-studio
-description: 围绕一个人类体验种子，为类推箱子特定原型启动、调度并交付一个合格单关候选。作为唯一端到端 Controller，建立 task-local 探索和单候选账本，向独立 `$sokoban-level-designer` 分配体验简报、候选设计、修订、审查回应和提交前动作；调度 fresh Evidence Reviewer 与单次 Puzzle Critic，维护输入防火墙和 exact version，直到唯一候选通过审美审查、原型专属提交前工作流与待玩交付。不用于亲自设计布局、原型实现、通用机制挖掘或归档排版。
+description: 围绕一个人类体验种子，为类推箱子特定原型启动、调度并交付一个合格单关候选。作为唯一端到端 Controller，建立 task-local 探索和单候选账本，向独立 `$sokoban-level-designer` 分配体验简报、候选设计、修订和审查回应；调度 fresh Evidence Reviewer 与单次 Puzzle Critic，并在候选接受后执行原型专属机械提交前工作流，直到唯一候选进入待玩交付。不用于亲自设计布局、原型实现、通用机制挖掘或归档排版。
 ---
 
 # Sokoban Level Design Studio
@@ -28,14 +28,14 @@ description: 围绕一个人类体验种子，为类推箱子特定原型启动�
 
 每个任务固定一个 `candidate_id`、至多一个最近发布的 exact version 和至多一个 delivery version。首次发布前 exact 可以为空；Designer 的工作布局不登记版本。更换 structure family 仍服务同一体验简报和 candidate id。
 
-任何角色都不能创建候选数组、并行设计、派生版本关系或第二个待玩入口。候选被接受后停止设计；提交前变换若要求重审，只把同一候选的新 exact 送回审查链。
+任何角色都不能创建候选数组、并行设计、派生版本关系或第二个待玩入口。候选被接受后停止设计；提交前流程只执行原型 authority 预先定义的机械检查与 review-preserving 规范化，不恢复设计或审查。
 
 ## 角色与写入边界
 
 | 角色 | 职责 | 唯一写入范围 |
 |---|---|---|
 | Controller | 启动、assignment、调度、白名单组包、状态转换、提交前编排与交付 | dispatch、单候选账本、Critic packets、提交前总账、levels、queue、handoff |
-| Designer | 体验核心、归档校准、唯一候选设计、实跑重读、送审、退回响应与设计侧提交前动作 | assignment 指定 artifacts 与 task-local requests |
+| Designer | 体验核心、归档校准、唯一候选设计、实跑重读、送审与退回响应 | assignment 指定 artifacts 与 task-local requests |
 | Mechanism Explorer | 展开局部结构空间并发布正向设计语料 | task lexicon、index 与 runs |
 | Evidence Reviewer | 独立核验当前 exact 的全部硬证据，包括 SCC / graph 声明 | evidence review |
 | Puzzle Critic | 在硬证据已支持后，结合完整作品、全部前序和人类归档作一次审美判断 | 最终自然语言批评 |
@@ -73,7 +73,7 @@ Controller 建立任务、dispatch 与单候选账本
 2. 按 task exploration 合同写 `dispatch.yml`，用 fresh agent 显式调用 `$sokoban-mechanism-lab`，固定 `mechanism_explore` 与 `task_local`。只给体验种子、玩家前序、允许机制、规则、工具入口、source boundary 和任务目录。
 3. 不把审美归档、正式 exact、review 或 Designer 设想传给 Explorer。
 4. 向 Designer 发 `experience_brief` assignment，使其在 Explorer 工作期间独立完成归档校准。首批已验证 task lexicon 发布后，发一份 `candidate_design` assignment，授权当前阶段的 Designer 工作目录和最终发布位置。
-5. 同一活动 assignment 可以恢复调用持续 Designer，覆盖其内部全部草稿、probe 和修订。阶段切换、已发布 exact 被退回或提交前设计动作开始时，才写下一份 assignment 并运行 `validate-assignment`。Designer 的局部探索 request 由 Controller 校验抽象边界后再调度 Explorer。
+5. 同一活动 assignment 可以恢复调用持续 Designer，覆盖其内部全部草稿、probe 和修订。阶段切换或已发布 exact 被退回时，才写下一份 assignment 并运行 `validate-assignment`。Designer 的局部探索 request 由 Controller 校验抽象边界后再调度 Explorer；候选被接受后不再创建 Designer assignment。
 
 Controller 只验收 assignment 边界、发布 artifact 的存在性、candidate/exact 对齐和流程前置条件。Designer 发布可送审 exact 后，Controller 才登记版本并进入硬证据链。
 
@@ -102,9 +102,9 @@ Controller 只验收 assignment 边界、发布 artifact 的存在性、candidat
 
 ## 提交前工作流与交付
 
-候选被接受后，逐项处理 `design_handoff.yml` 中所有 `kind: pre_submission_check`。设计判断或 artifact 变换逐项发 `pre_submission_design_check` assignment；机械、构建或只读检查按 authority routing 调度。
+候选被接受后，逐项处理 `design_handoff.yml` 中所有 `kind: pre_submission_check`。这些 workflow 只按 authority routing 运行确定性工具，不向 Designer 分配 assignment。authority docs 必须预先固定结构候选算法、允许操作和保持条件；候选发现不得依赖 Designer 判断职责，也不得默认逐格枚举全部普通空地。
 
-只读 workflow 保留 review。若 workflow 改变 exact，只有 authority docs 明确允许且本次满足全部操作边界、必需复验和不变量时，才能直接成为 delivery version；其它变化形成新 exact，重跑必要硬证据与 Critic。
+只读 workflow 直接保留 acceptance。规范化反事实未证明保持条件时不应用并保留当前 delivery exact；证明完整时才写入新的 delivery version。工具运行不完整只令 workflow 保持 `incomplete` 并重跑。提交前流程没有设计修订或重新审查分支。
 
 交付前验证：
 

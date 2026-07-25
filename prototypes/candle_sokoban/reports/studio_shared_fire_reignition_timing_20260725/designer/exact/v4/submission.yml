@@ -1,0 +1,108 @@
+submission_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_v4_designer_submission
+design_task_id: studio_shared_fire_reignition_timing_20260725
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v4
+designer_claim:
+  player_experience_core: 玩家先用墙把仍燃的 C1 主动压灭；随后让 C2 连续经历 len4、len3、len2、len1，在 C2 len1 点亮 (7,5) 并燃尽后，玩家仍要穿过无亮倒数回到左侧共享火盆，于 t2 复燃 C1。复燃后的三次边界继续把 C1 收到 len3、len2、len1，最后由 C1 点亮 (4,2)。
+  player_action: 玩家主动选择第一拍墙灭火，读取 C2 的连续边界、目标与燃尽责任，再在 C2 消失后的无亮倒数中回到共享火盆并选择 t2 复燃；复燃后按 C1 的新长度和站位完成终局。
+  visible_payoff: step1 墙灭火保留 C1；steps5/10/15/20 依次显示 C2 len4/3/2/1，step22 点亮 (7,5)，step25 C2 燃尽；step44 共享火盆以 t2 复燃 C1，steps45/50/55 显示 C1 len3/2/1，step56 点亮 (4,2) 并胜利。
+  why_this_level_exists: 把 v3 的四种非等价目标顺序、对象责任和因果时序收束为唯一玩家逻辑，并让 replay 的 eventWin 始终与胜态一致：墙灭火—C2 先完成并燃尽—共享火盆 t2 复燃—C1 三次边界—终局。
+  work_identity_conditions:
+    - C1 必须先由墙灭火；C2 必须完整经历 len4、len3、len2、len1。
+    - C2 必须先以 len1 点亮 (7,5) 并燃尽，之后 C1 才能从 (1,3) 的共享火盆以 t2 复燃。
+    - C1 必须在复燃后经历 len3、len2、len1，最后点亮 (4,2)；不触发后续机制 branch。
+packaging_account:
+  opening: 左侧小室呈现玩家、C1、墙灭火口和共享火盆；右侧 C2 与 (7,5) 目标由短通道和墙分隔，两个目标责任可被辨认。
+  preparation: 第一步把 C1 下压到墙口；随后沿紧凑通道读取 C2 的 len4→len3→len2→len1，完成 (7,5) 的 endpoint 消费并见证 C2 燃尽。
+  reveal_or_use: C2 消失后，玩家在无亮倒数中回到 (1,3) 共享火盆，选择 t2 复燃 C1；此后的 C1 len3、len2、len1 每次都改写下一步站位与终点责任。
+  ending: C1 以 len1 在 step56 点亮 (4,2)，同一合法结算返回胜态并立即结束。
+  every_major_element_role:
+    - C1：墙灭火、共享火盆 t2 复燃、复燃后 len3/len2/len1、最终目标。
+    - C2：前置 len4/3/2/1、(7,5) 目标、燃尽责任。
+    - 墙：第一拍主动灭火的唯一结构锚点。
+    - 左共享火盆：C1 的唯一中周期复燃源。
+    - (7,5) 火盆：C2 len1 的目标消费。
+    - (4,2) 火盆：C1 len1 的终局消费。
+  known_perceptible_defects:
+    - 规范解在 C2 燃尽后到共享火盆之间存在一段无亮倒数回程；它是当前 v75 时序成本，不能包装成新的机制事件。
+    - C1 的 t2 复燃发生在 C2 已燃尽之后；独立 Critic 需判断这段回程是否仍足以让复燃时机成为主动选择。
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete
+    search_budget: base graph 3438 states / 9536 edges; product graph 4541 states / 12688 edges; terminal winning states
+    known_raw_winning_variants:
+      - - down
+        - right
+        - right
+        - right
+        - up
+        - right
+        - right
+        - down
+        - right
+        - down
+        - right
+        - right
+        - right
+        - down
+        - down
+        - down
+        - left
+        - left
+        - left
+        - left
+        - left
+        - up
+        - down
+        - right
+        - right
+        - right
+        - right
+        - right
+        - down
+        - down
+        - left
+        - left
+        - left
+        - left
+        - left
+        - left
+        - up
+        - left
+        - up
+        - up
+        - left
+        - left
+        - up
+        - up
+        - down
+        - up
+        - down
+        - up
+        - down
+        - up
+        - up
+        - down
+        - right
+        - right
+        - right
+        - up
+    equivalence_account: 所有 winning product states 共享同一完整 milestone signature；差异只在必要站位与走位等价变体，不改变墙灭火、C2 先完成目标并燃尽、C1 t2 复燃和 C1 终局责任。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/layout_analysis.json
+    evidence_limits:
+      - 产品图按同一 runtime state 与同一单调里程碑历史合流；不把原始走位回环算作新逻辑解。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/identity_counterfactuals.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/identity_counterfactuals.json
+  exposure_gate_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4/exposure_audit.json
+  evidence_limits:
+    - Designer packet 不替代 fresh Evidence Reviewer 的独立硬证据核验。
+    - Designer packet 不替代 Puzzle Critic 对难度和中段感受的判断。
+designer_self_verdict: submit_for_independent_review

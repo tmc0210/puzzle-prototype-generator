@@ -1,0 +1,92 @@
+schema_version: 1
+artifact_kind: designer_withdrawal_assessment
+assignment_ref: >-
+  prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/assignments/assignment_review_response_v4.yml
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version_basis: v4
+
+designer_decision: withdraw_exact
+withdrawal_scope: exact_revision_after_critic
+decision_boundary: >-
+  撤回当前 candidate 的 v4 exact 送审资格，不发布 v5，也不创建第二候选。v4 的 Evidence Review
+  硬证据保持为历史输入，但不能以它覆盖本轮 Critic 指出的玩家体验缺口；本次撤回只针对当前
+  shared_fire_and_reignition timing experience 的 exact 交付，不外推为 candle_sokoban 机制普遍不可设计。
+
+reasoning_sketch:
+  required_player_relation: >-
+    玩家必须主动用墙熄灭 C1，并在 C2 仍参与倒数的可读窗口中选择何时从 shared fire 重燃 C1；
+    该选择至少要改变仍可用对象、可达区域、火源责任或下一次操作，并反向约束更早的准备。
+  strongest_revision_material:
+    - >-
+      candidate_v87 保留了同一 candidate 的墙灭火—重燃核心，并出现 C1 在 C2 燃尽前复燃的相位变体；
+      但完整可达图实际包含 wick_reexposed_unlit 与 roll_intermediate_extinguish，分别来自 C1/C2
+      的直接穿行和中途熄灭，触犯 body_concealment_and_reexposure / rolling_contact_chain 暴露禁门。
+    - >-
+      保持 complete exposure pass 的定向变体均回到 C2 先燃尽、C1 后复燃的固定串联，或失去可胜态；
+      它们没有把中段倒数转成两个玩家侧的有后果 timing decisions。
+  closure_relation: >-
+    在当前紧凑几何中，制造真实重叠窗口需要开放 C1 与 C2 的交叉滚动列；该列一旦开放，完整图就
+    产生禁止的烛芯重暴露或中途滚动熄灭。封回该列则只剩 v4 的无亮回程和固定 t2 复燃。继续以
+    加长路线、重复上下移动或额外等待补齐时机，会直接复刻 Critic 退回的问题。
+
+family_outcome:
+  family: shared_fire_reignition_timing
+  status: ended_without_v5_exact
+  why_not_continue_same_family:
+    - >-
+      最强重构分支虽然有 C1/C2 亮态重叠，但不能通过 complete exposure audit；安全分支不能形成
+      两个可读且有后果的主动时机选择。
+    - >-
+      继续搜索需要改变对象邻接、火盆分布或核心几何，而不是在本 assignment 的同一 candidate 内
+      做有限玩家侧修订；这会把失败边界扩成第二候选或新的机制事件，违反 assignment。
+    - >-
+      不把等待、长路线、重复往返或 forbidden branch 伪装成难度 4 的证据。
+
+failed_path_summary:
+  - version: v4
+    outcome: >-
+      Evidence Reviewer 通过，但 Critic 确认 C2 先完成并燃尽、无亮回程、C1 t2 复燃固定串联；
+      中段没有亮态回程或主动时机选择，难度 4 无法确认。
+  - version: candidate_v87
+    outcome: >-
+      形成最接近目标的 C1/C2 重叠时序，但完整图出现 wick_reexposed_unlit 与
+      roll_intermediate_extinguish；不能保持 allowed_exposure_through=shared_fire_and_reignition。
+  - versions: candidate_v96-candidate_v102
+    outcome: >-
+      定向移动 C2、开放安全通道或阻断接触的实验，分别无胜态、仍先燃尽或保留禁止滚动边；
+      没有一版同时满足玩家时机、唯一逻辑与完整暴露门。
+
+player_side_verdict:
+  target_difficulty: 4
+  minimum_acceptable_difficulty: 4
+  verdict: does_not_reach_candidate_bar
+  reasons:
+    - >-
+      v4 的 t2 复燃是固定路线相位，不是玩家在仍燃对象之间的主动责任选择。
+    - >-
+      能产生亮态重叠的几何分支把负荷转成禁止的烛身 / 烛芯交互；能通过暴露审计的分支又退化为
+      无亮回程和等待，无法确认难度 4。
+
+evidence_boundary:
+  v4_exact_exists: true
+  v4_evidence_review_supported: true
+  v4_critic_supported: false
+  v5_exact_published: false
+  v5_canonical_replay: false
+  v5_solution_family_audit: false
+  v5_identity_counterfactuals_complete: false
+  v5_complete_exposure_audit: false
+  v5_submission_packet: false
+  note: >-
+    未发布 v5，因此不伪造 v5 的 exact manifest、replay、解族、反事实、exposure audit 或 submission packet。
+    定向 workbench 诊断仅作为撤回理由，不替代 exact 级证据。
+
+controller_handoff:
+  requested_outcome: withdraw_exact_without_new_candidate
+  ledger_write_by_designer: false
+  review_requested: false
+  preserved_artifacts:
+    - >-
+      prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v4
+    - >-
+      prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/workbench

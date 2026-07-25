@@ -1,0 +1,29 @@
+task: studio_shared_fire_reignition_timing_20260725
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v3
+layout_source: candidate_v53.layout
+checks:
+  experience_core_kept_single: true
+  allowed_exposure_through: shared_fire_and_reignition
+  forbidden_later_branches_absent: true
+  replay_complete: true
+  replay_nonempty: true
+  replay_win: true
+  canonical_t2_reignite: true
+  graph_complete: true
+  solution_family_complete: true
+  milestone_family_nonempty: true
+  normalized_milestone_core_present: true
+  all_wins_keep_required_history: true
+  identity_counterfactuals_complete: true
+  exposure_complete: true
+  forbidden_event_hits_zero: true
+  exposure_gate_pass: true
+  no_ledger_dispatch_critic_levels_queue_handoff_written: true
+boundary_read:
+  - t2→t1：第一处复燃后边界同时把 C1 收到 len3、C2 收到 len2；上方横线不再是下一站，玩家必须进入下方 staging。
+  - t1→t5：第二处边界把 C1 收到 len2、C2 收到 len1；C2 的新 wick 责任让右火盆成为下一次可执行消费。
+  - C2 len1 消费右目标后，下一边界把 C1 收到 len1 并让 C2 燃尽；玩家回收新形成的 C1 终点位置。
+  - 最终 C1 len1 wick 点左目标；所有变化仍在 shared_fire_and_reignition 内，没有后续 branch。
+evidence_limits:
+  - 自查只支持发布 packet，不取代独立 Evidence Reviewer 或 Puzzle Critic。

@@ -1,0 +1,34 @@
+task: studio_shared_fire_reignition_timing_20260725
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v4
+layout_source: candidate_v75.layout
+checks:
+  experience_core_kept_single: true
+  allowed_exposure_through: shared_fire_and_reignition
+  forbidden_later_branches_absent: true
+  replay_complete: true
+  replay_nonempty: true
+  replay_win: true
+  replay_step_event_win_consistent: true
+  c1_wall_douse_present: true
+  c1_shared_reignite_present: true
+  post_reignite_boundary_consumptions_at_least_two: true
+  graph_complete: true
+  solution_family_complete: true
+  uniqueness_result: unique_complete
+  unique_within_budget: true
+  equivalent_variants_only: true
+  one_milestone_signature: true
+  all_wins_keep_required_history: true
+  identity_counterfactuals_complete: true
+  exposure_complete: true
+  forbidden_event_hits_zero: true
+  exposure_gate_pass: true
+  no_ledger_dispatch_critic_levels_queue_handoff_written: true
+boundary_read:
+  - step1：墙灭火 C1；C2 继续自己的倒数责任。
+  - steps5/10/15/20：C2 依次收到 len4/3/2/1，右侧可达位置和下一操作选择连续变化；step22 点亮 (7,5)，step25 C2 燃尽。
+  - step44：在 C2 已燃尽后的无亮倒数中，玩家从 (1,3) 共享火盆以 t2 复燃 C1；此处只发生 shared_fire_and_reignition，不宣称胜利。
+  - steps45/50/55：C1 依次收到 len3/2/1，三次边界继续改变下一次站位；step56 点亮 (4,2) 并以同一合法结算胜利。
+evidence_limits:
+  - 自查只支持发布 packet，不取代独立 Evidence Reviewer 或 Puzzle Critic。

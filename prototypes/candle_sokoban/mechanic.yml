@@ -218,6 +218,18 @@ counterfactuals:
     disable_rules: [move_candle]
 
 optimizations:
+  zero_candle_loss_terminal:
+    status: pass
+    requires:
+      - normal_all_braziers_lit_win
+      - no_candle_creation
+      - braziers_permanent_when_lit
+    notes: >
+      Under the normal all_braziers_lit win condition, a non-winning state with
+      no remaining candles is a proven loss terminal. Search, graph, agency, and
+      exposure enumeration keep the transition into that state, including its
+      events, but do not expand later walk/countdown-only states. Diagnostic
+      event_occurs probes remain unterminalized by this rule.
   reachability_macro:
     status: fail
     requires:

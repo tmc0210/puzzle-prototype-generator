@@ -32,7 +32,6 @@ const VALID_ASSIGNMENT_KINDS = new Set([
   "candidate_design",
   "revision",
   "review_response",
-  "pre_submission_design_check",
 ]);
 const VALID_DESIGNER_RESPONSES = new Set([
   "revise_candidate",
@@ -113,7 +112,7 @@ async function prepareCriticBasePacket(options) {
   if (candidate.candidate_state !== "hard_validated") {
     throw new Error("只有 hard_validated 的当前候选才能生成 Critic base packet");
   }
-  await assertSupportedEvidence(candidate, candidate.candidate_id);
+  await assertSupportedEvidence(candidate, candidate.candidate_id, candidate.exact_version);
 
   const artifact = await buildReviewArtifact(candidate);
   const prototypeContext = asObject(brief.prototype_context, "prototype_context");
@@ -338,6 +337,9 @@ async function validateCandidateLedger(options) {
     const criticExactVersion = candidate.candidate_state === "accepted"
       ? candidate.reviewed_exact_version
       : candidate.exact_version;
+    const evidenceExactVersion = candidate.candidate_state === "accepted"
+      ? candidate.reviewed_exact_version
+      : candidate.exact_version;
     if (candidate.critic_review_ref) {
       recordReviewerVersion(
         criticVersions,
@@ -349,7 +351,7 @@ async function validateCandidateLedger(options) {
     }
     await recordEvidenceReviewerVersions(
       candidate.evidence_review_refs,
-      candidate.exact_version,
+      evidenceExactVersion,
       evidenceReviewerVersions,
       "candidate.evidence_review_refs",
       errors,
@@ -427,7 +429,24 @@ async function validateCurrentCandidate(candidate, ledger, ledgerRef, errors) {
       await checkRef(candidate[field], `candidate.${field}`, errors);
     }
     try {
-      await assertSupportedEvidence(candidate, candidateId);
+      const submission = await readYamlRef(candidate.submission_packet_ref);
+      const submissionExactVersion = candidate.candidate_state === "accepted"
+        ? candidate.reviewed_exact_version
+        : candidate.exact_version;
+      if (submission.candidate_id !== candidateId) {
+        errors.push("candidate.submission_packet_ref 的 candidate_id 不一致");
+      }
+      if (submission.exact_version !== submissionExactVersion) {
+        errors.push("candidate.submission_packet_ref 未绑定 reviewed exact");
+      }
+    } catch (error) {
+      errors.push(`candidate.submission_packet_ref 无法验证：${errorMessage(error)}`);
+    }
+    try {
+      const evidenceExactVersion = candidate.candidate_state === "accepted"
+        ? candidate.reviewed_exact_version
+        : candidate.exact_version;
+      await assertSupportedEvidence(candidate, candidateId, evidenceExactVersion);
     } catch (error) {
       errors.push(errorMessage(error));
     }
@@ -490,17 +509,40 @@ async function validateCurrentCandidate(candidate, ledger, ledgerRef, errors) {
       if (record.delivery_exact_version !== candidate.delivery_exact_version) {
         errors.push("提交前记录的 delivery_exact_version 不一致");
       }
-      if (record.overall_status !== "completed" || record.return_to_design_required !== false) {
-        errors.push("ready_for_playtest 要求提交前记录完整且无需回到设计");
+      if (record.overall_status !== "completed") {
+        errors.push("ready_for_playtest 要求提交前记录完整");
       }
       const workflowResults = requireArray(record.workflow_results, "pre_submission.workflow_results");
-      const changedResults = workflowResults.filter((result) => result?.version_effect === "changed");
+      const changedResults = workflowResults.filter(
+        (result) => result?.version_effect === "review_preserving_change",
+      );
       for (const [index, result] of workflowResults.entries()) {
         if (!result || !["completed", "not_applicable"].includes(result.status)) {
           errors.push(`提交前 workflow_results[${index}] 未完成`);
         }
-        if (result?.version_effect === "changed" && result.review_effect !== "preserved") {
-          errors.push(`提交前 workflow_results[${index}] 改变版本但未保留 review`);
+        if (!result || !["unchanged", "review_preserving_change"].includes(result.version_effect)) {
+          errors.push(`提交前 workflow_results[${index}] 的 version_effect 非法`);
+        }
+        if (result?.acceptance_preserved !== true) {
+          errors.push(`提交前 workflow_results[${index}] 未确认 acceptance_preserved=true`);
+        }
+        if (result?.status === "not_applicable" && result.version_effect !== "unchanged") {
+          errors.push(`提交前 workflow_results[${index}] 不适用却改变了版本`);
+        }
+        if (result?.version_effect === "review_preserving_change") {
+          if (!stringOrEmpty(result.preservation_basis)) {
+            errors.push(`提交前 workflow_results[${index}] 缺少 preservation_basis`);
+          }
+          if (!Array.isArray(result.authority_docs) || result.authority_docs.length === 0) {
+            errors.push(`提交前 workflow_results[${index}] 缺少 authority_docs`);
+          }
+          if (!Array.isArray(result.artifact_refs) || result.artifact_refs.length === 0) {
+            errors.push(`提交前 workflow_results[${index}] 缺少保持证明 artifact`);
+          }
+          const discovery = result.candidate_discovery;
+          if (!discovery || !stringOrEmpty(discovery.method) || !Array.isArray(discovery.candidate_units)) {
+            errors.push(`提交前 workflow_results[${index}] 缺少结构候选发现记录`);
+          }
         }
       }
       if (
@@ -508,6 +550,12 @@ async function validateCurrentCandidate(candidate, ledger, ledgerRef, errors) {
         && changedResults.length === 0
       ) {
         errors.push("reviewed 与 delivery 版本不同，但提交前记录没有版本变化项");
+      }
+      if (
+        candidate.reviewed_exact_version === candidate.delivery_exact_version
+        && changedResults.length > 0
+      ) {
+        errors.push("提交前记录声称改变版本，但 reviewed 与 delivery 版本相同");
       }
     } catch (error) {
       errors.push(`提交前记录无法验证：${errorMessage(error)}`);
@@ -598,14 +646,11 @@ async function assertValidDesignerAssignment(assignmentRef) {
     if (assignmentCandidateId !== candidate.candidate_id) {
       throw new Error(`${assignmentId}.candidate_id 与单候选账本不一致`);
     }
-    if (["revision", "review_response", "pre_submission_design_check"].includes(assignmentKind)) {
+    if (["revision", "review_response"].includes(assignmentKind)) {
       const basis = requireString(assignment.exact_version_basis, `${assignmentId}.exact_version_basis`);
       if (basis !== candidate.exact_version) {
         throw new Error(`${assignmentId}.exact_version_basis 与当前候选不一致`);
       }
-    }
-    if (assignmentKind === "pre_submission_design_check" && candidate.candidate_state !== "accepted") {
-      throw new Error(`${assignmentId} 只能分配给 accepted 候选`);
     }
   }
 
@@ -959,7 +1004,7 @@ function recordCriticForExact(criticsByExact, exactVersion, criticId, label, err
   criticsByExact.set(exactVersion, criticId);
 }
 
-async function assertSupportedEvidence(candidate, label) {
+async function assertSupportedEvidence(candidate, label, exactVersion) {
   const refs = requireStringArray(candidate.evidence_review_refs, `${label}.evidence_review_refs`);
   if (refs.length === 0) throw new Error(`${label}.evidence_review_refs 不能为空`);
   for (const ref of refs) {
@@ -971,7 +1016,7 @@ async function assertSupportedEvidence(candidate, label) {
     if (review.candidate_id !== candidate.candidate_id) {
       throw new Error(`${label} 的硬证据 candidate_id 不一致：${ref}`);
     }
-    if (review.exact_version !== candidate.exact_version) {
+    if (review.exact_version !== exactVersion) {
       throw new Error(`${label} 的硬证据 exact_version 不一致：${ref}`);
     }
   }

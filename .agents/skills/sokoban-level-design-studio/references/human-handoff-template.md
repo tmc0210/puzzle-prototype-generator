@@ -12,8 +12,8 @@ candidate:
   delivery_exact_version: ""
   player_experience: ""
   known_risks: []
-  submission_packet_ref: ""
-  evidence_review_refs: []
+  submission_packet_ref: ""  # reviewed_exact_version 的送审包
+  evidence_review_refs: []    # reviewed_exact_version 的独立硬证据
   critic_review_ref: ""
   pre_submission_workflow_record_ref: ""
   pre_submission_state: completed
@@ -28,4 +28,4 @@ candidate:
 archive_status: not_archived_waiting_for_playtest
 ```
 
-交付正文只介绍当前关卡的体验核心、玩家实际操作、可见回报、已知风险和证据边界，不比较其它设计，不排名、不打分。未经人类试玩，不得预填 `defer`、`needs_revision`、`ready_for_archive` 或 `reject`。
+交付正文只介绍当前关卡的体验核心、玩家实际操作、可见回报、已知风险和证据边界，不比较其它设计，不排名、不打分。delivery 与 reviewed exact 不同时，提交前记录承担 delivery 的机械保持证明，不为 delivery 伪造新的送审包或独立审查。未经人类试玩，不得预填 `defer`、`needs_revision`、`ready_for_archive` 或 `reject`。

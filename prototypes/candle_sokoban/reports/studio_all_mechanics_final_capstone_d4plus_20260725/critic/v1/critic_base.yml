@@ -1,0 +1,610 @@
+review_attempt_id: candle_all_mechanics_v1_critic
+prototype_id: candle_sokoban
+prototype_rules:
+  confirmed_rules:
+    - 正式胜利只在完整回合结算后检查：玩家存活且全部火盆已点亮。
+    - 全局燃烧周期固定为 5；每次合法行动推进共享倒计时，无效输入不推进。
+    - 蜡烛只能沿长轴推动一格，或从侧面滚到下一步被实体阻挡的位置；多格滚动仍只消耗一个行动。
+    - 滚动每个小步都先结算遮蔽灭火，再结算火盆或外露火焰递归点火；途中状态会影响后续小步。
+    - 已燃烛芯被墙或其它烛身遮住时熄灭；移开遮蔽物后只会未燃重曝，不会自动复燃。
+    - 已点火盆与外露已燃烛芯都可复燃外露未燃烛芯；复燃不重置共享倒计时。
+    - 燃烧边界只缩短结算时仍点燃的蜡烛；缩短腾出的旧端帽格可触发退焰点火。
+    - 全部蜡烛熄灭时倒计时仍推进；边界前熄灭的蜡烛会避开该次缩短。
+  win_condition: all_braziers_lit
+  object_and_event_semantics:
+    - 多格蜡烛是刚体；cap 方向外一格是逻辑烛芯投影，不单独占实体。
+    - 火盆是实体；点亮后永久保持火源身份。
+    - roll_intermediate_extinguish 与 roll_reignite_after_extinguish 描述同次滚动内的火焰状态链。
+    - boundary_ignite_participates 表示边界前复燃的蜡烛立即参加本次缩短。
+    - shrink_ignite 只说明退焰点火真实发生，不自动证明前面的遮蔽与复燃在胜解中必要。
+    - 玩家进入外露火焰会死亡；死亡先于最终胜利判定。
+  player_prior:
+    - 已掌握轴推、侧滚操作位、滚动距离不增加行动成本、火焰危险与全局倒计时计算。
+    - 已掌握燃烧缩短、多烛同时缩短、燃尽消失与边界相位规划。
+    - 已掌握墙体遮芯灭火、边界灭火避烧及全灭状态继续推进倒计时。
+    - 已掌握火盆/烛芯复燃、中途复燃不重置倒计时及边界复燃立即参与缩短。
+    - 已掌握烛身主动遮蔽、未燃重曝与可逆遮蔽的先后关系。
+    - 已掌握退焰点火所需的旧端帽格、烛芯外露时机与站位计算。
+    - 已掌握滚动途中逐小步点盆、点火、灭火、终点前点最后火盆与同次滚动先灭后复燃。
+prior_course_refs: []
+target_difficulty: 5
+stage_difficulty_calibration_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/calibration/stage_difficulty_view.md
+cross_stage_aesthetic_calibration_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/calibration/cross_stage_aesthetic_view.md
+candidate:
+  candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+  exact_version: v1
+  solve_instance:
+    layout: |-
+      ###########
+      ###.....###
+      ##@.21R.###
+      ####2..l.##
+      ###o2....##
+      ####d..####
+      #####..O###
+      ######u####
+      ###########
+    player_start:
+      - 2
+      - 2
+    win_condition:
+      type: all_braziers_lit
+      description: All braziers are lit and the player is alive after full turn settlement.
+  canonical_solution:
+    exact_inputs:
+      - right
+      - up
+      - right
+      - right
+      - down
+      - up
+      - left
+      - left
+      - down
+      - right
+      - up
+      - down
+      - up
+      - right
+      - right
+      - down
+      - right
+      - down
+      - right
+      - down
+      - left
+      - left
+      - left
+    mechanically_derived_trace:
+      - step: 1
+        input: right
+        before_layout: |-
+          ###########
+          ###.....###
+          ##@.21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+        event: walk, countdown:5->4
+        after_layout: |-
+          ###########
+          ###.....###
+          ##.@21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+      - step: 2
+        input: up
+        before_layout: |-
+          ###########
+          ###.....###
+          ##.@21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+        event: walk, countdown:4->3
+        after_layout: |-
+          ###########
+          ###@....###
+          ##..21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+      - step: 3
+        input: right
+        before_layout: |-
+          ###########
+          ###@....###
+          ##..21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+        event: walk, countdown:3->2
+        after_layout: |-
+          ###########
+          ###.@...###
+          ##..21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+      - step: 4
+        input: right
+        before_layout: |-
+          ###########
+          ###.@...###
+          ##..21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+        event: walk, countdown:2->1
+        after_layout: |-
+          ###########
+          ###..@..###
+          ##..21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+      - step: 5
+        input: down
+        before_layout: |-
+          ###########
+          ###..@..###
+          ##..21R.###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####..O###
+          ######u####
+          ###########
+        event: roll_step:candle#1:d1, extinguish:candle#1:concealed, extinguish_by_candle_body:candle#1, roll_step:candle#1:d2, wick_reexposed_unlit:candle#1, wick_reexposed_unlit:candle#single2, roll_step:candle#1:d3, roll_step:candle#1:d4, ignite:candle#1, ignite_from_brazier:candle#1:7,6, ignite_midcycle:candle#1:t1, roll_candle:candle#1:d4, roll_multi_cell_one_turn:candle#1:d4, roll_intermediate_extinguish:candle#1:d1, roll_reignite_after_extinguish:candle#1:d1->d4, countdown:1->5, boundary_ignite_participates:candle#1, shrink:candle#1:len1, shrink_ignite:candle#single4
+        after_layout: |-
+          ###########
+          ###.....###
+          ##..2@..###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+      - step: 6
+        input: up
+        before_layout: |-
+          ###########
+          ###.....###
+          ##..2@..###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+        event: walk, countdown:5->4
+        after_layout: |-
+          ###########
+          ###..@..###
+          ##..2...###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+      - step: 7
+        input: left
+        before_layout: |-
+          ###########
+          ###..@..###
+          ##..2...###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+        event: walk, countdown:4->3
+        after_layout: |-
+          ###########
+          ###.@...###
+          ##..2...###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+      - step: 8
+        input: left
+        before_layout: |-
+          ###########
+          ###.@...###
+          ##..2...###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+        event: walk, countdown:3->2
+        after_layout: |-
+          ###########
+          ###@....###
+          ##..2...###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+      - step: 9
+        input: down
+        before_layout: |-
+          ###########
+          ###@....###
+          ##..2...###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+        event: walk, countdown:2->1
+        after_layout: |-
+          ###########
+          ###.....###
+          ##.@2...###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+      - step: 10
+        input: right
+        before_layout: |-
+          ###########
+          ###.....###
+          ##.@2...###
+          ####2..l.##
+          ###o2....##
+          ####d..####
+          #####R.O###
+          ######U####
+          ###########
+        event: roll_step:candle#2:d1, roll_step:candle#2:d2, ignite:candle#2, ignite_from_wick:candle#2:6,6, ignite_midcycle:candle#2:t1, roll_candle:candle#2:d2, roll_multi_cell_one_turn:candle#2:d2, countdown:1->5, simultaneous_burn:candle#1+candle#2+candle#single4, boundary_ignite_participates:candle#2, burn_out:candle#1, shrink:candle#2:len3, burn_out:candle#single4
+        after_layout: |-
+          ###########
+          ###.....###
+          ##..@.2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 11
+        input: up
+        before_layout: |-
+          ###########
+          ###.....###
+          ##..@.2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: walk, countdown:5->4
+        after_layout: |-
+          ###########
+          ###.@...###
+          ##....2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 12
+        input: down
+        before_layout: |-
+          ###########
+          ###.@...###
+          ##....2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: walk, countdown:4->3
+        after_layout: |-
+          ###########
+          ###.....###
+          ##..@.2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 13
+        input: up
+        before_layout: |-
+          ###########
+          ###.....###
+          ##..@.2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: walk, countdown:3->2
+        after_layout: |-
+          ###########
+          ###.@...###
+          ##....2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 14
+        input: right
+        before_layout: |-
+          ###########
+          ###.@...###
+          ##....2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: walk, countdown:2->1
+        after_layout: |-
+          ###########
+          ###..@..###
+          ##....2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 15
+        input: right
+        before_layout: |-
+          ###########
+          ###..@..###
+          ##....2.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: walk, countdown:1->5, shrink:candle#2:len2
+        after_layout: |-
+          ###########
+          ###...@.###
+          ##....2.###
+          ####..Dl.##
+          ###o.....##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 16
+        input: down
+        before_layout: |-
+          ###########
+          ###...@.###
+          ##....2.###
+          ####..Dl.##
+          ###o.....##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: push_axis:candle#2, countdown:5->4
+        after_layout: |-
+          ###########
+          ###.....###
+          ##....@.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 17
+        input: right
+        before_layout: |-
+          ###########
+          ###.....###
+          ##....@.###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: walk, countdown:4->3
+        after_layout: |-
+          ###########
+          ###.....###
+          ##.....@###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 18
+        input: down
+        before_layout: |-
+          ###########
+          ###.....###
+          ##.....@###
+          ####..2l.##
+          ###o..D..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: roll_step:candle#single2:d1, roll_candle:candle#single2:d1, countdown:3->2
+        after_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..2@.##
+          ###o..Dl.##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 19
+        input: right
+        before_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..2@.##
+          ###o..Dl.##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: walk, countdown:2->1
+        after_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..2.@##
+          ###o..Dl.##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 20
+        input: down
+        before_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..2.@##
+          ###o..Dl.##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: walk, countdown:1->5, shrink:candle#2:len1, shrink_ignite:candle#single2
+        after_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..D..##
+          ###o...L@##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 21
+        input: left
+        before_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..D..##
+          ###o...L@##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: push_axis:candle#single2, extinguish:candle#2:concealed, extinguish_by_candle_body:candle#2, countdown:5->4
+        after_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..d..##
+          ###o..L@.##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 22
+        input: left
+        before_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..d..##
+          ###o..L@.##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: push_axis:candle#single2, wick_reexposed_unlit:candle#2, countdown:4->3
+        after_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..d..##
+          ###o.L@..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+      - step: 23
+        input: left
+        before_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..d..##
+          ###o.L@..##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+        event: push_axis:candle#single2, light_brazier:3,4, countdown:3->2, win_all_braziers_lit
+        after_layout: |-
+          ###########
+          ###.....###
+          ##......###
+          ####..d..##
+          ###OL@...##
+          ####...####
+          #####..O###
+          ######.####
+          ###########
+mechanical_evidence_status: supported

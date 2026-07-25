@@ -1,0 +1,27 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version: v1
+checked_before_publication: true
+checks:
+  - command: npm run check
+    status: pass
+  - command: npm run candle:conformance
+    status: warning
+    passed_checks:
+      - adapter_registered
+      - parse_render_smoke
+      - expected_trace_replay
+      - global_countdown_semantics
+      - mechanic_exposure_hard_gate
+      - solver_smoke
+      - graph_smoke
+      - layout_analyzer_smoke
+      - probe_seed_suite
+      - runtime_backed_playable
+    unavailable_by_contract:
+      - raw_sampler
+      - candidate_seed_factories
+      - curated_miner
+      - puzzlescript_exporter
+      - puzzlescript_checker
+    interpretation: warning 仅来自原型合同明确未实现的工具，不是 runtime 或候选失败。

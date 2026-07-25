@@ -1,0 +1,90 @@
+runId: shared_fire_reignition_timing_explorer_20260725
+title: "shared_fire_and_reignition 允许门：墙灭火后的边界/中周期重燃"
+notes: >-
+  局部结构谱：两格竖蜡烛 1D 向下推入墙而灭火；玩家绕到右侧后向左侧滚一格，
+  让烛芯落到已点亮火盆 O 上并重燃。两格横蜡烛 2R 被上下墙槽保护，作为同时
+  燃烧的对象责任对照。四个 case 只改变重燃发生在燃烧边界前、边界中，或保留熄灭。
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 32
+  maxStates: 100000
+  maxTransitions: 400000
+cases:
+  - id: boundary_reignite_brazier
+    family: wall_douse_reignite_timing
+    variant: boundary_reignite
+    changed_variable: "在 countdown=1 的边界行动中侧滚到 O，重燃同回合参加燃烧"
+    contrast_with: [boundary_hold_douse, midcycle_reignite_brazier]
+    notes: >-
+      右移到蜡烛上方后向下推 1D 使 D 端的烛芯落到墙格而灭火；再走到右侧，
+      在 countdown=1 向左侧滚一格，烛芯落到 O 并重燃。该行动同时面对已燃 2R，
+      观察 boundary_ignite_participates 与 simultaneous_burn。
+    layout: |
+      #############
+      #####@..#..o#
+      #...#.1.#...#
+      #...#.D.#...#
+      #...#...#...#
+      #...#O#O###.#
+      #...#...#2R.#
+      #############
+    actions: [right, down, right, down, left]
+
+  - id: boundary_hold_douse
+    family: wall_douse_reignite_timing
+    variant: boundary_hold_doused
+    changed_variable: "同一边界窗口不侧滚重燃，保留墙灭火结果"
+    contrast_with: [boundary_reignite_brazier]
+    notes: >-
+      前四步与 boundary_reignite_brazier 相同；最后一步向上离开操作位，不让 1D
+      在 countdown=1 前移离墙。观察 1 保持两格并避开本次缩短，而 2R 单独燃烧。
+    layout: |
+      #############
+      #####@..#..o#
+      #...#.1.#...#
+      #...#.D.#...#
+      #...#...#...#
+      #...#O#O###.#
+      #...#...#2R.#
+      #############
+    actions: [right, down, right, down, up]
+
+  - id: midcycle_reignite_brazier
+    family: wall_douse_reignite_timing
+    variant: midcycle_reignite
+    changed_variable: "在 countdown=2 的中周期行动中侧滚到 O，下一次边界才参加燃烧"
+    contrast_with: [midcycle_hold_douse, boundary_reignite_brazier]
+    notes: >-
+      玩家初始站在 1D 正上方，第一步即墙灭火；随后走到右侧，在 countdown=2
+      侧滚一格重燃，最后向上走过燃烧边界。观察 ignite_midcycle 与下一步的
+      simultaneous_burn，和边界即时重燃形成 timing 对照。
+    layout: |
+      #############
+      #####.@.#..o#
+      #...#.1.#...#
+      #...#.D.#...#
+      #...#...#...#
+      #...#O#O###.#
+      #...#...#2R.#
+      #############
+    actions: [down, right, down, left, up]
+
+  - id: midcycle_hold_douse
+    family: wall_douse_reignite_timing
+    variant: midcycle_hold_doused
+    changed_variable: "同一中周期窗口不侧滚重燃，下一次边界仍只有 2R 负责燃烧"
+    contrast_with: [midcycle_reignite_brazier]
+    notes: >-
+      前三步把 1D 推入墙并把玩家带到右侧；随后向上、再向左完成一次不接触蜡烛
+      的必要移动，使 countdown=1 到来时 1 仍被墙熄灭。用于排除“只要过了时间就
+      自动复燃”的解释，并比较对象责任与最终可达动作。
+    layout: |
+      #############
+      #####.@.#..o#
+      #...#.1.#...#
+      #...#.D.#...#
+      #...#...#...#
+      #...#O#O###.#
+      #...#...#2R.#
+      #############
+    actions: [down, right, down, up, left]

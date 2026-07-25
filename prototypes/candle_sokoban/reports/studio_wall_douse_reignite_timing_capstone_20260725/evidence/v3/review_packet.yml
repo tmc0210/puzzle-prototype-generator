@@ -1,0 +1,144 @@
+review_attempt_id: CANDLE_WALL_REIGNITION_TIMING_V3_HARD_001
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+exact_version: v3
+prototype_id: candle_sokoban
+reviewer_role: independent_hard_evidence_only
+output_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/evidence/v3/evidence_review.yml
+
+exact_artifact:
+  manifest_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exact_manifest.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/layout.txt
+  layout_sha256: a842aa84756a54db1b8cba87555272dafff1ad4fa620f4b3373a0ebe960bff88
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solve_instance.yml
+
+mechanical_claims:
+  - claim_id: normal_win_and_replay
+    claim: >-
+      v3 的 25 步 canonical replay 全部合法，并在完整回合结算后玩家存活且以 all_braziers_lit 正常获胜。
+  - claim_id: current_exact_complete_graph_and_exposure
+    claim: >-
+      v3 的 reachable graph complete，为 8594 states / 23086 transitions / 1 winning state；
+      allowed_exposure_through=shared_fire_and_reignition 的审计与 exact/sequence digest 匹配，
+      verdict=pass、forbidden_hits 为空，并保存完整 raw graph。
+  - claim_id: current_exact_solution_family
+    claim: >-
+      v3 的完整 first-win product graph 为 30132 product states / 81021 edges / 2 winning states；
+      全胜解必经目标墙灭、静态复燃、len3/len2/len1、辅助烛上盆、瞬时止挡单格窗口与最终交付，
+      只有一个里程碑签名；首次复燃只落在 t1/t3 且都参加同一燃烧边界。
+  - claim_id: brazier_top_anchor_wall_counterfactual
+    claim: >-
+      原坐标 (7,1)、v3 坐标 (5,1) 的已亮火盆替墙后图仍 complete 且有胜，exposure 仍 pass，
+      核心胜利历史不变；但完整 losing interaction 图扩大到 9153 states / 24497 transitions，
+      extinguish_by_wall 可达边数增加，因此替换不是行为中性，也不产生胜利旁路或机制泄漏。
+  - claim_id: brazier_upper_goal_wall_counterfactual
+    claim: >-
+      原坐标 (14,1)、v3 坐标 (12,1) 的待点火盆替墙后 complete graph 有 2 个 winning states，
+      product graph 有 6 个 winning states，辅助烛轴推不再全胜解必经、上盆职责完全消失，
+      因而产生对象职责旁路，但 exposure 仍 pass。
+  - claim_id: brazier_reignite_source_wall_counterfactual
+    claim: >-
+      原坐标 (4,3)、v3 坐标 (2,3) 的已亮火盆替墙后 complete graph 无胜态，
+      且不再有目标静态复燃来源；exposure 审计本身仍 complete/pass。
+  - claim_id: brazier_two_neutral_grate_cells
+    claim: >-
+      原坐标 (5,4)/(6,4)、v3 坐标 (3,4)/(4,4) 两只中部已亮火盆分别替墙后，
+      complete graph、raw edges 的 from/to/action/events、胜态、完整产品图、复燃时机类与 exposure
+      均和裁边基线逐项一致；二者的火盆属性并非机械必要，墙能等价承担实体筛挡位。
+  - claim_id: brazier_right_grate_wall_counterfactual
+    claim: >-
+      原坐标 (7,4)、v3 坐标 (5,4) 的右侧已亮火盆替墙后 complete graph 无胜态，
+      并出现 roll_intermediate_extinguish 与 wick_reexposed_unlit 各 38 次，exposure verdict=fail；
+      该格必须是不会灭芯的实体通道，不能换墙。
+  - claim_id: brazier_final_goal_wall_counterfactual
+    claim: >-
+      原坐标 (6,5)、v3 坐标 (4,5) 的待点火盆替墙后 complete graph 出现 12 个 winning states，
+      product graph 有 13 个 winning states / 4 个里程碑签名，最短解降到 8，存在绕过墙灭、复燃、
+      止挡单格窗口与最终交付的非等价胜解；exposure 仍 pass。
+  - claim_id: brazier_stopper_anchor_wall_counterfactual
+    claim: >-
+      原坐标 (3,6)、v3 坐标 (1,6) 的已亮火盆 literal 替墙会触发 silent initial
+      extinguish_by_wall，Candle parser 拒绝该非法初态，故不存在可声称 complete 的 literal graph；
+      仅作诊断的显式未燃 settled surrogate 虽 complete/pass 且有胜，却允许 t5 晚复燃并丢失止挡缩短、
+      目标单格、最终交付和同步燃尽历史，说明替墙会破坏核心截止窗口。
+
+solution_uniqueness_claim:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  search_budget: >-
+    base reachable graph max_states=500000，实际 complete 8594 states / 23086 transitions / 1 winning runtime state；
+    first-win 单调历史与首次复燃倒数产品图 complete 30132 product states / 81021 legal edges /
+    2 winning product states，shortest cost=25，raw shortest input count=306。
+  known_raw_winning_variants:
+    - up up up up left up down up left down up right right right right left left down left left down down right down left
+    - up up up up left down up up left down up right right right right left left down left left down down right down left
+    - up up up up left up left down up down up right right right right left left down left left down down right down left
+  equivalence_account: >-
+    两个 winning product states 分别记录首次复燃 t1 与 t3；两者进入同一燃烧边界，并共享唯一
+    wall_douse>static_reignite>target_len3>target_len2>target_len1_and_gate_open>singleton_delivery 签名、
+    同一三根蜡烛职责、相同目标分配、相同 row5 停位与唯一 winning runtime state。306 条最短串只允许
+    相邻必要走位或独立行动换序，没有晚一轮复燃、不同目标分配或不同终局停位的 winning product state。
+  extracted_from: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/submission.yml#hard_evidence.solution_uniqueness
+
+allowed_evidence_sources:
+  - docs/21-level-design-studio-standard.md
+  - docs/30-scc-graph-diagnostic-reading.md
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/layout_analysis.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solution_family.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/identity_counterfactuals.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b71_top_anchor/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b71_top_anchor/reachable_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b71_top_anchor/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b71_top_anchor/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b141_upper_goal/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b141_upper_goal/reachable_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b141_upper_goal/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b141_upper_goal/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b43_reignite_source/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b43_reignite_source/reachable_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b43_reignite_source/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b43_reignite_source/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b54_grate_left/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b54_grate_left/reachable_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b54_grate_left/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b54_grate_left/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b64_grate_middle/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b64_grate_middle/reachable_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b64_grate_middle/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b64_grate_middle/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b74_grate_right/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b74_grate_right/reachable_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b74_grate_right/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b74_grate_right/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b65_final_goal/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b65_final_goal/reachable_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b65_final_goal/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b65_final_goal/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b36_stopper_anchor/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b36_stopper_anchor/initial_validation_error.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b36_stopper_anchor/exposure_audit_error.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b36_stopper_anchor/settled_surrogate/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b36_stopper_anchor/settled_surrogate/reachable_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b36_stopper_anchor/settled_surrogate/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b36_stopper_anchor/settled_surrogate/solution_family_audit.json
+
+forbidden_inputs:
+  - Designer 的体验核心、包装、自评、已知审美缺点、难度叙事或逐盆保留决策
+  - Designer submission.yml（除本 packet 已机械提取的 solution_uniqueness 字段）
+  - Designer 的 brazier_wall_counterfactual_summary.yml；只允许读取本 packet 和逐项 raw artifacts
+  - Explorer lexicon、设计材料、archive、Critic 校准、旧 review 或人类交接
+  - 任何其它 exact 或旧 Evidence Review
+
+review_contract:
+  - 使用 $sokoban-evidence-reviewer 严格输出 evidence-reviewer-template 的结构化硬证据审查。
+  - 不替 Designer 补跑 solver、图、反事实或事件 probe；证据不足写 unknown/incomplete。
+  - 逐盆 literal 替墙与 settled surrogate 必须严格区分，不得把非法初态伪报为 complete graph。
+  - 可读取完整 graph 原始证据，但不评价审美、难度、包装、火盆是否好看或待玩资格。

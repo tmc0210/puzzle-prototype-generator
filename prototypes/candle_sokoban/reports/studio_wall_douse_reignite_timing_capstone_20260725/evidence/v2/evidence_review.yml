@@ -1,0 +1,199 @@
+review_attempt_id: CANDLE_WALL_REIGNITION_TIMING_V2_HARD_001
+reviewer_instance_id: CANDLE_WALL_REIGNITION_TIMING_V2_FRESH_EVIDENCE_REVIEWER_001
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+exact_version: v2
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - docs/21-level-design-studio-standard.md
+    - docs/30-scc-graph-diagnostic-reading.md
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/exact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/layout.txt
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/layout_analysis.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/identity_counterfactuals.json
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "up up up up left up down up left down up right right right right left left down left left down down right down left"
+    - "up up up up left down up up left down up right right right right left left down left left down down right down left"
+    - "up up up up left up left down up down up right right right right left left down left left down down right down left"
+  equivalence_evidence_basis:
+    - >-
+      solution_family.json#graph：当前 candidate_id/v2/layout_sha256 的 first-win 单调历史产品图
+      status=complete，覆盖 8594 个基础状态、30132 个产品状态与 81021 条合法边，且只有
+      2 个 winning product states。
+    - >-
+      solution_family.json#requiredHistory：requiredMask=1023；目标烛墙灭火、静态复燃、
+      复燃后 len3、后续 len2/len1、单格交付，辅助 candle#4 的轴推与上盆，以及
+      candle#3 的 singleton/终局燃尽共 10 个历史 flag，全部记录
+      allWinningTraces=true、violatingWinningTraceCount=0。
+    - >-
+      solution_family.json#winningMilestoneSignatures：两个 winning product states 共享唯一签名
+      wall_douse>static_reignite>target_len3>target_len2>target_len1_and_gate_open>singleton_delivery。
+    - >-
+      solution_family.json#shortestWinningFamily：最短 cost=25、rawShortestInputCount=306；两个
+      product-state representatives 具有同一 milestone signature 与同一 finalState。
+    - >-
+      solution_family.json#timingVariants：仅存在首次复燃前倒数 t1 与 t3 两类胜利产品态；两类
+      minimumDepth 均为 25，并落入同一里程碑签名和同一终局。
+    - >-
+      layout_analysis.json#graph 与 canonical_replay.json#final：基础 reachable graph complete，
+      8594 states / 23086 legal transitions / 1 winning runtime state；规范胜路的最终状态与
+      solution-family representatives 一致。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - >-
+      结论是 docs/21 所定义的玩家逻辑类唯一，不是原始输入串唯一；306 条最短输入串中的走位
+      回环与独立必要行动换序允许等价。
+    - >-
+      产品图按相同 runtime state、单调历史 mask 与首次复燃倒数合流；支持范围限于 artifact
+      明确编码的对象职责、目标交付、依赖里程碑与终局身份，不把该合流解释为审美结论。
+
+claims:
+  - claim_id: normal_win_and_replay
+    claim: >-
+      v2 的 25 步 canonical replay 全部合法，并在完整回合结算后玩家存活且以
+      all_braziers_lit 正常获胜。
+    status: supported
+    evidence_basis:
+      - >-
+        exact_manifest.yml、layout.txt 与 solve_instance.yml 的 candidate/version/layout/win/
+        global_burn_cycle 一致；layout.txt 实算 SHA-256 为
+        779d9a248b3ab2da50b913a5025da6bc87c1fdfff0556215f6de09c776afaa54。
+      - >-
+        canonical_replay.json：completed=true、executedSteps=25、legalThroughStep=25；第 25 步
+        先点亮 (6,5) 火盆，再结算 countdown:1->5、candle#1 与 candle#3 同步燃尽，随后产生
+        win_all_braziers_lit；final key 为 D:0 且 final.isWin=true。
+      - >-
+        src/prototypes/candle_sokoban/mechanics.ts 与 designer_contract.md：胜利检查发生在全局燃烧、
+        玩家死亡结算之后，且 all_braziers_lit 要求玩家未死亡。
+    limits: []
+
+  - claim_id: exposure_gate
+    claim: >-
+      v2 对 allowed_exposure_through=shared_fire_and_reignition 的 exposure audit 与 exact/sequence
+      digest 匹配，reachable graph 为 complete，verdict=pass，forbidden_hits 为空，并保存完整 raw graph。
+    status: supported
+    evidence_basis:
+      - >-
+        exposure_audit.json：exact_version=v2、layout_sha256=
+        779d9a248b3ab2da50b913a5025da6bc87c1fdfff0556215f6de09c776afaa54、
+        allowed_exposure_through=shared_fire_and_reignition、graph.status=complete、
+        verdict=pass、forbidden_hits=[]。
+      - >-
+        layout.txt 与 mechanic_exposure_sequence.yml 的实算 SHA-256 分别与 audit/manifest 的
+        layout digest 和 f5f0b771ed6b3c5f2b55955bf47f9b2f8196a6f9db88313063b600ce6123266e
+        sequence digest 完全一致。
+      - >-
+        exposure_audit.json#raw_graph：nodes=8594、edges=23086，与 graph summary 一致；节点索引
+        0..8593 连续、节点 key 全部非空且唯一、唯一 winning node 与规范 replay 的 final key 一致；
+        边索引 0..23085，所有 from/to 均指向已保存节点，action 合法且每条边均保存 events。
+      - >-
+        mechanic_exposure_sequence.yml：该 gate 的 forbidden families 为
+        body_concealment_and_reexposure、retreating_flame_transfer、rolling_contact_chain；完整图的
+        forbidden_hits 为空，满足 complete-graph pass 边界。
+    limits:
+      - >-
+        exposure 结论仅为较晚机制事件在完整可达边上的不可达性，不证明允许机制必经、有效使用、
+        难度或作品质量。
+
+  - claim_id: all_wins_use_wall_douse_and_reignite_schedule
+    claim: >-
+      完整 first-win product graph 的全部首次胜利历史都包含同一目标烛的墙灭火、静态复燃、
+      复燃后 len3、随后 len2 与 len1，以及单格交付；没有绕过墙灭火或复燃时序的胜解。
+    status: supported
+    evidence_basis:
+      - >-
+        solution_family.json#graph：first-win 产品图 status=complete，30132 product states、
+        81021 legal edges、2 winning product states。
+      - >-
+        solution_family.json#requiredHistory：target_wall_douse、target_static_reignite、
+        target_shrink_to_len3_after_reignite、target_shrink_to_len2、target_shrink_to_len1 与
+        final_brazier_after_singleton 对全部胜路均为 true，违规胜路数均为 0。
+      - >-
+        solution_family.json#winningMilestoneSignatures：全部胜利产品态只有一个有序里程碑签名；
+        canonical_replay.json 在第 5/10/15/20/25 步分别给出该签名的正常实例。
+    limits:
+      - >-
+        基础图只有一个 winning runtime state 本身不足以证明事件必经；本结论依赖额外的完整
+        first-win 单调历史产品图，而不是从单一胜态推断。
+
+  - claim_id: auxiliary_and_transient_stopper_participation
+    claim: >-
+      全部首次胜利历史都包含辅助 candle#4 的轴推与上盆，以及 candle#3 缩成单格、最终与交付
+      同步燃尽；这些对象不是未参与的可见 affordance。
+    status: supported
+    evidence_basis:
+      - >-
+        solution_family.json#requiredHistory：auxiliary_axis_push、upper_brazier_after_auxiliary_push、
+        stopper_shrink_to_singleton 与 stopper_burn_out_at_final 对全部胜路均为 true，违规数均为 0。
+      - >-
+        canonical_replay.json：candle#4 在第 13--15 步连续轴推，于第 15 步点亮 (14,1) 并燃尽；
+        candle#3 在第 20 步缩为 len1，第 25 步与目标交付同一结算中燃尽。
+      - >-
+        identity_counterfactuals.json：remove_auxiliary_candle 与 remove_transient_stopper 的图均
+        complete 且 winStateCount=0，独立支持两对象的基线机械参与责任。
+    limits:
+      - >-
+        对象参与和删除后不可解是机械关系，不产生审美或难度评价。
+
+  - claim_id: reignite_boundary_family
+    claim: >-
+      完整产品图只有首次复燃 t1 与 t3 两类 winning product state；二者都进入同一个第二轮燃烧
+      边界，共享唯一里程碑签名、相同对象职责、目标分配与最终 winning runtime state，没有晚一轮
+      复燃胜解。
+    status: supported
+    evidence_basis:
+      - >-
+        solution_family.json#timingVariants：完整产品图的两个胜利产品态分别为 t1 与 t3，各 1 个，
+        minimumDepth 都是 25；未记录任何其它复燃倒数胜利类。
+      - >-
+        solution_family.json#winningMilestoneSignatures 与 #shortestWinningFamily：两类共享唯一里程碑
+        签名、同一对象化 required history 与同一 finalState。
+      - >-
+        layout_analysis.json#graph：基础图 complete 且仅有一个 winning runtime state；该状态与两类
+        representatives 及 canonical replay 的终局一致。
+    limits:
+      - >-
+        t1/t3 是首次复燃输入前的倒数分类，不表示原始输入串只有两条；二者的独立走位/准备换序仍可
+        产生多个等价 raw variants。
+
+  - claim_id: identity_counterfactuals
+    claim: >-
+      删除目标首推后的烛芯墙、静态复燃火源、辅助 candle#4 或瞬时止挡 candle#3 都使完整图无胜；
+      删除 row4 footprint 筛或终盆则产生更早/更多胜态，机械上支持这些结构承担基线身份责任。
+    status: supported
+    evidence_basis:
+      - >-
+        identity_counterfactuals.json 的 candidateId、exactVersion、layoutSha256 与当前 exact 一致；
+        所有列出的变体图 status 均为 complete。
+      - >-
+        open_initial_wick_wall、unlit_reignite_source、remove_auxiliary_candle、
+        remove_transient_stopper 的 winStateCount 均为 0，solve.found 均为 false。
+      - >-
+        remove_fire_grate 产生 29 个胜态且最短 cost=14；相对基线 1 个胜态、cost=25，既更多也更早。
+      - >-
+        remove_final_goal 产生 12 个胜态且最短 cost=8；相对基线同样更多且更早。
+    limits:
+      - >-
+        删除火盆会改变 all_braziers_lit 的目标集合；对应变体只支持“移除 consumer 后交付段退化”的
+        机械身份边界，不证明作品更有趣。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

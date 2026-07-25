@@ -58,6 +58,7 @@ export type CandleExposureAuditReport = {
       max_states: number;
       max_transitions: number | null;
       terminalize_wins: true;
+      terminalize_zero_candle_loss: true;
     };
   };
   reachable_event_counts: Record<string, number>;
@@ -258,6 +259,7 @@ export function auditCandleExposure(
         max_states: maxStates,
         max_transitions: maxTransitions ?? null,
         terminalize_wins: true,
+        terminalize_zero_candle_loss: true,
       },
     },
     reachable_event_counts: Object.fromEntries(

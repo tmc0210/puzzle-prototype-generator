@@ -1,0 +1,317 @@
+schema_version: 1
+design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725
+assignment_id: candle_all_mechanics_experience_brief_002
+assignment_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/assignments/designer_experience_brief_002.yml
+artifact_kind: experience_brief
+status: complete
+
+prototype_context:
+  confirmed_rules:
+    - 正式胜利只在完整回合结算后检查：玩家存活且全部火盆已点亮。
+    - 全局燃烧周期固定为 5；每次合法行动推进共享倒计时，无效输入不推进。
+    - 蜡烛只能沿长轴推动一格，或从侧面滚到下一步被实体阻挡的位置；多格滚动仍只消耗一个行动。
+    - 滚动每个小步都先结算遮蔽灭火，再结算火盆或外露火焰递归点火；途中状态会影响后续小步。
+    - 已燃烛芯被墙或其它烛身遮住时熄灭；移开遮蔽物后只会未燃重曝，不会自动复燃。
+    - 已点火盆与外露已燃烛芯都可复燃外露未燃烛芯；复燃不重置共享倒计时。
+    - 燃烧边界只缩短结算时仍点燃的蜡烛；缩短腾出的旧端帽格可触发退焰点火。
+    - 全部蜡烛熄灭时倒计时仍推进；边界前熄灭的蜡烛会避开该次缩短。
+  win_condition: all_braziers_lit
+  object_and_event_semantics:
+    - 多格蜡烛是刚体；cap 方向外一格是逻辑烛芯投影，不单独占实体。
+    - 火盆是实体；点亮后永久保持火源身份。
+    - roll_intermediate_extinguish 与 roll_reignite_after_extinguish 描述同次滚动内的火焰状态链。
+    - boundary_ignite_participates 表示边界前复燃的蜡烛立即参加本次缩短。
+    - shrink_ignite 只说明退焰点火真实发生，不自动证明前面的遮蔽与复燃在胜解中必要。
+    - 玩家进入外露火焰会死亡；死亡先于最终胜利判定。
+  allowed_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+    - rolling_contact_chain
+  allowed_exposure_through: rolling_contact_chain
+  tool_boundary:
+    implemented:
+      - Candle runtime adapter 与 ASCII parser/renderer
+      - solver、完整图枚举与 layout analyzer
+      - try-inputs 非空 replay
+      - runtime-backed playable、诊断 probes 与 exposure audit
+    unavailable:
+      - Candle 专属 miner
+      - candidate factory
+      - PuzzleScript exporter/checker
+    evidence_limit: >-
+      当前 Explorer 材料只支持给定非空输入的确定性 replay 与局部结构差异；正式候选的可解性、
+      解族、必经性、对象责任和完整 exposure gate 必须等 exact 发布后重新取证。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - 已掌握轴推、侧滚操作位、滚动距离不增加行动成本、火焰危险与全局倒计时计算。
+    - 已掌握燃烧缩短、多烛同时缩短、燃尽消失与边界相位规划。
+    - 已掌握墙体遮芯灭火、边界灭火避烧及全灭状态继续推进倒计时。
+    - 已掌握火盆/烛芯复燃、中途复燃不重置倒计时及边界复燃立即参与缩短。
+    - 已掌握烛身主动遮蔽、未燃重曝与可逆遮蔽的先后关系。
+    - 已掌握退焰点火所需的旧端帽格、烛芯外露时机与站位计算。
+    - 已掌握滚动途中逐小步点盆、点火、灭火、终点前点最后火盆与同次滚动先灭后复燃。
+  prerequisite_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+    - rolling_contact_chain
+  known_prior_level_refs: []
+  prior_course_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/prior_course.yml
+  prior_course_limit: >-
+    当前没有获授权的 Candle clean human-reviewed 正式前序布局；玩家知识以上述人类授权先验为准，
+    不从 runtime 诊断关、旧 Candle 报告或未归档材料反推课程。
+
+experience_seed:
+  human_seed: >-
+    面向已经掌握全部六个机制家族、衍生技巧和计算的终局熟练玩家，设计最终高难单关；首批材料
+    提供一次侧滚中的烛身灭火、未燃重曝、途中火盆复燃、燃烧边界缩短与旧端帽退焰点火依赖。
+  selected_direction: >-
+    把一次不可中止的长侧滚编排成“主动熄灭形成暗窗—越过必须暂时保持未燃的关键接触—后段
+    复燃—同动作跨边界缩短—旧端帽退焰点燃终点挡块”的连续火焰状态程序。
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  dispatch_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/lexicon.md
+  task_index_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/batch.yml
+  selected_material_refs:
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/lexicon.md#滚动侧轨先灭后复燃接端帽退焰点火
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/results.json#case_a_integrated_boundary_chain
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/results.json#case_f_endpoint_relight
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/results.json#case_b_phase_not_boundary
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/results.json#case_c_no_body_screen
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/results.json#case_d_no_relight_source
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/results.json#case_e_target_one_cell_left
+  original_material_refs_read:
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/results.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/report.md
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/proposed_families.md
+  verified_material_facts:
+    - case_a 以非空合法 replay 观察到 d2 烛身灭火、d3 未燃重曝、d4 火盆复燃、边界缩短与 shrink_ignite。
+    - case_f 证明复燃延迟到滚动终点小步仍可接通边界缩短和退焰点火。
+    - case_b 证明非边界相位虽保留先灭后复燃，却不会缩短或点燃终点烛。
+    - case_d 证明缺少后段复燃源时，横烛会边界避烧，端帽不腾出，终点烛不亮。
+    - case_e 证明终点烛芯必须落在刚腾出的旧端帽格；左移一格就仍被剩余端帽遮住。
+    - case_c 证明仅凭最终退焰点火不能声称烛身遮蔽必要；无屏体也能得到相同末端点火。
+  design_commitments_not_yet_verified:
+    - 正式候选必须让滚动中的暗窗保护一个有后续责任的关键接触，使无屏体 shortcut 改变胜解关系。
+    - 玩家必须主动构造或保留遮蔽位置、复燃来源、共享相位与终点受火体之间的依赖。
+    - 退焰点燃后的新火源必须被整关收束直接消费，不能只是事件展示。
+
+archive_calibration:
+  calibration_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/designer/archive_calibration.yml
+  full_index_or_retrieval_summaries_read: true
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+    - ICE_CAND_0002
+    - ICE_CAND_0004
+    - ICE_CAND_0011
+    - ICE_CAND_0037
+  related_positive_records_read:
+    - RA_CAND_0017
+    - RA_CAND_0022
+    - ICE_CAND_0024
+  related_lower_bound_or_boundary_records_read:
+    - RA_CAND_0006
+    - ICE_CAND_0006
+    - ICE_CAND_0019
+  additional_human_reviewed_records_read: []
+  human_comment_refs:
+    - HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001
+    - HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001
+    - HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001
+    - HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001
+    - HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001
+    - ICE_CAND_0002#HC_001
+    - ICE_CAND_0004#HC_001
+    - HC_ICE_CAND_0011_001
+    - HC_ICE_CAND_0037_001
+    - HP_RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_opening_comfort_001
+    - HP_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_001
+    - HC_ICE_CAND_0024_001
+    - HP_RA_EXP_2026_07_05_SOFT_HANDOFF_NO_MERGE_LOCK_v1_001
+    - ICE_CAND_0006#HC_001
+    - HC_ICE_CAND_0019_001
+  applied_calibration: >-
+    目标不是把机制事件串成长链，而是让同一对象、空间与状态在前后持续承担责任。目标难度 5
+    必须来自非局部预见、高耦合和反直觉关系；路线长度、重复动作、目标位置硬化、完整图与事件
+    覆盖都不能补偿洞见不足、对象退休、割裂拼接或 affordance 未兑现。
+
+experience_core:
+  experience_statement: >-
+    玩家把一次不可中止的长侧滚预先编排成一段可见的火焰状态程序：先用自己布置或保留的烛身
+    主动熄灭滚动长烛，让未燃烛芯穿过一处必须暂时保持未燃的关键接触；越过后再由已点火盆
+    复燃，恰在共享倒计时边界缩短，并用腾出的旧端帽退焰点燃兼作滚动终点挡块的单格烛；这个
+    新火源随即成为收束整关所必需的输出。
+  visible_setup: >-
+    开局让玩家同时看见一根可长距离侧滚的已燃长烛、它的烛芯侧轨、可移动的烛身屏体、暗窗内
+    需要暂时保持未燃的关键烛芯或火源、后段已点火盆、终点单格烛挡块，以及公开的共享倒计时。
+    这些对象共同提出矛盾：长烛最终必须燃烧并缩短，但不能从头到尾保持点燃。
+  player_action: >-
+    玩家在提交核心侧滚前，必须预见整条侧轨，选择并完成遮蔽位置、受保护接触、复燃来源、
+    倒计时相位与终点挡块/受火体的准备；随后亲手发动一次不可中止的长侧滚，让火焰按预定区间
+    消失、保持熄灭、重新出现并在边界传给下一根蜡烛。
+  visible_payoff: >-
+    同一次滚动中，玩家先看到长烛火焰被烛身吞掉、未燃烛芯越过关键接触，再在后段火盆旁复燃；
+    滚停后长烛立刻缩短，原端帽格腾空并点亮正好挡住它的单格烛。核心画面把“熄火”反转成
+    成功传火的必要准备，而非失败或绕路。
+  why_level_exists: >-
+    这关把熟练玩家已知的遮蔽、重曝、复燃、滚动逐步结算、共享相位与退焰点火重新解释为一段
+    必须事先编排的单行动程序；价值不在事件数量，而在玩家发现“为了让火焰最终到达有用位置，
+    必须先让它在正确区间死去”。
+  core_boundary:
+    central_objects:
+      - 承载火焰状态、滚动轨迹与边界缩短的已燃多格长烛。
+      - 由玩家主动布置或保留、决定暗窗起点的可移动遮蔽烛身。
+      - 位于暗窗内、必须暂时保持未燃且在后续仍有责任的关键烛芯或火源。
+      - 位于遮蔽之后、在边界结算前恢复长烛火焰的已点火盆。
+      - 烛身兼作滚动终点挡块、烛芯落在旧端帽格并接受退焰点火的单格蜡烛。
+      - 把前述状态压进同一次行动的共享倒计时边界相位。
+    supporting_objects:
+      - 只用于让玩家构造核心关系、提供必要操作位或收束可达性的墙与通道。
+      - 只在能约束核心准备或直接消费核心输出时才允许出现的其它蜡烛与火盆。
+      - 把新点燃单格烛或末端双火源快速转化为 all_braziers_lit 的短收束结构。
+
+work_identity:
+  conditions:
+    - >-
+      同一次玩家发动的侧滚必须按顺序实际发生：烛身遮蔽灭火、未燃重曝、暗窗内关键接触保持
+      未燃、后段火盆复燃、边界复燃参与缩短、旧端帽格退焰点燃终点单格烛。
+    - >-
+      烛身遮蔽必须改变完整胜解所需的后续状态：玩家不是为了触发事件而熄火，而是为了让某个
+      有后续责任的关键接触在滚动经过时保持未燃。
+    - >-
+      遮蔽体必须是玩家能够主动安排或有意义地保留的蜡烛，其可移动性决定暗窗区间；它不是可由
+      固定墙无损替换的事件按钮。
+    - >-
+      复燃火盆必须由此前选择获得或保留为火源；复燃发生在受保护接触之后、边界结算之前，且
+      缺少它就不会腾出旧端帽格。
+    - >-
+      共享相位必须与其它准备互相约束：正确相位由完整计划产生，不能靠与对象状态无关的孤立
+      往返随意修正而仍保留同一玩家判断。
+    - >-
+      终点单格烛同时承担几何挡块与退焰受火体责任；它的位置决定滚动停止点、旧端帽错格与
+      `u -> U` 的可见回报。
+    - >-
+      新点燃单格烛或末端双火源状态必须直接参与胜利收束；高潮后只允许短而必要的兑现，不得
+      另起清理子题。
+    - >-
+      正式包装至少提供两个局部看似可行的准备方案，只有预见完整侧滚的暗窗、复燃与端帽结果
+      才能区分；难度来自前后依赖而不是执行唯一动作。
+  counterfactuals:
+    - change: 删除遮蔽烛身，让长烛从头保持点燃。
+      identity_failure: >-
+        若仍能保护关键接触并以同一因果关系获胜，就退化为 Explorer 的 case_c 普通缩短 shortcut，
+        “主动熄火”不再是玩家洞见，本作品身份失败。
+    - change: 用固定墙替换可移动遮蔽烛身，或预先把它锁死在唯一位置。
+      identity_failure: >-
+        暗窗不再由玩家构造或保留，烛身遮蔽只剩自动动画；作品失去对完整轨迹的主动编排。
+    - change: 删除暗窗内必须暂时保持未燃的关键接触，或让它预先点燃且不影响后续。
+      identity_failure: >-
+        熄火没有消费对象，前半链可整体退休；关卡只剩复燃接退焰点火的 witness。
+    - change: 删除、熄灭或前移后段复燃火盆。
+      identity_failure: >-
+        长烛要么边界避烧、旧端帽不腾出，要么在受保护接触之前过早复燃；完整状态程序断裂。
+    - change: 让核心侧滚发生在非燃烧边界，或允许玩家在不改变其它准备的情况下任意等待校相。
+      identity_failure: >-
+        前者不会缩短或点亮终点烛；后者把高难相位关系降成独立倒计时税。
+    - change: 将终点单格烛错开旧端帽一格、换成墙，或让其它实体单独决定滚动终点。
+      identity_failure: >-
+        挡块与受火体责任分离，旧端帽错格回报消失；作品不再是同一几何关系。
+    - change: 新点燃单格烛及末端双火源不参与后续胜利，核心之后另接独立收尾。
+      identity_failure: >-
+        退焰点火只剩机制展示，后继不能把约束传回此前准备，整关变成拼接。
+
+level_brief:
+  packaging_intent: complete_single_level
+  expected_difficulty: 5
+  minimum_acceptable_difficulty: 4
+  expected_scale: >-
+    单一共享空间内的中等规模、高关系密度终局关；核心侧滚前允许紧密耦合的构造与相位准备，
+    核心侧滚后只留直接消费新火源的短收束。规模由关系需要决定，不以机制数量或步数扩张。
+  expected_player_load: >-
+    玩家需要同时维护长烛的滚动侧轨、火焰明暗区间、一个必须暂时保持未燃的对象、复燃窗口、
+    共享倒计时边界、缩短后的端帽错格与终点受火体责任，并从终局用途反推此前准备。
+  opening_intent: >-
+    先呈现“长烛必须最终点燃并缩短，却不能全程点燃”的可读矛盾；不把遮蔽、复燃与终点关系
+    预先排成唯一操作的教学展示。
+  ending_intent: >-
+    以长烛缩短、终点挡块点燃和该新火源被胜利条件立即消费为高潮；不追加独立机制展示或清理。
+
+reasoning_sketch:
+  structural_thesis: >-
+    难点来自一次不可中止滚动对多个此前准备的同时验收。玩家必须从终点旧端帽退焰反推相位与
+    挡块位置，再从复燃窗口反推暗窗终点，并从必须暂时保持未燃的关键接触反推遮蔽体位置；这些
+    关系共同决定同一动作，而不是按局部顺序逐段开锁。
+  dependency_chain:
+    - 后继胜利消费需要终点单格烛被点燃。
+    - 终点单格烛被点燃需要旧端帽在本动作边界腾出。
+    - 旧端帽腾出需要长烛在受保护接触之后、边界之前复燃。
+    - 受保护接触保持未燃需要长烛在经过它之前由可移动烛身主动熄灭。
+    - 遮蔽位置、复燃来源、共享相位与终点挡块必须在提交侧滚前共同成立。
+  principal_falsifiers:
+    - 无遮蔽仍存在同因果胜解。
+    - 暗窗内没有任何后续责任被保护。
+    - 相位可由无代价往返独立修正。
+    - 终点受火体不参与胜利收束。
+    - 玩家可只靠局部唯一动作完成全部准备，无需预见侧滚后果。
+
+allowed_design_sources:
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/prior_course.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/designer/archive_calibration.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/dispatch.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/batch.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/results.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/report.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/exploration/runs/batch_001_roll_screen_relight_boundary_transfer/proposed_families.md
+
+prototype_specific_routing:
+  - 正式候选必须使用 all_braziers_lit，不得使用 event_occurs。
+  - 本课程位置允许暴露到 rolling_contact_chain；全部六个家族是玩家先验，不是逐项事件配额。
+  - 正式 exact 必须用 Candle 原始 replay、完整图与 exposure audit 重新核验，graph exhausted 不能算通过。
+  - 长步行与原地往返可承担倒计时计算，不因比例高自动扣分；但不得单独充当难度或包装。
+  - 后续只建立一个 candidate_id；结构修订或换 family 仍属于同一候选工作台。
+  - 当前只固定体验核心与作品身份；没有 layout、solve instance、candidate id 或 exact version。
+
+human_review_constraints:
+  - 目标难度固定为 5，最低不得低于 4；扎实组合关或普通复合锁不足以自动承担最终 capstone。
+  - 不因全部机制已掌握而要求候选逐项展示六个家族；只保留服务同一玩家关系的机制与对象。
+  - 高 affordance 对象必须得到相称兑现，不能在开场事件演出后退休。
+  - 不接受重复动作堆叠、无关 witness 拼接、目标位置硬化、路线长度或反馈迟缓 deadend 作为主要增难方式。
+  - 事件覆盖、唯一解、完整图、探针和步骤数只有否决/约束作用，不提供正向审美价值。
+  - 核心输出必须被后继直接消费并把约束传回准备阶段；高潮后不得另起清理子题。
+
+self_check:
+  archive_calibration_complete: true
+  task_exploration_provenance_valid: true
+  selected_material_has_scene_card: true
+  selected_material_has_non_empty_replay: true
+  selected_material_has_minimal_use_and_counterexamples: true
+  experience_core_is_player_perceptible: true
+  central_and_supporting_objects_separated: true
+  work_identity_is_counterfactually_falsifiable: true
+  expected_difficulty_is_5: true
+  single_experience_core_only: true
+  candidate_id_created: false
+  formal_layout_created: false
+  exact_version_published: false
+  controller_state_written: false

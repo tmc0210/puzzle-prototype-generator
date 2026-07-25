@@ -1,0 +1,63 @@
+exploration_id: candle_wall_douse_reignite_timing_task_local_20260725
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/exploration
+dispatch_prompt: >-
+  使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件；等待并以
+  designer_request_ref 指向的 Designer request 为当前唯一设计空间来源，读取当前 task lexicon 避免重复。
+designer_request_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/exploration/requests/designer_request_001.yml
+experience_seed: >-
+  展开玩家主动把已燃蜡烛用墙灭火、再在计划相位从火盆或另一外露烛芯复燃，以控制它跳过或参加
+  某次共享燃烧边界；局部材料必须让这次相位选择改变蜡烛长度、占格、火源或后续操作位，而不只是
+  产生事件 witness 或固定等待。
+player_prior:
+  - 玩家已完全掌握 basic_candle_manipulation 与 wall_dousing。
+  - 玩家已掌握它们的全部衍生技巧、共享倒计时计算、长度变化计算与火焰危险判断。
+allowed_mechanisms:
+  - basic_candle_manipulation
+  - wall_dousing
+  - shared_fire_and_reignition
+  - push_axis
+  - roll_candle
+  - roll_multi_cell_one_turn
+  - light_brazier
+  - player_died
+  - countdown
+  - shrink
+  - burn_out
+  - simultaneous_burn
+  - extinguish_by_wall
+  - countdown_without_lit_candle
+  - boundary_extinguish_avoids_burn
+  - ignite_from_brazier
+  - ignite_from_wick
+  - ignite_midcycle
+  - boundary_ignite_participates
+allowed_tools:
+  - npx tsx src/cli.ts mechanism-lab-run prototypes/candle_sokoban <cases.yml> --run-id <batch_id> --write
+  - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+  - npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write
+source_boundary:
+  allowed:
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/exploration/requests/designer_request_001.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - src/cli.ts
+    - src/workflows/localExperimentRunner.ts
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/exploration
+  forbidden:
+    - prototypes/candle_sokoban/reports
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - prototypes/reality_anchor/design_archive
+    - prototypes/ice_slide_escape/design_archive
+    - C:/Users/ASUS/Downloads/CANDLE_SOKOBAN_KNOWLEDGE.md
+    - 任何正式候选、Designer 工作布局、送审包、review 或审美归档
+task_lexicon_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/exploration/lexicon_index.md

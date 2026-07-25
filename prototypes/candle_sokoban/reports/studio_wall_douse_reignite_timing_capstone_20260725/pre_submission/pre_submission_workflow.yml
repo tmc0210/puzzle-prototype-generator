@@ -1,0 +1,65 @@
+design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+reviewed_exact_version: v2
+delivery_exact_version: v2
+workflow_results:
+  - workflow_id: strict_exposure_gate_recheck
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 当前唯一候选已获 Critic 接受并准备交付，design_handoff 要求总是重跑。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    operations_performed:
+      - 对 delivery exact v2 重跑 Candle exposure audit，max_states=300000。
+      - 核对 exact_version、level id、layout digest、sequence digest 与 delivery artifact 一致。
+      - 核对 graph.status=complete、verdict=pass、forbidden_hits=0、raw graph 节点/边完整保存。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/v2/strict_exposure_audit.json
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/exact_manifest.yml
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: design_handoff 明确规定该只读重检不改变 exact 并保留 review；本次 layout digest 完全一致。
+    status: completed
+
+  - workflow_id: runtime_conformance_recheck
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 当前唯一候选准备进入待玩列表，design_handoff 要求总是运行。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    operations_performed:
+      - 运行 npm run check，TypeScript noEmit 检查通过。
+      - 运行 npm run candle:conformance，所有已实现检查通过。
+      - sampler、candidate factory、miner 与 PuzzleScript 工具按权威合同记录为 unavailable，未伪报实现。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/v2/runtime_conformance_recheck.yml
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: 只读构建/一致性检查，未改变 layout、win 或机制用法。
+    status: completed
+
+  - workflow_id: playable_delivery_build
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: delivery v2 已写入 studio/levels.yml 并加入 playable_queue.yml。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    operations_performed:
+      - 只写入一个 delivery version CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001_V2。
+      - 以 source=studio、status=pending_playtest 加入 playable_queue.yml。
+      - 重建 runtime-backed playable 并运行 replay coverage；3 个待玩关全部覆盖。
+      - 在 playable/data.json 中核对 source、level id 与 delivery version 可解析。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/v2/playable_delivery_build.yml
+      - prototypes/candle_sokoban/studio/levels.yml
+      - prototypes/candle_sokoban/playable_queue.yml
+      - prototypes/candle_sokoban/playable/data.json
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: 交付接线和 runtime-backed 构建未改变 reviewed exact 的 layout、win 或核心机制用法。
+    status: completed
+
+overall_status: completed
+return_to_design_required: false

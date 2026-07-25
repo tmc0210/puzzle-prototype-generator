@@ -1,0 +1,65 @@
+schema_version: 1
+artifact_kind: designer_revision_report
+assignment_id: candle_all_mechanics_revision_001_counterfactual_evidence
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version_basis: v1
+supplement_manifest_ref: manifest.yml
+
+version_decision:
+  v1_layout_unchanged: true
+  v1_solve_instance_unchanged: true
+  v1_canonical_replay_unchanged: true
+  publish_v2: false
+  rationale: 反事实补证没有迫使布局修订；问题属于证据可核验性与声明边界，而不是候选 exact 失效。
+
+claim_updates:
+  - claim_id: relight_source_necessity
+    status_after_supplement: supported
+    statement: >-
+      x7,y6 已点火盆是 v1 后段复燃源；唯一改动为 O→o 的反事实在统一预算内完整枚举
+      11,436 个状态和 30,878 条合法边，零终局。
+    evidence_refs:
+      - counterfactuals/remove_late_relight_source/layout.txt
+      - counterfactuals/remove_late_relight_source/solve_instance.yml
+      - counterfactuals/remove_late_relight_source/raw_complete_graph.json
+    limits:
+      - 必要性结论限定于 v1 以及该单格 O→o 的精确反事实，不泛化为任何其它复燃布局。
+
+  - claim_id: counterfactual_boundaries
+    status_after_supplement: supported_with_narrowing
+    replacement_statement: >-
+      删除 x7,y3 双职责对象、以墙替代该对象、或把 x7,y6 已点火盆改成未点火盆，
+      各自在统一预算下得到 complete 且零终局的原始图。把 x6,y7 端点单格烛改成墙或左移一格仍可解，
+      所以只声明 v1 中该端点参与，不声明它对可解性单独必要。名为 shift_start_one_cell_right 的实际变体
+      同时右移起点并封墙旧起点，且仍可解；它不是纯相位反事实，不能支持“错相位必然破坏”。
+    evidence_refs:
+      - manifest.yml
+      - counterfactuals/remove_dual_role_screen_key/raw_complete_graph.json
+      - counterfactuals/replace_dual_role_screen_key_with_wall/raw_complete_graph.json
+      - counterfactuals/remove_late_relight_source/raw_complete_graph.json
+      - counterfactuals/replace_endpoint_singleton_with_wall/raw_complete_graph.json
+      - counterfactuals/shift_endpoint_one_cell_left/raw_complete_graph.json
+      - counterfactuals/shift_start_one_cell_right/raw_complete_graph.json
+    limits:
+      - 删除或替换双职责对象是复合干预，不把零胜局单独归因于屏体、钥匙、占位中的某一项。
+      - 起点变体含旧起点封墙这一混杂因素；若未来需要纯相位因果声明，应另建预声明的单变量布局。
+
+unchanged_v1_claims:
+  status: no_change_requested
+  note: >-
+    规范解、完整图、等价解族、exposure gate、核心 roll edge、当前 exact 的屏键参与、
+    当前 exact 的端点与 relay 参与均不因本补充而改写；本报告只补反事实证据并收窄反事实外推。
+
+designer_self_check:
+  status: pass
+  facts:
+    - 六个实际布局及 SHA-256 已保存。
+    - 六个 solve instance 均声明 cycle 5、all_braziers_lit 和同一预声明预算。
+    - 六份 raw complete graph 均内嵌完整 nodes/edges。
+    - 三个可解变体均附最短路径和实际 runtime replay。
+    - v1 三个冻结文件的 SHA-256 前后保持一致。
+  known_issue_resolved:
+    issue: shift_start_one_cell_right 初稿 delta 曾把旧起点误写为地板。
+    resolution: >-
+      逐格机械差分发现实际布局为旧起点封墙，已在 solve instance、manifest 与声明边界中统一更正；
+      raw graph 从始至终对应实际布局及其正确 SHA-256，不受该元数据修正影响。

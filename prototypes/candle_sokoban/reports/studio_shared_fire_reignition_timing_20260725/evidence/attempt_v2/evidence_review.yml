@@ -1,0 +1,125 @@
+review_attempt_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_V2_HARD_01
+reviewer_instance_id: EVR_CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_V2_FRESH_20260725_01
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_001
+exact_version: v2
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/evidence/attempt_v2/input.yml
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v2/layout.txt
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v2/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v2/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v2/layout_analysis.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v2/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v2/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v2/identity_counterfactuals.json
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - source: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/designer/exact/v2/solution_family.json
+      shortest_cost: 22
+      raw_shortest_input_count: 31677
+      product_states: 1
+      winning_product_states: 5
+      milestone_signature: wall_douse>midcycle_reignite>shrink_len3>shrink_len2>shrink_len1>terminal_transfer
+  equivalence_evidence_basis:
+    - solution_family.json graph.status=complete，baseStateCount=1081，productStateCount=1081，legalEdgeCount=2460。
+    - solution_family.json 的 requiredHistory.requiredMask=63，everyWinningTraceHasAllRequiredFlags=true，六个 required flag 的 violatingWinningTraceCount 均为 0。
+    - solution_family.json 的 winningMilestoneSignatures 只有一个 signature，winningProductStates=5。
+    - solution_family.json 的 shortestWinningFamily.representatives 只有一个里程碑代表；原始输入字符串差异被同一 runtime state 与同一里程碑历史合并。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 31677 是原始最短输入串数量，不是要求输入串字面唯一；已按玩家逻辑类等价证据核验。
+    - complete graph 采用 terminalize_wins=true，胜态后的动作不属于胜利轨迹继续扩展。
+
+claims:
+  - claim_id: exact_identity
+    claim: 当前所有机械 artifact 与 candidate_id=CANDLE_SHARED_FIRE_REIGNITION_TIMING_001、exact_version=v2、level_id=CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_V2 及 layout_sha256=c9fc705ded6cbbb264ccbd303a687f971bd80449606bd390d32ec7acac9ca5e3 一致；canonical replay 的布局与当前 layout.txt 一致。
+    status: supported
+    evidence_basis:
+      - input.yml exact 与 candidate/exact/version/level/layout_sha256 字段。
+      - solve_instance.yml candidate_id、exact_version、level_id。
+      - canonical_replay.json id=CANDLE_SHARED_FIRE_REIGNITION_TIMING_001_V2、prototype=candle_sokoban，且 replay.layout 与 layout.txt 相同。
+      - solution_family.json 与 identity_counterfactuals.json 的 candidateId/exactVersion/layoutSha256。
+      - exposure_audit.json 的 prototype、exact_version、level.id、level.layout_sha256。
+    limits: []
+
+  - claim_id: canonical_replay_legal_normal_win
+    claim: canonical replay 非空，共 22 步，全部合法并完成正常 all_braziers_lit 胜利；最终状态 isWin=true，终步包含 light_brazier:4,2 与 win_all_braziers_lit。
+    status: supported
+    evidence_basis:
+      - solve_instance.yml input_count=22、complete=true、win=true、全部 event_trace 条目 legal=true。
+      - canonical_replay.json replay.completed=true、executedSteps=22、legalThroughStep=22、initial.isWin=false、final after.isWin=true。
+      - canonical_replay.json winCondition.type=all_braziers_lit 及终步事件。
+    limits: []
+
+  - claim_id: player_survival_on_winning_traces
+    claim: canonical 胜利轨迹中玩家存活；完整 raw graph 中所有包含 player_died 的 42 条边都进入非胜终止节点，且没有 player_died 边进入胜态，因此死亡不能形成胜利旁路。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json 的 22 个 step 均 legal，事件中无 player_died，终步 after.isWin=true。
+      - exposure_audit.json graph.status=complete、raw_graph.nodes=1081、raw_graph.edges=2460；reachable_event_counts.player_died=42。
+      - exposure_audit.json raw_graph 中 player_died 的目标节点均 winning=false、outgoing=0，edges_to_winning_with_death=0。
+    limits: []
+
+  - claim_id: complete_reachable_exposure_graph
+    claim: 当前 exact 的可达图与 exposure raw edge graph 均为 complete；图覆盖 1081 个可达状态、2460 条合法边和 5 个胜态，SCC/agency artifact 也标记为 complete。
+    status: supported
+    evidence_basis:
+      - layout_analysis.json graph.status=complete、reachableStateCount=1081、legalTransitionCount=2460、winStateCount=5。
+      - layout_analysis.json agency.status=complete、agency.scc.condensationRule=strongly_connected_components、sccCount=734、winningSccCount=5。
+      - exposure_audit.json graph.status=complete、reachable_state_count=1081、legal_transition_count=2460、win_state_count=5、raw_graph.nodes=1081、raw_graph.edges=2460。
+    limits:
+      - exposure_audit.json graph 使用 terminalize_wins=true；胜态之后没有继续枚举动作。
+
+  - claim_id: wall_douse_shared_reignite_and_countdown
+    claim: 所有胜利轨迹都包含主蜡烛的墙灭火、共享火盆中周期复燃、三次倒数触发的长度消费以及终端转移；canonical 轨迹具体在 step 1、9、10、15、20、22 兑现这些事件。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json step 1 的 extinguish_by_wall:candle#1；step 9 的 ignite_from_brazier:candle#1:1,3 与 ignite_midcycle:candle#1:t2；step 10/15/20 的 shrink:candle#1:len3/len2/len1；step 22 的 ignite_from_wick:candle#single1:4,2、light_brazier:4,2、win_all_braziers_lit。
+      - solve_instance.yml canonical_milestones 与完整 event_trace。
+      - solution_family.json requiredHistory.requiredMask=63、everyWinningTraceHasAllRequiredFlags=true，wall_douse、midcycle_reignite_from_shared_brazier、shrink_to_len3/len2/len1、terminal_brazier_and_receiver_ignite 的违反胜路计数均为 0。
+      - exposure_audit.json reachable_event_counts.countdown=2460、countdown_without_lit_candle=802、shrink=226、extinguish_by_wall=3、ignite_from_brazier=5、ignite_midcycle=8。
+    limits: []
+
+  - claim_id: raw_forbidden_hits_and_bypass
+    claim: 完整 exact exposure graph 中 forbidden_hits 为空；所有声明的 forbidden event pattern 在 raw edge events 中均为 0，因此未发现 body concealment/re-exposure、retreating flame transfer、rolling contact chain 或其它列明 forbidden later event 的 exact bypass。
+    status: supported
+    evidence_basis:
+      - exposure_audit.json verdict=pass、forbidden_hits=[]。
+      - exposure_audit.json raw_graph.edges 共 2460 条；extinguish_by_candle_body、wick_reexposed_unlit、shrink_ignite、roll_intermediate_light_brazier、roll_last_brazier_before_endpoint、roll_intermediate_ignite、roll_intermediate_extinguish、roll_reignite_after_extinguish 在 raw edge events 中均为 0。
+      - exposure_audit.json exposure_gate.forbidden_branches 列出的三个后续分支在 raw edge events 中均无对应事件命中。
+      - solution_family.json complete required-history product graph 中没有 known_non_equivalent_win_refs。
+    limits:
+      - 结论范围是当前 candidate/exact 的完整可达图；不外推到其它版本或未允许读取的材料。
+
+  - claim_id: object_participation
+    claim: 当前 exact 的对象参与由带对象标识的原始事件直接支持：candle#1 执行滚动、墙灭火、共享火盆复燃和长度消费，candle#single3 发生边界燃尽，candle#single1 在终端由 wick 点燃，目标 brazier 4,2 被点亮，shared brazier 1,3 提供中周期火源。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json 与 solve_instance.yml 的完整 event_trace，包含上述对象限定事件。
+      - exposure_audit.json reachable_event_counts 中对应事件类别均有可达计数，且 light_brazier=5、ignite_from_wick=5、ignite_from_brazier=5。
+      - solution_family.json 的 terminal_brazier_and_receiver_ignite required flag 对所有胜利轨迹均成立。
+    limits:
+      - 该结论核验对象实际参与，不把对象参与自动提升为每个对象的独立必要性；identity counterfactuals 单独记录身份反事实。
+
+  - claim_id: identity_counterfactuals
+    claim: 当前 exact 的身份反事实与 candidate/version/layout hash 一致，并给出完整图结果：移除初始墙灭火墙仍可解但不再保有墙灭火事件，移除共享火盆不可解，移除终端接收蜡烛仍可解，移除目标火盆则退化为初始胜态；这些结果支持对象职责边界的机械关系。
+    status: supported
+    evidence_basis:
+      - identity_counterfactuals.json candidateId、exactVersion、layoutSha256 与当前 exact 一致。
+      - identity_counterfactuals.json 六个 results 的 graph.status 均为 complete；remove_wall_douse 为 5 个胜态且 cost=16，remove_reignite_source 为 0 个胜态，remove_terminal_receiver 为 5 个胜态，remove_target_brazier 为 cost=0 的 1 个胜态。
+      - identity_counterfactuals.json baseline.requiredHistory.everyWinningTraceHasAllRequiredFlags=true。
+    limits:
+      - 反事实只证明机械身份关系，不证明审美、难度或作品价值，也不把反事实布局的胜利算作当前 exact 的 bypass。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

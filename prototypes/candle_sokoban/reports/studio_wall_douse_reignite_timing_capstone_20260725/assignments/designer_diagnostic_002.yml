@@ -1,0 +1,39 @@
+assignment_id: candle_wall_douse_reignite_timing_diagnostic_002
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: studio_controller_root_20260725
+task_root: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725
+candidate_ledger_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate_ledger.yml
+
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+exact_version_basis: v3
+
+design_brief: >-
+  人类质疑 v3 左下角 (1,6) 已亮火盆是否实际上等价于空地。上一轮只验证了该盆替墙会遮芯灭火，
+  不能回答替空地的问题。本阶段只做只读诊断：把该盆单独替换为 floor，保持其它字符、胜利条件、
+  倒数和输入不变，以完整图确认它是否承担实体、火源、目标、接触或失败分支职责。不要修改或发布 exact。
+input_refs:
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solution_family.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactuals/b36_stopper_anchor/initial_validation_error.json
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/diagnostic_002_left_bottom_brazier_to_floor
+exploration_request_root: null
+required_outputs:
+  - 保存仅把 v3 (1,6) 从 O 替为 . 的合法诊断布局与 layout digest。
+  - 保存该布局的 complete reachable graph、完整 solution-family/product graph 与 exposure audit 原始 artifact。
+  - >-
+    将状态数、边数、胜态、最短解、raw shortest 数、里程碑签名、复燃倒数类、必要历史、事件集合及
+    来自该格火盆的 ignite/light 事件，与 v3 逐项对照；若状态键因火盆集合变化不能 literal 比较，
+    明确给出所用的状态同构投影，不得把相同计数直接称为逐边相同。
+  - 写一份简短结论，严格区分“不能换墙”与“能否换空地”；不发布 v4、不更改账本或待玩入口。

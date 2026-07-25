@@ -1,0 +1,38 @@
+assignment_id: candle_shared_fire_reignition_timing_20260725_2_structure_rebuild
+required_skill: sokoban-level-designer
+assignment_kind: candidate_design
+controller_instance_id: candle_shared_fire_reignition_timing_20260725_2_controller
+task_root: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2
+candidate_ledger_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/candidate_ledger.yml
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_002
+exact_version_basis: null
+design_brief: >-
+  这是同一 candidate 的 structure-family rebuild；此前 workbench 未发布 exact，不能把它当成第二候选。
+  withdrawal_assessment_v1 已证明：虽然有 t=1 hold-doused 与 t=2 reignite 的演示胜路，完整图存在 11 步
+  旁路，玩家灭火后可永不重燃 1D，由 2R 单独点亮目标。因此新结构必须从对象责任和胜利依赖上消除该旁路：
+  两根蜡烛都必须承担不可替代的目标/可达责任，墙灭火后的对象必须在规定窗口重燃才能完成后续，不能让
+  单根蜡烛或等待回合单独胜利。仍保持体验种子：玩家分析并主动选择 wall douse、t=1 boundary reignition
+  与 t=2 midcycle reignition；每个选择都要改变仍燃对象的下一边界责任、空间资格或下一操作，并且至少
+  两个选择成为胜利的必要因果，不是演示。优先紧凑交叉结构，禁止无亮回程、重复上下等待、路线税；严格
+  不暴露 body_concealment_and_reexposure、retreating_flame_transfer 或 rolling_contact_chain。
+  完成完整图、旁路反例、唯一逻辑签名、canonical replay/eventWin、identity counterfactuals 与 exposure audit；
+  若仍不能满足，才 withdraw_exact。只写新 task designer 目录与 action/assessment，不写 ledger、critic、levels、queue。
+input_refs:
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/experience_brief.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/designer/archive_calibration.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/designer/workbench/withdrawal_assessment.yml
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-design-studio/references/submission-packet-template.md
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/designer
+required_outputs:
+  - 同一 candidate 的 exact v1 与完整送审 artifact，或明确 withdrawal assessment
+  - full graph/solution family 必须显式排除单蜡烛旁路与等待胜解
+  - canonical replay、exposure audit、identity counterfactuals、玩家侧自查

@@ -1,0 +1,71 @@
+review_attempt_id: candle_all_mechanics_v1_hard_recheck
+required_skill: sokoban-evidence-reviewer
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version: v1
+prototype_id: candle_sokoban
+
+baseline_hard_packet_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/evidence/v1/review_packet.yml
+baseline_claims_to_reaudit:
+  - canonical_solve
+  - complete_graph_shape
+  - solution_family
+  - exposure_gate
+  - core_roll_edge
+  - screen_key_participation
+  - endpoint_and_relay_participation
+superseded_baseline_claim_ids:
+  - relight_source_necessity
+  - counterfactual_boundaries
+
+replacement_claims:
+  - claim_id: relight_source_necessity
+    claim: >-
+      x7,y6 已点火盆是 v1 核心后段复燃源；只把该格 O 改为 o 的反事实在统一预声明预算内
+      complete 枚举 11,436 个状态、30,878 条边且零终局。必要性只限定于 v1 与此单变量反事实。
+  - claim_id: counterfactual_boundaries
+    claim: >-
+      删除 x7,y3 双职责对象、以墙替代该对象、或把 x7,y6 已点火盆改为未点火盆，三者的 raw graph
+      均 complete 且零终局。把 x6,y7 端点单格烛改成墙或左移一格仍可解，所以只声明 v1 中端点参与，
+      不声明它对可解性单独必要。名为 shift_start_one_cell_right 的实际变体同时封墙旧起点且仍可解，
+      不是纯相位反事实，不支持“错相位必然破坏”。
+  - claim_id: supplement_version_identity
+    claim: >-
+      supplement 只增加 v1 的反事实证据；v1 layout、solve instance 与 canonical replay digest 前后不变，
+      没有发布新 exact。
+
+solution_uniqueness_claim_source: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/evidence/v1/review_packet.yml#solution_uniqueness_claim
+
+supplement_contract:
+  manifest_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/manifest.yml
+  search_contract_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/search_contract.yml
+  claim_report_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/designer_revision_report.yml
+  counterfactual_roots:
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/counterfactuals/remove_dual_role_screen_key
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/counterfactuals/replace_dual_role_screen_key_with_wall
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/counterfactuals/remove_late_relight_source
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/counterfactuals/replace_endpoint_singleton_with_wall
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/counterfactuals/shift_endpoint_one_cell_left
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1/counterfactuals/shift_start_one_cell_right
+
+allowed_evidence_sources:
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/evidence/v1/review_packet.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/artifact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/level.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/layout.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/complete_graph_and_solution_family.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/diagnostics/runtime_checks.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/evidence_supplements/v1
+
+forbidden_inputs:
+  - 先前 evidence_review.yml 及其结论；本次必须 fresh 独立重审。
+  - Designer 体验核心、作品审美、包装、自评与 player_reading。
+  - Explorer、归档校准、旧 Candle reports、Critic 输入或审美/难度材料。
+
+required_output_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/evidence/v1/recheck/evidence_review.yml

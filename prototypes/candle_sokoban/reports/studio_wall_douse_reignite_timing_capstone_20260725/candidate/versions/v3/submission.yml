@@ -1,0 +1,108 @@
+submission_id: SUB_CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001_V3
+design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+exact_version: v3
+exact_version_basis: v2
+
+designer_claim:
+  player_experience_core: >-
+    玩家先在首轮边界主动把四格目标烛推入墙口熄灭，使它缺席燃烧并保住一格；随后必须在第二轮
+    边界前借静态火盆复燃，让目标重新加入共享倒数。这个“参加哪一轮”的选择最终决定目标变成
+    单格时，五格横止挡是否还保留最后一格来截停它。
+  player_action: >-
+    玩家反推终盆所需的单格停位、横止挡逐轮退烧与 row4 footprint 筛，再安排目标墙灭—复燃的
+    参与表，同时跨轮搬运辅助烛点亮上盆，最后在止挡窗口内下滚并四拍换侧完成左推。
+  visible_payoff: >-
+    目标清楚经历墙灭保长、静态复燃、三次缩短；横止挡同步由五格退成单格。正确目标在止挡仍存时
+    停在 row5，最后左推点盆并与止挡同回合燃尽；晚一轮的目标则越过已消失止挡落入锁死行。
+  why_this_level_exists: >-
+    它把 wall_dousing 与 shared_fire_and_reignition 从事件展示提升为跨四轮的参与集合控制：火源一直
+    可见，但玩家必须判断哪一个边界必须参燃，且这个时间选择由实体止挡窗口不可逆地消费。
+  work_identity_conditions:
+    - 所有当前 exact 胜利历史都先发生 candle#1 墙灭火与 boundary_extinguish_avoids_burn。
+    - 所有胜利历史都由 (2,3) 火盆复燃 candle#1，并使它经过 len3、len2、len1 三个参燃结果。
+    - 全胜解首次复燃倒数只落在 t1 或 t3，二者都赶上同一个第二轮边界；没有晚一轮复燃胜解。
+    - candle#4 必须被轴推并点亮 (12,1)，candle#3 必须缩到单格形成第四轮止挡窗口。
+    - row4 footprint 筛只放行单格目标，最终只能由 row5 停位的目标点亮 (4,5)。
+    - 正常胜利与 candle#1、candle#3 同回合燃尽一致收束，没有终局清理。
+
+packaging_account:
+  opening: >-
+    开局把墙口、四格目标、静态火源、三格辅助烛、五格横止挡与两个待点盆同时展示；右侧竖道
+    用首轮五拍把第一次承诺固定为边界墙灭火。
+  preparation: >-
+    墙灭后，上层辅助搬运和目标复燃共享同一小空间与倒数；玩家必须先建立四轮长度表，才能判断
+    哪些走位可交换、哪个参燃边界不可错过。
+  reveal_or_use: >-
+    目标第二轮复燃参燃后，辅助烛点上盆；随后目标与横止挡同步缩短。row4 三盆把抽象长度表转成
+    可见的实体筛，横止挡最后一格再把正确时机转成唯一停位。
+  ending: >-
+    单格目标被截停后只剩四拍换侧；最后左推点亮终盆，同一结算让目标和止挡燃尽并立即获胜。
+  every_major_element_role:
+    - candle#1：墙灭保长、静态复燃、三次参燃、单格停位和终盆交付的核心对象。
+    - (2,2) 墙与 (2,3) 已亮火盆：定义首轮缺席和第二轮重新加入。
+    - candle#4 与 (12,1) 火盆：跨轮辅助搬运目标，并承担第二、三轮的必要行动责任。
+    - row4 三只已亮火盆：长度 2/3/4 的身体筛，只允许单格目标通过 x6。
+    - candle#3：从五格退到单格的瞬时止挡，把复燃参燃边界消费为 row5 或 row6 的永久差异。
+    - (1,6) 已亮火盆与 (7,6) 墙：固定 candle#3 的烛芯和轴向操作面。
+    - (4,5) 火盆：消费正确单格停位并触发正常胜利。
+    - row7 整墙与右廊：锁死晚到目标，同时给正确目标精确四拍换侧路线。
+    - (5,1) 已亮火盆及上层墙：封住上层残余操作面，并避免新增 losing wall-douse interaction。
+  known_perceptible_defects:
+    - t1 与 t3 都能加入同一个第二轮边界；关卡锁定的是参燃边界，不是唯一接触倒数。
+    - 原坐标 (5,4)、(6,4) 两盆替墙在完整图上行为中性；按人类小修决定保留为统一 footprint 筛构图。
+
+revision_account:
+  basis: v2
+  changes:
+    - 删除 v2 底部两行机械不可达空区。
+    - 整体裁掉 v2 左侧两列冗余外墙。
+  unchanged:
+    - 全部 8 个火盆
+    - 三根 candle 与全部相对位置、操作面和事件关系
+    - canonical inputs、完整图规模、解族、难度目标与 exposure gate
+  brazier_wall_counterfactual_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactual_summary.yml
+  critic_scope_note: 本轮未读取或重跑 Critic；只提交 fresh Evidence Reviewer 所需硬证据。
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: >-
+      layout graph max_states=500000，实际完整 8594 states / 23086 transitions / 1 winning runtime state；
+      task-local 单调历史与首次复燃倒数产品图完整 30132 product states / 81021 legal edges /
+      2 winning product states，shortest cost=25，raw shortest input count=306。
+    known_raw_winning_variants:
+      - up up up up left up down up left down up right right right right left left down left left down down right down left
+      - up up up up left down up up left down up right right right right left left down left left down down right down left
+      - up up up up left up left down up down up right right right right left left down left left down down right down left
+    equivalence_account: >-
+      两个 winning product states 分别记录首次复燃 t1 与 t3；它们都赶上同一第二轮边界，并共享唯一
+      六项里程碑签名、同一三根蜡烛职责、同一目标分配、同一 row5 停位和同一唯一 winning runtime
+      state。306 条最短串只增加相邻独立走位交换，没有晚一轮复燃或不同终局停位的胜解。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/layout_analysis.json
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/designer_reading.yml
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactual_summary.yml
+    evidence_limits:
+      - 产品图把相同 runtime state、单调历史与首次复燃倒数类合流；不以 raw 输入串数量定义逻辑解数。
+      - 等价性和逐盆职责是 Designer 自查声明，仍须 fresh Evidence Reviewer 独立核验。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/identity_counterfactuals.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactual_summary.yml
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/identity_counterfactuals.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/identity_counterfactuals.md
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/designer_reading.yml
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactual_summary.yml
+  exposure_gate_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exposure_audit.json
+  evidence_limits:
+    - exposure audit 已验证 allowed_exposure_through=shared_fire_and_reignition、graph=complete、forbidden_hits=0。
+    - 逐盆 literal 替墙中 `(3,6)` 会造成非法静默初始墙灭；汇总保留 parser 错误原件和仅用于泄漏诊断的稳定代理，不伪造 complete literal graph。
+    - 自动硬证据不产生审美 verdict；本轮没有读取或重跑 Critic。
+
+designer_self_verdict: submit_for_independent_review

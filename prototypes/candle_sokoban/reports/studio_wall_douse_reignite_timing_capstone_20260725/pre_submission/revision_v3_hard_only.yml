@@ -1,0 +1,131 @@
+design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+reviewed_exact_version: v2
+delivery_exact_version: v3
+workflow_results:
+  - workflow_id: human_revision_pure_crop
+    applicability: applicable
+    applicability_basis: 人类要求删除底部两行、左侧两列冗余外墙，并逐盆确认后保留全部火盆。
+    authority_docs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/human_revision_20260725.yml
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/redundant_element_prune.md
+    candidate_discovery:
+      method: candle_redundancy_units_v1
+      candidate_units:
+        - detached_empty_region: v2_bottom_rows_8_9
+        - outer_outline_band: v2_left_columns_0_1
+    operations_performed:
+      - 从 v2 删除机械不可达的底部 2 行空区。
+      - 整体裁掉左侧 2 列冗余外墙；不改变任何火盆、蜡烛或主体相对关系。
+      - 发布 v3 并重跑完整图、产品图、exposure、身份反事实及逐盆墙替换证据。
+      - 用完整图、产品图、exposure 与身份反事实核对 delivery 机械保持条件。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/human_revision_20260725.yml
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exact_manifest.yml
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/layout_analysis.json
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exposure_audit.json
+    version_effect: review_preserving_change
+    acceptance_preserved: true
+    preservation_basis: >-
+      v3 只删除与活动围墙分离的底部空区和冗余左外框；canonical、完整图、胜解族、核心事件、
+      对象职责与 exposure 均保持，且未替换火盆、蜡烛或玩家起点。
+    status: completed
+
+  - workflow_id: strict_exposure_gate_recheck
+    applicability: applicable
+    applicability_basis: 人类要求本轮小修只确认硬证据；v3 delivery exact 仍必须核对 exposure 硬门。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/human_revision_20260725.yml
+    candidate_discovery: null
+    operations_performed:
+      - 核对 v3 exact、layout digest、sequence digest、complete graph 与 exposure raw artifact。
+      - 核对 current exact 与逐盆替墙机械 artifact。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exposure_audit.json
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 该 workflow 只读取 v3 exposure artifact，不改变 delivery layout。
+    status: completed
+
+  - workflow_id: runtime_conformance_recheck
+    applicability: applicable
+    applicability_basis: v3 准备替换待玩入口。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    candidate_discovery: null
+    operations_performed:
+      - npm run check 通过。
+      - npm run candle:conformance 的所有已实现检查通过；未实现工具保持 unavailable。
+    artifact_refs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 只读类型与 runtime 一致性检查，不改变 v3 exact。
+    status: completed
+
+  - workflow_id: playable_delivery_build
+    applicability: applicable
+    applicability_basis: v3 已替换 studio level 与 queue entry。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/human_revision_20260725.yml
+    candidate_discovery: null
+    operations_performed:
+      - 用 CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001_V3 替换旧 v2 待玩入口。
+      - 重建 runtime-backed playable 并完成 3 个待玩关的 replay coverage。
+      - 核对 playable data 可解析 v3 id。
+    artifact_refs:
+      - prototypes/candle_sokoban/studio/levels.yml
+      - prototypes/candle_sokoban/playable_queue.yml
+      - prototypes/candle_sokoban/playable/data.json
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 交付接线和 runtime-backed 构建不改变 v3 exact。
+    status: completed
+scope_authority:
+  source: human
+  ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/human_revision_20260725.yml
+  instruction: 小修只确认硬证据，不重跑 Critic 或完整审美评审链。
+
+revision:
+  kind: pure_unreachable_crop
+  changes:
+    - 删除 v2 底部 2 行机械不可达空区。
+    - 整体裁掉 v2 左侧 2 列冗余外墙。
+  brazier_replacements: 0
+  subject_objects_changed: false
+  v3_layout_sha256: a842aa84756a54db1b8cba87555272dafff1ad4fa620f4b3373a0ebe960bff88
+
+delivery_mechanical_verification:
+  artifact_refs:
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/layout_analysis.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v3/exposure_audit.json
+  status: complete
+  solution_uniqueness_status: supported
+  claims_supported: 10
+  claims_not_supported: 0
+  current_exact_exposure: {status: complete, verdict: pass, forbidden_hits: 0}
+  brazier_wall_counterfactual_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/designer/workbench/revision_001/brazier_wall_counterfactual_summary.yml
+
+acceptance_preservation:
+  status: proven
+  accepted_critic_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/critic/v2/critic_review.md
+  preservation_basis: >-
+    v3 没有替换火盆或主体对象，只裁机械不可达区域与冗余外墙；提交前机械 artifact 支持保持条件。
+    账本分别记录 reviewed_exact_version=v2 与 delivery_exact_version=v3。
+
+delivery_checks:
+  runtime_check: pass
+  conformance: >-
+    pass_with_declared_unavailable_tools；adapter、parse/render、11 条 expected trace、倒数语义、
+    exposure hard gate、solver、graph、layout analyzer 与 runtime-backed playable 均通过。
+  playable_build: pass
+  playable_replay_check: 3_of_3_complete
+
+overall_status: completed

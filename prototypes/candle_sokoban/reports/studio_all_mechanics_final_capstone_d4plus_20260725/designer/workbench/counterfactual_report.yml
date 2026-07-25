@@ -1,0 +1,102 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version_basis: work
+baseline_layout_ref: candidate_work_layout.txt
+baseline_graph:
+  status: complete
+  reachable_states: 57796
+  legal_transitions: 164149
+  winning_states: 5
+  shortest_cost: 23
+
+counterfactuals:
+  - id: remove_dual_role_screen_key
+    layout_ref: cf_no_screen_remove_key.txt
+    change: 删除位于 x7,y3 的左向单格烛；因此同时移除核心烛身屏体与后段终盆钥匙。
+    graph_status: complete
+    reachable_states: 4751
+    legal_transitions: 13656
+    winning_states: 0
+    result: unsolvable
+    identity_reading: >-
+      该对象不是一次性遮蔽按钮；完整图要求同一对象后续侧滚、受火并横推到终盆。
+      删除它既使核心长烛失去烛身灭火，也失去唯一横向终盆执行者。
+
+  - id: replace_dual_role_screen_key_with_wall
+    layout_ref: cf_fixed_wall_replace_key.txt
+    change: 用固定墙替换 x7,y3 的左向单格烛，不另补终局钥匙。
+    graph_status: complete
+    reachable_states: 2288
+    legal_transitions: 6176
+    winning_states: 0
+    result: unsolvable
+    identity_reading: >-
+      固定墙可以制造灭火，却不能保留暗窗内的未燃关键烛芯，也不能承担后段侧滚、受火和终盆横推；
+      因而不是对当前双责任对象的无损替换。
+
+  - id: remove_late_relight_source
+    layout_ref: cf_no_relight_source.txt
+    change: 把 x7,y6 的已点火盆 O 改成未点火盆 o。
+    graph_status: complete
+    reachable_states: 11436
+    legal_transitions: 30878
+    winning_states: 0
+    result: unsolvable
+    identity_reading: >-
+      核心长烛在 d1 被烛身熄灭后没有后段复燃源，不能在同动作边界腾出旧端帽并形成末端输出。
+
+  - id: replace_endpoint_singleton_with_floor
+    layout_ref: cf_endpoint_wall.txt
+    change: 把 x6,y7 的上向单格端点烛替换成固定墙；该墙继续阻止长烛滚动。
+    graph_status: complete
+    reachable_states: 45158
+    legal_transitions: 130183
+    winning_states: 5
+    shortest_cost: 23
+    result: solvable_but_identity_changed
+    missing_exact_event: shrink_ignite:candle#single4
+    identity_reading: >-
+      长烛缩短后自身烛芯仍在 x6,y6，故竖烛可以借长烛这一半火源继续获胜；但端点不再是可见的
+      u->U 受火体，也不再以同一实体兼任滚动挡块。本反事实证明 exact 使用的是 brief 允许的
+      “末端双火源状态”分支，不能进一步夸大为“端点烛是唯一火源”。
+
+  - id: shift_endpoint_one_cell_left
+    layout_ref: cf_endpoint_shift_left.txt
+    change: 把上向单格端点烛从 x6,y7 左移到 x5,y7，使其烛芯错离旧端帽格。
+    graph_status: complete
+    reachable_states: 49827
+    legal_transitions: 142625
+    winning_states: 5
+    shortest_cost: 23
+    result: solvable_but_identity_changed
+    missing_exact_event: shrink_ignite:candle#single4
+    identity_reading: >-
+      错移端点仍能几何挡停长烛，却不会被旧端帽退焰点亮；同样保留可解性但移除了作品的可见几何回报。
+
+  - id: shift_start_one_cell_right
+    layout_ref: cf_phase_start_one_right.txt
+    change: 把玩家起点从 x2,y2 右移到 x3,y2，使最短接近核心少一个合法行动。
+    graph_status: complete
+    reachable_states: 57391
+    legal_transitions: 164657
+    winning_states: 4
+    shortest_cost: 20
+    result: solvable_but_identity_changed
+    local_replay:
+      inputs: [up, right, right, down, up]
+      core_roll_events:
+        - roll_reignite_after_extinguish:candle#1:d1->d4
+        - countdown:2->1
+      following_action_events:
+        - countdown:1->5
+        - shrink:candle#1:len1
+        - shrink_ignite:candle#single4
+    identity_reading: >-
+      非边界核心滚仍可在下一动作结算缩短，但“复燃、缩短、端点点亮同属一次已提交长滚”的高潮被拆开；
+      exact 起点及最短路径把这三个结果重新压回唯一同一事件边。
+
+evidence_limits:
+  - 端点单格烛在 exact 中与缩短后的长烛共享 x6,y6 火源格；它真实点亮并参与末端双火源，
+    但 wall/shift 反事实说明它不是竖烛取火的唯一必要来源。
+  - remove/fixed-wall 变体同时移除了双责任对象的后段钥匙职责；它们证明不能无损替换整个对象，
+    不单独量化“只有遮蔽事件改变”这一更窄反事实。

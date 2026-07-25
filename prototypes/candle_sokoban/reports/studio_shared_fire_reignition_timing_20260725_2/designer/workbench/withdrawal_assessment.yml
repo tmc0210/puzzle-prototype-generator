@@ -1,0 +1,87 @@
+schema_version: 1
+assessment_kind: candidate_withdrawal
+task_root: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_002
+decision: withdraw_exact
+exact_version: null
+publish_exact_v1: false
+
+finite_search_decision:
+  status: completed_without_valid_exact
+  search_processes: stopped
+  search_variants_result: no_hit
+  random_search_result: no_hit
+  reason: >-
+    在停止继续搜索前，已有确定性重构 family 已完成有限 runtime 验证；未找到同时满足
+    双 timing、双蜡烛双目标责任、无 later branch 与无等待旁路的可发布快照。
+
+attempts:
+  - id: v2_single_step_cross
+    layout_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/designer/workbench/candidate_v2_timing_cross.txt
+    replay_ref: runtime try-inputs:CANDLE_SHARED_FIRE_REIGNITION_TIMING_002_v2
+    result: invalid_player_death
+    evidence:
+      - >-
+        t=1 的 1D 墙灭火后边界重燃成立，且 1D/2R 同时收缩；但后续 2R 操作需要玩家
+        经过 1D 收缩后外露的烛芯格，step 7 触发 player_died:candle#1。
+      - >-
+        该版本没有形成可胜的双目标 replay，因此不具备 exact 发布资格。
+
+  - id: v4_multi_step_cross
+    layout_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/designer/workbench/candidate_v4_timing_cross.txt
+    replay_ref: runtime try-inputs:CANDLE_SHARED_FIRE_REIGNITION_TIMING_002_v4
+    graph_ref: runtime explain-layout:CANDLE_SHARED_FIRE_REIGNITION_TIMING_002_rebuild_withdrawn
+    result: invalid_later_branch_and_bypass
+    graph:
+      status: complete
+      reachable_states: 48110
+      legal_transitions: 156127
+      winning_states: 6
+      shortest_cost: 6
+      shortest_inputs: right,right,up,left,right,right
+    canonical_timing_trace:
+      - step: 4
+        window: midcycle_t2_for_candle_1
+        event: light_brazier:5,2
+      - step: 5
+        window: boundary_after_t2
+        events: [simultaneous_burn:candle#1+candle#2, shrink:candle#1:len1, shrink:candle#2:len1]
+      - step: 6
+        window: forbidden_multi_step_crossing
+        events:
+          - extinguish_by_wall:candle#2
+          - ignite_midcycle:candle#2:t3
+          - light_brazier:11,3
+          - roll_intermediate_extinguish:candle#2:d1
+          - roll_intermediate_ignite:candle#2:d2
+          - roll_reignite_after_extinguish:candle#2:d1->d2
+    blocking_failures:
+      - >-
+        2R 的一次侧滚连续经过灭火位、火源位和目标位；完整图胜路命中
+        rolling_contact_chain 家族，超过 allowed_exposure_through=shared_fire_and_reignition。
+      - >-
+        最短胜路只在前段点亮一个目标，未让 1D 在墙灭火后重新承担最终目标责任；
+        1D/2R 的双 timing 体验不是胜利必要因果。
+      - >-
+        try-inputs 的指定双窗口长路中，两根单格蜡烛在最终目标分配前同时 burn_out，
+        因而仍不能构成合格 exact。
+
+hard_self_check:
+  allowed_exposure_through: shared_fire_and_reignition
+  valid_exact: false
+  exposure_audit: not_published
+  full_graph: complete_for_v4_but_invalid
+  no_waiting_bypass: not_supported
+  two_candles_irreplaceable: not_supported
+  two_goals_irreplaceable: not_supported
+  canonical_replay: no_valid_replay
+
+decision_basis:
+  - >-
+    该 task 的旧 v1 withdrawal 已证明“灭火后永不重燃 + up/down 等待 + 2R 单独胜利”旁路；
+    本次 structure-family rebuild 的有限尝试仍未同时消除 later branch 与对象责任旁路。
+  - >-
+    v4 虽然存在完整胜态，但胜利依赖 rolling_contact_chain，且最短胜路不满足墙灭火对象
+    的双 timing 责任，因此不能把硬可解性误写成体验核心成立。
+  - >-
+    不发布 exact/v1、submission.yml 或 designer_action_v1.yml；不修改 ledger、critic、levels、queue。

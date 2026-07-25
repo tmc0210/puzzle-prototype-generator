@@ -3,6 +3,7 @@ mechanic: candle_sokoban
 required_docs:
   - prototypes/candle_sokoban/docs/designer_contract.md
   - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/docs/redundant_element_prune.md
   - prototypes/candle_sokoban/mechanic.yml
 
 tool_commands:
@@ -12,6 +13,7 @@ tool_commands:
   explain_layout: "npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write"
   try_inputs: "npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write"
   exposure_audit: "npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts <layout-file|-> --id <id> --exact-version <exact> --allowed-exposure-through <branch> --max-states 300000 --out <report.json>"
+  redundancy_candidates: "npx tsx src/prototypes/candle_sokoban/redundancyCandidatesCli.ts <layout-file|-> --id <id> --out <report.json>"
   playable_build: "npm run candle:playable:build"
   playable_replay_check: "npm run candle:playable:check-replays"
 
@@ -52,9 +54,46 @@ hard_evidence_requirements:
     pass_condition: "verdict=pass，graph.status=complete，forbidden_hits 为空。"
     unknown_condition: "graph.status=exhausted 且尚未命中 later event；不得按通过处理。"
   normal_win_only: "正式候选必须使用 all_braziers_lit，不得使用 event_occurs。"
-  current_exact_only: "任何布局、胜利条件或核心机制用法变化都会使旧 replay、graph、exposure 与 review 失效。"
+  current_exact_only: "设计阶段的布局、胜利条件或核心机制用法变化会使当前 exact 的证据与 review 失效；接受后的 delivery 规范化只按 redundant_element_prune 的保持合同处理。"
 
 prototype_specific_workflows:
+  - id: redundant_element_prune
+    kind: pre_submission_check
+    default_status: always_run_before_delivery
+    trigger:
+      - "当前唯一候选已经通过 Critic，准备形成 delivery version。"
+    authority_docs:
+      - prototypes/candle_sokoban/docs/redundant_element_prune.md
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery:
+      method: candle_redundancy_units_v1
+      unit_kinds:
+        - whole_candle
+        - single_brazier
+        - detached_empty_region
+        - single_entry_floor_region
+        - outer_outline_band
+      forbidden_strategy: "不得逐格枚举全部普通空地，不得让 Designer 判断格子或对象职责。"
+    allowed_operations:
+      - whole_candle_to_floor
+      - whole_candle_to_wall
+      - single_brazier_to_floor
+      - single_brazier_to_wall
+      - maximal_floor_region_to_wall
+      - maximal_outer_region_or_band_trim
+    hard_checks:
+      - "保持玩家起点与所有保留对象的相对位置；不运行 opening 起点比较。"
+      - "canonical 行动、共享倒数、蜡烛长度/燃烧时间线与核心灭火/重燃时机保持。"
+      - "直接删蜡烛时使用对象擦除投影；纯自燃、自缩短和自行燃尽不能单独证明对象有职责。"
+      - "完整图、胜解族、required-winning 事件组、对象参与与 exposure 全部满足 authority doc。"
+      - "新增墙不得在任何可达边制造新的灭火、点火、点盆、缩短或来源归因。"
+      - "删除实体不得产生更短胜路、新解族、提前胜利或倒数时机旁路。"
+    result_contract:
+      allowed_version_effects: [unchanged, review_preserving_change]
+      acceptance_preserved: true
+      failed_or_unproven_counterfactual: retain_candidate_unit_without_change
+
   - id: strict_exposure_gate_recheck
     kind: pre_submission_check
     default_status: always_run_before_delivery
@@ -68,7 +107,7 @@ prototype_specific_workflows:
       - "报告 exact、layout digest 与 delivery version 一致。"
       - "graph.status 为 complete，verdict 为 pass，forbidden_hits 为空。"
     version_effect: unchanged
-    review_effect: preserved
+    acceptance_preserved: true
 
   - id: runtime_conformance_recheck
     kind: pre_submission_check
@@ -82,7 +121,7 @@ prototype_specific_workflows:
       - "npm run candle:conformance 的所有已实现检查通过。"
       - "工具 unavailable 项只记录边界，不得伪报为已实现。"
     version_effect: unchanged
-    review_effect: preserved
+    acceptance_preserved: true
 
   - id: playable_delivery_build
     kind: pre_submission_check
@@ -96,4 +135,4 @@ prototype_specific_workflows:
       - "queue entry 的 source、level id 与 delivery version 可解析。"
       - "playable replay coverage 检查通过。"
     version_effect: unchanged
-    review_effect: preserved
+    acceptance_preserved: true

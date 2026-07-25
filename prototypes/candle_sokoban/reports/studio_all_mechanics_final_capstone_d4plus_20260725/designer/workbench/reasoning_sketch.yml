@@ -1,0 +1,61 @@
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+status: ready_for_exact_evidence
+target_difficulty: 5
+
+structure_thesis: >-
+  同一根左向单格烛同时承担三项跨段责任：它的烛身在长烛第一滚动小步遮住长烛烛芯，
+  它自己的左侧烛芯又被滚动长烛烛身遮住并在下一小步保持未燃重曝，最后它必须被端点输出
+  取得的竖烛火源点亮并横推去点终盆。玩家若不在第 5 动作提交长滚，长烛会先缩短，
+  上述双向暗窗关系和端点退焰同动作回报都无法进入任何获胜路径。
+
+player_relation:
+  - 开局先从终盆反推唯一能横向送火的左向单格钥匙，因而知道它不能在核心前燃尽或退休。
+  - 再从钥匙的后续取火反推端点双火源必须点燃竖烛；端点输出不是事件展示，而是后段火源的取得条件。
+  - 最后把竖烛取火时刻反推到第 5 动作长滚：同一滚动先由钥匙烛身灭火、让钥匙烛芯未燃重曝，
+    后由既有亮盆复燃，并在本动作边界缩短、点亮兼作终点挡块的上向单格烛。
+  - 竖烛取火后存在两种局部等价准备：保留遮蔽并用退焰点亮钥匙，或把竖烛侧移后在钥匙横推途中直接点亮；
+    两者都保留同一对象职责、目标分配和前半因果链。
+
+dependency_chain:
+  - 终盆只能由左向单格钥匙横推到位后点亮。
+  - 钥匙必须先侧滚到终局行，并从端点输出所点燃的竖烛取得火。
+  - 竖烛必须右滚到末端双火源的烛芯格，完整图中 ignite:candle#2 对全部终局必经。
+  - 末端双火源需要核心长烛在第 5 动作复燃并立即缩短，同时以旧端帽退焰点亮终点上向单格烛。
+  - 核心复燃前必须先由钥匙烛身遮蔽灭火；同一动作内唯一核心边同时含复燃、边界参与、缩短与端点点亮。
+
+solution_family_account:
+  graph_status: complete
+  reachable_states: 57796
+  legal_transitions: 164149
+  winning_states: 5
+  shortest_cost: 23
+  classification: equivalent_variants_only
+  equivalence_basis: >-
+    所有终局都必经同一核心边、同一端点输出、同一竖烛取火、同一竖烛下推、同一钥匙侧滚、
+    同一钥匙横推和同一终盆分配；原始输入差异来自走位/相位回返，以及钥匙从同一已取得竖烛火源
+    接受退焰点火或直接烛芯点火的局部准备差异，没有对象替代、目标改派或核心旁路。
+
+current_falsifiers:
+  - id: core_roll_not_required
+    result: falsified_by_complete_graph
+    evidence: 屏蔽 roll_reignite_after_extinguish:candle#1:d1->d4 后无终局。
+  - id: core_not_same_action_boundary
+    result: falsified_by_complete_graph
+    evidence: 唯一核心事件边同时含 boundary_ignite_participates、shrink:candle#1:len1 与 shrink_ignite:candle#single4。
+  - id: endpoint_output_retires
+    result: falsified_by_complete_graph
+    evidence: 屏蔽 ignite:candle#2 后无终局；规范解中竖烛烛芯在 x6,y6 直接从末端双火源取火。
+  - id: screen_key_retires_or_is_substituted
+    result: falsified_by_complete_graph
+    evidence: 屏蔽钥匙侧滚、钥匙横推或终盆事件任一项后均无终局。
+  - id: unrelated_phase_wait_preserves_identity
+    result: falsified_by_complete_graph
+    evidence: 核心复燃/边界/端点三事件各只存在于同一条可达边；任何终局都必须经过该边。
+  - id: non_equivalent_winning_family
+    result: none_found
+    evidence: 5 个终局仅保留同一对象职责和因果链内的走位、相位与钥匙点火准备变体。
+
+known_perceptible_defects:
+  - >-
+    竖烛取火后的局部相位整理包含可见回返；原型合同明确允许倒计时计算，但 Critic 仍可能认为这一段
+    反馈弱于核心长滚，需要按完整回放判断它是必要预备还是节奏拖延。

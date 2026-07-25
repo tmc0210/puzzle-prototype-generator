@@ -1,0 +1,40 @@
+assignment_id: candle_shared_fire_reignition_timing_20260725_2_candidate_design
+required_skill: sokoban-level-designer
+assignment_kind: candidate_design
+controller_instance_id: candle_shared_fire_reignition_timing_20260725_2_controller
+task_root: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2
+candidate_ledger_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/candidate_ledger.yml
+candidate_id: CANDLE_SHARED_FIRE_REIGNITION_TIMING_002
+exact_version_basis: null
+design_brief: >-
+  在同一 candidate 内完成唯一单关候选。体验核心不是事件数量，而是玩家必须主动计算两个有后果的时机窗口：
+  先用墙灭火改变一根蜡烛是否参加边界，再在仍有另一根蜡烛承担倒计时责任的可读窗口选择边界或 t2 中周期重燃；
+  每个选择必须立即改变对象责任、可达区域、火源责任或下一步合法操作，并反向约束更早安排。避免上一轮常见失败：
+  C2 燃尽后的无亮回程、固定路线相位复燃、反复上下移动等待、把亮态重叠做成 forbidden branch。允许重构
+  structure family，但不得越过 shared_fire_and_reignition；完整图只保留一个玩家逻辑里程碑签名或等价站位变体。
+  目标难度至少 4，优先紧凑强耦合与对象重复复用，不用路线税或装饰物件制造负荷。完成完整 replay、解族、
+  exposure、反事实和玩家侧自查后发布 exact v1；不要写 ledger、critic、levels、queue 或 handoff。
+input_refs:
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/experience_brief.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/designer/archive_calibration.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/exploration/runs/shared_fire_reignition_timing_explorer_20260725/batch.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/exploration/runs/shared_fire_reignition_timing_explorer_20260725/report.md
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/human_brief.yml
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/prior_course.yml
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - .agents/skills/sokoban-level-design-studio/references/candidate-ledger-template.md
+  - .agents/skills/sokoban-level-design-studio/references/designer-action-template.md
+  - .agents/skills/sokoban-level-design-studio/references/submission-packet-template.md
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725_2/designer
+required_outputs:
+  - candidate designer action
+  - exact v1 layout and complete artifact bundle
+  - submission packet with player-side reasoning, identity, uniqueness, replay and exposure evidence

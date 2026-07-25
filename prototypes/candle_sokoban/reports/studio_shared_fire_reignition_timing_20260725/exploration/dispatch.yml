@@ -1,0 +1,44 @@
+exploration_id: CANDLE_STUDIO_SHARED_FIRE_REIGNITION_TIMING_20260725
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: D:/Developer/sokoban
+dispatch_prompt: 使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件。
+experience_seed: >-
+  玩家需要通过分析主动使用墙灭火和重燃机制来控制蜡烛的参与倒数时机。
+player_prior:
+  - 玩家已掌握 basic_candle_manipulation。
+  - 玩家已掌握 wall_dousing。
+  - 玩家已掌握 shared_fire_and_reignition 及其之前机制的衍生技巧和计算。
+allowed_mechanisms:
+  - basic_candle_manipulation
+  - wall_dousing
+  - shared_fire_and_reignition
+allowed_tools:
+  - runtime adapter
+  - ASCII parser/renderer
+  - solver
+  - complete reachable graph
+  - layout analyzer
+  - try_inputs
+  - explain_layout
+  - exposure_audit
+source_boundary:
+  allowed:
+    - prototypes/candle_sokoban/mechanic.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/docs/design_handoff.yml
+    - prototypes/candle_sokoban/README.md
+    - 当前 task-local exploration 目录中的本轮 dispatch、brief、lexicon 与 runs
+  forbidden:
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - prototypes/candle_sokoban/reports
+    - prototypes/reality_anchor/design_archive
+    - 任何 Critic、Designer 或候选 artifact
+task_lexicon_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/studio_shared_fire_reignition_timing_20260725/exploration/lexicon_index.md

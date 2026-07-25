@@ -1,0 +1,83 @@
+review_attempt_id: CANDLE_WALL_REIGNITION_TIMING_V2_HARD_001
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+exact_version: v2
+prototype_id: candle_sokoban
+reviewer_role: independent_hard_evidence_only
+output_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/evidence/v2/evidence_review.yml
+
+exact_artifact:
+  manifest_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/exact_manifest.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/layout.txt
+  layout_sha256: 779d9a248b3ab2da50b913a5025da6bc87c1fdfff0556215f6de09c776afaa54
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/solve_instance.yml
+
+mechanical_claims:
+  - claim_id: normal_win_and_replay
+    claim: >-
+      v2 的 25 步 canonical replay 全部合法，并在完整回合结算后玩家存活且以 all_braziers_lit 正常获胜。
+  - claim_id: exposure_gate
+    claim: >-
+      v2 对 allowed_exposure_through=shared_fire_and_reignition 的 exposure audit 与 exact/sequence digest 匹配，
+      reachable graph 为 complete，verdict=pass，forbidden_hits 为空，并保存完整 raw graph。
+  - claim_id: all_wins_use_wall_douse_and_reignite_schedule
+    claim: >-
+      完整 first-win product graph 的全部首次胜利历史都包含同一目标烛的墙灭火、静态复燃、
+      复燃后 len3、随后 len2 与 len1，以及单格交付；没有绕过墙灭火或复燃时序的胜解。
+  - claim_id: auxiliary_and_transient_stopper_participation
+    claim: >-
+      全部首次胜利历史都包含辅助 candle#4 的轴推与上盆，以及 candle#3 缩成单格、最终与交付同步燃尽；
+      这些对象不是未参与的可见 affordance。
+  - claim_id: reignite_boundary_family
+    claim: >-
+      完整产品图只有首次复燃 t1 与 t3 两类 winning product state；二者都进入同一个第二轮燃烧边界，
+      共享唯一里程碑签名、相同对象职责、目标分配与最终 winning runtime state，没有晚一轮复燃胜解。
+  - claim_id: identity_counterfactuals
+    claim: >-
+      删除目标首推后的烛芯墙、静态复燃火源、辅助 candle#4 或瞬时止挡 candle#3 都使完整图无胜；
+      删除 row4 footprint 筛或终盆则产生更早/更多胜态，机械上支持这些结构承担基线身份责任。
+
+solution_uniqueness_claim:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  search_budget: >-
+    base reachable graph max_states=500000，实际 complete 8594 states / 23086 transitions / 1 winning runtime state；
+    first-win 单调历史与首次复燃倒数产品图 complete 30132 product states / 81021 legal edges /
+    2 winning product states，shortest cost=25，raw shortest input count=306。
+  known_raw_winning_variants:
+    - up up up up left up down up left down up right right right right left left down left left down down right down left
+    - up up up up left down up up left down up right right right right left left down left left down down right down left
+    - up up up up left up left down up down up right right right right left left down left left down down right down left
+  equivalence_account: >-
+    两个 winning product states 分别记录首次复燃 t1 与 t3；两者赶上同一个第二轮边界，并共享唯一
+    wall_douse>static_reignite>target_len3>target_len2>target_len1_and_gate_open>singleton_delivery 签名、
+    同一三根蜡烛职责、相同目标分配、相同 row5 停位与唯一 winning runtime state。306 条最短串只允许
+    相邻必要走位/独立行动换序，没有晚一轮复燃、不同目标分配或不同终局停位的 winning product state。
+  extracted_from: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/submission.yml#hard_evidence.solution_uniqueness
+
+allowed_evidence_sources:
+  - docs/21-level-design-studio-standard.md
+  - docs/30-scc-graph-diagnostic-reading.md
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/exact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/layout.txt
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/layout_analysis.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/solution_family.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v2/identity_counterfactuals.json
+
+forbidden_inputs:
+  - Designer 的体验核心、包装、自评、已知审美缺点、为什么值得存在或难度叙事字段
+  - Designer submission.yml（除本 packet 已机械提取的 solution_uniqueness 字段）
+  - Explorer lexicon、设计材料或 Designer workbench
+  - archive、Critic 校准、旧 Candle 报告、难度或待玩判断
+  - 任何其它 exact、旧 review 或人类交接
+
+review_contract:
+  - 使用 $sokoban-evidence-reviewer 严格输出 evidence-reviewer-template 的结构化硬证据审查。
+  - 不替 Designer 补跑 solver、图、反事实或事件 probe；证据不足写 unknown/incomplete。
+  - 可读取完整 SCC/graph 原始证据，但不评价审美、难度、包装或待玩资格。

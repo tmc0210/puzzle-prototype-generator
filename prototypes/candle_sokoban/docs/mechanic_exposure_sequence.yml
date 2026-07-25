@@ -7,7 +7,9 @@ description: >
   设计的机制家族；new_events 可以包含同一知识自然产生的来源标签、边界结算标签和
   组合摘要，不再把这些诊断事件拆成额外课程阶段。allowed_exposure_through 及之前
   家族允许出现；之后家族的 new_events 在当前 exact version 的全部可达状态与边上
-  必须完全不可达。缺少 complete reachable graph 时只能判 unknown。
+  必须完全不可达。标准 all_braziers_lit 关卡把“尚未胜利且已无任何蜡烛”视为失败终局：
+  完整图保留进入该终局的边及其全部事件，不扩展之后只剩走路和空倒数的尾部状态。
+  缺少按这一终局约定完成的 complete reachable graph 时只能判 unknown。
 
 event_exposure_sequence:
   - branch: basic_candle_manipulation
@@ -140,5 +142,9 @@ review_contract:
     - exact_candidate_version
     - complete_reachable_graph
     - raw_edge_events
+  complete_graph_terminal_states:
+    - terminal_win
+    - player_dead
+    - zero_candles_before_normal_win
   incomplete_or_sampled_scan_verdict: unknown
   event_occurrence_only_means: 该机制已可达，不证明必经、有效使用、难度或关卡质量。

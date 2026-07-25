@@ -131,7 +131,11 @@ Critic 只写一篇短的自然语言批评。第一行必须严格为：
 
 ## 提交前工作流与待玩交付
 
-候选被接受后，Controller 逐项处理当前原型 `design_handoff.yml` 中所有 `kind: pre_submission_check` workflow。只读 workflow 保留 review；若 workflow 改变 exact，只有 authority docs 明确允许且实际满足全部边界、复验和不变量时才保留，否则形成新 exact 并重跑硬证据与 Critic。
+候选被接受后停止设计。Controller 逐项执行当前原型 `design_handoff.yml` 中所有 `kind: pre_submission_check` workflow；这些 workflow 只能包含确定性的机械检查，以及 authority docs 预先定义候选发现、允许变换和完整保持条件的规范化动作。它们不分配给 Designer，不产生设计判断，也没有返回评审链的出口。
+
+提交前规范化只有三种结果：没有候选；候选反事实未取得保持证明，因此保留原样；取得完整证明后应用变换并形成 delivery version。后两者都完成当前检查。工具运行本身未完成时只把提交前状态保持为 `incomplete`，重跑该工具；不得把工具不完整改写成设计修订。
+
+authority docs 必须让工具从有限的结构类别自动发现候选，不能要求 Designer 判断某格或对象是否有职责，也不能用“扫描整张画布的每个普通空格”代替候选算法。任何实际变换都必须留下当前 delivery layout 的机械证明；未证明的变换不应用，因此提交前流程在任何结果下都保留已经接受的作品。
 
 交付前检查：
 
@@ -144,7 +148,7 @@ pre_submission_checks = completed_or_recorded_not_applicable
 delivery_version_evidence = current
 ```
 
-满足后，只把一个 delivery version 写入 `studio/levels.yml` 或 `levels.yml`，加入 `playable_queue.yml` 并设为 `pending_playtest`，重建 playable 并确认 source/id 可解析。人类交接只介绍该关的体验核心、已知风险和 artifact refs，不比较其它设计。
+满足后，只把一个 delivery version 写入 `studio/levels.yml` 或 `levels.yml`，加入 `playable_queue.yml` 并设为 `pending_playtest`，重建 playable 并确认 source/id 可解析。`reviewed_exact_version` 与 `delivery_exact_version` 可以因已证明的提交前规范化而不同；提交前记录必须给出这种差异的 authority 与证明。人类交接只介绍该关的体验核心、已知风险和 artifact refs，不比较其它设计。
 
 ## 状态
 

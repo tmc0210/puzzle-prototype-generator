@@ -1,0 +1,66 @@
+runId: batch_002_wick_phase_gate
+title: "外露烛芯静态复燃的双烛缩短操作面门"
+notes: "墙灭火后由首个边界已从三格缩成二格的已燃源烛复燃；相位同时改变目标 footprint 与源火焰投影。"
+defaults:
+  maxExploreDepth: 9
+  maxReturnDepth: 12
+  maxStates: 30000
+  maxTransitions: 120000
+  win:
+    type: event_occurs
+    event: __probe_never_wins__
+cases:
+  - id: wick_midcycle_keep_target2_source2
+    family: wick_reignite_dual_footprint_gate
+    variant: midcycle_keep_target2_source2
+    changed_variable: "侧滚接触源烛外露烛芯发生在 countdown=3"
+    contrast_with:
+      - wick_boundary_shrink_target1_source1
+      - wick_boundary_survivor_wall_blocks
+    notes: "首个 t=1 边界让目标墙灭火避烧，同时让源烛从三格缩为二格、火焰退到 x=6；短操作侧让目标烛芯在 t=3 与其重合复燃。"
+    layout: |
+      ###########
+      #.......o.#
+      #..1R.#...#
+      #.....L22.#
+      #....#....#
+      #...#.....#
+      #.@.......#
+      ###########
+    actions: [up, up, up, up, right, up, right, down]
+
+  - id: wick_boundary_shrink_target1_source1
+    family: wick_reignite_dual_footprint_gate
+    variant: boundary_shrink_target1_source1
+    changed_variable: "侧滚接触源烛外露烛芯发生在 countdown=1"
+    contrast_with:
+      - wick_midcycle_keep_target2_source2
+      - wick_boundary_survivor_wall_blocks
+    notes: "首个边界同样把源烛准备成二格；长操作侧让目标于下一次 t=1 从源烛复燃，随后目标与源烛同时各缩成一格。"
+    layout: |
+      ###########
+      #.......o.#
+      #..1R.#...#
+      #.....L22.#
+      #....#....#
+      #...#.....#
+      #.@.......#
+      ###########
+    actions: [up, up, up, up, right, left, up, right, right, down]
+
+  - id: wick_boundary_survivor_wall_blocks
+    family: wick_reignite_dual_footprint_gate
+    variant: survivor_wall_blocks
+    changed_variable: "把 y=4 挡墙从目标被烧掉的 x=5 末端格下方移到 x=4 幸存格下方"
+    contrast_with: wick_boundary_shrink_target1_source1
+    notes: "仍在 t=1 由源烛芯复燃并让双烛各缩一格；挡墙改压在目标幸存格下方后，最终向下输入重新成为 roll_blocked。"
+    layout: |
+      ###########
+      #.......o.#
+      #..1R.#...#
+      #.....L22.#
+      #...#.....#
+      #...#.....#
+      #.@.......#
+      ###########
+    actions: [up, up, up, up, right, left, up, right, right, down]

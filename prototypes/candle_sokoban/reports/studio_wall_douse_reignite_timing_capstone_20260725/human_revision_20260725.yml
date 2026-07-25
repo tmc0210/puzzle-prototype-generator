@@ -1,0 +1,48 @@
+design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+exact_version_basis: v2
+source: human
+recorded_at: 2026-07-25
+playtest_status: needs_revision
+
+revision_request:
+  - >-
+    删除布局下方与主地图被整墙完全隔开的无意义空格，并把外墙紧缩到主地图实际边界；
+    v2 的末两行应从新 exact 中移除。
+  - >-
+    左侧整体再裁掉 2 列冗余外墙；裁后须保持封闭边界与所有主体对象、操作关系不变。
+  - >-
+    逐个确认当前 8 个火盆是否承担必要职责。对每个火盆单独制作“原格替换为墙、其它条件不变”
+    的 exact counterfactual，检查可解性、胜利旁路、机制暴露和墙灭火/复燃职责；中部三盆不因
+    视觉密集而默认删除，也不因当前不丑而免于核验。
+
+brazier_wall_counterfactual_scope:
+  coordinate_system: zero_based_xy
+  cells:
+    - {x: 7, y: 1, initial: lit}
+    - {x: 14, y: 1, initial: unlit}
+    - {x: 4, y: 3, initial: lit}
+    - {x: 5, y: 4, initial: lit}
+    - {x: 6, y: 4, initial: lit}
+    - {x: 7, y: 4, initial: lit}
+    - {x: 6, y: 5, initial: unlit}
+    - {x: 3, y: 6, initial: lit}
+
+acceptance_boundary:
+  - 下方断开空区必须删除，左侧必须整体裁掉 2 列，并保持地图封闭。
+  - 每个反事实必须明确报告完整图状态、胜利状态数量和机制暴露 verdict；不能以规范解单路代替。
+  - >-
+    若墙替换仍有胜解，必须检查是否减少必要目标、绕过对象职责、改变墙灭火或复燃参与轮次，
+    或产生不同逻辑解族；若无胜解，则说明该火盆的具体结构责任。
+  - 新 exact 仍须保持原体验核心、难度目标 5、all_braziers_lit 与 allowed_exposure_through=shared_fire_and_reignition。
+
+review_scope_override:
+  source: human
+  instruction: >-
+    本轮属于小修，不重跑 Critic 或完整审美评审链；只需确认新 exact 与逐盆反事实的硬证据无误。
+  controller_interpretation:
+    - 新 exact 仍使用 fresh Evidence Reviewer 独立核验硬证据。
+    - >-
+      若最终只删除机械不可达的断开空区、整体裁掉左侧 2 列冗余外墙，并保留 v2 的火盆与
+      主体结构，则保留 v2 Critic 的审美结论。
+    - 若最终替换任何火盆或改变主体结构，则不得把该变化伪装成纯裁边，需回报人类重新决定审查范围。

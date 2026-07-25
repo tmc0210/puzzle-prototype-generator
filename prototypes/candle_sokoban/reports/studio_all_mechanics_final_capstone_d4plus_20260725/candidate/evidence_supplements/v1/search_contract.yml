@@ -1,0 +1,42 @@
+schema_version: 1
+artifact_kind: counterfactual_search_contract
+assignment_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/assignments/designer_revision_001_counterfactual_evidence.yml
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version_basis: v1
+supplement_changes_exact: false
+declared_before_supplement_graph_generation: true
+declared_on: 2026-07-25
+
+baseline_freeze:
+  layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/layout.txt
+  layout_sha256: 5cc8271b9ffdf5ce81130e7ef7c4392d5b491068aea9ee8e8dde32134e924005
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/solve_instance.yml
+  solve_instance_sha256: 7e817a94ca773bbcd7709c9b5d30d815134b5bdff61884bef2a290397ae886b3
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v1/canonical_replay.json
+  canonical_replay_sha256: f779e07fb152dc168e84c73e982f92c4a37a617442687278f2edba5ac6a00090
+
+runtime_contract:
+  prototype: candle_sokoban
+  global_burn_cycle: 5
+  win_condition:
+    type: all_braziers_lit
+  terminalize_wins: true
+  max_states: 300000
+  max_transitions: 1000000
+  allowed_exposure_through: rolling_contact_chain
+  graph_completion_requirement: >-
+    每项 raw artifact 必须记录 graph.status=complete；exhausted 不支持零终局、可解性或边界声明。
+
+counterfactual_ids:
+  - remove_dual_role_screen_key
+  - replace_dual_role_screen_key_with_wall
+  - remove_late_relight_source
+  - replace_endpoint_singleton_with_wall
+  - shift_endpoint_one_cell_left
+  - shift_start_one_cell_right
+
+coordinate_convention: layout 左上角为 x=0,y=0，ASCII 字符按零基坐标记录。
+raw_artifact_contract:
+  - 每项保存实际 layout、layout SHA-256、相对 v1 的逐格变更、solve instance 与复现命令。
+  - raw_complete_graph.json 使用原型 exposureAuditCli 直接生成，必须包含完整 raw_graph.nodes 与 raw_graph.edges。
+  - 每项在统一预算下独立枚举，不复用 v1 或其它反事实的汇总计数。

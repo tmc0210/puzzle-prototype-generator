@@ -1,0 +1,62 @@
+runId: wall_douse_reignite_timing_20260725a
+title: "墙口、火源与共享倒数的局部时序对照"
+notes: "三张同尺度局部图；#1 先侧滚下行，#2 保持已燃以显示共享倒数的差异。"
+defaults:
+  maxExploreDepth: 8
+  maxReturnDepth: 18
+  maxStates: 12000
+  maxTransitions: 50000
+cases:
+  - id: narrow_mouth_midcycle_reignite
+    family: wall_mouth_countdown_gate
+    variant: narrow_wall_douse_then_midcycle_reignite
+    changed_variable: "墙口正好落在 #1 下滚后的烛芯投影格；复燃安排在倒数 t2 的中周期"
+    contrast_with: [wide_mouth_same_timing]
+    notes: "前四步把倒数送到 1；down 使 #1 在边界灭火并避开本次缩短。绕到下方后在 t2 上滚回 O 的投影格，中周期复燃；下一步边界让 #1 与 #2 同时缩短。"
+    win: {type: event_occurs, event: never}
+    layout: |
+      ###########
+      #o........#
+      #.@#......#
+      #.111ROL22#
+      #.....#...#
+      #..#..#...#
+      #.........#
+      ###########
+    actions: [left, right, left, right, down, left, down, down, down, right, right, right, up, up, left]
+
+  - id: wide_mouth_same_timing
+    family: wall_mouth_countdown_gate
+    variant: wall_shifted_one_cell_no_douse
+    changed_variable: "row 4 的墙从 #1 下滚后的投影格 x6 平移到 x7；其余布局和动作完全相同"
+    contrast_with: [narrow_mouth_midcycle_reignite]
+    notes: "同一走位与倒数时序；#1 下滚后投影仍在 x6 的地面，不会被墙遮住，因此第一次边界就与 #2 一起缩短，后续上滚只是保持燃烧而非复燃。"
+    win: {type: event_occurs, event: never}
+    layout: |
+      ###########
+      #o........#
+      #.@#......#
+      #.111ROL22#
+      #......#..#
+      #..#..#...#
+      #.........#
+      ###########
+    actions: [left, right, left, right, down, left, down, down, down, right, right, right, up, up, left]
+
+  - id: narrow_mouth_boundary_reignite
+    family: wall_mouth_countdown_gate
+    variant: narrow_wall_douse_then_boundary_reignite
+    changed_variable: "同一窄墙口；复燃上滚恰好安排在 douse 后的下一次倒数边界"
+    contrast_with: [narrow_mouth_midcycle_reignite]
+    notes: "down 在第一次边界灭火；四个绕行动作把倒数再次送到 1；up 上滚回 O 的投影格并在同一边界复燃，#1 立即参加本次缩短。"
+    win: {type: event_occurs, event: never}
+    layout: |
+      ###########
+      #o........#
+      #.@#......#
+      #.111ROL22#
+      #.....#...#
+      #..#..#...#
+      #.........#
+      ###########
+    actions: [left, right, left, right, down, left, down, down, right, up]

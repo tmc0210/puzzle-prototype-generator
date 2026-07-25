@@ -104,7 +104,7 @@ identity_counterfactuals:
 
 `exact version` 是 Designer 完成当前设计、自查并准备送审时发布的不可变快照，不是每次施工改动的编号。首次发布前可以没有 exact；退回设计后，账本保留上一份已发布 exact 作为修订依据，工作中的布局不取得版本身份。下一份完整快照发布时才形成新的 exact version。
 
-修改已发布 exact 的 layout、start、goal、胜利条件、核心机制使用或玩家关系，会使它的旧证据失效。旧 exact 只保存送审与审查 provenance，最终只有一个完成全部门禁的 delivery version 进入人类试玩。
+设计阶段修改已发布 exact 的 layout、start、goal、胜利条件、核心机制使用或玩家关系，会使它的旧证据失效。候选被接受后的原型专属提交前流程不是继续设计：它只能执行 authority docs 预先列出的机械检查与规范化变换；变换没有取得完整的 review-preserving 证明就不应用。最终只有一个完成全部门禁的 delivery version 进入人类试玩。
 
 ## 审美的非补偿性
 

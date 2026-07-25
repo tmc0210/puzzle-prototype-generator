@@ -1,0 +1,43 @@
+exploration_id: candle_wall_reignite_countdown_control_explore_001
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件。"
+experience_seed: >-
+  玩家需要通过分析主动使用墙灭火和重燃机制来控制蜡烛的参与倒数时机；目标是
+  机制暴露到 shared_fire_and_reignition，允许把已掌握的前序机制组合得复杂，
+  但局部材料只探索墙体遮芯、共享倒数与火源复燃的可拼接结构关系。
+player_prior:
+  - 玩家已掌握 basic_candle_manipulation 及其衍生的轴推、侧滚、共享倒数和燃烧计算。
+  - 玩家已掌握 wall_dousing 及边界灭火避开当轮缩短、全灭仍继续倒数。
+  - 不把 later branches 的知识提供给 Explorer。
+allowed_mechanisms:
+  - basic_candle_manipulation
+  - wall_dousing
+  - shared_fire_and_reignition
+allowed_tools:
+  - runtime adapter
+  - ASCII parser/renderer
+  - solver
+  - complete reachable graph
+  - replay and event probes
+  - exposure audit
+source_boundary:
+  allowed:
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - src/prototypes/candle_sokoban/runtime.ts
+    - src/prototypes/candle_sokoban/tools.ts
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+  forbidden:
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - prototypes/candle_sokoban/reports/**
+    - C:/Users/ASUS/Downloads/CANDLE_SOKOBAN_KNOWLEDGE.md
+task_lexicon_ref: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration/lexicon_index.md

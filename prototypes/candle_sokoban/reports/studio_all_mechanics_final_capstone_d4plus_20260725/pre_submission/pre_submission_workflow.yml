@@ -1,0 +1,59 @@
+design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+reviewed_exact_version: v1
+delivery_exact_version: v1
+workflow_results:
+  - workflow_id: strict_exposure_gate_recheck
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 当前唯一候选已获 Critic 接受，准备交付同一 v1。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    operations_performed:
+      - 对冻结 v1 layout 重跑 rolling_contact_chain exposure audit；57,796 节点、164,149 边。
+      - 核对 exact、layout digest、sequence digest、graph completeness 与 forbidden hits。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/strict_exposure_gate_recheck.yml
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/strict_exposure_gate_recheck.json
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: authority contract 预定义为只读重跑；v1 layout/digest 不变，complete/pass 且无 forbidden hit。
+    status: completed
+  - workflow_id: runtime_conformance_recheck
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: 当前唯一候选准备进入待玩列表。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    operations_performed:
+      - npm run check 通过。
+      - npm run candle:conformance 的全部已实现检查通过；合同声明 unavailable 项保持 unavailable。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/runtime_conformance_recheck.yml
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: authority contract 预定义为只读检查；没有修改 v1。
+    status: completed
+  - workflow_id: playable_delivery_build
+    designer_assignment_ref: null
+    applicability: applicable
+    applicability_basis: delivery v1 写入 studio/levels.yml 与 playable_queue.yml 后必须执行。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    operations_performed:
+      - 将唯一 delivery v1 写入 prototypes/candle_sokoban/studio/levels.yml。
+      - 将相同 level id 以 pending_playtest 加入 playable_queue.yml。
+      - 运行 npm run candle:playable:build，并核验 4 个可玩关 replay coverage。
+      - 核验 source、level id 与 playable/data.json 可解析。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/playable_delivery_build.yml
+      - prototypes/candle_sokoban/studio/levels.yml
+      - prototypes/candle_sokoban/playable_queue.yml
+      - prototypes/candle_sokoban/playable/data.json
+    version_effect: unchanged
+    review_effect: preserved
+    review_effect_basis: authority contract 预定义为交付构建检查；只接入冻结 v1，layout/digest 不变。
+    status: completed
+overall_status: completed
+return_to_design_required: false

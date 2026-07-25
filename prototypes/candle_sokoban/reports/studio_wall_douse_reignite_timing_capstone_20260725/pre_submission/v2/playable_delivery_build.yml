@@ -1,0 +1,23 @@
+workflow_id: playable_delivery_build
+design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+delivery_exact_version: v2
+level_source: prototypes/candle_sokoban/studio/levels.yml
+playable_queue: prototypes/candle_sokoban/playable_queue.yml
+queue_entry:
+  source: studio
+  level_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001_V2
+  status: pending_playtest
+commands:
+  - command: npm run candle:playable:build
+    exit_code: 0
+    result: built
+  - command: npm run candle:playable:check-replays
+    exit_code: 0
+    result: replay_coverage_complete_for_3_playable_levels
+resolution_check:
+  playable_data_ref: prototypes/candle_sokoban/playable/data.json
+  source_resolved: true
+  level_id_resolved: true
+  delivery_version_matches: true
+status: completed
