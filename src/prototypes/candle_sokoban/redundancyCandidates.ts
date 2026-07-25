@@ -7,6 +7,7 @@ export type CandleRedundancyCandidate = {
   kind:
     | "whole_candle"
     | "single_brazier"
+    | "vacated_object_floor_region"
     | "detached_empty_region"
     | "single_entry_floor_region"
     | "outer_outline_band";
@@ -16,13 +17,20 @@ export type CandleRedundancyCandidate = {
 
 export type CandleRedundancyCandidateReport = {
   schemaVersion: 1;
-  method: "candle_redundancy_units_v1";
+  method: "candle_redundancy_units_v2";
   levelId: string;
   width: number;
   height: number;
   player: RedundancyCell;
   candidates: CandleRedundancyCandidate[];
   counts: Record<CandleRedundancyCandidate["kind"], number>;
+};
+
+export type CandleRedundancyDiscoveryOptions = {
+  vacatedObjectRegions?: Array<{
+    id: string;
+    cells: RedundancyCell[];
+  }>;
 };
 
 const directions = [
@@ -35,6 +43,7 @@ const directions = [
 export function discoverCandleRedundancyCandidates(
   layout: string,
   levelId = "CANDLE_REDUNDANCY_CHECK",
+  options: CandleRedundancyDiscoveryOptions = {},
 ): CandleRedundancyCandidateReport {
   const lines = normalizeLines(layout, levelId);
   const state = parseLevel({
@@ -47,6 +56,7 @@ export function discoverCandleRedundancyCandidates(
   const candidates = [
     ...wholeCandleCandidates(state),
     ...singleBrazierCandidates(state),
+    ...vacatedObjectFloorRegions(lines, options.vacatedObjectRegions ?? []),
     ...detachedEmptyRegions(lines, state.player),
     ...singleEntryFloorRegions(lines, state.player),
     ...outerOutlineBands(lines),
@@ -56,6 +66,7 @@ export function discoverCandleRedundancyCandidates(
   const counts: CandleRedundancyCandidateReport["counts"] = {
     whole_candle: 0,
     single_brazier: 0,
+    vacated_object_floor_region: 0,
     detached_empty_region: 0,
     single_entry_floor_region: 0,
     outer_outline_band: 0,
@@ -64,7 +75,7 @@ export function discoverCandleRedundancyCandidates(
 
   return {
     schemaVersion: 1,
-    method: "candle_redundancy_units_v1",
+    method: "candle_redundancy_units_v2",
     levelId,
     width: state.width,
     height: state.height,
@@ -79,7 +90,7 @@ function wholeCandleCandidates(state: CandleSokobanState): CandleRedundancyCandi
     id: `whole_candle:${candle.id}`,
     kind: "whole_candle",
     cells: sortCells(candle.bodyCells.map((cell) => ({ ...cell }))),
-    operations: ["remove", "wallify"],
+    operations: ["remove"],
   }));
 }
 
@@ -88,8 +99,29 @@ function singleBrazierCandidates(state: CandleSokobanState): CandleRedundancyCan
     id: `single_brazier:${pointKey(brazier.position)}`,
     kind: "single_brazier",
     cells: [{ ...brazier.position }],
-    operations: ["remove", "wallify"],
+    operations: ["remove"],
   }));
+}
+
+function vacatedObjectFloorRegions(
+  lines: string[],
+  regions: NonNullable<CandleRedundancyDiscoveryOptions["vacatedObjectRegions"]>,
+): CandleRedundancyCandidate[] {
+  return regions.map((region) => {
+    const cells = sortCells(region.cells.map((cell) => ({ ...cell })));
+    if (cells.length === 0) throw new Error(`腾空对象区域 ${region.id} 不能为空`);
+    for (const { x, y } of cells) {
+      if (!isOrdinaryFloor(lines[y]?.[x] ?? "#")) {
+        throw new Error(`腾空对象区域 ${region.id} 的 (${x},${y}) 不是普通空地`);
+      }
+    }
+    return {
+      id: `vacated_object_floor_region:${region.id}:${cellListId(cells)}`,
+      kind: "vacated_object_floor_region" as const,
+      cells,
+      operations: ["wallify" as const],
+    };
+  });
 }
 
 function detachedEmptyRegions(
@@ -352,9 +384,10 @@ function compareCandidates(
   const order: Record<CandleRedundancyCandidate["kind"], number> = {
     whole_candle: 0,
     single_brazier: 1,
-    detached_empty_region: 2,
-    single_entry_floor_region: 3,
-    outer_outline_band: 4,
+    vacated_object_floor_region: 2,
+    detached_empty_region: 3,
+    single_entry_floor_region: 4,
+    outer_outline_band: 5,
   };
   return order[left.kind] - order[right.kind]
     || compareCells(left.cells[0]!, right.cells[0]!);

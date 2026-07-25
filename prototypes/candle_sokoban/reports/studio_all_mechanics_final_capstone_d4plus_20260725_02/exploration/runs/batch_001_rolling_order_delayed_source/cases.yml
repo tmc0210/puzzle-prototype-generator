@@ -1,0 +1,77 @@
+runId: batch_001_rolling_order_delayed_source
+title: "滚动接触顺序写入较晚火源格"
+notes: >-
+  两格横烛向下滚两格；先灭后燃与先燃后灭改变第一个共享边界的退焰点火，
+  并在第二个共享边界把差异搬到同一格的火焰/烛身状态。最后一次向左输入是最小 consumer。
+defaults:
+  evidence_tool: try-inputs
+  inputs: [down, up, right, left, down, right, down, down, down, left, left]
+cases:
+  - id: wall_then_brazier_positive
+    family: rolling_order_delayed_source
+    variant: wall_then_brazier
+    changed_variable: "滚动烛芯轨道顺序为墙后接已亮火盆"
+    contrast_with: [brazier_then_wall_reversed, wall_then_floor_no_reignite, floor_then_brazier_prelit_degenerate]
+    notes: "正例：先灭火、后复燃；第一个边界退焰点燃竖烛，第二个边界形成较晚火源格，最终输入合法并死亡。"
+    layout_file: wall_then_brazier_positive.layout
+    layout: |
+      #########
+      #..@....#
+      #.L1....#
+      ##......#
+      #O......#
+      ##u.....#
+      ##2.....#
+      ##2...o.#
+      #########
+  - id: brazier_then_wall_reversed
+    family: rolling_order_delayed_source
+    variant: brazier_then_wall
+    changed_variable: "交换已亮火盆与墙在滚动轨道上的先后"
+    contrast_with: wall_then_brazier_positive
+    notes: "顺序反例：终点前最后接触是墙，横烛不参加边界；竖烛不点燃不缩短，最终输入因左墙封住侧滚而非法。"
+    layout_file: brazier_then_wall_reversed.layout
+    layout: |
+      #########
+      #..@....#
+      #.L1....#
+      #O......#
+      ##......#
+      ##u.....#
+      ##2.....#
+      ##2...o.#
+      #########
+  - id: wall_then_floor_no_reignite
+    family: rolling_order_delayed_source
+    variant: wall_then_floor
+    changed_variable: "保留遮蔽点但移除复燃源"
+    contrast_with: wall_then_brazier_positive
+    notes: "少源反例：横烛在小步 1 熄灭后保持未燃，较晚火源格不形成。"
+    layout_file: wall_then_floor_no_reignite.layout
+    layout: |
+      #########
+      #..@....#
+      #.L1....#
+      ##......#
+      #.......#
+      ##u.....#
+      ##2.....#
+      ##2...o.#
+      #########
+  - id: floor_then_brazier_prelit_degenerate
+    family: rolling_order_delayed_source
+    variant: floor_then_brazier
+    changed_variable: "移除遮蔽点，让横烛预燃直达边界"
+    contrast_with: wall_then_brazier_positive
+    notes: "退化正对照：后续几何与正例相同，但没有滚动途中参与集合改写，只是预燃横烛的普通边界缩短。"
+    layout_file: floor_then_brazier_prelit_degenerate.layout
+    layout: |
+      #########
+      #..@....#
+      #.L1....#
+      #.......#
+      #O......#
+      ##u.....#
+      ##2.....#
+      ##2...o.#
+      #########

@@ -1,0 +1,99 @@
+runId: batch_wall_reignite_001
+title: "墙体遮芯后的共享倒数复燃局部结构谱"
+notes: "首批 task-local 正向材料：比较墙边熄灭、火盆/外露烛芯同格复燃、错一格退化与倒数边界结算。"
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 24
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: wall_then_brazier_reignite
+    family: wall_stop_shared_countdown_reignite
+    variant: brazier_same_cell_midcycle
+    changed_variable: "未燃竖蜡烛上推后的烛芯与已点亮火盆同列同格"
+    contrast_with: [wall_then_source_offset, wall_then_wick_reignite]
+    notes: "先将横向燃烧蜡烛推四格，使烛芯贴墙熄灭；再把竖向未燃蜡烛上推一格到 y1 的已点亮火盆。"
+    layout: |
+      ##############
+      #@11R....#OOo#
+      #............#
+      #..........u.#
+      #..........2.#
+      #............#
+      ##############
+    actions: [right, right, right, right, down, right, right, right, right, right, down, down, down, right, up, left, right, left, right, left]
+  - id: wall_then_wick_reignite
+    family: shared_countdown_reignite_source
+    variant: exposed_wick_same_cell_midcycle
+    changed_variable: "未燃竖蜡烛上推后的烛芯与另一根外露燃烛芯同格"
+    contrast_with: [wall_then_brazier_reignite, source_kind_swap]
+    notes: "局部把火盆火源换成另一根较长燃烧蜡烛的外露烛芯；第三步上推时在倒数中段同格点火。"
+    layout: |
+      #########
+      #o......#
+      #111R...#
+      #.......#
+      #....u..#
+      #....2..#
+      #....@..#
+      #.......#
+      #########
+    actions: [left, right, up]
+  - id: wall_then_source_offset
+    family: wall_stop_shared_countdown_reignite
+    variant: source_one_column_offset
+    changed_variable: "火源与竖向未燃蜡烛烛芯错开一列"
+    contrast_with: [wall_then_brazier_reignite, wall_then_wick_reignite]
+    notes: "保持墙边停位、倒数路径和上推站位，只把目标列的已点亮火盆换成相邻列火盆；上推后没有同格火源。"
+    layout: |
+      ##############
+      #@11R....#Oo.#
+      #............#
+      #..........u.#
+      #..........2.#
+      #............#
+      ##############
+    actions: [right, right, right, right, down, right, right, right, right, right, down, down, down, right, up, left, right, left, right, left]
+  - id: boundary_brazier_ignite
+    family: shared_countdown_boundary_reignite
+    variant: brazier_ignite_at_countdown_one
+    changed_variable: "复燃动作发生在共享倒数边界而非中段"
+    contrast_with: wall_then_brazier_reignite
+    notes: "先用四次合法走动把倒数降到 1，再把竖向未燃蜡烛上推到已点亮火盆；同一行动内复燃并参加边界缩短。"
+    layout: |
+      #########
+      #o..O...#
+      #.......#
+      #...u...#
+      #...2...#
+      #...@...#
+      #########
+    actions: [left, right, left, right, up]
+  - id: wall_douse_boundary_avoid
+    family: wall_stop_shared_countdown_reignite
+    variant: wall_douse_survives_boundary
+    changed_variable: "墙遮芯发生后，下一行动跨过倒数边界且蜡烛保持未燃"
+    contrast_with: boundary_brazier_ignite
+    notes: "前四次轴推把横向燃烧蜡烛的烛芯送入墙；第五次只走动，观察共享倒数边界不缩短未燃蜡烛。"
+    layout: |
+      ###########
+      #@11R...#o#
+      #.........#
+      #.........#
+      ###########
+    actions: [right, right, right, down, down]
+  - id: source_kind_swap
+    family: shared_countdown_boundary_reignite
+    variant: wick_source_at_countdown_one
+    changed_variable: "边界复燃的来源由火盆换成外露燃烛芯"
+    contrast_with: boundary_brazier_ignite
+    notes: "倒数边界前先走四步；第五步将竖向未燃蜡烛推到另一根燃烧 R 的外露烛芯投影格。"
+    layout: |
+      #########
+      #111R.o.#
+      #.......#
+      #....u..#
+      #....2..#
+      #....@..#
+      #########
+    actions: [left, right, left, right, up]

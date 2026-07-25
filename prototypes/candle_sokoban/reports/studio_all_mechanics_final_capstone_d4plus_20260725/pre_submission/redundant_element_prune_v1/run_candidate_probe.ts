@@ -10,8 +10,16 @@ import { replayInputSequence } from "../../../../../../src/workflows/inputSequen
 const taskRoot = path.resolve(
   "prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725",
 );
-const baselinePath = path.join(taskRoot, "candidate/versions/v1/layout.txt");
-const outputDir = path.join(taskRoot, "pre_submission/redundant_element_prune_v1/probes");
+const baselinePath = process.argv[2]
+  ? path.resolve(process.argv[2])
+  : path.join(taskRoot, "candidate/versions/v1/layout.txt");
+const reportName = process.argv[3] ?? "canonical_probe.json";
+const probeNamespace = process.argv[4];
+const outputDir = path.join(
+  taskRoot,
+  "pre_submission/redundant_element_prune_v1/probes",
+  ...(probeNamespace ? [probeNamespace] : []),
+);
 const inputs = [
   "right", "up", "right", "right", "down",
   "up", "left", "left", "down", "right",
@@ -77,7 +85,7 @@ const report = {
   probes,
 };
 await writeFile(
-  path.join(taskRoot, "pre_submission/redundant_element_prune_v1/canonical_probe.json"),
+  path.join(taskRoot, "pre_submission/redundant_element_prune_v1", reportName),
   `${JSON.stringify(report, null, 2)}\n`,
   "utf8",
 );

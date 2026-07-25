@@ -67,19 +67,23 @@ prototype_specific_workflows:
       - prototypes/candle_sokoban/docs/designer_contract.md
       - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
     candidate_discovery:
-      method: candle_redundancy_units_v1
+      method: candle_redundancy_units_v2
+      stage_order:
+        - remove_whole_objects_to_floor
+        - wallify_vacated_or_structural_floor_regions
+        - trim_redundant_outer_wall_bands
       unit_kinds:
         - whole_candle
         - single_brazier
+        - vacated_object_floor_region
         - detached_empty_region
         - single_entry_floor_region
         - outer_outline_band
       forbidden_strategy: "不得逐格枚举全部普通空地，不得让 Designer 判断格子或对象职责。"
     allowed_operations:
       - whole_candle_to_floor
-      - whole_candle_to_wall
       - single_brazier_to_floor
-      - single_brazier_to_wall
+      - vacated_object_floor_region_to_wall
       - maximal_floor_region_to_wall
       - maximal_outer_region_or_band_trim
     hard_checks:
@@ -93,6 +97,7 @@ prototype_specific_workflows:
       allowed_version_effects: [unchanged, review_preserving_change]
       acceptance_preserved: true
       failed_or_unproven_counterfactual: retain_candidate_unit_without_change
+      mechanical_pass_with_explicit_aesthetic_value: retain_as_retained_aesthetic_without_review
 
   - id: strict_exposure_gate_recheck
     kind: pre_submission_check

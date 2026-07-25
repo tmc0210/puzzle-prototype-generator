@@ -1,0 +1,56 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+exact_version: v2
+level_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001_v2
+layout_ref: layout.txt
+layout_sha256: 8bc7f838a06720b7e238f4e3b69efde4288be9e0d95cb6958b15eb56615e4dce
+global_burn_cycle: 5
+win_condition: all_braziers_lit
+canonical_inputs:
+  - right
+  - up
+  - right
+  - right
+  - down
+  - up
+  - left
+  - left
+  - down
+  - right
+  - up
+  - down
+  - up
+  - right
+  - right
+  - down
+  - right
+  - down
+  - right
+  - down
+  - left
+  - left
+  - left
+expected_cost: 23
+expected_depth: 23
+expected_final_win: true
+critical_steps:
+  - step: 5
+    input: down
+    responsibility: >-
+      长烛在同一侧滚内由左向单格烛烛身灭火、未燃重曝、由 x6,y6 亮盆复燃，
+      并在本动作边界缩短为单格烛。
+  - step: 10
+    input: right
+    responsibility: 竖向长烛滚到 x5 列，烛芯在 x5,y6 从缩短后的长烛取火并参加边界缩短。
+  - step: 16
+    input: down
+    responsibility: 把已取得火的竖烛下推，使其烛身成为左向单格钥匙后续取火准备的一部分。
+  - step: 18
+    input: down
+    responsibility: 将开局屏体/关键烛侧滚到终局行，其左侧烛芯与竖烛形成后段接力关系。
+  - step: 20
+    input: down
+    responsibility: 边界缩短竖烛并以退焰点亮左向单格钥匙。
+  - step: 23
+    input: left
+    responsibility: 第三次横推钥匙，点亮 x2,y4 最后火盆并满足 all_braziers_lit。

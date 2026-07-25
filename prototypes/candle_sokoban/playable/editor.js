@@ -244,6 +244,12 @@ function isWin(state, winCondition = { type: "all_braziers_lit" }) {
   }
   return false;
 }
+function isCandleSearchTerminal(state, winCondition = { type: "all_braziers_lit" }) {
+  if (state.dead || isWin(state, winCondition)) {
+    return true;
+  }
+  return winCondition.type === "all_braziers_lit" && state.candles.length === 0;
+}
 function isEventWin(events, winCondition) {
   const event = winCondition?.event;
   return winCondition?.type === "event_occurs" && event !== void 0 ? eventsMatchPattern(events, event) : false;
@@ -424,7 +430,7 @@ function settleContacts(state, events, previousProjections) {
 }
 function advanceGlobalBurnCountdown(state, events) {
   const previous = state.globalBurnCountdown;
-  if (state.candles.every((candle) => !candle.lit)) {
+  if (state.candles.length > 0 && state.candles.every((candle) => !candle.lit)) {
     events.push(`countdown_without_lit_candle:${previous}`);
   }
   if (previous > 1) {
@@ -644,7 +650,10 @@ function createCandleSokobanRuntime(mechanic) {
   return {
     defaultWin: mechanic.win,
     key: stateKey,
-    actions: (state) => state.dead || isWin(state, mechanic.win) ? [] : legalInputs(mechanic),
+    actions: (state, options) => {
+      const winCondition = options.winCondition ?? mechanic.win;
+      return isCandleSearchTerminal(state, winCondition) ? [] : legalInputs(mechanic);
+    },
     step: (state, action, options) => {
       const result = step(mechanic, state, action, options);
       return {
@@ -3210,7 +3219,7 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "mrzn8ht4" : String(Date.now());
+var buildId = true ? "mrzpr8tt" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);

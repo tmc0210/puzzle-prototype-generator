@@ -28,19 +28,19 @@ const baselineExposure = await readJson<RawExposure>(
   path.join(taskRoot, "candidate/versions/v1/diagnostics/exposure_audit.json"),
 );
 const finalExposure = await readJson<RawExposure>(
-  path.join(taskRoot, "pre_submission/redundant_element_prune_v1/final_delivery_exposure_audit.json"),
+  path.join(taskRoot, "pre_submission/redundant_element_prune_v1/final_exposure_audit.json"),
 );
 const baselineReplay = await readJson<Replay>(
   path.join(taskRoot, "candidate/versions/v1/canonical_replay.json"),
 );
 const finalReplay = await readJson<Replay>(
-  path.join(taskRoot, "pre_submission/redundant_element_prune_v1/final_delivery_replay/canonical_replay.json"),
+  path.join(taskRoot, "pre_submission/redundant_element_prune_v1/final_compact_replay/canonical_replay.json"),
 );
 const baselineFamily = await readJson<any>(
   path.join(taskRoot, "candidate/versions/v1/diagnostics/complete_graph_and_solution_family.json"),
 );
 const finalFamily = await readJson<any>(
-  path.join(taskRoot, "pre_submission/redundant_element_prune_v1/final_delivery_graph.json"),
+  path.join(taskRoot, "pre_submission/redundant_element_prune_v1/final_compact_graph.json"),
 );
 
 const nodes = finalExposure.raw_graph.nodes;

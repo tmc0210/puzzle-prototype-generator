@@ -1,0 +1,32 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
+reviewed_exact_version: v1
+delivery_exact_version: v2
+immutable: true
+layout_ref: layout.txt
+layout_sha256: 8bc7f838a06720b7e238f4e3b69efde4288be9e0d95cb6958b15eb56615e4dce
+version_effect: review_preserving_change
+normalization:
+  - 删除 candle#single4；对象擦除投影证明它只自行点燃、参加自身燃烧并燃尽。
+  - 在空地阶段把该对象腾出的 x6,y7 墙化；完整图逐边证明没有新增墙接触事件。
+  - 在墙化后的 layout 上裁去左右各一列与底部一行冗余外墙；所有保留对象仅做 x-1 坐标平移。
+artifacts:
+  - level.yml
+  - solve_instance.yml
+  - canonical_replay.json
+  - canonical_replay.md
+  - diagnostics/exposure_audit.json
+  - diagnostics/review_preservation_projection.json
+  - diagnostics/redundancy_candidates.json
+review_provenance:
+  submission_packet_ref: ../v1/submission_packet.yml
+  evidence_review_ref: ../../../evidence/v1/recheck/evidence_review.yml
+  critic_review_ref: ../../../critic/v1/critic_review.md
+preservation_contract:
+  canonical_projection_equal: true
+  winning_representative_inputs_equal: true
+  shortest_cost_preserved: 23
+  graph_status: complete
+  exposure_verdict: pass
+  forbidden_hits: 0
+  new_projected_mechanism_events: 0

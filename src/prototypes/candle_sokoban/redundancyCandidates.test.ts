@@ -21,7 +21,7 @@ assert.equal(report.counts.single_brazier, 8);
 
 const candles = report.candidates.filter((candidate) => candidate.kind === "whole_candle");
 assert.deepEqual(candles.map((candidate) => candidate.cells.length), [3, 4, 5]);
-assert.ok(candles.every((candidate) => candidate.operations.join(",") === "remove,wallify"));
+assert.ok(candles.every((candidate) => candidate.operations.join(",") === "remove"));
 
 const outline = report.candidates.filter((candidate) => candidate.kind === "outer_outline_band");
 assert.equal(outline.length, 2);
@@ -48,5 +48,19 @@ assert.ok(compact.candidates.some((candidate) =>
     { x: 3, y: 5 },
   ]),
 ));
+
+const staged = discoverCandleRedundancyCandidates(v3, "fixture-v3-staged", {
+  vacatedObjectRegions: [{ id: "removed-candle", cells: [{ x: 2, y: 4 }] }],
+});
+assert.equal(staged.counts.vacated_object_floor_region, 1);
+assert.deepEqual(
+  staged.candidates.find((candidate) => candidate.kind === "vacated_object_floor_region"),
+  {
+    id: "vacated_object_floor_region:removed-candle:2,4:1",
+    kind: "vacated_object_floor_region",
+    cells: [{ x: 2, y: 4 }],
+    operations: ["wallify"],
+  },
+);
 
 console.log("candle redundancy candidate tests passed");

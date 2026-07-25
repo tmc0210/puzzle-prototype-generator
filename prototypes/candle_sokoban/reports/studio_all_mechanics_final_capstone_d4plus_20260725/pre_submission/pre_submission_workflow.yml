@@ -1,59 +1,185 @@
 design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725
 candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001
 reviewed_exact_version: v1
-delivery_exact_version: v1
+delivery_exact_version: v2
 workflow_results:
-  - workflow_id: strict_exposure_gate_recheck
-    designer_assignment_ref: null
+  - workflow_id: redundant_element_prune
     applicability: applicable
-    applicability_basis: 当前唯一候选已获 Critic 接受，准备交付同一 v1。
+    applicability_basis: Candle delivery 前固定运行；用户另指出当前关存在冗余。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/redundant_element_prune.md
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery:
+      method: candle_redundancy_units_v2
+      stage_order:
+        - remove_whole_objects_to_floor
+        - wallify_vacated_or_structural_floor_regions
+        - trim_redundant_outer_wall_bands
+      candidate_units:
+        - {kind: whole_candle, id: candle#2, cells: [[4,2], [4,3], [4,4], [4,5]]}
+        - {kind: whole_candle, id: candle#1, cells: [[5,2], [6,2]]}
+        - {kind: whole_candle, id: candle#single2, cells: [[7,3]]}
+        - {kind: whole_candle, id: candle#single4, cells: [[6,7]]}
+        - {kind: single_brazier, id: brazier_3_4, cells: [[3,4]]}
+        - {kind: single_brazier, id: brazier_7_6, cells: [[7,6]]}
+        - {kind: vacated_object_floor_region, id: removed_candle_single4, cells: [[6,7]]}
+        - {kind: detached_empty_region, id: after_vacated_wall_detached_11, cells: [[5,3], [6,3], [8,3], [5,4], [6,4], [7,4], [8,4], [5,5], [6,5], [5,6], [6,6]]}
+        - {kind: single_entry_floor_region, id: after_vacated_wall_top_branch_7, cells: [[3,1], [4,1], [5,1], [6,1], [7,1], [3,2], [7,2]]}
+        - {kind: outer_outline_band, id: after_space_left, cells: left_x0}
+        - {kind: outer_outline_band, id: after_space_right, cells: right_x10}
+        - {kind: outer_outline_band, id: after_space_bottom, cells: bottom_y8}
+    operations_performed:
+      - 完整枚举 4 支蜡烛与 2 个火盆，只运行对象删为空地反事实；没有对象直改墙步骤。
+      - 删除 candle#single4；对象擦除后 canonical 的 24 个状态、23 步事件时间线与 reviewed v1 逐项相等。
+      - 在更新布局中把 candle#single4 腾出的 x6,y7 作为独立空地候选墙化。
+      - 空地墙化后重扫外框，裁去左右各一列和底部一行纯外墙，形成 9x8 delivery v2。
+      - 未采用审美保留；当前腾空格只形成无机制价值的底部缺口，墙化与裁边使轮廓更清楚。
+    candidates_checked:
+      - candidate_unit: whole_candle:candle#2
+        operation: remove
+        result: retained_counterfactual_failed
+        cheap_check: fail
+        canonical_timing_preserved: false
+        details: 23 步均合法但最终不胜。
+      - candidate_unit: whole_candle:candle#1
+        operation: remove
+        result: retained_counterfactual_failed
+        cheap_check: fail
+        canonical_timing_preserved: false
+        details: 只合法通过前 20 步且最终不胜。
+      - candidate_unit: whole_candle:candle#single2
+        operation: remove
+        result: retained_counterfactual_failed
+        cheap_check: fail
+        canonical_timing_preserved: false
+        details: 只合法通过前 22 步且最终不胜。
+      - candidate_unit: whole_candle:candle#single4
+        operation: remove
+        result: applied
+        cheap_check: pass
+        complete_graph: complete
+        canonical_timing_preserved: true
+        solution_family_preserved: true
+        new_contact_events: []
+        exposure_verdict: pass
+        details: >-
+          原版只多出 shrink_ignite:candle#single4、它参与的 simultaneous_burn 与其 burn_out；
+          擦除这些自有事件后，保留对象的状态和事件逐步相同。删除版 49,560 状态、141,784 边、
+          5 胜态、最短 23；五个胜态代表 inputs 与 v1 完全相同。
+      - candidate_unit: single_brazier:brazier_3_4
+        operation: remove
+        result: retained_counterfactual_failed
+        cheap_check: fail
+        canonical_timing_preserved: false
+        details: 删除后 initial_win=true，目标在开局即满足，构成直接机制泄漏。
+      - candidate_unit: single_brazier:brazier_7_6
+        operation: remove
+        result: retained_counterfactual_failed
+        cheap_check: fail
+        canonical_timing_preserved: false
+        details: 只合法通过前 15 步且最终不胜；后段复燃源不可删。
+      - candidate_unit: detached_empty_region:after_vacated_wall_detached_11
+        operation: wallify
+        result: retained_counterfactual_failed
+        cheap_check: fail
+        canonical_timing_preserved: false
+        details: 只合法通过前 4 步。
+      - candidate_unit: single_entry_floor_region:after_vacated_wall_top_branch_7
+        operation: wallify
+        result: retained_counterfactual_failed
+        cheap_check: fail
+        canonical_timing_preserved: false
+        details: parser 检出开局静默接触结算 extinguish_by_wall:candle#1。
+      - candidate_unit: vacated_object_floor_region:removed_candle_single4
+        operation: wallify
+        result: applied
+        cheap_check: pass
+        complete_graph: complete
+        canonical_timing_preserved: true
+        solution_family_preserved: true
+        new_contact_events: []
+        exposure_verdict: pass
+        details: 墙化后完整图 45,041 状态、129,793 边、5 胜态、最短 23；全图投影没有新增事件字符串。
+      - candidate_unit: outer_outline_band:after_space_left_right_bottom
+        operation: trim
+        result: applied
+        cheap_check: pass
+        complete_graph: complete
+        canonical_timing_preserved: true
+        solution_family_preserved: true
+        new_contact_events: []
+        exposure_verdict: pass
+        details: 只改变坐标原点和纯外墙尺寸；组合后完整图与墙化版同构。
+    retained_aesthetic: []
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/redundant_element_prune_v1/candidates.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/redundant_element_prune_v1/candidates_after_object_remove.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/redundant_element_prune_v1/candidates_after_space_wallify.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/redundant_element_prune_v1/canonical_probe.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/redundant_element_prune_v1/after_object_remove_probe.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/redundant_element_prune_v1/after_space_wallify_probe.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/redundant_element_prune_v1/projection_audit.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/redundant_element_prune_v1/final_exposure_audit.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v2/delivery_manifest.yml
+    version_effect: review_preserving_change
+    acceptance_preserved: true
+    preservation_basis: >-
+      v2 按固定三阶段仅删除可擦除对象、墙化其腾空格并裁纯外墙。canonical 状态/事件投影相等；
+      完整图 complete，最短成本和五个胜态代表 inputs 不变，所有剩余 required-winning 事件及顺序成立；
+      exposure complete/pass、forbidden_hits=0，新增墙在全图没有产生新机制事件。
+    status: completed
+
+  - workflow_id: strict_exposure_gate_recheck
+    applicability: applicable
+    applicability_basis: delivery v2 已形成，必须核对当前 exact 的 exposure 硬门。
     authority_docs:
       - prototypes/candle_sokoban/docs/designer_contract.md
       - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery: null
     operations_performed:
-      - 对冻结 v1 layout 重跑 rolling_contact_chain exposure audit；57,796 节点、164,149 边。
-      - 核对 exact、layout digest、sequence digest、graph completeness 与 forbidden hits。
+      - 对 v2 运行 rolling_contact_chain exposure audit，完整保存 45,041 节点和 129,793 边。
+      - 核对 layout digest=8bc7f838a06720b7e238f4e3b69efde4288be9e0d95cb6958b15eb56615e4dce。
     artifact_refs:
-      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/strict_exposure_gate_recheck.yml
-      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/strict_exposure_gate_recheck.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/candidate/versions/v2/diagnostics/exposure_audit.json
     version_effect: unchanged
-    review_effect: preserved
-    review_effect_basis: authority contract 预定义为只读重跑；v1 layout/digest 不变，complete/pass 且无 forbidden hit。
+    acceptance_preserved: true
+    preservation_basis: 只读核对 delivery v2 的完整 exposure artifact，不改变布局。
     status: completed
+
   - workflow_id: runtime_conformance_recheck
-    designer_assignment_ref: null
     applicability: applicable
-    applicability_basis: 当前唯一候选准备进入待玩列表。
+    applicability_basis: delivery v2 准备进入待玩列表。
     authority_docs:
       - prototypes/candle_sokoban/docs/designer_contract.md
+    candidate_discovery: null
     operations_performed:
       - npm run check 通过。
-      - npm run candle:conformance 的全部已实现检查通过；合同声明 unavailable 项保持 unavailable。
+      - npm run candle:conformance 的所有已实现检查通过；未实现工具保持 unavailable。
     artifact_refs:
       - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/runtime_conformance_recheck.yml
     version_effect: unchanged
-    review_effect: preserved
-    review_effect_basis: authority contract 预定义为只读检查；没有修改 v1。
+    acceptance_preserved: true
+    preservation_basis: 只读类型与 runtime 一致性检查，不改变 v2 exact。
     status: completed
+
   - workflow_id: playable_delivery_build
-    designer_assignment_ref: null
     applicability: applicable
-    applicability_basis: delivery v1 写入 studio/levels.yml 与 playable_queue.yml 后必须执行。
+    applicability_basis: v2 替换 studio level 与 queue entry 后必须重建 playable。
     authority_docs:
       - prototypes/candle_sokoban/docs/designer_contract.md
+    candidate_discovery: null
     operations_performed:
-      - 将唯一 delivery v1 写入 prototypes/candle_sokoban/studio/levels.yml。
-      - 将相同 level id 以 pending_playtest 加入 playable_queue.yml。
-      - 运行 npm run candle:playable:build，并核验 4 个可玩关 replay coverage。
-      - 核验 source、level id 与 playable/data.json 可解析。
+      - 用 CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001_v2 替换旧 v1 待玩入口。
+      - 重建 runtime-backed playable 并核对 replay coverage 与 level id 解析。
     artifact_refs:
       - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725/pre_submission/playable_delivery_build.yml
       - prototypes/candle_sokoban/studio/levels.yml
       - prototypes/candle_sokoban/playable_queue.yml
       - prototypes/candle_sokoban/playable/data.json
     version_effect: unchanged
-    review_effect: preserved
-    review_effect_basis: authority contract 预定义为交付构建检查；只接入冻结 v1，layout/digest 不变。
+    acceptance_preserved: true
+    preservation_basis: 交付接线和 playable 构建不改变 v2 exact。
     status: completed
+
 overall_status: completed
-return_to_design_required: false
