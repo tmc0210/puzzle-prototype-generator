@@ -3214,7 +3214,7 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "mrz4dxqe" : String(Date.now());
+var buildId = true ? "ms00mek5" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);

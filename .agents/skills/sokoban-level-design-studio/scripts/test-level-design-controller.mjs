@@ -69,6 +69,31 @@ try {
     replay: { completed: true },
     final: { isWin: true },
   }, null, 2));
+  await write("replay-frames.json", JSON.stringify({
+    schema_version: 1,
+    candidate_id: "candidate-1",
+    exact_version: "exact-1",
+    source_layout_ref: ref("layout.txt"),
+    graph_status: "complete",
+    canonical_cost: 1,
+    canonical_inputs: ["right"],
+    frames: [
+      {
+        step: 0,
+        input: null,
+        events: [],
+        layout: beforeLayout,
+        win: false,
+      },
+      {
+        step: 1,
+        input: "right",
+        events: ["push", "win"],
+        layout: afterLayout,
+        win: true,
+      },
+    ],
+  }, null, 2));
   await write("submission.yml", "candidate_id: candidate-1\nexact_version: exact-1\n");
   await write("prior-0001.md", "# 前序 0001\n\n一个已知教学关。\n");
   await write("stage-source.md", "# 阶段内人类归档原件\n");
@@ -97,6 +122,18 @@ try {
     "",
     "- 审美分：4",
     "- 人类原评语：关系紧凑。",
+    "",
+  ].join("\n"));
+  await write("stage-calibration-empty.md", [
+    "---",
+    yaml({
+      critic_calibration_kind: "stage_local_difficulty",
+      covered_prior_course_refs: [],
+      difficulty_metadata: "stage_local",
+    }).trimEnd(),
+    "---",
+    "",
+    "当前 authority 声明的正式前序课程为空，因此没有阶段内来源或难度分。",
     "",
   ].join("\n"));
   await write("lexicon.md", "# fixture lexicon\n");
@@ -137,6 +174,7 @@ try {
 
   await write("brief.yml", yaml({
     design_task_id: "task-1",
+    prototype_id: "fixture",
     prototype_context: {
       confirmed_rules: ["玩家向右推动箱子"],
       win_condition: "箱子覆盖目标",
@@ -313,6 +351,180 @@ try {
     "source_archive_refs",
   ]) {
     if (baseText.includes(forbidden)) throw new Error(`Critic base 泄漏禁止字段：${forbidden}`);
+  }
+
+  const frameReplayCandidate = {
+    ...hardValidatedCandidate,
+    canonical_trace_ref: ref("replay-frames.json"),
+  };
+  await write("ledger-frame-replay.yml", yaml({
+    design_task_id: "task-1",
+    experience_brief_ref: ref("brief.yml"),
+    ...criticCalibration,
+    task_state: "reviewing",
+    candidate: frameReplayCandidate,
+    review_cycles: [],
+    attempts: [],
+  }));
+  run([
+    "prepare-critic",
+    "--ledger", ref("ledger-frame-replay.yml"),
+    "--attempt", "review-frame-replay",
+    "--out", ref("critic-base-frame-replay.yml"),
+  ]);
+  const frameBase = YAML.parse(
+    await readFile(path.join(fixtureRoot, "critic-base-frame-replay.yml"), "utf8"),
+  );
+  const frameTrace = frameBase.candidate.canonical_solution.mechanically_derived_trace;
+  if (
+    frameBase.prototype_id !== "fixture"
+    || frameTrace.length !== 1
+    || frameTrace[0].before_layout !== beforeLayout
+    || frameTrace[0].after_layout !== afterLayout
+    || frameTrace[0].input !== "right"
+  ) {
+    throw new Error("Controller 未正确投影 frames canonical replay");
+  }
+
+  await write("replay-frames-tampered.json", JSON.stringify({
+    schema_version: 1,
+    candidate_id: "candidate-1",
+    exact_version: "exact-1",
+    source_layout_ref: ref("layout.txt"),
+    canonical_cost: 1,
+    canonical_inputs: ["right"],
+    frames: [
+      { step: 0, input: null, events: [], layout: afterLayout, win: false },
+      { step: 1, input: "right", events: ["push", "win"], layout: afterLayout, win: true },
+    ],
+  }, null, 2));
+  await write("ledger-frame-replay-tampered.yml", yaml({
+    design_task_id: "task-1",
+    experience_brief_ref: ref("brief.yml"),
+    ...criticCalibration,
+    task_state: "reviewing",
+    candidate: {
+      ...hardValidatedCandidate,
+      canonical_trace_ref: ref("replay-frames-tampered.json"),
+    },
+    review_cycles: [],
+    attempts: [],
+  }));
+  const tamperedFrameOutput = run([
+    "prepare-critic",
+    "--ledger", ref("ledger-frame-replay-tampered.yml"),
+    "--attempt", "review-frame-tampered",
+    "--out", ref("critic-base-frame-tampered.yml"),
+  ], 1);
+  if (!tamperedFrameOutput.includes("冻结 layout 与 frames replay 首帧不一致")) {
+    throw new Error("Controller 未拒绝首帧被篡改的 frames replay");
+  }
+
+  await write("replay-frames-not-win.json", JSON.stringify({
+    schema_version: 1,
+    candidate_id: "candidate-1",
+    exact_version: "exact-1",
+    source_layout_ref: ref("layout.txt"),
+    canonical_cost: 1,
+    canonical_inputs: ["right"],
+    frames: [
+      { step: 0, input: null, events: [], layout: beforeLayout, win: false },
+      { step: 1, input: "right", events: ["push"], layout: afterLayout, win: false },
+    ],
+  }, null, 2));
+  await write("ledger-frame-replay-not-win.yml", yaml({
+    design_task_id: "task-1",
+    experience_brief_ref: ref("brief.yml"),
+    ...criticCalibration,
+    task_state: "reviewing",
+    candidate: {
+      ...hardValidatedCandidate,
+      canonical_trace_ref: ref("replay-frames-not-win.json"),
+    },
+    review_cycles: [],
+    attempts: [],
+  }));
+  const nonWinningFrameOutput = run([
+    "prepare-critic",
+    "--ledger", ref("ledger-frame-replay-not-win.yml"),
+    "--attempt", "review-frame-not-win",
+    "--out", ref("critic-base-frame-not-win.yml"),
+  ], 1);
+  if (!nonWinningFrameOutput.includes("frames replay 未完成胜利")) {
+    throw new Error("Controller 未拒绝末帧未胜利的 frames replay");
+  }
+
+  await write("brief-empty-prior.yml", yaml({
+    design_task_id: "task-1-empty-prior",
+    prototype_id: "fixture",
+    prototype_context: {
+      confirmed_rules: ["玩家向右推动箱子"],
+      win_condition: "箱子覆盖目标",
+      object_and_event_semantics: ["$ 是箱子，. 是目标"],
+    },
+    player_context: {
+      player_prior: ["基础推箱"],
+      known_prior_level_refs: [],
+    },
+    task_exploration: {
+      required_skill: "sokoban-mechanism-lab",
+      intent: "mechanism_explore",
+      publication_scope: "task_local",
+      dispatch_ref: ref("dispatch.yml"),
+      task_lexicon_ref: ref("lexicon.md"),
+      task_index_ref: ref("index.md"),
+      first_material_batch_ref: ref("batch.yml"),
+      selected_material_refs: [ref("material.md")],
+    },
+    level_brief: { expected_difficulty: 3 },
+  }));
+  await write("ledger-empty-prior.yml", yaml({
+    design_task_id: "task-1-empty-prior",
+    experience_brief_ref: ref("brief-empty-prior.yml"),
+    critic_stage_difficulty_calibration: {
+      view_refs: [ref("stage-calibration-empty.md")],
+      source_archive_refs: [],
+    },
+    critic_cross_stage_aesthetic_calibration: criticCalibration.critic_cross_stage_aesthetic_calibration,
+    task_state: "reviewing",
+    candidate: hardValidatedCandidate,
+    review_cycles: [],
+    attempts: [],
+  }));
+  run([
+    "prepare-critic",
+    "--ledger", ref("ledger-empty-prior.yml"),
+    "--attempt", "review-empty-prior",
+    "--out", ref("critic-base-empty-prior.yml"),
+  ]);
+  const emptyPriorBase = YAML.parse(
+    await readFile(path.join(fixtureRoot, "critic-base-empty-prior.yml"), "utf8"),
+  );
+  if (emptyPriorBase.stage_difficulty_calibration_refs?.[0] !== ref("stage-calibration-empty.md")) {
+    throw new Error("正式前序为空时，Critic packet 未携带诚实的空阶段校准 view");
+  }
+
+  await write("ledger-nonempty-prior-without-stage-source.yml", yaml({
+    design_task_id: "task-1",
+    experience_brief_ref: ref("brief.yml"),
+    critic_stage_difficulty_calibration: {
+      view_refs: [ref("stage-calibration.md")],
+      source_archive_refs: [],
+    },
+    critic_cross_stage_aesthetic_calibration: criticCalibration.critic_cross_stage_aesthetic_calibration,
+    task_state: "reviewing",
+    candidate: hardValidatedCandidate,
+    review_cycles: [],
+    attempts: [],
+  }));
+  const missingStageSourceOutput = run([
+    "prepare-critic",
+    "--ledger", ref("ledger-nonempty-prior-without-stage-source.yml"),
+    "--attempt", "review-missing-stage-source",
+    "--out", ref("critic-base-missing-stage-source.yml"),
+  ], 1);
+  if (!missingStageSourceOutput.includes("critic_stage_difficulty_calibration.source_archive_refs 不能为空")) {
+    throw new Error("正式前序非空时，Controller 未拒绝空的阶段内 archive 来源");
   }
 
   await write("aesthetic-calibration-invalid.md", [
@@ -579,6 +791,42 @@ try {
   }));
   run(["validate", "--ledger", ref("ready-ledger.yml")]);
 
+  await write("delivery-record.yml", yaml({
+    candidate_id: "candidate-1",
+    exact_version_basis: "exact-1",
+    producer: { agent_instance_id: "delivery-operator-1" },
+    authorization: { pre_commit_verification_ref: ref("pre-commit-verification.yml") },
+    status: "completed",
+  }));
+  await write("pre-commit-verification.yml", yaml({
+    candidate_id: "candidate-1",
+    exact_version_basis: "exact-1",
+    verifier: { agent_instance_id: "delivery-pre-verifier-1" },
+    verification_phase: "pre_commit",
+    overall_verdict: "supported",
+  }));
+  await write("post-commit-verification.yml", yaml({
+    candidate_id: "candidate-1",
+    exact_version_basis: "exact-1",
+    verifier: { agent_instance_id: "delivery-post-verifier-1" },
+    verification_phase: "post_commit",
+    overall_verdict: "supported",
+  }));
+  await write("queue-activation.yml", yaml({
+    candidate_id: "candidate-1",
+    exact_version_basis: "exact-1",
+    authorization: { post_commit_verification_ref: ref("post-commit-verification.yml") },
+    activation: {
+      expected_sha256: "a".repeat(64),
+      actual_sha256: "a".repeat(64),
+      source: "fixture-levels",
+      level_id: "candidate-1",
+      status: "pending_playtest",
+    },
+    status: "completed",
+  }));
+  run(["validate", "--ledger", ref("ready-ledger.yml")]);
+
   await write("premature-ledger.yml", yaml({
     design_task_id: "task-1",
     experience_brief_ref: ref("brief.yml"),
@@ -716,6 +964,96 @@ try {
   if (!tamperedRoundOutput.includes("digest 已变化")) {
     throw new Error("Controller 未拒绝 digest 已变化的轮次");
   }
+
+  await write("mutable-target.yml", "value: old\n");
+  await write("mutable-summary.md", "# mutable summary\n");
+  const mutableOldDigest = await digest("mutable-target.yml");
+  await write("mutable-assignment.yml", yaml({
+    contract_version: 2,
+    task_id: "task-1",
+    round_id: "round-0002",
+    assignment_id: "assignment-001",
+    agent_instance_id: "fixture-agent-2",
+    role: "delivery_operator",
+    required_skill: null,
+    candidate_id: null,
+    exact_version_basis: null,
+    instance_policy: "fresh_for_assignment",
+    subagent_spawn_allowed: false,
+    objective: "mutate one authorized target",
+    dependency_decision_refs: [],
+    input_refs: [ref("mutable-target.yml")],
+    input_digests: [{ ref: ref("mutable-target.yml"), sha256: mutableOldDigest }],
+    allowed_output_refs: [ref("mutable-target.yml")],
+    forbidden_inputs: [],
+    required_outputs: ["mutable target"],
+    completion_contract: {
+      result_ref: ref("mutable-result.yml"),
+      allowed_statuses: ["completed"],
+    },
+  }));
+  await write("mutable-target.yml", "value: new\n");
+  const mutableNewDigest = await digest("mutable-target.yml");
+  await write("mutable-result.yml", yaml({
+    contract_version: 2,
+    task_id: "task-1",
+    round_id: "round-0002",
+    assignment_id: "assignment-001",
+    agent_instance_id: "fixture-agent-2",
+    role: "delivery_operator",
+    status: "completed",
+    consumed_refs: [ref("mutable-target.yml")],
+    consumed_digests: [{ ref: ref("mutable-target.yml"), sha256: mutableOldDigest }],
+    produced_refs: [ref("mutable-target.yml")],
+    produced_digests: [{ ref: ref("mutable-target.yml"), sha256: mutableNewDigest }],
+    authoritative_claim_refs: [ref("mutable-target.yml")],
+    boundary_check: {
+      read_within_allowlist: true,
+      wrote_within_allowlist: true,
+      spawned_subagents: false,
+      contamination_detected: false,
+    },
+  }));
+  await write("mutable-dispatch.yml", yaml({
+    contract_version: 2,
+    task_id: "task-1",
+    round_id: "round-0002",
+    objective: "mutable fixture",
+    dependency_decision_refs: [],
+    state_snapshot: {},
+    assignment_refs: [ref("mutable-assignment.yml")],
+    write_set: [ref("mutable-target.yml")],
+    barrier: {
+      expected_results: [ref("mutable-result.yml")],
+      all_terminal_before_decision: true,
+    },
+  }));
+  await write("mutable-decision.yml", yaml({
+    contract_version: 2,
+    task_id: "task-1",
+    round_id: "round-0002",
+    dispatch_ref: ref("mutable-dispatch.yml"),
+    result_refs: [ref("mutable-result.yml")],
+    accepted_result_refs: [ref("mutable-result.yml")],
+    rejected_result_refs: [],
+    summary_ref: ref("mutable-summary.md"),
+    state_before: {},
+    state_after: {},
+    decision: "accept mutable fixture",
+    decision_basis_refs: [ref("mutable-target.yml")],
+    unlocked_dependency_keys: [],
+    barrier_check: {
+      all_expected_results_present: true,
+      all_results_terminal: true,
+      all_accepted_results_contract_valid: true,
+    },
+    round_status: "closed",
+  }));
+  run([
+    "validate-round",
+    "--dispatch", ref("mutable-dispatch.yml"),
+    "--decision", ref("mutable-decision.yml"),
+  ]);
 
   passed = true;
 } finally {

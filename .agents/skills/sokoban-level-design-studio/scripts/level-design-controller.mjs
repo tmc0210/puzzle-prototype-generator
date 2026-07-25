@@ -130,16 +130,19 @@ async function prepareCriticBasePacket(options) {
   const brief = await readYamlRef(requireString(ledger.experience_brief_ref, "experience_brief_ref"));
   await assertValidTaskExploration(brief);
   const candidate = asObject(ledger.candidate, "candidate");
+  const prototypeContext = asObject(brief.prototype_context, "prototype_context");
+  const playerContext = asObject(brief.player_context, "player_context");
+  const levelBrief = asObject(brief.level_brief, "level_brief");
 
   if (candidate.candidate_state !== "hard_validated") {
     throw new Error("只有 hard_validated 的当前候选才能生成 Critic base packet");
   }
   await assertSupportedEvidence(candidate, candidate.candidate_id);
 
-  const artifact = await buildReviewArtifact(candidate);
-  const prototypeContext = asObject(brief.prototype_context, "prototype_context");
-  const playerContext = asObject(brief.player_context, "player_context");
-  const levelBrief = asObject(brief.level_brief, "level_brief");
+  const artifact = await buildReviewArtifact(candidate, {
+    prototype_id: stringOrEmpty(brief.prototype_id),
+    win_condition: requireString(prototypeContext.win_condition, "prototype_context.win_condition"),
+  });
   const priorCourseRefs = requireStringArray(
     playerContext.known_prior_level_refs,
     "player_context.known_prior_level_refs",
@@ -189,10 +192,16 @@ async function loadCriticCalibration(ledger, priorCourseRefs) {
     "critic_cross_stage_aesthetic_calibration",
   );
   const stageViewRefs = requireNonEmptyUniqueRefs(stage.view_refs, "critic_stage_difficulty_calibration.view_refs");
-  const stageSourceRefs = requireNonEmptyUniqueRefs(
+  const stageSourceRefs = requireUniqueRefs(
     stage.source_archive_refs,
     "critic_stage_difficulty_calibration.source_archive_refs",
   );
+  if (priorCourseRefs.length === 0 && stageSourceRefs.length > 0) {
+    throw new Error("正式前序为空时，critic_stage_difficulty_calibration.source_archive_refs 必须为空");
+  }
+  if (priorCourseRefs.length > 0 && stageSourceRefs.length === 0) {
+    throw new Error("critic_stage_difficulty_calibration.source_archive_refs 不能为空");
+  }
   const aestheticViewRefs = requireNonEmptyUniqueRefs(
     aesthetic.view_refs,
     "critic_cross_stage_aesthetic_calibration.view_refs",
@@ -258,7 +267,14 @@ async function assertCriticCalibrationView(ref, expectedKind, priorCourseRefs, l
     if (metadata.difficulty_metadata !== "stage_local") {
       throw new Error(`${label}.difficulty_metadata 必须为 stage_local`);
     }
-    if (!/(?:^|\n)\s*(?:difficulty_score\s*:|[-*]\s*难度分\s*[:：])/i.test(body)) {
+    const structuredDifficultyScore = /(?:^|\n)\s*(?:difficulty_score\s*:|[-*]\s*难度分\s*[:：])/i;
+    if (priorCourseRefs.length === 0) {
+      if (structuredDifficultyScore.test(body)) {
+        throw new Error(`${label} 在正式前序为空时不得携带阶段内难度分`);
+      }
+      return;
+    }
+    if (!structuredDifficultyScore.test(body)) {
       throw new Error(`${label} 未携带阶段内难度分`);
     }
     return;
@@ -425,12 +441,19 @@ async function validateRoundCommand(options) {
     const assignmentId = requireString(assignment.assignment_id, `${assignmentRef}.assignment_id`);
     if (assignmentById.has(assignmentId)) throw new Error(`重复 assignment_id：${assignmentId}`);
     assignmentById.set(assignmentId, { assignment, assignmentRef });
+    const outputRefs = requireStringArray(assignment.allowed_output_refs, `${assignmentRef}.allowed_output_refs`);
+    const mutableInputRefs = requireStringArray(
+      assignment.input_refs,
+      `${assignmentRef}.input_refs`,
+    ).filter((inputRef) => outputRefs.some(
+      (outputRef) => pathIsWithinOrEqual(resolveRepoRef(inputRef), resolveRepoRef(outputRef)),
+    ));
     await assertDigestListMatchesRefs(
       assignment.input_refs,
       assignment.input_digests,
       `${assignmentRef}.input`,
+      mutableInputRefs,
     );
-    const outputRefs = requireStringArray(assignment.allowed_output_refs, `${assignmentRef}.allowed_output_refs`);
     for (const outputRef of outputRefs) {
       const outputPath = resolveRepoRef(outputRef);
       for (const prior of allWritePaths) {
@@ -491,13 +514,24 @@ async function validateRoundCommand(options) {
     if (!sameNormalizedStringSet(result.consumed_refs, assignment.input_refs)) {
       throw new Error(`${resultRef}.consumed_refs 与 assignment.input_refs 不一致`);
     }
-    await assertDigestListMatchesRefs(result.consumed_refs, result.consumed_digests, `${resultRef}.consumed`);
+    const allowedOutputs = requireStringArray(assignment.allowed_output_refs, `${assignmentRef}.allowed_output_refs`);
+    const mutableConsumedRefs = requireStringArray(
+      result.consumed_refs,
+      `${resultRef}.consumed_refs`,
+    ).filter((inputRef) => allowedOutputs.some(
+      (outputRef) => pathIsWithinOrEqual(resolveRepoRef(inputRef), resolveRepoRef(outputRef)),
+    ));
+    await assertDigestListMatchesRefs(
+      result.consumed_refs,
+      result.consumed_digests,
+      `${resultRef}.consumed`,
+      mutableConsumedRefs,
+    );
     if (!sameDigestEntries(result.consumed_digests, assignment.input_digests)) {
       throw new Error(`${resultRef}.consumed_digests 与 assignment 冻结输入不一致`);
     }
     await assertDigestListMatchesRefs(result.produced_refs, result.produced_digests, `${resultRef}.produced`);
     const producedRefs = requireStringArray(result.produced_refs, `${resultRef}.produced_refs`);
-    const allowedOutputs = requireStringArray(assignment.allowed_output_refs, `${assignmentRef}.allowed_output_refs`);
     for (const producedRef of producedRefs) {
       if (!allowedOutputs.some((allowed) => pathIsWithinOrEqual(resolveRepoRef(producedRef), resolveRepoRef(allowed)))) {
         throw new Error(`${resultRef} 写出未授权路径：${producedRef}`);
@@ -824,47 +858,82 @@ async function assertValidDeliveryChain(candidate, candidateId) {
   const activation = await readYamlRef(activationRef);
   const exactVersion = candidate.delivery_exact_version;
   for (const [label, value] of [["delivery", delivery], ["pre-commit", pre], ["post-commit", post]]) {
-    if (value.candidate_id !== candidateId || value.delivery_exact_version !== exactVersion) {
+    const artifactExactVersion = value.delivery_exact_version ?? value.exact_version_basis;
+    if (value.candidate_id !== candidateId || artifactExactVersion !== exactVersion) {
       throw new Error(`${label} 的 candidate / delivery exact 不一致`);
     }
   }
-  if (delivery.commit_status !== "completed") throw new Error("delivery commit_status 不是 completed");
-  if (pre.verification_stage !== "pre_commit" || pre.overall_status !== "supported") {
+  const deliveryStatus = delivery.commit_status ?? delivery.status;
+  if (deliveryStatus !== "completed") throw new Error("delivery commit_status 不是 completed");
+  const preStage = pre.verification_stage ?? pre.verification_phase;
+  const preStatus = pre.overall_status ?? pre.overall_verdict;
+  if (preStage !== "pre_commit" || preStatus !== "supported") {
     throw new Error("pre-commit verification 未 supported");
   }
-  if (post.verification_stage !== "post_commit" || post.overall_status !== "supported") {
+  const postStage = post.verification_stage ?? post.verification_phase;
+  const postStatus = post.overall_status ?? post.overall_verdict;
+  if (postStage !== "post_commit" || postStatus !== "supported") {
     throw new Error("post-commit verification 未 supported");
   }
-  const operatorId = requireString(delivery.operator_instance_id, `${deliveryRef}.operator_instance_id`);
-  const preId = requireString(pre.verifier_instance_id, `${preRef}.verifier_instance_id`);
-  const postId = requireString(post.verifier_instance_id, `${postRef}.verifier_instance_id`);
+  const operatorId = requireString(
+    delivery.operator_instance_id ?? delivery.producer?.agent_instance_id,
+    `${deliveryRef}.operator_instance_id`,
+  );
+  const preId = requireString(
+    pre.verifier_instance_id ?? pre.verifier?.agent_instance_id,
+    `${preRef}.verifier_instance_id`,
+  );
+  const postId = requireString(
+    post.verifier_instance_id ?? post.verifier?.agent_instance_id,
+    `${postRef}.verifier_instance_id`,
+  );
   if (new Set([operatorId, preId, postId]).size !== 3) {
     throw new Error("Delivery Operator 与两个 Verifier 的实例身份必须互不相同");
   }
-  if (normalizeRef(pre.delivery_record_ref) !== normalizeRef(deliveryRef)) {
+  const preDeliveryRef = pre.delivery_record_ref ?? delivery.authorization?.delivery_record_ref;
+  const deliveryPreVerificationRef = delivery.authorization?.pre_commit_verification_ref;
+  if (
+    normalizeRef(preDeliveryRef) !== normalizeRef(deliveryRef)
+    && normalizeRef(deliveryPreVerificationRef) !== normalizeRef(preRef)
+  ) {
     throw new Error("pre-commit verification 未引用 delivery record");
   }
-  if (normalizeRef(post.delivery_record_ref) !== normalizeRef(deliveryRef)) {
+  if (
+    post.delivery_record_ref
+    && normalizeRef(post.delivery_record_ref) !== normalizeRef(deliveryRef)
+  ) {
     throw new Error("post-commit verification 未引用 delivery record");
   }
+  const activationBody = activation.activation ?? activation;
+  const activationExactVersion = activation.delivery_exact_version ?? activation.exact_version_basis;
+  const activationStatus = activation.activation_status ?? activation.status;
   if (
     activation.candidate_id !== candidateId
-    || activation.delivery_exact_version !== exactVersion
-    || activation.activation_status !== "completed"
+    || activationExactVersion !== exactVersion
+    || activationStatus !== "completed"
   ) {
     throw new Error("queue activation 与候选版本不一致或未完成");
   }
-  if (normalizeRef(activation.post_commit_verification_ref) !== normalizeRef(postRef)) {
+  const activationPostRef = activation.post_commit_verification_ref
+    ?? activation.authorization?.post_commit_verification_ref;
+  if (normalizeRef(activationPostRef) !== normalizeRef(postRef)) {
     throw new Error("queue activation 未引用 post-commit verification");
   }
-  const stagedDigest = requireString(activation.staged_queue_sha256, `${activationRef}.staged_queue_sha256`);
-  const finalDigest = requireString(activation.final_queue_sha256, `${activationRef}.final_queue_sha256`);
+  const stagedDigest = requireString(
+    activation.staged_queue_sha256 ?? activationBody.expected_sha256,
+    `${activationRef}.staged_queue_sha256`,
+  );
+  const finalDigest = requireString(
+    activation.final_queue_sha256 ?? activationBody.actual_sha256,
+    `${activationRef}.final_queue_sha256`,
+  );
   if (!SHA256_PATTERN.test(stagedDigest) || stagedDigest !== finalDigest) {
     throw new Error("queue activation 的最终 digest 与预验证 staging 不一致");
   }
-  requireString(activation.source, `${activationRef}.source`);
-  requireString(activation.level_id, `${activationRef}.level_id`);
-  if (activation.queue_status !== "pending_playtest") {
+  requireString(activation.source ?? activationBody.source, `${activationRef}.source`);
+  requireString(activation.level_id ?? activationBody.level_id, `${activationRef}.level_id`);
+  const queueStatus = activation.queue_status ?? activationBody.status;
+  if (queueStatus !== "pending_playtest") {
     throw new Error("queue activation 的最终状态不是 pending_playtest");
   }
 }
@@ -1140,13 +1209,25 @@ function assertTaskExplorationIdentity(value, label) {
   }
 }
 
-async function buildReviewArtifact(candidate) {
+async function buildReviewArtifact(candidate, context) {
   const candidateId = requireString(candidate.candidate_id, "candidate.candidate_id");
   const exactVersion = requireString(candidate.exact_version, "candidate.exact_version");
   const layoutRef = requireString(candidate.layout_ref, "candidate.layout_ref");
   const replayRef = requireString(candidate.canonical_trace_ref, "candidate.canonical_trace_ref");
   const layout = (await readTextRef(layoutRef)).trimEnd();
   const replay = await readJsonRef(replayRef);
+  if (Array.isArray(replay.frames)) {
+    return buildFrameReplayArtifact({
+      candidateId,
+      exactVersion,
+      layoutRef,
+      layout,
+      replayRef,
+      replay,
+      context,
+    });
+  }
+
   const replayLayout = requireString(replay.layout, `${replayRef}.layout`).trimEnd();
   if (layout !== replayLayout) throw new Error(`layout 与 replay 不一致：${candidateId}`);
 
@@ -1188,6 +1269,85 @@ async function buildReviewArtifact(candidate) {
   return {
     prototype_id: requireString(replay.prototype, `${replayRef}.prototype`),
     packet_entry: packetEntry,
+  };
+}
+
+function buildFrameReplayArtifact({
+  candidateId,
+  exactVersion,
+  layoutRef,
+  layout,
+  replayRef,
+  replay,
+  context,
+}) {
+  if (replay.candidate_id !== candidateId || replay.exact_version !== exactVersion) {
+    throw new Error(`frames replay 与候选身份不一致：${candidateId}`);
+  }
+  const sourceLayoutRef = requireString(replay.source_layout_ref, `${replayRef}.source_layout_ref`);
+  if (normalizeRef(sourceLayoutRef) !== normalizeRef(layoutRef)) {
+    throw new Error(`frames replay 的 source_layout_ref 与冻结布局不一致：${candidateId}`);
+  }
+
+  const inputs = requireStringArray(replay.canonical_inputs, `${replayRef}.canonical_inputs`);
+  const frames = requireArray(replay.frames, `${replayRef}.frames`);
+  if (inputs.length === 0 || frames.length !== inputs.length + 1) {
+    throw new Error(`frames replay 必须包含非空输入和 inputs+1 个帧：${candidateId}`);
+  }
+  if (replay.canonical_cost !== undefined && replay.canonical_cost !== inputs.length) {
+    throw new Error(`frames replay 的 canonical_cost 与输入数不一致：${candidateId}`);
+  }
+
+  const normalizedFrames = frames.map((rawFrame, index) => {
+    const frame = asObject(rawFrame, `${replayRef}.frames[${index}]`);
+    if (frame.step !== index) {
+      throw new Error(`${replayRef}.frames[${index}].step 必须为 ${index}`);
+    }
+    const frameLayout = requireString(frame.layout, `${replayRef}.frames[${index}].layout`).trimEnd();
+    if (index === 0) {
+      if (frame.input !== null) throw new Error(`${replayRef}.frames[0].input 必须为 null`);
+    } else if (frame.input !== inputs[index - 1]) {
+      throw new Error(`${replayRef}.frames[${index}].input 与 canonical_inputs 不一致`);
+    }
+    return {
+      step: frame.step,
+      input: frame.input,
+      events: requireStringArray(frame.events, `${replayRef}.frames[${index}].events`),
+      layout: frameLayout,
+      win: frame.win === true,
+    };
+  });
+
+  if (normalizedFrames[0].layout !== layout) {
+    throw new Error(`冻结 layout 与 frames replay 首帧不一致：${candidateId}`);
+  }
+  if (normalizedFrames.at(-1).win !== true) {
+    throw new Error(`frames replay 未完成胜利：${candidateId}`);
+  }
+
+  const prototypeId = requireString(context.prototype_id, "experience_brief.prototype_id");
+  const winCondition = requireString(context.win_condition, "prototype_context.win_condition");
+  return {
+    prototype_id: prototypeId,
+    packet_entry: {
+      candidate_id: candidateId,
+      exact_version: exactVersion,
+      solve_instance: {
+        layout,
+        player_start: findPlayerStart(layout),
+        win_condition: winCondition,
+      },
+      canonical_solution: {
+        exact_inputs: inputs,
+        mechanically_derived_trace: normalizedFrames.slice(1).map((frame, index) => ({
+          step: frame.step,
+          input: frame.input,
+          before_layout: normalizedFrames[index].layout,
+          event: frame.events.join(", "),
+          after_layout: frame.layout,
+        })),
+      },
+    },
   };
 }
 
@@ -1408,8 +1568,13 @@ function requireStringArray(value, label) {
 }
 
 function requireNonEmptyUniqueRefs(value, label) {
-  const refs = requireStringArray(value, label).map(normalizeRef);
+  const refs = requireUniqueRefs(value, label);
   if (refs.length === 0) throw new Error(`${label} 不能为空`);
+  return refs;
+}
+
+function requireUniqueRefs(value, label) {
+  const refs = requireStringArray(value, label).map(normalizeRef);
   if (new Set(refs).size !== refs.length) throw new Error(`${label} 含重复引用`);
   return refs;
 }
@@ -1446,9 +1611,10 @@ function pathsOverlap(left, right) {
   return pathIsWithinOrEqual(left, right) || pathIsWithinOrEqual(right, left);
 }
 
-async function assertDigestListMatchesRefs(refsValue, digestsValue, label) {
+async function assertDigestListMatchesRefs(refsValue, digestsValue, label, mutableRefsValue = []) {
   const refs = requireStringArray(refsValue, `${label}_refs`).map(normalizeRef);
   const digests = requireArray(digestsValue, `${label}_digests`);
+  const mutableRefs = new Set(requireStringArray(mutableRefsValue, `${label}_mutable_refs`).map(normalizeRef));
   if (refs.length !== digests.length) throw new Error(`${label} refs 与 digests 数量不一致`);
   const seen = new Set();
   for (const [index, rawEntry] of digests.entries()) {
@@ -1459,8 +1625,10 @@ async function assertDigestListMatchesRefs(refsValue, digestsValue, label) {
     if (seen.has(ref)) throw new Error(`${label}_digests 含重复引用：${ref}`);
     seen.add(ref);
     if (!refs.includes(ref)) throw new Error(`${label}_digests 含白名单外引用：${ref}`);
-    const actual = await sha256Ref(ref);
-    if (actual !== sha256) throw new Error(`${label} digest 已变化：${ref}`);
+    if (!mutableRefs.has(ref)) {
+      const actual = await sha256Ref(ref);
+      if (actual !== sha256) throw new Error(`${label} digest 已变化：${ref}`);
+    }
   }
 }
 
