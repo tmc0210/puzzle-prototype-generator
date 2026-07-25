@@ -1,0 +1,144 @@
+runId: batch_stage06_002_ordered_douse_reignite
+title: "一次长滚中的遮芯—接火顺序与终点火焰读取"
+notes: >-
+  二格横烛位于一条竖向滚道中央；玩家从左侧等步数绕到上方或下方，选择向下或向上侧滚五格。
+  两路分别按墙→预亮火盆和预亮火盆→墙经过两个严格非终点接触，两个对称终点火盆读取滚后亮灭。
+defaults:
+  maxExploreDepth: 5
+  maxReturnDepth: 10
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: douse_then_reignite_consumer
+    family: ordered_rolling_contacts_write_final_fire_state
+    variant: douse_then_reignite
+    changed_variable: "同一布局选择向下轨道：墙遮芯在前、预亮火盆在后"
+    contrast_with:
+      - source_then_douse_consumer
+      - remove_reignition_contact
+    notes: "up,right 绕到烛身上方，再 down：d1 灭火，d3 复燃，d5 下端火盆被当前火焰点亮。"
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #......#
+      #....O.#
+      #......#
+      #....o.#
+      ########
+    actions: [up, right, down]
+
+  - id: source_then_douse_consumer
+    family: ordered_rolling_contacts_write_final_fire_state
+    variant: source_then_douse
+    changed_variable: "同一布局改选向上轨道：预亮火盆在前、墙遮芯在后"
+    contrast_with: douse_then_reignite_consumer
+    notes: "down,right 绕到烛身下方，再 up：d1 经过火源仍燃，d3 被墙灭，d5 上端火盆保持未亮。"
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #......#
+      #....O.#
+      #......#
+      #....o.#
+      ########
+    actions: [down, right, up]
+
+  - id: remove_dousing_contact
+    family: ordered_rolling_contacts_write_final_fire_state
+    variant: remove_dousing
+    changed_variable: "删除向下轨道前段遮芯墙"
+    contrast_with: douse_then_reignite_consumer
+    notes: "沿正确方向滚动但始终燃烧；下方预亮火盆不再承担复燃，只剩普通终点点盆。"
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #......#
+      #......#
+      #....O.#
+      #......#
+      #....o.#
+      ########
+    actions: [up, right, down]
+
+  - id: remove_reignition_contact
+    family: ordered_rolling_contacts_write_final_fire_state
+    variant: remove_reignition
+    changed_variable: "删除向下轨道后段预亮火源"
+    contrast_with: douse_then_reignite_consumer
+    notes: "d1 被墙灭后不再接火；以未燃状态到达同一下端终点，火盆不亮。"
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      ########
+    actions: [up, right, down]
+
+  - id: stop_before_second_contact
+    family: ordered_rolling_contacts_write_final_fire_state
+    variant: early_stop_after_dousing
+    changed_variable: "向下轨道在第二接触前用身体列挡块把滚程截短到 d2"
+    contrast_with: douse_then_reignite_consumer
+    notes: "d1 被墙灭，d2 到达近终点；近终点火盆读取未燃状态，下方火源仍在后一行但未被经过。"
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #....o.#
+      #..#.O.#
+      #......#
+      #......#
+      ########
+    actions: [up, right, down]
+
+  - id: move_consumer_off_socket
+    family: ordered_rolling_contacts_write_final_fire_state
+    variant: consumer_misaligned
+    changed_variable: "保持向下轨道的墙后火源顺序，把下端火盆横移一格离开火焰投影"
+    contrast_with: douse_then_reignite_consumer
+    notes: "滚烛仍按 d1 灭、d3 复燃并以燃烧状态落在 d5，但下端火盆未被当前火焰命中。"
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #......#
+      #....O.#
+      #......#
+      #.....o#
+      ########
+    actions: [up, right, down]

@@ -1,0 +1,23 @@
+request_id: stage06_request_003_boundary_contact_program
+exploration_id: candle_curriculum_stage06_rolling_contact_chain_20260725
+stage_id: stage_06_rolling_contact_chain
+allowed_exposure_through: rolling_contact_chain
+design_space: >-
+  在倒计时 1 执行一次有序接触长滚：一条顺序让滚烛终点燃烧并立即参加本次边界，另一条让它终点未燃并避开缩短。
+  两路滚动完成后应把位置/亮灭噪声尽量对齐，留下由本次参与与否造成的一格长度差；紧接 consumer 读取该格，
+  且另一必要输出读取正确的最终火焰职责。核心是路径顺序→终态→同动作边界参与→空间后果的连续链。
+sampling_axes:
+  - 同图或同构等距滚道在 countdown=1 执行墙→火源与火源→墙，逐小步核对最终状态和 boundary participation。
+  - 终点燃烧路必须出现当次 shrink；终点未燃路必须出现 boundary_extinguish_avoids_burn 或等价明确避烧证据。
+  - 边界后对齐烛芯端/状态，令差异只剩尾格，再由紧接滚动停点或推动面读取。
+  - 把 countdown 改为 2 时保留顺序终态但不立刻产生长度差，用来隔离边界职责。
+  - 删墙、删火源或提前截停分别退化，不得在后续另处复燃掩盖路径结果。
+  - 若只是 S06_T02 后多等一次边界、没有新的即时选择压力与空间 consumer，应降为 material_only。
+do_not_repeat:
+  - 只用终点火盆读取亮灭，不读取同动作边界后的长度。
+  - 将顺序程序与边界 consumer 分成两个独立 exact 模块。
+  - 依赖开放走路对齐而没有必要工序。
+  - 编辑 Controller 账本或把完整组合写入 Lexicon。
+materialization_target: >-
+  一个同动作边界程序 existence proof：接触顺序写出最终亮灭，立即决定是否缩短，并由同一连续后继链读取长度后果；
+  countdown=2 控制保留亮灭却删除即时几何差。

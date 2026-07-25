@@ -1,0 +1,32 @@
+request_id: stage04_request_001_mobile_shutter_douses_in_place
+exploration_id: candle_curriculum_stage04_body_concealment_20260725
+stage_id: stage_04_body_concealment
+allowed_exposure_through: body_concealment_and_reexposure
+design_space: >-
+  目标燃烛 B 已位于后继结构要求的精确位置，若把 B 推到墙边灭火会破坏该位置；
+  玩家改为移动另一根蜡烛 C，使 C 的烛身落在 B 的烛芯投影格并让 B 原地灭火。
+  C 的这次移动还必须把自身送到一个直接打开、关闭或建立后继操作面的空间位置；
+  跨过共享边界后，B 保留的位置与长度和 C 的新位置共同让同一后继滚动、轴推或目标链成立。
+sampling_axes:
+  - B 初始长度 2—4 格，边界前保持原坐标；C 尝试轴推与终点侧滚两种遮芯方式。
+  - 同一布局比较用 C 遮蔽、让 B 自己贴墙、完全不灭火三路，隔离“原地退出”的价值。
+  - C 的遮蔽终点必须同时清出玩家通路、成为滚动停块或提供下一操作面，不能只停在 B 烛芯上。
+  - 后继至少同时读取 B 保住的一格和 C 的终点；删除其中任一 consumer 后应退化。
+  - 用固定墙替代 C，检查是否只能保 B 而不能完成 C 的空间职责；移除 B 长度 consumer，检查遮蔽是否只剩开关事件。
+  - 指定正向 trace 不要求再次移开 C，避免把未燃重曝提前变成主角；不得使用退焰点火或滚动途中接触链。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/selections/stage_03_shared_fire_reignition.yml
+do_not_repeat:
+  - 只证明 C 的烛身能让 B 熄灭，或把 B 原地变暗本身当核心。
+  - 用 C 作为纯移动墙，却不消费 B 保留的位置与长度。
+  - 复刻“选择 A/B 谁保长”，而不要求遮体 C 自身的新位置承担第二项职责。
+  - 用两个不同布局分别证明遮蔽与空间用途；必须出现在同一选择和同一后继链。
+  - 让移开 C 后的未燃重曝、退焰点火或滚动途中事件承担本批核心。
+  - 把完整伪关卡作为 Lexicon 条目；只发布细粒度结构。
+  - 设计正式关卡、判断课程优先级或编辑 experience_cores.yml。
+materialization_target: >-
+  找到一个“可移动遮板双职责”组合：C 在不移动 B 的情况下让 B 原地退出，并把自己送到有空间用途的终点；
+  边界后同一后继链同时要求 B 的保形原位和 C 的终点。固定墙、移动 B 与移除任一 consumer 的对照
+  能证明它不是墙灭换皮。完整组合留作 optional direction，Lexicon 只收细粒度局部结构。

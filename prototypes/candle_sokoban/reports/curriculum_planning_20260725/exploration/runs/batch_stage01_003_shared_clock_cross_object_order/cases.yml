@@ -1,0 +1,115 @@
+runId: batch_stage01_003_shared_clock_cross_object_order
+title: 共享时钟造成跨对象 A/B 顺序锁
+notes: >-
+  同一中央起点可先滚 B 或先推 A；A 的必要操作与返回推进共享五拍，
+  使 B 在使用前缩短。比较 B 的完整/缩短形状是否被终点火盆或操作面实际读取。
+defaults:
+  maxExploreDepth: 12
+  maxReturnDepth: 18
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: roll_shape_b_first_lights_then_a_wins
+    family: shared_clock_cross_object_order
+    variant: B-first_full-shape_success
+    changed_variable: A/B 操作顺序
+    contrast_with: [roll_shape_a_first_shrinks_b_and_misses]
+    notes: 从同一叉口先向下侧滚完整 B；B 在预燃火盆处停在近点并以右侧火焰点盆，再返回叉口连续三次轴推 A 点亮另一盆。
+    layout: |
+      ###############
+      #.............#
+      #..@111R...o..#
+      #..22R........#
+      #.............#
+      #.....o.......#
+      #....O........#
+      #.............#
+      ###############
+    actions: [down, up, right, right, right]
+
+  - id: roll_shape_a_first_shrinks_b_and_misses
+    family: shared_clock_cross_object_order
+    variant: A-first_B-shortened_failure
+    changed_variable: A/B 操作顺序
+    contrast_with: [roll_shape_b_first_lights_then_a_wins]
+    notes: 同一布局先三次轴推 A，再沿原路返回 B 上方；第五拍已经缩短 B，同一 down 使短 B 越过原停点并错失右侧火盆。
+    layout: |
+      ###############
+      #.............#
+      #..@111R...o..#
+      #..22R........#
+      #.............#
+      #.....o.......#
+      #....O........#
+      #.............#
+      ###############
+    actions: [right, right, right, left, left, left, down]
+
+  - id: roll_shape_a_first_without_target
+    family: shared_clock_cross_object_order
+    variant: consumer_removed
+    changed_variable: 移除 B 近点右侧未燃火盆
+    contrast_with: [roll_shape_a_first_shrinks_b_and_misses]
+    notes: 保留顺序和终点差异，但移除 B 的近点火盆 consumer；用于区分可用顺序锁与未消费的滚动位置差。
+    layout: |
+      ###############
+      #.............#
+      #..@111R...o..#
+      #..22R........#
+      #.............#
+      #.............#
+      #....O........#
+      #.............#
+      ###############
+    actions: [right, right, right, left, left, left, down]
+
+  - id: axis_singleton_b_first_then_a_wins
+    family: shared_clock_cross_object_order
+    variant: singleton_B-first_success
+    changed_variable: A/B 操作顺序
+    contrast_with: [axis_singleton_a_first_burns_out]
+    notes: 先用两次必要轴推让单格 B 点亮下方火盆，再返回叉口处理 A；B 的局部输出在其首次燃尽前完成。
+    layout: |
+      ###############
+      #..@111R...o..#
+      #..D..........#
+      #.............#
+      #.............#
+      #..o..........#
+      #.............#
+      ###############
+    actions: [down, down, up, up, right, right, right, right]
+
+  - id: axis_singleton_a_first_burns_out
+    family: shared_clock_cross_object_order
+    variant: singleton_A-first_failure
+    changed_variable: A/B 操作顺序
+    contrast_with: [axis_singleton_b_first_then_a_wins, axis_extra_length_a_first_recovers]
+    notes: 同一布局先推 A 点盆再返回；第五拍删除单格 B，回到原操作位后向下只会走路，B 的火盆失去火源。
+    layout: |
+      ###############
+      #..@111R...o..#
+      #..D..........#
+      #.............#
+      #.............#
+      #..o..........#
+      #.............#
+      ###############
+    actions: [right, right, right, left, left, left, down, down]
+
+  - id: axis_extra_length_a_first_recovers
+    family: shared_clock_cross_object_order
+    variant: one-extra-cell_removes-order-lock
+    changed_variable: B 从单格增加为二格
+    contrast_with: [axis_singleton_a_first_burns_out]
+    notes: 保持 A、起点与两个火盆不变，只把 B 向烛芯方向延为二格；A-first 跨界后 B 仍剩单格，两次向下轴推仍能点盆。
+    layout: |
+      ###############
+      #..@111R...o..#
+      #..2..........#
+      #..D..........#
+      #.............#
+      #..o..........#
+      #.............#
+      ###############
+    actions: [right, right, right, left, left, left, down, down]

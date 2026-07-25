@@ -1,0 +1,90 @@
+runId: batch_stage01_001_long_roll_temporal_compression
+title: "长滚省拍保留端帽长度，并由紧接轴推点盆消费"
+notes: >-
+  A/B 只改变到达同一侧滚位前是否多一次准备行动；比较同一根二格燃烛滚到同一位置后，
+  烛尾左侧的向右轴推能否把烛芯投影送到固定火盆。
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 14
+  maxStates: 12000
+  maxTransitions: 48000
+cases:
+  - id: long_roll_preserves_cap_for_brazier
+    family: long_roll_temporal_compression
+    variant: preserved_length_lights_brazier
+    changed_variable: "侧滚前少一次准备行动"
+    contrast_with: one_step_setup_shrinks_before_brazier_push
+    notes: "向下长滚两格 -> 三步到新烛尾左侧 -> 第五拍向右轴推，二格烛芯应点亮火盆。"
+    layout: |
+      #########
+      #.......#
+      #..@....#
+      #..1R...#
+      #.......#
+      #.....o.#
+      #########
+    actions: [down, left, down, down, right]
+
+  - id: one_step_setup_shrinks_before_brazier_push
+    family: long_roll_temporal_compression
+    variant: shortened_wick_stops_before_brazier
+    changed_variable: "玩家初始离侧滚位远一格，增加一次合法准备行动"
+    contrast_with: long_roll_preserves_cap_for_brazier
+    notes: "先左移到侧滚位，再执行相同长滚和绕行；第五拍先缩短，第六拍向右轴推后，单格烛芯应停在火盆前一格。"
+    layout: |
+      #########
+      #.......#
+      #...@...#
+      #..1R...#
+      #.......#
+      #.....o.#
+      #########
+    actions: [left, down, left, down, down, right]
+
+  - id: long_roll_without_consumer
+    family: long_roll_temporal_compression
+    variant: event_only_no_consumer
+    changed_variable: "火盆再向右移一格，轴推后的烛芯不再对准"
+    contrast_with: long_roll_preserves_cap_for_brazier
+    notes: "保留长滚、倒计时和第五拍轴推，但火盆不消费保留的二格长度；只能形成事件 witness。"
+    layout: |
+      #########
+      #.......#
+      #..@....#
+      #..1R...#
+      #.......#
+      #......o#
+      #########
+    actions: [down, left, down, down, right]
+
+  - id: short_roll_same_length_consumer
+    family: long_roll_temporal_compression
+    variant: one_cell_roll_also_lights
+    changed_variable: "侧滚距离从两格缩为一格"
+    contrast_with: long_roll_preserves_cap_for_brazier
+    notes: "一格侧滚后只需两步到烛尾左侧，第四拍轴推同样以二格长度点盆；检验多格距离是否必要。"
+    layout: |
+      #########
+      #.......#
+      #.......#
+      #..@....#
+      #..1R...#
+      #.....o.#
+      #########
+    actions: [down, left, down, right]
+
+  - id: prepositioned_same_length_consumer
+    family: long_roll_temporal_compression
+    variant: no_roll_same_endpoint_alignment
+    changed_variable: "移除侧滚，把二格蜡烛预先放在终点行"
+    contrast_with: long_roll_preserves_cap_for_brazier
+    notes: "玩家一步走到烛尾左侧，第二拍轴推同样点盆；证明终点点盆 consumer 本身不隔离长滚。"
+    layout: |
+      #########
+      #.......#
+      #.......#
+      #.......#
+      #.@.....#
+      #..1R.o.#
+      #########
+    actions: [down, right]

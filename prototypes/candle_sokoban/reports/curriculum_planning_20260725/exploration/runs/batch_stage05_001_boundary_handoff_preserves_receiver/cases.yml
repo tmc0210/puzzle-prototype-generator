@@ -1,0 +1,134 @@
+runId: batch_stage05_001_boundary_handoff_preserves_receiver
+title: "燃烧边界后的退焰交接保留接收者一格"
+notes: "同图比较边界前普通接火与边界后退焰交接；对齐并墙灭后，用尾格停行接固定火源与最终火盆。"
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 24
+  maxStates: 50000
+  maxTransitions: 200000
+cases:
+  - id: boundary_handoff_long_wins
+    family: boundary_handoff_preserves_receiver
+    variant: boundary_handoff_long_wins
+    changed_variable: "维持 A 对 B 烛芯的遮蔽直到 A 存活缩短"
+    contrast_with: [ordinary_contact_short_overshoots, one_cell_source_burnout_no_handoff]
+    notes: "第 5 步边界由 A 退焰点燃 B；B 不参加已结束的结算而保持两格。右推一格在墙上灭火并固定烛芯端，侧滚由尾格墙停在 y8，右推接 O 后再侧滚到最终 o。"
+    layout: |
+      ############
+      #..........#
+      #..........#
+      #.....2....#
+      #...1rD#...#
+      #.....@....#
+      #..........#
+      #..........#
+      #.......O..#
+      #....#.....#
+      #.......o..#
+      ############
+    actions: [left, left, left, right, left, up, right, up, right, down, left, down, down, down, down, right, up, right, down]
+
+  - id: ordinary_contact_short_overshoots
+    family: boundary_handoff_preserves_receiver
+    variant: ordinary_contact_short_overshoots
+    changed_variable: "第 1 步把 A 向上移开，使 B 在边界前普通接火"
+    contrast_with: boundary_handoff_long_wins
+    notes: "B 参加第 5 步边界后只剩一格；再右推两格对齐并墙灭。相同向下侧滚忽略 x5,y9 尾格墙，落到 y10，既未接到 y8 的 O，也无法把火送到 x8,y10。"
+    layout: |
+      ############
+      #..........#
+      #..........#
+      #.....2....#
+      #...1rD#...#
+      #.....@....#
+      #..........#
+      #..........#
+      #.......O..#
+      #....#.....#
+      #.......o..#
+      ############
+    actions: [up, down, left, left, left, up, right, right, up, left, right, right, down]
+
+  - id: one_cell_source_burnout_no_handoff
+    family: boundary_handoff_preserves_receiver
+    variant: one_cell_source_burnout_no_handoff
+    changed_variable: "把 A 从两格改成会在当前边界燃尽的一格"
+    contrast_with: boundary_handoff_long_wins
+    notes: "A 的端帽仍遮住 B 烛芯，但边界时 A 直接 burn_out，不产生存活退焰火格；B 重曝后仍未燃。"
+    layout: |
+      ############
+      #..........#
+      #..........#
+      #..........#
+      #...1rD#...#
+      #.....@....#
+      #..........#
+      #..........#
+      #.......O..#
+      #....#.....#
+      #.......o..#
+      ############
+    actions: [left, left, left, right, left]
+
+  - id: wick_misaligned_no_handoff
+    family: boundary_handoff_preserves_receiver
+    variant: wick_misaligned_no_handoff
+    changed_variable: "把 B 整体左移一格，使烛芯不在 A 的被删端帽格"
+    contrast_with: boundary_handoff_long_wins
+    notes: "边界仍缩短 A，但 B 的外露烛芯在 x5,y4，与退焰格 x6,y4 错开，B 保持未燃。"
+    layout: |
+      ############
+      #..........#
+      #..........#
+      #.....2....#
+      #..1r.D#...#
+      #.....@....#
+      #..........#
+      #..........#
+      #.......O..#
+      #....#.....#
+      #.......o..#
+      ############
+    actions: [left, left, left, right, left]
+
+  - id: tail_stop_removed_long_overshoots
+    family: boundary_handoff_preserves_receiver
+    variant: tail_stop_removed_long_overshoots
+    changed_variable: "删除 x5,y9 的单格尾端停墙"
+    contrast_with: boundary_handoff_long_wins
+    notes: "退焰交接、墙灭和对齐保持不变；两格 B 向下侧滚越过原 y8 停行直到 y10，无法从 y8 固定火源继续正确链。"
+    layout: |
+      ############
+      #..........#
+      #..........#
+      #.....2....#
+      #...1rD#...#
+      #.....@....#
+      #..........#
+      #..........#
+      #.......O..#
+      #..........#
+      #.......o..#
+      ############
+    actions: [left, left, left, right, left, up, right, up, right, down]
+
+  - id: final_brazier_prelit_removes_fire_read
+    family: boundary_handoff_preserves_receiver
+    variant: final_brazier_prelit_removes_fire_read
+    changed_variable: "把 x8,y10 最终火盆预亮，并在角落加入不参与 trace 的未亮火盆"
+    contrast_with: boundary_handoff_long_wins
+    notes: "正确路线仍生成两格 B、停在 y8、接 O 并滚到 y10，但末步不再产生 light_brazier:x8,y10；隔离原链的火焰输出职责。"
+    layout: |
+      ############
+      #.........o#
+      #..........#
+      #.....2....#
+      #...1rD#...#
+      #.....@....#
+      #..........#
+      #..........#
+      #.......O..#
+      #....#.....#
+      #.......O..#
+      ############
+    actions: [left, left, left, right, left, up, right, up, right, down, left, down, down, down, down, right, up, right, down]

@@ -1,0 +1,205 @@
+runId: batch_stage06_001_path_output_endpoint_body_duty
+title: "四格侧滚的途中永久输出与终点实体职责"
+notes: >-
+  向左燃烧的四格横烛向下滚四小步：第二步的火焰扫过火盆，第四步的尾格停在单格竖烛左侧。
+  后续单格竖烛向左侧滚时由该尾格截停，并只在准确列拥有向上轴推接口。
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 24
+  maxStates: 30000
+  maxTransitions: 120000
+  win:
+    type: event_occurs
+    event: never_occurs
+cases:
+  - id: composed_long_roll
+    family: path_output_endpoint_body_duty
+    variant: four_step_path_and_tail_stop
+    changed_variable: "基准正例"
+    contrast_with:
+      - prelit_path_output
+      - endpoint_consumer_removed
+      - near_stop_at_brazier
+      - alternate_lane_misses_output
+      - axis_push_surrogate
+    notes: >-
+      A 从 y=2 向下滚到 y=6；d2 在 (3,4) 点盆，d4 后最右尾格 (7,6) 截停 Q 于 x=8。
+      Q 随后只有在 x=8 可向上轴推。
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #..o.........#
+      ##...........#
+      #.........u..#
+      #...#........#
+      #............#
+      ##############
+    actions:
+      - down
+      - right
+      - right
+      - right
+      - right
+      - down
+      - down
+      - down
+      - down
+      - left
+      - down
+      - left
+      - left
+      - up
+
+  - id: prelit_path_output
+    family: path_output_endpoint_body_duty
+    variant: endpoint_chain_without_path_creation
+    changed_variable: "把途中未亮火盆改为预亮火盆"
+    contrast_with: composed_long_roll
+    notes: >-
+      A 仍滚四步并在终点截停 Q，Q 仍能在 x=8 上推；但路径不再创造永久输出。
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #..O.........#
+      ##...........#
+      #.........u..#
+      #...#........#
+      #............#
+      ##############
+    actions:
+      - down
+      - right
+      - right
+      - right
+      - right
+      - down
+      - down
+      - down
+      - down
+      - left
+      - down
+      - left
+      - left
+      - up
+
+  - id: endpoint_consumer_removed
+    family: path_output_endpoint_body_duty
+    variant: path_output_only
+    changed_variable: "删除 Q 及其唯一上推口读取"
+    contrast_with: composed_long_roll
+    notes: >-
+      A 仍在 d2 点盆并继续到终点，但终点没有任何对象读取其尾格。
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #..o.........#
+      #............#
+      #............#
+      #...#........#
+      #............#
+      ##############
+    actions:
+      - down
+
+  - id: near_stop_at_brazier
+    family: path_output_endpoint_body_duty
+    variant: two_step_stop_at_output
+    changed_variable: "把 A 的停止墙从 y=7 提前到 y=5"
+    contrast_with: composed_long_roll
+    notes: >-
+      A 只滚两步并在火盆所在 y=4 结束；点盆落在终点而非途中，A 也没有到达 Q 的 y=6 身体行。
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #..o.........#
+      ##..#........#
+      #.........u..#
+      #............#
+      #............#
+      ##############
+    actions:
+      - down
+      - right
+      - right
+      - right
+      - right
+      - down
+      - down
+      - down
+      - down
+      - left
+      - down
+      - left
+      - left
+      - left
+      - left
+      - left
+      - left
+      - left
+      - left
+      - left
+      - up
+
+  - id: alternate_lane_misses_output
+    family: path_output_endpoint_body_duty
+    variant: endpoint_chain_without_flame_lane
+    changed_variable: "把火盆从火焰列 x=3 横移到 x=2"
+    contrast_with: composed_long_roll
+    notes: >-
+      A 的四步终点与 Q 的停点、上推接口不变，但火焰扫过 x=3，不能点亮 x=2 火盆。
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #.o..........#
+      ##...........#
+      #.........u..#
+      #...#........#
+      #............#
+      ##############
+    actions:
+      - down
+      - right
+      - right
+      - right
+      - right
+      - down
+      - down
+      - down
+      - down
+      - left
+      - down
+      - left
+      - left
+      - up
+
+  - id: axis_push_surrogate
+    family: path_output_endpoint_body_duty
+    variant: axial_translation_stays_on_start_row
+    changed_variable: "把垂直侧滚替换为同一横烛的连续水平轴推"
+    contrast_with: composed_long_roll
+    notes: >-
+      A 连续向左轴推只改变 x；火焰始终在 y=2，既不经过 (3,4) 火盆，也不把尾格送到 y=6 供 Q 截停。
+    layout: |
+      ##############
+      #............#
+      #...L444@....#
+      #............#
+      #..o.........#
+      ##...........#
+      #.........u..#
+      #...#........#
+      #............#
+      ##############
+    actions:
+      - left
+      - left

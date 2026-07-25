@@ -1,0 +1,32 @@
+request_id: stage03_request_001_midcycle_join_allocates_burn
+exploration_id: candle_curriculum_stage03_shared_fire_reignition_20260725
+stage_id: stage_03_shared_fire_reignition
+allowed_exposure_through: shared_fire_and_reignition
+design_space: >-
+  一根已燃驱动烛 A 维持共享倒计时，未燃 B 的外露烛芯可通过已点火盆或 A 的外露火焰加入燃烧集合。
+  同一布局允许玩家在首次边界前点燃 B，或先完成另一段必要操作、跨过边界后再点燃 B；点火不会重置倒计时，
+  因而早加入的 B 多经历一次缩短，晚加入的 B 保留一格。随后让两路 B 都处于燃烧且烛芯端对齐，
+  用只擦过差异格的侧滚停点、轴推面或火盆距离读取它究竟参加了几次燃烧结算。
+sampling_axes:
+  - B 初始长度 2—4 格，优先比较一次缩短后的相邻长度，不用直接燃尽作为正向入口。
+  - 点火源分别尝试已点火盆与另一根外露燃烛；至少一种必须形成同布局早/晚加入选择。
+  - 边界前后的必要行动由操作 A、移动 B 或到达点火接口构成，不用原地等待凑拍。
+  - 点火后通过同样的轴推/侧滚把 B 烛芯端重新对齐，排除 consumer 只读最终位置或是否燃烧。
+  - 至少尝试一个离散侧滚停点 consumer，以及一个轴推面或目标距离 consumer。
+  - 把 B 初始设为已燃，检查加入选择是否消失；移除点火源或下游 consumer，检查是否只剩不可用状态差。
+  - 指定 trace 不得使用烛身遮蔽、未燃重曝、退焰点火或滚动途中接触链。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/selections/stage_02_wall_dousing.yml
+do_not_repeat:
+  - 只证明未燃烛芯会被火盆/火焰点燃，或点火不会重置倒计时。
+  - 把“边界前点燃会立即参加缩短”事件标签本身当体验核心。
+  - 只复刻墙体阶段的 A/B 保长分配，却不让玩家通过加入时机主动选择 B 的燃烧历史。
+  - 让早/晚路线最终仍有不同亮灭状态或不同烛芯端位置，混淆长度 consumer。
+  - 用两个不同初始布局代替同一局面中的加入时机选择。
+  - 设计完整关卡、判断课程优先级或声称结构值得占一关。
+materialization_target: >-
+  找到至少一个“入场相位分配一次燃烧”的局部结构：同一未燃 B 可在边界前后加入，
+  两路最终同为燃烧、烛芯端对齐，却因是否参加那次边界留下相邻长度；一个最小后继明确读取该格。
+  若只有点火事件、亮灭差或普通路程差，则不发布正向条目。

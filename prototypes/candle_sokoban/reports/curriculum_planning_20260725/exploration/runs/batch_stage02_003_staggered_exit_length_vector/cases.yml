@@ -1,0 +1,250 @@
+runId: batch_stage02_003_staggered_exit_length_vector
+title: "跨两边界错峰墙灭后的 4/3/2 尾端阶梯"
+notes: "三根等长燃烛错峰退出 -> 对齐烛芯端留下长/中/短尾端阶梯 -> 同一未燃横向单格探针连续读取三处占格与缺口"
+defaults:
+  maxExploreDepth: 9
+  maxReturnDepth: 12
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: staggered_432_full_chain
+    family: staggered_exit_length_vector
+    variant: generated_432_single_probe_chain
+    changed_variable: "A/B/C 分别在第一边界前、两边界之间、第二边界后墙灭"
+    contrast_with:
+      - swapped_342_first_phase_collapses
+      - same_cycle_442_second_pass_blocked
+      - c_medium_433_first_tail_push_blocked
+      - c_removed_second_tail_push_legal
+    notes: "同一初始布局先生成 4/3/2，再把同一未燃横向单格探针依次送过 A 近停、B 占格/缺口和 C 缺口/占格；动作止于探针进入 C 的 x8 缺口。"
+    layout: |
+      ..............
+      .......l......
+      ..............
+      .....@111R.#..
+      ..............
+      ..............
+      ..#...........
+      ......222R.#..
+      ..............
+      ......333R.#..
+      .o.....#......
+      ..............
+    actions:
+      - right
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - left
+      - left
+      - down
+      - down
+      - right
+      - right
+      - right
+      - left
+      - left
+      - left
+      - up
+      - up
+      - up
+      - up
+      - up
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - down
+      - right
+      - down
+      - left
+      - left
+      - left
+      - left
+      - left
+      - up
+      - left
+      - down
+      - left
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - right
+      - right
+      - right
+      - up
+      - right
+      - down
+      - right
+      - down
+      - left
+      - up
+      - left
+      - down
+      - left
+      - down
+      - down
+      - down
+      - right
+
+  - id: generated_432_staging_only
+    family: staggered_exit_length_vector
+    variant: generated_432_interface
+    changed_variable: "只回放三次错峰墙灭，停在 consumer 前"
+    contrast_with: staggered_432_full_chain
+    notes: "确认相同四格起点经必要移动与推动留下 A=4、B=3、C=2，且三根均熄灭、烛芯端同列。"
+    layout: |
+      ..............
+      .......l......
+      ..............
+      .....@111R.#..
+      ..............
+      ..............
+      ..#...........
+      ......222R.#..
+      ..............
+      ......333R.#..
+      .o.....#......
+      ..............
+    actions: [right, left, down, down, down, down, right, right, left, left, down, down, right, right, right]
+
+  - id: swapped_342_first_phase_collapses
+    family: staggered_exit_length_vector
+    variant: swapped_A_B_exit_periods
+    changed_variable: "交换 A/B 的退出周期：A=3、B=4、C=2"
+    contrast_with: staggered_432_full_chain
+    notes: "静态最终接口控制；A 的 x7 近停格消失，探针第一次 down 越过 A，直接被 B 的 x7 格截在较低位置。"
+    layout: |
+      .......@......
+      .......l......
+      ..............
+      ........22r#..
+      ..............
+      ..............
+      ..#...........
+      .......333r#..
+      ..............
+      .........4r#..
+      .o.....#......
+      ..............
+    actions: [down]
+
+  - id: same_cycle_442_second_pass_blocked
+    family: staggered_exit_length_vector
+    variant: A_B_both_preserved
+    changed_variable: "A/B 同在第一边界前退出：第二层为四格而非三格"
+    contrast_with:
+      - medium_B_second_pass_reaches_lower_turn
+      - staggered_432_full_chain
+    notes: "截取连续链的第二次下滚接口；B=4 占 x7，探针位于 x7,y6 时 down 为 roll_blocked。"
+    layout: |
+      ..............
+      ..............
+      ..............
+      .......111r#..
+      ..............
+      .......@......
+      .......l......
+      .......222r#..
+      ..............
+      .........3r#..
+      .o.....#......
+      ..............
+    actions: []
+
+  - id: medium_B_second_pass_reaches_lower_turn
+    family: staggered_exit_length_vector
+    variant: B_medium_has_x7_gap
+    changed_variable: "B 从四格改为三格，x7 由占格变缺口"
+    contrast_with: same_cycle_442_second_pass_blocked
+    notes: "同一接口中 down 合法，探针越过 B 的 x7 缺口并在 x7,y10 墙前停到 y9。"
+    layout: |
+      ..............
+      ..............
+      ..............
+      .......111r#..
+      ..............
+      .......@......
+      .......l......
+      ........22r#..
+      ..............
+      .........3r#..
+      .o.....#......
+      ..............
+    actions: [down]
+
+  - id: c_medium_433_first_tail_push_blocked
+    family: staggered_exit_length_vector
+    variant: C_only_one_boundary
+    changed_variable: "C 只经历一次缩短：三格尾端从 x8 开始"
+    contrast_with:
+      - c_short_432_one_push_then_blocked
+      - c_removed_second_tail_push_legal
+    notes: "截取链末尾；探针从 x6 先右推到 x7，C=3 占 x8，随后 right 为 axis_push_blocked。"
+    layout: |
+      ..............
+      ..............
+      ..............
+      .......111r#..
+      ..............
+      ..............
+      ..#...........
+      ........22r#..
+      ..............
+      .....@l.44r#..
+      .o.....#......
+      ..............
+    actions: [right]
+
+  - id: c_short_432_one_push_then_blocked
+    family: staggered_exit_length_vector
+    variant: C_two_boundaries_exact_tail
+    changed_variable: "C 经两次缩短：二格尾端从 x9 开始"
+    contrast_with:
+      - c_medium_433_first_tail_push_blocked
+      - c_removed_second_tail_push_legal
+    notes: "同一接口从 x6 连推两次进入 x8 缺口；动作后下一次 right 被 C 的 x9 格挡住。"
+    layout: |
+      ..............
+      ..............
+      ..............
+      .......111r#..
+      ..............
+      ..............
+      ..#...........
+      ........22r#..
+      ..............
+      .....@l..4r#..
+      .o.....#......
+      ..............
+    actions: [right, right]
+
+  - id: c_removed_second_tail_push_legal
+    family: staggered_exit_length_vector
+    variant: third_candle_removed
+    changed_variable: "删除 C，保留同一探针与末端操作面"
+    contrast_with: c_short_432_one_push_then_blocked
+    notes: "探针从 x6 连推两次进入 x8；因 x9 不再有 C，下一次 right 仍合法，第三根不是陈列。"
+    layout: |
+      ..............
+      ..............
+      ..............
+      .......111r#..
+      ..............
+      ..............
+      ..#...........
+      ........22r#..
+      ..............
+      .....@l....#..
+      .o.....#......
+      ..............
+    actions: [right, right]

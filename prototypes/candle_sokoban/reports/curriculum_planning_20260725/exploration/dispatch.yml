@@ -1,0 +1,55 @@
+exploration_id: candle_curriculum_stage06_rolling_contact_chain_20260725
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件。"
+experience_seed: >-
+  为 20—25 关 Candle 课程的滚动途中接触阶段寻找“同一长滚的路径事件与终点职责共同构成选择”的可玩结构；
+  不把 roll_intermediate_* 事件 witness、单纯沿途点盆或碰火死亡当成果。
+player_prior:
+  - 已掌握全部前序机制，包括退焰交接、blocker→fuel 与跨边界接力。
+  - 尚不知道侧滚每个小步都会立即结算接触，而且点火、灭火或点盆不会让滚动提前停止。
+allowed_mechanisms:
+  - basic_candle_manipulation
+  - wall_dousing
+  - shared_fire_and_reignition
+  - body_concealment_and_reexposure
+  - retreating_flame_transfer
+  - rolling_contact_chain
+allowed_tools:
+  - Candle runtime adapter、ASCII parser 与逐步 replay
+  - mechanism-lab-run 的局部动作回放、最终动作表与有界状态图
+  - task-local 诊断脚本，但不得进入完整关卡设计
+source_boundary:
+  allowed:
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - src/prototypes/candle_sokoban/runtime.ts
+    - prototypes/candle_sokoban/mechanic.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/docs/curriculum_planning_context.md
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/course_brief.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/stage_ledger.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  forbidden:
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - prototypes/candle_sokoban/studio/levels.yml
+    - prototypes/candle_sokoban/playable_queue.yml
+    - prototypes/candle_sokoban/reports 下除本 curriculum_planning workspace 外的全部内容
+    - design archive、人类评价、旧候选、sampler profile、外部知识文档和硬编码布局模板
+task_lexicon_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+publication_layers:
+  lexicon: >-
+    只发布可独立拼接的细粒度局部结构，每条说明输入状态、局部变换、最小 consumer 与适用边界；
+    不把整个伪关卡、完整玩家命题或多段动作链作为单条 lexicon family。
+  experience_core: >-
+    Explorer 可以提出玩家侧命题，但只写入本 batch 的 proposed_families.md；由 Controller 决定是否抽象进入 experience_cores.yml。
+  optional_direction: >-
+    具体布局、动作回放和多个局部结构的组合留在 run artifacts，视为非约束性的可选探索方向。

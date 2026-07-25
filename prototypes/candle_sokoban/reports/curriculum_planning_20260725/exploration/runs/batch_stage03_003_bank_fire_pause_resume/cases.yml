@@ -1,0 +1,165 @@
+runId: batch_stage03_003_bank_fire_pause_resume
+title: "存火—暂停—取火闭环局部对照"
+notes: >-
+  燃烛 B 先点 P，再在墙面退出；暂停期把竖烛 G 推离最终轴推站位；
+  B 返回 P 同动作复燃并在边界缩短一格，预亮火盆 S1/S2 分别提供返回停块与长度读取，
+  最终把保住的火焰插口送到 Q。完整组合仅为 optional direction。
+defaults:
+  maxExploreDepth: 6
+  maxReturnDepth: 8
+  maxStates: 12000
+  maxTransitions: 40000
+cases:
+  - id: closed_loop_correct
+    family: bank_pause_retrieve_optional_direction
+    variant: bank_douse_prepare_reignite_consume
+    changed_variable: "完整闭环"
+    contrast_with: [no_pause_overburns_interface, pause_without_bank_has_no_fire, prelit_bank_removes_first_output, final_consumer_removed]
+    notes: >-
+      B 点亮 P 后滚入墙面熄灭；把 G 下推一格清出最终轴推面；绕过左墙后把 B 滚回 P，
+      在第十五拍同动作复燃并缩成三格；下一拍借 S1 越过旧停列、由 S2 停在准确行，
+      再从清出的站位轴推一格，以火焰点亮 Q。
+    layout: |
+      .......#...
+      ...#....#..
+      ..@333R.o..
+      .......O...
+      ...d....o..
+      ......O....
+      ...........
+      ...........
+    actions: [right, down, right, up, left, down, down, up, up, left, up, up, right, right, down, down, left, down, down, right]
+
+  - id: no_pause_overburns_interface
+    family: bank_pause_retrieve_optional_direction
+    variant: bank_without_wall_exit
+    changed_variable: "删除遮芯墙，B 在必要工作期间持续燃烧"
+    contrast_with: [closed_loop_correct]
+    notes: >-
+      只删去 x8,y1 的灭火墙并执行同一动作。B 在清 G 与返回期间连续跨过共享边界，
+      返回动作不再被 S1 的列截停，后续同一输入只是走路，无法取得正确终点与 Q 接口。
+    layout: |
+      .......#...
+      ...#.......
+      ..@333R.o..
+      .......O...
+      ...d....o..
+      ......O....
+      ...........
+      ...........
+    actions: [right, down, right, up, left, down, down, up, up, left, up, up, right, right, down, down, left, down, down, right]
+
+  - id: pause_without_bank_has_no_fire
+    family: bank_pause_retrieve_optional_direction
+    variant: bank_brazier_removed
+    changed_variable: "移除永久火盆 P"
+    contrast_with: [closed_loop_correct]
+    notes: >-
+      P 改为空地；B 仍按同样路径墙灭、清 G 并保住实体长度。
+      trace 停在返回动作前，避免把“移出墙面但没有火源”的晚期重曝事件带入当前阶段；
+      保形但不取火的最终结果由 unlit_preserved_geometry_cannot_output 单独隔离。
+    layout: |
+      .......#...
+      ...#....#..
+      ..@333R....
+      .......O...
+      ...d....o..
+      ......O....
+      ...........
+      ...........
+    actions: [right, down, right, up, left, down, down, up, up, left, up, up, right, right]
+
+  - id: unlit_preserved_geometry_cannot_output
+    family: bank_pause_retrieve_optional_direction
+    variant: preserved_shape_without_retrieved_fire
+    changed_variable: "正确三格几何保持未燃"
+    contrast_with: [closed_loop_correct]
+    notes: >-
+      从正确闭环第十五拍之后的三格位置开始，但把 B 设为未燃；
+      同一滚动、绕位与最终轴推全部合法，Q 仍不点亮，隔离“几何保住但没有取回火”的失败。
+    layout: |
+      .......#...
+      ...#@...#..
+      ....33r.O..
+      .......o...
+      ........o..
+      ...d..O....
+      ...........
+      ...........
+    actions: [down, left, down, down, right]
+
+  - id: prelit_bank_removes_first_output
+    family: bank_pause_retrieve_optional_direction
+    variant: bank_already_lit
+    changed_variable: "P 初始已点亮"
+    contrast_with: [closed_loop_correct]
+    notes: >-
+      P 初始已亮；同一首推不再产生永久输出，但后续墙灭与从 P 复燃仍可发生。
+      用于界定第一段存火职责，而不是否定暂停—取火接口。
+    layout: |
+      .......#...
+      ...#....#..
+      ..@333R.O..
+      .......O...
+      ...d....o..
+      ......O....
+      ...........
+      ...........
+    actions: [right, down, right, up, left, down, down, up, up, left, up, up, right, right, down, down, left, down, down, right]
+
+  - id: final_consumer_removed
+    family: bank_pause_retrieve_optional_direction
+    variant: q_removed_with_dummy_goal
+    changed_variable: "移除最终 Q，并在远角保留未亮占位目标"
+    contrast_with: [closed_loop_correct]
+    notes: >-
+      Q 改为空地，远角增加一个与本动作链无关的未亮火盆以避免目标集合提前完结；
+      闭环与最终轴推仍合法，但不再产生最终火焰输出。
+    layout: |
+      .......#...
+      ...#....#..
+      ..@333R.o..
+      .......O...
+      ...d.......
+      ......O....
+      ...........
+      ..........o
+    actions: [right, down, right, up, left, down, down, up, up, left, up, up, right, right, down, down, left, down, down, right]
+
+  - id: pre_shrink_prelit_stop_blocks_roll
+    family: prelit_stop_released_by_cap_shrink
+    variant: cap_column_still_present
+    changed_variable: "B 仍有占据 S1 上方的烛芯端实体列"
+    contrast_with: [post_shrink_prelit_stop_allows_roll]
+    notes: >-
+      四格燃烛位于返回行，预亮火盆 S1 在烛芯端实体列的下一行；
+      同一 down 因实体列将进入 S1 而 roll_blocked。
+    layout: |
+      .......#...
+      ...#@...#..
+      ....333R...
+      .......O...
+      ...........
+      ......O...o
+      ...........
+      ...........
+    actions: []
+
+  - id: post_shrink_prelit_stop_allows_roll
+    family: prelit_stop_released_by_cap_shrink
+    variant: cap_column_removed_flame_passes_prelit_socket
+    changed_variable: "删除烛芯端一格，S1 从实体停块变为已亮火焰经过格"
+    contrast_with: [pre_shrink_prelit_stop_blocks_roll]
+    notes: >-
+      三格燃烛的实体已不占 S1 上方列；同一 down 可滚两格并由 S2 截停。
+      火焰第一小步经过已亮 S1，不产生灭火、点火或新的点盆事件。
+    layout: |
+      .......#...
+      ...#@...#..
+      ....33R....
+      .......O...
+      ...........
+      ......O...o
+      ...........
+      ...........
+    actions: [down]

@@ -1,0 +1,28 @@
+request_id: stage05_request_001_boundary_handoff_preserves_receiver
+exploration_id: candle_curriculum_stage05_retreating_flame_20260725
+stage_id: stage_05_retreating_flame
+allowed_exposure_through: retreating_flame_transfer
+design_space: >-
+  让已燃 A 的烛身末格遮住未燃 B 的烛芯。玩家可以在边界前主动移开 A，让 B 由普通接触结算提前接火，
+  或维持遮蔽直到 A 作为存活燃烛缩短：A 的新火焰落在刚重曝的 B 烛芯格，B 在燃烧结算后接火。
+  两路随后应重新对齐为“B 已燃、烛芯端相同”，但提前接火的 B 已支付本次边界而短一格，
+  退焰交接的 B 保住一格。紧接的同一任务链必须同时读取这格实体差与 B 的火焰输出。
+sampling_axes:
+  - 同一初始布局中的边界前普通接火、维持遮蔽到退焰交接、错位未接火三路。
+  - A 至少两格并在边界后存活；一格 A 的燃尽对照应证明燃尽不会制造退焰来源。
+  - 两条成功接火路线在比较点让 B 同为燃烧且烛芯端对齐，只由尾端一格隔离是否支付本次边界。
+  - 后继 consumer 同时读取 B 的长度与火；删除实体差读取或预亮最终火盆时分别退化。
+  - 对 B 烛芯错位一格、取消遮蔽重曝、禁用退焰规则，分别隔离同格、刚重曝与 shrink_ignite 的职责。
+  - 指定 trace 不得依赖滚动途中接触链；完整可达图按当前 exposure 门核对。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml
+do_not_repeat:
+  - 只证明 shrink_ignite 事件发生，或让终点仅检查 B 是否点亮。
+  - 用不同初始长度冒充交接前后产生的长度差。
+  - 把退焰交接与最终 consumer 分成互不相接的两个 exact 模块。
+  - 把完整交接伪关卡发布成 Lexicon 条目或由 Explorer 编辑 experience_cores.yml。
+materialization_target: >-
+  先采样 3—6 个近邻变体，并给出至少一个同布局 existence proof：玩家选择让 B 在边界前普通加入，
+  或在 A 缩短后接力加入；后者因不参加已完成的燃烧结算而多保一格，且长度与火焰被同一连续后继链消费。
+  若只能获得事件 witness 或 consumer 无法闭合，应如实降为 material_only。

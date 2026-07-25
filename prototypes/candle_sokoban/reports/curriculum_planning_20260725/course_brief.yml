@@ -1,0 +1,64 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+prototype_id: candle_sokoban
+status: active
+
+goal:
+  mainline_level_count:
+    minimum: 20
+    maximum: 25
+  statement: >-
+    先按机制暴露顺序探索可玩的局部结构，再由玩家侧判断挑选主线体验核心；
+    不从事件表或预设关数反推关卡槽位。
+
+human_constraints:
+  jam_production_cost_is_selection_factor: false
+  fixed_opening:
+    - 第 1 关建立轴推、烛芯位置和点盆目标。
+    - 第 2 或第 3 关让玩家跨过一次五拍倒计时边界并看到蜡烛缩短；首次可只展示，不要求主动利用。
+  slot_rule: >-
+    除上述短教学展示外，每个槽位都必须包含玩家选择、动后具体差异、最小 consumer
+    和可说明的错误反事实。
+
+difficulty_scale:
+  type: relative_course_difficulty
+  minimum: 1
+  maximum: 5
+  calibration: >-
+    只表示本课程内部的相对难度；5 是唯一最高档，不存在 5+、6—8 或隐藏的更高档位。
+    新机制首次出现可以回落，机制暴露更晚也不自动意味着难度更高。
+
+selection_labels:
+  - mainline_core
+  - jam_reserve
+  - material_only
+  - reject
+
+artifact_layers:
+  lexicon:
+    purpose: 记录可独立拼接的细粒度局部结构；必须有最小 consumer，但不表达完整玩家命题。
+    excludes:
+      - runtime 规则或事件事实本身
+      - 已经串成完整体验核心的多段组合
+      - 具体伪关卡的完整布局与动作链
+  experience_core:
+    purpose: 记录玩家选择、动后差异、consumer 链与错误反事实，作为课程槽位的评估对象。
+    authority_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml
+  optional_direction:
+    purpose: Explorer 为证明体验核心可用而制作的具体组合实例，可作后续单关设计基石但不约束最终实现。
+    storage: 各 batch 的 proposed_families.md、cases.*、results.json 与 explorer_notes.md
+
+authority_refs:
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/mechanic.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/docs/curriculum_planning_context.md
+
+excluded_as_design_sources:
+  - prototypes/candle_sokoban/knowledge.yml
+  - prototypes/candle_sokoban/curriculum.yml
+  - prototypes/candle_sokoban/levels.yml
+  - prototypes/candle_sokoban/studio/levels.yml
+  - prototypes/candle_sokoban/playable_queue.yml
+  - 旧 Candle reports、旧候选、既有待玩关、design archive 与外部知识文档

@@ -1,0 +1,130 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+stage_id: stage_03_shared_fire_reignition
+status: completed
+
+player_prior:
+  - 已掌握基础操控、共享倒计时及墙体灭火退出编排。
+  - 尚不知道火盆/外露烛芯可点燃未燃烛芯，也不知道新加入者继承当前倒计时相位。
+
+controller_focus: >-
+  点火的课程价值是让对象在玩家选择的共享相位加入燃烧集合。候选必须把加入时机写成长度、火源接力、
+  或参与区间差异，并由后继消费；不得把 ignite / reignite 事件本身当槽位。
+
+batches:
+  - batch_id: batch_stage03_001_midcycle_join_allocates_burn
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage03_request_001_midcycle_join_allocates_burn.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      早/晚加入两路最终同为燃烧且烛芯端对齐，只差 B 是否参加当前边界而留下的一格尾端；
+      预燃 B 会删除晚加入分支，移除火源会删除参与，推动面与侧滚目标均能读取尾格。
+      它与墙灭保长的玩家动作相反：玩家在决定是否用一格长度支付当前周期来取得火焰身份。
+    player_facing_core: >-
+      玩家决定现在让 B 接入共享时钟、立刻取得火但支付当前周期的一格，
+      还是等边界后再点燃，把完整长度带入后继接口。
+    required_counterfactual:
+      - B 初始已燃时，晚加入的保格路线消失并收敛到短 B。
+      - 移除稳定点火源后，边界前路线不再加入或缩短。
+      - 删除侧滚目标后只剩终点差，没有用途。
+    packaging_constraints:
+      - 正式关卡应把动态生成的尾格差和后继 consumer 串入同一 exact trace。
+      - consumer 必须在相位差再次跨界前读取，或显式处理两路剩余倒计时差。
+      - 若使用燃烛而非火盆作源，必须重新证明边界后的点火接口仍稳定。
+    expected_course_role: 共享火焰首次主动应用；教学“加入继承当前相位”。
+    expected_relative_difficulty: 4
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_001_midcycle_join_allocates_burn/batch.yml
+
+  - batch_id: batch_stage03_002_dying_source_ignition_window
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage03_request_002_dying_source_ignition_window.yml
+    status: completed
+    controller_decision: material_only
+    decision_reason: >-
+      有限火源已可靠产生过早二格燃、窗口三格燃、过晚四格未燃；另一个静态组合也证明
+      只有三格燃烛能通过准确长度门并点盆。但动态生成与 consumer 尚未串入同一 exact trace，
+      跨周期的 C 点盆目前仍是独立小题，不能据此确认一个完整体验核心。
+    player_facing_core: pending_composition
+    required_counterfactual:
+      - 永久火盆会删除接火上限，三格火源会把上限延后一周期。
+      - 预燃 B 删除加入选择并收敛到过短结果。
+      - B 改未燃、删除火盆或删除远点墙分别移除火焰职责或长度门。
+    material_refs:
+      - receding_wick_source_shifts_ignition_socket
+      - single_push_lane_selects_middle_roll_endpoint
+      - orthogonal_push_hands_player_to_axis_face
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_002_dying_source_ignition_window/batch.yml
+
+  - batch_id: batch_stage03_002b_dying_source_window_composition
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage03_request_002b_dying_source_window_composition.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      组合收口把动态接火窗口、准确长度门与最终火焰输出放进同一初始布局和胜利链。
+      第一周期下推 E 直接打开返回 D 的限时短路；窗口 B 生成中间终点并用火焰完成唯一火盆。
+      早接在远列被墙拒绝，过晚虽通过几何但因无火不能胜利，两个界限均有独立 consumer。
+    player_facing_core: >-
+      玩家不能一看见火源就接火，也不能只顾保长；必须在火源第一次退移后、彻底消失前完成交接，
+      让 B 同时带着准确长度与火焰进入一条连续后继链。
+    required_counterfactual:
+      - 删除远列墙后，过早短 B 的上推恢复，隔离长度下界。
+      - 不做第一周期 E 准备时，无法在下一次缩短前到达读取器。
+      - 删除最终火盆后，完整几何链仍可执行但没有输出与胜利。
+      - batch 002 的永久源、延寿源、预燃 B 对照继续支持时间窗上界与加入选择。
+    packaging_constraints:
+      - 正式关卡可重做 E、返回路径与终点列，但必须保留“第一周期准备同一 consumer”的因果关系。
+      - D 必须先读取中间长度，再把玩家交给 B 的轴推面；不能拆成两个并列小题。
+      - 完整图仍需收紧旁路并重做 exposure audit。
+    expected_course_role: 共享火焰阶段的窗口深化；把加入下界与有限火源上界同时交给玩家规划。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T02_DYING_SOURCE_IGNITION_WINDOW
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_002_dying_source_ignition_window/batch.yml
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_002b_dying_source_window_composition/batch.yml
+
+  - batch_id: batch_stage03_003_bank_fire_pause_resume
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage03_request_003_bank_fire_pause_resume.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同图闭环中 P 先保存 B 输出的火焰，后在 B 暂停跨界保形后成为复燃接口；暂停期间推动 G
+      直接清出最终轴推位。不暂停会让 B 过度缩短并错失停点，保形但不取火则几何可走却不能点 Q。
+      因而永久存火、参与暂停和恢复火焰三段均不可删。
+    player_facing_core: >-
+      玩家先把火焰留在永久火盆里，再让原蜡烛暂停燃烧去完成空间准备，最后从存火点取回火焰；
+      火可以连续保存，但蜡烛不必连续燃烧。
+    required_counterfactual:
+      - 删除墙后 B 在必要工作期间连续缩短，失去最终长度接口。
+      - 移除 P 后 B 可保形但没有可取回的火；未燃静态对照不能点 Q。
+      - P 预亮会删除第一段存火职责，但暂停—取火接口仍在。
+      - 删除 Q 后完整闭环仍可动作却没有输出或胜利。
+    packaging_constraints:
+      - 暂停期间的对象工作必须直接准备最终链，不能换成独立小题或空走。
+      - 从墙离开的同一行动必须直接落入 P 的点火接口，避免提前暴露未燃重曝。
+      - P/S1/S2 的具体火盆包装只是可选方向，正式关卡可换但需重新核验。
+    expected_course_role: 共享火焰阶段终盘；组合退出、永久存火与复燃，建立多段参与史。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T03_PAUSE_RESUME_BURN_INTERVALS
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_003_bank_fire_pause_resume/batch.yml
+
+planned_followups:
+  - id: S03_T02_DYING_SOURCE_IGNITION_WINDOW
+    purpose: 探索接火过早会多烧、过晚会失去火源的传火窗口。
+  - id: S03_T03_PAUSE_RESUME_BURN_INTERVALS
+    purpose: 探索墙灭与复燃把同一对象的参与史切成多个区间。
+
+mainline_cores:
+  - id: S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN
+    title: 在边界前后加入，选择是否支付当前周期
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN
+  - id: S03_T02_DYING_SOURCE_IGNITION_WINDOW
+    title: 有限火源夹出的唯一接火窗口
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T02_DYING_SOURCE_IGNITION_WINDOW
+  - id: S03_T03_PAUSE_RESUME_BURN_INTERVALS
+    title: 存火—暂停—取火闭环
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T03_PAUSE_RESUME_BURN_INTERVALS
+jam_reserve: []
+material_only: []
+rejected: []

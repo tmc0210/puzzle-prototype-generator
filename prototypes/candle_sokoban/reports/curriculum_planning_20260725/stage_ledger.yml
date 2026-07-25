@@ -1,0 +1,349 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+current_stage: stage_07_all_mechanics_composition
+
+stages:
+  - id: stage_01_basic_countdown
+    title: 基础操控与早期倒计时
+    status: completed
+    phase: selected
+    allowed_exposure_through: basic_candle_manipulation
+    player_prior:
+      - 具备基础推箱子走位经验。
+      - 尚不知道 Candle 的轴推、侧滚、烛芯投影和共享倒计时规则。
+    fixed_teaching_beats:
+      - 第 1 关建立轴推、烛芯位置和点盆。
+      - 第 2 或第 3 关必须看到一次倒计时边界与蜡烛缩短。
+    target_player_capabilities:
+      - 理解侧滚移动多格仍只消耗一个行动，并能把它用于时间规划。
+      - 理解燃烧缩短会改变蜡烛实体形状，并能预见该变化的后继用途。
+      - 只在有独立 consumer 时，把同步燃烧或燃尽提升为体验核心。
+    theme_shortlist:
+      - id: S01_T01_LONG_ROLL_TEMPORAL_COMPRESSION
+        priority: first
+        status: rejected
+        outcome: >-
+          火盆能消费边界前的长度差，但一格短滚与无滚动预置终点都能复现；
+          多格长滚没有被隔离，退化为普通少走一步。
+        design_space: >-
+          燃烧长蜡烛在第一次边界前可选择一次多格侧滚或较慢的多行动准备；
+          长滚路线只走一拍并保留特定长度/端点，较慢路线跨界后失去端帽格；
+          紧接的窄操作位、滚动停点或终点点盆只接受其中一种动后局面。
+      - id: S01_T02_SHRINK_RELEASES_OPERATION_CELL
+        priority: deferred_candidate
+        status: deferred
+        outcome: >-
+          首批构造发现存活燃烛缩短后，旧端帽格成为退后的火焰投影；
+          玩家立即进入会死亡，不能把它当成干净操作位。后续若探索必须更换 consumer。
+        design_space: >-
+          燃烧长蜡烛的端帽占住下一步所需站位或通口；玩家安排共享边界后该格被缩短释放；
+          新空位立即允许一次此前不合法的绕行、轴推或侧推，过早/过晚释放则失去操作面或形成旁路。
+      - id: S01_T03_BURNOUT_REMOVES_ROLL_STOP
+        priority: second
+        status: mainline_core
+        outcome: >-
+          短燃烛在燃尽前/后让同一滚烛停在近点/远点，通口或轴推面立即读取停点；
+          持续未燃挡块、固定墙与移除 consumer 对照均支持该时间窗口的独立性。
+        design_space: >-
+          一根短燃烛当前作为另一根蜡烛的侧滚挡块；玩家选择它是否在边界燃尽，
+          从而让后者停在近端或越过旧位置到远端；两个停点分别接入不同的后续操作面。
+      - id: S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY
+        priority: third
+        status: mainline_core
+        outcome: >-
+          同一叉口先处理 A 或 B；A 的必要工序会跨过共享边界并削掉 B 的烛芯端一列，
+          该列同时决定 B 的侧滚碰撞、终点和火盆对齐。单格燃尽只保留为退化期限对照。
+        design_space: >-
+          两处都需要完成操作的燃烛共享同一倒计时；玩家选择先处理哪一处；
+          在 A 花费的每个合法行动同时消耗 B 的寿命，反向顺序会让短烛先缩短或燃尽并失去后继用途；
+          两处必须服务同一胜利关系，不能退化为两个并列小题。
+    batches_completed:
+      - batch_stage01_001_long_roll_temporal_compression
+      - batch_stage01_002_burnout_removes_roll_stop
+      - batch_stage01_003_shared_clock_cross_object_order
+    mainline_cores:
+      - S01_T03_BURNOUT_REMOVES_ROLL_STOP
+      - S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY
+    jam_reserve: []
+    material_only: []
+    rejected:
+      - S01_T01_LONG_ROLL_TEMPORAL_COMPRESSION
+
+  - id: stage_02_wall_dousing
+    title: 墙体灭火
+    status: completed
+    phase: selected
+    allowed_exposure_through: wall_dousing
+    player_prior:
+      - 已掌握轴推、侧滚、烛芯点盆和全火盆目标。
+      - 已见过共享五拍倒计时、同步缩短与燃尽，并做过燃尽前后时机选择和跨对象顺序规划。
+      - 尚不知道烛芯贴墙会灭火，也不知道边界当拍灭火可避开本次缩短。
+    target_player_capabilities:
+      - 把墙体灭火理解为让指定蜡烛退出共享燃烧集合，而不是单纯关闭火焰。
+      - 能选择让哪根蜡烛在某次边界前退出，把时间决定写成可消费的长度分配。
+      - 能安排先使用燃烧态输出、再及时灭火保留实体形状的双阶段用途。
+      - 在深化结构中规划多次边界上的错峰退出，形成指定长度向量。
+    theme_shortlist:
+      - id: S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH
+        priority: first
+        status: mainline_core
+        outcome: >-
+          同一叉口先灭 A/B，会把边界保住的额外尾端格分配给具体对象；两根随后都熄灭并对齐烛芯端，
+          横条停点或竖烛轴推面只读取该格属于哪一行。提前一拍退出仍成立，说明核心是参与集合而非事件标签。
+        design_space: >-
+          两根燃烛都接近各自墙面，玩家在共享边界前只能选择把其中一根烛芯送入墙体；
+          被选者当拍灭火并保住一格，另一根继续燃烧并缩短，形成可交换的长短分配；
+          下游滚动停点、轴推面或火盆对齐只接受正确对象保长后的具体形状。
+      - id: S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+        priority: second
+        status: mainline_core
+        outcome: >-
+          同一 A 必须先以燃烧态点盆，再在边界前墙灭保住左尾格；过早漏掉点盆，过晚先缩短，
+          后继 B 对同一格的轴推从被挡变为放行。前后 consumer 缺一都只剩事件或长度差。
+        design_space: >-
+          同一根燃烛必须先以外露火焰完成一次必要输出，再在首次边界前把烛芯送入墙体；
+          过早灭火失去前段火焰用途，过晚灭火则先缩短并失去后段实体用途；
+          及时退出后保留的那一格立刻成为另一对象的停块、操作面或目标对齐条件。
+      - id: S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+        priority: third
+        status: mainline_core
+        outcome: >-
+          A/B/C 跨两个边界退出并对齐成 4/3/2；同一探针依次读取 A 的尾格、B 的占格与缺口、
+          C 的入口与终止格。交换周期、合并周期或删除 C 会在连续链的不同接口断开。
+        design_space: >-
+          多根燃烛在不同燃烧边界前依次贴墙退出，使它们分别经历零次、一次或更多次缩短；
+          玩家主动制造一个非对称长度向量，随后由联合滚道或多个相互依赖的操作面一次性读取，
+          任意交换退出顺序都会留下错误的长度分配。
+    batches_completed:
+      - batch_stage02_001_boundary_exit_allocates_length
+      - batch_stage02_002_just_in_time_dual_use_then_freeze
+      - batch_stage02_003_staggered_exit_length_vector
+    mainline_cores:
+      - S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH
+      - S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+      - S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+    jam_reserve: []
+    material_only: []
+    rejected: []
+  - id: stage_03_shared_fire_reignition
+    title: 共享火焰与复燃
+    status: completed
+    phase: selected
+    allowed_exposure_through: shared_fire_and_reignition
+    player_prior:
+      - 已掌握共享倒计时、燃烧缩短、燃尽、轴推与侧滚。
+      - 已会用墙体灭火选择对象退出、夹出单对象退出窗口，并跨多个边界安排退出次序。
+      - 尚不知道外露未燃烛芯可被已点火盆或已燃烛芯点燃，也不知道加入不会重置共享倒计时。
+    target_player_capabilities:
+      - 把点火理解为让指定对象在当前共享相位加入燃烧集合，而不是简单恢复火焰。
+      - 能利用“入场不重置倒计时”选择让对象经历或避开下一次缩短。
+      - 能在火源有寿命时安排传火窗口，并让接火对象承担后继火源或实体职责。
+      - 能组合墙灭与复燃，把同一对象的燃烧参与拆成多个主动区间。
+    theme_shortlist:
+      - id: S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN
+        priority: first
+        status: mainline_core
+        outcome: >-
+          同一未燃 B 在边界前/后从稳定火源加入；两路最终同为燃烧且烛芯端对齐，
+          只差是否为当前周期支付一格长度。尾端碰撞列或侧滚目标读取该加入历史。
+        design_space: >-
+          另一根燃烛维持共享相位，未燃 B 可在边界前或边界后从固定火源加入；
+          入场不会重置倒计时，因此早加入让 B 多经历一次缩短，晚加入保留一格；
+          两路最终重新对齐火焰状态与烛芯端，只由后继碰撞列或目标距离读取 B 的长度历史。
+      - id: S03_T02_DYING_SOURCE_IGNITION_WINDOW
+        priority: second
+        status: mainline_core
+        outcome: >-
+          同一布局中，过早接火让 B 过短并错过单列门，窗口接火同时留下准确长度与火焰并完成唯一火盆，
+          过晚则几何可通但火源已消失。第一周期工作直接准备同一读取器，组合已在 exact 中闭合。
+        design_space: >-
+          短燃烛 A 只会再存活有限边界，未燃 B 只能从 A 取得火；过早传火让 B 经历过多缩短，
+          等 A 燃尽后又永久失去火源，玩家必须在两者之间的一个周期内完成交接；
+          B 的目标长度与后继传火共同读取该窗口。
+      - id: S03_T03_PAUSE_RESUME_BURN_INTERVALS
+        priority: third
+        status: mainline_core
+        outcome: >-
+          B 先把火存入永久 P，再墙灭跨两次边界保形并完成最终通路准备，随后从 P 同动作复燃；
+          保住的长度与取回的火共同完成 Q。不暂停失去几何，不取火则保形但无输出。
+        design_space: >-
+          同一蜡烛先把火焰存入永久火盆，再墙灭退出并跨过必要工作区间保形；
+          之后从该火盆复燃取回火焰，继续完成最终输出。玩家把火焰连续性转移给固定火盆，
+          同时把原蜡烛的燃烧史切成两个主动区间。
+    batches_completed:
+      - batch_stage03_001_midcycle_join_allocates_burn
+      - batch_stage03_002_dying_source_ignition_window
+      - batch_stage03_002b_dying_source_window_composition
+      - batch_stage03_003_bank_fire_pause_resume
+    mainline_cores:
+      - S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN
+      - S03_T02_DYING_SOURCE_IGNITION_WINDOW
+      - S03_T03_PAUSE_RESUME_BURN_INTERVALS
+    jam_reserve: []
+    material_only: []
+    rejected: []
+  - id: stage_04_body_concealment
+    title: 烛身遮蔽与未燃重曝
+    status: completed
+    phase: selected
+    allowed_exposure_through: body_concealment_and_reexposure
+    player_prior:
+      - 已会用墙让对象退出、用火盆/烛芯让对象加入，并规划多个参与区间。
+      - 尚不知道另一根蜡烛的烛身也能遮住燃烛烛芯，也不知道移开遮体后目标保持未燃。
+    target_player_capabilities:
+      - 把可移动蜡烛理解为兼具空间对象与可移动燃烧开关的遮板。
+      - 能在不移动目标蜡烛的情况下原地冻结其长度与位置。
+      - 能利用移开遮板后的未燃重曝区间，先恢复操作面或重新定位，再选择何时复燃。
+    theme_shortlist:
+      - id: S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+        priority: first
+        status: mainline_core
+        outcome: >-
+          C 的一格烛身遮住 B 烛芯，使 B 不移动而保住完整原轮廓；C 的邻格同时建立后继停块。
+          移动 B 贴墙会丢原位，不退出会丢长度，删除任一读取则退化为普通灭火或普通移动墙。
+        design_space: >-
+          目标燃烛 B 必须留在精确位置，不能靠推入墙面灭火；玩家移动另一根蜡烛 C，
+          让 C 的烛身遮住 B 的烛芯并使 B 原地退出燃烧。C 的终点同时打开或建立后继空间接口，
+          边界后 B 保留的位置与长度再由滚动停点、操作面或目标对齐读取。
+      - id: S04_T02_REEXPOSED_UNLIT_STAGING_WINDOW
+        priority: second
+        status: mainline_core
+        outcome: >-
+          同一布局里，遮板离开先交出未燃烛芯格；暂存后复燃动态生成二格燃烛，
+          通过同一窄身门并由火焰列点亮终盆。立即复燃得到一格燃烛而错列，永不复燃则三格过宽且无火。
+        design_space: >-
+          C 移开后 B 的烛芯重新外露但保持未燃；玩家利用这段“几何已开放、燃烧未恢复”的区间
+          重新定位 B 或穿过其原火焰接口，随后再从受控火源复燃并完成输出。
+      - id: S04_T03_MOVABLE_COVER_COUPLES_TWO_OBJECT_JOBS
+        priority: third
+        status: deferred_unexplored
+        outcome: >-
+          前两项已经给出“遮住”与“移开后暂存”两种不可合并的玩家命题；本假设暂不占探索轮次，
+          留作全机制组合时可能重访的材料方向，不视为 jam_reserve 或已成立核心。
+        design_space: >-
+          C 为完成自己的滚动/轴推任务必须在两个端点间移动，而两个端点分别遮住或放开 B 的烛芯；
+          玩家要把 C 的空间工序与 B 的参与区间排成同一链，不能把遮蔽当独立开关。
+    batches_completed:
+      - batch_stage04_001_mobile_shutter_douses_in_place
+      - batch_stage04_002_reexposed_unlit_staging_window
+      - batch_stage04_002b_reexposed_unlit_composition
+    mainline_cores:
+      - S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+      - S04_T02_REEXPOSED_UNLIT_STAGING_WINDOW
+    jam_reserve: []
+    material_only: []
+    rejected: []
+  - id: stage_05_retreating_flame
+    title: 退焰点火
+    status: completed
+    phase: selected
+    allowed_exposure_through: retreating_flame_transfer
+    player_prior:
+      - 已掌握基础操控、共享倒计时、退出与加入燃烧集合、烛身遮蔽和未燃重曝。
+      - 尚不知道存活燃烛缩短后的新火焰只会点燃同格刚刚重曝的未燃烛芯。
+    target_player_capabilities:
+      - 把退焰点火理解为一次边界交接：旧载体支付本次燃烧，接火者在结算后获得火焰。
+      - 能让同一次缩短同时解除一个烛身遮蔽关系并建立新的火焰职责。
+      - 能跨多个边界规划火种载体的接力次序，而不是只见证一次 shrink_ignite 事件。
+    theme_shortlist:
+      - id: S05_T01_BOUNDARY_HANDOFF_PRESERVES_RECEIVER
+        priority: first
+        status: mainline_core
+        outcome: >-
+          救援在同图中让早、晚两路边界后 B 都保持燃烧；早接 B 支付边界而短一格，退焰接班 B 保持完整。
+          B 的下一次直接侧滚把两种长度的当前火焰写入相邻插口，只有完整燃烛点亮远盆；
+          一格 A 燃尽控制保留完整 B 几何但无火，证明长度与退焰所得火都被同一接口读取。
+        design_space: >-
+          A 的烛身末格遮住未燃 B 的烛芯；燃烧边界让存活 A 缩短，退后的火焰在结算后点燃刚重曝的 B。
+          与边界前普通接火相比，两路最终都得到燃烧 B，但只有退焰交接让 B 不支付本次燃烧、保住额外一格；
+          同一后继链同时读取 B 的完整长度与火焰。
+      - id: S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE
+        priority: second
+        status: mainline_core
+        outcome: >-
+          A 存活缩短把同一格从遮芯且阻挡 B 前推的实体端帽，翻成 B 身体可进入的非实体退焰；
+          B 原地接火并在下一次直接轴推中进入该格、点亮前方火盆。一格 A 燃尽或 A 提前错列都只开放无火通道。
+          “B 已燃但 A 仍占格”不是稳定态，故核心是 blocker→fuel 的原子接口转换，不是两把独立许可。
+        design_space: >-
+          A 的末格既遮住 B 的烛芯，也正占据 B 沿长轴前推时身体要进入的下一格；边界缩短同时释放这个身体目的格并把火交给 B。
+          正确路下一次直接轴推 B 进入刚释放格并完成输出；A 燃尽只能释放而不能传火，另处预先点亮 B 则仍被 A 身体挡住。
+      - id: S05_T03_RETREATING_FLAME_RELAY
+        priority: third
+        status: mainline_core
+        outcome: >-
+          玩家在第一边界动作把未燃 B 推入直角双链接槽；A→B 与 B→C 分属相邻边界，接火者不在同边界继续缩短。
+          准传、过早、断链分别得到三格燃 C、两格燃 C、三格未燃 C，由同一终点侧滚与远火焰插口读取。
+          当前过早/断链来自近邻布局，正式设计需把三路收进同一初态的玩家选择。
+        design_space: >-
+          玩家在第一边界前把未燃 B 送入唯一中继槽：B 的烛芯受 A 端帽遮蔽，而 B 端帽同时遮住 C 烛芯。
+          第一边界 A 缩短后点燃 B，第二边界 B 再缩短点燃 C，使火种每个边界只前进一段；
+          B 提前已燃会让 C 过早加入，B 过短或错位则中途断链，最终由 C 的长度与火共同读取节拍。
+    batches_completed:
+      - batch_stage05_001_boundary_handoff_preserves_receiver
+      - batch_stage05_001b_direct_handoff_consumer
+      - batch_stage05_002_release_body_step_and_fire
+      - batch_stage05_003_retreating_flame_relay
+    mainline_cores:
+      - S05_T01_BOUNDARY_HANDOFF_PRESERVES_RECEIVER
+      - S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE
+      - S05_T03_RETREATING_FLAME_RELAY
+    jam_reserve: []
+    material_only: []
+    rejected: []
+  - id: stage_06_rolling_contact_chain
+    title: 滚动途中接触链
+    status: completed
+    phase: selected
+    allowed_exposure_through: rolling_contact_chain
+    player_prior:
+      - 已掌握所有前序机制，包括退焰同格交接和跨边界接力。
+      - 尚不知道侧滚每个小步都会立即结算点盆、点火与灭火，而且接触不会使滚动提前停下。
+    target_player_capabilities:
+      - 把侧滚路径与最终停点视为两套可同时消费的接口，而不是只看终点。
+      - 能用途中接触的先后顺序写入滚烛的最终燃烧状态。
+      - 能把一次长滚的最终接触状态接到同动作末尾的燃烧边界，控制是否缩短。
+    theme_shortlist:
+      - id: S06_T01_PATH_OUTPUT_ENDPOINT_BODY_DUTY
+        priority: first
+        status: mainline_core
+        outcome: >-
+          A 一次 d4 长滚在非终点 d2 点盆，d4 尾格跨两个缩短边界仍截停 Q；Q 因而停在可上推列。
+          短滚只点盆而失去终点职责，预亮/错列盆只剩终点链，删除 Q 只剩 drive-by，普通轴推不能同时复现。
+          两项是同一动作累积的必要成果；正式关卡需把 Q 上推接入标准胜利闭环。
+        design_space: >-
+          一根燃烛侧滚时，火焰只在途中某个小步扫过目标火盆，最终停点不再对齐该盆；
+          同一滚动的实体终点同时成为下一对象的停块、遮板或操作面。过早停只建立路径输出，
+          另一轨道只取得终点职责，只有正确长滚在一个行动内同时完成二者。
+      - id: S06_T02_ORDERED_DOUSE_REIGNITE_WRITES_ENDPOINT_STATE
+        priority: second
+        status: mainline_core
+        outcome: >-
+          同图上下 d5 长滚以相反顺序经过墙与火源；墙→火源终点燃烧并点盆，火源→墙终点未燃。
+          两路等距、同长度、同倒计时且由同构终点接口读取；反序首次火源接触为幂等，核心是最后有效状态写入覆盖前态。
+        design_space: >-
+          同一次侧滚沿途依次经过遮芯点与火源点；“先灭后燃”到终点为燃，“先燃后灭”到终点为未燃。
+          玩家通过滚动方向、轨道或可移动接触体决定顺序，终点后的同一 consumer 读取最终亮灭而非事件数量。
+      - id: S06_T03_BOUNDARY_CONTACT_PROGRAM
+        priority: third
+        status: mainline_core
+        outcome: >-
+          countdown=1 的同一长滚先写最终亮灭，随即决定参加缩短或避烧；燃烧路端帽释放并 shrink_ignite 接收烛，
+          未燃路保长并继续遮芯。countdown=2 保留路径终态与端点输出，却删除即时缩短/释放，证明不是 T02 后多等一拍。
+        design_space: >-
+          把有序接触长滚放在倒计时 1：滚动途中最终写成燃烧就参加本次边界，最终写成未燃则避开缩短；
+          一次行动同时决定终点状态和边界后长度，再由紧邻空间/火焰接口读取。
+    batches_completed:
+      - batch_stage06_001_path_output_endpoint_body_duty
+      - batch_stage06_002_ordered_douse_reignite
+      - batch_stage06_003_boundary_contact_program
+    mainline_cores:
+      - S06_T01_PATH_OUTPUT_ENDPOINT_BODY_DUTY
+      - S06_T02_ORDERED_DOUSE_REIGNITE_WRITES_ENDPOINT_STATE
+      - S06_T03_BOUNDARY_CONTACT_PROGRAM
+    jam_reserve: []
+    material_only: []
+    rejected: []
+  - id: stage_07_all_mechanics_composition
+    title: 全机制组合
+    status: in_progress
+    phase: awaiting_theme_synthesis

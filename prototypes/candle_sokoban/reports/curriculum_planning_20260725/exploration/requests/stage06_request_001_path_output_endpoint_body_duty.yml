@@ -1,0 +1,28 @@
+request_id: stage06_request_001_path_output_endpoint_body_duty
+exploration_id: candle_curriculum_stage06_rolling_contact_chain_20260725
+stage_id: stage_06_rolling_contact_chain
+allowed_exposure_through: rolling_contact_chain
+design_space: >-
+  让一根已燃蜡烛执行至少三格侧滚：它的外露火焰只在某个非终点小步扫过唯一未亮火盆，
+  滚动继续到最终挡块；终点实体位置随后立即成为另一对象的停块、遮板或唯一操作面。
+  正确轨道/挡块让一个行动同时完成“沿途永久输出”和“终点实体职责”；缩短路径只点盆却没到职责位，
+  另一轨道或预亮火盆则只剩普通终点摆位。玩家应当同时规划扫过路径与最终落点。
+sampling_axes:
+  - 正例侧滚至少三小步，火盆在非最终小步点亮，滚烛继续移动并在明确终点承担实体 consumer。
+  - 近端挡块让同一滚烛在点盆后提前结束，或在点盆前结束；用于隔离路径输出与终点职责不能合并为短滚。
+  - 预亮途中火盆后，相同滚动仍建立终点职责但失去路径输出；删除终点 consumer 后只剩 drive-by 点盆。
+  - 尝试用普通轴推序列、无途中接触的另一轨道或从终点反向操作复现；若同样轻易完成，结构应降级。
+  - 终点职责优先选择下一对象的停点/推动面，并尽量在滚后下一次对象操作直接读取，不做独立诊断小题。
+  - 指定正确 trace 可使用本阶段途中点盆事件，但不得依赖无关的途中点火/灭火链；完整图记录所有 later events。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml
+do_not_repeat:
+  - 只证明滚动途中能点盆，或最后一个盆在终点前被点亮。
+  - 把火盆放在滚动终点，退化为普通终点对齐。
+  - 路径点盆和终点职责分别属于两个互不相干的小题。
+  - 用失败输入、碰火死亡或“滚动没有停止”本身作为体验核心。
+  - 把完整长滚伪关卡发布成 Lexicon 条目或编辑 Controller 账本。
+materialization_target: >-
+  一个路径—终点双读的同链 existence proof：同一次三格以上侧滚在非终点小步产生不可由终点复现的永久输出，
+  并在最终落点建立紧接的实体接口；删除任一 consumer 都退化，短滚或普通推序列不能同时完成。

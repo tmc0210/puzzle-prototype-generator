@@ -1,0 +1,103 @@
+runId: batch_stage05_001b_direct_handoff_consumer
+title: "退焰交来的完整燃烛下一滚直读长度与火焰"
+notes: "同图比较边界后两格燃 B 与提前接火后一格燃 B；下一次两格侧滚直接读取火焰投影远近，不经过灭火、补火或滚动途中事件。"
+defaults:
+  maxExploreDepth: 14
+  maxReturnDepth: 18
+  maxStates: 40000
+  maxTransitions: 160000
+cases:
+  - id: post_settlement_long_lights_far_socket
+    family: direct_handoff_flame_socket
+    variant: post_settlement_long_lights_far_socket
+    changed_variable: "维持 A 对 B 烛芯的遮蔽直到 A 存活缩短"
+    contrast_with: [ordinary_early_short_misses_far_socket, one_cell_source_long_unlit_misses_far_socket]
+    notes: "第 5 步 A 缩短并退焰点燃完整两格 B；第 7 步是边界后首次直接操作 B，向右两格侧滚后 B 火焰落在远插口并点盆。"
+    layout: |
+      #############
+      #...........#
+      #...........#
+      #...........#
+      #...2R@o....#
+      #....u......#
+      #....1..#...#
+      #...........#
+      #...........#
+      #############
+    actions: [down, down, down, left, left, up, right]
+
+  - id: ordinary_early_short_misses_far_socket
+    family: direct_handoff_flame_socket
+    variant: ordinary_early_short_misses_far_socket
+    changed_variable: "第 1 步把 A 向左退一格，让 B 在边界前普通接火"
+    contrast_with: [post_settlement_long_lights_far_socket, short_lit_reaches_near_socket]
+    notes: "B 在第 1 步普通接火并参加第 5 步结算，边界后仍燃烧但只剩一格；第 7 步同向两格侧滚后火焰只到近格，远盆不亮。"
+    layout: |
+      #############
+      #...........#
+      #...........#
+      #...........#
+      #...2R@o....#
+      #....u......#
+      #....1..#...#
+      #...........#
+      #...........#
+      #############
+    actions: [left, left, down, down, down, up, right]
+
+  - id: one_cell_source_long_unlit_misses_far_socket
+    family: direct_handoff_flame_socket
+    variant: one_cell_source_long_unlit_misses_far_socket
+    changed_variable: "把 A 改成会在边界燃尽的一格，移除存活退焰"
+    contrast_with: post_settlement_long_lights_far_socket
+    notes: "A 第 5 步燃尽，B 以完整两格重曝但未燃；第 7 步相同两格侧滚几何合法，烛芯也落在远盆格，却没有点盆输出。"
+    layout: |
+      #############
+      #...........#
+      #...........#
+      #...........#
+      #....R@o....#
+      #....u......#
+      #....1..#...#
+      #...........#
+      #...........#
+      #############
+    actions: [down, down, down, left, left, up, right]
+
+  - id: short_lit_reaches_near_socket
+    family: direct_handoff_flame_socket
+    variant: short_lit_reaches_near_socket
+    changed_variable: "只把火盆从远插口向 B 移近一格"
+    contrast_with: ordinary_early_short_misses_far_socket
+    notes: "使用普通提前接火路线在边界后的等价局部快照：一格 B 仍燃烧；同向两格侧滚把当前火焰送到近插口并点盆。"
+    layout: |
+      #############
+      #...........#
+      #...........#
+      #...........#
+      #...........#
+      #......o....#
+      #...@U..#...#
+      #...........#
+      #...........#
+      #############
+    actions: [right]
+
+  - id: wick_under_surviving_tail_no_handoff
+    family: direct_handoff_flame_socket
+    variant: wick_under_surviving_tail_no_handoff
+    changed_variable: "把 A 向右错一格，使 B 烛芯位于 A 的存活尾格而非被删端帽"
+    contrast_with: post_settlement_long_lights_far_socket
+    notes: "第 5 步 A 仍缩短，但 B 烛芯继续被 A 的存活格遮住，没有 shrink_ignite；本例只界定退焰格必须是被删除端帽格。"
+    layout: |
+      #############
+      #o..........#
+      #...........#
+      #...........#
+      #....2R@....#
+      #....u......#
+      #....1..#...#
+      #...........#
+      #...........#
+      #############
+    actions: [down, down, down, left, left]

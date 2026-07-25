@@ -1,0 +1,32 @@
+request_id: stage02_request_001_boundary_exit_allocates_length
+exploration_id: candle_curriculum_stage02_wall_dousing_20260725
+stage_id: stage_02_wall_dousing
+allowed_exposure_through: wall_dousing
+design_space: >-
+  开始摆法中有两根都将在同一共享边界参加燃烧的蜡烛，它们分别接近可遮住自身烛芯的墙面；
+  玩家从同一决策区域只能选择先把 A 或 B 的烛芯送入墙体。被选者在该行动的接触结算中灭火，
+  若恰逢边界便保住当前长度，未选者继续燃烧并缩短，于是同一布局产生“长 A/短 B”或“短 A/长 B”两种长度分配；
+  紧接的侧滚停点、轴推操作面或火盆对齐只接受其中一种对象—长度配对。
+sampling_axes:
+  - 两根燃烛初始长度尝试 2/2、3/2、3/3；优先让边界只删除一格而非直接燃尽。
+  - 从同一状态比较选择 douse A 与 douse B，灭火行动本身必须是必要对象操作，不用无意义等待凑到边界。
+  - 至少尝试一个离散侧滚停点 consumer，以及一个轴推面或火盆距离 consumer。
+  - 交换 A/B 的后继职责，检查核心是“正确分配保长名额”而不是某个固定朝向或坐标。
+  - 把灭火行动提前一拍、把遮芯墙移除、或让两者都保持燃烧，核对差异是否确由选择性退出和边界避烧产生。
+  - 移除下游 consumer 后应只剩长度差；若仍可声称成功，说明 consumer 没有被隔离。
+  - 指定 trace 不得出现火盆/烛芯复燃、烛身遮蔽、未燃重曝、退焰点火或滚动途中接触链。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/selections/stage_01_basic_countdown.yml
+do_not_repeat:
+  - 只证明烛芯贴墙会 extinguish_by_wall，或边界灭火会 boundary_extinguish_avoids_burn。
+  - 把“主动把燃烛芯送进墙面，使其退出燃烧状态”本身当成体验核心。
+  - 只保住任意一根蜡烛的一格，却没有要求把保长名额分配给具体对象的后继结构。
+  - 用两个不同初始布局分别展示长短结果；必须在同一局面中给出 A/B 决策。
+  - 让更晚阶段的复燃、烛身遮蔽、退焰点火或滚动途中接触承担 consumer。
+  - 设计完整关卡、判断课程优先级或声称结构值得占一关。
+materialization_target: >-
+  找到至少一个“选择性退出分配长度”的局部结构：同一边界前选择 douse A/B，
+  让两根对象交换谁保长、谁缩短；一个最小后继明确要求正确对象拥有那一格。
+  若灭火只有状态变化、任意对象保长都等价，或差异只是之后更容易移动，则不发布正向条目。

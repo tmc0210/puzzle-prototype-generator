@@ -1,0 +1,28 @@
+request_id: stage06_request_002_ordered_douse_reignite
+exploration_id: candle_curriculum_stage06_rolling_contact_chain_20260725
+stage_id: stage_06_rolling_contact_chain
+allowed_exposure_through: rolling_contact_chain
+design_space: >-
+  让同一根滚烛在一次至少三小步的侧滚中依次经过一个遮芯点和一个火源点，且两者都严格位于非终点小步。
+  “先遮芯灭火、后经过火源复燃”应在终点保持燃烧；反向顺序或另一轨道的“先接火、后遮芯”应在终点保持未燃。
+  滚动不能因中途亮灭而停止。终点紧接的同一火焰 consumer 只接受正确顺序，空间终点本身尽量对齐或由同构接口消除噪声。
+sampling_axes:
+  - 正确 trace 必须在一次滚动中按不同小步出现 extinguish 与更晚 ignite，并产生 roll_reignite_after_extinguish；终点仍燃烧。
+  - 错序 trace 必须让最后一次相关接触是遮芯，终点未燃；优先在同一布局通过方向、轨道或可移动接触体选择顺序。
+  - 删除遮芯点后只剩普通途中点火；删除火源后只剩途中灭火；两种删项都应消除“顺序程序”的独立性。
+  - 终点放未亮火盆或下游未燃烛芯，直接读取最终燃烧状态；不得在终点之后另处复燃。
+  - 近端挡块使滚动在第二接触前结束时，应只执行前半程序并在 consumer 失败。
+  - 记录每个小步的具体接触事件；不得把总事件集合相同但顺序未核实的 trace 当证据。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T01_PATH_OUTPUT_ENDPOINT_BODY_DUTY
+do_not_repeat:
+  - 只证明滚动途中能灭火或点火，或只出现 roll_reignite_after_extinguish 标签。
+  - 把灭火、复燃放在两次独立行动中。
+  - 终点后再从固定来源补火，掩盖接触顺序。
+  - 只比较不同终点位置而没有最终亮灭 consumer。
+  - 用下一动作的燃烧边界长度差作为主要读取；该深化留给 S06_T03。
+  - 编辑 Controller 账本或把完整顺序伪关卡写进 Lexicon。
+materialization_target: >-
+  一个同动作接触顺序的 existence proof：相同滚烛在一次长滚中经历两个严格非终点接触，顺序决定终点亮灭；
+  终点直接 consumer 读取该状态。删掉任一接触、提前停止或反向排序时，后继链在不同接口退化或失败。

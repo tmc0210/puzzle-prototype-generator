@@ -1,0 +1,126 @@
+runId: batch_stage06_003_boundary_contact_program
+title: "倒计时 1 长滚把路径终态提交给同动作边界"
+notes: >-
+  三格竖向燃烛位于横向滚道中央；玩家四步到达左右镜像操作面，第五步长滚。
+  右滚墙→火源，点亮端点盆后立刻缩短并把退焰交给相邻未燃烛；左滚火源→墙，端点未燃并避开同次边界。
+defaults:
+  maxExploreDepth: 7
+  maxReturnDepth: 12
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: douse_reignite_at_boundary
+    family: ordered_contact_state_commits_to_same_action_boundary
+    variant: douse_reignite_countdown_one
+    changed_variable: "第五次输入选择右滚：墙→火源后以燃烧终态进入当次边界"
+    contrast_with:
+      - source_douse_at_boundary
+      - douse_reignite_countdown_two
+    notes: "left,down,down,down 到左操作面；right d4：d1 灭、d3 复燃、d4 点端盆，随后 shrink len2 并点燃右侧接收烛。"
+    layout: |
+      #############
+      #.....@.....#
+      #...........#
+      #...........#
+      #.....3.....#
+      #.....3.....#
+      #r....D....l#
+      #.o#.O.#.Oo.#
+      #...........#
+      #############
+    actions: [left, down, down, down, right]
+
+  - id: source_douse_at_boundary
+    family: ordered_contact_state_commits_to_same_action_boundary
+    variant: source_douse_countdown_one
+    changed_variable: "第五次输入选择左滚：火源→墙后以未燃终态避开当次边界"
+    contrast_with: douse_reignite_at_boundary
+    notes: "right,down,down,down 到右操作面；left d4：d1 火源幂等、d3 墙灭、d4 端盆不亮，随后保留 len3，左侧接收烛仍被端帽遮芯。"
+    layout: |
+      #############
+      #.....@.....#
+      #...........#
+      #...........#
+      #.....3.....#
+      #.....3.....#
+      #r....D....l#
+      #.o#.O.#.Oo.#
+      #...........#
+      #############
+    actions: [right, down, down, down, left]
+
+  - id: douse_reignite_countdown_two
+    family: ordered_contact_state_commits_to_same_action_boundary
+    variant: douse_reignite_countdown_two
+    changed_variable: "玩家起点下移一格，把同一右滚从倒计时 1 提前到倒计时 2"
+    contrast_with: douse_reignite_at_boundary
+    notes: "left,down,down 三步到左操作面；right d4 后仍燃且点端盆，但倒计时只到 1，不 shrink、不释放端帽、不点燃接收烛。"
+    layout: |
+      #############
+      #...........#
+      #.....@.....#
+      #...........#
+      #.....3.....#
+      #.....3.....#
+      #r....D....l#
+      #.o#.O.#.Oo.#
+      #...........#
+      #############
+    actions: [left, down, down, right]
+
+  - id: remove_dousing_contact
+    family: ordered_contact_state_commits_to_same_action_boundary
+    variant: remove_right_wall
+    changed_variable: "删除右滚 d1 遮芯墙"
+    contrast_with: douse_reignite_at_boundary
+    notes: "仍在第五次输入右滚并点端盆、缩短与交火，但不再经历路径状态程序，退化为普通燃烛提交边界。"
+    layout: |
+      #############
+      #.....@.....#
+      #...........#
+      #...........#
+      #.....3.....#
+      #.....3.....#
+      #r....D....l#
+      #.o#.O...Oo.#
+      #...........#
+      #############
+    actions: [left, down, down, down, right]
+
+  - id: remove_reignition_contact
+    family: ordered_contact_state_commits_to_same_action_boundary
+    variant: remove_right_source
+    changed_variable: "删除右滚 d3 复燃火源"
+    contrast_with: douse_reignite_at_boundary
+    notes: "d1 墙灭后保持未燃到端点；端盆不亮，边界避烧，右侧接收烛仍被端帽遮芯。"
+    layout: |
+      #############
+      #.....@.....#
+      #...........#
+      #...........#
+      #.....3.....#
+      #.....3.....#
+      #r....D....l#
+      #.o#.O.#..o.#
+      #...........#
+      #############
+    actions: [left, down, down, down, right]
+
+  - id: stop_before_second_contact
+    family: ordered_contact_state_commits_to_same_action_boundary
+    variant: stop_after_dousing
+    changed_variable: "在右滚 d2 的顶部身体目的格增加挡墙"
+    contrast_with: douse_reignite_at_boundary
+    notes: "右滚只完成 d1 墙灭便被身体列挡停；同动作边界避烧，未到达火源、端盆或接收烛。"
+    layout: |
+      #############
+      #.....@.....#
+      #...........#
+      #...........#
+      #.....3.#...#
+      #.....3.....#
+      #r....D....l#
+      #.o#.O.#.Oo.#
+      #...........#
+      #############
+    actions: [left, down, down, down, right]

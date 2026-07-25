@@ -1,0 +1,134 @@
+runId: batch_stage04_002b_reexposed_unlit_composition
+title: "未燃暂存与两格火焰门的同图收口"
+notes: "同一布局比较先准备后复燃、先复燃后准备与不复燃；两格态穿门并点盆。"
+defaults:
+  maxExploreDepth: 16
+  maxReturnDepth: 24
+  maxStates: 40000
+  maxTransitions: 160000
+cases:
+  - id: staged_middle_wins
+    family: reexposed_unlit_exact_gate_composition
+    variant: staged_middle_wins
+    changed_variable: "重曝后先准备 B 的横向位置并清走 C，之后才接火"
+    contrast_with: [immediate_short_misses, never_reignite_long_blocked]
+    notes: "左推 B 发生在未燃区间；B 后来接触 O，只缩短一次成两格，再向下滚入左墙与右火盆之间并点盆。"
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..11R.O..#
+      #.....d...#
+      #.....@...#
+      ####...####
+      #.....o...#
+      ###########
+    actions: [up, up, up, down, left, up, left, left, left, left, down, right, right, up, right, down]
+
+  - id: immediate_short_misses
+    family: reexposed_unlit_exact_gate_composition
+    variant: immediate_short_misses
+    changed_variable: "B 在清走 C 和准备门之前先接火"
+    contrast_with: staged_middle_wins
+    notes: "重曝后先绕到尾端把 B 推入 O；再绕到门上方时 B 多参加一个边界，最终只剩一格，向下滚后火焰落在火盆左侧。"
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..11R.O..#
+      #.....d...#
+      #.....@...#
+      ####...####
+      #.....o...#
+      ###########
+    actions: [up, up, up, down, up, left, left, left, left, down, right, up, right, up, left, right, left, right, left, right, down, down]
+
+  - id: never_reignite_long_blocked
+    family: reexposed_unlit_exact_gate_composition
+    variant: never_reignite_long_blocked
+    changed_variable: "完成未燃准备但不做进入固定火源的最后一次轴推"
+    contrast_with: staged_middle_wins
+    notes: "B 保持三格未燃；从上方向下侧滚时，左端格将进入 x3,y7 墙，因此停在门上且不能点盆。"
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..11R.O..#
+      #.....d...#
+      #.....@...#
+      ####...####
+      #.....o...#
+      ###########
+    actions: [up, up, up, down, left, up, left, left, left, left, down, right, up, right, right, down]
+
+  - id: keep_cover_no_handoff
+    family: reexposed_unlit_exact_gate_composition
+    variant: keep_cover_no_handoff
+    changed_variable: "C 只进入 B 烛芯格，不继续离开"
+    contrast_with: staged_middle_wins
+    notes: "保持遮蔽时玩家仍在 C 下方；未获得烛芯格落点，也尚未开始直接左推 B 或清场。"
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..11R.O..#
+      #.....d...#
+      #.....@...#
+      ####...####
+      #.....o...#
+      ###########
+    actions: [up]
+
+  - id: widened_gate_long_passes
+    family: reexposed_unlit_exact_gate_composition
+    variant: widened_gate_long_passes
+    changed_variable: "把窄口左侧 x3,y6 墙改为空地"
+    contrast_with: never_reignite_long_blocked
+    notes: "沿永不复燃路线保留三格 B；放宽一列后同一次向下侧滚可越过原阻塞行并抵达底行，但未燃烛芯仍不能点盆。"
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..11R.O..#
+      #.....d...#
+      #.....@...#
+      ###....####
+      #.....o...#
+      ###########
+    actions: [up, up, up, down, left, up, left, left, left, left, down, right, up, right, right, down]
+
+  - id: source_removed_staged_fails
+    family: reexposed_unlit_exact_gate_composition
+    variant: source_removed_staged_fails
+    changed_variable: "把复燃来源 O 改成未点亮火盆 o"
+    contrast_with: staged_middle_wins
+    notes: "执行与正确路相同的准备和两次右推；B 不复燃、不缩短，三格身体在窄口前停住，最终火盆也不亮。"
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..11R.o..#
+      #.....d...#
+      #.....@...#
+      ####...####
+      #.....o...#
+      ###########
+    actions: [up, up, up, down, left, up, left, left, left, left, down, right, right, up, right, down]
+
+  - id: prelit_final_removes_fire_read
+    family: reexposed_unlit_exact_gate_composition
+    variant: prelit_final_removes_fire_read
+    changed_variable: "把窄口后的最终火盆预先点亮，并加一个不参与 trace 的未亮火盆避免初始胜利"
+    contrast_with: staged_middle_wins
+    notes: "正确路线仍动态生成两格燃烛并穿口，但末次滚动不再产生 light_brazier；说明原胜利链确实读取 B 的火焰，而不只读取长度。"
+    layout: |
+      ###########
+      #........o#
+      #.........#
+      #..11R.O..#
+      #.....d...#
+      #.....@...#
+      ####...####
+      #.....O...#
+      ###########
+    actions: [up, up, up, down, left, up, left, left, left, left, down, right, right, up, right, down]

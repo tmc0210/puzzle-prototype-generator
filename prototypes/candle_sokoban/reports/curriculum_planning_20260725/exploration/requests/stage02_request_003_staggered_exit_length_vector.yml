@@ -1,0 +1,34 @@
+request_id: stage02_request_003_staggered_exit_length_vector
+exploration_id: candle_curriculum_stage02_wall_dousing_20260725
+stage_id: stage_02_wall_dousing
+allowed_exposure_through: wall_dousing
+design_space: >-
+  三根等长燃烛 A/B/C 分别能在不同操作点把烛芯送入墙体。玩家要让 A 在第一次边界前退出、
+  B 继续燃烧一次后在第二次边界前退出、C 至少经历两次缩短，从而把相同起点主动写成
+  长/中/短三个长度层级；随后对齐它们的烛芯端，让尾端格形成有顺序的挡块阶梯。
+  一个后继对象或一条连续操作链必须联合读取至少两级差异：只完成第一次分配、把 A/B 的退出周期互换、
+  或让两根在同一周期退出，都不能复现正确的停点序列或操作通路。
+sampling_axes:
+  - 初始长度优先 3—4 格，最终尝试 3/2/1 或 4/3/2；避免任何对象直接燃尽使问题退化为存在期限。
+  - 第一次与第二次退出之间的行动必须由到达下一个墙灭操作点或移动必要对象构成，不用原地等待。
+  - 至少尝试一个单一横条/竖条在三行或三列间形成连续近—中—远停点的联合 consumer。
+  - 至少尝试一个“尾端格阶梯”使同一对象连续获得两个必要操作面的版本，而非三个独立动作检查。
+  - 交换 A/B 退出周期、让 A/B 同周期退出、只保留两根蜡烛，验证是否确实需要跨两个边界与三层长度。
+  - 移除 consumer 的第二个读取点；若仍保留全部玩家推理，则它只是上一批 A/B 分配的加复杂版本。
+  - 指定 trace 不得使用火盆/烛芯复燃、烛身遮蔽、未燃重曝、退焰点火或滚动途中接触链。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_001_boundary_exit_allocates_length/explorer_notes.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_002_just_in_time_dual_use_then_freeze/explorer_notes.md
+do_not_repeat:
+  - 仅把三根蜡烛做成长中短陈列，或用三个互不影响的小检查分别读取它们。
+  - 只要求第一次边界前选择 A/B 谁保长；那已经属于上一批的单次分配。
+  - 把第三根蜡烛当装饰，删除它或删除第二次退出后仍保留完整核心。
+  - 用可删走步跨过第二个边界，或让错误顺序只增加普通路程。
+  - 用更晚阶段的复燃、烛身遮蔽、退焰点火或滚动途中接触承担联合 consumer。
+  - 设计完整关卡、判断课程优先级或声称结构值得占一关。
+materialization_target: >-
+  找到一个真正需要两次退出决策的联合长度序列：玩家通过不同周期墙灭主动制造三个层级，
+  一个连续后继结构读取至少两处尾端差异；同周期退出、交换周期和删掉第二读取点的对照能证明
+  它不是第一批“把一格分给 A/B”的重复。若只能得到更复杂的长度陈列，则不发布新条目。

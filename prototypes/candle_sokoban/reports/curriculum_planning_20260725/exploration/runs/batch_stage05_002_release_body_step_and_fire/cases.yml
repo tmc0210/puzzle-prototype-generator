@@ -1,0 +1,98 @@
+runId: batch_stage05_002_release_body_step_and_fire
+title: "退焰把同一前推接口从实体封口改成携火空格"
+notes: "A 存活缩短后，B 的下一身体目的格开放且 B 于原地接火；下一次 B 轴推同时读取可进入性与当前火焰。"
+defaults:
+  maxExploreDepth: 12
+  maxReturnDepth: 16
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: surviving_source_opens_and_ignites_then_push_lights
+    family: released_body_step_with_current_fire
+    variant: surviving_source_opens_and_ignites_then_push_lights
+    changed_variable: "让两格 A 保持遮住 B 烛芯直到边界，并在缩短后存活"
+    contrast_with: [pre_boundary_same_push_blocked, burnout_opens_but_unlit_push_misses, moved_source_opens_early_without_fire]
+    notes: "第 5 步 A 缩短并 shrink_ignite B；第 6 步是边界后第一次直接操作 B，向右轴推进入 A 刚释放的格，B 当前火焰在下一格点盆。"
+    layout: |
+      #############
+      #...........#
+      #...........#
+      #...........#
+      #.@.1rUo....#
+      #.....2.....#
+      #...........#
+      #...........#
+      #############
+    actions: [up, down, up, down, right, right]
+
+  - id: pre_boundary_same_push_blocked
+    family: released_body_step_with_current_fire
+    variant: pre_boundary_same_push_blocked
+    changed_variable: "在边界前对同一 B 前推接口提前输入"
+    contrast_with: surviving_source_opens_and_ignites_then_push_lights
+    notes: "第 1 步走到 B 尾侧；第 2 步向右时 A 端帽仍占 B 前推目的格，输入为 axis_push_blocked，倒计时不推进。"
+    layout: |
+      #############
+      #...........#
+      #...........#
+      #...........#
+      #.@.1rUo....#
+      #.....2.....#
+      #...........#
+      #...........#
+      #############
+    actions: [right, right]
+
+  - id: burnout_opens_but_unlit_push_misses
+    family: released_body_step_with_current_fire
+    variant: burnout_opens_but_unlit_push_misses
+    changed_variable: "把 A 改成边界时燃尽的一格，保留同一遮蔽格和后继轴推"
+    contrast_with: surviving_source_opens_and_ignites_then_push_lights
+    notes: "第 5 步一格 A 燃尽并释放目的格，没有退焰火；第 6 步 B 同向轴推合法，但未燃 B 不点亮前方火盆。"
+    layout: |
+      #############
+      #...........#
+      #...........#
+      #...........#
+      #.@.1rUo....#
+      #...........#
+      #...........#
+      #...........#
+      #############
+    actions: [up, down, up, down, right, right]
+
+  - id: moved_source_opens_early_without_fire
+    family: released_body_step_with_current_fire
+    variant: moved_source_opens_early_without_fire
+    changed_variable: "把两格 A 平移到 B 烛芯之外，使前推目的格从开局即为空"
+    contrast_with: surviving_source_opens_and_ignites_then_push_lights
+    notes: "A 在另一列缩短，不重曝也不点燃 B；第 6 步 B 同向轴推合法，但没有火盆输出。"
+    layout: |
+      #############
+      #...........#
+      #...........#
+      #...........#
+      #.@.1r.oU...#
+      #.......2...#
+      #...........#
+      #...........#
+      #############
+    actions: [up, down, up, down, right, right]
+
+  - id: handoff_and_push_without_fire_consumer
+    family: released_body_step_with_current_fire
+    variant: handoff_and_push_without_fire_consumer
+    changed_variable: "移走 B 前方的未亮火盆，只在远角保留无关火盆"
+    contrast_with: surviving_source_opens_and_ignites_then_push_lights
+    notes: "A 仍缩短并点燃 B，第 6 步轴推仍进入释放格；因为前向火焰格没有 consumer，本步不产生 light_brazier。"
+    layout: |
+      #############
+      #o..........#
+      #...........#
+      #...........#
+      #.@.1rU.....#
+      #.....2.....#
+      #...........#
+      #...........#
+      #############
+    actions: [up, down, up, down, right, right]

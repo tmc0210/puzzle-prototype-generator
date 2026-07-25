@@ -1,0 +1,26 @@
+request_id: stage01_request_001_long_roll_temporal_compression
+exploration_id: candle_curriculum_stage01_basic_countdown_20260725
+stage_id: stage_01_basic_countdown
+allowed_exposure_through: basic_candle_manipulation
+design_space: >-
+  开始摆法是一根燃烧多格蜡烛在第一次燃烧边界前拥有一次多格侧滚路线，同时存在需要更多合法行动的准备路线；
+  玩家选择侧滚方向与触发时机；长滚只推进一拍并保留特定长度/端点，慢路线跨界后失去端帽格；
+  动后紧接一个窄操作位、滚动停点或终点点盆，只让其中一种长度与端点关系产生下一步有效动作。
+sampling_axes:
+  - 蜡烛长度 2/3/4 与侧滚距离 2/3/4 的组合。
+  - 第一次边界前需要 0/1/2 次准备行动，比较长滚是否真正压缩时间而非普通近路。
+  - 最小 consumer 分别尝试终点烛芯对准火盆、保留端帽格提供操作面、长度改变导致后续侧滚停点差异。
+  - 错例至少包含慢路线未跨边界、长滚后没有任何后继用途、普通走路捷径和目标提前点亮。
+  - 墙与边界只可充当实体约束；不得让烛芯进入墙格并产生 wall_dousing。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+do_not_repeat:
+  - 只证明多格侧滚仍只产生一次 countdown。
+  - 只把更短步数或更近路线写成时间压缩。
+  - 把碰火死亡、墙灭火、途中点盆或滚动途中点火当作本轮成果。
+  - 设计完整关卡、判断课程优先级或声称某结构值得占一关。
+materialization_target: >-
+  找到至少一个局部结构，使多格侧滚节省的倒计时拍数保留或改变了具体蜡烛实体格/端点，
+  且一个极小后继约束立即消费该差异；若所有变体都只证明行动成本规则，则不发布新 lexicon 条目。
+

@@ -1,0 +1,131 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+stage_id: stage_05_retreating_flame
+status: selected
+
+controller_focus: >-
+  退焰点火的独立价值不在“边界时点着 B”，而在旧载体与新载体承担不同的本次结算：
+  A 缩短并释放遮蔽，B 在结算后接火。候选必须让这种交接历史改变后继可玩的状态。
+
+batches:
+  - batch_id: batch_stage05_001_boundary_handoff_preserves_receiver
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage05_request_001_boundary_handoff_preserves_receiver.yml
+    status: completed
+    controller_decision: material_only
+    decision_reason: >-
+      同图已隔离“边界前普通接火会缩成一格、边界后退焰接火保留两格”，并把尾格接入连续停行链；
+      但正确路随即墙灭 B，最终火焰从固定火盆重新取得。若 B 在 A 缩短后只重曝而未被退焰点燃，
+      它仍能以两格未燃状态走完同一停行—再点火—输出链，因此 shrink_ignite 的火没有被消费。
+      该结果是有效的加入相位/长度材料，但不足以证明退焰机制独占一个体验槽位。
+    player_facing_core: pending_rescue
+    required_counterfactual:
+      - A 一格燃尽不会形成退焰火格；A 存活是局部变换前提。
+      - B 烛芯错位时不会 shrink_ignite；同格与刚重曝是局部变换前提。
+      - 删除尾格停墙后长路也越过接火行，说明现有 consumer 只读长度。
+      - 正确路存在另一个固定火源，导致最关键的“删除退焰所得火”反事实仍会成功。
+    material_refs:
+      - post_settlement_flame_handoff_preserves_receiver_cell
+      - aligned_wick_ends_isolate_tail_delta
+      - tail_column_reads_length_delta
+      - endpoint_changes_immediate_action_interface
+
+  - batch_id: batch_stage05_001b_direct_handoff_consumer
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage05_request_001b_direct_handoff_consumer.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同图早、晚两路在边界后 B 都保持燃烧，下一次直接侧滚也使用相同输入和距离；完整 B 的当前火焰落在远盆，
+      短 B 的当前火焰落在近一格。近移火盆证明短路仍有火；把 A 改成一格燃尽后，完整 B 以相同几何到达远插口却不点盆，
+      证明正确路同时消费了结算后保住的长度和 shrink_ignite 交来的火。
+    player_facing_core: >-
+      玩家让旧蜡烛继续遮住接火者直到边界，由旧载体支付这次燃烧；接火者在结算后以完整燃烧态接班，
+      并用第一次直接移动把完整长度和当前火焰一起送到准确插口。
+    required_counterfactual:
+      - 边界前普通接火时 B 仍有火，但缩短一格后只命中近插口。
+      - A 只有一格时会燃尽；B 完整且移动几何相同，却因没有退焰火而无法输出。
+      - B 烛芯不在 A 被删端帽格或没有刚重曝时，不发生交接。
+      - 输出前不得灭火或另处复燃，否则退焰所得火的职责再次被旁路。
+    packaging_constraints:
+      - 正式关卡必须用必要动作安全交出 A 的操作位，不能让玩家开局站在火焰格。
+      - 边界前的计时行动必须是可读的必要工序，不能保留当前空走。
+      - 完整可达图必须封闭滚动途中事件旁路；指定正确路线只在侧滚终点点盆。
+    expected_course_role: 退焰点火首次主动应用；建立“旧载体付费、接火者完整接班”的结算顺序。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T01_BOUNDARY_HANDOFF_PRESERVES_RECEIVER
+      - post_settlement_flame_handoff_preserves_receiver_cell
+      - equal_translation_offsets_flame_socket_by_length
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_001b_direct_handoff_consumer/batch.yml
+
+  - batch_id: batch_stage05_002_release_body_step_and_fire
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage05_request_002_release_body_step_and_fire.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      A 末格与 B 烛芯格、B 前推新增身体目的格是同一格；A 存活缩短后，该格从实体封口变成非实体退焰，
+      B 同时接火，下一次轴推直接进入旧封口并点盆。一格 A 燃尽与 A 错列都让相同 B 合法前推却不输出，
+      说明它不是普通开门；正例也不依赖 T01 的长短差或远近插口。
+    player_facing_core: >-
+      玩家不提前清走挡路的 A，而是让它在准确位置存活到燃烧边界；同一个实体封口随后翻成携火通道，
+      被点燃的 B 立刻推过这格完成输出。
+    required_counterfactual:
+      - 边界前同向轴推被 A 实体端帽阻挡；失败输入只作状态对照，不是核心本身。
+      - A 一格燃尽或提前错列只开放通道，B 以相同长度和几何可推但无火。
+      - 移除前方火盆后接口转换仍发生，但当前火没有被后继消费。
+      - “B 有火而 A 仍占同格”会被烛身遮芯立即熄灭，不得写成可稳定持有的反事实。
+    packaging_constraints:
+      - 正式关卡要用必要工序推进四拍，并把玩家安全交到 B 尾侧。
+      - 退焰格只能由 B 身体进入，不能诱导或要求玩家踩火。
+      - 当前最短接法会让 B 身体遮灭 A；若后续仍需 A 保火，必须另做结构。
+      - 完整可达图需封闭滚动途中事件旁路。
+    expected_course_role: 退焰点火的直观同格应用；展示实体封口如何在边界上翻成携火通道。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE
+      - shrink_vacated_wick_cell_becomes_nonsolid_flame_gate
+      - post_settlement_flame_handoff_preserves_receiver_cell
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_002_release_body_step_and_fire/batch.yml
+
+  - batch_id: batch_stage05_003_retreating_flame_relay
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage05_request_003_retreating_flame_relay.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      玩家在第一边界动作亲自把 B 推入同时连接 A 与 C 的直角中继槽；A→B、B→C 分属相邻两个边界，
+      新接火者不会在同边界继续缩短。准传、过早、断链动态生成三格燃、两格燃、三格未燃的 C，
+      同一侧滚终点与远端火焰插口只接受三格燃态，因此不是两次 shrink_ignite 的事件 witness。
+    player_facing_core: >-
+      玩家把一根未燃蜡烛摆成既接上游、又压住下游的中继体，让火种严格按“一次燃烧边界前进一步”传递；
+      传早一轮会烧短，链条过短则断火，准确节拍把完整火种送到终点。
+    required_counterfactual:
+      - B 提前燃烧会让 C 早一边界接火，最终仍有火但短一格。
+      - B 只有一格时在第二边界燃尽，C 保持完整但未燃。
+      - 移除远端插口后两次交火仍发生，却没有可玩的输出。
+      - 过早与断链当前由近邻布局证明，正式关卡必须将其改造成同一初态内的真实玩家分支。
+    packaging_constraints:
+      - 第一边界前的空走与两边界间的开放路线都要换成必要空间工作。
+      - 正式布局必须让 B 入槽动作不可省，并让错误节拍成为玩家可理解的同图选择。
+      - 侧滚只可在最终小步点盆，完整可达图必须封闭途中事件旁路。
+    expected_course_role: 退焰阶段深化/终盘；把单次交接扩展为跨边界状态接力。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T03_RETREATING_FLAME_RELAY
+      - single_push_closes_two_orthogonal_cap_wick_links
+      - post_settlement_flame_handoff_preserves_receiver_cell
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_003_retreating_flame_relay/batch.yml
+
+planned_followups: []
+
+mainline_cores:
+  - id: S05_T01_BOUNDARY_HANDOFF_PRESERVES_RECEIVER
+    title: 旧载体支付边界，接火者以完整燃烧态接班
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T01_BOUNDARY_HANDOFF_PRESERVES_RECEIVER
+  - id: S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE
+    title: 让实体封口在边界上翻成携火通道
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE
+  - id: S05_T03_RETREATING_FLAME_RELAY
+    title: 把中继摆成双链接，让火每个边界前进一步
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T03_RETREATING_FLAME_RELAY
+jam_reserve: []
+material_only: []
+rejected: []

@@ -1,0 +1,92 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+stage_id: stage_06_rolling_contact_chain
+status: selected
+
+controller_focus: >-
+  侧滚途中结算的独立价值是让“扫过的接触序列”和“最终实体停点”同时写入一次行动结果。
+  只发生 roll_intermediate_* 事件、只点一个盆或只展示滚动不会停，都不足以占关。
+
+batches:
+  - batch_id: batch_stage06_001_path_output_endpoint_body_duty
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage06_request_001_path_output_endpoint_body_duty.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同一 d4 长滚在非终点 d2 写入永久火盆状态，并在 d4 留下跨两次缩短仍稳定的尾格停块；后继 Q 由此停在可上推列。
+      短滚只点盆却失去停块，预亮/错列火盆只保留终点链，删除 Q 只剩途中点盆，普通轴推无法同时复现两项职责。
+      两项并非因果开关，但都是同一不可拆动作累积的必要成果，足以形成路径—终点双规划。
+    player_facing_core: >-
+      玩家不能只看蜡烛会停在哪里：同一记长滚必须让火焰在路上扫过目标，同时把烛身尾端留在后继对象需要的停块位。
+    required_counterfactual:
+      - 在火盆行提前停止只完成路径输出，后继 Q 远滚到封闭列。
+      - 预亮或错列火盆时终点停块仍成立，但途中输出职责消失。
+      - 删除 Q 时仍能 drive-by 点盆，却没有任何对象读取最终落点。
+      - 普通轴推序列既不扫过火盆行，也不建立同一终点停块。
+    packaging_constraints:
+      - 正式关卡必须把 Q 的准确停点和上推继续接到标准胜利所需的终段 consumer。
+      - 途中火盆与终段目标都必须是胜利必要条件；不能用诊断事件目标收尾。
+      - 保持终点职责落在背离烛芯的尾格，或重新验证缩短后接口仍稳定。
+      - 约束开放转场与替代操作，完成正式解族和全图审计。
+    expected_course_role: 滚动途中结算首次主动应用；建立“扫过路径”和“最终落点”两套接口。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T01_PATH_OUTPUT_ENDPOINT_BODY_DUTY
+      - wick_opposite_tail_preserves_endpoint_stop_across_burn
+      - dynamic_occupancy_changes_roll_endpoint
+      - endpoint_changes_immediate_action_interface
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage06_001_path_output_endpoint_body_duty/batch.yml
+
+  - batch_id: batch_stage06_002_ordered_douse_reignite
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage06_request_002_ordered_douse_reignite.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同一布局、同一二格燃烛、同准备步数和 d5 滚距，上下方向分别执行墙→火源与火源→墙；
+      前者终点燃烧并点盆，后者终点未燃。删墙、删火源、提前截停和 consumer 错列分别拆掉顺序程序的不同接口。
+    player_facing_core: 玩家选择滚动方向，让途中接触按正确顺序覆盖亮灭；最后一次有效写入决定终点能否输出。
+    required_counterfactual:
+      - 删墙后成功退化为普通燃烛终点点盆。
+      - 删火源后只剩途中灭火，终点无输出。
+      - d2 截停只执行前半程序；consumer 错列保留程序但删除读取。
+      - 反序首次火源接触为幂等，不得宣称两路事件多重集相同。
+    expected_course_role: 滚动途中深化；把一条滚道理解为有顺序的状态程序。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T02_ORDERED_DOUSE_REIGNITE_WRITES_ENDPOINT_STATE
+      - rolling_contacts_overwrite_fire_state_in_path_order
+      - endpoint_flame_socket_reads_rolling_final_state
+
+  - batch_id: batch_stage06_003_boundary_contact_program
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage06_request_003_boundary_contact_program.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      countdown=1 的同一输入内，墙→火源长滚终点燃烧并立刻缩短、释放端帽、点燃接收烛；
+      火源→墙终点未燃并避开缩短，端帽继续遮芯。countdown=2 保留同样路径终态和端点输出却删除即时几何后果。
+    player_facing_core: 玩家把有序接触长滚压在燃烧边界上，让滚动最后写出的状态立即决定这根烛是否为本次结算付费。
+    required_counterfactual:
+      - countdown=2 保留顺序终态但不产生缩短、端帽释放或接收烛点火。
+      - 删墙、删火源与提前截停分别拆掉路径程序。
+      - 边界后的 consumer 当前是自动端帽释放与交火；正式关卡仍需接入玩家可读的后继职责。
+    expected_course_role: 滚动途中阶段终盘；把路径程序、共享边界和退焰交火压入同一输入。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T03_BOUNDARY_CONTACT_PROGRAM
+      - rolling_final_state_is_committed_by_same_action_boundary
+
+planned_followups: []
+
+mainline_cores:
+  - id: S06_T01_PATH_OUTPUT_ENDPOINT_BODY_DUTY
+    title: 一记长滚同时经营扫过路径与最终落点
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T01_PATH_OUTPUT_ENDPOINT_BODY_DUTY
+  - id: S06_T02_ORDERED_DOUSE_REIGNITE_WRITES_ENDPOINT_STATE
+    title: 让滚道接触顺序写出终点亮灭
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T02_ORDERED_DOUSE_REIGNITE_WRITES_ENDPOINT_STATE
+  - id: S06_T03_BOUNDARY_CONTACT_PROGRAM
+    title: 让滚动终态在同一输入里提交为边界参与
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T03_BOUNDARY_CONTACT_PROGRAM
+jam_reserve: []
+material_only: []
+rejected: []

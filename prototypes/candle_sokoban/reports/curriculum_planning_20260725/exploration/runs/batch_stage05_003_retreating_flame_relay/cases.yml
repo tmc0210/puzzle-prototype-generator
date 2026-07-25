@@ -1,0 +1,103 @@
+runId: batch_stage05_003_retreating_flame_relay
+title: "玩家设置的两边界退焰中继接到长度—火焰插口"
+notes: "B 在第一边界前进入 A/C 双链接槽；相邻两边界依次 A→B、B→C，最终 C 的同次侧滚同时读取长度与火。"
+defaults:
+  maxExploreDepth: 12
+  maxReturnDepth: 16
+  maxStates: 40000
+  maxTransitions: 160000
+cases:
+  - id: player_sets_dual_link_then_relay_lights_far_socket
+    family: player_set_two_boundary_flame_relay
+    variant: correct_late_receiver_full_length_lit
+    changed_variable: "三格未燃 B 在第一边界动作中被推入同时遮住 C、又被 A 遮住的双链接槽"
+    contrast_with: [prelit_relay_ignites_c_one_boundary_early, one_cell_relay_burns_out_before_second_handoff, correct_relay_without_far_socket]
+    notes: "第 5 步玩家推 B 入槽并触发 A→B；第 10 步 B→C；第 11 步三格燃 C 向右滚三格，端点火焰落在 y=4 的远插口并点盆。"
+    layout: |
+      ###########
+      #.........#
+      #.....2...#
+      #.....2...#
+      #@11r.D.o.#
+      #....u....#
+      #....3....#
+      #....3...##
+      #.........#
+      ###########
+    actions: [up, down, up, down, right, down, down, down, right, right, right]
+
+  - id: prelit_relay_ignites_c_one_boundary_early
+    family: player_set_two_boundary_flame_relay
+    variant: early_receiver_short_lit_misses_far_socket
+    changed_variable: "移除 A 链接并让已燃三格 B 从右侧推入 C 的遮蔽槽，使 C 在第一而非第二边界接火"
+    contrast_with: [player_sets_dual_link_then_relay_lights_far_socket, early_receiver_lights_near_socket]
+    notes: "第 1 步玩家把已燃 B 左推到遮住 C 烛芯的位置；第 5 步 B 缩短并点燃 C，第 10 步 C 再缩短为两格；第 11 步同距侧滚后火焰在 y=5，错过 y=4 的远插口。"
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #.........#
+      #...11R@o.#
+      #....u....#
+      #....3....#
+      #....3...##
+      #.........#
+      ###########
+    actions: [left, down, down, down, down, left, left, up, down, up, right]
+
+  - id: one_cell_relay_burns_out_before_second_handoff
+    family: player_set_two_boundary_flame_relay
+    variant: broken_relay_full_length_unlit_misses_far_socket
+    changed_variable: "把中继 B 从三格缩成一格，保留玩家入槽、A→B、C 与最终插口"
+    contrast_with: player_sets_dual_link_then_relay_lights_far_socket
+    notes: "第 5 步 A 仍 shrink_ignite 一格 B；第 10 步 B 燃尽而无存活退焰，C 保持三格未燃；第 11 步 C 同距侧滚到相同长态终点但不能点盆。"
+    layout: |
+      ###########
+      #.........#
+      #.....2...#
+      #.....2...#
+      #..@r.D.o.#
+      #....u....#
+      #....3....#
+      #....3...##
+      #.........#
+      ###########
+    actions: [up, down, up, down, right, down, down, down, up, down, right]
+
+  - id: early_receiver_lights_near_socket
+    family: player_set_two_boundary_flame_relay
+    variant: early_receiver_short_lit_near_socket_control
+    changed_variable: "只把终端火盆从三格 C 的 y=4 插口下移到两格 C 的 y=5 插口"
+    contrast_with: prelit_relay_ignites_c_one_boundary_early
+    notes: "过早路的动作与两格燃 C 终态不变；第 11 步同距侧滚后火焰在 y=5 点亮近插口，证明远插口失败来自一格长度差。"
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #.........#
+      #...11R@..#
+      #....u..o.#
+      #....3....#
+      #....3...##
+      #.........#
+      ###########
+    actions: [left, down, down, down, down, left, left, up, down, up, right]
+
+  - id: correct_relay_without_far_socket
+    family: player_set_two_boundary_flame_relay
+    variant: correct_relay_without_fire_consumer
+    changed_variable: "移走 y=4 的远端火盆，在无关角落保留未亮火盆"
+    contrast_with: player_sets_dual_link_then_relay_lights_far_socket
+    notes: "玩家设置、两个边界与三格燃 C 的最终侧滚全部保留；没有远端插口时指定 trace 不产生 light_brazier。"
+    layout: |
+      ###########
+      #o........#
+      #.....2...#
+      #.....2...#
+      #@11r.D...#
+      #....u....#
+      #....3....#
+      #....3...##
+      #.........#
+      ###########
+    actions: [up, down, up, down, right, down, down, down, right, right, right]

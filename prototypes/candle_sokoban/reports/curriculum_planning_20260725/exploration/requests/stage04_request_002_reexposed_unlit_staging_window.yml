@@ -1,0 +1,33 @@
+request_id: stage04_request_002_reexposed_unlit_staging_window
+exploration_id: candle_curriculum_stage04_body_concealment_20260725
+stage_id: stage_04_body_concealment
+allowed_exposure_through: body_concealment_and_reexposure
+design_space: >-
+  燃烛 B 先被可移动遮体 C 原地熄灭；随后玩家为完成同一任务链移动 C，重新开放 B 的烛芯格或操作面。
+  C 移开后 B 的烛芯外露但保持未燃，玩家利用这个“空间已打开、参与状态仍关闭”的记忆区间，
+  先重新定位 B、穿过原火焰接口或跨过共享边界保形；之后再从受控火源主动复燃 B，
+  用准备好的几何与火焰完成最终输出。
+sampling_axes:
+  - C 先遮蔽、后移开的两个终点都必须承担空间职责；B 在两次动作间保持原位。
+  - 移开 C 的同一行动必须产生 `wick_reexposed_unlit` 且没有立即复燃；后续另一个明确动作才让 B 接触火源。
+  - 暂存区间内至少完成一次直接准备最终 consumer 的 B 轴推/侧滚、玩家穿行或跨边界保形。
+  - 同一布局比较不移开 C、移开后立即接触火源、正确未燃暂存后再复燃三路。
+  - 不移开 C 应因空间接口仍被占而失败；立即复燃应因过早参与或火焰状态破坏几何；不再复燃应能完成几何但欠缺最终输出。
+  - 移除后继火源、预亮最终火盆或移除长度/位置 consumer，分别隔离重曝记忆、火焰职责与几何职责。
+  - 不得使用退焰点火或滚动途中接触链。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_001_mobile_shutter_douses_in_place/explorer_notes.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_003_bank_fire_pause_resume/explorer_notes.md
+do_not_repeat:
+  - 只证明移开 C 后 B 不会自动复燃，或把 `wick_reexposed_unlit` 事件本身当核心。
+  - 只把 C 移开作为普通开路，B 的未燃记忆没有被时间或后继火焰消费。
+  - 复刻墙灭后的暂停—复燃；本轮必须由可移动遮体的离开同时恢复此前被占的空间接口。
+  - 让 B 永远保持未燃而不再承担火焰职责，或让复燃与前面几何准备成为两个独立小题。
+  - 把完整伪关卡作为 Lexicon 条目；只发布细粒度结构。
+  - 设计正式关卡、判断课程优先级或编辑 experience_cores.yml。
+materialization_target: >-
+  找到一个“移开遮板后状态记忆”的完整组合：C 离开同时恢复空间接口，但 B 仍未燃；
+  玩家利用这段区间直接准备最终几何，再主动复燃并完成同一输出链。不移开、立即复燃、永不复燃
+  三条对照分别证明空间、时机与火焰职责。完整组合留作 optional direction，Lexicon 只收原子关系。

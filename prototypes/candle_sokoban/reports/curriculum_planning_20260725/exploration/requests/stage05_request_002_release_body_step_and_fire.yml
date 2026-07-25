@@ -1,0 +1,30 @@
+request_id: stage05_request_002_release_body_step_and_fire
+exploration_id: candle_curriculum_stage05_retreating_flame_20260725
+stage_id: stage_05_retreating_flame
+allowed_exposure_through: retreating_flame_transfer
+design_space: >-
+  让已燃 A 的末格占住未燃 B 的烛芯投影格；该格同时也是 B 沿自身长轴向前推动时，端帽身体要进入的下一格。
+  边界前 B 即使有火也无法前推，因为 A 的实体仍占目的格；A 若一格燃尽或提前移开，只会把目的格释放，却不能把退焰火交给 B。
+  只有 A 存活缩短时，该格从实体阻挡变成非实体火焰投影并 shrink_ignite B；B 的下一次直接轴推进入刚释放格，
+  让当前火焰继续前移并完成同一输出。这里释放的是“蜡烛身体目的格”，不是供玩家踩入的安全格。
+sampling_axes:
+  - 正确路：A 存活缩短同时释放 B 的前进一步并点燃 B；边界后的下一次 B 轴推合法且直接输出。
+  - 只释放无火：一格 A 燃尽或等价近邻，让 B 以相同长度和相同轴推几何进入该格，但不能完成 fire consumer。
+  - 只有火无空间：在边界前以普通来源点亮 B，同时 A 末格仍占目的格；B 保持燃烧但轴推被实体阻挡。
+  - A 末格提前移开且无普通火源时，B 可前推但保持未燃；用来隔离 release 与 handoff 的双重职责。
+  - 将最终火盆预亮或移走前向封口，分别移除火焰读取与刚释放目的格的空间读取。
+  - 指定正确 trace 不得让玩家进入火焰格，不得使用滚动途中接触链，且输出前不得重新取火。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md#post_settlement_flame_handoff_preserves_receiver_cell
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md#endpoint_changes_immediate_action_interface
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_001b_direct_handoff_consumer/explorer_notes.md
+do_not_repeat:
+  - 把 A 释放的火焰投影格说成玩家可以安全进入的操作站位。
+  - 再做一次长 B/短 B 命中远近火盆；本批必须读取“轴推目的格由实体阻挡变可进入”。
+  - 只证明轴推从非法变合法，或只证明 shrink_ignite 点火，而没有同一后继动作同时消费两者。
+  - 在输出前墙灭、从火盆复燃或借其他烛芯重新取火。
+  - 把失败输入本身当成关卡核心；它只作为“火有了但空间没开放”的反事实。
+  - 编辑 Controller 账本或把完整组合写入 Lexicon。
+materialization_target: >-
+  一个双许可的同链 existence proof：A 的同一次存活缩短把 B 的下一身体目的格从占用变为空闲，并把 B 点燃；
+  B 下一次直接轴推既依赖该格已释放，也用交来的当前火焰完成输出。只释放或只传火都在同一动作接口失败。

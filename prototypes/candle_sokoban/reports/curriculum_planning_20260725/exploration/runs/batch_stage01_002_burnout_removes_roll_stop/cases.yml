@@ -1,0 +1,184 @@
+runId: batch_stage01_002_burnout_removes_roll_stop
+title: "燃尽移除近端侧滚挡块：近远停点与轴推 consumer"
+notes: >-
+  同一布局中比较立即侧滚与第五拍燃尽后侧滚；近端单格燃烛存在时横烛停在近点，
+  燃尽后横烛停在远点；终点右侧墙只让近点的向右轴推合法。
+defaults:
+  maxExploreDepth: 15
+  maxReturnDepth: 24
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: corridor_roll_now_near_blocks_next_down
+    family: burnout_removed_roll_stop
+    variant: immediate_near_closes_corridor
+    changed_variable: "在第五拍燃尽前立即侧滚，近点横烛占住唯一向下通口"
+    contrast_with: corridor_roll_after_burnout_far_opens_next_down
+    notes: "同图立即向下滚；单格燃烛仍占 x4,y5，二格横烛只能停在 y4；玩家仍在 y3，相同的下一次 down 因横烛无法继续滚而非法。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #...1r....#
+      #..#..#...#
+      #..#R.#...#
+      #..#..#...#
+      #..#..#...#
+      #..#..#...#
+      ###########
+    actions: [down, down]
+
+  - id: corridor_roll_after_burnout_far_opens_next_down
+    family: burnout_removed_roll_stop
+    variant: delayed_far_opens_corridor
+    changed_variable: "先跨过第五拍让近端挡块燃尽，再侧滚到远点"
+    contrast_with: corridor_roll_now_near_blocks_next_down
+    notes: "第五拍 burn_out 后从原位向下滚到 y8；玩家仍在 y3，相同的下一次 down 成为走入 y4 通口的合法行动。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #...1r....#
+      #..#..#...#
+      #..#R.#...#
+      #..#..#...#
+      #..#..#...#
+      #..#..#...#
+      ###########
+    actions: [left, up, right, down, left, right, down, down]
+
+  - id: two_cell_roll_now_near_axis_push
+    family: burnout_removed_roll_stop
+    variant: two_cell_immediate_near
+    changed_variable: "在第五拍燃尽前立即侧滚"
+    contrast_with: two_cell_roll_after_burnout_far_blocked
+    notes: "同图立即向下滚；单格燃烛仍占 x4,y6，二格横烛停在 y5；绕到左端后向右轴推应合法。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #...1r....#
+      #.........#
+      #.........#
+      #...R.....#
+      #.........#
+      #.....#...#
+      ###########
+    actions: [down, left, left, down, down, right]
+
+  - id: two_cell_roll_after_burnout_far_blocked
+    family: burnout_removed_roll_stop
+    variant: two_cell_delayed_far
+    changed_variable: "先用五次合法走路让近端单格燃烛燃尽，再从同一位置向下侧滚"
+    contrast_with:
+      - two_cell_roll_now_near_axis_push
+      - two_cell_far_without_consumer_axis_push
+      - persistent_unlit_stop_after_boundary
+    notes: "第五拍 burn_out 后返回原侧推位；二格横烛越过 x4,y6 停到 y8；绕到左端后向右轴推应被 x6,y8 的墙挡住。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #...1r....#
+      #.........#
+      #.........#
+      #...R.....#
+      #.........#
+      #.....#...#
+      ###########
+    actions: [left, up, right, down, left, right, down, left, left, down, down, down, down, down, right]
+
+  - id: three_cell_roll_now_near_axis_push
+    family: burnout_removed_roll_stop
+    variant: three_cell_immediate_near
+    changed_variable: "滚烛由二格增为三格，并将动态挡块对齐到横条左端"
+    contrast_with: three_cell_roll_after_burnout_far_blocked
+    notes: "三格横烛立即向下滚，停在 y5；绕到 x2,y5 后向右轴推应合法。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #..22r....#
+      #.........#
+      #.........#
+      #..R......#
+      #.........#
+      #.....#...#
+      ###########
+    actions: [down, left, left, left, down, down, right]
+
+  - id: three_cell_roll_after_burnout_far_blocked
+    family: burnout_removed_roll_stop
+    variant: three_cell_delayed_far
+    changed_variable: "三格横烛在第五拍燃尽后才侧滚"
+    contrast_with: three_cell_roll_now_near_axis_push
+    notes: "第五拍 burn_out 后三格横烛滚到 y8；绕到 x2,y8 后向右轴推应被 x6,y8 的墙挡住。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #..22r....#
+      #.........#
+      #.........#
+      #..R......#
+      #.........#
+      #.....#...#
+      ###########
+    actions: [left, up, right, down, left, right, down, left, left, left, down, down, down, down, down, right]
+
+  - id: persistent_unlit_stop_after_boundary
+    family: burnout_removed_roll_stop
+    variant: persistent_unlit_control
+    changed_variable: "近端单格燃烛改为持续存在的未燃单格蜡烛"
+    contrast_with: two_cell_roll_after_burnout_far_blocked
+    notes: "同样先走过第五拍再侧滚；未燃单格蜡烛不消失，二格横烛仍停近点，随后向右轴推应合法。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #...1r....#
+      #.........#
+      #.........#
+      #...r.....#
+      #.........#
+      #.....#...#
+      ###########
+    actions: [left, up, right, down, left, right, down, left, left, down, down, right]
+
+  - id: fixed_wall_stop_after_boundary
+    family: burnout_removed_roll_stop
+    variant: fixed_wall_control
+    changed_variable: "用固定墙替换可燃尽近端挡块"
+    contrast_with: two_cell_roll_after_burnout_far_blocked
+    notes: "同样延迟到第五拍后侧滚；近端墙始终存在，二格横烛仍停近点，随后向右轴推应合法。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #...1r....#
+      #.........#
+      #.........#
+      #...#.....#
+      #.........#
+      #.....#...#
+      ###########
+    actions: [left, up, right, down, left, right, down, left, left, down, down, right]
+
+  - id: two_cell_far_without_consumer_axis_push
+    family: burnout_removed_roll_stop
+    variant: consumer_removed_control
+    changed_variable: "移除远点 x6,y8 的轴推阻挡墙"
+    contrast_with: two_cell_roll_after_burnout_far_blocked
+    notes: "动态挡块照常在第五拍燃尽，二格横烛照常滚到远点；因终点右侧墙被移除，随后向右轴推应重新合法。"
+    layout: |
+      ###########
+      #o........#
+      #....@....#
+      #...1r....#
+      #.........#
+      #.........#
+      #...R.....#
+      #.........#
+      #.........#
+      ###########
+    actions: [left, up, right, down, left, right, down, left, left, down, down, down, down, down, right]

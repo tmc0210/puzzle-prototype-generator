@@ -1,0 +1,236 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+purpose: >-
+  只记录由 Controller 认可的玩家侧体验核心。具体布局与动作链属于 optional_direction，
+  细粒度可拼接关系属于 exploration/lexicon.md。
+
+cores:
+  - id: S01_T03_BURNOUT_REMOVES_ROLL_STOP
+    stage_id: stage_01_basic_countdown
+    status: mainline_core
+    title: 临时占格的消失时机改写后继空间结果
+    player_choice: 在动态占格消失前还是消失后执行同一空间操作。
+    state_difference: 同一对象取得两个离散终点或操作面。
+    consumer: 后继通口、推动面或目标关系只接受其中一个空间结果。
+    lexicon_refs:
+      - dynamic_occupancy_changes_roll_endpoint
+      - endpoint_changes_immediate_action_interface
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage01_002_burnout_removes_roll_stop/proposed_families.md
+
+  - id: S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY
+    stage_id: stage_01_basic_countdown
+    status: mainline_core
+    title: 处理一处的行动远程消耗另一对象的可用形状
+    player_choice: 先处理 A 还是先使用 B。
+    state_difference: A 的必要工序让未操作的 B 在共享边界失去一列。
+    consumer: B 的碰撞、火焰对齐或操作面读取被消耗的具体列。
+    lexicon_refs:
+      - remote_work_advances_shared_age
+      - shrink_removes_collision_column
+      - tail_column_reads_length_delta
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage01_003_shared_clock_cross_object_order/proposed_families.md
+
+  - id: S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH
+    stage_id: stage_02_wall_dousing
+    status: mainline_core
+    title: 把有限保形机会分配给具体对象
+    player_choice: 在边界前让 A 还是 B 退出燃烧集合。
+    state_difference: 保住的额外长度属于不同对象，而非只有总长度不同。
+    consumer: 后继结构要求正确对象拥有那一格。
+    lexicon_refs:
+      - wall_exit_freezes_current_length
+      - aligned_wick_ends_isolate_tail_delta
+      - tail_column_reads_length_delta
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_001_boundary_exit_allocates_length/proposed_families.md
+
+  - id: S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+    stage_id: stage_02_wall_dousing
+    status: mainline_core
+    title: 同一对象先完成燃烧态职责，再及时退出保存实体职责
+    player_choice: 过早退出、及时退出，或先处理别处而过晚退出。
+    state_difference: 只有及时路线同时保留前段火焰输出与后段实体格。
+    consumer: 永久火焰输出读取下界，后继碰撞或操作面读取上界。
+    lexicon_refs:
+      - permanent_fire_output_survives_source_exit
+      - wall_exit_freezes_current_length
+      - tail_column_reads_length_delta
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_002_just_in_time_dual_use_then_freeze/proposed_families.md
+
+  - id: S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+    stage_id: stage_02_wall_dousing
+    status: mainline_core
+    title: 跨多个边界把参与计划写成连续可读的空间序列
+    player_choice: 分别在哪个燃烧周期让多个对象退出。
+    state_difference: 相同起点被写成有顺序的嵌套长度层级。
+    consumer: 同一后继对象连续读取多个层级，上一落点成为下一操作面。
+    lexicon_refs:
+      - staggered_exits_create_nested_tail_intervals
+      - single_probe_chains_occupancy_and_gap_reads
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_003_staggered_exit_length_vector/proposed_families.md
+    calibration: >-
+      4/3/2 与固定探针路线只是一个较完整的可选方向；核心不绑定三根、具体长度或该路线。
+
+  - id: S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN
+    stage_id: stage_03_shared_fire_reignition
+    status: mainline_core
+    title: 在边界前后加入，选择是否支付当前周期
+    player_choice: 现在点燃 B，还是等共享边界后再让它加入。
+    state_difference: 两路最终同为燃烧且烛芯端对齐，只差 B 是否因参加当前周期少一格。
+    consumer: 只擦过尾端差异列的推动面、滚动停点或目标距离读取加入历史。
+    lexicon_refs:
+      - boundary_relative_join_writes_tail_delta
+      - stable_ignition_socket_realigns_wick_end
+      - tail_column_reads_length_delta
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_001_midcycle_join_allocates_burn/proposed_families.md
+
+  - id: S03_T02_DYING_SOURCE_IGNITION_WINDOW
+    stage_id: stage_03_shared_fire_reignition
+    status: mainline_core
+    title: 有限火源夹出的唯一接火窗口
+    player_choice: 在火源退移前、两次边界之间，或火源消失后让 B 尝试接火。
+    state_difference: 过早得到过短燃烛，窗口得到准确长度燃烛，过晚得到保长但未燃的蜡烛。
+    consumer: 同一连续链用单列长度门读取下界，再用 B 的火焰完成最终永久输出。
+    lexicon_refs:
+      - receding_wick_source_shifts_ignition_socket
+      - boundary_relative_join_writes_tail_delta
+      - single_push_lane_selects_middle_roll_endpoint
+      - orthogonal_push_hands_player_to_axis_face
+    optional_direction_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_002_dying_source_ignition_window/proposed_families.md
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_002b_dying_source_window_composition/proposed_families.md
+
+  - id: S03_T03_PAUSE_RESUME_BURN_INTERVALS
+    stage_id: stage_03_shared_fire_reignition
+    status: mainline_core
+    title: 存火—暂停—取火闭环
+    player_choice: 是否先把火存入永久节点，再让原对象退出并在必要工作后取回。
+    state_difference: 正确路线同时保留 B 的实体长度和可恢复火焰；不暂停失去形状，不取火失去输出。
+    consumer: 保留长度决定最终停点与操作面，取回火焰完成同一链上的最终永久输出。
+    lexicon_refs:
+      - permanent_fire_output_survives_source_exit
+      - wall_exit_freezes_current_length
+      - stable_ignition_socket_realigns_wick_end
+      - prelit_brazier_handoffs_body_stop_to_flame_lane
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_003_bank_fire_pause_resume/proposed_families.md
+
+  - id: S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+    stage_id: stage_04_body_concealment
+    status: mainline_core
+    title: 移动遮板同时冻结目标原轮廓并建立空间接口
+    player_choice: 是否把 C 移到 B 的烛芯处，以一次动作同时改变 B 状态和 C 的空间位置。
+    state_difference: B 原位保留完整轮廓，C 的相邻占格同时成为后继接口。
+    consumer: 同一任务链分别读取 B 的原位保形与 C 的终点占格。
+    lexicon_refs:
+      - body_cover_freezes_target_footprint_in_place
+      - multicell_cover_endpoint_adds_adjacent_stop_cell
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_001_mobile_shutter_douses_in_place/proposed_families.md
+    calibration: 固定墙可复现静态形状；核心依赖可选移动同时建立两项结果，而非对象类型独占该形状。
+
+  - id: S04_T02_REEXPOSED_UNLIT_STAGING_WINDOW
+    stage_id: stage_04_body_concealment
+    status: mainline_core
+    title: 移开遮板后先利用未燃窗口，再主动复燃
+    player_choice: 重曝后立即复燃、先完成必要准备再复燃，或始终不复燃。
+    state_difference: 三路分别得到过短燃烛、准确长度燃烛和过长未燃烛；遮板是否离开还决定准备站位能否取得。
+    consumer: 同一连续接口用窄身门读取身体长度，再用末端火焰列读取燃烧状态。
+    lexicon_refs:
+      - cover_departure_hands_player_into_unlit_wick_cell
+      - reexposed_unlit_setup_defers_burn_boundary
+      - narrow_body_slot_and_flame_column_accept_middle_length
+    optional_direction_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_002_reexposed_unlit_staging_window/proposed_families.md
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_002b_reexposed_unlit_composition/proposed_families.md
+    calibration: >-
+      三/二/一格与当前窄门只是 existence proof；核心是同一必要 consumer 同时夹住复燃时机的上下界。
+      正式设计必须把开放走路换成必要工序，并封闭可达图中的更晚机制旁路。
+
+  - id: S05_T01_BOUNDARY_HANDOFF_PRESERVES_RECEIVER
+    stage_id: stage_05_retreating_flame
+    status: mainline_core
+    title: 旧载体支付边界，接火者以完整燃烧态接班
+    player_choice: 在边界前移开 A 让 B 普通接火，或维持遮蔽直到 A 存活缩短后退焰交接。
+    state_difference: 两路边界后 B 都燃烧；早接者支付本次结算而短一格，退焰接班者在结算后加入并保持完整。
+    consumer: B 的第一次直接移动把长度差写成相邻火焰插口；只有完整且已燃的 B 命中远端输出。
+    lexicon_refs:
+      - post_settlement_flame_handoff_preserves_receiver_cell
+      - equal_translation_offsets_flame_socket_by_length
+    optional_direction_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_001_boundary_handoff_preserves_receiver/proposed_families.md
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_001b_direct_handoff_consumer/proposed_families.md
+    calibration: >-
+      第一批只消费长度，救援才以“短 B 仍燃、长 B 强制未燃”两组控制证明同一接口同时读取长度与退焰所得火。
+      正式设计必须替换火焰格开局和空走计时，并封闭 later-exposure 旁路。
+
+  - id: S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE
+    stage_id: stage_05_retreating_flame
+    status: mainline_core
+    title: 让实体封口在边界上翻成携火通道
+    player_choice: 提前移开 A、让过短 A 燃尽，或把仍可存活的 A 保持在 B 前方直到边界。
+    state_difference: 正确边界把同一格从遮芯且阻挡 B 前推的实体端帽，翻成点燃 B 且允许 B 身体进入的非实体火焰投影。
+    consumer: B 的下一次直接轴推进入刚释放格，并把当前火焰推到前方输出；只释放无火时相同几何不输出。
+    lexicon_refs:
+      - shrink_vacated_wick_cell_becomes_nonsolid_flame_gate
+      - post_settlement_flame_handoff_preserves_receiver_cell
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_002_release_body_step_and_fire/proposed_families.md
+    calibration: >-
+      这不是“火许可”和“空间许可”可正交持有的双钥匙；A 占住 B 烛芯格时会立即熄灭 B。
+      核心是同格 blocker→fuel 的原子身份翻转，退焰格只供 B 身体进入，不是玩家安全站位。
+
+  - id: S05_T03_RETREATING_FLAME_RELAY
+    stage_id: stage_05_retreating_flame
+    status: mainline_core
+    title: 把中继摆成双链接，让火每个边界前进一步
+    player_choice: 在第一边界前把未燃 B 推入同时连接 A 与 C 的中继槽，或让中继过早燃烧、过短燃尽或错开链接。
+    state_difference: 准传、过早与断链分别得到恰长燃 C、过短燃 C、保长未燃 C；A→B 与 B→C 分属相邻边界。
+    consumer: C 沿同一尾行滚到共同终点，只有恰长且燃烧的 C 命中远端火焰插口。
+    lexicon_refs:
+      - single_push_closes_two_orthogonal_cap_wick_links
+      - post_settlement_flame_handoff_preserves_receiver_cell
+      - equal_translation_offsets_flame_socket_by_length
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_003_retreating_flame_relay/proposed_families.md
+    calibration: >-
+      目前准传链在单一连续 trace 中闭合；过早与断链来自近邻布局。正式单关必须把三档变成同一初态内的玩家选择，
+      把两段空走换成必要工作，并重新完成 later-exposure 全图审计。
+
+  - id: S06_T01_PATH_OUTPUT_ENDPOINT_BODY_DUTY
+    stage_id: stage_06_rolling_contact_chain
+    status: mainline_core
+    title: 一记长滚同时经营扫过路径与最终落点
+    player_choice: 选择能跨过目标行并继续到职责位的长滚，而不是在目标处短停、只追求终点或用普通轴推代替。
+    state_difference: 正确动作既留下途中永久输出，又把稳定尾格留在后继对象的碰撞列；替代路线只完成其中一项。
+    consumer: 途中火盆作为必要目标保留，终点尾格随后改写 Q 的滚动停点与紧接轴推动作集合。
+    lexicon_refs:
+      - wick_opposite_tail_preserves_endpoint_stop_across_burn
+      - dynamic_occupancy_changes_roll_endpoint
+      - endpoint_changes_immediate_action_interface
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage06_001_path_output_endpoint_body_duty/proposed_families.md
+    calibration: >-
+      路径输出与终点职责是同一动作累积的两个必要结果，不声称火盆因果解锁 Q。
+      正式关卡必须把 Q 链接到标准胜利目标，并约束当前开放转场与替代操作。
+
+  - id: S06_T02_ORDERED_DOUSE_REIGNITE_WRITES_ENDPOINT_STATE
+    stage_id: stage_06_rolling_contact_chain
+    status: mainline_core
+    title: 让滚道接触顺序写出终点亮灭
+    player_choice: 在同图中选择让滚烛先经过遮芯点再经过火源，或按相反方向经过同构接触序列。
+    state_difference: 墙后火源留下燃烧终态，火源后墙留下未燃终态；两路对象长度、滚距与倒计时一致。
+    consumer: 同构终点的火焰插口直接读取滚动结束时的最终状态。
+    lexicon_refs:
+      - rolling_contacts_overwrite_fire_state_in_path_order
+      - endpoint_flame_socket_reads_rolling_final_state
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage06_002_ordered_douse_reignite/proposed_families.md
+    calibration: 反序首个火源接触对初始燃烛为幂等；核心是接触变换非交换，而非两路事件集合相同。
+
+  - id: S06_T03_BOUNDARY_CONTACT_PROGRAM
+    stage_id: stage_06_rolling_contact_chain
+    status: mainline_core
+    title: 让滚动终态在同一输入里提交为边界参与
+    player_choice: 在倒计时 1 选择让长滚最后写成燃烧或未燃。
+    state_difference: 同一输入结束时，燃烧路立即缩短并释放端帽，未燃路避烧并保留遮蔽；countdown=2 不产生该差异。
+    consumer: 端帽释放与否立即决定下游烛芯是否重曝并接到退焰火。
+    lexicon_refs:
+      - rolling_contacts_overwrite_fire_state_in_path_order
+      - rolling_final_state_is_committed_by_same_action_boundary
+      - post_settlement_flame_handoff_preserves_receiver_cell
+    optional_direction_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage06_003_boundary_contact_program/proposed_families.md
+    calibration: 当前后继读取是同一结算链内的自动端帽释放与交火；正式设计需继续接入玩家可操作的后继职责。

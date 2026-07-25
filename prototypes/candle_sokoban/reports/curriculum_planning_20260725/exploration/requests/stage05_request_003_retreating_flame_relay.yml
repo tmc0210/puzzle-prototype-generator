@@ -1,0 +1,31 @@
+request_id: stage05_request_003_retreating_flame_relay
+exploration_id: candle_curriculum_stage05_retreating_flame_20260725
+stage_id: stage_05_retreating_flame
+allowed_exposure_through: retreating_flame_transfer
+design_space: >-
+  在第一燃烧边界前，玩家把未燃中继 B 送入一个精确槽位：B 的烛芯投影受已燃 A 的端帽遮蔽，
+  而 B 自己的端帽同时遮住未燃 C 的烛芯。第一边界只有 A 在燃烧集合中，A 存活缩短后退焰点燃 B；
+  B 不参加已完成的结算。第二边界 B 再存活缩短，退焰点燃 C，使火种每个边界只沿遮蔽链接前进一段。
+  最终同一 consumer 应区分“正确节拍得到完整燃 C”“B 提前已燃导致 C 早一轮加入并多烧一格”“B 过短燃尽或错位导致 C 未燃”。
+sampling_axes:
+  - 至少验证 A→B 与 B→C 发生在相邻两个不同边界，不能在同一边界递归跨两段。
+  - 正确路需包含玩家在第一边界前把 B 推入或保留在同时连接 A、C 的中继槽；不接受纯静态等待 witness。
+  - 早路让 B 在第一边界前普通接火或初始已燃，使 C 在第一边界过早接火；第二边界后 C 应比正确路短一格但仍有火。
+  - 断链路用一格 B 燃尽、B 错位或缺失第二遮蔽链接，使第二边界后 C 保长但未燃。
+  - 同一最终动作链同时读取 C 的长度与火：早路长度失败，断链路火焰失败，正确路完成输出。
+  - 指定 trace 不得在 relay 之后另处复燃 C，不得使用 rolling_contact_chain 途中事件；完整可达图按 exposure 门核对。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md#post_settlement_flame_handoff_preserves_receiver_cell
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md#shrink_vacated_wick_cell_becomes_nonsolid_flame_gate
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md#equal_translation_offsets_flame_socket_by_length
+do_not_repeat:
+  - 只把 T01 的单次早/晚接火换成三根蜡烛，没有第二个独立边界和中继职责。
+  - 预先把 A/B/C 完全摆好后只空走十拍见证两个 shrink_ignite。
+  - 最终只检查 C 是否点亮，不读取过早接火造成的长度差。
+  - relay 后把 C 灭掉并从固定火源重取火。
+  - 使用滚动途中点火、灭火或点盆。
+  - 编辑 Controller 账本或把完整接力伪关卡写入 Lexicon。
+materialization_target: >-
+  一个两边界接力的同链 existence proof：玩家先建立 B 的双链接中继位，A 在第一边界把火交给 B，
+  B 在第二边界把火交给 C；正确、过早、断链三路动态生成“恰长燃烧、过短燃烧、保长未燃”，
+  并由同一连续 consumer 读取。若只能做静态事件 witness，应降为 material_only。

@@ -1,0 +1,226 @@
+runId: batch_stage02_001_boundary_exit_allocates_length
+title: 选择性墙体灭火把保长格分配给 A 或 B
+notes: >-
+  两根三格燃烛在首次边界前二选一贴墙灭火，另一根缩成二格；随后两者都以同一烛芯列贴墙熄灭，
+  让先后选择只留下尾端格属于 A 还是 B。横条侧滚或竖烛轴推读取这格实体挡块。
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 14
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: roll_A_first_long_A_stops_near
+    family: boundary_exit_allocates_length
+    variant: A-first_roll-near
+    changed_variable: 同一布局首次边界前先灭 A
+    contrast_with: [roll_B_first_long_B_stops_far]
+    notes: >-
+      第五拍向右推 A，使其烛芯贴墙并退出燃烧；B 同拍缩短。第十拍再把 B 推到同一烛芯列贴墙，
+      两根都熄灭后把上方横烛向下侧滚。A 保住的尾端格挡住横烛，横烛停在 A 前；玩家走到其上方后下一次 down 应被挡。
+    layout: |
+      ###############
+      #...........o.#
+      #....l33......#
+      #.............#
+      #.............#
+      #.............#
+      #.....11R.#...#
+      #.@...........#
+      #.....22R.#...#
+      #.............#
+      ###############
+    actions: [up, right, right, right, right, left, down, down, right, right, left, left, left, up, up, up, up, up, up, up, right, down, down, down]
+
+  - id: roll_B_first_long_B_stops_far
+    family: boundary_exit_allocates_length
+    variant: B-first_roll-far
+    changed_variable: 同一布局首次边界前先灭 B
+    contrast_with: [roll_A_first_long_A_stops_near]
+    notes: >-
+      与 A-first 完全相同的初始摆法，改为第五拍先把 B 推入墙面；A 缩短后再贴墙。
+      横烛不再碰到 A 的尾端列，继续滚到 B 前；在相同的玩家后续站位，下一次 down 应仍是 walk。
+    layout: |
+      ###############
+      #...........o.#
+      #....l33......#
+      #.............#
+      #.............#
+      #.............#
+      #.....11R.#...#
+      #.@...........#
+      #.....22R.#...#
+      #.............#
+      ###############
+    actions: [down, right, right, right, right, left, up, up, right, right, left, left, left, up, up, up, up, up, right, down, down, down]
+
+  - id: axis_A_first_long_A_blocks_next_push
+    family: boundary_exit_allocates_length
+    variant: A-first_axis-blocked
+    changed_variable: consumer 改为同列单格竖烛的轴推面
+    contrast_with: [axis_B_first_short_A_allows_next_push]
+    notes: >-
+      A-first 完成同样的长 A/短 B 分配；未燃单格竖烛被连续向下轴推到 A 上方。
+      A 保住的尾端格占住下一格，最终动作表中的 down 应为 axis_push_blocked。
+    layout: |
+      ###############
+      #...........o.#
+      #......d......#
+      #.............#
+      #.............#
+      #.............#
+      #.....11R.#...#
+      #.@...........#
+      #.....22R.#...#
+      #.............#
+      ###############
+    actions: [up, right, right, right, right, left, down, down, right, right, left, left, up, up, up, up, up, up, up, right, right, down, down, down]
+
+  - id: axis_B_first_short_A_allows_next_push
+    family: boundary_exit_allocates_length
+    variant: B-first_axis-legal
+    changed_variable: 同一布局首次边界前先灭 B
+    contrast_with: [axis_A_first_long_A_blocks_next_push]
+    notes: >-
+      B-first 让 A 缩成二格；两根贴墙后，单格竖烛被推到 A 上方。
+      A 的尾端格已空，最终动作表中的同一 down 应为合法轴推，可进入该格。
+    layout: |
+      ###############
+      #...........o.#
+      #......d......#
+      #.............#
+      #.............#
+      #.............#
+      #.....11R.#...#
+      #.@...........#
+      #.....22R.#...#
+      #.............#
+      ###############
+    actions: [down, right, right, right, right, left, up, up, right, right, left, left, up, up, up, up, up, right, right, down, down, down]
+
+  - id: early_A_exit_still_allocates_long_A
+    family: boundary_exit_allocates_length
+    variant: A-exits-one-beat-early
+    changed_variable: A 的墙体灭火从第五拍提前到第四拍
+    contrast_with: [roll_A_first_long_A_stops_near]
+    notes: >-
+      玩家起点右移一格，使 A 在第四拍已经贴墙灭火；第五拍走向 B 操作位时 B 缩短。
+      两根最终仍是长 A/短 B，同一横烛仍在 A 前近停，说明分配依赖边界前退出，而不依赖边界动作标签本身。
+    layout: |
+      ###############
+      #...........o.#
+      #....l33......#
+      #.............#
+      #.............#
+      #.............#
+      #.....11R.#...#
+      #..@..........#
+      #.....22R.#...#
+      #.............#
+      ###############
+    actions: [up, right, right, right, left, down, down, right, right, left, left, left, up, up, up, up, up, up, up, right, down, down, down]
+
+  - id: wall_removed_both_shrink_no_slot
+    family: boundary_exit_allocates_length
+    variant: dousing-wall-removed
+    changed_variable: 移除 A/B 烛芯前的遮芯墙
+    contrast_with: [roll_A_first_long_A_stops_near, roll_B_first_long_B_stops_far]
+    notes: >-
+      保持 A-first 的前五次动作，但移除两行的右墙。第五拍推动 A 后它没有退出燃烧，边界同时缩短 A/B，
+      不再得到唯一一根三格长烛。
+    layout: |
+      ###############
+      #...........o.#
+      #....l33......#
+      #.............#
+      #.............#
+      #.............#
+      #.....11R.....#
+      #.@...........#
+      #.....22R.....#
+      #.............#
+      ###############
+    actions: [up, right, right, right, right]
+
+  - id: no_consumer_A_first_only_length_state
+    family: boundary_exit_allocates_length
+    variant: A-first_consumer-removed
+    changed_variable: 移除横条侧滚与竖烛轴推 consumer
+    contrast_with: [roll_A_first_long_A_stops_near]
+    notes: 完成 A-first 的两次墙体灭火，但顶部没有任何读取尾端格的对象；结果只剩长 A/短 B 的状态差。
+    layout: |
+      ###############
+      #...........o.#
+      #.............#
+      #.............#
+      #.............#
+      #.............#
+      #.....11R.#...#
+      #.@...........#
+      #.....22R.#...#
+      #.............#
+      ###############
+    actions: [up, right, right, right, right, left, down, down, right, right]
+
+  - id: no_consumer_B_first_only_length_state
+    family: boundary_exit_allocates_length
+    variant: B-first_consumer-removed
+    changed_variable: 移除横条侧滚与竖烛轴推 consumer
+    contrast_with: [roll_B_first_long_B_stops_far]
+    notes: 完成 B-first 的两次墙体灭火，但没有下游对象；结果只剩短 A/长 B 的状态差。
+    layout: |
+      ###############
+      #...........o.#
+      #.............#
+      #.............#
+      #.............#
+      #.............#
+      #.....11R.#...#
+      #.@...........#
+      #.....22R.#...#
+      #.............#
+      ###############
+    actions: [down, right, right, right, right, left, up, up, right, right]
+
+  - id: two_cell_axis_A_first_blocks_on_preserved_tail
+    family: boundary_exit_allocates_length
+    variant: two-cell_A-first_axis-blocked
+    changed_variable: A/B 初始长度从三格同时缩为二格，并把 consumer 列右移一格
+    contrast_with: [two_cell_axis_B_first_passes_short_A]
+    notes: >-
+      两根初始二格燃烛仍从同一叉口二选一；A-first 后 A 保持二格、B 缩为单格并最终与 A 烛芯端对齐。
+      单格竖烛被推到 A 上方，A 保住的尾端格使下一次 down 为 axis_push_blocked。
+    layout: |
+      ###############
+      #...........o.#
+      #.......d.....#
+      #.............#
+      #.............#
+      #.............#
+      #......1R.#...#
+      #..@..........#
+      #......2R.#...#
+      #.............#
+      ###############
+    actions: [up, right, right, right, right, left, down, down, right, right, left, left, up, up, up, up, up, up, up, right, right, down, down, down]
+
+  - id: two_cell_axis_B_first_passes_short_A
+    family: boundary_exit_allocates_length
+    variant: two-cell_B-first_axis-legal
+    changed_variable: 同一二格布局首次边界前先灭 B
+    contrast_with: [two_cell_axis_A_first_blocks_on_preserved_tail]
+    notes: >-
+      B-first 后 A 缩为单格、B 保持二格；二者贴墙后，A 的尾端列为空。
+      单格竖烛到达 A 上方时，同一 down 仍为合法轴推。
+    layout: |
+      ###############
+      #...........o.#
+      #.......d.....#
+      #.............#
+      #.............#
+      #.............#
+      #......1R.#...#
+      #..@..........#
+      #......2R.#...#
+      #.............#
+      ###############
+    actions: [down, right, right, right, right, left, up, up, right, right, left, left, up, up, up, up, up, right, right, down, down, down]

@@ -1,0 +1,218 @@
+runId: batch_stage04_001_mobile_shutter_douses_in_place
+title: "可移动遮板双职责：原地退出与终点占格"
+notes: >-
+  B 保持精确坐标；C 的一格烛身遮住 B 烛芯，另一格烛身建立侧滚停块；
+  后继再用两个独立列读取 B 的原尾格和原端帽格。
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 24
+  maxStates: 30000
+  maxTransitions: 120000
+cases:
+  - id: axis_cover_full_chain
+    family: mobile_cover_dual_duty
+    variant: axis_push_full_chain
+    changed_variable: C 轴推到 B 烛芯格，并保留 C 终点、B 原位和 B 长度三个 consumer
+    contrast_with:
+      - axis_cover_without_c_endpoint_probe
+      - move_b_to_wall_loses_original_tail
+      - no_douse_loses_original_cap
+    notes: >-
+      第一步上推 C：C 的上格落到 B 烛芯投影格，下格留作 x=6 的近端滚动停块；
+      第五拍边界后 B 不缩短。x=6 单格横烛由 C 下格截停，x=3 单格横烛由 B 原尾格截停；
+      最后把 x=5 单格竖烛推到 B 原端帽格下方，同一 `up` 因端帽仍在而不可用。
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..22R....#
+      #.....3...#
+      #....dd...#
+      #.....@...#
+      #..l..r...#
+      #.........#
+      #........o#
+      ###########
+    actions:
+      - up
+      - right
+      - down
+      - left
+      - right
+      - down
+      - down
+      - left
+      - up
+      - down
+      - left
+      - left
+      - left
+      - up
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+
+  - id: side_roll_cover_without_b_probes
+    family: mobile_cover_dual_duty
+    variant: side_roll_c_endpoint_only
+    changed_variable: C 改从右侧滚入同一终点，并删除 B 尾格与端帽格探针
+    contrast_with: axis_cover_full_chain
+    notes: >-
+      竖烛 C 从 x=8 向左侧滚，被 B 的端帽挡在 x=6；C 上格遮住 B 烛芯，
+      下格让 x=6 的探针停在 y=5。该 case 只证明侧滚也能产生同一两格终点，
+      并刻意删除 B consumer，因此不单独支撑完整组合。
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..22R..3@#
+      #.......d.#
+      #.........#
+      #.........#
+      #.....r...#
+      #.........#
+      #........o#
+      ###########
+    actions:
+      - left
+      - down
+      - right
+      - up
+      - down
+      - down
+      - down
+      - down
+      - down
+      - left
+      - left
+      - left
+      - up
+
+  - id: axis_cover_without_c_endpoint_probe
+    family: mobile_cover_dual_duty
+    variant: remove_c_endpoint_consumer
+    changed_variable: 删除 x=6 探针，只保留 B 原尾格与原端帽格读取
+    contrast_with: axis_cover_full_chain
+    notes: >-
+      C 仍原地熄灭 B，B 仍保持三格与原坐标；但没有任何后继动作读取 C 的第二格终点，
+      因而只剩原地退出，不再证明遮板双职责。
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..22R....#
+      #.....3...#
+      #....dd...#
+      #.....@...#
+      #..l......#
+      #.........#
+      #........o#
+      ###########
+    actions:
+      - up
+      - right
+      - down
+      - left
+      - right
+      - down
+      - down
+      - left
+      - left
+      - left
+      - left
+      - up
+      - down
+      - right
+      - right
+      - up
+      - up
+      - up
+
+  - id: fixed_wall_preserves_b_but_changes_stop
+    family: mobile_cover_dual_duty
+    variant: fixed_wall_substitute
+    changed_variable: 用 B 烛芯格的一格固定墙替代两格 C 终点
+    contrast_with: axis_cover_full_chain
+    notes: >-
+      B 预置为未燃并由烛芯格固定墙保持；x=6 探针仍可向上滚，但固定墙在 y=3，
+      它停在 y=4，而 C 的第二格占住 y=4 时探针停在 y=5。墙能给出遮蔽位，
+      却没有 C 终点额外一格形成的近停接口，也没有移动动作耦合。
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..22r#...#
+      #.........#
+      #.........#
+      #.........#
+      #.....r...#
+      #.....@...#
+      #........o#
+      ###########
+    actions:
+      - up
+
+  - id: move_b_to_wall_loses_original_tail
+    family: mobile_cover_dual_duty
+    variant: self_wall_exit_moves_b
+    changed_variable: 不用 C，改为把 B 右推一格使烛芯贴墙
+    contrast_with: axis_cover_full_chain
+    notes: >-
+      B 同样在边界前退出并保住三格，但整体从 x=3..5 移到 x=4..6；
+      x=3 的尾格探针不再被截停，证明“保长”不能替代“原位保形”。
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #.@22R.#..#
+      #.........#
+      #.........#
+      #.........#
+      #..l......#
+      #.........#
+      #........o#
+      ###########
+    actions:
+      - right
+      - down
+      - left
+      - right
+      - down
+      - right
+      - down
+      - down
+      - down
+      - left
+      - up
+
+  - id: no_douse_loses_original_cap
+    family: mobile_cover_dual_duty
+    variant: no_exit_before_boundary
+    changed_variable: 不让 B 退出，边界删除原端帽格
+    contrast_with: axis_cover_full_chain
+    notes: >-
+      B 保持尾端坐标但第五拍缩短为两格，x=5 原端帽列腾空；
+      把 x=5 竖烛推到 y=4 后，同一 `up` 仍合法；正例中该输入被原端帽格阻挡，
+      证明“原位”不能替代“保形”。
+    layout: |
+      ###########
+      #.........#
+      #.........#
+      #..22R....#
+      #.........#
+      #....d....#
+      #.....@...#
+      #.........#
+      #.........#
+      #........o#
+      ###########
+    actions:
+      - right
+      - left
+      - right
+      - left
+      - left
+      - up

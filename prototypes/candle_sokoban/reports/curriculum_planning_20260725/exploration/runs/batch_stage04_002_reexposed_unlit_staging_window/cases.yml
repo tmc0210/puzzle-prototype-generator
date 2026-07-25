@@ -1,0 +1,170 @@
+runId: batch_stage04_002_reexposed_unlit_staging_window
+title: "遮板移开后的未燃暂存窗口"
+notes: "C 遮芯后离开；比较先清空间再复燃、立即复燃、永不复燃与保持遮蔽。"
+defaults:
+  maxExploreDepth: 12
+  maxReturnDepth: 20
+  maxStates: 20000
+  maxTransitions: 80000
+cases:
+  - id: staged_then_reignite
+    family: reexposed_unlit_staging_window
+    variant: staged_then_reignite
+    changed_variable: "C 的清场发生在 B 复燃之前，并让 B 未燃跨过共享边界"
+    contrast_with: [reignite_before_clearing, clear_but_never_reignite, keep_cover]
+    notes: "1 上推 C 遮芯；2 再上推使 B 重曝未燃；3-5 把 C 从 B 后继滚道移走并让 B 未燃跨界；6-10 到达滚动面并再次跨界；11 把 B 滚到 O 处复燃；12-15 让 B 恰缩短一次。"
+    layout: |
+      ###########
+      #.....O..o#
+      #.........#
+      #.........#
+      #..11R....#
+      #.....d...#
+      #.....@...#
+      ###########
+    actions: [up, up, right, up, left, down, right, down, left, left, up, right, left, right, left]
+
+  - id: reignite_before_clearing
+    family: reexposed_unlit_staging_window
+    variant: reignite_before_clearing
+    changed_variable: "B 在移走 C 之前复燃"
+    contrast_with: staged_then_reignite
+    notes: "重曝后先把 B 滚到 O；该动作处在共享边界，B 立即缩一格。随后才清 C，再过一边界，B 变成一格。"
+    layout: |
+      ###########
+      #.....O..o#
+      #.........#
+      #.........#
+      #..11R....#
+      #.....d...#
+      #.....@...#
+      ###########
+    actions: [up, up, down, left, up, right, right, up, left, down]
+
+  - id: clear_but_never_reignite
+    family: reexposed_unlit_staging_window
+    variant: clear_but_never_reignite
+    changed_variable: "把固定火源 O 改为未亮火盆 o"
+    contrast_with: staged_then_reignite
+    notes: "空间清场与 B 的滚动位置相同，但 B 不复燃；后续四步跨界仍保持三格。"
+    layout: |
+      ###########
+      #.....o..o#
+      #.........#
+      #.........#
+      #..11R....#
+      #.....d...#
+      #.....@...#
+      ###########
+    actions: [up, up, right, up, left, down, right, down, left, left, up, right, left, right, left]
+
+  - id: keep_cover
+    family: reexposed_unlit_staging_window
+    variant: keep_cover
+    changed_variable: "C 只移动到 B 的烛芯格，不继续离开"
+    contrast_with: staged_then_reignite
+    notes: "遮蔽后停手；玩家位于 C 下方，同一 up 仍会推动 C，烛芯格尚未成为空的操作/穿行格。"
+    layout: |
+      ###########
+      #.....O..o#
+      #.........#
+      #.........#
+      #..11R....#
+      #.....d...#
+      #.....@...#
+      ###########
+    actions: [up]
+
+  - id: exposed_unlit_interface
+    family: reexposed_unlit_staging_window
+    variant: exposed_unlit_interface
+    changed_variable: "在保持遮蔽对照上再上推 C 一格"
+    contrast_with: keep_cover
+    notes: "第二次 up 后玩家进入原遮芯格，C 到其上方；该步产生 wick_reexposed_unlit 而不产生 ignite。"
+    layout: |
+      ###########
+      #.....O..o#
+      #.........#
+      #.........#
+      #..11R....#
+      #.....d...#
+      #.....@...#
+      ###########
+    actions: [up, up]
+
+  - id: sealed_keep_cover
+    family: wick_cell_handoff_consumer
+    variant: covered_pocket
+    changed_variable: "C 停在烛芯格，玩家仍在下方封闭袋"
+    contrast_with: sealed_reexposed_handoff
+    notes: "第一次 up 后，玩家所在格左右皆是墙；同一 right 非法，必须继续移动 C 才能取得上层出口。"
+    layout: |
+      ###########
+      #O......o.#
+      #.........#
+      #..11R....#
+      #....#d#..#
+      #....#@#..#
+      ###########
+    actions: [up, right]
+
+  - id: sealed_reexposed_handoff
+    family: wick_cell_handoff_consumer
+    variant: reexposed_exit
+    changed_variable: "C 再上移一格，把原遮芯格交给玩家"
+    contrast_with: sealed_keep_cover
+    notes: "第二次 up 后玩家进入外露未燃烛芯格；同一 right 变成合法 walk，直接离开封闭袋。"
+    layout: |
+      ###########
+      #O......o.#
+      #.........#
+      #..11R....#
+      #....#d#..#
+      #....#@#..#
+      ###########
+    actions: [up, up, right]
+
+  - id: length_gate_long_rejects
+    family: prepared_length_consumer
+    variant: long_rejects
+    changed_variable: "B 保持三格，竖探针停在 x6 的封口下"
+    contrast_with: [length_gate_middle_accepts, length_gate_short_rejects]
+    notes: "复用 task lexicon 的三终点单列门：左滚后绕到探针下方，同一 up 被 x6 上墙拒绝。"
+    layout: |
+      ###########
+      #o.......O#
+      #...#.#...#
+      #..11r.u@.#
+      #.........#
+      ###########
+    actions: [left, down, left, up]
+
+  - id: length_gate_middle_accepts
+    family: prepared_length_consumer
+    variant: middle_accepts
+    changed_variable: "B 为两格，竖探针停在唯一开放的 x5 列"
+    contrast_with: [length_gate_long_rejects, length_gate_short_rejects]
+    notes: "左滚后绕到探针下方，同一 up 轴推合法；这是暂存—复燃链所需的最小长度 consumer。"
+    layout: |
+      ###########
+      #o.......O#
+      #...#.#...#
+      #..1r..u@.#
+      #.........#
+      ###########
+    actions: [left, down, left, left, up]
+
+  - id: length_gate_short_rejects
+    family: prepared_length_consumer
+    variant: short_rejects
+    changed_variable: "B 只剩一格，竖探针多滚到 x4 的封口下"
+    contrast_with: [length_gate_long_rejects, length_gate_middle_accepts]
+    notes: "左滚后绕到探针下方，同一 up 被 x4 上墙拒绝。"
+    layout: |
+      ###########
+      #o.......O#
+      #...#.#...#
+      #..r...u@.#
+      #.........#
+      ###########
+    actions: [left, down, left, left, left, up]

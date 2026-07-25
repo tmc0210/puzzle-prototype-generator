@@ -1,0 +1,105 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+stage_id: stage_01_basic_countdown
+status: completed
+
+fixed_teaching_beats:
+  - slot: opening_axis_wick_goal
+    role: 短教学入口
+    decision: fixed
+    notes: 第 1 关建立轴推、端帽外烛芯与点盆目标，不要求复杂体验核心。
+  - slot: early_countdown_reveal
+    role: 主题展示
+    decision: fixed
+    notes: 第 2 或第 3 关跨过五拍边界并明显缩短；首次允许只观察，不伪装成谜题核心。
+
+controller_admission_questions:
+  - 玩家在机制发生前做了什么有意义的选择？
+  - 选择留下了哪段长度、哪格空位、哪个阻挡、火焰状态或操作位差异？
+  - 哪个最小后继动作实际消费了该差异？
+  - 用错对象、方向、顺序或时机后，后续行动或可解性怎样改变？
+  - 是否退化为普通近路、普通阻挡、事件 witness 或已知结构重复？
+  - 是否与本阶段其它核心具有不可合并的玩家推理差异？
+
+batches:
+  - batch_id: batch_stage01_001_long_roll_temporal_compression
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage01_request_001_long_roll_temporal_compression.yml
+    status: completed
+    controller_decision: reject
+    decision_reason: >-
+      A/B 证明长度差可被终点火盆消费，但 D 的一格短滚与 E 的无滚动预置终点都复现同一 consumer；
+      多格长滚只减少普通准备步数，没有产生独占的动后局面或玩家选择。
+    player_facing_core: null
+    required_counterfactual:
+      - 一格短滚仍能点盆，否定多格距离的必要性。
+      - 移除滚动、预置相同终点仍能点盆，否定侧滚本身的必要性。
+      - 移开火盆后只剩事件 witness，证明当前 consumer 只消费长度对齐。
+    evidence_limit: >-
+      complete graph 中可达墙灭火等后期事件，本批 artifact 只用于局部拒绝裁决，
+      不得充当早期正式候选的 exposure 证据。
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage01_001_long_roll_temporal_compression/batch.yml
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage01_001_long_roll_temporal_compression/explorer_notes.md
+
+  - batch_id: batch_stage01_002_burnout_removes_roll_stop
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage01_request_002_burnout_removes_roll_stop.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同一布局提供燃尽前/后两种时间选择，并把它们转写为另一根蜡烛的近/远离散停点；
+      通口与轴推面两类 consumer 都真实改变后继动作集合，且固定挡块、持续挡块和无 consumer
+      对照排除了普通阻挡与单纯 burn_out witness。
+    player_facing_core: >-
+      玩家决定是在临时挡块消失前利用它取得近停点，还是等倒计时删除挡块后让同一根蜡烛滚到远停点；
+      后继空间立即要求其中一个停点。
+    required_counterfactual:
+      - 把燃烛换成持续未燃蜡烛后，燃烧边界不再改变停点。
+      - 把燃烛换成固定墙后，时间选择消失。
+      - 移除通口或远点轴推墙后，近/远差异不再改变下一动作。
+    packaging_constraints:
+      - 用必要对象操作替代当前 probe 中的开阔区五拍走路。
+      - 让近点 consumer 及时发生，或限制玩家无代价回到上侧后二次滚远。
+      - 正式 exact 必须对完整可达图通过 basic_candle_manipulation exposure gate。
+    expected_course_role: 早期倒计时首次主动应用，位于侧滚与被动缩短展示之后。
+    expected_relative_difficulty: 2
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S01_T03_BURNOUT_REMOVES_ROLL_STOP
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage01_002_burnout_removes_roll_stop/batch.yml
+
+  - batch_id: batch_stage01_003_shared_clock_cross_object_order
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage01_request_003_shared_clock_cross_object_order.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同一布局和起点提供真实 A/B 顺序选择；处理 A 的必要推动与返程推进共享时钟，
+      使尚未使用的 B 丢掉烛芯端碰撞列。停块和未燃火盆随后同时读取 B 的宽度、
+      侧滚终点与火焰列，区别于单格燃尽期限，也区别于已选的“动态挡块消失”。
+    player_facing_core: >-
+      玩家先使用 B 可保留完整形状并在近点点盆；若先完成 A，A 的必要工序会远程缩短 B，
+      使同一次侧滚越过近点并错失共同胜利所需的火盆。
+    required_counterfactual:
+      - 移除 B 火盆后只剩近远终点差，共同目标不再消费 B 的完整形状。
+      - 单格 B 的燃尽版本只是明显期限，只可作为退化下界。
+      - 给退化 B 增加一格后，A-first 仍能完成 B，确认寿命余量边界来自共享时钟。
+    packaging_constraints:
+      - 保持 A 的操作和回到 B 上方的路径都不可删，避免用人为走步凑拍。
+      - 正式关卡需封闭 A-first 后的补救旁路，使错误顺序具有清楚代价。
+      - 当前指定 trace 干净，但正式 exact 仍须对完整可达图通过基础阶段 exposure gate。
+    expected_course_role: 早期倒计时的跨对象深化，位于燃尽改写滚动终点之后。
+    expected_relative_difficulty: 3
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage01_003_shared_clock_cross_object_order/batch.yml
+
+mainline_cores:
+  - id: S01_T03_BURNOUT_REMOVES_ROLL_STOP
+    title: 燃尽闸门改写侧滚终点
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S01_T03_BURNOUT_REMOVES_ROLL_STOP
+  - id: S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY
+    title: 共享时钟跨对象保形顺序锁
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY
+jam_reserve: []
+material_only: []
+rejected:
+  - id: S01_T01_LONG_ROLL_TEMPORAL_COMPRESSION
+    reason: 多格长滚未被隔离，退化为普通少走一步；不进入 lexicon 或课程槽位。

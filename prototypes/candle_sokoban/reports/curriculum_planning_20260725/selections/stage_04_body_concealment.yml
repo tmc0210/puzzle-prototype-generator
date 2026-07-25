@@ -1,0 +1,96 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+stage_id: stage_04_body_concealment
+status: selected
+
+controller_focus: >-
+  烛身遮蔽的独立价值是让一个可移动空间对象同时充当另一对象的原地参与开关。
+  候选必须消费目标保留的位置/长度和遮体自身的新位置，不能只复刻墙体灭火。
+
+batches:
+  - batch_id: batch_stage04_001_mobile_shutter_douses_in_place
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage04_request_001_mobile_shutter_douses_in_place.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同一移动把 C 的一格送入 B 烛芯、另一格送入独立空间接口；B 因而在不平移的情况下保住原尾格与端帽格。
+      自行把 B 推墙会失去原位，不退出会失去长度，删除 C 或 B 的读取分别退化为普通移动停块或普通原地灭火。
+      固定两格墙可复现静态占格，因此独立价值是可选动作的双重结果，不是终局形状专有性。
+    player_facing_core: >-
+      玩家把另一根蜡烛当作可移动遮板：一次移动既让目标在原位停止燃烧，又把遮板自身摆到后继需要的位置。
+    required_counterfactual:
+      - 把 B 自己推墙能保长但破坏原坐标。
+      - 不让 B 退出会保留尾端却在边界失去端帽格。
+      - 删除 C 邻格 consumer 后只剩原地灭火；删除 B 原轮廓读取后 C 只是移动停块。
+      - 固定墙只能说明静态占格可替代，不能复现玩家在时机上选择同时建立两项结果。
+    packaging_constraints:
+      - 正式关卡要用一条连续 consumer 压缩当前三只诊断探针。
+      - 必须让 C 的终点职责和 B 的保形原位同时进入同一任务链。
+      - 本核心不要求移开 C，未燃重曝留给下一槽位。
+    expected_course_role: 烛身遮蔽首次主动应用；突出“原地退出 + 可移动遮板自身位置”。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_001_mobile_shutter_douses_in_place/batch.yml
+
+  - batch_id: batch_stage04_002_reexposed_unlit_staging_window
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage04_request_002_reexposed_unlit_staging_window.yml
+    status: completed
+    controller_decision: material_only
+    decision_reason: >-
+      遮体离开后的未燃烛芯格已改变玩家通路，重曝后先清场再复燃也已形成三/二/一格时序差；
+      但时序输出与只接受二格的单列门仍是两个 exact 模块，尚未闭合为同一胜利链。
+    player_facing_core: pending_composition
+    required_counterfactual:
+      - C 不离开时空间接口仍被占。
+      - 立即复燃会多参加一次边界，永不复燃则保长但无火。
+      - 三终点单列门分别拒绝三格与一格，只接受二格。
+    material_refs:
+      - cover_departure_hands_player_into_unlit_wick_cell
+      - reexposed_unlit_setup_defers_burn_boundary
+      - single_push_lane_selects_middle_roll_endpoint
+
+  - batch_id: batch_stage04_002b_reexposed_unlit_composition
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage04_request_002b_reexposed_unlit_composition.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      救援构造把未燃重曝、延后复燃和准确长度/火焰读取压进同一布局：立即复燃得到一格燃烛，
+      暂存后复燃得到二格燃烛，永不复燃保持三格未燃；同一窄身门拒绝三格，末端火焰列拒绝一格与未燃态。
+      因此玩家真正控制的是“开放但未燃”的准备区间，不是见证重曝事件。
+    player_facing_core: >-
+      玩家移开遮板后不急着点火，先利用重曝但未燃的安全窗口完成必要准备，再在准确时机复燃，
+      让同一对象以恰好长度和有火状态通过最终接口。
+    required_counterfactual:
+      - 保持遮蔽时拿不到烛芯格与后继准备位置。
+      - 立即复燃会让 B 多支付一次边界并缩成一格，火焰错过末端读取列。
+      - 永不复燃时 B 保持三格，额外身体列在窄门被截停，而且不能完成火焰输出。
+      - 删除窄门、预亮终盆或删除复燃来源，会分别移除长度、火焰或主动复燃职责。
+    packaging_constraints:
+      - 正式关卡必须把重曝交出的站位直接接到必要对象操作，不能靠开放走路填满倒计时。
+      - 当前 existence proof 的完整可达图仍可触及更晚机制事件，正式设计必须封闭退焰点火与滚动途中接触旁路。
+      - 核心不绑定三/二/一的具体尺寸；只要求早、准、晚形成由同一 consumer 读取的三档状态。
+    expected_course_role: 未燃重曝的主动应用；把“何时复燃”与“先完成哪项必要准备”绑定。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S04_T02_REEXPOSED_UNLIT_STAGING_WINDOW
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_002_reexposed_unlit_staging_window/batch.yml
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_002b_reexposed_unlit_composition/batch.yml
+
+planned_followups: []
+deferred_hypotheses:
+  - id: S04_T03_MOVABLE_COVER_COUPLES_TWO_OBJECT_JOBS
+    reason: >-
+      尚未探索，不算 jam_reserve。前两核心已分别覆盖遮住目标与移开后的主动暂存；
+      若全机制组合需要遮体自身承担长程工序，再按新的 consumer 重新派发。
+
+mainline_cores:
+  - id: S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+    title: 移动遮板同时冻结目标原轮廓并建立空间接口
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+  - id: S04_T02_REEXPOSED_UNLIT_STAGING_WINDOW
+    title: 移开遮板后先利用未燃窗口，再主动复燃
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S04_T02_REEXPOSED_UNLIT_STAGING_WINDOW
+jam_reserve: []
+material_only: []
+rejected: []

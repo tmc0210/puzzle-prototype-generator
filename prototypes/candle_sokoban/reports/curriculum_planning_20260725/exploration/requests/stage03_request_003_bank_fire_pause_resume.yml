@@ -1,0 +1,36 @@
+request_id: stage03_request_003_bank_fire_pause_resume
+exploration_id: candle_curriculum_stage03_shared_fire_reignition_20260725
+stage_id: stage_03_shared_fire_reignition
+allowed_exposure_through: shared_fire_and_reignition
+design_space: >-
+  同一燃烛 B 先以外露火焰点亮永久火盆 P，把火焰状态存入场景；随后 B 的烛芯贴墙灭火，
+  在玩家完成另一段直接准备最终通路的必要工作时跨过至少一个共享边界而保持长度；
+  最后移动 B，使刚重新外露的未燃烛芯在同一行动落到 P 的火源格并立即复燃，
+  再以保住的实体长度和取回的火焰完成最终火盆 Q 或同一胜利链。
+  不暂停会让 B 在工作期间过度缩短并失去最终几何；暂停后不复燃则几何仍在但 Q 无法点亮。
+sampling_axes:
+  - B 初始长度 2—4 格；先点 P、墙灭、跨边界、从 P 复燃、点 Q 五段必须属于同一布局与完整 trace。
+  - 墙与 P 的相对位置要使 B 从遮芯状态移动后直接在 P 上复燃，避免留下 `wick_reexposed_unlit` 晚期暴露。
+  - 暂停区间内的行动必须直接打开 B 到 Q 的滚道、准备操作面或移动后继对象，不用独立小题或空走。
+  - 比较从不墙灭、墙灭但不复燃、正确存火—暂停—取火三路；至少前两条分别隔离长度职责与火焰职责。
+  - 预先点亮 P，检查 B 的第一段存火职责是否消失；移除 P 或使其未燃，检查复燃接口是否消失。
+  - 移除最终长度 consumer 或预亮 Q，检查暂停与取火是否只剩无用途状态变化。
+  - 若存在早复燃/晚复燃选择，验证加入不重置倒计时是否给最终长度留下额外界限；不是硬要求。
+  - 指定 trace 不得使用烛身遮蔽、未燃重曝、退焰点火或滚动途中接触链。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage03_001_midcycle_join_allocates_burn/explorer_notes.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_002_just_in_time_dual_use_then_freeze/explorer_notes.md
+do_not_repeat:
+  - 只做“墙灭后再从火盆点着”的复燃演示，没有暂停区间或长度 consumer。
+  - 只做先点 P、后点 Q 的普通两盆顺序，B 在中间没有因退出而保住可用形状。
+  - 把前一墙体核心“先点盆再墙灭保尾”原样重演；本轮必须让 P 成为后续取回火焰的存储点。
+  - 让暂停期间的工作成为独立小题，或用无意义走动跨边界。
+  - 让复燃动作先产生未燃重曝再于后续行动点火；当前阶段要求同动作直接进入稳定火源接口。
+  - 把完整伪关卡作为单条 Lexicon；只发布新原子结构或补现有原子证据。
+  - 设计正式关卡、判断课程优先级或编辑 experience_cores.yml。
+materialization_target: >-
+  找到一个“存火—暂停—取火”闭环：B 先把火永久留在 P，墙灭跨过必要工作区间保形，
+  再从 P 同动作复燃，并以保住的长度与火焰完成同一最终链；不暂停和不复燃对照分别破坏几何与火焰职责。
+  完整组合留作 optional direction，Lexicon 只记录可独立拼接的局部关系。

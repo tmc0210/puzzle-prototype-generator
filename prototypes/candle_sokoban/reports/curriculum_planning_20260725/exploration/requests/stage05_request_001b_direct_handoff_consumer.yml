@@ -1,0 +1,29 @@
+request_id: stage05_request_001b_direct_handoff_consumer
+exploration_id: candle_curriculum_stage05_retreating_flame_20260725
+stage_id: stage_05_retreating_flame
+allowed_exposure_through: retreating_flame_transfer
+design_space: >-
+  收紧首批交接：同一初始布局仍比较边界前普通接火与 A 缩短后的退焰接火，但边界结算后 B 必须在两路都保持燃烧，
+  且下一次对 B 的直接轴推或侧滚就进入同一个空间＋火焰 consumer。退焰路的完整 B 应因额外身体格取得准确停点/操作面，
+  并用当前这簇火直接点盆或继续传火；提前接火的短 B 应错过该点。结算后到 fire consumer 之间不得墙灭、烛身灭火、
+  固定火盆复燃或别的烛芯复燃，确保删掉 shrink_ignite 所得火就会在同一接口失败。
+sampling_axes:
+  - 同图早接火短 B 与退焰接火长 B；边界后两路 B 都为燃烧，且比较动作尽量相同。
+  - 优先采样“一次侧滚：长度决定停点，当前火焰在正确停点点盆”和“一次轴推：长度决定操作合法性，当前火焰完成输出”两类。
+  - 退焰路若把 B 强制设为未燃，几何可达但同一输出必须失败；该控制不得通过另一个火源补火。
+  - 删除只读取额外身体格的墙/停块后，两路空间差应消失或正确路失去准确停点。
+  - A 一格燃尽、B 烛芯错位继续作为退焰发生条件的近邻反例，但不能代替 downstream fire control。
+  - 正确指定 trace 不得出现滚动途中接触链事件；火焰读取可发生在直接动作终点。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md#post_settlement_flame_handoff_preserves_receiver_cell
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_001_boundary_handoff_preserves_receiver/explorer_notes.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage05_001_boundary_handoff_preserves_receiver/proposed_families.md
+do_not_repeat:
+  - 墙灭 B 后再从固定火盆或其他烛芯取火。
+  - 只读长短差而不读取 shrink_ignite 交来的当前火焰。
+  - 以不同初始布局或不同初始 B 长度制造早晚差。
+  - 用滚动途中点火/灭火/点盆偷渡下一阶段机制。
+  - 把完整伪关卡写进 Lexicon 或编辑 Controller 账本。
+materialization_target: >-
+  一个同布局 direct-consumer existence proof：退焰交接产生“较长且已燃”的 B，提前接火产生“较短且已燃”的 B；
+  边界后的下一次直接对象操作同时消费额外身体格和当前火焰。若只能通过灭火后重取火闭合，维持 material_only。

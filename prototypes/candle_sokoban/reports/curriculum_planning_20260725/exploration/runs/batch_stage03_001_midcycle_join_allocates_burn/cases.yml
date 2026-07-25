@@ -1,0 +1,160 @@
+runId: batch_stage03_001_midcycle_join_allocates_burn
+title: 中途加入分配一次燃烧，并由对齐后的尾格 consumer 读取
+notes: >-
+  同布局比较 B 在首次共享边界前后加入；另以预燃、移除火源、侧滚终点与火焰源作近邻对照。
+defaults:
+  maxExploreDepth: 10
+  maxReturnDepth: 16
+  maxStates: 12000
+  maxTransitions: 48000
+  win:
+    type: event_occurs
+    event: never_occurs
+cases:
+  - id: brazier_join_before_boundary_aligned_tail_gap
+    family: join_phase_writes_aligned_tail_cell
+    variant: before_boundary_short_tail_gap
+    changed_variable: B 在首次边界前加入燃烧集合
+    contrast_with:
+      - brazier_join_after_boundary_aligned_tail_present
+      - prelit_b_removes_late_preservation
+      - source_removed_before_boundary_no_join
+    notes: >-
+      玩家先接近并把四格未燃 B 推入 O 的点火接触位；再折返上推 A 点盆并在第五拍结算。
+      B 缩成三格后右推一格对齐烛芯端，玩家回到 x4；尾格 x5 为空，下一 right 是 walk。
+    layout: |
+      ...o........
+      ............
+      ...U........
+      ..@.222r.O..
+      ............
+      ...........o
+    actions: [right, right, left, up, down, right, right, left]
+
+  - id: brazier_join_after_boundary_aligned_tail_present
+    family: join_phase_writes_aligned_tail_cell
+    variant: after_boundary_long_tail_present
+    changed_variable: B 在首次边界后才加入燃烧集合
+    contrast_with:
+      - brazier_join_before_boundary_aligned_tail_gap
+      - prelit_b_removes_late_preservation
+    notes: >-
+      玩家先上推 A 点盆，再返回 B 左轴面；第五拍 B 仍未燃。第六拍把 B 推入同一 O 点火。
+      最终 B 与早加入分支同为燃烧、烛芯端同在 x8，玩家同在 x4；但尾格 x5 仍存在，下一 right 因 O 固定前端而 axis_push_blocked。
+    layout: |
+      ...o........
+      ............
+      ...U........
+      ..@.222r.O..
+      ............
+      ...........o
+    actions: [right, up, left, down, right, right]
+
+  - id: prelit_b_removes_late_preservation
+    family: join_phase_writes_aligned_tail_cell
+    variant: prelit_control_converges_to_short
+    changed_variable: B 初始已燃，不再有加入选择
+    contrast_with:
+      - brazier_join_after_boundary_aligned_tail_present
+      - brazier_join_before_boundary_aligned_tail_gap
+    notes: >-
+      采用 A-first 路线，但 B 从开局已燃；它仍在第五拍缩短。再补一推对齐后，状态收敛到早加入分支的三格 B 与尾格缺口。
+    layout: |
+      ...o........
+      ............
+      ...U........
+      ..@.222R.O..
+      ............
+      ...........o
+    actions: [right, up, left, down, right, right, right, left]
+
+  - id: source_removed_before_boundary_no_join
+    family: join_phase_writes_aligned_tail_cell
+    variant: no_source_no_participation
+    changed_variable: 删除 B 接触位的已点亮火盆
+    contrast_with:
+      - brazier_join_before_boundary_aligned_tail_gap
+    notes: >-
+      重放边界前分支到第五拍，但 x9 没有火源；B 始终未燃并保持四格。该 case 只作加入来源反事实，不是正向材料。
+    layout: |
+      ...o........
+      ............
+      ...U........
+      ..@.222r....
+      ............
+      ...........o
+    actions: [right, right, left, up, down]
+
+  - id: static_short_b_tail_gap_rolls_probe_far_and_lights
+    family: aligned_tail_cell_changes_roll_stop
+    variant: short_b_far_stop_lights_target
+    changed_variable: 对齐后 B 缺少 x5 尾格
+    contrast_with:
+      - static_long_b_tail_stops_probe_near
+      - static_short_b_without_roll_target
+    notes: >-
+      隔离 consumer：三格燃烛 B 占 x6..8；竖直燃烛 D 从 x2 向右侧滚到 x5，端火在远点点亮 x5,y3 火盆。
+    layout: |
+      ............
+      ..........o.
+      ............
+      .....o......
+      ..U.........
+      .@3...22R...
+      ............
+    actions: [right]
+
+  - id: static_long_b_tail_stops_probe_near
+    family: aligned_tail_cell_changes_roll_stop
+    variant: long_b_near_stop_misses_target
+    changed_variable: 对齐后 B 保有 x5 尾格
+    contrast_with:
+      - static_short_b_tail_gap_rolls_probe_far_and_lights
+    notes: >-
+      隔离 consumer：四格燃烛 B 占 x5..8；同一 D 只滚到 x4，端火没有对齐 x5,y3 火盆。
+    layout: |
+      ............
+      ..........o.
+      ............
+      .....o......
+      ..U.........
+      .@3..222R...
+      ............
+    actions: [right]
+
+  - id: static_short_b_without_roll_target
+    family: aligned_tail_cell_changes_roll_stop
+    variant: far_stop_without_downstream_output
+    changed_variable: 删除只在远端对齐的目标火盆
+    contrast_with:
+      - static_short_b_tail_gap_rolls_probe_far_and_lights
+    notes: >-
+      D 仍滚到远端，但删除 x5,y3 火盆后没有输出；该 case 界定“终点坐标差”不等于消费。
+    layout: |
+      ............
+      ..........o.
+      ............
+      ............
+      ..U.........
+      .@3...22R...
+      ............
+    actions: [right]
+
+  - id: wick_flame_source_joins_before_boundary_but_interface_recedes
+    family: join_source_interface_stability
+    variant: burning_wick_source_early_only
+    changed_variable: 用另一根燃烛的外露火焰替代稳定火盆
+    contrast_with:
+      - brazier_join_before_boundary_aligned_tail_gap
+      - source_removed_before_boundary_no_join
+    notes: >-
+      x9,y2 的向下燃烛把火焰投到 B 点火格 x9,y3；B 在第二拍加入并在第五拍缩短。
+      该单格火源也于边界燃尽，因此只证明火焰源可供早加入；它不能提供同一稳定的边界后接口，不作为正向 family。
+    layout: |
+      ...o........
+      ............
+      ...U.....D..
+      ..@.222r....
+      ............
+      ...........o
+    actions: [right, right, left, up, down]

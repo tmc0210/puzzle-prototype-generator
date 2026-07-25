@@ -1,0 +1,168 @@
+runId: batch_stage02_002_just_in_time_dual_use_then_freeze
+title: 同一燃烛先点盆再及时墙灭保尾
+notes: >-
+  三格燃烛 A 先点亮 P，再在首次边界前向上侧滚入墙面熄灭；随后把 B 送到 A 左尾格上方，向下轴推被挡。
+  先准备 B 再绕回 A 左轴面会跨过第五拍；短 A 虽可右推复位并在同一墙面熄灭，却让 B 向下推入缺口。
+defaults:
+  maxExploreDepth: 9
+  maxReturnDepth: 12
+  maxStates: 24000
+  maxTransitions: 100000
+cases:
+  - id: timely_light_then_douse_preserves_tail_blocks_b
+    family: light_then_freeze_tail_window
+    variant: timely_dual_use_b_blocked
+    changed_variable: 点 P 后第四拍把 A 向上侧滚入墙面
+    contrast_with: [late_prepare_b_then_douse_loses_tail_b_rolls]
+    notes: >-
+      right 点亮 P；down,right,up 从下侧把完整 A 向上滚一格，烛芯贴墙并在第四拍熄灭。
+      随后把 B 向上推到 y1，再向右侧滚到 x3，玩家站到 B 上方；最终动作表中的 down 应为 axis_push_blocked，
+      因为 A 的 x3 尾格仍在。
+    layout: |
+      ....######
+      ....#....#
+      .u....#..#
+      .@11R.o..#
+      .....#...#
+      #...#....#
+      #........#
+      #.......o#
+      ##########
+    actions: [right, down, right, up, left, left, up, left, up, right, up, right, right]
+
+  - id: late_prepare_b_then_douse_loses_tail_b_rolls
+    family: light_then_freeze_tail_window
+    variant: late_dual_use_b_rolls_through
+    changed_variable: 点 P 后先推 B 并绕到 A 左轴面，使 A 跨过首次边界才墙灭
+    contrast_with: [timely_light_then_douse_preserves_tail_blocks_b]
+    notes: >-
+      right 点 P 后，left,up 把 B 推上一格；down,right 是绕回 A 左轴面的必要路线，第五拍把 A 缩成二格。
+      第六拍右推把短 A 的烛芯端复位，随后从下侧向上滚入与及时路线相同的墙面熄灭。
+      B 保持在 y1；把它向右侧滚到 x3 并站到上方后，最终 down 应合法，把 B 推入 A 缺失的 x3 尾格。
+    layout: |
+      ....######
+      ....#....#
+      .u....#..#
+      .@11R.o..#
+      .....#...#
+      #...#....#
+      #........#
+      #.......o#
+      ##########
+    actions: [right, left, up, down, right, right, down, right, up, left, left, left, left, up, up, right, up, right, right]
+
+  - id: too_early_douse_keeps_p_dark
+    family: light_then_freeze_tail_window
+    variant: too_early_front_consumer_fails
+    changed_variable: 在点 P 前先滚开 B，再把 A 向下滚入另一面墙
+    contrast_with: [timely_light_then_douse_preserves_tail_blocks_b, prelit_p_early_douse_no_longer_owes_front_output]
+    notes: >-
+      up 把 B 推上一格，right 到达 A 上方；down 把尚未点 P 的完整 A 向下滚一格并墙灭。
+      A 保持三格，但 P 仍暗，且局面中没有其他火源恢复该前段输出。
+    layout: |
+      ....######
+      ....#....#
+      .u....#..#
+      .@11R.o..#
+      .....#...#
+      #...#....#
+      #........#
+      #.......o#
+      ##########
+    actions: [up, right, down]
+
+  - id: prelit_p_early_douse_no_longer_owes_front_output
+    family: light_then_freeze_tail_window
+    variant: front_consumer_precompleted
+    changed_variable: 把 P 从 o 改为 O，移除必须先保持 A 燃烧的前段约束
+    contrast_with: [too_early_douse_keeps_p_dark]
+    notes: >-
+      P 预亮后走完全相同的过早墙灭 trace；A 仍完整熄灭，而前段火盆已完成。
+      本案只证明过早路线的前段失败来自 P，不把不同终点包装成新的后段 consumer。
+    layout: |
+      ....######
+      ....#....#
+      .u....#..#
+      .@11R.O..#
+      .....#...#
+      #...#....#
+      #........#
+      #.......o#
+      ##########
+    actions: [up, right, down]
+
+  - id: timely_without_b_only_preserves_length
+    family: light_then_freeze_tail_window
+    variant: timely_consumer_removed
+    changed_variable: 删除 B，保留及时点盆与墙灭路线
+    contrast_with: [timely_light_then_douse_preserves_tail_blocks_b, late_without_b_only_loses_length]
+    notes: >-
+      与及时正例相同地先点 P 后第四拍墙灭，但删除 B；结果只有三格未燃 A，没有后继动作读取 x3 尾格。
+    layout: |
+      ....######
+      ....#....#
+      ......#..#
+      .@11R.o..#
+      .....#...#
+      #...#....#
+      #........#
+      #.......o#
+      ##########
+    actions: [right, down, right, up]
+
+  - id: late_without_b_only_loses_length
+    family: light_then_freeze_tail_window
+    variant: late_consumer_removed
+    changed_variable: 删除 B；同一绕行在第五拍只留下短 A 状态
+    contrast_with: [late_prepare_b_then_douse_loses_tail_b_rolls, timely_without_b_only_preserves_length]
+    notes: >-
+      删除 B 后仍先点 P，left,up,down,right 的绕行跨过第五拍，再右推复位并向上滚入墙面。
+      本案只保留二格 A 的状态差，不把控制案中的走动当正向材料。
+    layout: |
+      ....######
+      ....#....#
+      ......#..#
+      .@11R.o..#
+      .....#...#
+      #...#....#
+      #........#
+      #.......o#
+      ##########
+    actions: [right, left, up, down, right, right, down, right, up]
+
+  - id: one_extra_tail_static_restores_b_block
+    family: light_then_freeze_tail_window
+    variant: extra_tail_boundary_correction
+    changed_variable: 在过晚终局的 A 左端补回一格，使 x3 再次被占据
+    contrast_with: [late_prepare_b_then_douse_loses_tail_b_rolls]
+    notes: >-
+      静态复现后段读取：B 位于 x3,y1，三格未燃 A 位于 x3..x5,y2 且烛芯端贴墙；玩家在 B 上方。
+      最终 down 应为 axis_push_blocked。它只界定“一格余量恢复 consumer”，不独立替代完整过晚 trace。
+    layout: |
+      ##########
+      ###@######
+      ###d#....#
+      #..11r#..#
+      #........#
+      #.......o#
+      ##########
+    actions: []
+
+  - id: side_roll_front_output_has_no_clean_followup_window
+    family: light_then_freeze_tail_window
+    variant: side_roll_front_path_deferred
+    changed_variable: 前段从轴推点盆改为一步侧滚改变火焰行
+    contrast_with: [timely_light_then_douse_preserves_tail_blocks_b]
+    notes: >-
+      玩家从上侧输入 down，使 A 只滚一格并在终点点亮 P；下一行的墙只负责稳定终点。
+      该近邻摆法验证侧滚前段输出，但 P 占住烛芯前格、玩家仍停在 A 上侧，当前局部没有在边界前接上同一 A 的墙灭与尾格 consumer；不发布为正向结构。
+    layout: |
+      #########
+      #.......#
+      #.@.....#
+      #.11R...#
+      #....o..#
+      #..#....#
+      #......o#
+      #########
+    actions: [down]

@@ -1,0 +1,32 @@
+request_id: stage02_request_002_just_in_time_dual_use_then_freeze
+exploration_id: candle_curriculum_stage02_wall_dousing_20260725
+stage_id: stage_02_wall_dousing
+allowed_exposure_through: wall_dousing
+design_space: >-
+  一根燃烛 A 在同一局面中承担前后两个不同用途：它必须先保持外露燃烧，通过必要的轴推或侧滚让火焰点亮火盆 P；
+  随后又必须在首次共享边界前把烛芯送入墙体退出燃烧，保住一格实体长度。
+  过早走灭火路线会让 P 保持未燃；完成 P 后拖过边界再灭火会让 A 先缩短，丢失的那格使另一根蜡烛 B
+  在紧接的侧滚停点、轴推面或通口 consumer 上得到错误结果。只有“先用火，再及时冻结形状”的窗口同时满足两段用途。
+sampling_axes:
+  - A 初始长度 2—4 格；从点亮 P 到贴墙灭火的必要行动预算尝试跨越倒计时剩余 1—3 拍。
+  - 前段火焰用途至少尝试轴推改变烛芯对齐、侧滚改变火焰行/列两种路径；禁止用原地等待制造窗口。
+  - 后段实体 consumer 至少尝试 B 的离散侧滚近/远停点，以及 A 保留尾端格提供/封锁轴推操作面。
+  - 同一初始布局明确比较过早灭火、先点 P 后及时灭火、先点 P 但跨界后灭火三条可选路线。
+  - 把 P 预先点亮，检查“必须先保持燃烧”的前半约束是否消失；移除后段 consumer，检查及时/过晚是否只剩长度差。
+  - 给 A 增加一格寿命或将倒计时余量增加一拍，检查原本过晚路线是否恢复，界定窗口来源。
+  - 指定 trace 不得使用火盆/烛芯复燃、烛身遮蔽、未燃重曝、退焰点火或滚动途中接触链。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_001_boundary_exit_allocates_length/explorer_notes.md
+do_not_repeat:
+  - 只做“把烛芯推进墙里就保长”的直接应用，没有先消费其燃烧态。
+  - 只让早灭路线少点一个盆、晚灭路线少一格，却没有同一成功窗口同时连接两个 consumer。
+  - 用可删的来回走动或远距离空走人为制造倒计时压力。
+  - 把已经选中的 A/B 保长名额分配换皮；本轮必须围绕同一对象先用燃烧态、后用实体态。
+  - 用更晚阶段的复燃把早灭错误轻易恢复，或让烛身遮蔽/滚动途中事件承担关键关系。
+  - 设计完整关卡、判断课程优先级或声称结构值得占一关。
+materialization_target: >-
+  找到至少一个真正的双用途时间窗：同一 A 必须先以燃烧态完成 P，再在边界前墙灭保住特定实体格，
+  该格随后由 B 的最小动作读取；过早、及时、过晚三条路线分别留下可核验的不同失败/成功局面。
+  若无法把前后两段都变成不可替代的 consumer，则不发布新条目。

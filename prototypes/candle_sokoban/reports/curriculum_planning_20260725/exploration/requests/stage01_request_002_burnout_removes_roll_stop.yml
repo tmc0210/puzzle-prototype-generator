@@ -1,0 +1,31 @@
+request_id: stage01_request_002_burnout_removes_roll_stop
+exploration_id: candle_curriculum_stage01_basic_countdown_20260725
+stage_id: stage_01_basic_countdown
+allowed_exposure_through: basic_candle_manipulation
+design_space: >-
+  开始摆法是一根即将在首次燃烧边界燃尽的短燃烛，作为另一根未燃多格蜡烛侧滚路线上的近端实体挡块，
+  同一路线上还有一个更远的稳定挡块；玩家选择在短烛燃尽前还是燃尽后发动侧滚；
+  近端挡块存在时滚烛停在近点，燃尽后滚烛越过旧位置停在远点；
+  紧接的轴推面、通口或其它最小动作约束只消费其中一个停点。
+sampling_axes:
+  - 短燃烛使用单格或将在下一边界燃尽的末格状态；滚烛长度尝试 2/3 格。
+  - 近端挡块与远端挡块的间距，使燃尽前/后形成两个清楚不同且可复现的滚动终点。
+  - 玩家可立即滚动或通过清楚的合法行动跨过边界后再滚动，比较时间选择而不是初始布局差异。
+  - 最小 consumer 至少尝试近点有轴推操作面而远点被挡、远点进入窄通口而近点无法进入、同一下一输入在两终点产生不同合法动作。
+  - 持续存在的未燃短烛、固定墙/火盆替代挡块、移除下游 consumer，作为普通阻挡与事件 witness 对照。
+  - 使用未燃滚烛并错开所有烛芯投影，避免烛身灭火、复燃、退焰点火和滚动途中接触链污染。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage01_001_long_roll_temporal_compression/explorer_notes.md
+do_not_repeat:
+  - 只证明短燃烛会 burn_out 或侧滚遇到实体会停下。
+  - 用两个不同初始布局代替同一局面中的“现在滚 / 边界后滚”玩家选择。
+  - 把碰火死亡、普通等待、普通可动箱挡路或事件覆盖写成成果。
+  - 沿用首批的终点火盆长度对齐，或继续声称多格长滚本身是 active rule。
+  - 设计完整关卡、判断课程优先级或声称结构值得占一关。
+materialization_target: >-
+  找到至少一个动态滚动挡块结构：同一开始局面允许玩家在短燃烛燃尽前后发动侧滚，
+  两个时间选择产生近/远两个终点，并由一个极小后继约束制造动作集合、可达性或对象位置差异；
+  若燃尽只删除普通障碍而没有可消费的时间窗口，则不发布新 lexicon 条目。
+

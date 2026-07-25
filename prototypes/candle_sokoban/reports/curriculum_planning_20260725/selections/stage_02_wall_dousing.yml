@@ -1,0 +1,110 @@
+schema_version: 1
+planning_id: candle_curriculum_planning_20260725
+stage_id: stage_02_wall_dousing
+status: completed
+
+player_prior:
+  - 已掌握轴推、侧滚、烛芯点盆和全火盆目标。
+  - 已见过共享五拍倒计时、同步缩短与燃尽，并做过燃尽前后时机选择和跨对象顺序规划。
+  - 尚不知道烛芯贴墙会灭火，也不知道边界当拍灭火可避开本次缩短。
+
+controller_focus: >-
+  墙体灭火的课程价值不是“让一根燃烛变暗”，而是让指定对象在指定时刻退出共享燃烧集合。
+  每个候选都必须说明退出前后留下的长度/参与集合差异，以及哪个后继动作实际读取这份差异。
+
+batches:
+  - batch_id: batch_stage02_001_boundary_exit_allocates_length
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage02_request_001_boundary_exit_allocates_length.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同一布局的首次选择交换谁在边界前退出；两根最终都熄灭且烛芯端对齐后，
+      亮灭身份与终点位移已被消去，只剩额外尾端格属于 A 行还是 B 行。
+      横条侧滚和竖烛轴推两类 consumer 都读取该对象—长度配对，移除墙或 consumer 后关系消失。
+    player_facing_core: >-
+      玩家不是单纯把蜡烛灭掉，而是在同一共享边界前决定把唯一保住的一格分给 A 还是 B；
+      后继碰撞列要求这格必须落在正确对象上。
+    required_counterfactual:
+      - 移除遮芯墙后两根同时缩短，不再有可分配的保长格。
+      - 两根都灭火并对齐后仍有差异，排除 consumer 读取亮灭或最终位置。
+      - 移除横条/竖烛后只剩长度状态，没有后继动作差异。
+      - 提前一拍灭火仍成立，表明 active relation 是边界前退出而非边界事件标签。
+    packaging_constraints:
+      - 把开阔测试区的长距离连接压缩为可读、必要的对象操作。
+      - 正式关卡必须限制熄灭后滚离墙所产生的重曝和烛身遮蔽旁路。
+      - 让 consumer 只擦过额外尾端列，避免同时混入位置差。
+    expected_course_role: 墙体灭火首次主动应用；教学“选择谁退出”，再让后继几何读取保长对象。
+    expected_relative_difficulty: 3
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_001_boundary_exit_allocates_length/batch.yml
+
+  - batch_id: batch_stage02_002_just_in_time_dual_use_then_freeze
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage02_request_002_just_in_time_dual_use_then_freeze.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      同一 A 的燃烧态和墙灭后的实体态被串入一个有上下界的时间窗：过早灭火欠缺前段火盆，
+      过晚灭火先失去后段所需尾格，只有及时路线同时留下两项输出。P 预亮、删除 B 和补回尾格
+      分别隔离了前段、后段与一格寿命边界，因此不是“点盆后顺手灭火”。
+    player_facing_core: >-
+      玩家要先让 A 保持燃烧完成点盆，但又不能先忙另一件事；必须趁边界前把 A 的烛芯送入墙体，
+      将它从火源及时转成保留完整形状的实体工具。
+    required_counterfactual:
+      - 过早灭火保住形状但 P 留暗；P 预亮后这项惩罚消失。
+      - 删除 B 后及时/过晚只剩 A 的长短状态，没有后继读取。
+      - 过晚终局静态补回一格后，B 的同一轴推再次被挡。
+    packaging_constraints:
+      - 正式关卡必须把 B 的被挡/放行结果接入共同胜利路径或不可替代操作位，不能把动作差本身当目标。
+      - “先准备 B”及回到 A 操作面的行动必须在关卡中保持必要，不允许可删走步凑拍。
+      - 收紧完整图，排除墙灭后重曝、烛身遮蔽与更晚事件旁路。
+    expected_course_role: 墙体灭火第二次应用；从“选择谁退出”深化到“同一对象何时退出”。
+    expected_relative_difficulty: 4
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_002_just_in_time_dual_use_then_freeze/batch.yml
+
+  - batch_id: batch_stage02_003_staggered_exit_length_vector
+    request_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage02_request_003_staggered_exit_length_vector.yml
+    status: completed
+    controller_decision: mainline_core
+    decision_reason: >-
+      4/3/2 不是长度陈列：同一探针的前一落点给出下一段操作面，连续读取 A 的 x7、
+      B 的 x8/x7、C 的 x9/x8。交换或合并 A/B 退出周期会破坏前两段，C 少经历一边界
+      或被删除会分别改变末端第一推/第二推，因此两个边界和三根对象均不可删。
+    player_facing_core: >-
+      玩家把三根同长蜡烛安排在不同燃烧周期退出，主动写出长—中—短阶梯；
+      随后一根探针沿这份时间记录连续近停、换列、穿口并在末端取得正确操作位。
+    required_counterfactual:
+      - 交换 A/B 周期或让 A/B 同周期退出，会在第一或第二接口断链。
+      - C 只缩短一次时入口被占；删除 C 时终止推继续合法。
+      - 只读取 C 的入口、不读取下一推时，第三根可以删除，不能算完整 consumer。
+    packaging_constraints:
+      - 压缩当前宽松的两处转接廊，但保持同一探针上一落点成为下一操作面的连续性。
+      - 不能拆成三根探针或三个并列检查。
+      - 正式 exact 需重新审计完整图，禁止熄灭后重曝及更晚事件旁路。
+    expected_course_role: 墙体灭火阶段终盘，综合两次边界与三对象参与集合编排。
+    expected_relative_difficulty: 5
+    material_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage02_003_staggered_exit_length_vector/batch.yml
+
+planned_followups:
+  - id: S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+    purpose: 探索先消费燃烧态、再及时退出保留实体态的一窗双用途。
+  - id: S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+    purpose: 探索跨多个边界错峰退出并制造联合长度向量的复杂应用。
+
+mainline_cores:
+  - id: S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH
+    title: 墙前择一把尾端挡块格分给 A/B
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH
+  - id: S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+    title: 先点盆再墙灭保尾窗口
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+  - id: S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+    title: 错峰墙灭写成三阶尾端通路
+    material_ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+jam_reserve: []
+material_only: []
+rejected: []
