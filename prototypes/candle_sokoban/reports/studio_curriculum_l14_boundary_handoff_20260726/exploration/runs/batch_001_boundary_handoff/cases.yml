@@ -1,0 +1,39 @@
+batch_id: batch_001_boundary_handoff
+family: boundary_handoff_slot
+common:
+  b_shape: "向右三格横烛 11r"
+  boundary_turn: 5
+  post_boundary_b_first_direct_input: down
+  expected_roll_distance: 2
+  consumer: "B 完整长度滚后烛芯格上的同一未点火火盆"
+  filler_boundary: "前五拍含只调倒数的往返走路；不得把空走写入正式结构核心"
+  fixed_fire_source_boundary: "三个布局均无初始 O；o 只作未点火 consumer"
+  rolling_exposure_boundary: "允许基础侧滚；火盆仅可在最终 roll step 被点亮，不得出现 roll_intermediate_*"
+cases:
+  - id: l14_b001_direct_pay_short_lit
+    variant: direct_pay_short_lit
+    changed_variable: "B 在边界接火前是否已外露；本变体由 A 普通接火"
+    contrast_with: [l14_b001_retreat_handoff_full_lit, l14_b001_burnout_full_unlit]
+    layout_ref: layouts/direct_pay_short_lit.txt
+    boundary_inputs: [left, right, left, right, down]
+    consumer_inputs: [left, left, down, down, down]
+    expected_boundary: "A、B 同时燃烧；B len3->len2 且保持燃烧"
+    expected_consumer: "B 首次 down 侧滚 d2；火焰短一格，火盆不亮"
+  - id: l14_b001_retreat_handoff_full_lit
+    variant: retreat_handoff_full_lit
+    changed_variable: "B 烛芯由 A 末端遮住，A 存活缩短后才由退焰点燃"
+    contrast_with: [l14_b001_direct_pay_short_lit, l14_b001_burnout_full_unlit]
+    layout_ref: layouts/retreat_handoff_full_lit.txt
+    boundary_inputs: [up, down, up, down, right]
+    consumer_inputs: [left, left, down, down, down]
+    expected_boundary: "A len3->len2；B shrink_ignite 后仍 len3 且燃烧"
+    expected_consumer: "B 首次 down 侧滚 d2；完整长度的火焰落入同一火盆并点亮"
+  - id: l14_b001_burnout_full_unlit
+    variant: burnout_full_unlit
+    changed_variable: "遮芯 A 从可存活的三格换成会燃尽的单格"
+    contrast_with: [l14_b001_retreat_handoff_full_lit, l14_b001_direct_pay_short_lit]
+    layout_ref: layouts/burnout_full_unlit.txt
+    boundary_inputs: [up, down, up, down, right]
+    consumer_inputs: [left, left, down, down, down]
+    expected_boundary: "A 燃尽；B 保持 len3 但未燃"
+    expected_consumer: "B 首次 down 侧滚 d2；几何到位但无火，火盆不亮"

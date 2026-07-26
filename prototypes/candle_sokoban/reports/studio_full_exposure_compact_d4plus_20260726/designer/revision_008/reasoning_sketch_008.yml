@@ -56,6 +56,20 @@ v002_structure_hypothesis:
     第二次交接后的单格供体穿过尾格墙孔，直接以芯火点亮最上盆；直接路线的两格供体无法进入该行。
   planned_inputs: [up, left, up, up, left, left, up, right, down, right, up, down, right, down, down, right, right, right, up, left]
 
+v002_runtime_result:
+  status: rejected_work_layout
+  cause: 原末行火盆位于两格接收者身体行，阻断第一次向右侧滚。
+
+v003_structure_hypothesis:
+  working_layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_008/work/layout_v003.layout
+  dynamic_stopper: >-
+    把两格接收者的右侧截停物改为位于其上身行的火盆。两格阶段因火盆实体停在 x=8，并用 y=4 芯行点中层盆；
+    缩为 y=6 单格后，身体能从火盆下方穿过，芯投影在 y=5 反而点亮该截停盆及终点盆。
+  direct_route_filter: >-
+    直接路线过早得到单格接收者：若先向右滚会点末行两盆但困在终点，永远点不到 y=4 中层盆；
+    若先轴推到 y=5 再滚可点中层盆，却因中层盆占住其上侧操作面而无法下移到 y=6 点末行盆。
+  planned_inputs: [up, left, up, up, left, left, up, right, down, right, up, down, right, down, down, up, right, right]
+
 publication_gate:
   - 规范解逐步状态与事件实际成立。
   - 重交接策略确实形成第二次 shrink_ignite，且其单格供体进入错误停止行后不可恢复。
