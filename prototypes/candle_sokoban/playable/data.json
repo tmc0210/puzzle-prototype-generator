@@ -1038,11 +1038,512 @@
           "layout_sha256": "8bc7f838a06720b7e238f4e3b69efde4288be9e0d95cb6958b15eb56615e4dce",
           "allowed_exposure_through": "rolling_contact_chain"
         }
+      },
+      {
+        "id": "CANDLE_COURSE_L1_FIXED_OPENING_001_V2",
+        "title": "烛芯在前",
+        "global_burn_cycle": 5,
+        "layout": "########\n#@11R.o#\n########",
+        "win": {
+          "type": "all_braziers_lit"
+        },
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "light_brazier:6,1",
+              "countdown:5->4",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "push_axis",
+          "light_brazier",
+          "countdown",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "课程 L1：玩家沿蜡烛轴向推进一次，直接看见烛芯端接触火盆、火盆点亮并达成全火盆胜利。 此关只建立轴推、烛芯位置、火焰点盆与胜利目标；目标相对难度 1。",
+        "lineage": {
+          "source": "studio",
+          "created_by": "design_studio_controller",
+          "created_at": "2026-07-26T00:00:00+08:00",
+          "design_task_id": "studio_course_l1_fixed_opening_20260726",
+          "candidate_id": "CANDLE_COURSE_L1_FIXED_OPENING_001",
+          "exact_version": "v2",
+          "reviewed_exact_version": "v2",
+          "layout_sha256": "a37c8338e9a7b54cd91cfc875a056910da3439a800162d92ff981455cb52e3e2",
+          "allowed_exposure_through": "basic_candle_manipulation"
+        }
+      },
+      {
+        "id": "CANDLE_COURSE_L2_FIXED_OPENING_001_V1",
+        "title": "一拍滚远",
+        "global_burn_cycle": 5,
+        "layout": "........o\n##....###\n###...###\n###1R.###\n###@#####",
+        "win": {
+          "type": "all_braziers_lit"
+        },
+        "expected_trace": [
+          {
+            "input": "up",
+            "events": [
+              "roll_step:candle#1:d1",
+              "roll_step:candle#1:d2",
+              "roll_step:candle#1:d3",
+              "roll_candle:candle#1:d3",
+              "roll_multi_cell_one_turn:candle#1:d3",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk",
+              "countdown:4->3"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk",
+              "countdown:3->2"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk",
+              "countdown:2->1"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk",
+              "countdown:1->5",
+              "shrink:candle#1:len1"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "countdown:4->3"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "countdown:3->2"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "light_brazier:8,0",
+              "countdown:2->1",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "roll_step",
+          "roll_candle",
+          "roll_multi_cell_one_turn",
+          "walk",
+          "countdown",
+          "shrink",
+          "push_axis",
+          "light_brazier",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "课程 L2：玩家从侧面让两格燃烛一拍滚动三格，再沿收紧路径追到尾端。 第五拍自然归零时蜡烛从两格缩为一格，火盆仍未亮；随后继续用 L1 已知的轴推与烛芯点盆关系收尾。 首次只观察倒计时和缩短，不要求主动规划；目标相对难度 1。",
+        "lineage": {
+          "source": "studio",
+          "created_by": "design_studio_controller",
+          "created_at": "2026-07-26T00:00:00+08:00",
+          "design_task_id": "studio_course_l2_fixed_opening_20260726",
+          "candidate_id": "CANDLE_COURSE_L2_FIXED_OPENING_001",
+          "exact_version": "v1",
+          "reviewed_exact_version": "v1",
+          "layout_sha256": "60ed3892fb44c5fcd161a2787674bb648b8097a98322e82e4b3f8abed4818175",
+          "allowed_exposure_through": "basic_candle_manipulation"
+        }
+      },
+      {
+        "id": "CANDLE_COURSE_L3_BURNOUT_ROLL_STOP_001_V1_TRIMMED",
+        "title": "先停近，再燃尽",
+        "global_burn_cycle": 5,
+        "layout": "###############\n###..O..O######\n#..@111R...O..#\n#...........o.#\n#......R..O...#\n###############",
+        "win": {
+          "type": "all_braziers_lit"
+        },
+        "expected_trace": [
+          {
+            "input": "up",
+            "events": [
+              "walk",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown:4->3"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "roll_step:candle#1:d1",
+              "roll_candle:candle#1:d1",
+              "countdown:3->2"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk",
+              "countdown:2->1"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk",
+              "countdown:1->5",
+              "simultaneous_burn:candle#1+candle#single2",
+              "shrink:candle#1:len3",
+              "burn_out:candle#single2"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "countdown:4->3"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "countdown:3->2"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "countdown:2->1"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "light_brazier:12,3",
+              "countdown:1->5",
+              "shrink:candle#1:len2",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "walk",
+          "countdown",
+          "roll_step",
+          "roll_candle",
+          "simultaneous_burn",
+          "shrink",
+          "burn_out",
+          "push_axis",
+          "light_brazier",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "课程 L3：玩家必须在单格短燃烛仍占格时先让主烛近滚；若先沿开局轨道轴推， 短烛在第五拍燃尽后，同向侧滚会越过旧位置落到远行，并被紧邻火盆阻断。 目标相对难度 2；delivery v1-trimmed 仅裁去 reviewed v1 顶部两行纯外墙。",
+        "lineage": {
+          "source": "studio",
+          "created_by": "design_studio_controller",
+          "created_at": "2026-07-26T00:00:00+08:00",
+          "design_task_id": "studio_course_l3_burnout_roll_stop_20260726",
+          "candidate_id": "CANDLE_COURSE_L3_BURNOUT_ROLL_STOP_001",
+          "exact_version": "v1-trimmed",
+          "reviewed_exact_version": "v1",
+          "layout_sha256": "2b7fdc871f5d2f5f37136859938bf2acf456e8bfc9926cd462816a80581719a4",
+          "allowed_exposure_through": "basic_candle_manipulation"
+        }
+      },
+      {
+        "id": "CANDLE_COURSE_L4_SIMULTANEOUS_SHRINK_GEOMETRY_001_V1_NORMALIZED",
+        "title": "留住那一列",
+        "global_burn_cycle": 5,
+        "layout": "##############\n###.@..111R.o#\n##.L22#.######\n#o......######\n##.O...#######\n##....########\n##############",
+        "win": {
+          "type": "all_braziers_lit"
+        },
+        "expected_trace": [
+          {
+            "input": "down",
+            "events": [
+              "roll_step:candle#2:d1",
+              "roll_candle:candle#2:d1",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk",
+              "countdown:4->3"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown:3->2"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown:2->1"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#1",
+              "light_brazier:12,1",
+              "countdown:1->5",
+              "simultaneous_burn:candle#1+candle#2",
+              "shrink:candle#1:len3",
+              "shrink:candle#2:len2"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk",
+              "countdown:4->3"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk",
+              "countdown:3->2"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_axis:candle#2",
+              "countdown:2->1"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "push_axis:candle#2",
+              "light_brazier:1,3",
+              "countdown:1->5",
+              "simultaneous_burn:candle#1+candle#2",
+              "shrink:candle#1:len2",
+              "shrink:candle#2:len1",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "roll_step",
+          "roll_candle",
+          "walk",
+          "countdown",
+          "push_axis",
+          "light_brazier",
+          "simultaneous_burn",
+          "shrink",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "课程 L4：玩家必须先用完整三格 B 取得近停接口，再处理 A；A 点盆的同一拍 会远程把已近停 B 从三格缩成两格，玩家随后回访并用两次轴推完成最终点盆。 若先处理 A，两格 B 会越过原碰撞列远滚到底。目标相对难度 3；delivery v1-normalized 只裁去 reviewed v1 顶部一行和最右一列纯外墙。",
+        "lineage": {
+          "source": "studio",
+          "created_by": "design_studio_controller",
+          "created_at": "2026-07-26T00:00:00+08:00",
+          "design_task_id": "studio_course_l4_simultaneous_shrink_geometry_20260726",
+          "candidate_id": "CANDLE_COURSE_L4_SIMULTANEOUS_SHRINK_GEOMETRY_001",
+          "exact_version": "v1-normalized",
+          "reviewed_exact_version": "v1",
+          "layout_sha256": "f28dec8954f924fd00cd09d6cf98ffce00af6cb175b4eb2635284e7b928ab75a",
+          "allowed_exposure_through": "basic_candle_manipulation"
+        }
+      },
+      {
+        "id": "CANDLE_COURSE_L8_MIDCYCLE_JOIN_ALLOCATES_BURN_001_V3",
+        "title": "赶上这一轮",
+        "global_burn_cycle": 5,
+        "layout": "############\n#@2222r...O#\n###3#.######\n##.3..######\n##.3########\n##oD########\n###.########\n###.########\n############",
+        "win": {
+          "type": "all_braziers_lit"
+        },
+        "expected_trace": [
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#2",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#2",
+              "countdown:4->3"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#2",
+              "ignite:candle#2",
+              "ignite_from_brazier:candle#2:10,1",
+              "ignite_midcycle:candle#2:t3",
+              "countdown:3->2"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk",
+              "countdown:2->1"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "push_axis:candle#3",
+              "countdown:1->5",
+              "simultaneous_burn:candle#2+candle#3",
+              "shrink:candle#2:len4",
+              "shrink:candle#3:len3"
+            ]
+          },
+          {
+            "input": "up",
+            "events": [
+              "walk",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "walk",
+              "countdown:4->3"
+            ]
+          },
+          {
+            "input": "right",
+            "events": [
+              "push_axis:candle#2",
+              "countdown:3->2"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk",
+              "countdown:2->1"
+            ]
+          },
+          {
+            "input": "down",
+            "events": [
+              "walk",
+              "countdown:1->5",
+              "simultaneous_burn:candle#2+candle#3",
+              "shrink:candle#2:len3",
+              "shrink:candle#3:len2"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "walk",
+              "countdown:5->4"
+            ]
+          },
+          {
+            "input": "left",
+            "events": [
+              "roll_step:candle#3:d1",
+              "light_brazier:2,5",
+              "roll_candle:candle#3:d1",
+              "countdown:4->3",
+              "win_all_braziers_lit"
+            ]
+          }
+        ],
+        "expected_events": [
+          "push_axis",
+          "countdown",
+          "ignite",
+          "ignite_from_brazier",
+          "ignite_midcycle",
+          "walk",
+          "simultaneous_burn",
+          "shrink",
+          "roll_step",
+          "light_brazier",
+          "roll_candle",
+          "win_all_braziers_lit"
+        ],
+        "design_notes": "课程 L8：玩家先用两次必要轴推把共享倒计时消耗到 t3，再让 B 接入当前周期； B 在迫近边界支付的一格长度使首边界后的入口推合法。玩家进入下层并跨过第二个 边界，最后由已缩成两格的 D 侧滚点亮终盘火盆。reviewed/delivery exact 均为 v3； 目标相对难度 4，暴露上限 shared_fire_and_reignition。",
+        "lineage": {
+          "source": "studio",
+          "created_by": "design_studio_controller",
+          "created_at": "2026-07-26T00:00:00+08:00",
+          "design_task_id": "studio_course_l8_midcycle_join_allocates_burn_20260726",
+          "candidate_id": "CANDLE_COURSE_L8_MIDCYCLE_JOIN_ALLOCATES_BURN_001",
+          "exact_version": "v3",
+          "reviewed_exact_version": "v3",
+          "layout_sha256": "68908c59671d818500833c72fdf2485bf5489d1fdd4367437e050dd2fbb3cf2c",
+          "allowed_exposure_through": "shared_fire_and_reignition"
+        }
       }
     ]
   },
   "evaluation": {
-    "generatedAt": "2026-07-25T01:51:50.425Z",
+    "generatedAt": "2026-07-26T09:12:03.575Z",
     "prototype": "candle_sokoban",
     "results": [
       {
