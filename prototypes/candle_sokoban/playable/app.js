@@ -679,7 +679,6 @@ function legalInputs(mechanic) {
 }
 var layers = [
   editorToolGroup("terrain", "Terrain", [
-    tool("terrain", "clear_cell", "\u6E05\u7A7A\u683C\u5B50", "floor", "."),
     tool("terrain", "floor", "\u5730\u9762", "floor", "."),
     tool("terrain", "wall", "\u5899", "wall", "#")
   ]),
@@ -693,8 +692,6 @@ var layers = [
     tool("object", "clear", "\u6E05\u7269\u4F53", void 0, ".")
   ]),
   editorToolGroup("mechanism", "Candle", [
-    tool("mechanism", "drag_unlit", "\u62D6\u753B\u672A\u71C3\u8721\u70DB", void 0, "r"),
-    tool("mechanism", "drag_lit", "\u62D6\u753B\u71C3\u70E7\u8721\u70DB", void 0, "R"),
     ...Array.from({ length: 9 }, (_, index) => {
       const digit = String(index + 1);
       return tool("mechanism", `body_${digit}`, `\u70DB\u8EAB ${digit}`, `body_${digit}`, digit);
@@ -3226,7 +3223,7 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "ms1kx7yh" : String(Date.now());
+var buildId = true ? "mrzpr8tt" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var reviewData = await loadReviewData(data);
