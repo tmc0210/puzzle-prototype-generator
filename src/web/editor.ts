@@ -32,6 +32,11 @@ import {
   puzzleScript16Sprites,
   type PixelSpriteAsset,
 } from "./assets/puzzlescript16/manifest.js";
+import {
+  resizeEditorBoard,
+  type EditorGridEdge,
+  type EditorGridResizeDelta,
+} from "./editorGridResize.js";
 import { BoardFitController } from "./fitBoard.js";
 
 declare const __BUILD_ID__: string;
@@ -106,6 +111,9 @@ type EditorMode = "edit" | "play" | "ascii";
 type SourceFilterId = "studio" | "queued" | "archive" | "package";
 
 type SourceFilters = Record<SourceFilterId, boolean>;
+
+type RowResizeSide = Extract<EditorGridEdge, "top" | "bottom">;
+type ColumnResizeSide = Extract<EditorGridEdge, "left" | "right">;
 
 type ViewState = {
   sourceScrollTop: number;
@@ -192,6 +200,8 @@ let pendingScrollSelected = false;
 let sourceSearchRenderTimer: number | undefined;
 let restoreSourceSearchFocus = false;
 let restoreSourceSearchCursor = 0;
+let rowResizeSide: RowResizeSide = "bottom";
+let columnResizeSide: ColumnResizeSide = "right";
 
 render();
 
@@ -475,10 +485,22 @@ function renderGridTools(): string {
   return `
     <div class="grid-tools">
       <span class="active-tool-chip">${escapeHtml(activeToolLabel())}</span>
-      <button class="secondary-button" data-action="add-row">加行</button>
-      <button class="secondary-button" data-action="remove-row">减行</button>
-      <button class="secondary-button" data-action="add-col">加列</button>
-      <button class="secondary-button" data-action="remove-col">减列</button>
+      <span class="grid-resize-group" role="group" aria-label="行数调整">
+        <button class="secondary-button" data-action="add-row">加行</button>
+        <button class="secondary-button" data-action="remove-row">减行</button>
+        <select class="grid-side-select" data-resize-side="row" aria-label="行操作位置">
+          <option value="top" ${rowResizeSide === "top" ? "selected" : ""}>上侧</option>
+          <option value="bottom" ${rowResizeSide === "bottom" ? "selected" : ""}>下侧</option>
+        </select>
+      </span>
+      <span class="grid-resize-group" role="group" aria-label="列数调整">
+        <button class="secondary-button" data-action="add-col">加列</button>
+        <button class="secondary-button" data-action="remove-col">减列</button>
+        <select class="grid-side-select" data-resize-side="column" aria-label="列操作位置">
+          <option value="left" ${columnResizeSide === "left" ? "selected" : ""}>左侧</option>
+          <option value="right" ${columnResizeSide === "right" ? "selected" : ""}>右侧</option>
+        </select>
+      </span>
     </div>
   `;
 }
@@ -839,10 +861,22 @@ function bindEvents(): void {
     continuePaint(x, y, button);
   });
 
-  app.querySelector<HTMLButtonElement>("[data-action='add-row']")?.addEventListener("click", () => resizeGrid(0, 1));
-  app.querySelector<HTMLButtonElement>("[data-action='remove-row']")?.addEventListener("click", () => resizeGrid(0, -1));
-  app.querySelector<HTMLButtonElement>("[data-action='add-col']")?.addEventListener("click", () => resizeGrid(1, 0));
-  app.querySelector<HTMLButtonElement>("[data-action='remove-col']")?.addEventListener("click", () => resizeGrid(-1, 0));
+  app.querySelector<HTMLSelectElement>("[data-resize-side='row']")?.addEventListener("change", (event) => {
+    const value = (event.currentTarget as HTMLSelectElement).value;
+    if (value === "top" || value === "bottom") {
+      rowResizeSide = value;
+    }
+  });
+  app.querySelector<HTMLSelectElement>("[data-resize-side='column']")?.addEventListener("change", (event) => {
+    const value = (event.currentTarget as HTMLSelectElement).value;
+    if (value === "left" || value === "right") {
+      columnResizeSide = value;
+    }
+  });
+  app.querySelector<HTMLButtonElement>("[data-action='add-row']")?.addEventListener("click", () => resizeGrid(rowResizeSide, 1));
+  app.querySelector<HTMLButtonElement>("[data-action='remove-row']")?.addEventListener("click", () => resizeGrid(rowResizeSide, -1));
+  app.querySelector<HTMLButtonElement>("[data-action='add-col']")?.addEventListener("click", () => resizeGrid(columnResizeSide, 1));
+  app.querySelector<HTMLButtonElement>("[data-action='remove-col']")?.addEventListener("click", () => resizeGrid(columnResizeSide, -1));
 
   app.querySelector<HTMLButtonElement>("[data-action='undo-edit']")?.addEventListener("click", () => {
     undoEdit();
@@ -1371,30 +1405,15 @@ function applyActiveTool(x: number, y: number): void {
   draft.layout = editorAdapter.serializeBoard(board);
 }
 
-function resizeGrid(deltaWidth: number, deltaHeight: number): void {
+function resizeGrid(edge: EditorGridEdge, delta: EditorGridResizeDelta): void {
   captureDraftFromDom();
   const board = editorAdapter.parseAsciiToBoard(draft.layout);
-  const nextWidth = Math.max(1, board.width + deltaWidth);
-  const nextHeight = Math.max(1, board.height + deltaHeight);
-  if (nextWidth === board.width && nextHeight === board.height) {
+  const resizedBoard = resizeEditorBoard(board, edge, delta);
+  if (resizedBoard === board) {
     return;
   }
   pushUndoSnapshot();
-  const nextCells: EditorCell[] = [];
-  for (let y = 0; y < nextHeight; y += 1) {
-    for (let x = 0; x < nextWidth; x += 1) {
-      nextCells.push(
-        x < board.width && y < board.height
-          ? cloneEditorCell(board.cells[y * board.width + x] ?? defaultEditorCell())
-          : defaultEditorCell(),
-      );
-    }
-  }
-  draft.layout = editorAdapter.serializeBoard({
-    width: nextWidth,
-    height: nextHeight,
-    cells: nextCells,
-  });
+  draft.layout = editorAdapter.serializeBoard(resizedBoard);
   diagnoseResult = null;
   playState = null;
   markDirty("未保存修改");
@@ -1528,10 +1547,6 @@ function clearCellContent(cell: EditorCell): void {
 
 function defaultEditorCell(): EditorCell {
   return { terrain: "floor" };
-}
-
-function cloneEditorCell(cell: EditorCell): EditorCell {
-  return { ...cell };
 }
 
 function ensurePlayState(): void {

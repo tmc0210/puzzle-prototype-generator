@@ -3246,6 +3246,32 @@ var requiredCandleSokobanSpriteKeys = [
   )
 ];
 
+// src/web/editorGridResize.ts
+function resizeEditorBoard(board, edge, delta) {
+  const horizontal = edge === "left" || edge === "right";
+  const nextWidth = Math.max(1, board.width + (horizontal ? delta : 0));
+  const nextHeight = Math.max(1, board.height + (horizontal ? 0 : delta));
+  if (nextWidth === board.width && nextHeight === board.height) {
+    return board;
+  }
+  const shiftedX = edge === "left" ? delta : 0;
+  const shiftedY = edge === "top" ? delta : 0;
+  const cells = [];
+  for (let y = 0; y < nextHeight; y += 1) {
+    for (let x = 0; x < nextWidth; x += 1) {
+      const sourceX = x - shiftedX;
+      const sourceY = y - shiftedY;
+      const sourceCell = sourceX >= 0 && sourceX < board.width && sourceY >= 0 && sourceY < board.height ? board.cells[sourceY * board.width + sourceX] : void 0;
+      cells.push(sourceCell ? { ...sourceCell } : { terrain: "floor" });
+    }
+  }
+  return {
+    width: nextWidth,
+    height: nextHeight,
+    cells
+  };
+}
+
 // src/web/fitBoard.ts
 var tileSizeProperty = "--tile-size";
 var tileSizeCapProperty = "--tile-size-cap";
@@ -3336,7 +3362,7 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "ms1jl0rt" : String(Date.now());
+var buildId = true ? "ms1jw5ay" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);
@@ -3366,6 +3392,8 @@ var pendingScrollSelected = false;
 var sourceSearchRenderTimer;
 var restoreSourceSearchFocus = false;
 var restoreSourceSearchCursor = 0;
+var rowResizeSide = "bottom";
+var columnResizeSide = "right";
 render();
 window.addEventListener("keydown", (event) => {
   if ((event.ctrlKey || event.metaKey) && !event.shiftKey && event.key.toLowerCase() === "z" && !isEditableTarget(event.target)) {
@@ -3620,10 +3648,22 @@ function renderGridTools() {
   return `
     <div class="grid-tools">
       <span class="active-tool-chip">${escapeHtml(activeToolLabel())}</span>
-      <button class="secondary-button" data-action="add-row">\u52A0\u884C</button>
-      <button class="secondary-button" data-action="remove-row">\u51CF\u884C</button>
-      <button class="secondary-button" data-action="add-col">\u52A0\u5217</button>
-      <button class="secondary-button" data-action="remove-col">\u51CF\u5217</button>
+      <span class="grid-resize-group" role="group" aria-label="\u884C\u6570\u8C03\u6574">
+        <button class="secondary-button" data-action="add-row">\u52A0\u884C</button>
+        <button class="secondary-button" data-action="remove-row">\u51CF\u884C</button>
+        <select class="grid-side-select" data-resize-side="row" aria-label="\u884C\u64CD\u4F5C\u4F4D\u7F6E">
+          <option value="top" ${rowResizeSide === "top" ? "selected" : ""}>\u4E0A\u4FA7</option>
+          <option value="bottom" ${rowResizeSide === "bottom" ? "selected" : ""}>\u4E0B\u4FA7</option>
+        </select>
+      </span>
+      <span class="grid-resize-group" role="group" aria-label="\u5217\u6570\u8C03\u6574">
+        <button class="secondary-button" data-action="add-col">\u52A0\u5217</button>
+        <button class="secondary-button" data-action="remove-col">\u51CF\u5217</button>
+        <select class="grid-side-select" data-resize-side="column" aria-label="\u5217\u64CD\u4F5C\u4F4D\u7F6E">
+          <option value="left" ${columnResizeSide === "left" ? "selected" : ""}>\u5DE6\u4FA7</option>
+          <option value="right" ${columnResizeSide === "right" ? "selected" : ""}>\u53F3\u4FA7</option>
+        </select>
+      </span>
     </div>
   `;
 }
@@ -3939,10 +3979,22 @@ function bindEvents() {
     }
     continuePaint(x, y, button);
   });
-  app.querySelector("[data-action='add-row']")?.addEventListener("click", () => resizeGrid(0, 1));
-  app.querySelector("[data-action='remove-row']")?.addEventListener("click", () => resizeGrid(0, -1));
-  app.querySelector("[data-action='add-col']")?.addEventListener("click", () => resizeGrid(1, 0));
-  app.querySelector("[data-action='remove-col']")?.addEventListener("click", () => resizeGrid(-1, 0));
+  app.querySelector("[data-resize-side='row']")?.addEventListener("change", (event) => {
+    const value = event.currentTarget.value;
+    if (value === "top" || value === "bottom") {
+      rowResizeSide = value;
+    }
+  });
+  app.querySelector("[data-resize-side='column']")?.addEventListener("change", (event) => {
+    const value = event.currentTarget.value;
+    if (value === "left" || value === "right") {
+      columnResizeSide = value;
+    }
+  });
+  app.querySelector("[data-action='add-row']")?.addEventListener("click", () => resizeGrid(rowResizeSide, 1));
+  app.querySelector("[data-action='remove-row']")?.addEventListener("click", () => resizeGrid(rowResizeSide, -1));
+  app.querySelector("[data-action='add-col']")?.addEventListener("click", () => resizeGrid(columnResizeSide, 1));
+  app.querySelector("[data-action='remove-col']")?.addEventListener("click", () => resizeGrid(columnResizeSide, -1));
   app.querySelector("[data-action='undo-edit']")?.addEventListener("click", () => {
     undoEdit();
   });
@@ -4414,28 +4466,15 @@ function applyActiveTool(x, y) {
   applyToolToCell(cell, tool4);
   draft.layout = editorAdapter.serializeBoard(board);
 }
-function resizeGrid(deltaWidth, deltaHeight) {
+function resizeGrid(edge, delta) {
   captureDraftFromDom();
   const board = editorAdapter.parseAsciiToBoard(draft.layout);
-  const nextWidth = Math.max(1, board.width + deltaWidth);
-  const nextHeight = Math.max(1, board.height + deltaHeight);
-  if (nextWidth === board.width && nextHeight === board.height) {
+  const resizedBoard = resizeEditorBoard(board, edge, delta);
+  if (resizedBoard === board) {
     return;
   }
   pushUndoSnapshot();
-  const nextCells = [];
-  for (let y = 0; y < nextHeight; y += 1) {
-    for (let x = 0; x < nextWidth; x += 1) {
-      nextCells.push(
-        x < board.width && y < board.height ? cloneEditorCell(board.cells[y * board.width + x] ?? defaultEditorCell()) : defaultEditorCell()
-      );
-    }
-  }
-  draft.layout = editorAdapter.serializeBoard({
-    width: nextWidth,
-    height: nextHeight,
-    cells: nextCells
-  });
+  draft.layout = editorAdapter.serializeBoard(resizedBoard);
   diagnoseResult = null;
   playState = null;
   markDirty("\u672A\u4FDD\u5B58\u4FEE\u6539");
@@ -4548,9 +4587,6 @@ function clearCellContent(cell) {
 }
 function defaultEditorCell() {
   return { terrain: "floor" };
-}
-function cloneEditorCell(cell) {
-  return { ...cell };
 }
 function ensurePlayState() {
   if (!playState) {
