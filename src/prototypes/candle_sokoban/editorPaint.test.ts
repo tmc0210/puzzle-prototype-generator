@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import type { EditorBoard, EditorCell } from "../runtimeAdapter.js";
 import {
+  applyCandleClearCellTool,
   paintDraggedCandle,
   type CandleDragPoint,
 } from "./editorPaint.js";
@@ -106,6 +107,24 @@ for (const [end, expectedCap] of [
     expectedCap,
   );
 }
+
+const occupiedCell: EditorCell = {
+  terrain: "wall",
+  target: "goal",
+  actor: "player",
+  object: "brazier_lit",
+  mechanism: "cap_L",
+};
+assert.equal(
+  applyCandleClearCellTool(occupiedCell, {
+    id: "clear_cell",
+    layer: "terrain",
+    label: "清空格子",
+    value: "floor",
+  }),
+  true,
+);
+assert.deepEqual(occupiedCell, { terrain: "floor" });
 
 function board(width: number, height: number): EditorBoard {
   return {

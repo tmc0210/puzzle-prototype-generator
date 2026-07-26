@@ -33,6 +33,21 @@ export function candleDragKind(tool: EditorToolItem): CandleDragKind | undefined
   return undefined;
 }
 
+export function applyCandleClearCellTool(
+  cell: EditorCell,
+  tool: EditorToolItem,
+): boolean {
+  if (tool.layer !== "terrain" || tool.id !== "clear_cell") {
+    return false;
+  }
+  cell.terrain = "floor";
+  delete cell.target;
+  delete cell.actor;
+  delete cell.object;
+  delete cell.mechanism;
+  return true;
+}
+
 export function paintDraggedCandle(
   baseBoard: EditorBoard,
   start: CandleDragPoint,

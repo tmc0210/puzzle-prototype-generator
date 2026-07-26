@@ -72,6 +72,7 @@ function legalInputs(mechanic: MechanicDoc): InputId[] {
 
 const layers = [
   editorToolGroup("terrain", "Terrain", [
+    tool("terrain", "clear_cell", "清空格子", "floor", "."),
     tool("terrain", "floor", "地面", "floor", "."),
     tool("terrain", "wall", "墙", "wall", "#"),
   ]),

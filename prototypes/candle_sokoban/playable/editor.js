@@ -674,6 +674,7 @@ function legalInputs(mechanic) {
 }
 var layers = [
   editorToolGroup("terrain", "Terrain", [
+    tool("terrain", "clear_cell", "\u6E05\u7A7A\u683C\u5B50", "floor", "."),
     tool("terrain", "floor", "\u5730\u9762", "floor", "."),
     tool("terrain", "wall", "\u5899", "wall", "#")
   ]),
@@ -3019,6 +3020,17 @@ function candleDragKind(tool4) {
   }
   return void 0;
 }
+function applyCandleClearCellTool(cell, tool4) {
+  if (tool4.layer !== "terrain" || tool4.id !== "clear_cell") {
+    return false;
+  }
+  cell.terrain = "floor";
+  delete cell.target;
+  delete cell.actor;
+  delete cell.object;
+  delete cell.mechanism;
+  return true;
+}
 function paintDraggedCandle(baseBoard, start, cursor, kind, lockedAxis, retainedDirection) {
   if (!isInBounds(baseBoard, start) || !isInBounds(baseBoard, cursor)) {
     return void 0;
@@ -3324,7 +3336,7 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "ms1i3sa3" : String(Date.now());
+var buildId = true ? "ms1jl0rt" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);
@@ -4475,6 +4487,9 @@ function activeToolItem() {
   return void 0;
 }
 function applyToolToCell(cell, tool4) {
+  if (candleDragEnabled && applyCandleClearCellTool(cell, tool4)) {
+    return;
+  }
   if (tool4.layer === "terrain") {
     cell.terrain = tool4.value ?? "floor";
     if (cell.terrain === "wall") {

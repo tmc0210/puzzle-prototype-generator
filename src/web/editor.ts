@@ -21,6 +21,7 @@ import {
   type VisualTile,
 } from "../prototypes/runtimeAdapter.js";
 import {
+  applyCandleClearCellTool,
   candleDragKind,
   paintDraggedCandle,
   type CandleDragAxis,
@@ -1458,6 +1459,10 @@ function activeToolItem(): EditorToolItem | undefined {
 }
 
 function applyToolToCell(cell: EditorCell, tool: EditorToolItem): void {
+  if (candleDragEnabled && applyCandleClearCellTool(cell, tool)) {
+    return;
+  }
+
   if (tool.layer === "terrain") {
     cell.terrain = tool.value ?? "floor";
     if (cell.terrain === "wall") {
