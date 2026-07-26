@@ -687,6 +687,8 @@ var layers = [
     tool("object", "clear", "\u6E05\u7269\u4F53", void 0, ".")
   ]),
   editorToolGroup("mechanism", "Candle", [
+    tool("mechanism", "drag_unlit", "\u62D6\u753B\u672A\u71C3\u8721\u70DB", void 0, "r"),
+    tool("mechanism", "drag_lit", "\u62D6\u753B\u71C3\u70E7\u8721\u70DB", void 0, "R"),
     ...Array.from({ length: 9 }, (_, index) => {
       const digit = String(index + 1);
       return tool("mechanism", `body_${digit}`, `\u70DB\u8EAB ${digit}`, `body_${digit}`, digit);
@@ -3004,6 +3006,106 @@ function getRuntimeAdapter(mechanic) {
   );
 }
 
+// src/prototypes/candle_sokoban/editorPaint.ts
+function candleDragKind(tool4) {
+  if (tool4.layer !== "mechanism") {
+    return void 0;
+  }
+  if (tool4.id === "drag_unlit") {
+    return "unlit";
+  }
+  if (tool4.id === "drag_lit") {
+    return "lit";
+  }
+  return void 0;
+}
+function paintDraggedCandle(baseBoard, start, cursor, kind, lockedAxis) {
+  if (!isInBounds(baseBoard, start) || !isInBounds(baseBoard, cursor)) {
+    return void 0;
+  }
+  const axis = lockedAxis ?? inferAxis(start, cursor);
+  const end = projectToAxis(start, cursor, axis);
+  const cells = pointsBetween(start, end);
+  const board = cloneBoard(baseBoard);
+  if (cells.length === 1) {
+    paintMechanism(board, cells[0], `cap_${kind === "lit" ? "R" : "r"}`);
+    return { board, axis, cells };
+  }
+  const digit = nextAvailableDigit(baseBoard);
+  if (!digit) {
+    return void 0;
+  }
+  const capGlyph2 = capForDirection(start, end, kind);
+  for (const bodyCell of cells.slice(0, -1)) {
+    paintMechanism(board, bodyCell, `body_${digit}`);
+  }
+  paintMechanism(board, cells.at(-1), `cap_${capGlyph2}`);
+  return { board, axis, cells };
+}
+function inferAxis(start, cursor) {
+  const deltaX = Math.abs(cursor.x - start.x);
+  const deltaY = Math.abs(cursor.y - start.y);
+  if (deltaX === 0 && deltaY === 0) {
+    return void 0;
+  }
+  return deltaX >= deltaY ? "horizontal" : "vertical";
+}
+function projectToAxis(start, cursor, axis) {
+  if (axis === "horizontal") {
+    return { x: cursor.x, y: start.y };
+  }
+  if (axis === "vertical") {
+    return { x: start.x, y: cursor.y };
+  }
+  return { ...start };
+}
+function pointsBetween(start, end) {
+  const deltaX = Math.sign(end.x - start.x);
+  const deltaY = Math.sign(end.y - start.y);
+  const distance = Math.max(
+    Math.abs(end.x - start.x),
+    Math.abs(end.y - start.y)
+  );
+  return Array.from({ length: distance + 1 }, (_, index) => ({
+    x: start.x + deltaX * index,
+    y: start.y + deltaY * index
+  }));
+}
+function capForDirection(start, end, kind) {
+  const glyph = end.x > start.x ? "r" : end.x < start.x ? "l" : end.y > start.y ? "d" : "u";
+  return kind === "lit" ? glyph.toUpperCase() : glyph;
+}
+function nextAvailableDigit(board) {
+  const used = new Set(
+    board.cells.map((cell) => cell.mechanism?.match(/^body_([1-9])$/)?.[1]).filter((digit) => digit !== void 0)
+  );
+  return Array.from({ length: 9 }, (_, index) => String(index + 1)).find((digit) => !used.has(digit));
+}
+function paintMechanism(board, point, mechanism) {
+  const cell = board.cells[point.y * board.width + point.x];
+  if (!cell) {
+    return;
+  }
+  cell.terrain = "floor";
+  cell.mechanism = mechanism;
+  delete cell.target;
+  delete cell.actor;
+  delete cell.object;
+}
+function cloneBoard(board) {
+  return {
+    width: board.width,
+    height: board.height,
+    cells: board.cells.map(cloneCell)
+  };
+}
+function cloneCell(cell) {
+  return { ...cell };
+}
+function isInBounds(board, point) {
+  return point.x >= 0 && point.y >= 0 && point.x < board.width && point.y < board.height;
+}
+
 // src/web/assets/puzzlescript16/manifest.ts
 function sprite(file, label, layerRole, size = 16) {
   return {
@@ -3219,10 +3321,11 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "mrzpr8tt" : String(Date.now());
+var buildId = true ? "ms1hlwox" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);
+var candleDragEnabled = adapter.id === "candle_sokoban";
 var catalog = await loadEditorCatalog();
 var selectedKey = initialSourceKey() ?? catalog.sources[0]?.key ?? newDraftKey;
 var mode = loadEditorMode();
@@ -3239,6 +3342,10 @@ var undoStack = [];
 var redoStack = [];
 var painting = false;
 var paintChanged = false;
+var candlePaintStart = null;
+var candlePaintBaseLayout = "";
+var candlePaintAxis;
+var candlePaintPreviewCells = [];
 var pendingScrollSelected = false;
 var sourceSearchRenderTimer;
 var restoreSourceSearchFocus = false;
@@ -3476,7 +3583,8 @@ function renderEditableBoard(_selectedSource) {
     }
     return renderVisualBoard(boardFromState(adapter, playState.current), "editor-board play-board");
   }
-  return renderVisualBoard(boardForDraft(), "editor-board editable-board", true);
+  const classNames = candleDragEnabled ? "editor-board editable-board candle-drag-board" : "editor-board editable-board";
+  return renderVisualBoard(boardForDraft(), classNames, true);
 }
 function renderAsciiPreview() {
   return renderVisualBoard(boardForDraft(), "editor-board");
@@ -3775,6 +3883,9 @@ function bindEvents() {
   });
   app.querySelectorAll("[data-x][data-y]").forEach((button) => {
     button.addEventListener("pointerdown", (event) => {
+      if (candleDragEnabled && event.button !== 0) {
+        return;
+      }
       const x = Number(button.dataset.x);
       const y = Number(button.dataset.y);
       if (!Number.isInteger(x) || !Number.isInteger(y)) {
@@ -3783,17 +3894,34 @@ function bindEvents() {
       event.preventDefault();
       beginPaint(x, y);
     });
-    button.addEventListener("pointerenter", () => {
-      if (!painting) {
-        return;
-      }
-      const x = Number(button.dataset.x);
-      const y = Number(button.dataset.y);
-      if (!Number.isInteger(x) || !Number.isInteger(y)) {
-        return;
-      }
-      continuePaint(x, y, button);
-    });
+    if (!candleDragEnabled) {
+      button.addEventListener("pointerenter", () => {
+        if (!painting) {
+          return;
+        }
+        const x = Number(button.dataset.x);
+        const y = Number(button.dataset.y);
+        if (!Number.isInteger(x) || !Number.isInteger(y)) {
+          return;
+        }
+        continuePaint(x, y, button);
+      });
+    }
+  });
+  app.querySelector(".candle-drag-board")?.addEventListener("pointermove", (event) => {
+    if (!painting || (event.buttons & 1) === 0 || !(event.target instanceof Element)) {
+      return;
+    }
+    const button = event.target.closest("[data-x][data-y]");
+    if (!button) {
+      return;
+    }
+    const x = Number(button.dataset.x);
+    const y = Number(button.dataset.y);
+    if (!Number.isInteger(x) || !Number.isInteger(y)) {
+      return;
+    }
+    continuePaint(x, y, button);
   });
   app.querySelector("[data-action='add-row']")?.addEventListener("click", () => resizeGrid(0, 1));
   app.querySelector("[data-action='remove-row']")?.addEventListener("click", () => resizeGrid(0, -1));
@@ -4114,6 +4242,16 @@ function beginPaint(x, y) {
   pushUndoSnapshot();
   painting = true;
   paintChanged = false;
+  const tool4 = activeToolItem();
+  if (tool4 && candleDragKind(tool4)) {
+    candlePaintStart = { x, y };
+    candlePaintBaseLayout = draft.layout;
+    candlePaintAxis = void 0;
+    candlePaintPreviewCells = [];
+    updateDraggedCandle(x, y);
+    return;
+  }
+  clearCandlePaintGesture();
   if (paintCell(x, y)) {
     paintChanged = true;
     renderCellButton(x, y);
@@ -4121,6 +4259,10 @@ function beginPaint(x, y) {
 }
 function continuePaint(x, y, button) {
   if (!painting || mode !== "edit") {
+    return;
+  }
+  if (candlePaintStart) {
+    updateDraggedCandle(x, y);
     return;
   }
   if (paintCell(x, y)) {
@@ -4135,12 +4277,44 @@ function endPaint() {
   painting = false;
   if (!paintChanged) {
     undoStack.pop();
+    clearCandlePaintGesture();
     return;
   }
+  clearCandlePaintGesture();
   diagnoseResult = null;
   playState = null;
   markDirty("\u672A\u4FDD\u5B58\u4FEE\u6539");
   render();
+}
+function updateDraggedCandle(x, y) {
+  const tool4 = activeToolItem();
+  const kind = tool4 ? candleDragKind(tool4) : void 0;
+  if (!candlePaintStart || !kind) {
+    return;
+  }
+  const baseBoard = editorAdapter.parseAsciiToBoard(candlePaintBaseLayout);
+  const result = paintDraggedCandle(
+    baseBoard,
+    candlePaintStart,
+    { x, y },
+    kind,
+    candlePaintAxis
+  );
+  if (!result) {
+    return;
+  }
+  const cellsToRender = [...candlePaintPreviewCells, ...result.cells];
+  draft.layout = editorAdapter.serializeBoard(result.board);
+  candlePaintAxis = result.axis;
+  candlePaintPreviewCells = result.cells;
+  paintChanged = draft.layout !== candlePaintBaseLayout;
+  renderCellButtons(cellsToRender);
+}
+function clearCandlePaintGesture() {
+  candlePaintStart = null;
+  candlePaintBaseLayout = "";
+  candlePaintAxis = void 0;
+  candlePaintPreviewCells = [];
 }
 function paintCell(x, y) {
   const before = draft.layout;
@@ -4158,6 +4332,17 @@ function renderCellButton(x, y, button = cellButton(x, y)) {
   }
   button.innerHTML = renderTileLayers(tile);
   button.title = tileLabel(tile);
+}
+function renderCellButtons(points) {
+  const rendered = /* @__PURE__ */ new Set();
+  for (const point of points) {
+    const key = `${point.x},${point.y}`;
+    if (rendered.has(key)) {
+      continue;
+    }
+    rendered.add(key);
+    renderCellButton(point.x, point.y);
+  }
 }
 function cellButton(x, y) {
   return [...app.querySelectorAll("[data-x][data-y]")].find((button) => button.dataset.x === String(x) && button.dataset.y === String(y));

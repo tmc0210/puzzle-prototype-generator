@@ -1216,6 +1216,11 @@ textarea:disabled {
   --tile-size-cap: 58px;
 }
 
+.candle-drag-board {
+  touch-action: none;
+  user-select: none;
+}
+
 .editor-tile-button {
   width: var(--tile-size);
   height: var(--tile-size);

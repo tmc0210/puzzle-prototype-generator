@@ -85,6 +85,8 @@ const layers = [
     tool("object", "clear", "清物体", undefined, "."),
   ]),
   editorToolGroup("mechanism", "Candle", [
+    tool("mechanism", "drag_unlit", "拖画未燃蜡烛", undefined, "r"),
+    tool("mechanism", "drag_lit", "拖画燃烧蜡烛", undefined, "R"),
     ...Array.from({ length: 9 }, (_, index) => {
       const digit = String(index + 1);
       return tool("mechanism", `body_${digit}`, `烛身 ${digit}`, `body_${digit}`, digit);

@@ -21,6 +21,12 @@ import {
   type VisualTile,
 } from "../prototypes/runtimeAdapter.js";
 import {
+  candleDragKind,
+  paintDraggedCandle,
+  type CandleDragAxis,
+  type CandleDragPoint,
+} from "../prototypes/candle_sokoban/editorPaint.js";
+import {
   puzzleScript16Sprites,
   type PixelSpriteAsset,
 } from "./assets/puzzlescript16/manifest.js";
@@ -157,6 +163,7 @@ const buildId = typeof __BUILD_ID__ === "string" ? __BUILD_ID__ : String(Date.no
 const data = await loadPlayableData();
 const adapter = getRuntimeAdapter(data.mechanic);
 const editorAdapter = requireEditorAdapter(adapter);
+const candleDragEnabled = adapter.id === "candle_sokoban";
 
 let catalog = await loadEditorCatalog();
 let selectedKey = initialSourceKey() ?? catalog.sources[0]?.key ?? newDraftKey;
@@ -174,6 +181,10 @@ let undoStack: string[] = [];
 let redoStack: string[] = [];
 let painting = false;
 let paintChanged = false;
+let candlePaintStart: CandleDragPoint | null = null;
+let candlePaintBaseLayout = "";
+let candlePaintAxis: CandleDragAxis | undefined;
+let candlePaintPreviewCells: CandleDragPoint[] = [];
 let pendingScrollSelected = false;
 let sourceSearchRenderTimer: number | undefined;
 let restoreSourceSearchFocus = false;
@@ -435,7 +446,10 @@ function renderEditableBoard(_selectedSource: EditableLevelSource | undefined): 
     }
     return renderVisualBoard(boardFromState(adapter, playState.current), "editor-board play-board");
   }
-  return renderVisualBoard(boardForDraft(), "editor-board editable-board", true);
+  const classNames = candleDragEnabled
+    ? "editor-board editable-board candle-drag-board"
+    : "editor-board editable-board";
+  return renderVisualBoard(boardForDraft(), classNames, true);
 }
 
 function renderAsciiPreview(): string {
@@ -781,6 +795,9 @@ function bindEvents(): void {
 
   app.querySelectorAll<HTMLButtonElement>("[data-x][data-y]").forEach((button) => {
     button.addEventListener("pointerdown", (event) => {
+      if (candleDragEnabled && event.button !== 0) {
+        return;
+      }
       const x = Number(button.dataset.x);
       const y = Number(button.dataset.y);
       if (!Number.isInteger(x) || !Number.isInteger(y)) {
@@ -789,17 +806,34 @@ function bindEvents(): void {
       event.preventDefault();
       beginPaint(x, y);
     });
-    button.addEventListener("pointerenter", () => {
-      if (!painting) {
-        return;
-      }
-      const x = Number(button.dataset.x);
-      const y = Number(button.dataset.y);
-      if (!Number.isInteger(x) || !Number.isInteger(y)) {
-        return;
-      }
-      continuePaint(x, y, button);
-    });
+    if (!candleDragEnabled) {
+      button.addEventListener("pointerenter", () => {
+        if (!painting) {
+          return;
+        }
+        const x = Number(button.dataset.x);
+        const y = Number(button.dataset.y);
+        if (!Number.isInteger(x) || !Number.isInteger(y)) {
+          return;
+        }
+        continuePaint(x, y, button);
+      });
+    }
+  });
+  app.querySelector<HTMLElement>(".candle-drag-board")?.addEventListener("pointermove", (event) => {
+    if (!painting || (event.buttons & 1) === 0 || !(event.target instanceof Element)) {
+      return;
+    }
+    const button = event.target.closest<HTMLButtonElement>("[data-x][data-y]");
+    if (!button) {
+      return;
+    }
+    const x = Number(button.dataset.x);
+    const y = Number(button.dataset.y);
+    if (!Number.isInteger(x) || !Number.isInteger(y)) {
+      return;
+    }
+    continuePaint(x, y, button);
   });
 
   app.querySelector<HTMLButtonElement>("[data-action='add-row']")?.addEventListener("click", () => resizeGrid(0, 1));
@@ -1162,6 +1196,16 @@ function beginPaint(x: number, y: number): void {
   pushUndoSnapshot();
   painting = true;
   paintChanged = false;
+  const tool = activeToolItem();
+  if (tool && candleDragKind(tool)) {
+    candlePaintStart = { x, y };
+    candlePaintBaseLayout = draft.layout;
+    candlePaintAxis = undefined;
+    candlePaintPreviewCells = [];
+    updateDraggedCandle(x, y);
+    return;
+  }
+  clearCandlePaintGesture();
   if (paintCell(x, y)) {
     paintChanged = true;
     renderCellButton(x, y);
@@ -1170,6 +1214,10 @@ function beginPaint(x: number, y: number): void {
 
 function continuePaint(x: number, y: number, button: HTMLButtonElement): void {
   if (!painting || mode !== "edit") {
+    return;
+  }
+  if (candlePaintStart) {
+    updateDraggedCandle(x, y);
     return;
   }
   if (paintCell(x, y)) {
@@ -1185,12 +1233,48 @@ function endPaint(): void {
   painting = false;
   if (!paintChanged) {
     undoStack.pop();
+    clearCandlePaintGesture();
     return;
   }
+  clearCandlePaintGesture();
   diagnoseResult = null;
   playState = null;
   markDirty("未保存修改");
   render();
+}
+
+function updateDraggedCandle(x: number, y: number): void {
+  const tool = activeToolItem();
+  const kind = tool ? candleDragKind(tool) : undefined;
+  if (!candlePaintStart || !kind) {
+    return;
+  }
+
+  const baseBoard = editorAdapter.parseAsciiToBoard(candlePaintBaseLayout);
+  const result = paintDraggedCandle(
+    baseBoard,
+    candlePaintStart,
+    { x, y },
+    kind,
+    candlePaintAxis,
+  );
+  if (!result) {
+    return;
+  }
+
+  const cellsToRender = [...candlePaintPreviewCells, ...result.cells];
+  draft.layout = editorAdapter.serializeBoard(result.board);
+  candlePaintAxis = result.axis;
+  candlePaintPreviewCells = result.cells;
+  paintChanged = draft.layout !== candlePaintBaseLayout;
+  renderCellButtons(cellsToRender);
+}
+
+function clearCandlePaintGesture(): void {
+  candlePaintStart = null;
+  candlePaintBaseLayout = "";
+  candlePaintAxis = undefined;
+  candlePaintPreviewCells = [];
 }
 
 function paintCell(x: number, y: number): boolean {
@@ -1210,6 +1294,18 @@ function renderCellButton(x: number, y: number, button = cellButton(x, y)): void
   }
   button.innerHTML = renderTileLayers(tile);
   button.title = tileLabel(tile);
+}
+
+function renderCellButtons(points: CandleDragPoint[]): void {
+  const rendered = new Set<string>();
+  for (const point of points) {
+    const key = `${point.x},${point.y}`;
+    if (rendered.has(key)) {
+      continue;
+    }
+    rendered.add(key);
+    renderCellButton(point.x, point.y);
+  }
 }
 
 function cellButton(x: number, y: number): HTMLButtonElement | undefined {
