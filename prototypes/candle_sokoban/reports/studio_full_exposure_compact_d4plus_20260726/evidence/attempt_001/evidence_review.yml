@@ -1,0 +1,115 @@
+review_attempt_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001_review_001
+reviewer_instance_id: evidence_reviewer_001_fresh
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_001/input.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/layout.txt
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/level.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/manifest.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/**
+    - docs/21-level-design-studio-standard.md
+    - prototypes/candle_sokoban/docs/design_handoff.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "canonical 17-input path follows legal raw-graph edges from node 0 to winning node 1533."
+    - "solution_family.json enumerates 20 shortest input sequences at cost 17 and groups those shortest sequences into one causal family."
+    - "complete_graph.json contains four terminal winning states (nodes 1533, 2214, 4423, 5551) whose minimum depths are 17, 19, 23, and 25."
+  equivalence_evidence_basis:
+    - "solution_family.json: shortest_causal_family_count=1 for the 20 enumerated shortest sequences."
+    - "analysis.json and complete_graph.json: each of the ten declared core event instances is required on every winning path."
+    - "complete_graph.json raw-edge audit: the donor shrink-transfer bundle, receiver long-roll relay bundle, and relay long-roll goal bundle are each unavoidable on every winning path."
+  known_non_equivalent_win_refs: []
+  status: unknown
+  limits:
+    - "The supplied causal-family classification is explicitly limited to shortest sequences; it does not classify winning paths reaching the non-shortest terminal winning states or paths containing reachable cycles."
+    - "Required-event and required-bundle tests prove common milestones, but do not by themselves establish that every non-shortest winning path preserves one player-logic class."
+    - "No known non-equivalent win is exhibited, so the declaration is not contradicted; the reviewer cannot supply the missing all-winning-path equivalence account."
+
+claims:
+  - claim_id: candidate_exact_layout_solve_alignment
+    claim: "candidate、exact、layout、solve instance 与当前审查 artifact 对齐。"
+    status: supported
+    evidence_basis:
+      - "level.yml and manifest.yml both identify candidate CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003 and exact CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001."
+      - "The actual layout.txt SHA-256 is 080a65f20be11c841dbb95f6868b200c90e3dfe0da9fc65670c035a6fbcfc90c, matching input.yml, analysis.json, canonical_replay.json, complete_graph.json, object_participation.json, solution_family.json, and exposure_audit.json."
+      - "level.yml embeds the same layout, uses all_braziers_lit, and mechanics.ts supplies the fixed/default global burn cycle 5."
+    limits:
+      - "Several artifacts bind to the exact through the layout digest rather than carrying an exact_version field of their own."
+
+  - claim_id: canonical_normal_win
+    claim: "17 个 canonical inputs 均合法；完整回合结算后玩家存活并以 all_braziers_lit 正常胜利。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json: complete=true, cost=17, 17 recorded steps, final event win_all_braziers_lit, and no player_died event."
+      - "complete_graph.json raw-edge audit follows all 17 inputs as legal edges from node 0 to terminal winning node 1533."
+      - "level.yml and the runtime contract use normal all_braziers_lit victory."
+    limits: []
+
+  - claim_id: graph_complete_current_exact
+    claim: "当前 exact 的完整可达图为 complete，含 13893 states、41106 legal edges、4 winning states。"
+    status: supported
+    evidence_basis:
+      - "complete_graph.json: status=complete with the declared counts and matching current-layout digest."
+      - "Raw-graph audit found 13,893 unique node ids and keys, 41,106 edges, no invalid edge references, and all 13,893 nodes reachable from node 0."
+      - "Exactly four raw nodes are winning, and all four have zero outgoing edges."
+    limits:
+      - "Completeness is interpreted only under the prototype's documented terminal rules for win, player death, and zero candles before normal win."
+
+  - claim_id: required_winning_event_instances
+    claim: "所有胜路都必须经过声明的十个 candle、shrink、ignite、roll 与 brazier 事件实例。"
+    status: supported
+    evidence_basis:
+      - "analysis.json and solution_family.json record winning_path_without=false for every declared event instance."
+      - "Independent raw-graph audit of complete_graph.json removed every edge carrying each pattern in turn; none of the ten filtered graphs retained a path from node 0 to a winning node."
+    limits:
+      - "This establishes event-instance necessity, not aesthetic or difficulty significance."
+
+  - claim_id: object_participation
+    claim: "candle#1、candle#2、candle#3、brazier:6,5、brazier:7,2 均在全部胜路中承担所声明机械职责。"
+    status: supported
+    evidence_basis:
+      - "object_participation.json ties every subject to concrete canonical steps and events on the current layout digest."
+      - "complete_graph.json required-event audit establishes all-winning-path necessity for candle#1 roll/shrink, candle#2 shrink-ignite/shrink/long roll, candle#3 ignite/shrink/long roll, and both brazier-light instances."
+      - "Raw-edge bundle audit found no winning path without the paired donor shrink+shrink_ignite, no winning path without candle#2:d5 together with candle#3 ignition and brazier:6,5 lighting, and no winning path without candle#3:d4 together with brazier:7,2 lighting."
+    limits:
+      - "Participation is a mechanical all-winning-path result only; it does not imply quality or player salience."
+
+  - claim_id: identity_counterfactuals
+    claim: "供体预缩、删除供体、删除接力烛会破坏可胜性；预点燃 candle#2 仍会先被供体遮熄并继续需要 retreat shrink_ignite。"
+    status: unknown
+    evidence_basis:
+      - "counterfactuals.yml reports complete searches with zero winning states for donor_preshortened, donor_deleted, and relay_deleted."
+      - "counterfactuals.yml reports receiver_prelit as having 13,893 reachable states, four winning states, shortest cost 17, and identity_preserved."
+    limits:
+      - "The mutation layouts referenced by counterfactuals.yml are outside allowed evidence sources, and the report supplies no mutation-layout digests, raw graphs, or raw traces with which to verify the mutations and results independently."
+      - "For receiver_prelit, the report's identity_reading asserts prior extinguishing and continued shrink_ignite necessity, but supplies no all-winning-path event probe or raw counterfactual graph supporting that stronger statement."
+
+  - claim_id: strict_exposure_gate
+    claim: "当前 exact 的 exposure graph complete，verdict=pass，forbidden_hits 为空，允许暴露到 rolling_contact_chain。"
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json matches the current exact version, candidate id, and layout digest; graph.status=complete, verdict=pass, and forbidden_hits is empty."
+      - "Its raw graph contains 13,893 nodes and 41,106 edges, matching the current complete graph."
+      - "Its sequence SHA-256 32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c matches the actual mechanic_exposure_sequence.yml."
+    limits:
+      - "rolling_contact_chain is the final declared exposure branch, so forbidden_branches and forbidden_event_patterns are both empty; the pass therefore relies on alignment and completeness rather than a non-empty later-event absence test."
+
+hard_failures: []
+evidence_gaps:
+  - "equivalent_variants_only lacks an equivalence classification covering non-shortest winning paths and reachable cycles; the supplied family count covers only the 20 shortest sequences."
+  - "identity counterfactuals lack allowed mutation layouts/digests and raw counterfactual graph or trace evidence, especially for receiver_prelit's claimed mandatory extinguish-then-shrink_ignite chain."
+overall_hard_status: incomplete
+required_action: rerun_or_supply_evidence

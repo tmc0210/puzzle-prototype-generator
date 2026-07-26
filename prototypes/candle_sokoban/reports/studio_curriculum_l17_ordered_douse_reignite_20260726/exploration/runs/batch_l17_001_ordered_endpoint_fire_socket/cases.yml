@@ -1,0 +1,144 @@
+runId: batch_l17_001_ordered_endpoint_fire_socket
+title: "同距反向滚道有序覆写终态，并由同构终点火焰插口读取"
+notes: >-
+  二格横向燃烛位于上下对称竖滚道中央；玩家用两步等长准备，从上侧或下侧发起 d5 侧滚。
+  两路分别按墙→火源和火源→墙经过严格非终点接触，两端同构的未亮火盆在 d5 读取最终亮灭。
+cases:
+  - id: douse_then_reignite_consumer
+    family: ordered_rolling_contacts_write_endpoint_fire_state
+    variant: douse_then_reignite
+    changed_variable: "同一布局选择向下：d1 墙遮芯，d3 已亮火盆复燃"
+    contrast_with: [source_then_douse_consumer, remove_dousing_contact, remove_reignition_contact]
+    notes: "正例：同距滚道先灭后燃，d5 同构火盆读取燃烧终态。"
+    layout_ref: layouts/symmetric_track.txt
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #......#
+      #....O.#
+      #......#
+      #....o.#
+      ########
+    actions: [up, right, down]
+    inputs: [up, right, down]
+  - id: source_then_douse_consumer
+    family: ordered_rolling_contacts_write_endpoint_fire_state
+    variant: source_then_douse
+    changed_variable: "同一布局选择向上：d1 已亮火盆为幂等接触，d3 墙遮芯"
+    contrast_with: douse_then_reignite_consumer
+    notes: "主对照：相同对象、准备步数与 d5 滚距，反序最后由墙写灭，终点火盆不亮。"
+    layout_ref: layouts/symmetric_track.txt
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #......#
+      #....O.#
+      #......#
+      #....o.#
+      ########
+    actions: [down, right, up]
+    inputs: [down, right, up]
+  - id: remove_dousing_contact
+    family: ordered_rolling_contacts_write_endpoint_fire_state
+    variant: remove_dousing
+    changed_variable: "删除向下路径 d1 的遮芯墙"
+    contrast_with: douse_then_reignite_consumer
+    notes: "删项对照：始终燃烧并点盆，证明成功会退化为普通常燃输出。"
+    layout_ref: layouts/remove_dousing.txt
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #......#
+      #......#
+      #....O.#
+      #......#
+      #....o.#
+      ########
+    actions: [up, right, down]
+    inputs: [up, right, down]
+  - id: remove_reignition_contact
+    family: ordered_rolling_contacts_write_endpoint_fire_state
+    variant: remove_reignition
+    changed_variable: "删除向下路径 d3 的已亮火源"
+    contrast_with: douse_then_reignite_consumer
+    notes: "删项对照：d1 灭后没有复燃，d5 终点盆不亮。"
+    layout_ref: layouts/remove_reignition.txt
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      ########
+    actions: [up, right, down]
+    inputs: [up, right, down]
+  - id: stop_before_second_contact
+    family: ordered_rolling_contacts_write_endpoint_fire_state
+    variant: early_stop_after_dousing
+    changed_variable: "身体列挡块在 d2 后阻止继续滚到 d3 火源"
+    contrast_with: douse_then_reignite_consumer
+    notes: "截停对照：只执行 d1 墙灭，d2 停住且近端盆不亮。"
+    layout_ref: layouts/early_stop.txt
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #....o.#
+      #..#.O.#
+      #......#
+      #......#
+      ########
+    actions: [up, right, down]
+    inputs: [up, right, down]
+  - id: move_consumer_off_socket
+    family: ordered_rolling_contacts_write_endpoint_fire_state
+    variant: consumer_misaligned
+    changed_variable: "保持正序程序，把 d5 终点盆横移一格"
+    contrast_with: douse_then_reignite_consumer
+    notes: "consumer 对照：正序仍写成燃烧，但横移火盆不再读取。"
+    layout_ref: layouts/consumer_misaligned.txt
+    layout: |
+      ########
+      #....o.#
+      #......#
+      #....#.#
+      #......#
+      #....O.#
+      #.@1R..#
+      #....#.#
+      #......#
+      #....O.#
+      #......#
+      #.....o#
+      ########
+    actions: [up, right, down]
+    inputs: [up, right, down]

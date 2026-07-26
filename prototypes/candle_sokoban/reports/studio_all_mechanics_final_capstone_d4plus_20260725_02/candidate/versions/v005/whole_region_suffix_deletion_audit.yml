@@ -1,0 +1,89 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v005
+assignment_id: candle_all_mechanics_002_revision_004_human_non_stitched_successor
+status: pass
+
+baseline:
+  layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/layout.txt
+  normal_win: all_braziers_lit
+  graph: {status: complete, states: 98961, edges: 276326, raw_wins: 2}
+  shortest_cost: 22
+  required_early_choice:
+    object: candle#2 relay
+    operation: push_axis_down
+    minimum_count_on_every_win: 2
+  accepted_local_output:
+    writer_roll: d4
+    relay_after_transfer: lit,len2,cells=(7,8)(7,7)
+  rejected_local_output:
+    writer_roll: d3
+    relay_after_transfer: lit,len2,cells=(7,7)(7,6)
+    still_local_success: true
+    globally_win_reachable: false
+
+largest_recognizable_downstream_region:
+  description: 左下目标 (2,7)、其火焰行与 y8 的 relay 横滚通道；这是完整局面中唯一可被读成“后继”的大块区域
+  cells_removed_or_walled:
+    - final_brazier: [2, 7]
+    - horizontal_readout_band: "x1..x5 at y7/y8 plus the left endpoint"
+  retained_midgame:
+    - writer、墙、已亮复燃火盆
+    - 两格 relay 及其一推/两推停靠空间
+    - 两种 writer stop distance 与 shrink_ignite 局部输出
+  redirected_normal_win:
+    method: 在 audit-only 反事实的 writer 公共轨道 (6,3) 放置未亮火盆；胜利仍为 all_braziers_lit
+    reason: 删除最终目标后仍需用正常胜利把比较面收束到中段，不能使用 event_occurs
+  layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/counterfactuals/suffix_deleted_redirected.txt
+  graph: {status: complete, states: 30117, edges: 81972, raw_wins: 25}
+  observed_classification_change:
+    one_push_history: normal_win
+    two_push_history: normal_win
+    full_exact_one_push_history: local_success_but_global_loss
+    full_exact_two_push_history: global_win
+  verdict: pass
+  rationale: >-
+    删除后不只是完整解的同一前缀提前结束；原本由下游目标排除的一推 d3 输出重新成为正常胜利历史，
+    与两推 d4 输出重新等价。完整 exact 的早期正确选择集合因此由“必须二推”扩大，解族和中段完成
+    状态的等价关系均发生实质变化。
+
+proper_suffix_candidates:
+  - id: final_relay_roll_only
+    apparent_suffix: 第二边界后从 (7,8) 把单格 relay 左滚并点亮 (2,7)
+    why_not_detachable: >-
+      该一步读取的是开场停靠写入的纵坐标；一推输出在相同第二边界后实体位于 y7、火焰位于 y6，
+      火盆本身阻断其横滚，且下一边界会燃尽。删除这一读出会直接取消早先二推要求。
+    evidence: 全胜路均需 roll_candle:candle#2:d6 与 light_brazier:2,7；一推局部输出不在 win-reachable 集合
+    verdict: coupled
+  - id: post_transfer_boundary_walk
+    apparent_suffix: shrink_ignite 之后到第二边界的走位
+    why_not_independent: >-
+      这组动作不是另一个子题；它结算两格 relay 的唯一一次保留性缩短，把早期停靠值转成最终 wick 行，
+      同时让 writer 燃尽，随后立即读取，无额外对象或清理任务。
+    verdict: timing_bridge_within_same_relation
+  - id: entire_left_lower_readout_region
+    apparent_suffix: 左下火盆与整条横向读出带
+    deletion_counterfactual_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/counterfactuals/suffix_deleted_redirected.txt
+    early_choice_changed: true
+    solution_family_changed: true
+    same_prefix_only_early_win: false
+    verdict: coupled
+
+anti_stitch_checks:
+  successor_selects_between_two_local_successes: pass
+  selected_difference_is_concrete: relay_y_coordinate_and_post_boundary_wick_row
+  early_correct_choice_depends_on_late_target: pass
+  whole_region_actual_deletion_run: pass
+  normal_win_used_in_counterfactual: pass
+  event_occurs_not_used: true
+  v004_right_wing_geometry_reused: false
+  extra_consumer_candle_added: false
+
+evidence_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/downstream_coupling_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/counterfactuals/suffix_deleted_redirected.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/reasoning_sketch.yml
+
+limits:
+  - 此审计只证明后继耦合和机械分类改变，不评价审美或最终难度。
+  - audit-only 中段火盆只存在于反事实，不属于正式 exact，也不作为正式对象职责。

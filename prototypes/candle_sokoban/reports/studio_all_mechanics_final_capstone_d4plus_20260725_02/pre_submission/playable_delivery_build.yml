@@ -1,0 +1,33 @@
+workflow_id: playable_delivery_build
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+reviewed_exact_version: v001
+delivery_exact_version: v002
+checked_on: 2026-07-25
+delivery_source:
+  level_source: prototypes/candle_sokoban/studio/levels.yml
+  level_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002_v002
+  layout_sha256: 8794d0aec5f1657fd3c4a133fcbc288a4f918aaa1c072892bf6e010e91c43703
+  playable_queue: prototypes/candle_sokoban/playable_queue.yml
+  queue_status: pending_playtest
+operations:
+  - command: npm run candle:playable:build
+    status: pass
+    details:
+      - runtime-backed playable 已重建。
+      - build 内置 candle:playable:check-replays 通过。
+      - Replay coverage complete for 5 playable level(s).
+  - command: npm run candle:playable:check-replays
+    status: pass
+    details:
+      - 独立复跑 replay coverage，5 个 playable level 全部覆盖。
+  - check: source_and_id_resolution
+    status: pass
+    details:
+      - studio/levels.yml 只包含一个相同 level id 的交付记录。
+      - playable_queue.yml 解析到 source=studio、相同 level id 与 pending_playtest。
+      - playable/data.json 包含该 level id 与标题“余焰写入”。
+version_effect: unchanged
+acceptance_preserved: true
+preservation_basis: 交付接线和 runtime-backed 构建不改变 delivery v002 exact。
+playable_ref: prototypes/candle_sokoban/playable/index.html
+status: completed

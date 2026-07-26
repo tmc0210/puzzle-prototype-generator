@@ -1,0 +1,242 @@
+design_task_id: candle_curriculum_l17_ordered_douse_reignite_20260726
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/assignments/designer_experience_brief_002.yml
+brief_status: complete_material_selected_no_candidate
+candidate_id: null
+
+prototype_context:
+  confirmed_rules:
+    - 玩家可沿蜡烛长轴推动一格，也可从侧面触发滚动；滚动直到下一小步被实体阻挡。
+    - 侧滚的每个小步都立即按“先灭火、再递归点火/点盆”结算接触，途中变化不会让滚动提前停止。
+    - 烛芯被墙或另一根蜡烛烛身遮住时熄灭；外露未燃烛芯可从已亮火盆或已燃烛芯接火。
+    - 每个合法行动只推进一次共享倒计时；global_burn_cycle 固定为 5，滚动距离不增加行动成本。
+    - 燃烧边界只缩短结算时仍燃烧的蜡烛；新点燃者可参加当次边界，已熄灭者避开缩短。
+    - 无效输入不是 runtime edge 且不推进倒计时；初始布局不得依赖静默点火、灭火或点盆。
+  win_condition: 玩家存活，并在完整回合结算后点亮全部火盆。
+  object_and_event_semantics:
+    - 多格蜡烛是刚体；cap 方向之外一格是非实体烛芯投影，火焰位于外露且已燃的烛芯投影。
+    - 已亮火盆永久保持点亮并成为火源；火焰会杀死进入其格的玩家。
+    - 本关核心中的墙接触和火源接触都是对同一滚烛燃烧状态的写入；路径中最后一次有效写入决定终点亮灭。
+    - 反序路的首次火源接触对初始燃烛可能是幂等，不把两路误写成具有相同事件多重集。
+  allowed_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+    - rolling_contact_chain
+  tool_boundary:
+    - 可用 runtime adapter、ASCII parser/renderer、solver、完整图、layout analyzer、runtime-backed playable、诊断 probe 和 exposure audit。
+    - Candle 专属 miner、candidate factory、PuzzleScript exporter/checker 未实现；不得用其它原型工具结论替代 Candle runtime 证据。
+    - 当前阶段不运行 layout、solve、replay、diagnostic 或 exact 工具；只固定体验简报和校准。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - 按课程规划，玩家已掌握轴推、侧滚、烛芯点盆、共享倒计时与燃烧缩短/燃尽。
+    - 按课程规划，玩家已掌握墙灭火、共享火焰与复燃、烛身遮蔽/未燃重曝及退焰点火。
+    - L16 actual delivery 已让玩家实际见证侧滚逐小步结算，以及同一长滚同时承担路径输出与终点实体职责。
+    - L17 不再把“途中会结算”或“路径与终点都有职责”本身当作新奇。
+  prerequisite_mechanisms:
+    - all_exposure_families_through_rolling_contact_chain
+    - l16_path_output_endpoint_dual_duty
+  known_prior_level_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/prior_course/l16_delivery.md
+  prior_provenance_boundary:
+    actual_delivery_slots: [L16]
+    planning_only_slots: [L01-L15]
+    planning_refs:
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/course_brief.yml
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/stage_ledger.yml
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml
+      - prototypes/candle_sokoban/reports/curriculum_planning_20260725/selections
+    note: L01-L15 只作为课程规划先验，不登记为 actual level、exact version 或 known prior level ref。
+
+experience_seed:
+  human_seed: >-
+    玩家选择滚动方向、轨道或途中接触体，让同一根滚烛按墙→火源或火源→墙的顺序被连续写入；
+    前者到终点燃烧，后者到终点未燃，再由同构终点 consumer 直接读取最终状态。目标相对难度为 5。
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  status: first_material_published
+  selection_status: selected
+  dispatch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon.md
+  task_index_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/batch.yml
+  selected_material_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon.md#symmetric_reverse_track_writes_and_reads_endpoint_flame
+  selected_material_evidence:
+    - material_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon.md#symmetric_reverse_track_writes_and_reads_endpoint_flame
+      scene_card_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/scene_card.md
+      cases_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/cases.yml
+      results_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/results.json
+      non_empty_inputs:
+        douse_then_reignite: [up, right, down]
+        source_then_douse: [down, right, up]
+      raw_replay_refs:
+        - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/raw_replays/douse_then_reignite_consumer.md
+        - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/raw_replays/source_then_douse_consumer.md
+        - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/raw_replays/remove_dousing_contact.md
+        - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/raw_replays/remove_reignition_contact.md
+        - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/raw_replays/stop_before_second_contact.md
+        - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket/raw_replays/move_consumer_off_socket.md
+      minimum_use: >-
+        中央二格初始燃烛选择等距反向 d5 滚道；d1 与 d3 以相反顺序经过遮芯墙和已亮火盆，
+        d5 的同构未亮火盆插口把最终燃烧 / 未燃状态直接读成点亮 / 保持未亮。
+      observed_scope: >-
+        只支持初始燃烧、二格横烛、竖向 d5、d1/d3 非终点接触、d5 consumer、两步等长准备且不跨燃烧边界；
+        不外推到初始未燃、不同长度、可移动接触体、共同终点汇合或下游未燃烛芯 consumer。
+  material_boundary: >-
+    已选材料只提供“接触顺序最后写入终态，并由火焰插口直接读取”的局部结构事实。
+    Explorer 的镜像 ASCII、两步准备、两只未亮终点盆和 proposed family 都不是完整关卡；
+    当前 assignment 仍不建立布局、candidate、solve instance、replay、diagnostic 或 exact。
+
+material_selection_account:
+  selected_relation: >-
+    采用等距反向滚道的局部关系：墙把燃态写灭，已亮火盆把燃态写燃；初始燃烧时两种写入不交换，
+    d5 同构火焰插口直接读取最后状态。
+  runtime_readback:
+    douse_then_reignite: >-
+      `up,right,down` 全部合法；核心滚动 d5，d1 extinguish_by_wall、d2 wick_reexposed_unlit、
+      d3 ignite_from_brazier、d5 light_brazier；最终 candle lit=1、consumer lit=1、countdown=2。
+    source_then_douse: >-
+      `down,right,up` 全部合法；核心滚动 d5，d1 火源对初始燃态幂等且无 ignite，
+      d3 extinguish_by_wall、d4 wick_reexposed_unlit；最终 candle lit=0、consumer lit=0、countdown=2。
+    counterfactuals: >-
+      删墙退化为普通常燃输出；删火源只剩灭火；d2 截停删去第二次写入；consumer 横移保留燃烧终态却失去点盆读取。
+  retained_for_design:
+    - 同一初态内由玩家选择相反接触顺序。
+    - 两路准备步数、滚距、对象长度和倒计时相同，使终点差异归因于最后写入。
+    - 墙与火源均为严格非终点接触，consumer 只在终点读取。
+    - 反序首个火源接触只作幂等写燃，不宣称产生 ignite 或两路事件多重集相同。
+  not_carried_forward_as_level:
+    - Explorer 的具体 8x13 镜像 ASCII、绝对坐标和 d1/d3/d5 距离不是正式候选。
+    - 两步开放走位只是等长控制，不构成难度、前序或玩家选择。
+    - 两端同时存在的未亮火盆是局部测量仪器；不能原样变成 all_braziers_lit 下必须额外清理或无法同时完成的双目标。
+    - 本批没有完整可达图、完整关卡解族、难度或审美结论，不能替正式 exact 背书。
+
+archive_calibration:
+  full_index_or_retrieval_summaries_read: true
+  calibration_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/designer/archive_calibration.yml
+  all_aesthetic_1_records_read:
+    - ICE_CAND_0002
+    - ICE_CAND_0004
+    - ICE_CAND_0011
+    - ICE_CAND_0037
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  related_positive_records_read:
+    - RA_CAND_0022
+    - ICE_CAND_0019
+    - RA_CAND_0017
+  related_lower_bound_or_boundary_records_read:
+    - RA_CAND_0019
+    - RA_CAND_0020
+    - ICE_CAND_0012
+  additional_human_reviewed_records_read: []
+  human_comment_refs:
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0002.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0004.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0011.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0037.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0019.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0017.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0019.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0020.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0012.md
+
+experience_core:
+  experience_statement: >-
+    玩家把一记长滚读成有先后次序的状态程序：在两个局部都说得通的滚法中，主动选出让墙先熄灭、
+    火源后复燃的顺序，使同一滚烛以燃烧终态抵达；反序虽经过同样两类接触位置，却以未燃终态抵达。
+    两路不是相同事件多重集的换序：反序首次火源接触对初始燃态为幂等，不产生 ignite。
+  visible_setup: >-
+    开局清楚展示同一根初始燃烛、可比较的两个滚动方向或轨道、各自严格位于终点前的遮芯接触与火源接触，
+    以及几何同构、只读取终态火焰的终点 consumer；不能在构图上直接把正确顺序标成唯一答案。
+  player_action: >-
+    玩家先完成与最终顺序直接相关的必要定位或路线选择，再亲自触发一记连续长滚，
+    让同一根蜡烛依次经过两个接触写入点。
+  visible_payoff: >-
+    正确顺序在滚动终点留下清楚可见的燃烧烛芯，并立即通过同构火焰插口完成必要输出；
+    反序到同类终点时烛芯未燃，接口保持沉默，玩家能回读最后一次有效写入为何覆盖前态。
+  why_level_exists: >-
+    L16 已把侧滚路径和终点作为两套职责；L17 首次要求玩家把路径内部的接触次序当作非交换程序，
+    并让终点只读取程序的最终状态。这一“顺序覆盖→终态读取”关系不能由 L16 的双职责替代。
+  core_boundary:
+    central_objects:
+      - 同一根被滚动且被连续写入燃态的蜡烛
+      - 产生遮芯灭火的接触关系
+      - 在后序位置重新点火的火源接触关系
+      - 让玩家选择接触顺序的方向、轨道或可移动接触体
+      - 几何同构并直接读取最终亮灭的终点火焰插口
+    supporting_objects:
+      - 为两个局部合理方案提供操作面的墙与必要站位
+      - 把终点状态接入 all_braziers_lit 的必要火盆
+      - 只用于压缩路径、阻止旁路或快速收束的边界墙
+
+work_identity:
+  conditions:
+    - 同一初态内存在至少两个局部合理、由玩家可主动选择的接触顺序；不是两张对照图或唯一合法滚法。
+    - 同一根滚烛在一次连续长滚中同时经历遮芯写入和火源写入，途中接触不让滚动提前停止。
+    - 墙→火源得到燃烧终态，火源→墙得到未燃终态；成功与失败的对象长度、滚距和倒计时成本保持可比。
+    - 两端 consumer 的几何与职责同构，直接区分滚动结束时的亮灭，而不是读取不同距离、不同长度或额外对象身份。
+    - 终点输出属于标准 all_braziers_lit 胜利链，且没有其它火源或后续复燃旁路替代滚动所得终态。
+    - 必要准备会压缩顺序选择，主要对象在核心前后继续承担同一关系；高潮后尽快结束。
+    - 新意只属于顺序覆盖与终态读取；L16 的逐小步结算和路径/终点双职责只作为玩家先验。
+  counterfactuals:
+    - 删除遮芯接触后，成功路退化为普通燃烛滚到终点，顺序覆盖消失。
+    - 删除后序火源后，只剩途中灭火，墙→火源不再恢复燃烧终态。
+    - 把两路改成同一接触顺序、只留唯一合法轨道或让正确方向一眼可见，会退化成机制 witness。
+    - 预亮终点、错开 consumer 或允许别处补火后，滚动终态不再被直接消费。
+    - 把两次接触拆到两次行动，或到终点后再复燃，会破坏“一记长滚写完、终点立即读取”的作品身份。
+    - 若难度主要来自同一输入末尾立即缩短/避烧和端帽释放，则作品已漂移到 S06_T03 边界提交方向。
+
+level_brief:
+  packaging_intent: complete_single_level
+  expected_difficulty: 5
+  expected_scale: >-
+    紧凑中型；围绕一项主要顺序判断安排必要准备、一记核心长滚和立即终点读取，
+    不用多个重复轨道、长前奏或高潮后清理扩容。
+  expected_player_load: >-
+    高推理、低执行摩擦。玩家需要比较两种局部都合理的接触次序，预见最后一次有效写入，
+    并把终点火焰插口反向读成对早先路线的约束；不依赖规则遗忘、精确操作或大规模试错。
+
+allowed_design_sources:
+  - prototypes/candle_sokoban/mechanic.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T02_ORDERED_DOUSE_REIGNITE_WRITES_ENDPOINT_STATE
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/selections/stage_06_rolling_contact_chain.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/prior_course/l16_delivery.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon.md#symmetric_reverse_track_writes_and_reads_endpoint_flame
+  - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket
+  - clean human-reviewed archives 只用于审美校准，不作为 Candle 布局模板或机械事实来源。
+
+prototype_specific_routing:
+  - allowed_exposure_through 固定为 rolling_contact_chain；正式 exact 必须在完整可达图上 exposure complete/pass 且 forbidden_hits 为空。
+  - 正式候选固定使用 all_braziers_lit，不得使用 event_occurs。
+  - 课程探索 probe 与 optional direction 只证明体验核心可行，不能直接充当候选布局或 exact。
+  - knowledge.yml、curriculum.yml、diagnostic levels.yml、旧 Candle reports 和未发布探索材料均禁止作为设计来源。
+  - 首批 task lexicon 已读取并完成材料选择；只有 Controller 后续发出 candidate_design assignment 后才可开始正式布局。
+  - 当前 experience_brief assignment 结束时 candidate_id 仍为 null，不运行 solve、replay、diagnostic，也不发布 exact。
+
+human_review_constraints:
+  - 不把唯一显然滚道、强制按钮或“把眼前对象推到底”包装成难度 5。
+  - 不把灭火、复燃、途中事件数量或完整图指标当作正向审美价值。
+  - 不用重复同构步骤、无关子题、单行道前奏或高潮后清理抬高规模。
+  - 所有高 affordance 对象都要在玩家侧兑现职责，避免轨道、火源或可动接触体只作读题污染。
+  - 错误顺序应产生接近、可理解的终态差，而不是大量反馈迟缓 deadend。
+  - 优先保持紧凑因果链、对象强耦合、延迟回读和可预见的反直觉选择。
+  - 不把 Explorer 的两只未亮终点盆原样变成正式双目标；成功后的 all_braziers_lit 收束必须直接、无额外清理子题。

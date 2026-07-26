@@ -1,0 +1,42 @@
+schema_version: 1
+design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725_02
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version_seen: v004
+feedback_kind: human_playtest_return
+human_status: needs_revision
+
+human_feedback:
+  - "这关右边的部分实际上是一个拼接关卡吧；也就是那个 o 右侧的所有内容。"
+  - "全删掉也不影响前面的核心啊？"
+
+controller_counterfactual_confirmation:
+  interpretation: >-
+    “那个 o”按 delivery v004 中央 gate 火盆 (4,6) 处理：保留该火盆和左侧 writer/receiver，
+    删除其右侧全部区域、最终火盆与 candle#3，并在 x=5 重新封闭外墙。
+  counterfactual_layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/human_feedback/counterfactual_002_right_of_gate_removed.txt
+  replay_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/human_feedback/counterfactual_002_replay.json
+  complete_graph_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/human_feedback/counterfactual_002_complete_graph.json
+  observed_facts:
+    - 删翼反事实的前 19 步动作和逐步事件与 v004 完全相同。
+    - 同一个第 20 步 right 在反事实中点亮中央 gate 火盆并正常胜利。
+    - 反事实 complete graph 为 3600 states / 9360 edges / 3 wins，最短胜解 19 步。
+    - v004 的右翼只把第 20 步之后延长为 candle#2→candle#3 退焰、相位行走与终滚；没有改变前 19 步的任何玩家选择。
+  structural_conclusion: >-
+    右翼是可拆卸后继。它消费了前段输出，但没有把约束反向传回前段；删除后继不会让任何早期
+    构造选择重新分类，只会让同一前缀更早胜利。因此 v004 违反 docs/17 的后继应用非拼接标准，
+    也没有兑现 experience brief 所称“后继把约束传回最初滚动顺序和相位准备”。
+
+required_response:
+  revision_scope: structural_revision_same_candidate
+  preserve:
+    - 玩家主动写入火态、跨边界传递并在较晚位置读取的体验核心。
+    - 目标难度 5、最低难度 4，以及全前序机制均已掌握的课程位置。
+  replace:
+    - v004 中中央 gate 火盆之后可整体删除的 consumer 右翼。
+    - 任何只消费唯一既成状态、删除后仍保留完全相同核心前缀的尾段。
+  acceptance_boundary:
+    - 后继必须筛选或需要一种特定的前段输出状态，使约束真实反向传回更早的对象位置、方向、长度、火态或相位选择。
+    - 至少存在两个眼前都能完成局部核心动作、但后继只接受其中一个的可辨状态；或提供同等强度的实际结构证据。
+    - 删除后继并把正常胜利收束到中段时，必须显著改变早期正确选择、解族或核心完成状态的等价关系，不能只是同一前缀提前胜利。
+    - 新 exact 必须提交 whole-region / suffix deletion coupling audit；只列对象必经事件不算通过。
+    - 不用更多机制、事件或地图长度掩盖拼接；允许彻底重构当前 family。

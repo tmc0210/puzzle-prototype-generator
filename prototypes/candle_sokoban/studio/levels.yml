@@ -1,6 +1,6 @@
 mechanic: candle_sokoban
 levels:
-  - id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001_V3
+  - id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001_V4
     title: 墙灭火与复燃参与时机·终盘
     global_burn_cycle: 5
     layout: |-
@@ -8,9 +8,9 @@ levels:
       #####O..44R.o#
       ###.L111.#####
       ##O......#####
-      ##.OOO...#####
-      ##..o....#####
-      #OL3333#@#####
+      #####O...#####
+      ####o....#####
+      #.L3333#@#####
       ##############
     win:
       type: all_braziers_lit
@@ -53,18 +53,18 @@ levels:
       - burn_out
       - win_all_braziers_lit
     design_notes: >-
-      Design Studio delivery CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001 v3；25 步规范解。
+      Design Studio delivery CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001 v4；25 步规范解。
       玩家在首轮边界主动墙灭保长，在第二轮边界前静态复燃并参与缩短，随后利用目标烛与
-      瞬时横止挡的共享燃烧计划完成单格交付。v3 仅裁去底部两行与左侧两列冗余外墙；
-      当前 exact 硬证据与逐盆反事实 provenance 见 task-local handoff。
+      瞬时横止挡的共享燃烧计划完成单格交付。v4 在 v3 基础上删除三个机械冗余已亮火盆，
+      墙化一个腾空格与下方蜡烛左上单入口 pocket；两个会制造新墙灭火的格子保留为小缺口。
     lineage:
       source: studio
       created_by: design_studio_controller
       created_at: 2026-07-25T00:00:00+08:00
       design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
       candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
-      exact_version: v3
-      layout_sha256: a842aa84756a54db1b8cba87555272dafff1ad4fa620f4b3373a0ebe960bff88
+      exact_version: v4
+      layout_sha256: 926688b9c149e2b3a9e19ff676ad1926ae3557db02a5446343786329f6db2cf0
       allowed_exposure_through: shared_fire_and_reignition
 
   - id: CANDLE_REIGNITE_MULTICANDLE_V18_WORKBENCH
@@ -407,4 +407,151 @@ levels:
       exact_version: v2
       reviewed_exact_version: v1
       layout_sha256: 8bc7f838a06720b7e238f4e3b69efde4288be9e0d95cb6958b15eb56615e4dce
+      allowed_exposure_through: rolling_contact_chain
+
+  - id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002_v006
+    title: 余焰写入·双值回读
+    global_burn_cycle: 5
+    layout: |-
+      ###########
+      ######....#
+      ####.L111.#
+      ######....#
+      #######@..#
+      ######Ou..#
+      ######.2..#
+      #.o.....#.#
+      #.........#
+      ###########
+    win:
+      type: all_braziers_lit
+    expected_trace:
+      - input: up
+      - input: down
+      - input: down
+      - input: down
+      - input: up
+      - input: up
+      - input: up
+      - input: right
+      - input: right
+      - input: up
+      - input: up
+      - input: left
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: right
+      - input: down
+      - input: down
+      - input: down
+      - input: left
+      - input: left
+    expected_events:
+      - walk
+      - countdown
+      - push_axis
+      - shrink
+      - roll_step
+      - extinguish
+      - extinguish_by_wall
+      - ignite
+      - ignite_from_brazier
+      - ignite_midcycle
+      - roll_candle
+      - roll_multi_cell_one_turn
+      - roll_intermediate_extinguish
+      - roll_intermediate_ignite
+      - roll_reignite_after_extinguish
+      - shrink_ignite
+      - simultaneous_burn
+      - burn_out
+      - light_brazier
+      - roll_intermediate_light_brazier
+      - roll_last_brazier_before_endpoint
+      - win_all_braziers_lit
+    design_notes: >-
+      Design Studio delivery CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002 v006；22 步规范解。
+      开场一推与两推都能完成 writer 墙灭、火盆复燃和退焰点 relay 的局部成功，
+      但较晚终盆只接受两推写入的纵坐标；删除整块读出区会让两种早期输出重新等价。
+      reviewed v005 经独立硬证据支持与单次 fresh Critic 接受；v006 仅裁去一列冗余右外墙。
+    lineage:
+      source: studio
+      created_by: design_studio_controller
+      created_at: 2026-07-25T00:00:00+08:00
+      design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725_02
+      candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+      exact_version: v006
+      reviewed_exact_version: v005
+      layout_sha256: 787d14a5648da7d14f44d5dbf6cc1fb17cc21f1d441d0a01a3b01f4a9000680f
+      allowed_exposure_through: rolling_contact_chain
+
+  - id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001_exact_001
+    title: 长滚双写·尾格截停
+    global_burn_cycle: 5
+    layout: |-
+      ############
+      #......#####
+      #@l444.o####
+      ##O.....O###
+      ##o......u.#
+      ##.......2.#
+      ##.......2.#
+      #######....#
+      ############
+    win:
+      type: all_braziers_lit
+    expected_trace:
+      - input: right
+      - input: up
+      - input: right
+      - input: down
+      - input: down
+      - input: down
+      - input: down
+      - input: right
+      - input: right
+      - input: right
+      - input: right
+      - input: down
+      - input: down
+      - input: right
+      - input: right
+      - input: right
+      - input: up
+      - input: left
+      - input: down
+      - input: left
+      - input: left
+      - input: up
+      - input: up
+    expected_events:
+      - push_axis
+      - roll_step
+      - ignite
+      - ignite_from_brazier
+      - ignite_midcycle
+      - light_brazier
+      - roll_candle
+      - roll_multi_cell_one_turn
+      - roll_intermediate_ignite
+      - roll_intermediate_light_brazier
+      - shrink
+      - simultaneous_burn
+      - burn_out
+      - win_all_braziers_lit
+    design_notes: >-
+      Candle 课程 L16：同一记四格长侧滚在严格中途点亮必要火盆，并把终点反烛芯尾格留作后继蜡烛的
+      必要截停接口；后继再从所得列轴推完成终盆。目标难度 5，23 步规范解。exact_001 经完整硬证据、
+      fresh Evidence Reviewer 与单次 fresh Critic 接受；提交前固定冗余扫描的七个候选均因反事实失败而保留。
+    lineage:
+      source: studio
+      created_by: design_studio_controller
+      created_at: 2026-07-26T00:00:00+08:00
+      design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+      candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+      exact_version: exact_001
+      reviewed_exact_version: exact_001
+      layout_sha256: 61e8934282bc48a21ae200ea7ec2c99309ab24617df79a0f8c5673f13fa34d2b
       allowed_exposure_through: rolling_contact_chain

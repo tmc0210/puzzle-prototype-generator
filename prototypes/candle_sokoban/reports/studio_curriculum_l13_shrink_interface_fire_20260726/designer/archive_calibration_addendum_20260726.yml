@@ -1,0 +1,168 @@
+schema_version: candle_designer_archive_calibration_addendum.v1
+design_task_id: candle_curriculum_l13_shrink_interface_fire_20260726
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version_read: CANDLE_CURRICULUM_L13_001_exact_003
+calibration_date: 2026-07-26
+mode: readonly_player_side_calibration
+
+scope:
+  purpose: >-
+    用新增 Candle clean human-reviewed archive 校准当前作品实物的玩家决策、洞见、路径职责与难度风险。
+  not_a_review_verdict: true
+  exact_modified: false
+  new_exact_published: false
+  controller_state_modified: false
+
+archive_authority:
+  readme_ref: prototypes/candle_sokoban/design_archive/README.md
+  index_ref: prototypes/candle_sokoban/design_archive/index.yml
+  index_status: experimental
+  fact_source: candidate_records_and_original_human_comments
+  all_candidate_cards_read:
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0001.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0002.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0003.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0004.md
+
+exact_artifacts_read:
+  layout_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/layout.txt
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/canonical_replay.json
+  complete_solution_family_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/solution_family.json
+  branch_evidence_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/baseline_event_queries.json
+
+artifact_first_read:
+  layout: |-
+    ##########
+    ######o###
+    ###..1R.##
+    ##@U..u#.#
+    ###....###
+    ##########
+  canonical_inputs: [right, down, right, right, right, up]
+  shortest_cost: 6
+  decisive_structure:
+    - 第 1 拍 right 是唯一进展；C 侧滚两格并被 A 烛身遮灭。
+    - >-
+      第 1 拍后出现唯一有作品意义的方向承诺：向上绕到 A 尾侧并最终推 A，或向下进入 B 尾侧站位线。
+    - 向上分支的实际对象决定是第 4 拍推 A；A 墙灭且端点不可恢复。
+    - 正确分支从第 2 拍 down 起，规范输入余下为 right、right、right、up。
+    - 第 2 至 4 拍只走路；第 5 拍走路自动触发 A shrink 与 shrink_ignite B；第 6 拍推 B 点盆结束。
+    - 深度 8 与 10 的其它胜态只增加纯移动时序，不增加新的生产性决定。
+
+source_by_source_calibration:
+  - archive_id: CANDLE_CAND_0001
+    human_scores: {aesthetic: 3, difficulty: 3}
+    original_human_comment: 此处的退焰构造有一定洞见，正常流程可用
+    applicable_boundary:
+      - 人类认可的是具体退焰构造“有一定洞见”，不是只要出现退焰事件就有高洞见。
+      - 该归档作品把侧滚、遮灭、重曝、后段复燃和旧端帽退焰串成多段耦合链，仍只得到难度 3。
+      - exact_003 的第 5 拍确有清楚退焰交接，因此可以把它视为“可能有一定洞见”的下界参照。
+      - exact_003 没有同等长度的主动耦合链，不能从本条人评推出难度 5，也不能推出退焰事件本身足够。
+
+  - archive_id: CANDLE_CAND_0002
+    human_scores: {aesthetic: 3, difficulty: 2}
+    original_human_comment: 开局下推两次将未点燃蜡烛作为阻挡的普通二择，机制硬证据满足但几乎无玩家洞见
+    applicable_boundary:
+      - 该人评直接否定“机械写入与读回成立”能够替代玩家洞见。
+      - exact_003 不是“推一次或两次”的同题复刻，但在强制首拍后也只剩一次二元承诺。
+      - >-
+        exact_003 的二择内容比纯次数二择更有语义：玩家需预测保留 A 才能在边界给 B 退焰；但作品实物没有
+        第二个独立判断去检验或深化这个预测。
+      - 因此本条警告对 exact_003 的决策密度与洞见上限高度适用，对具体机制形状不作同一化。
+
+  - archive_id: CANDLE_CAND_0003
+    human_scores: {aesthetic: 1, difficulty: 2}
+    original_human_comment: >-
+      声称难度不低于5，但实际玩家仅面临二择：先推左上蜡烛还是右下蜡烛，且玩家开局即可先推左上蜡烛，
+      玩家闭着眼睛右推后就毫无抉择点。典型反例，归档作为警告。
+    applicable_boundary:
+      - 这是本轮最直接的负面校准：目标难度声明必须服从实际决策拓扑，而不是机制链叙事。
+      - >-
+        exact_003 同样在开局附近形成一次二择；选定正确的下方分支后，余下 right、right、right、up 没有
+        新的对象取舍，完整胜解族也只允许纯移动时序差异。
+      - exact_003 的正确二择依赖可读的 blocker-to-fuel 预测，不完全等同“闭眼右推”；但决策坍缩这一失败模式成立。
+      - 该差异最多说明 exact_003 的单个判断比反例更有内容，不能消除难度 5 被高估的风险。
+
+  - archive_id: CANDLE_CAND_0004
+    human_scores: {aesthetic: 3, difficulty: 3}
+    original_human_comment: >-
+      要求先抉择灭火，并叠加一个右上蜡烛操作的顺序锁，因几何结构紧凑路径有复用而无拼接感，
+      整体3难度3审美达标
+    applicable_boundary:
+      - “紧凑路径复用”只有在同一几何被多个对象操作和顺序约束再次消费时才是正面事实。
+      - exact_003 的下方四格路径同时取得 B 尾侧站位并推进共享倒数，存在功能重合。
+      - >-
+        但该路径只走一遍，没有后段回读或多对象顺序锁；C 在首拍后不再参与，A 的翻转也由倒数自动发生。
+      - 因而 exact_003 只能声明路径没有明显拼接段，不能援引本条人评把一次性直线路径升级为“复用价值”。
+
+player_side_checks:
+  ordinary_binary_choice:
+    result: substantial_match_to_archive_warning
+    evidence:
+      - 强制首拍后，唯一生产性选择是上走并推 A，或下走并保留 A。
+      - 上路错误有清楚墙灭反馈，但反馈清楚不增加决策数量。
+      - 下路一旦选择，之后不存在第二个需要预见的构造分歧。
+    boundary: >-
+      二择所读取的是 A 同时作为实体封口与未来火源的关系，不是完全任意的左右按钮；这保留了一个真实概念判断，
+      但没有证明其足以承担高难单关。
+
+  decision_space_after_opening:
+    result: collapses_after_single_commitment
+    evidence:
+      - 第 1 拍强制。
+      - 正确承诺最迟在第 2 拍 down 时完成。
+      - 第 3、4、5 拍连续 right 只完成走位与倒数推进；第 6 拍 up 是已经点燃 B 后的直接兑现。
+      - 其它胜解只在纯移动时序上变长，未加入新的对象因果决定。
+    risk: 与 CANDLE_CAND_0003 的“开局二择后不再有抉择”失败模式结构上接近。
+
+  retreating_flame_insight:
+    mechanical_event_established: true
+    player_visible_payoff: >-
+      第 5 拍 A 端帽消失、B 同格点燃；第 6 拍 B 占入旧端帽格并点盆，变化紧凑且可见。
+    active_construction_strength: low_to_moderate
+    evidence:
+      - 玩家不移动 A 或 B 来构造共享接口；二者的精确对齐开局已经完成。
+      - 正确行为主要是不要推 A，并沿唯一短线走到 B 尾侧等待边界自动发生。
+      - C 的首拍是强制操作，不是玩家在多个准备结构中选择的一种构造。
+    risk: >-
+      作品可能只让玩家识别“不要动 A，等退焰事件自动成立”，而没有要求玩家主动制造、变换或再次读取该接口；
+      退焰事件成立的机械密度可能高于实际洞见密度。
+
+  compact_path_reuse:
+    result: functional_overlap_but_not_archive_grade_reuse
+    positive_fact: 下方路线同时把玩家送到 B 尾侧并精确消耗到目标燃烧边界。
+    limits:
+      - 玩家没有不等待的其它必要工作，无法比较“走这条路”与其它工作安排。
+      - 路径没有被后段对象或顺序锁再次消费。
+      - 零回访和六拍收束证明执行简洁，不证明推理复杂或路径复用具有独立价值。
+
+  target_difficulty_5:
+    result: not_substantiated_by_current_artifact
+    calibrated_likelihood: closer_to_2_or_3_than_5
+    basis:
+      - 人类归档中更长的退焰耦合链 CANDLE_CAND_0001 被评为难度 3。
+      - 带主动灭火与额外顺序锁、且几何真实复用的 CANDLE_CAND_0004 被评为难度 3。
+      - 单次开局二择并在之后坍缩的 CANDLE_CAND_0002 与 CANDLE_CAND_0003 均被评为难度 2。
+      - exact_003 的唯一概念判断比纯次数二择更有内容，但实际动作结构仍是一拍强制、一次承诺、线性兑现。
+    uncertainty: >-
+      只有真实人类试玩能给最终难度；当前 clean archive 与作品实物没有提供把目标 5 视为已兑现的依据。
+
+honest_conclusion:
+  statement: >-
+    exact_003 有一个清楚、紧凑、可见的 blocker-to-fuel 反转，但当前作品实物把全部推理押在强制首拍后的
+    单次上/下承诺。正确承诺后决策立即坍缩，退焰接口由开局预对齐并自动结算；下方路径虽同时承担站位与
+    倒数，却不具备归档正例中的多对象顺序复用。以新增 Candle 人评校准，目标难度 5 未被当前实物兑现，
+    更接近难度 2 至 3 的风险很高。
+  potential_risks:
+    - 普通二择的语义稍强，但结构仍可能被玩家读成“别推 A，走下去”等待自动开锁。
+    - 强制 C 首拍可能制造事件密度，却没有增加玩家构造选择。
+    - 第 5 拍的机械奇观可能掩盖此前只有一个判断的事实。
+    - 紧凑和无拼接只说明执行干净，不能补偿决策坍缩或难度目标失真。
+    - 若玩家已掌握 L01-L12 的全部前序知识，同格退焰预测可能比孤立试玩更快被识别，进一步压低难度。
+
+action_boundary:
+  recommendation_for_controller: >-
+    将本补充作为后续校准输入；不要据此改写 frozen exact_003。若需要根据这些风险修订，必须另发正式
+    Designer revision assignment。
+  current_exact_action: none

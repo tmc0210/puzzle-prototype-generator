@@ -1,0 +1,46 @@
+schema_version: 1
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/assignments/designer_revision_002_remove_repair_win_family.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+status: frozen_exact_published
+structure_revision: 4
+player_relation: >-
+  玩家先把完整长度的横烛侧滚到竖烛上方；竖烛帽端既是几何止挡，也是稍后被退焰穿过的接收器。
+  第一次边界的退焰点燃竖烛，第二次边界把它的火头下移；同一火态随后由六格长滚送入火盆并交给第三烛，
+  第三烛再跨一次边界缩短后，以改变后的火头列长滚点亮终点火盆。
+structure_hypothesis:
+  - 入口动作不是把接收器送入残余火头，而是让完整供体借接收器止挡构造帽端/芯位交叉；接收器此后保持固定，封闭晚到补火。
+  - 供体必须先以三格长度落在止挡上；缩短后的供体会失去该止挡几何，因此供体侧滚、首次 shrink_ignite 与接收器火态属于同一不可替代链。
+  - 竖接收烛在第二次边界缩短后侧滚六格；第三小步同时点亮近盆并点燃第三烛，第四小步的体段遮火使竖烛不能保留额外火源。
+  - 第三烛必须经历下一次边界从三格缩为两格，玩家才能从新的受力格把它向上长滚；改变后的芯列在倒数第二个小步点亮远盆并立即正常胜利。
+revision_002_diagnosis:
+  expected_relation: >-
+    exact_001 中，首次边界由完整长度供体缩短并把退焰交给受体；供体此后保持退出交叉芯位，受体的同一火态直接经历下一边界缩短，再由五格长滚消费。
+  repair_relation: >-
+    玩家在首次接火时先到达缩短供体的后操作侧，随后将供体轴推回交叉芯位；供体新增遮熄受体的职责，下一边界又以第二次 shrink_ignite 修复受体，并把受体 len2 缩短推迟到供体燃尽边界。
+  separating_structural_responsibility: >-
+    预期解不需要首次接火后从供体后侧重新操纵它；repair 必须保留该后操作位与回占交叉芯位的轴推通道。修订应保留首次退焰接收及全部后继跑道，同时让缩短供体在接火后不能从后侧回占接收芯位。
+  current_working_hypothesis: >-
+    收回缩短供体后侧的局部操作位，使供体在首次退焰后成为固定的倒数参与者；不得阻断玩家通往受体未来缩短后的操作侧，也不得用额外目标、等待或独立子题替代原核心。
+  validated_result: >-
+    exact_002 以单格筛选墙收回该后操作位，并将接力烛及两只火盆整体右移一列，使筛选墙不再与接力烛缩短后的上滚芯列重合。接收烛因此改为六格长滚；完整胜路中 repair signature 边为 0，而只移除筛选墙的结构反事实会恢复一个 repair 终局。
+difficulty_basis:
+  target: 4
+  intended_load:
+    - 先把竖烛读成供体的长度敏感止挡，再把同一格读成退焰接收芯
+    - 连续预演三个共享边界造成的三次火头列变化
+    - 预见两次不可中止长滚中的中途点盆、接力点火与遮火顺序
+    - 在供体落位后提前走向竖烛未来缩短后的操作侧；上返虽仍可恢复，但会错过最短相位
+  excluded_load:
+    - 原地等待或往返消耗倒计时
+    - 与火态链无关的见证火盆
+    - 依靠开放房间状态爆炸形成的工具难搜
+    - 末端墙熄灭或死亡抢在正常胜利前制造噪声
+identity_tests:
+  - 全图删去 shrink_ignite:candle#2 边后不得存在胜路。
+  - 全图删去 candle#2 六格长滚、candle#3 接力点火或 candle#3 四格长滚任一事件边后不得存在胜路。
+  - 把 candle#2 预先点燃不会形成旁路：供体落位过程先以体段遮熄它，之后仍必须由 shrink_ignite 重新点燃。
+  - 删除任一火盆或任一蜡烛会改变正常胜利目标或使当前因果作品身份消失。
+  - 供体若预先缩成两格，接收器不再形成侧滚止挡，正常胜利应不可达。
+publication_boundary: 只有完整图、完整回放、解族、对象参与、exposure 与身份反事实全部通过后才发布唯一 exact，发布后不再修改。
+revision_basis_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001
+frozen_exact_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002

@@ -1,0 +1,54 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v001
+counterfactuals:
+  - id: guard_not_moved
+    mutation: none; restrict winning paths to those without roll_candle:candle#single3
+    result: no_winning_path
+    evidence: complete baseline graph; opening_guard_roll is required on every winning path
+    identity_read: guard 必须由玩家在关键滚动前移出后置遮蔽位。
+  - id: guard_removed
+    mutation: remove the whole initial guard candle
+    result: solvable_degenerate
+    complete_graph:
+      status: complete
+      reachable_states: 12755
+      legal_transitions: 41007
+      winning_states: 5
+      shortest_cost: 26
+    identity_read: 删除 guard 会把最短解从 28 降至 26，并取消玩家的空间写入准备，因此 guard 有防旁路职责。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_guard.txt
+  - id: wall_removed
+    mutation: replace the writer wick-track wall at 4,4 with floor
+    result: solvable_degenerate
+    complete_graph:
+      status: complete
+      reachable_states: 29148
+      legal_transitions: 93119
+      winning_states: 2
+      shortest_cost: 28
+    identity_read: 最短胜解不再含 extinguish_by_wall 或 roll_reignite_after_extinguish，退化为预燃 writer 直接点 bridge。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_wall.txt
+  - id: active_source_removed
+    mutation: remove candle#5 while retaining its surrounding walls
+    result: unsolvable
+    complete_graph:
+      status: complete
+      reachable_states: 64065
+      legal_transitions: 200681
+      winning_states: 0
+    identity_read: writer 被墙遮灭后没有后置火源，bridge、relay 与 consumer 均无法进入胜利火链。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_source.txt
+  - id: bridge_transfer_removed
+    mutation: restrict winning paths to those without shrink_ignite:candle#2
+    result: no_winning_path
+    evidence: complete baseline graph
+  - id: relay_transfer_removed
+    mutation: restrict winning paths to those without shrink_ignite:candle#3
+    result: no_winning_path
+    evidence: complete baseline graph
+  - id: final_consumer_readout_removed
+    mutation: restrict winning paths to those without the candle#3 roll edge that lights brazier 2,1
+    result: no_winning_path
+    evidence: complete baseline graph
+conclusion: pass

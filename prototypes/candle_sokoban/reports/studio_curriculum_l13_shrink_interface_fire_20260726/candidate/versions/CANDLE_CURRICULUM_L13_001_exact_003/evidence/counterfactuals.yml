@@ -1,0 +1,116 @@
+schema_version: candle_designer_counterfactuals.v4
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+source_layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/solve_instance.yml
+provenance:
+  candidate_id: CANDLE_CURRICULUM_L13_001
+  exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+  layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/solve_instance.yml
+
+tests:
+  - id: early_source_move_and_douse
+    kind: exact_state_branch
+    inputs: [right, up, right, right]
+    observed_terminal_events: [push_axis:candle#1, extinguish_by_wall:candle#1]
+    endpoint_node: 13
+    endpoint_can_reach_win: false
+    result: losing_irrecoverable_commitment
+    ref: baseline_event_queries.json
+
+  - id: source_burns_out_at_target_boundary
+    mutation: A 由两格燃烧烛改为占同一接口的单格燃烧烛。
+    graph: {status: complete, states: 555, edges: 1469, winning_states: 0}
+    result: unsolvable
+    refs: [counterfactuals/cf_source_burnout_layout.txt, counterfactuals/cf_source_burnout_graph.json]
+
+  - id: source_initially_unlit
+    mutation: A 保持两格与对齐，但初始未燃。
+    graph: {status: complete, states: 241, edges: 591, winning_states: 0}
+    result: unsolvable
+    refs: [counterfactuals/cf_source_unlit_layout.txt, counterfactuals/cf_source_unlit_graph.json]
+
+  - id: receiver_b_shift_down_one_cell
+    mutation: >-
+      只把 B（candle#single3）从 (6,3) 下移到 (6,4)，Manhattan distance=1；10x6 画布、全部墙、
+      玩家、火盆、A、C、全部对象方向/长度/燃烧态不变。
+    counterfactual_layout_sha256: 780f0371316d97d4828262268592f5317a6aed75cc5319b8cfe473cf21dfd34e
+    direct_replay:
+      inputs: [right, down, right, right, up]
+      target_boundary_events: [shrink:candle#1:len1, shrink_ignite:candle#single2]
+      receiver_b_shrink_ignite: false
+      final_win: false
+    graph: {status: complete, states: 278, edges: 718, winning_states: 0}
+    full_graph_identity_result:
+      winning_path_families: []
+      winning_bypass_count: 0
+      shrink_ignite_receiver_edge_count: 0
+      push_receiver_edge_count: 0
+      ordinary_ignite_receiver_edge_count: 0
+      alternative_shrink_ignite_c_edge_count: 11
+    downstream_disclosure: >-
+      B 不再截停 C，故 C 首拍多滚一格并使 roll_intermediate_extinguish 可达；目标边界可把 A 的退焰交给 C，
+      但完整图没有胜态。这些都是同一位置干预的实际下游结果，不隐藏为“只改火焰”。
+    result: strict_single_variable_shift_is_unsolvable_and_exact_alignment_is_required
+    claim_limit: >-
+      只支持“当前 exact 的 B 精确对齐不可移除”；不声称错列版仍可解、会在下一推普通点燃 B，或保留 C 的
+      滚动终点和 B 的操作面。
+    refs:
+      - counterfactuals/cf_receiver_b_shift_down/layout.txt
+      - counterfactuals/cf_receiver_b_shift_down/replay.json
+      - counterfactuals/cf_receiver_b_shift_down/complete_graph.json
+      - counterfactuals/cf_receiver_b_shift_down/identity_analysis.json
+
+  - id: support_c_deleted
+    mutation: 删除 C，保留玩家、A、B、火盆与墙形。
+    graph: {status: complete, states: 550, edges: 1444, winning_states: 3, shortest_cost: 6}
+    canonical_difference: 同样六个输入的首拍从 roll+douse C 退化为 walk；前五拍不再有对象准备事件。
+    result: solvable_but_player_preparation_identity_removed
+    refs: [counterfactuals/cf_support_removed_layout.txt, counterfactuals/cf_support_removed_graph.json]
+
+  - id: source_lengthened
+    mutation: A 从两格改为三格，保留端帽、B、C 与火盆。
+    graph: {status: complete, states: 4359, edges: 11320, winning_states: 6}
+    non_equivalent_witnesses:
+      - {winning_node: 135, shortest_cost: 12, account: 首次交接后推 A 遮灭 B，下一边界二次 shrink_ignite B。}
+      - {winning_node: 218, shortest_cost: 14, account: B 燃尽后 A 二次退焰点燃 C，再滚/推 C 点盆。}
+      - {winning_node: 233, shortest_cost: 14, account: 延后推 A 遮灭 B 后再次 shrink_ignite B。}
+    result: second_transfer_and_support_takeover_families_reappear
+    refs: [counterfactuals/cf_source_long_layout.txt, counterfactuals/cf_source_long_graph.json, mutation_graph_summary.json]
+
+  - id: receiver_misses_singleton_fire_window
+    kind: exact_state_branch
+    inputs: [right, up, down, up, down, up, down, up, down, up]
+    observed_terminal_events: [burn_out:candle#1, burn_out:candle#single3]
+    endpoint_node: 100
+    endpoint_can_reach_win: false
+    result: no_second_transfer_or_multi_push_repair
+    ref: baseline_event_queries.json
+
+  - id: operate_source_after_transfer
+    kind: exact_state_branch
+    inputs: [right, up, down, up, right, right]
+    observed_terminal_events: [push_axis:candle#1, extinguish_by_candle_body:candle#single3]
+    endpoint_node: 25
+    endpoint_can_reach_win: false
+    result: post_transfer_other_object_task_is_losing
+    ref: baseline_event_queries.json
+
+  - id: receiver_prelit_attempt
+    mutation: 把 B 从未燃 u 改为已燃 U，其余布局不变。
+    runtime_result: silent initial contact settlement 立即遮灭 B，solve instance 被拒绝。
+    result: no_stable_prelit_bypass
+    refs: [counterfactuals/cf_receiver_prelit_layout.txt, counterfactuals/cf_receiver_prelit_runtime_rejection.txt]
+
+  - id: required_consumer_shifted
+    mutation: 火盆从 B 推后烛芯格 (6,1) 左移到 (5,1)。
+    graph: {status: complete, states: 10936, edges: 28475, winning_states: 0}
+    result: unsolvable
+    refs: [counterfactuals/cf_consumer_shifted_layout.txt, counterfactuals/cf_consumer_shifted_graph.json]
+
+conclusion: >-
+  当前 exact 的两格 A、单格 B、必要 C 工序、同格对齐和紧邻 consumer 共同关闭提前清 A、
+  二次传火、C 接管、B 多推修复与无消费输出。严格 B 下移一格反事实证明当前精确对齐不可移除；
+  不再把旧复合 fixture 的“仍可解但普通点火”行为外推为当前 exact 的单变量性质。全部十项反事实均由
+  exact_003 白名单内 artifact 支持。

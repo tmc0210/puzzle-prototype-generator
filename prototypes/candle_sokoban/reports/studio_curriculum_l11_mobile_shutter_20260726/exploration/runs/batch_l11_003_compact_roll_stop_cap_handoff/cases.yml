@@ -1,0 +1,32 @@
+runId: batch_l11_003_compact_roll_stop_cap_handoff
+title: "C 邻格近停交接 B 原端帽二次截停"
+notes: >-
+  两格 C 的下格先把 D 自动截在近停位；D 仅向左轴推一格，
+  随后由 B 的原端帽完成第二次侧滚截停。
+cases:
+  - id: two_cell_c_d2_then_b_cap_d1
+    variant: two_cell_c_positive_handoff
+    changed_variable: 两格 C 保留邻格，B 保留原端帽
+    contrast_with:
+      - single_cell_c_overshoots_and_loses_push_face
+      - shortened_b_loses_original_cap_stop
+    layout_ref: two_cell_c_d2_then_b_cap_d1.txt
+    inputs: left,up,right,down,down,down,left,up,right,up,up,left,down,left,up
+  - id: single_cell_c_overshoots_and_loses_push_face
+    variant: single_cell_c_overshoot
+    changed_variable: C 缩为单格；D 第一次侧滚多走一格，终点右侧是墙
+    contrast_with: two_cell_c_d2_then_b_cap_d1
+    layout_ref: single_cell_c_overshoots_and_loses_push_face.txt
+    inputs: up,left,up,left,down,down,down,down,right,up,right,up,up,up
+  - id: shortened_b_loses_original_cap_stop
+    variant: original_b_cap_absent
+    changed_variable: B 从三格缩为两格，原 x=5,y=3 端帽缺失
+    contrast_with: two_cell_c_d2_then_b_cap_d1
+    layout_ref: shortened_b_loses_original_cap_stop.txt
+    inputs: left,up,right,down,down,down,left,up,right,up,up,left,down,left,up
+  - id: wrong_d_first_occupies_c_push_stance
+    variant: wrong_object_first
+    changed_variable: C 到位前先侧滚 D
+    contrast_with: two_cell_c_d2_then_b_cap_d1
+    layout_ref: wrong_d_first_occupies_c_push_stance.txt
+    inputs: down,down,left,up,up

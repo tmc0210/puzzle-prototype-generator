@@ -1,0 +1,80 @@
+submission_id: candle_curriculum_l16_path_output_endpoint_exact_001_submission
+design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+exact_version: exact_001
+
+designer_claim:
+  player_experience_core: >-
+    玩家为一次长侧滚预先对齐同一支蜡烛；长滚在严格途中点亮必要火盆却继续运动，
+    到端后留下的反灯芯尾端又被后继蜡烛消费为停止接口，后继随即完成 all_braziers_lit。
+  player_action: >-
+    先把 A 右推一格，从上方触发 d4 下滚；随后到 Q 右侧向左触发 d2 滚动，
+    再从下方沿 x=7 上推 Q 直到点亮最终火盆。
+  visible_payoff: >-
+    A 一次 d4 动作中可见 d1 取火、d2 点盆、继续两格；稍后 Q 在 d2 正好撞上 A 的尾端，
+    使之前看似残余的单格实体立刻变成最终推进列。
+  why_this_level_exists: >-
+    它把 rolling_contact_chain 课程推进到“一次长滚同时产生严格途中永久输出与端点实体职责”，
+    并要求玩家在高潮后重读同一尾端，而不是把路径输出与终点停止拆成两个子题。
+  work_identity_conditions:
+    - A 的同一次 d4 长滚必须在 d2 严格途中点亮必要火盆 (2,4)，且继续到 d4 端点。
+    - A 的反灯芯尾端 (6,6) 必须成为 Q 左滚第二小步的实体停止来源。
+    - Q 必须在该滚动途中取火，并从截停列直接轴推点亮最终火盆 (7,2)。
+    - 正常胜利条件必须是 all_braziers_lit；不得以包装或脚本替代。
+
+packaging_account:
+  opening: >-
+    A、Q、两枚已亮火盆和两枚未亮火盆同屏；A 原列下滚被近端火盆阻挡，唯一右推格与远端最终列均可见。
+  preparation: >-
+    A 的一次右轴推同时完成烛芯路径列与反灯芯尾端列的双对齐，没有独立开关或额外清理。
+  reveal_or_use: >-
+    d4 长滚先展示严格途中输出；燃烧缩短后的 A 尾端在 Q 向左滚时被重新解释并实际消费。
+  ending: >-
+    Q 截停后只需从下方沿同一列推进；推进次数随燃烧后剩余长度变化，但第一下就进入直接收束，不开启新子题。
+  every_major_element_role:
+    - A：长滚路径输出与端点尾块双职责主体。
+    - (2,3) 已亮火盆：A 的途中火源兼未对齐滚动的实体阻挡。
+    - (2,4) 未亮火盆：严格途中永久输出，且是标准胜利的必要组成。
+    - (3,7) 墙：固定 A 的 d4 端点与尾端坐标。
+    - Q：消费尾端的后继，并完成最终火盆。
+    - (8,3) 已亮火盆：Q 的 d1 途中火源。
+    - (9,3) 墙：阻止 Q 在消费尾端前直接上推。
+    - (7,2) 未亮火盆：把 Q 截停列转化成直接终局。
+    - 其余边界与地板：提供可读站位、保留错误滚向和短转场。
+  known_perceptible_defects:
+    - none_identified
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/canonical_replay.md
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: max_states=300000；实际 17337 states / 54606 legal transitions，完整结束
+    known_raw_winning_variants:
+      - 13 个原始 winning states；7 种燃烧终态签名。
+      - Q 因滚后剩余长度不同，需要在同一 x=7 列上推 1 至 3 次。
+      - A 完成双职责后可被做无后续作用的尾声轴推；另有走位与共享倒数相位差异。
+    equivalence_account: >-
+      所有胜解都包含同一 A 对齐、同一 A d4、同一 d2 严格途中点盆、同一 Q 左滚 d2、
+      同一 A 尾端 (6,6) 截停和同一最终上推关系；10 类强制事件移除与 5 组事件顺序检查全部通过。
+      原始差异不改变责任对象、关系坐标、事件来源或玩家推理，只改变时序、已消费对象的尾声动作或推进次数。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_account.yml
+    evidence_limits:
+      - 等价性是 Designer 对完整状态图与事件顺序的玩家逻辑归类，不替代 fresh Evidence Reviewer 的独立核验。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/summary.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/unaligned_a_replay.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/q_wrong_direction_replay.md
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/prelit_path_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/delete_q_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+  evidence_limits:
+    - runtime 证据确认机械身份与完整可达图，不把图规模、步数或指标当作难度与审美结论。
+    - 目标难度 5 与高潮后的玩家感受仍需由独立 Puzzle Critic 基于当前 exact 实际布局判断。
+
+designer_self_verdict: submit_for_independent_review

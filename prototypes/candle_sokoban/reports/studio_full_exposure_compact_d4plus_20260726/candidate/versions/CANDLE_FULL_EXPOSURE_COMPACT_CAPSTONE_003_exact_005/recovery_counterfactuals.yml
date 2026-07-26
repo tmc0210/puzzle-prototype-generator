@@ -1,0 +1,27 @@
+schema_version: 1
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005
+graph_scope: complete
+probes:
+  - id: wrong_boundary_step5
+    inputs: [up, left, up, up, up]
+    observed_progress:
+      - light_brazier:7,3
+      - wick_reexposed_unlit:candle#2
+      - shrink:candle#3:len1
+    win_reachable_from_result: false
+  - id: delayed_wrong_two_braziers_step8
+    inputs: [up, left, up, up, up, down, left, left]
+    observed_progress:
+      - light_brazier:7,3
+      - light_brazier:1,5
+    remaining_failure: >-
+      接收烛仍未燃且保持两格；(7,5) 对其侧滚是实体挡块。完整子图无胜，轴推换线、已亮上盆补火、
+      供体返回及跨周期恢复均包含在 complete graph 的否定范围内。
+    win_reachable_from_result: false
+  - id: alternative_reignition_sources_on_winning_paths
+    forbidden_events:
+      - ignite_from_brazier:candle#2
+      - ignite_from_wick:candle#2
+    occurs_on_any_winning_path: false
+evidence_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/solution_family_audit.json

@@ -1,0 +1,63 @@
+runId: batch_003_active_interface_construction
+title: "主动建立并保全退焰共享接口"
+notes: "停止面选列与跨边界未来列读取两条不可折叠结构轴。"
+defaults:
+  maxStates: 300000
+cases:
+  - id: roll_stop_then_axis_direct
+    family: active_roll_stop_interface
+    variant: roll_then_axis
+    changed_variable: "先在有停止墙的下层侧滚一格，再于目标边界轴推上移"
+    contrast_with: [axis_first_late_overshoot, roll_without_stop_overshoot, roll_prealigned_removed_step]
+    layout_ref: layouts/roll_stop_positive.txt
+    actions: [right, down, down, right, up, up]
+  - id: axis_first_late_overshoot
+    family: active_roll_stop_interface
+    variant: axis_first_late
+    changed_variable: "把两次对象操作次序反转，先轴推到无停止墙的上层"
+    contrast_with: roll_stop_then_axis_direct
+    layout_ref: layouts/roll_stop_positive.txt
+    actions: [down, down, right, up, left, up, right]
+  - id: roll_without_stop_overshoot
+    family: active_roll_stop_interface
+    variant: stop_wall_removed
+    changed_variable: "删除下层一格侧滚停止墙"
+    contrast_with: roll_stop_then_axis_direct
+    layout_ref: layouts/roll_stop_no_wall.txt
+    actions: [right, down, down, right, up, up]
+  - id: roll_prealigned_removed_step
+    family: active_roll_stop_interface
+    variant: prealigned
+    changed_variable: "B 预先处于共享列与最终行，删除侧滚和建轨步骤"
+    contrast_with: roll_stop_then_axis_direct
+    layout_ref: layouts/roll_stop_prealigned.txt
+    actions: [left, right, left, right, left, right, up]
+  - id: staged_future_column_direct
+    family: active_future_release_column
+    variant: future_column
+    changed_variable: "第一次边界后保持未来释放列并第二次轴推"
+    contrast_with: [chase_current_cap_wrong_consumer, future_column_shifted_consumer, staged_prealigned_removed_step]
+    layout_ref: layouts/future_column_positive.txt
+    actions: [up, left, down, right, up, down, right, up, left, right, left, down, right, left, right, up, up]
+  - id: chase_current_cap_wrong_consumer
+    family: active_future_release_column
+    variant: chase_current_cap
+    changed_variable: "第一次边界后侧滚到 A 当前端帽列，再轴推追求提前点火"
+    contrast_with: staged_future_column_direct
+    layout_ref: layouts/future_column_positive.txt
+    actions: [up, left, down, right, up, right, down, right, up, left, right, up]
+  - id: future_column_shifted_consumer
+    family: active_future_release_column
+    variant: consumer_shifted_to_wrong_column
+    changed_variable: "只把 consumer 移到追当前端帽分叉的列"
+    contrast_with: chase_current_cap_wrong_consumer
+    layout_ref: layouts/future_column_shifted_consumer.txt
+    actions: [up, left, down, right, up, right, down, right, up, left, right, up]
+  - id: staged_prealigned_removed_step
+    family: active_future_release_column
+    variant: prealigned_future_column
+    changed_variable: "B 预先放在未来释放列的最终行"
+    contrast_with: staged_future_column_direct
+    layout_ref: layouts/future_column_prealigned.txt
+    actions: [left, right, left, right, left, right, left, right, left, right, left, right, left, right, left, up, up]
+

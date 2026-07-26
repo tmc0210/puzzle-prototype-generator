@@ -1,0 +1,156 @@
+workflow_id: redundant_element_prune
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+reviewed_exact_version: v003
+delivery_exact_version: v004
+checked_on: 2026-07-25
+authority_ref: prototypes/candle_sokoban/docs/redundant_element_prune.md
+redundant_element_prune:
+  status: normalized
+  candidate_discovery:
+    method: candle_redundancy_units_v2
+    fixed_stage_order:
+      - whole_candle_to_floor
+      - single_brazier_to_floor
+      - vacated_object_floor_region_to_wall
+      - detached_or_single_entry_floor_region_to_wall
+      - outer_outline_band_trim
+    counts:
+      whole_candle: 3
+      single_brazier: 3
+      vacated_object_floor_region: 0
+      detached_empty_region: 0
+      single_entry_floor_region: 4
+      outer_outline_band: 1
+    source_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v3/candidates.json
+  candidates_checked:
+    - candidate_unit: whole_candle:candle#1
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入只合法通过 19/28 步且最终不胜；writer 不可删。
+    - candidate_unit: whole_candle:candle#2
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 28 步可执行但最终不胜；主动 receiver/relay 不可删。
+    - candidate_unit: whole_candle:candle#3
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 28 步可执行但最终不胜；consumer 与终局读出不可删。
+    - candidate_unit: single_brazier:9,2
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: false
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 删除最终目标后第 20 步提前胜利，改变目标义务与胜利时机。
+    - candidate_unit: single_brazier:4,5
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入只合法通过 19/28 步且最终不胜；writer 复燃源不可删。
+    - candidate_unit: single_brazier:6,6
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: false
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范解虽仍在第 28 步胜利，但 gate 点盆事件和目标义务消失，违反已接受必经关系。
+    - candidate_unit: single_entry_floor_region:4:3,1:4
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events:
+        - extinguish_by_wall:candle#1
+      exposure_verdict: not_run
+      details: parser 检出开局静默墙灭火，立即改变初始结算。
+    - candidate_unit: single_entry_floor_region:3:9,1:3
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入 28 步后不胜，终滚从 d6 缩成 d4 且无法点最终火盆。
+    - candidate_unit: single_entry_floor_region:1:6,5:1
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入只合法通过 19/28 步，writer 滚距和首次转移被破坏。
+    - candidate_unit: single_entry_floor_region:2:10,8:3
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入只合法通过 24/28 步，终局操作路线被阻断。
+    - candidate_unit: outer_outline_band:left:0,0:22
+      operation: trim
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      details: >-
+        裁去左侧两列纯外墙；规范 28 步在 x+2 坐标投影后状态与事件逐步相同。v003 与 v004
+        完整图均为 12254 状态/33533 边/2 胜态/最短 28，全部状态键和边签名在投影后双向一致；
+        五组必经关系保持，没有新增机制或接触事件，exposure complete/pass。
+  post_trim_outline_rescan:
+    source_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v3/candidates_after_trim.json
+    outer_outline_band_count: 0
+  retained_aesthetic: []
+  artifact_refs:
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v3/candidates.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v3/canonical_probe.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v3/trim_left2_exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v3/trim_left2_projection_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v3/candidates_after_trim.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v004/delivery_manifest.yml
+  delivery_layout_changed: true
+  version_effect: review_preserving_change
+  preservation_basis: >-
+    只裁去左侧两列纯外墙；完整图在固定坐标平移后全状态、全边严格同构，规范时间线、最短成本、
+    两个胜态、全部已接受关系、对象参与和 exposure 均保持，且无新增机制事件。
+status: completed

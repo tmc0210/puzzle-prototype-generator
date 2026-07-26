@@ -1,0 +1,80 @@
+design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725_02
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+reviewed_exact_version: v001
+delivery_exact_version: v002
+workflow_results:
+  - workflow_id: redundant_element_prune
+    applicability: applicable
+    applicability_basis: Candle delivery 前固定运行。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/redundant_element_prune.md
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery:
+      method: candle_redundancy_units_v2
+      candidate_units:
+        - {kind: whole_candle, id: candle#1, cells: [[3,3], [4,3]]}
+        - {kind: whole_candle, id: candle#5, cells: [[4,5], [5,5]]}
+        - {kind: whole_candle, id: candle#single3, cells: [[4,6]]}
+        - {kind: whole_candle, id: candle#6, cells: [[5,7], [6,7]]}
+        - {kind: whole_candle, id: candle#2, cells: [[5,8], [5,9], [5,10]]}
+        - {kind: whole_candle, id: candle#3, cells: [[6,8], [7,8], [8,8]]}
+        - {kind: single_brazier, id: brazier_2_1, cells: [[2,1]]}
+        - {kind: detached_empty_region, id: detached_5_6_6_6, cells: [[5,6], [6,6]]}
+        - {kind: single_entry_floor_region, id: top_left_deadend, cells: [[1,1]]}
+        - {kind: single_entry_floor_region, id: main_open_region, cell_count: 41}
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune.yml
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v002/delivery_manifest.yml
+    version_effect: review_preserving_change
+    acceptance_preserved: true
+    preservation_basis: >-
+      只墙化 x1,y1 单格死端；规范回放、complete win-reaching 子图、最短成本、必经事件、对象参与与
+      exposure 全部保持，无新增机制事件。所有其它固定枚举候选均未应用。
+    status: completed
+
+  - workflow_id: strict_exposure_gate_recheck
+    applicability: applicable
+    applicability_basis: delivery v002 已形成，必须核对当前 exact 的 exposure 硬门。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery: null
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/strict_exposure_gate_recheck.yml
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v002/diagnostics/exposure_audit.json
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 只读核对 delivery v002 的 complete/pass exposure，不改变布局。
+    status: completed
+
+  - workflow_id: runtime_conformance_recheck
+    applicability: applicable
+    applicability_basis: delivery v002 准备进入待玩列表。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    candidate_discovery: null
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/runtime_conformance_recheck.yml
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 只读类型与 runtime 一致性检查，不改变 delivery v002。
+    status: completed
+
+  - workflow_id: playable_delivery_build
+    applicability: applicable
+    applicability_basis: v002 接入 studio level 与 queue 后必须重建 playable。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    candidate_discovery: null
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/playable_delivery_build.yml
+      - prototypes/candle_sokoban/studio/levels.yml
+      - prototypes/candle_sokoban/playable_queue.yml
+      - prototypes/candle_sokoban/playable/data.json
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 交付接线和 playable 构建不改变 v002 exact。
+    status: completed
+
+overall_status: completed

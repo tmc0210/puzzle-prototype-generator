@@ -1,0 +1,12 @@
+import { readFile, writeFile } from "node:fs/promises";
+const source = process.argv[2]!;
+const output = process.argv[3]!;
+const target = process.argv[4]!;
+const rows = (await readFile(source, "utf8")).replace(/\r/g, "").trimEnd().split("\n");
+const currentY = rows.findIndex((row, index) => index > 9 && row.includes("o"));
+const currentX = currentY >= 0 ? rows[currentY]!.indexOf("o") : -1;
+if (currentX < 0) throw new Error("missing lower target");
+rows[currentY] = `${rows[currentY]!.slice(0, currentX)}.${rows[currentY]!.slice(currentX + 1)}`;
+const [x, y] = target.split(",").map(Number);
+rows[y] = `${rows[y]!.slice(0, x)}o${rows[y]!.slice(x + 1)}`;
+await writeFile(output, `${rows.join("\n")}\n`, "utf8");

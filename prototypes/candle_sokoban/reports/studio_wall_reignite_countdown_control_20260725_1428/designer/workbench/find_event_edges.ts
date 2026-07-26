@@ -1,0 +1,11 @@
+import { readFile } from "node:fs/promises";
+import { enumerateRuntimeGraph } from "../../../../../../src/core/runtimeGraph.js";
+import { loadPrototypePackage } from "../../../../../../src/core/io.js";
+import { getRuntimeAdapter } from "../../../../../../src/prototypes/runtimeAdapter.js";
+const layout = `${(await readFile(process.argv[2]!, "utf8")).replace(/\r/g, "").trimEnd()}\n`;
+const wanted = process.argv[3]!;
+const pkg = await loadPrototypePackage("prototypes/candle_sokoban"); const adapter = getRuntimeAdapter(pkg.mechanic); const runtime = adapter.createRuntime(pkg.mechanic);
+const initial = adapter.parseLevel({ id: "find-event", title: "find-event", layout, global_burn_cycle: 5, win: pkg.mechanic.win });
+const graph = enumerateRuntimeGraph(runtime, initial, pkg.mechanic.win, { winCondition: pkg.mechanic.win }, { maxStates: 100000, terminalizeWins: true });
+const edge = graph.edges.find((candidate) => candidate.events.some((event) => event.includes(wanted)));
+console.log(JSON.stringify({ status: graph.status, edge: edge ? { from: edge.from, to: edge.to, action: edge.action, events: edge.events, fromKey: graph.keys[edge.from], toKey: graph.keys[edge.to] } : null }, null, 2));

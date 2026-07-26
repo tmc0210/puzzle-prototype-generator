@@ -1,0 +1,91 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+assignment_id: candle_all_mechanics_002_revision_004_human_non_stitched_successor
+basis_version: v004
+status: workbench_validated_not_yet_published
+target_difficulty: 5
+minimum_difficulty: 4
+
+structural_revision: change_structure_family
+withdrawn_family: >-
+  v004 的中央 gate 之后只有一个既成输出；右翼不筛选任何早期状态，删去后只是让同一前缀提前胜利。
+  本轮不保留 gate、第三根 consumer、右翼几何或“唯一输出后再延长”的结构。
+
+structural_hypothesis: >-
+  把两格朝上 relay 的纵向停靠做成整个作品的写入值。玩家可以把 relay 下推一格或两格；两种位置
+  都能让已烧成两格的 writer 在同一次下滚中先由墙灭火、后由已亮火盆复燃，随后停住并在下一
+  边界以退焰点燃 relay，因此两者都是眼前完整的局部成功。差异只在 relay 的纵坐标：一推输出的
+  lit relay 占 y6-y7，二推输出占 y7-y8。左下目标位于 y7，且 relay 只有两格长；下一边界后，一推
+  输出缩成 y7 单格、火焰在 y6，横滚时目标反而作为同排实体挡块，若再等一界则 relay 直接燃尽；
+  二推输出缩成 y8 单格、火焰正位于 y7，横滚才会在终点前点亮目标。因而较晚目标主动筛选较早
+  两个局部成功输出，最终一步不是消费唯一状态的尾段。
+
+difficulty_5_reasoning:
+  - >-
+    玩家必须从左下目标反推 relay 在第一次点火后还要经过一次共享边界，进而反推出开局应下推
+    两格而非一格；局部 writer 接力本身无法给出这个答案。
+  - >-
+    同时还要让四格 writer 先经历两次自然缩短，使其端帽/灯芯列移到 relay 列；过早滚动即使能
+    完成墙灭与火盆复燃，也不能在缩短时释放正确覆盖格。
+  - >-
+    关键下滚的 stop distance 由早先 relay 深度决定：一推是 d3，二推是 d4；两者都保留 lit 末态并
+    触发 shrink_ignite，玩家不能用“有没有成功接火”作为即时判据，只能读取未来目标需要的火焰行。
+  - >-
+    relay 只有两格，使错误一推输出没有靠多等一轮修正的余量；这要求把对象长度、目标行、共享相位
+    与最终横滚的 wick/body 分层关系共同纳入计划。
+  - >-
+    目标难度 5 来自一次早期空间选择同时决定 stop distance、退焰接收坐标和第二边界后的 wick 行；
+    走位、原地调相与事件数量不计入难度。当前实物至少达到复合反推的难度 4 下界，是否达到 5
+    留给独立 Critic 与人类试玩判断。
+
+two_locally_successful_outputs:
+  pushed_once:
+    writer_roll: d3
+    local_completion:
+      - extinguish_by_wall:candle#1
+      - ignite_from_brazier:candle#1:6,5
+      - roll_reignite_after_extinguish:candle#1:d2->d3
+      - shrink_ignite:candle#2
+    output_state: relay lit,len2,cells=(7,7)(7,6); writer lit,len1,cell=(8,5)
+    global_fate: complete graph 中不能到达正常胜利
+  pushed_twice:
+    writer_roll: d4
+    local_completion:
+      - extinguish_by_wall:candle#1
+      - ignite_from_brazier:candle#1:6,5
+      - roll_reignite_after_extinguish:candle#1:d2->d3
+      - shrink_ignite:candle#2
+    output_state: relay lit,len2,cells=(7,8)(7,7); writer lit,len1,cell=(8,6)
+    global_fate: 七步内可到达正常胜利
+
+downstream_reader:
+  demand: 下一边界后 relay 的外露火焰必须在 y7，而实体必须在 y8，才能左滚越过目标 (2,7)
+  rejects_pushed_once: 下一边界后实体在 y7、火焰在 y6；目标作为实体挡块阻止穿越，再等一界则单格 relay 燃尽
+  accepts_pushed_twice: 下一边界后实体在 y8、火焰在 y7；左滚途中 d5 点亮目标并在 d6 端点前正常胜利
+
+deletion_test_hypothesis: >-
+  删除左下目标与 relay 横滚区，并把正常胜利重定向到 writer 公共滚动轨道的 (6,3) 时，一推 d3
+  与两推 d4 两条历史都正常胜利；完整 exact 则全部胜路至少需要两次 relay 轴推和 writer d4。
+  因而删除后继使早期输出等价类从“只接受二推”扩大为“至少一推、二推都接受”，不是同一前缀单纯早胜。
+
+identity_tests:
+  - 任一完整胜路若少于两次 push_axis:candle#2，较晚目标没有反向筛选早期停靠，身份失败。
+  - 任一完整胜路若不用 writer d4 而接受一推 d3 输出，双局部成功筛选身份失败。
+  - 一推输出若仍可通过多等一界、再推、灭火校正或其它蜡烛点亮目标，长度锁身份失败。
+  - writer 若不在同一次滚动中墙灭后由 (6,5) 火盆复燃仍能胜，滚动写入身份失败。
+  - relay 若不经 writer 的 shrink_ignite 即可点火，跨边界传递身份失败。
+  - 最终目标若可由 writer 或其它火源点亮，较晚读取身份失败。
+  - 删去左下目标/滚动区并重定向中段胜利后，一推与两推若仍不重新等价，非拼接声明失败。
+
+current_evidence:
+  full_graph: complete,98961_states,276326_edges,2_raw_wins
+  local_output_audit_ref: designer/workbench/downstream_coupling_audit.json
+  deletion_layout_ref: designer/workbench/counterfactual_suffix_deleted_redirected.txt
+  deletion_graph: complete,30117_states,81972_edges,25_raw_wins
+  full_win_minimum_relay_pushes: 2
+  full_one_push_local_output_win_reachable: false
+  full_two_push_local_output_win_reachable: true
+
+publication_gate: >-
+  只有当前布局的完整 replay、完整图、两类局部输出、删区重定向、全胜路事件必要性、exposure、
+  身份反事实、对象参与与玩家侧重读同时闭合后，才发布新 exact；否则继续覆盖工作台。

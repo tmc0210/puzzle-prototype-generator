@@ -1,5 +1,5 @@
 schema_version: 1
-design_task_id: candle_wall_reignite_experience_brief_001
+design_task_id: candle_wall_reignite_countdown_control_20260725_1428
 candidate_id: candle_shared_fire_wall_timing_20260725_1428
 
 prototype_context:
@@ -46,12 +46,10 @@ task_exploration:
   task_index_ref: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration/lexicon_index.md
   first_material_batch_ref: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration/runs/batch_wall_reignite_001/batch.yml
   selected_material_refs:
-    - wall_stop_shared_countdown_reignite.brazier_same_cell_midcycle
-    - shared_countdown_reignite_source.exposed_wick_same_cell_midcycle
-    - shared_countdown_boundary_reignite.brazier_ignite_at_countdown_one
-    - shared_countdown_boundary_reignite.wick_source_at_countdown_one
-    - wall_douse_boundary_avoid
-    - wall_then_source_offset
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration/lexicon.md
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration/lexicon_index.md
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration/runs/batch_wall_reignite_001/report.md
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/exploration/runs/batch_wall_reignite_001/results.json
 
 archive_calibration:
   full_index_or_retrieval_summaries_read: true
@@ -81,27 +79,27 @@ archive_calibration:
     - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/archive_calibration.yml
 
 experience_core:
-  experience_statement: 玩家亲自把一根正在燃烧、看似必须赶紧使用的蜡烛推入同一面墙使其熄灭，主动把它从本轮燃烧中保存下来；随后利用仍在流逝的共享倒数，把另一根蜡烛送进同格火源复燃，并在下一次 t1 边界前决定再次让墙面暂停哪一根、何时让同一组火源重新接上。玩家最终发现墙不是一次性灭火按钮，而是反复改写蜡烛参与倒数时机的“闸门”。
-  visible_setup: 开局把同一面有缺口的墙、两条可被墙边停位的蜡烛、一个已点亮火盆和一条可移动的燃烧火源放在同一读图关系中；火盆与外露烛芯的同格/错列差异可见但不能直接兑现。
-  player_action: 玩家必须按共享倒数选择先灭火、跨过边界保存长度、再把未燃烛芯送入火盆或另一根外露燃烛芯；随后将已经使用过的墙边停位和火源槽重新安排，在不同倒数相位重复该因果关系，而不是分别完成几个独立 witness。
-  visible_payoff: 墙边蜡烛保持原长度跨过 t1，复燃动作不重置倒数；若复燃正好发生在 t1，蜡烛立即缩短并改变后续可达的火源/站位关系，之后同一墙口再次灭火或放行会让玩家看到之前的时序选择被回收。
-  why_level_exists: 把前序的墙体灭火和共享倒数从一次性规则见证提升为同一组空间关系的反复时序控制：玩家必须为后继复燃所需的长度、火源和墙口状态提前作选择，且后继结果会反过来决定前面哪一次灭火才是正确的。
+  experience_statement: 玩家先把正在燃烧的长蜡烛送入墙口使其熄灭，接受共享倒数仍会流逝，却把这次保存换成更晚的火源接触；随后让第二根未燃蜡烛接入火盆，等待三次边界缩短改变它的可用长度，再把目标送入唯一终止位。墙是时序闸门：它改变哪根蜡烛此刻参与燃烧，而不是一次性按钮。
+  visible_setup: 开局同时可读到顶端的墙口—燃烧蜡烛—已燃火盆关系，以及右下未燃蜡烛、下方火盆和墙边目标槽；亮/灭状态提示先后职责，但不依赖静默点火。
+  player_action: 玩家必须先完成墙灭火并穿过共享倒数边界，再在中段火源槽让第二根蜡烛接火，主动等待长度变化，最后从正确操作侧把它送入目标；这些动作共享同一倒数和墙边站位，不是并列子题。
+  visible_payoff: 第一根蜡烛跨过 t1 仍保留长度，第二根蜡烛接火发生在中段并随后缩短三次；顶端目标先被点亮，末端目标只在长度和站位同时正确时兑现，胜利立即收束。
+  why_level_exists: 把前序墙灭火、共享倒数和火盆接火压进一个连续的双对象时序：前段保存的行动窗口决定玩家能否读懂后段等待，后段的长度兑现再决定最终目标槽可达。
   core_boundary:
     central_objects:
-      - 同一面有缺口的墙及其两个可重复使用的墙边停位
-      - 至少两根会在不同阶段被墙灭火、保存、复燃并再次改变状态的蜡烛
-      - 已点亮火盆与外露燃烛芯两种共享火源
-      - 全局倒数 t3/t1 相位与边界缩短/避烧差异
+      - 顶部墙口及其墙边停位，负责把燃烧蜡烛从倒数中暂时摘出
+      - 一根先灭火再由火盆复燃的长蜡烛，以及一根后继接火并跨三次边界缩短的蜡烛
+      - 两个已点亮火盆作为共享火源，两个目标火盆作为连续回报
+      - 全局倒数 t4/t1 相位与边界缩短/避烧差异
     supporting_objects:
       - 最终需要点亮的未点亮火盆
       - 只承担站位、滚动阻挡和读图节奏的普通墙/地面
 
 work_identity:
   conditions:
-    - 规范胜解必须至少两次使用同一墙面造成有效 extinguish_by_wall，并让灭火后的未燃长度跨越共享倒数边界。
-    - 规范胜解必须至少一次以已点亮火盆、至少一次以外露已燃烛芯作为同格复燃来源；两种来源不是并列装饰，而要改变后续倒数/站位选择。
-    - 至少一次复燃发生在 t1 边界并参加当轮缩短，至少一次复燃发生在中段并把后续灭火/复燃安排传回此前决定。
-    - 关键蜡烛在前序和后继中承担不同但连续的时序职责；任何单独删去墙边保存、火源来源或后继再灭火关系都应使完整胜解或核心回报消失。
+    - 规范胜解必须使用墙口造成有效 extinguish_by_wall，并让第一根燃烧蜡烛跨越共享倒数边界而不缩短；该保存必须改变后段火源接入时机。
+    - 规范胜解必须先以已点亮火盆复燃第一根蜡烛，再以另一已点亮火盆点燃后继蜡烛；两次接火分别改变前段回报与后段长度窗口。
+    - 后继蜡烛必须经历三次共享倒数缩短，且最终目标点火发生在一次完整结算中；提前接火或提前进入目标槽都不构成同一回报。
+    - 两根蜡烛在前序和后继中承担不同但连续的时序职责；删除墙口、顶端火源、下方火源或任一目标火盆都应破坏规范胜解或作品回报。
   counterfactuals:
     - 把同一墙的缺口改成完全开放地面，应产生新的火源/路线或失去必需的墙灭火时序，不能保持作品身份。
     - 将火盆错开一列或把外露烛芯改为烛身相邻，应保留轴推合法性但失去复燃及后续倒数消费，证明同格火源关系有职责。
@@ -111,7 +109,7 @@ work_identity:
 level_brief:
   packaging_intent: complete_single_level
   expected_difficulty: 4
-  expected_scale: 紧凑的双墙口/共享火源中庭，3 根左右蜡烛、3 个火盆，前后关系交织但高潮后立即结束
+  expected_scale: 紧凑的双区共享火源中庭，2 根蜡烛、4 个火盆，前后关系交织但高潮后立即结束
   expected_player_load: 玩家需要维护全局倒数相位，判断两次墙灭火的保存价值、火源来源替换和 t1 复燃是否应立即缩短；不依赖盲目试错或大量无意义走位
 
 allowed_design_sources:

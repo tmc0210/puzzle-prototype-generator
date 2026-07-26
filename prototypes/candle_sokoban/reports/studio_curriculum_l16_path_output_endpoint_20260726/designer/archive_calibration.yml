@@ -1,0 +1,324 @@
+schema_version: 1
+design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/assignments/designer_revision_001_human_archive.yml
+designer_stage: revision_after_human_archive
+calibration_status: complete
+
+scope_boundary:
+  purpose: >-
+    只用 clean human-reviewed archive 校准玩家侧审美、作品密度和失败下界；
+    跨原型样本不提供 Candle 布局、对象映射或机制实现模板。
+  revision_authorized_candle_sources_read:
+    - prototypes/candle_sokoban/design_archive/index.yml
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0001.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0002.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0003.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0004.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/human_feedback/exact_001.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001
+  still_excluded_candle_sources:
+    - 未在当前 revision assignment 中逐项授权的其它 Candle 旧 reports、旧候选和既有待玩关。
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - 当前任务尚未由 Explorer 正式发布的材料。
+  controller_state_not_written:
+    - candidate_ledger.yml
+    - dispatch.yml
+    - review、Critic、接受、提交前与待玩状态
+
+candle_archive_revision_calibration:
+  index:
+    ref: prototypes/candle_sokoban/design_archive/index.yml
+    sha256: 68563d7194d8c6685c48bbe838b292491dcf07cb69f8067c48a4c71dfa8c2b59
+    complete_index_read: true
+    candidate_count: 4
+    all_candidate_cards_read: true
+  candidate_cards:
+    - candidate_id: CANDLE_CAND_0001
+      ref: prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0001.md
+      sha256: 03f1fe7060dd9becc6a9331f7a66926571bd9efe84e4c17fa812c84b1448cf1e
+      human_comment_id: HP_CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001_v2_001
+      aesthetic_score: 3
+      difficulty_score: 3
+      weight: related_positive_lower_bound
+      calibration_read: >-
+        退焰和多事件链能形成一定洞见，但人类只认作难度 3 常规流程；事件丰富不能为 L16 的难度 5 背书。
+    - candidate_id: CANDLE_CAND_0002
+      ref: prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0002.md
+      sha256: 0f7c686c4c7b1dd246ec244b0fad95aca61cfc52a6e5e7b9e1791ba6db2e9bbc
+      human_comment_id: HP_CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002_v006_001
+      aesthetic_score: 3
+      difficulty_score: 2
+      weight: direct_binary_choice_lower_bound
+      calibration_read: >-
+        开局写入一次或两次、末端再读回的普通二择即使机械成立也只有难度 2；
+        新结构不能把“选距离、选次数、选先后”包装成反向约束。
+    - candidate_id: CANDLE_CAND_0003
+      ref: prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0003.md
+      sha256: 7edee7bce62d9431374f20ad2eb78316a4646d3661cb04a4c8c001af88ba7a57
+      human_comment_id: HP_CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001_exact_001_001
+      aesthetic_score: 1
+      difficulty_score: 2
+      weight: highest_weight_direct_counterexample
+      calibration_read: >-
+        这是本 revision 的最高权重直接反例。exact_001 虽有严格途中点盆、尾端 consumer、完整图和解族证据，
+        玩家实际只需先推左上对象，之后盲目右推，首个承诺后决策空间坍塌；任何同构流程都必须否决。
+    - candidate_id: CANDLE_CAND_0004
+      ref: prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0004.md
+      sha256: f2fcf9ad792d7f7ce5831f4e05d207845f7c74e124adf4519d9c4615d406d6f4
+      human_comment_id: HP_CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001_V4_001
+      aesthetic_score: 3
+      difficulty_score: 3
+      weight: compact_reuse_positive_lower_bound
+      calibration_read: >-
+        紧凑空间和路径复用能避免顺序锁读作拼接，但“先灭火、再处理另一对象、再复燃”仍只到难度 3；
+        新 L16 需要更强的跨阶段判断，而不是再加一个顺序锁。
+  human_feedback:
+    ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/human_feedback/exact_001.yml
+    sha256: 90607723d97802005256e9361912cf820a22f66cbc89859bbc5bc0eaff71e7c6
+    exact_version: exact_001
+    human_scores: {aesthetic: 1, difficulty: 2}
+    direct_failure: >-
+      玩家开局面对的只是“先动哪支蜡烛”，正确承诺后没有新的实质判断；长走位、重复右推和丰富事件都未形成玩家负荷。
+  exact_001_frozen_baseline:
+    ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001
+    layout_sha256: 61e8934282bc48a21ae200ea7ec2c99309ab24617df79a0f8c5673f13fa34d2b
+    directory_verified_unchanged: true
+    mechanical_fact_not_a_quality_defense: >-
+      complete/pass、13 个胜点和必经事件证明机械身份，却不能反驳人类对审美 1、难度 2 与决策坍塌的裁决。
+  revision_design_threshold:
+    - 首次不可逆或有代价的承诺之后，至少保留一个不能靠盲推完成的实质判断。
+    - 该后续判断必须读取 consumer 的操作面、燃烧长度、遮蔽状态或停点，并反向筛选长滚前的路径与端点规划。
+    - 错误前段构造应能完成途中输出或局部接口之一，但在后段暴露缺失关系；不得只是开局二择后立刻撞墙。
+    - 主要对象和同一紧凑空间必须在承诺前、核心长滚和 consumer 阶段连续复用，不能前段对象退休、后段另起题。
+    - 难度说明必须逐项列出玩家判断及其可见信息来源；不引用图规模、事件数、步数或重复轴推作为难度理由。
+  direct_difference_requirements:
+    versus_CANDLE_CAND_0002: >-
+      不使用一次/两次、先/后、左/右等普通二择作为核心；后段必须要求组合读取至少两个前段留下的关系。
+    versus_CANDLE_CAND_0003: >-
+      首个正确动作不能决定余下全部流程；核心长滚之后仍须有会失败、且失败原因能回指长滚规划的实质 consumer 判断。
+
+archive_indexes_or_retrieval_summaries_read:
+  - ref: prototypes/ice_slide_escape/design_archive/index.yml
+    sha256: 7b6ee9e98c8fea77004e596e1c3210b2b412942bbc116c082aeb7ade4fdfc18a
+    complete_index_read: true
+    all_candidate_retrieval_summaries_read: true
+    candidate_count: 33
+    clean_archive_count: 15
+    clean_human_reviewed_count: 14
+    clean_candidate_ids:
+      - ICE_CAND_0002
+      - ICE_CAND_0003
+      - ICE_CAND_0004
+      - ICE_CAND_0006
+      - ICE_CAND_0011
+      - ICE_CAND_0012
+      - ICE_CAND_0015
+      - ICE_CAND_0019
+      - ICE_CAND_0020
+      - ICE_CAND_0022
+      - ICE_CAND_0024
+      - ICE_CAND_0033
+      - ICE_CAND_0034
+      - ICE_CAND_0035
+      - ICE_CAND_0037
+    boundary_note: ICE_CAND_0003 没有人类原评语，不作为人类审美锚点。
+  - ref: prototypes/reality_anchor/design_archive/index.yml
+    sha256: aa61c31fd65609a776437bd12218a5b4bdd9a19b3706ba32ee061fed6e609304
+    complete_index_read: true
+    all_candidate_retrieval_summaries_read: true
+    candidate_count: 32
+    clean_archive_count: 32
+    clean_human_reviewed_count: 32
+    clean_candidate_ids:
+      - RA_CAND_0001
+      - RA_CAND_0002
+      - RA_CAND_0003
+      - RA_CAND_0004
+      - RA_CAND_0005
+      - RA_CAND_0006
+      - RA_CAND_0007
+      - RA_CAND_0008
+      - RA_CAND_0009
+      - RA_CAND_0010
+      - RA_CAND_0011
+      - RA_CAND_0012
+      - RA_CAND_0013
+      - RA_CAND_0014
+      - RA_CAND_0015
+      - RA_CAND_0016
+      - RA_CAND_0017
+      - RA_CAND_0018
+      - RA_CAND_0019
+      - RA_CAND_0020
+      - RA_CAND_0021
+      - RA_CAND_0022
+      - RA_CAND_0023
+      - RA_CAND_0024
+      - RA_CAND_0025
+      - RA_CAND_0026
+      - RA_CAND_0027
+      - RA_CAND_0028
+      - RA_CAND_0029
+      - RA_CAND_0030
+      - RA_CAND_0031
+      - RA_CAND_0032
+
+all_aesthetic_1_records_read:
+  - candidate_id: ICE_CAND_0002
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0002.md
+    human_comment_id: HC_001
+    calibration_read: >-
+      工具支持和局部死路不能补偿玩家按直觉“看到什么推什么”即可完成；
+      对目标难度 5，必须存在需要预见后继的真实选择。
+  - candidate_id: ICE_CAND_0004
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0004.md
+    human_comment_id: HC_001
+    calibration_read: >-
+      三次重复的简单教学仍是教学；L16 不能靠重复长滚或累计途中事件伪装深化。
+  - candidate_id: ICE_CAND_0011
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0011.md
+    human_comment_id: HC_ICE_CAND_0011_001
+    calibration_read: >-
+      核心顺序逻辑成立仍不足够；冗余空间、可删除开局、未披露多解和正例形状污染
+      都会让完整作品失格。
+  - candidate_id: ICE_CAND_0037
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0037.md
+    human_comment_id: HC_ICE_CAND_0037_001
+    calibration_read: >-
+      重复步骤拼接、无洞见和接口外溢是致命问题；完整图与 required event
+      不能替代作品身份和接口隔离。
+  - candidate_id: RA_CAND_0024
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md
+    human_comment_id: HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001
+    calibration_read: >-
+      高机制信号会抬高玩家预期；若实际只兑现普通腾挪，即使指标漂亮也会形成严重落差。
+  - candidate_id: RA_CAND_0027
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md
+    human_comment_id: HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001
+    calibration_read: >-
+      可见对象的高 affordance 必须被实际使用；对 L16，途中火盆与终点实体接口都不能只是可见但无责。
+  - candidate_id: RA_CAND_0030
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md
+    human_comment_id: HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001
+    calibration_read: >-
+      大地图、大量对象和反馈迟缓的自然 deadend 不产生相称亮点，也不能承担难度 5。
+  - candidate_id: RA_CAND_0031
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md
+    human_comment_id: HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001
+    calibration_read: >-
+      机制事件齐全若集中在不被后续复用的单行道开场，仍是无效演出；准备段必须直接服务核心长滚。
+  - candidate_id: RA_CAND_0032
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md
+    human_comment_id: HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001
+    calibration_read: >-
+      前段对象退休、后段另起 witness 是割裂子题；L16 的后继必须消费长滚终点并把约束传回滚动前。
+
+related_positive_records_read:
+  - candidate_id: ICE_CAND_0019
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0019.md
+    human_comment_id: HC_ICE_CAND_0019_001
+    why_related: >-
+      延迟显现的 stopper 让早期动作在后继中获得回读价值，适合校准“终点接口把约束传回长滚选择”；
+      同时其复合锁 caveat 提醒 L16 仍需要一个清楚的核心亮点。
+  - candidate_id: ICE_CAND_0024
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0024.md
+    human_comment_id: HC_ICE_CAND_0024_001
+    why_related: >-
+      强空间与要素复用使两段不读作独立子关；L16 的路径输出和终点 consumer
+      也必须共享同一空间关系，而不是两端拼接。
+  - candidate_id: ICE_CAND_0033
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0033.md
+    human_comment_id: HC_ICE_CAND_0033_001
+    why_related: >-
+      审美 5、难度 2 证明作品价值不靠复杂度；小误导、小反转和同一对象重读
+      可以比堆叠更多机制更有力。
+  - candidate_id: RA_CAND_0001
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0001.md
+    human_comment_id: HC_RA_CAND_0001_001
+    why_related: >-
+      玩家视角矛盾、设计密度和强要素耦合是目标难度 5 的正面参照。
+  - candidate_id: RA_CAND_0022
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md
+    human_comment_id: HP_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_001
+    why_related: >-
+      短步骤、紧凑空间和反直觉但可回读的动作可承载强洞见；L16 不需要用长流程补足难度。
+  - candidate_id: RA_CAND_0029
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0029.md
+    human_comment_id: HP_STUDIO_L_1_001
+    why_related: >-
+      同一组要素的两次使用结构不同且最终归位，校准了“复用”应改变局部关系而非重复动作。
+
+related_lower_bound_or_boundary_records_read:
+  - candidate_id: ICE_CAND_0012
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0012.md
+    human_comment_ids:
+      - HC_ICE_CAND_0012_001
+      - HC_ICE_CAND_0012_002
+    boundary_read: >-
+      清楚逻辑链和多次强复用仍可能只达到功能下界；若所有推进都顺着最显眼方向，缺少真实洞见。
+  - candidate_id: ICE_CAND_0020
+    record_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0020.md
+    human_comment_id: HC_ICE_CAND_0020_001
+    boundary_read: >-
+      跨段复用可能只适合功能性路线衔接，不能反向拔高每段自身质量；
+      L16 不能把“途中盆 + 后继对象”两项并列存在误报为强 application。
+  - candidate_id: RA_CAND_0019
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0019.md
+    human_comment_id: HP_RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1_001
+    boundary_read: >-
+      第一步与后续都过于显然时只能算简单应用；难度 5 必须来自对双重结果的预见，而非执行步骤。
+  - candidate_id: RA_CAND_0020
+    record_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0020.md
+    human_comment_id: HP_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_001
+    boundary_read: >-
+      重复动作只有在清晰几何下才勉强形成可用下界；L16 应避免用多次相似长滚填充流程。
+
+calibration_conclusions_for_l16:
+  - >-
+    核心单位必须是一记不可拆的长侧滚：途中永久点亮一个标准胜利必要火盆，
+    同时在终点留下被后继对象直接读取的实体接口。
+  - >-
+    两项职责必须共同改变滚动前的玩家选择。若删掉后继后，长滚终点选择不再需要区分，
+    或预亮途中火盆后仍保留完整谜题，则原包装没有把两项责任耦合成同一关。
+  - >-
+    终点 consumer 必须足够接近并把约束传回此前判断；不得在核心后另起一段独立子题，
+    也不得让滚烛在高潮后承担清理劳动。
+  - >-
+    难度 5 应来自玩家同时预见路径火焰投影、最终身体占格、后继对象操作面与标准胜利义务；
+    不来自大地图、长走位、重复长滚、对象数量或事件数量。
+  - >-
+    途中点盆不能只是 roll_intermediate 事件 witness。火盆必须属于 all_braziers_lit 目标，
+    且在所有允许胜解中由该长滚的途中小步负责。
+  - >-
+    终点实体接口不能只是稳定停块的展示。后继对象必须实际使用该占格改变停点、操作面、
+    遮蔽关系或可进入格，并继续通向剩余标准胜利目标。
+  - >-
+    首次教学滚动小步结算时允许产生清楚惊喜，但正式解题负担必须落在可回读、可预见的双重规划上，
+    不能把规则不知道或操作不准当作难度。
+  - >-
+    归档仅提供审美关系；任何具体布局、坐标、冰块/锚点形态和动作链均不进入 Candle 正式设计来源。
+
+human_comment_refs:
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0002.md#HC_001"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0004.md#HC_001"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0011.md#HC_ICE_CAND_0011_001"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0037.md#HC_ICE_CAND_0037_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md#HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md#HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md#HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md#HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md#HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0012.md#HC_ICE_CAND_0012_001"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0012.md#HC_ICE_CAND_0012_002"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0019.md#HC_ICE_CAND_0019_001"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0020.md#HC_ICE_CAND_0020_001"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0024.md#HC_ICE_CAND_0024_001"
+  - "prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0033.md#HC_ICE_CAND_0033_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0001.md#HC_RA_CAND_0001_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0019.md#HP_RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0020.md#HP_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md#HP_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_001"
+  - "prototypes/reality_anchor/design_archive/candidates/RA_CAND_0029.md#HP_STUDIO_L_1_001"

@@ -1,0 +1,61 @@
+schema_version: 1
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/revision_007_exact005_identity.yml
+designer_instance_id: candle_full_exposure_compact_designer_revision_007
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version_basis: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005
+published_exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006
+
+evidence_failure_answered:
+  exact_005_difference: >-
+    14 步族在首次 shrink_ignite 后持续保火；18/20 步族会让接收者被供体烛身熄灭，再依赖
+    第二次 shrink_ignite。两者依赖因果不同，exact_005 的 equivalent_variants_only 声明无效。
+  response_kind: layout_and_mechanical_revision
+  actual_change: >-
+    把交叉供体初始长度从三格缩为两格，并将其左端右移一格，交叉芯位和其它核心对象不变。
+    第一次边界后供体因此只剩单格；它仍能被再利用点上盆，但若回占交叉芯位熄灭接收者，
+    下一边界只会 burn_out，无法第二次 shrink_ignite。
+  not_a_textual_reclassification: true
+
+player_side_revision_judgment:
+  active_decisions:
+    - 第五步在辅助烛与交叉供体之间选择：移动辅助烛，主动保留供体完成首次交接。
+    - 首次交接后保留接收者火态，同时把缩短供体分配给上盆；用供体重遮会不可恢复。
+    - 最终长滚消费同一接收者的持续火态，并把此前判断集中兑现为两个途中火盆。
+  excluded_quality_proxies:
+    - forced-viable 数量、比例或连续段
+    - win-reachable outdegree
+    - 完整图规模或唯一胜态本身
+
+mechanical_result:
+  canonical_replay: 14 步正常胜利
+  complete_graph:
+    status: complete
+    reachable_states: 51042
+    legal_transitions: 147660
+    winning_states: 1
+  solution_family:
+    result: unique_complete
+    all_winning_paths_exactly_one_receiver_shrink_ignite: true
+    receiver_body_extinguish_on_any_winning_path: false
+    alternative_receiver_reignite_on_any_winning_path: false
+  recovery_counterfactuals:
+    wrong_boundary_step5_win_reachable: false
+    wrong_branch_delayed_after_two_braziers_win_reachable: false
+    reconceal_then_singleton_donor_burnout_win_reachable: false
+  exposure:
+    verdict: pass
+    graph_status: complete
+    forbidden_hits: 0
+
+artifact_refs:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/submission_packet.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/recovery_counterfactuals.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/object_participation.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/player_readthrough.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exposure_audit.json
+
+designer_result: exact_006 已冻结，提交 Controller 等待 fresh Evidence Reviewer；不产生审查 verdict 或候选状态转换。
+

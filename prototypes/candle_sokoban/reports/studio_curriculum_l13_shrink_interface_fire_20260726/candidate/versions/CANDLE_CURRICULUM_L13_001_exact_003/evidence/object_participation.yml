@@ -1,0 +1,58 @@
+schema_version: candle_designer_object_participation.v2
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/solve_instance.yml
+provenance:
+  candidate_id: CANDLE_CURRICULUM_L13_001
+  exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+  layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/solve_instance.yml
+search_scope: complete
+graph: {status: complete, states: 3619, edges: 9424, winning_states: 3}
+
+required_winning_event_cut_method: >-
+  对每个 required event 在当前 exact 完整原始图上删除包含该事件的边，再从初态搜索任一终局胜态；七项均无避让胜路。
+required_events:
+  - {event: roll_candle:candle#single2:d2, avoiding_win_exists: false, role: C 首拍退出并把玩家交到核心分叉。}
+  - {event: extinguish_by_candle_body:candle#single2, avoiding_win_exists: false, role: C 由 A 尾部遮灭，准备工作与核心实体关系绑定。}
+  - {event: shrink:candle#1:len1, avoiding_win_exists: false, role: A 在目标边界存活且释放旧端帽。}
+  - {event: shrink_ignite:candle#single3, avoiding_win_exists: false, role: A 退焰在同格原子点燃 B。}
+  - {event: push_axis:candle#single3, avoiding_win_exists: false, role: B 直接占入刚释放的接口。}
+  - {event: light_brazier:6,1, avoiding_win_exists: false, role: B 获得的火完成唯一必要输出。}
+  - {event: win_all_braziers_lit, avoiding_win_exists: false, role: 正式胜利条件。}
+
+objects:
+  - id: candle#1
+    designer_name: A
+    initial_state: 两格、燃烧、向右；端帽位于共享接口 (6,2)。
+    canonical_events: [shrink:candle#1:len1, extinguish_by_candle_body:candle#1]
+    role: 活着且对齐的实体封口、唯一退焰来源；B 推入后被 B 烛身遮灭并结束职责。
+  - id: candle#single2
+    designer_name: C
+    initial_state: 单格、燃烧、向上；位于玩家右侧。
+    canonical_events: [roll_candle:candle#single2:d2, extinguish_by_candle_body:candle#single2]
+    role: 必要准备对象；侧滚后由 A 尾部遮灭，保留核心关系的胜路中不再参与。
+    deletion_counterfactual: 删除后仍有 3 个胜态，但首拍变成 walk，主动对象准备职责消失。
+  - id: candle#single3
+    designer_name: B
+    initial_state: 单格、未燃、向上；烛芯投影与 A 端帽同为 (6,2)。
+    canonical_events: [shrink_ignite:candle#single3, push_axis:candle#single3]
+    role: 原子交接接收者与唯一消费载体；获火后的下一次对象操作直接推盆。
+  - id: brazier:6,1
+    designer_name: required_consumer
+    canonical_events: [light_brazier:6,1, win_all_braziers_lit]
+    role: 把 B 获得的火变成紧接、可见且正式的必要输出。
+
+winning_path_object_identity:
+  productive_causal_family_count: 1
+  significant_non_milestone_edge_count: 0
+  unexpected_milestone_companion_count: 0
+  later_c_event_edge_count_on_some_winning_path_after_preparation: 0
+  bad_winning_product_state_count: 0
+  refs: [baseline_event_queries.json, solution_equivalence_all_wins.json, solution_equivalence_all_wins.yml]
+
+limits:
+  - 事件割集证明当前 exact 的全部胜路需要这些事件，不把删除对象后的改变误称为同一图内必要性。
+  - C 删除反事实证明玩家准备与作品身份职责；不声称 C 对裸 all_braziers_lit 可解性必要。
+  - 此文件只作机械对象参与自查，不评价审美、难度或自然发现率。

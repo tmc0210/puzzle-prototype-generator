@@ -1,0 +1,246 @@
+schema_version: 1
+design_task_id: candle_full_exposure_compact_d4plus_20260726
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/assignments/designer_experience_brief_001.yml
+candidate_id: null
+exact_version: null
+
+prototype_context:
+  confirmed_rules:
+    - 玩家可沿蜡烛长轴推动一格，或从侧面让整根蜡烛滚到下一步被实体阻挡的位置。
+    - 多格侧滚只消耗一个合法行动，但每个滚动小步都会立即结算遮芯灭火、递归点火与点盆；途中变化不终止滚动。
+    - 每个合法行动推进固定 global_burn_cycle=5 的共享倒数；无效输入不产生 runtime edge，也不推进倒数。
+    - 倒数从 1 跨越燃烧边界时，所有仍点燃的蜡烛同时从烛芯端缩短一格；单格燃尽消失。
+    - 墙或另一根蜡烛的烛身遮住已燃烛芯时会先灭火；遮蔽物移开后只形成未燃重曝，不会自动复燃。
+    - 已点亮火盆与外露已燃烛芯可以点燃同格外露未燃烛芯；点火不重置共享倒数。
+    - 燃烛缩短后腾出的末端格可以形成退焰；若同格刚好重曝另一根未燃烛芯，可在同一边界触发 shrink_ignite。
+    - 玩家进入外露火焰会在本行动末死亡；死亡优先于正常胜利。
+  win_condition: 玩家存活，并在完整行动结算后点亮全部火盆（all_braziers_lit）。
+  object_and_event_semantics:
+    - 多格蜡烛是不可拆分的刚体；cap 方向外一格是逻辑烛芯投影，不占实体格。
+    - 火盆是实体阻挡；点亮后永久保持点亮，并成为火源。
+    - 接触结算顺序为先熄灭所有被遮已燃芯，再递归点火与点盆，随后推进共享倒数并在边界同步缩短。
+    - 正式关卡初始静默接触结算不得产生点火、灭火或点盆事件。
+    - 非胜利且蜡烛已经全部消失的状态是完整图搜索的失败终局。
+  allowed_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+    - rolling_contact_chain
+  tool_boundary:
+    - 当前可用 Candle runtime adapter、ASCII parser/renderer、solver、完整图枚举、layout analyzer、try-inputs、runtime-backed playable、diagnostic probes 与 exposure audit。
+    - Candle 专属 miner、candidate factory、PuzzleScript exporter/checker 当前未实现；不得用其它原型证据替代 Candle runtime 证据。
+    - task-local exact replay 只证明指定输入上的局部关系；完整候选的可解性、解族、事件必经和 exposure 必须对未来 exact 另行取证。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - 玩家已完整掌握全部六个 Candle 机制家族及其衍生技巧，不需要机制教学或规则提醒。
+    - 玩家能精确计算共享五回合倒数、边界同步缩短与燃尽。
+    - 玩家能预判轴推、不可中止侧滚全程及每个中间小步的接触结算。
+    - 玩家能主动构造墙体或烛身遮芯、未燃重曝、火盆/烛芯复燃与退焰点火。
+    - 玩家能规划边界点火参与、边界灭火避烧、多对象次序窗口与滚动途中点盆/灭火/复燃。
+  prerequisite_mechanisms:
+    - {order: 1, branch: basic_candle_manipulation, mastery: complete_with_derived_techniques}
+    - {order: 2, branch: wall_dousing, mastery: complete_with_derived_techniques}
+    - {order: 3, branch: shared_fire_and_reignition, mastery: complete_with_derived_techniques}
+    - {order: 4, branch: body_concealment_and_reexposure, mastery: complete_with_derived_techniques}
+    - {order: 5, branch: retreating_flame_transfer, mastery: complete_with_derived_techniques}
+    - {order: 6, branch: rolling_contact_chain, mastery: complete_with_derived_techniques}
+  known_prior_level_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/prior_course.yml
+  prior_level_boundary_note: >-
+    人类为本任务直接提供的是完整 mastery boundary，而不是可逐关引用的实际关卡清单；
+    不从禁止的课程规划材料、curriculum.yml、knowledge.yml 或诊断 levels.yml 补造前序关卡。
+
+experience_seed:
+  human_seed: >-
+    在全部机制及衍生技巧已掌握的终盘语境中，让两根异轴蜡烛争用同一狭窄交叉口：
+    玩家需要为共享燃烧边界安排退出与接收的先后关系，再由一次不可中止长侧滚在途中
+    消费并读出此前选择。成品必须紧凑，目标难度为 4，不做机制教学或事件展览。
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  dispatch_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon.md
+  task_index_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_001_retreat_roll_readout/batch.yml
+  selected_material_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon.md#末端格退焰接收后由长侧滚读出
+  selected_material_evidence:
+    positive_exact_replay:
+      case: receiver_on_vacated_cap
+      refs:
+        - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_001_retreat_roll_readout/receiver_on_vacated_cap.txt
+        - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_001_retreat_roll_readout/results.json
+      supported_relation: >-
+        第 5 步边界横烛缩短并触发 shrink_ignite；第 7 步接收烛五格侧滚，
+        第 4 小步点亮火盆并正常胜利。
+    contrast_exact_replay:
+      case: receiver_under_surviving_tail
+      refs:
+        - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_001_retreat_roll_readout/receiver_under_surviving_tail.txt
+        - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_001_retreat_roll_readout/results.json
+      supported_relation: >-
+        相同接收烛、跑道、火盆和输入下，交叉格在边界后仍被横烛尾部占住；
+        接收烛侧滚首步只未燃重曝，经过火盆仍不点亮。
+    shortcut_probe:
+      case: receiver_one_cell_early_failed_probe
+      refs:
+        - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_001_retreat_roll_readout/receiver_one_cell_early.txt
+        - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_001_retreat_roll_readout/results.json
+      design_boundary: >-
+        未在边界接火的接收烛若于长滚第一小步经过横烛缩短后的外露芯，会途中补火；
+        正式设计必须截断这一 shortcut，不能把它误当成先后关系仍成立。
+  material_evidence_limits:
+    - 只验证横烛朝右退焰、竖烛朝上投芯、随后向右长滚的一种朝向，旋转与镜像尚未分别验证。
+    - 只验证倒数由走动送到边界的局部装置；正式关卡必须把边界前动作改造成玩家为核心作选择的构造，而不是强制等待动画。
+    - 尚未验证两烛交换角色、边界行动本身退出交叉口、完整候选解族或难度。
+
+archive_calibration:
+  full_index_or_retrieval_summaries_read: true
+  calibration_artifact_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/archive_calibration.yml
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+    - ICE_CAND_0002
+    - ICE_CAND_0004
+    - ICE_CAND_0011
+    - ICE_CAND_0037
+  related_positive_records_read:
+    - RA_CAND_0017
+    - RA_CAND_0022
+    - RA_CAND_0029
+    - ICE_CAND_0019
+    - ICE_CAND_0024
+  related_lower_bound_or_boundary_records_read:
+    - RA_CAND_0006
+    - ICE_CAND_0006
+    - ICE_CAND_0012
+  additional_human_reviewed_records_read: []
+  human_comment_refs:
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0017.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0029.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0006.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0002.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0004.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0006.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0011.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0012.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0019.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0024.md
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0037.md
+
+experience_core:
+  experience_statement: >-
+    玩家把两根异轴蜡烛和同一交叉芯位读成一个跨共享边界的先后装置：先在仍有多个
+    局部可行动作时，主动构造“燃烛末端将于本轮腾出、未燃接收烛恰在该格重曝”的状态；
+    随后提交一次不可中止长侧滚，让终点前火盆是否被点亮集中兑现此前对退出顺序、
+    共享倒数和退焰位置的预见。
+  visible_setup: >-
+    开局同时可见两根异轴蜡烛争用的狭窄交叉口、距离燃烧边界的共享倒数、接收烛的
+    长侧滚跑道与终点前火盆。至少两种局部上可行的交叉口处理方式应保留不同的后续责任，
+    不能把正确摆法直接画成无需选择的实验装置。
+  player_action: >-
+    玩家亲自安排边界前的对象位置与行动次序，使燃烛在共享边界从交叉格退出并由接收烛
+    接到退焰；之后从侧面推动接收烛，接受长滚不可中止的承诺并用途中火盆消费其起滚前火态。
+  visible_payoff: >-
+    共享边界时燃烛明显缩短、交叉芯位换由接收烛带火；紧接着接收烛贯穿跑道，
+    在尚未抵达终点前点亮远端火盆。正确先后关系由一个集中、不可撤回的远端亮火结果兑现。
+  why_level_exists: >-
+    单独的遮芯、退焰点火或长滚途中点盆都已是玩家熟知事实；本关存在的理由是让玩家把
+    三者压缩成同一个跨边界因果承诺：前一阶段决定哪一格会成为退焰接收点，后一动作才
+    消费这个状态。玩家不是观看事件串，而是预见、构造并亲手触发其远端读出。
+  core_boundary:
+    central_objects:
+      - 负责在共享燃烧边界缩短并腾出交叉末端格的已燃蜡烛
+      - 芯位占用同一交叉格、先接退焰再承担不可中止长侧滚的未燃蜡烛
+      - 同时承担遮芯/重曝与退焰接收的狭窄交叉芯位
+      - global_burn_cycle=5 的共享边界与两烛火态/长度变化
+      - 位于长滚途中、消费接收烛起滚前火态的火盆
+    supporting_objects:
+      - 只为形成必要站位、阻断中途补火 shortcut 与收紧读图的墙体
+      - 若正常胜利还需其它火盆，其作用只能把核心状态传回前序选择或在高潮动作中共同收束
+
+work_identity:
+  conditions:
+    - 正确解必须由玩家在共享边界前构造“腾出的燃烛末端格与未燃接收烛芯位同格”，而非开局自动满足或只靠强制走位等待。
+    - 同一接收烛必须先承担交叉口的退焰接收，再承担不可中止长侧滚；两段责任不能拆给互不相关对象。
+    - 长滚途中 consumer 必须机械地区分接收烛在起滚前是否已点燃，且正确分支在终点前产生可见点盆回报。
+    - 至少一个边界前局部可行动作必须只有在玩家预见长滚 consumer 时才能正确取舍，使后继约束真实传回前序构造。
+    - 燃烛余下的烛身、芯火、墙体与跑道必须封住未接火分支的顺滚补火 shortcut，不能让错误次序在途中恢复等价。
+    - 高潮后的收束必须短；不得在长滚读出之后另接与交叉口状态无关的清理子题。
+    - 正式候选使用 all_braziers_lit，且完整胜解族都保持上述对象责任和因果顺序。
+  counterfactuals:
+    - 若接收烛预先点燃、由邻近火盆直接补火或能在长滚途中从燃烛余芯补火，边界前先后选择失去责任，作品身份不成立。
+    - 若交叉格不是本轮缩短腾出的末端格，只剩普通遮芯与未燃重曝，不再是同一作品。
+    - 若删除途中火盆或把读出改成不消费火态的普通位移，前序构造没有后继约束，核心关系断裂。
+    - 若把边界前内容改成五步唯一走位、自动燃烧演出或独立机制 witness，玩家没有主动构造，作品身份不成立。
+    - 若长滚可以在点盆前停止或改由多次可撤回轴推完成，玩家不再提交一次不可中止承诺，作品身份改变。
+    - 若另加墙灭火、复燃或其它机制段落但其状态不回传到交叉口取舍，只会形成拼接子题，必须删除。
+
+level_brief:
+  packaging_intent: complete_single_level
+  expected_difficulty: 4
+  expected_scale: >-
+    最终保持紧凑：优先两根核心多格蜡烛、一个共享交叉口、一条可读长滚跑道和极少量火盆；
+    画布只保留产生真实选择、必要站位、shortcut 筛选和短收束所需空间，不预设具体尺寸或布局。
+  expected_player_load: >-
+    熟练玩家需同时维护共享倒数、两烛长度/火态、交叉格在边界前后的占用、至少两种构造顺序
+    的后续差异，以及长滚每个小步的火源路径；难度来自跨边界预见和反直觉次序，不来自规则回忆、
+    冗余走位、目标位置硬化或迟缓 deadend。
+
+allowed_design_sources:
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/docs/redundant_element_prune.md
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/prior_course.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/dispatch.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_001_retreat_roll_readout/**
+  - prototypes/reality_anchor/design_archive/index.yml
+  - prototypes/ice_slide_escape/design_archive/index.yml
+  - 本简报 archive_calibration.human_comment_refs 明列的 clean archive 候选卡
+
+prototype_specific_routing:
+  - 后续只建立一个 candidate_id；工作布局不取得 exact 身份，自查完成前不得发布版本。
+  - allowed_exposure_through 固定为 rolling_contact_chain；未来 exact 必须以完整 reachable graph 通过 exposure audit，graph exhausted 只能判 unknown。
+  - 正式候选必须使用 all_braziers_lit，不得使用 event_occurs；初始静默结算必须无事件。
+  - 每次设计与修订都需实际读取完整非空 replay、逐步状态、事件、对象参与和工具边界。
+  - 发布 exact 前必须完成玩家侧重读、非等价胜解排查与解族唯一性自查；本阶段不发布 layout、solve instance、replay 或 exact。
+  - 候选若被接受，冗余对象/区域清理与 exposure/conformance/playable 重检由 Controller 按 pre-submission workflow 机械执行，不返回 Designer 作审美判断。
+
+human_review_constraints:
+  - 全机制已掌握只定义玩家先验，不要求在一关中逐项展示全部机制；任何高 affordance 对象都必须兑现玩家可感的结构责任。
+  - 不把事件数量、同一步大量事件、非空 replay、完整图或唯一解当作审美和难度的正向证明。
+  - 不用多个独立 witness、重复步骤或开局机制演出拼接终盘关；前后内容必须消费同一核心状态。
+  - 不靠目标位置硬化、腾挪税、冗余走位、等待倒数或反馈迟缓的 deadend 达成难度 4。
+  - 允许长步行与原地来回移动服务共享倒数，但只有存在“不等待”的真实选择且时机改变后续责任时，才可计入谜题内容。
+  - 优先保留短步骤中的强预见、反直觉操作、空间/要素高复用与集中回报；高潮后尽快结束。
+
+source_exclusions_observed:
+  - assignment 明令禁止的 Candle 课程规划上下文及其相关规划产物（未访问、未使用）
+  - prototypes/candle_sokoban/knowledge.yml
+  - prototypes/candle_sokoban/curriculum.yml
+  - prototypes/candle_sokoban/levels.yml
+  - prototypes/candle_sokoban/mechanism_lab/cases.yml
+  - 旧 Candle studio 候选与报告
+  - C:/Users/ASUS/Downloads/CANDLE_SOKOBAN_KNOWLEDGE.md

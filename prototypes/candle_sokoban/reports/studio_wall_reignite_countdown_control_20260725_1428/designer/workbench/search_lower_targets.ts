@@ -1,0 +1,17 @@
+import { readFile } from "node:fs/promises";
+import { enumerateRuntimeGraph } from "../../../../../../src/core/runtimeGraph.js";
+import { loadPrototypePackage } from "../../../../../../src/core/io.js";
+import { solveWithRuntime } from "../../../../../../src/core/solver.js";
+import type { LevelDoc } from "../../../../../../src/core/types.js";
+import { replayInputSequence } from "../../../../../../src/workflows/inputSequenceReplay.js";
+import { getRuntimeAdapter } from "../../../../../../src/prototypes/runtimeAdapter.js";
+const base = (await readFile(process.argv[2]!, "utf8")).replace(/\r/g, "").trimEnd(); const pkg=await loadPrototypePackage("prototypes/candle_sokoban"); const adapter=getRuntimeAdapter(pkg.mechanic); const runtime=adapter.createRuntime(pkg.mechanic); const options={winCondition:pkg.mechanic.win};
+function setCell(l:string,x:number,y:number,g:string){const a=l.split("\n"),r=a[y]!;a[y]=r.slice(0,x)+g+r.slice(x+1);return a.join("\n");}
+function sig(k:string){return k.split("|C:")[1]?.split("|B:")[0]??k;}
+function test(l:string){let initial;try{const level:LevelDoc={id:"lower-target",title:"lower-target",layout:l+"\n",global_burn_cycle:5,win:pkg.mechanic.win};initial=adapter.parseLevel(level);}catch{return null;}const sol=solveWithRuntime(runtime,initial,{...options,maxStates:40000,maxDepth:200});if(!sol.found)return null;const rep=replayInputSequence(adapter,runtime,initial,sol.inputs,options,pkg.mechanic.win);const ev=rep.steps.flatMap(s=>s.events);if(!rep.final.isWin||!ev.some(e=>e.startsWith("extinguish_by_wall"))||!ev.some(e=>e.startsWith("ignite_from_brazier")))return null;const g=enumerateRuntimeGraph(runtime,initial,pkg.mechanic.win,options,{maxStates:40000,terminalizeWins:true});if(g.status!=="complete")return null;const forbidden=g.edges.flatMap(e=>e.events.filter(x=>/^(roll_intermediate_|roll_reignite_after_extinguish|wick_reexposed_unlit|shrink_ignite)/.test(x)));if(forbidden.length)return null;const ss=[...new Set([...g.winStateIndexes].map(i=>sig(g.keys[i]!)))];return{depth:sol.inputs.length,states:g.keys.length,edges:g.edges.length,wins:g.winStateIndexes.size,signatures:ss,inputs:sol.inputs,events:ev,layout:l+"\n"};}
+let seed=0x7f250728;function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/0x100000000;}
+const targets:[[number,number],[number,number]]|Array<[number,number]>=[[11,15],[12,15],[11,16],[12,16],[11,17],[12,17],[11,18],[12,18]];const targetCells=new Set(targets.map(([x,y])=>`${x},${y}`));
+const protect=new Set(["8,13","9,13","10,13","11,13","12,13","8,14","9,14","10,14","11,14","12,14","12,16","11,17"]);
+const sourceRows=base.split("\n"); const cells:Array<[number,number]>=[]; for(let y=12;y<=18;y++)for(let x=8;x<=12;x++)if(sourceRows[y]![x]==="."&&!protect.has(`${x},${y}`))cells.push([x,y]);
+for(let i=0;i<5000;i++){const [tx,ty]=targets[Math.floor(rand()*targets.length)]!;let l=base;const old=sourceRows.findIndex((r,yi)=>yi>=12&&r.includes("o"));if(old<0)continue;const ox=sourceRows[old]!.indexOf("o");l=setCell(l,ox,old,".");if(l.split("\n")[ty]![tx]!==".")continue;l=setCell(l,tx,ty,"o");const sh=[...cells].sort(()=>rand()-.5);const n=Math.floor(rand()*7);const walls:Array<string>=[];try{for(const [x,y] of sh.slice(0,n)){if(l.split("\n")[y]![x]!==".")continue;l=setCell(l,x,y,"#");walls.push(`${x},${y}`);}const r=test(l);if(r&&r.signatures.length===1){console.log(JSON.stringify({index:i,target:[tx,ty],walls,...r},null,2));process.exit(0);}if(i%250===0)console.error(`tested ${i}`);}catch{}}
+console.log("NO_UNIQUE");

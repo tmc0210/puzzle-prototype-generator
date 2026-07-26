@@ -1,0 +1,68 @@
+submission_id: candle_full_exposure_compact_exact_005_submission
+design_task_id: candle_full_exposure_compact_d4plus_20260726
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005
+
+designer_claim:
+  player_experience_core: >-
+    玩家先把接收烛芯构造成横烛末端的退焰接收位，再在两个都立即点盆的边界对象操作中分配职责；
+    后续同一接收烛必须再缩短，才能穿过此前作为实体挡块的中盆并在一次长滚中连续点亮中盆与远盆。
+  player_action: >-
+    首推接收烛入交叉位；第5步选择左推辅助烛而非上滚供体；复用缩后供体点上盆；
+    让接收烛参加下一边界缩成单格，最后从侧面提交不可中止长滚。
+  visible_payoff: >-
+    第一次边界明确发生退焰交接；第二次边界让接收烛从被中盆挡住的两格刚体变成单格；
+    最后长滚第1与第4小步连续点盆，终点在两次点亮之后。
+  why_this_level_exists: >-
+    它把交叉退焰、对象目标分配、共享边界长度变化和途中点盆压成同一对象的跨阶段责任；
+    中盆在前后阶段从实体挡块变成 consumer，使前序接火与后续缩短共同决定高潮动作是否可能。
+  work_identity_conditions:
+    - 玩家必须首推 candle#2 构造交叉芯位。
+    - 全部胜路必须由 candle#3 点亮 (1,5)，并由 candle#1 在第一次交火后点亮 (7,3)。
+    - candle#2 必须通过 shrink_ignite 接火，不能从火盆或普通烛芯补火。
+    - candle#2 必须再缩成单格后，才以一次多格长滚点亮 (7,5) 与 (10,5)。
+    - 第5步退出供体及其第8步双盆进展状态均不得恢复胜利。
+
+packaging_account:
+  opening: "首步轴推未燃接收烛进入可见交叉芯位；不是静默开局演出。"
+  preparation: "三步转位把共享倒数送到1，同时呈现辅助烛与供体两个对象操作。"
+  reveal_or_use: "第5步双进展选择后，供体余身点上盆；第二边界把中盆从挡块重读为长滚 consumer。"
+  ending: "最后一次五格长滚连续点亮两个目标并立即胜利，无高潮后清理。"
+  every_major_element_role:
+    - candle#1：遮芯/退焰供体/上盆点火者。
+    - candle#2：玩家构造的接收器/长度相位对象/双盆长滚 consumer。
+    - candle#3：左盆点火者/错误分支延迟进展载体。
+    - (7,5) 火盆：缩前实体挡块/缩后第一途中目标。
+    - (10,5) 火盆：终点前远端读出。
+    - 上方墙面：限定 candle#1 的第二相位行，使其余身仍可沿轴点上盆。
+    - 下方紧凑轮廓：保留首推站位与最终接收烛起滚站位，截断无责任开放区域。
+  known_perceptible_defects:
+    - 最短解前四步站位较受约束，可能被部分玩家感知为线性前缀；首步对象构造与第5步关系选择是否足以抵消，交独立 Critic 判断。
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: "max_states=700000; actual_states=107188; legal_transitions=309398; winning_states=3"
+    known_raw_winning_variants:
+      - "depth14: up,left,up,up,left,up,left,up,right,down,down,down,right,right"
+      - "depth18 representative: up,left,up,up,left,left,up,right,down,right,up,left,up,right,down,down,down,right"
+      - "depth20 representative: up,left,up,up,left,left,up,right,down,right,up,left,up,right,down,up,down,down,down,right"
+    equivalence_account: >-
+      三个终局及其全部可达胜路保持同一目标分配和依赖：candle#3 点左盆，candle#1 交退焰后点上盆，
+      candle#2 必须 shrink_ignite、缩成单格并长滚点两个余盆。18/20步变体只增加一次再遮芯与再退焰交接；
+      没有普通复燃、错误第5步恢复或对象职责改换。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/solution_family_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/graph_analysis.json
+    evidence_limits: []
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/recovery_counterfactuals.yml
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/solution_family_audit.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/object_participation.yml
+  evidence_limits: []
+
+designer_self_verdict: submit_for_independent_review

@@ -1,0 +1,54 @@
+batch_id: batch_001_double_link_consumer
+prototype: candle_sokoban
+family: adjacent_retreating_flame_relay_with_dual_read_consumer
+defaults:
+  global_burn_cycle: 5
+  max_states: 300000
+cases:
+  - id: relay_exact
+    variant: exact_two_boundary_relay
+    changed_variable: A 端帽先占 B 烛芯，B 端帽再占 C 烛芯
+    contrast_with: [relay_early, relay_broken]
+    layout_ref: layouts/relay_exact.txt
+    inputs: [left, right, left, right, left, right, left, right, left, right, up]
+    expected_local_use: 第 11 动把完整已燃 C 上推一格，以火焰命中固定火盆
+  - id: relay_early
+    variant: one_boundary_early
+    changed_variable: A 已先退一格且 B 已燃，B→C 提前一个燃烧边界
+    contrast_with: relay_exact
+    layout_ref: layouts/relay_early.txt
+    inputs: [left, right, left, right, left, right, left, right, left, right, up]
+    expected_local_use: 第 10 动后 C 已缩短，第 11 动上推时烛芯到不了固定火盆
+  - id: relay_broken
+    variant: second_link_separated_before_boundary
+    changed_variable: 第 10 动在燃烧边界前沿轴推走 B，解除 B 端帽对 C 烛芯的遮蔽
+    contrast_with: relay_exact
+    layout_ref: layouts/relay_broken.txt
+    inputs: [up, up, up, up, left, right, left, right, right, right, right, left, down, down, down, down, right, up]
+    expected_local_use: C 保持三格但未燃；绕回尾部后同样上推到固定火盆仍不点亮
+  - id: consumer_exact_full_lit
+    variant: comparable_exact
+    changed_variable: C 为三格且已燃
+    contrast_with: [consumer_early_short_lit, consumer_broken_full_unlit]
+    layout_ref: layouts/consumer_exact_full_lit.txt
+    inputs: [up]
+    expected_local_use: 同一上推动作点亮同一火盆
+  - id: consumer_early_short_lit
+    variant: comparable_early
+    changed_variable: C 已燃但只有两格
+    contrast_with: consumer_exact_full_lit
+    layout_ref: layouts/consumer_early_short_lit.txt
+    inputs: [up]
+    expected_local_use: 同一上推动作后火焰差一格，火盆不亮
+  - id: consumer_broken_full_unlit
+    variant: comparable_broken
+    changed_variable: C 保持三格但未燃
+    contrast_with: consumer_exact_full_lit
+    layout_ref: layouts/consumer_broken_full_unlit.txt
+    inputs: [up]
+    expected_local_use: 同一上推动作把烛芯送到火盆格，但无火所以火盆不亮
+boundary_checks:
+  - id: side_roll_later_exposure_witness
+    purpose: 只核对开放侧向空间会进入 dispatch 之后的 rolling_contact_chain；不作为正向语料
+    layout_ref: layouts/side_roll_later_exposure_witness.txt
+    inputs: [right]

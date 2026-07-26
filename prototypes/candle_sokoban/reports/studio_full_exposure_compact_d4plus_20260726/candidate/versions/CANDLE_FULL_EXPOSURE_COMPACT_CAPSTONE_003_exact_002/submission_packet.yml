@@ -1,0 +1,92 @@
+submission_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002_submission_001
+design_task_id: candle_full_exposure_compact_d4plus_20260726
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002
+
+designer_claim:
+  player_experience_core: >-
+    玩家把同一根竖烛先读成完整横烛的长度敏感止挡，再读成帽端退焰接收器；接到的火态经过一次缩短后由六格长滚送入近盆并交给第三烛，第三烛再跨边界缩短，以改变后的火头列完成第二次长滚。
+  player_action: >-
+    先向下侧滚 candle#1 构造帽端/芯位交叉；沿左侧走到 candle#2 缩短后的操作侧，向右长滚 candle#2；随后移动到 candle#3 缩短后的受力格，向上长滚 candle#3。
+  visible_payoff: >-
+    第一次边界可见 candle#1 退焰点燃 candle#2；candle#2 的六格滚在第三小步同时点亮近盆并点燃 candle#3；最终 candle#3 的四格滚在倒数第二小步点亮远盆并立即正常胜利。
+  why_this_level_exists: >-
+    把已掌握的止挡、退焰接收、共享倒计时、缩短后火头换列和滚动中接触压缩成一条连续火态接力；修订墙要求首次接火后供体真正退出交叉责任，不能用回推遮熄与再次点燃另造时序。
+  work_identity_conditions:
+    - candle#1 必须以三格完整长度侧滚到 candle#2 上方，并由 candle#2 帽端止挡。
+    - candle#2 必须由首次 shrink_ignite 接火，随后在下一边界直接缩为两格并完成六格侧滚。
+    - candle#1 在首次接火后不得回占接收芯位、遮熄 candle#2 或承担第二次修复点火。
+    - candle#2 六格滚必须在途中点亮 brazier:7,5 并点燃 candle#3，不能由残余火头或火盆补火替代。
+    - candle#3 必须跨下一次边界缩为两格，再以新的火头列完成四格侧滚并点亮 brazier:8,2。
+    - 正常胜利必须是 all_braziers_lit 且玩家存活；死亡、事件胜利或删除对象均不等价。
+
+packaging_account:
+  opening: >-
+    12x9 紧凑画面中，三格 candle#1 位于 candle#2 上方；入口仍只允许向下侧滚，立即建立止挡与交叉芯位关系。供体右下的单格墙清楚收回其落位后的后操作侧。
+  preparation: >-
+    candle#1 落位后，玩家沿左侧不回访路线前往 candle#2 第二次边界缩短后的操作侧；两次边界依次完成首次退焰点火与接收器火头下移。
+  reveal_or_use: >-
+    candle#2 向右六格滚，把此前火态一次展示为近盆点亮、candle#3 接力点燃和自身被体段遮火；玩家继续走向 candle#3 新受力格。
+  ending: >-
+    第三次边界令 candle#3 从三格缩为两格，玩家向上侧滚它；其新火头列在倒数第二小步点亮远盆，正常胜利在同一动作结算。
+  every_major_element_role:
+    - candle#1：完整长度供体、candle#2 的止挡测试对象、唯一一次退焰火源及后续边界相位标记。
+    - candle#2：candle#1 的几何止挡、退焰接收器、第二次边界的缩短对象和六格长滚火态载体。
+    - candle#3：由 candle#2 途中点燃的接力烛、第三次边界的缩短对象及最终四格长滚载体。
+    - brazier:7,5：candle#2 第三滚动小步的途中消费者，使接收火态必须由长滚兑现。
+    - brazier:8,2：candle#3 缩短后新火头列的远端消费者和正常胜利收束点。
+    - 供体后侧筛选墙：阻止首次接火后把缩短供体推回交叉芯位；删除它会恢复一条非等价 repair 胜路。
+    - candle#2 左侧约束墙与紧凑通道：限定必要操作侧，并让三轮倒数由走向下一操作位自然推进。
+  known_perceptible_defects:
+    - 入口侧滚仍是唯一合法进展，首步本身缺少选择压力。
+    - canonical 空间路线较线性；难度 4 主要来自三次边界、两次不可中止长滚和火头列变化的联合预演。
+    - 画布较 exact_001 多一列；该列用于把 repair 筛选墙与接力烛上滚芯列分离，但仍可能让构图显得偏长。
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/level.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: max_states=300000; actual_states=8846; actual_legal_transitions=26443
+    known_raw_winning_variants:
+      - 完整图含 2 个终止胜态，分别可在深度 18 与 20 到达；最短成本为 18。
+      - 最短层共有 24 条输入序列；其对象事件序列相同，差异只来自纯走位次序。
+      - 全部 win-coaccessible 子图含 61 nodes、118 edges，SCC 全为单点；生产性里程碑自动机的 winning product states 为 2，坏胜态为 0。
+      - 原始显著事件轨迹有 2 种，只在终局胜利同回合是否伴随 candle#3 再缩为 len1 上不同；该终局结算没有后继消费或新增职责。
+      - 全图另有 18 个循环 SCC，但能到达胜利的循环 SCC 为 0。
+    equivalence_account: >-
+      所有胜路经过同一生产性事件束顺序：candle#1:d2 侧滚；首次 candle#1 len2 与 shrink_ignite candle#2；下一边界 candle#1 len1 与 candle#2 len2；candle#2:d6 长滚并点亮近盆、点燃 candle#3；candle#1 燃尽与 candle#3 len2；candle#3:d4 长滚点亮终盆。任何胜路都不含供体回推 repair signature、其它显著非里程碑对象事件或改变依赖时序的分支。两种 raw trace 只差终局同回合的 candle#3 len1 结算。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/complete_graph.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/solution_equivalence_all_wins.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/scc_raw.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/whole_graph_scc_raw.json
+    evidence_limits:
+      - 生产性因果等价判据不忽略任何非里程碑显著对象事件；唯一被归并的显著差异是没有后继消费的终局同回合 candle#3 len1 结算。它不评价自然发现概率或审美价值。
+      - equivalent_variants_only 是 Designer 的完整图自查结论，仍需 fresh Evidence Reviewer 独立核验。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/repair_family_elimination.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/analysis.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/solution_equivalence_all_wins.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/counterfactuals.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/object_participation.json
+  evidence_limits:
+    - Object participation 由 canonical 实际事件和完整图十项 required-winning 事件共同支持，不是审美质量判断。
+    - Exposure audit 只证明 rolling_contact_chain 边界 complete/pass，不证明难度或玩家体验。
+    - 身份反事实覆盖供体预缩、删除供体、删除接力烛、预点燃接收器与删除 repair 筛选墙，不声称穷尽任意布局改写。
+
+designer_self_verdict: submit_for_independent_review
+
+additional_metadata:
+  title: 退焰接力
+  prototype: candle_sokoban
+  win_type: all_braziers_lit
+  intended_difficulty: 4
+  allowed_exposure_through: rolling_contact_chain
+  layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/layout.txt
+  layout_sha256: c456c3873943e4d8f35efbd3a6b51942b83d3c0967cf68549de024b97e128cf4
+  graph_summary: complete; states=8846; legal_transitions=26443; winning_states=2
+  exposure_summary: complete/pass; forbidden_hits=0

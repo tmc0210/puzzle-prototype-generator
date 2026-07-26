@@ -1,0 +1,79 @@
+design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+reviewed_exact_version: exact_001
+delivery_exact_version: exact_001
+workflow_results:
+  - workflow_id: redundant_element_prune
+    applicability: applicable
+    applicability_basis: 当前唯一候选已经通过 Critic，必须按 Candle authority 扫描固定冗余单元。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/redundant_element_prune.md
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery:
+      method: candle_redundancy_units_v2
+      candidate_units:
+        - whole_candle:candle#4
+        - whole_candle:candle#2
+        - single_brazier:7,2
+        - single_brazier:2,3
+        - single_brazier:8,3
+        - single_brazier:2,4
+        - single_entry_floor_region:1:10,4:5
+    operations_performed: []
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/pre_submission/redundancy_candidates.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/pre_submission/redundant_element_prune.yml
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 七个固定候选均在便宜反事实检查中破坏 canonical 合法性、胜利、胜利时机或核心事件，故不应用变换。
+    status: completed
+  - workflow_id: strict_exposure_gate_recheck
+    applicability: applicable
+    applicability_basis: delivery exact 必须重新通过当前 exposure 顺序硬门。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery: null
+    operations_performed:
+      - 对 exact_001 重跑 allowed_exposure_through=rolling_contact_chain 的完整 exposure audit。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/pre_submission/exposure_recheck_exact_001.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/pre_submission/strict_exposure_gate_recheck.yml
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: layout digest 与 exact_001 一致，完整图 17337 states / 54606 edges，verdict pass 且 forbidden hits 为空。
+    status: completed
+  - workflow_id: runtime_conformance_recheck
+    applicability: applicable
+    applicability_basis: 当前唯一候选准备进入待玩列表。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    candidate_discovery: null
+    operations_performed:
+      - npm run check
+      - npm run candle:conformance
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/pre_submission/runtime_conformance_recheck.yml
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: TypeScript 检查通过，Candle 所有已实现 conformance checks 通过；未实现工具边界已明确记录。
+    status: completed
+  - workflow_id: playable_delivery_build
+    applicability: applicable
+    applicability_basis: 唯一 delivery exact 已写入 studio source 并加入待玩队列。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+    candidate_discovery: null
+    operations_performed:
+      - 写入唯一 studio level 与 pending_playtest queue entry。
+      - 重建 runtime-backed playable 并复核全部 queue replay。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/pre_submission/playable_delivery_build.yml
+      - prototypes/candle_sokoban/playable/data.json
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: source、queue 和 playable data 均解析同一 level id；6 个待玩关卡 replay coverage 完整。
+    status: completed
+overall_status: completed
+

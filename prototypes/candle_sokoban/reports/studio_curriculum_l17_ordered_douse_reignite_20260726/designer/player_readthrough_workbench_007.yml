@@ -1,0 +1,89 @@
+candidate_id: CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+workbench_version: workbench_007
+layout_ref: >-
+  prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/
+  designer/workbench/layout.txt
+perspective: informed_human_player_with_l16_actual_prior
+target_difficulty: 5
+difficulty_status: rejected_after_candle_specific_human_archive
+
+opening_read:
+  visible_objects: >-
+    中央一根向右燃烧的六格横烛；右侧同列自上而下是未亮火盆、遮芯墙、已亮火盆、
+    未亮火盆；上下两条端帽各有两枚墙点，给中央烛身和右移后的烛身留下不同停止接口。
+  immediate_affordance: >-
+    玩家在长烛左侧，向上或向下绕一格都能从侧面把它送到同构的上端或下端；
+    两个选择都合法、等距、不会当场接触右侧程序列。
+  actual_question: >-
+    两只未亮火盆都必须点亮，因此玩家不能只问“哪边先得分”，而要从第二次贯穿滚动的方向
+    反推：哪一端发车会让右侧烛芯依次经过墙与火源，并把最后状态交给另一端火盆。
+
+expected_reasoning:
+  wrong_but_local_plan: >-
+    先把蜡烛送到下端、右推点亮下盆，再向上贯穿；这条路准备动作、第一次回报和 d8 滚距
+    都与正路一致，局部看并不荒谬。
+  wrong_payoff: >-
+    上滚先经过 y=8 的已亮火盆；因蜡烛本就燃烧，这次接触没有新点燃。随后 y=4 墙把火写灭，
+    蜡烛以未燃状态抵达 y=2，上盆保持沉默。失败在核心动作终点立即可见，不拖成长 deadend。
+  intended_plan: >-
+    先去上端并把上盆点亮，再向下贯穿。y=4 墙在 d2 把火写灭，y=8 已亮火盆在 d6
+    重新点燃，y=10 下盆在 d8 直接读取燃烧终态并当回合完成 all_braziers_lit。
+  delayed_reframe: >-
+    开局的“上／下送烛”并不是单纯选一个最近目标；它是在选择随后同一条程序列的读取方向。
+    上端第一次点盆既是目标回报，也是把主滚置于墙→火源顺序的发车端。
+
+execution_read:
+  shortest_cost: 14
+  friction: low
+  preparation: >-
+    预备 d4 后，玩家沿左侧回到端行并向右推；第二次推在燃烧边界点亮起点火盆同时缩短，
+    画面会把烛芯退回一格，第三次推重新对齐 x=9。这个反馈只负责可见对齐，
+    不改变墙→火源的核心判断，也不要求隐藏输入或精确计时。
+  climax: >-
+    站到端帽操作面后只需一次反向侧推；d8 长滚连续呈现灭火、未燃重曝、复燃、终点点盆，
+    胜利与第二只盆点亮同回合发生。
+  no_cleanup: true
+
+novelty_against_l16:
+  inherited: >-
+    玩家已知长滚逐小步结算，也知道路径事件和终点接口可同时承担职责。
+  new_read: >-
+    玩家必须比较同一接触列的正反读取，把墙和火源视为对同一燃态的非交换写入，
+    并让终点 consumer 只读取最后写入后的状态。
+
+difficulty_account:
+  why_not_a_unique_obvious_roll: >-
+    开局上下发车都合法、同距、同构；反序也先点亮一盆并完整执行 d8，
+    只有在预见第二端读取时才能排除。
+  why_target_five_is_plausible: >-
+    难点是把两个时间分离的端点目标、一次端侧对齐和四格相隔的两次写入压成一个反向计划；
+    玩家要在行动前比较“最后有效写入”，而不是试某个唯一按钮。
+  calibration_limit: >-
+    右侧程序列本身清楚，熟悉 L16 的玩家可能较快读出正序；Designer 不把步数、完整图或事件量
+    当作难度证据。是否确实达到相对难度 5，留给只读一次当前 exact 的 fresh Puzzle Critic。
+
+perceptible_defects:
+  - id: clear_program_column_may_reduce_search
+    severity: bounded
+    account: >-
+      墙、火源与两端 consumer 同列使因果关系可读，也可能让强玩家很快识别方向；
+      但遮蔽它会把难度转成视觉噪声，当前版本保留高推理、低执行摩擦的 brief 优先级。
+  - id: burn_boundary_visible_realignment
+    severity: bounded
+    account: >-
+      起点点盆时发生一次缩短并需要再推一格；它有清楚画面反馈，且完整胜解允许不同等待相位，
+      不把边界缩短本身作为作品新意。
+
+post_archive_reassessment:
+  new_refs:
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0002.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0003.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0004.md
+  decisive_failure: >-
+    玩家只在开局决定先上还是先下；一旦正确执行上向 d4，余下所有推动与走位都只是把已经选定的程序列执行到底。
+    这与 CANDLE_CAND_0003 的“开局二择后盲目右推、决策空间坍塌”同构，
+    也未超过 CANDLE_CAND_0002 的普通二择或 CANDLE_CAND_0004 的难度3紧凑顺序锁。
+  revised_difficulty_prediction: 2
+  revised_aesthetic_prediction: 1_to_2
+
+designer_player_verdict: reject_exact_001_before_independent_review

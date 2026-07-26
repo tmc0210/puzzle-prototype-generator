@@ -1,0 +1,53 @@
+review_attempt_id: candle_all_mechanics_002_v001_hard_recheck_001
+required_skill: sokoban-evidence-reviewer
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v001
+prototype_id: candle_sokoban
+
+base_hard_claim_packet_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/evidence/v001/review_packet.yml
+review_scope: >-
+  以 fresh 独立身份重新核验 base packet 的全部机械声明与 solution uniqueness；不得读取上一名 Reviewer 的
+  evidence_review。补充 artifact 只填充 frozen v001 的三项身份反事实原始证据，不改变 exact、claim 或作品身份。
+
+frozen_exact_verification:
+  candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+  exact_version: v001
+  layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/layout.txt
+  layout_sha256: 07f6b42d7fb8634537083b11acf60fc5ac28b2e38ef84370481f02a1175211ca
+  exact_manifest_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/artifact_manifest.yml
+
+supplemental_evidence_sources:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/supplement_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/designer_revision_report.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/generate_counterfactual_summaries.mjs
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/raw_complete_graph.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/solve_result.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/winning_state_representatives.jsonl
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/reproduction.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/raw_complete_graph.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/solve_result.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/winning_state_representatives.jsonl
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/reproduction.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/raw_complete_graph.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/solve_result.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/unsat_certificate.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/reproduction.json
+
+required_counterfactual_rechecks:
+  - id: guard_removed
+    expected_mutation_layout_sha256: bbd83ce9f5dc8c5cabdf299699197d642c03ba2ecbf1f9a827bcf15fa8d0d31a
+    claim: graph complete；12755 states；41007 legal edges；5 wins；shortest 26；最短代表不含 opening guard roll。
+  - id: wall_removed
+    expected_mutation_layout_sha256: 774815d2a4dc981d6c59c2b52add8d578bbfb68dab24b45671a8750b515debaf
+    claim: graph complete；29148 states；93119 legal edges；2 wins；shortest 28；全部 terminal-win BFS 代表无 wall douse、writer wick reignition 或 roll_reignite。
+  - id: active_source_removed
+    expected_mutation_layout_sha256: 9ac9a0c758386a5fc85488392444162373241984b2babf654bb1f28f0a163f39
+    claim: graph complete；64065 states；200681 legal edges；0 wins；正常胜利在完整图中不可解。
+
+forbidden_inputs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/evidence/v001/evidence_review.yml
+  - Designer 体验核心、作品审美、包装、自评、player_reread 与 submission packet 叙事
+  - Explorer 材料、归档校准、旧 Candle reports、既有待玩关、任何 Critic 输入或结论
+  - 自动指标对审美、难度或待玩价值的解释
+
+required_output_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/evidence/v001/recheck/evidence_review.yml

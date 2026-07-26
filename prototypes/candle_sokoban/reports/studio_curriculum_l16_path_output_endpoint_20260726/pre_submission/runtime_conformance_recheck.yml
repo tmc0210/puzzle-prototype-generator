@@ -1,0 +1,21 @@
+workflow_id: runtime_conformance_recheck
+candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+delivery_exact_version: exact_001
+executed_at: 2026-07-26T17:27:17+08:00
+checks:
+  - command: npm run check
+    status: pass
+    result: TypeScript tsc --noEmit completed with exit code 0.
+  - command: npm run candle:conformance
+    status: pass_with_declared_unavailable_boundaries
+    result: >-
+      所有已实现检查均通过：adapter、parse/render、11 条 expected trace、共享倒计时、零蜡烛终止、
+      exposure hard gate、solver、graph、layout analyzer、probe seed suite 与 runtime-backed playable。
+    unavailable:
+      - raw_sampler
+      - candidate_seed_factories
+      - curated_miner
+      - puzzlescript_exporter
+      - puzzlescript_checker
+status: completed
+

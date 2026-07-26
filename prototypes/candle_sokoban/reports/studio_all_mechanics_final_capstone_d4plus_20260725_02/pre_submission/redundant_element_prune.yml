@@ -1,0 +1,153 @@
+workflow_id: redundant_element_prune
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+reviewed_exact_version: v001
+delivery_exact_version: v002
+checked_on: 2026-07-25
+authority_ref: prototypes/candle_sokoban/docs/redundant_element_prune.md
+redundant_element_prune:
+  status: normalized
+  candidate_discovery:
+    method: candle_redundancy_units_v2
+    fixed_stage_order:
+      - whole_candle_to_floor
+      - single_brazier_to_floor
+      - vacated_object_floor_region_to_wall
+      - detached_or_single_entry_floor_region_to_wall
+      - outer_outline_band_trim
+    candidate_units:
+      - {kind: whole_candle, id: candle#1, cells: [[3,3], [4,3]]}
+      - {kind: whole_candle, id: candle#5, cells: [[4,5], [5,5]]}
+      - {kind: whole_candle, id: candle#single3, cells: [[4,6]]}
+      - {kind: whole_candle, id: candle#6, cells: [[5,7], [6,7]]}
+      - {kind: whole_candle, id: candle#2, cells: [[5,8], [5,9], [5,10]]}
+      - {kind: whole_candle, id: candle#3, cells: [[6,8], [7,8], [8,8]]}
+      - {kind: single_brazier, id: brazier_2_1, cells: [[2,1]]}
+      - {kind: detached_empty_region, id: detached_5_6_6_6, cells: [[5,6], [6,6]]}
+      - {kind: single_entry_floor_region, id: top_left_deadend, cells: [[1,1]]}
+      - {kind: single_entry_floor_region, id: main_open_region, cell_count: 41}
+  candidates_checked:
+    - candidate_unit: whole_candle:candle#1
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入只合法通过 20/28 步且最终不胜，便宜条件已失败。
+    - candidate_unit: whole_candle:candle#5
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入只合法通过 20/28 步且最终不胜，active source 不可删。
+    - candidate_unit: whole_candle:candle#single3
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: false
+      new_contact_events: []
+      exposure_verdict: pass
+      details: >-
+        擦除 guard 自身首步滚动事件后，规范输入仍在第 28 步胜利；但既有 complete guard_removed
+        反事实为 12755 状态、41007 边、5 胜态、最短 26，新增更短解与解族，故明确保留。
+    - candidate_unit: whole_candle:candle#6
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入只合法通过 20/28 步且最终不胜，bridge 不可删。
+    - candidate_unit: whole_candle:candle#2
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 28 步均可执行但最终不胜，relay 不可删。
+    - candidate_unit: whole_candle:candle#3
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 28 步均可执行但最终不胜，consumer 与终局 readout 不可删。
+    - candidate_unit: single_brazier:brazier_2_1
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 删除唯一火盆后 parser 拒绝无正常胜利目标的关卡。
+    - candidate_unit: detached_empty_region:detached_5_6_6_6
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 墙化后规范输入首步即无法执行。
+    - candidate_unit: single_entry_floor_region:top_left_deadend
+      operation: wallify
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      details: >-
+        规范 28 步的状态与事件逐步完全相同；v001 与 v002 的 complete win-reaching 子图均为
+        88 状态/160 边，state-key 与 edge 签名集合双向一致；最短仍 28，2 个胜态，全部必经事件、
+        最少 5 次 consumer 轴推保持；全图无新增机制/墙接触事件，exposure complete/pass。
+    - candidate_unit: single_entry_floor_region:main_open_region
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events:
+        - extinguish_by_wall:candle#1
+      exposure_verdict: not_run
+      details: parser 检出开局静默接触结算改变，新增墙立即熄灭 writer。
+  post_wallify_outline_rescan:
+    source_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v1/candidates_after_space_wallify.json
+    outer_outline_band_count: 0
+    trim_applied: false
+  retained_aesthetic: []
+  artifact_refs:
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v1/candidates.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v1/canonical_probe.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/raw_complete_graph.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v1/wallify_1_1_exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v1/wallify_1_1_projection_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/redundant_element_prune_v1/candidates_after_space_wallify.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v002/delivery_manifest.yml
+  delivery_layout_changed: true
+  version_effect: review_preserving_change
+  preservation_basis: >-
+    仅应用单格死端墙化；规范回放相同、可胜子图同构、最短成本与胜态数不变、全部已接受关系保持，
+    complete exposure 通过且全图没有新增机制事件。其余候选均因反事实失败或解族改变而保留。
+status: completed

@@ -1,0 +1,192 @@
+review_attempt_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001_review_002
+reviewer_instance_id: fresh_evidence_reviewer_attempt_002
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_002/input.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/layout.txt
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/level.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/manifest.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/**
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/evidence_supplements/exact_001/**
+    - docs/21-level-design-studio-standard.md
+    - prototypes/candle_sokoban/docs/design_handoff.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - >-
+      DIRECT_BACKBONE：terminal winning nodes 1533、2214；已给最短 witness 深度分别为
+      17、19，沿同一直接生产链完成六个里程碑。
+    - >-
+      DONOR_SHIFT_RECEIVER_REPAIR：terminal winning nodes 4423、5551；已给最短 witness
+      深度分别为 23、25；在第一轮 donor-to-receiver 点火之后额外发生
+      push_axis:candle#1、extinguish:candle#2:concealed、
+      extinguish_by_candle_body:candle#2，之后再由新的 shrink_ignite:candle#2 修复。
+  equivalence_evidence_basis:
+    - >-
+      solution_equivalence_all_wins.json 的 strict automaton 对 nodes 4423、5551 均返回
+      violated=true、other=true、incomplete=true，strict_event_equivalent=false；因此原始显著
+      事件轨迹确为两族，而不是纯输入串差异。
+    - >-
+      role_level_automaton 只有在显式 quotient 掉供体横移—受体熄灭—受体复燃修复后才返回
+      bad_winning_product_states=[]；该窄 criterion 证明六个选定生产性里程碑仍有序，却不能自行
+      证明 docs/21 要求的全部对象职责与依赖因果保持。
+    - >-
+      docs/21 只允许在保持对象职责、目标分配和依赖因果时把原始变体归为同一玩家逻辑类。
+      repair 胜路让 candle#1 额外承担横推遮熄与再次点火修复，使 candle#2 经历点燃—熄灭—
+      复燃，并把 candle#2 的 len2 缩短从 donor len1 边界推迟到 donor burn_out 边界；对象职责
+      和燃烧依赖时序均已改变。
+    - >-
+      当前 exact 的 win-coaccessible induced graph 含 120 nodes、228 edges，raw SCC 为
+      120 个单点分量且无 internal edge；拓扑核对处理完全部 120 nodes。repair 分支因此不是
+      可按“完整回返环”忽略的循环 stutter。
+  known_non_equivalent_win_refs:
+    - >-
+      prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/evidence_supplements/exact_001/solution_equivalence_all_wins.json
+      # terminal_winning_state_witnesses[winning_node_id=4423]
+    - >-
+      prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/evidence_supplements/exact_001/solution_equivalence_all_wins.json
+      # terminal_winning_state_witnesses[winning_node_id=5551]
+    - >-
+      prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/evidence_supplements/exact_001/solution_equivalence_all_wins.json
+      # significant_non_milestone_edges[edgeId=64,edgeId=129]
+  status: contradicted
+  limits:
+    - >-
+      本结论只否定当前等价类声明；不评价两条路线的自然发现概率、长度、难度、审美或包装。
+    - >-
+      完整图按 Candle 合同终止 normal win、player death 与 zero-candle loss；该口径与当前
+      all_braziers_lit exact 及 exposure 合同一致。
+
+claims:
+  - claim_id: canonical_normal_win
+    claim: 17 个 canonical inputs 均合法；完整回合结算后玩家存活并以 all_braziers_lit 正常胜利。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical_replay.json 为 complete=true、cost=17、17 inputs/17 steps，digest 为
+        080a65f20be11c841dbb95f6868b200c90e3dfe0da9fc65670c035a6fbcfc90c。
+      - >-
+        逐步 input/events 与 complete_graph.json 从 node 0 起的 17 条实际边完全一致，终点
+        node 1533 为 winning=true，状态键 D:0、两个火盆均为 1，末步含
+        win_all_braziers_lit。
+
+  - claim_id: graph_complete_current_exact
+    claim: 当前 exact 的完整可达图为 complete，含 13893 states、41106 legal edges、4 winning states。
+    status: supported
+    evidence_basis:
+      - >-
+        complete_graph.json 的 status=complete、layout_sha256 与 frozen layout 实际 SHA-256
+        一致；声明计数与实际 13893 nodes、41106 edges、4 winning nodes 一致。
+      - >-
+        node ids 无重复，所有 edge endpoints 均存在；winning nodes 为
+        1533、2214、4423、5551，且终止胜态无出边。
+      - >-
+        supplement_manifest.yml 冻结的 layout、complete graph 与 canonical replay 三个 digest
+        均与实际文件一致，并绑定当前 candidate id 与 exact version。
+
+  - claim_id: required_winning_event_instances
+    claim: >-
+      所有胜路都必须经过 candle#1:d2 侧滚、candle#1 缩为 len2、shrink_ignite candle#2、
+      candle#2 缩为 len2、candle#2:d5 侧滚、点燃 candle#3、点亮 brazier:6,5、
+      candle#3 缩为 len2、candle#3:d4 侧滚、点亮 brazier:7,2。
+    status: supported
+    evidence_basis:
+      - >-
+        analysis.json 对十个 exact event pattern 的 complete-graph avoiding test 均给出
+        winning_path_without=false 与 required_on_every_winning_path=true。
+      - >-
+        对 complete_graph.json 独立按各 exact event 删除相应边后，十项均无 reachable winning
+        node；solution_equivalence_all_wins.json 的全部四个 terminal witnesses 也保留六个有序
+        生产性 milestone bundles。
+
+  - claim_id: object_participation
+    claim: candle#1、candle#2、candle#3、brazier:6,5、brazier:7,2 均在全部胜路中承担声明的生产性机械职责。
+    status: supported
+    evidence_basis:
+      - >-
+        object_participation.json 与 canonical replay 逐对象给出实际参与步骤，digest 与当前 exact
+        一致；all_subjects_participate=true。
+      - >-
+        complete-graph 十项必经事件核对覆盖三根蜡烛的声明操作/传火/缩短和两个火盆的点亮；
+        role_level_automaton 的四个 winning product states 均完整经过 R1..R6，
+        bad_winning_product_states=[]。
+      - >-
+        该支持只确认所有胜路仍包含这些声明的生产性职责；repair 胜路中的额外职责不被此项
+        否定，也正是唯一性审查失败的原因。
+
+  - claim_id: win_coaccessible_acyclicity
+    claim: >-
+      当前完整图中可位于某条 initial-to-win 路径上的子图没有循环 SCC；全图的 41 个循环 SCC
+      均不能到达胜态，因此不存在可任意重复循环后仍获胜的无限胜路。
+    status: supported
+    evidence_basis:
+      - >-
+        从 complete_graph.json 的四个 winning nodes 反向闭包得到 120 nodes、诱导 228 edges，
+        与 scc_raw.json 的 node set 完全一致；120 个 SCC 均为单点且 internal edge 总数为 0。
+      - >-
+        对该诱导子图的拓扑核对处理完全部 120 nodes，直接确认无环。
+      - >-
+        whole_graph_scc_raw.json 覆盖全部 13893 nodes、2634 components；按 raw graph 复核其
+        internal-edge counts、successor sets 与 can_reach_win flags 均一致，41 个循环分量中
+        can_reach_win=true 的数量为 0。
+
+  - claim_id: identity_counterfactuals
+    claim: >-
+      供体预缩、删除供体、删除接力烛的 mutation complete graph 均为零胜态；预点燃 candle#2
+      的 mutation 仍有 4 胜态且所有胜路必先 extinguish:candle#2:concealed，之后再
+      shrink_ignite:candle#2。
+    status: supported
+    evidence_basis:
+      - >-
+        四个 mutation layout 的实际 SHA-256 分别与 manifest、graph_summary、raw complete graph
+        和 event_probes 一致；四图均 status=complete，实际 node/edge/win 数与声明一致，node ids
+        无重复且 edge endpoints 全部有效。
+      - >-
+        cf_donor_preshortened 为 19627/57919/0，cf_without_donor 为 1170/3370/0，
+        cf_without_relay 为 6095/18335/0；三者 canonical_replay 均为 null，raw graph 无 winning node。
+      - >-
+        cf_receiver_prelit 为 13893/41106/4，initial graph node key 与 probe 一致且明确
+        candle#2 初始 lit；其 17 步 replay 首步先发生 receiver concealed extinguish，后在第 5 步
+        发生 shrink_ignite。
+      - >-
+        对 cf_receiver_prelit raw complete graph 独立传播“未熄灭/已熄灭/已后续复燃”有序状态，
+        得到 13893 reachable product states、4 winning product states，四者全为 stage=2 且
+        bad=false，与 ordered probe 的 bad_winning_state_count=0 一致。
+      - >-
+        旧 candidate evidence/counterfactuals.yml 对 without_relay 的 5705 states 计数已由
+        supplement_manifest.yml 明示纠正；当前 mutation layout 的 raw complete graph 与 probe
+        一致为 6095 states，零胜态结论不受该旧计数影响。
+
+  - claim_id: strict_exposure_gate
+    claim: 当前 exact 的 exposure graph complete，verdict=pass，forbidden_hits 为空，允许暴露到 rolling_contact_chain。
+    status: supported
+    evidence_basis:
+      - >-
+        exposure_audit.json 绑定当前 exact version 与 layout digest，sequence digest 与当前
+        mechanic_exposure_sequence.yml 实际 SHA-256 一致；allowed_exposure_through 为
+        rolling_contact_chain。
+      - >-
+        graph.status=complete，声明和 raw arrays 均为 13893 nodes、41106 edges、4 win states；
+        verdict=pass、forbidden_hits=[]。rolling_contact_chain 是当前序列最后一个 branch，
+        forbidden_branches=[] 与合同一致。
+
+hard_failures:
+  - >-
+    已知获胜变体 DONOR_SHIFT_RECEIVER_REPAIR 不是 docs/21 下可忽略的纯走位、完整回返环、
+    对称重标号或独立必要步骤换序；它增加对象职责并改变依赖时序。known_non_equivalent_win_refs
+    非空，故 equivalent_variants_only 声明 contradicted。
+evidence_gaps: []
+overall_hard_status: contradicted
+required_action: revise_candidate

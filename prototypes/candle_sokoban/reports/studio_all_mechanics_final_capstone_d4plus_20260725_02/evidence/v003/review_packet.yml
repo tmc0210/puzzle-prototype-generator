@@ -1,0 +1,112 @@
+review_attempt_id: candle_all_mechanics_002_v003_hard_001
+required_skill: sokoban-evidence-reviewer
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v003
+prototype_id: candle_sokoban
+
+review_scope: >-
+  以 fresh 独立身份核验 frozen v003 的机械声明与 solution uniqueness。只读取本包列出的规则、
+  exact artifact 与原始 runtime/graph/反事实证据；不读取 Designer 的体验、包装、自评、难度判断，
+  不读取 v001/v002 审查，也不评价当前作品是否值得待玩。
+
+exact_artifact:
+  level_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/level.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/layout.txt
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/solve_instance.yml
+  artifact_manifest_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/artifact_manifest.yml
+  layout_sha256: f4e2e6fc3c9af719f4396f274c184bb57f7a59314b4c5a93e7467598511e52e5
+  win_condition: all_braziers_lit
+  global_burn_cycle: 5
+
+mechanical_claims:
+  - claim_id: exact_identity_and_normal_win
+    claim: >-
+      所有 exact artifact 均绑定 candidate=CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002、version=v003、
+      layout digest=f4e2...52e5；正式胜利为 all_braziers_lit，燃烧周期为 5。
+  - claim_id: canonical_solve
+    claim: >-
+      规范 28 输入 replay 全部合法；step 1 直接轴推 candle#2，step 10 writer 侧滚，step 20 candle#2
+      侧滚，step 28 candle#3 侧滚；完整回合结算后玩家存活且三个火盆全部点亮。
+  - claim_id: complete_graph_shape
+    claim: >-
+      在 maxStates=500000、maxDepth=200 的声明预算下，完整枚举 12254 个可达状态、33533 条合法边、
+      2 个 raw winning state；max observed depth=67，graph status=complete，未命中预算边界。
+  - claim_id: solution_family
+    claim: >-
+      两个 raw winning state 的 BFS 代表深度为 28 与 30；二者都包含同一 opening receiver 轴推、
+      同一 writer 墙灭/火盆复燃/首次退焰、同一 candle#2 d3 侧滚点亮 (6,6)、同一 candle#2→candle#3
+      退焰与同一 candle#3 终滚点亮 (9,2)，差异只在 consumer 燃尽前后的两步相位分配。
+  - claim_id: all_wins_required_active_relation_chain
+    claim: >-
+      所有胜路都必经 opening candle#2 轴推、writer 同一滚动中的墙灭/火盆复燃/首次 shrink_ignite、
+      candle#2 主动 d3 侧滚点亮 gate brazier 并布置覆盖、candle#2→candle#3 退焰，以及 candle#3 终滚点盆；
+      每条胜路至少各含一次 receiver axis push、writer roll、active relay roll 与 consumer final roll。
+  - claim_id: active_choice_reachability
+    claim: >-
+      正确 opening 单推后的 state index 2 可达胜；连续多推一格后的 state index 8 不可达胜；
+      未推 receiver 而提前执行 writer 的 state index 148 不可达胜；规范首次转移后的 state index 156
+      与主动 relay 布置后的 state index 1215 均可达胜。
+  - claim_id: identity_counterfactuals
+    claim: >-
+      移除 (6,6) gate brazier 的完整图为 45461 states/130093 edges/5 wins，并恢复非等价拆分历史；
+      移除 (4,4) douse wall 的完整图为 22696/64298/2，胜路退化为无墙灭的预燃直达；
+      移除 (4,5) reignite source 的完整图为 18236/50703/0；预燃 candle#2 的完整图为 6221/17290/0。
+  - claim_id: exposure_gate
+    claim: >-
+      当前 exact 的 allowed_exposure_through=rolling_contact_chain；exposure audit 绑定当前布局，
+      graph complete、verdict pass、forbidden_hits=0，raw graph 为 12254 nodes/33533 edges。
+
+solution_uniqueness_claim:
+  extracted_by: Controller 从 Designer submission packet 仅提取机械 uniqueness 字段
+  result: equivalent_variants_only
+  search_scope: complete
+  search_budget: maxStates=500000; maxDepth=200
+  known_raw_winning_variants:
+    - win_state_index=3936; bfs_depth=28
+    - win_state_index=4784; bfs_depth=30
+  equivalence_account: >-
+    两个胜态使用同一 opening axis push、writer 核心接触与首次转移、active relay d3 侧滚与 gate 点亮、
+    relay→consumer 退焰和 consumer 终滚；较长代表只在 consumer 燃尽前后多分配两步相位。
+  evidence_refs:
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/graph_analysis.md
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/winning_state_representatives.jsonl
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/required_relations_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/solution_family_self_check.yml
+  evidence_limits:
+    - 完整图与代表支持 runtime 胜族及必经关系，不判断两种相位分配的人类体验价值。
+
+allowed_evidence_sources:
+  - docs/21-level-design-studio-standard.md
+  - docs/30-scc-graph-diagnostic-reading.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/artifact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/level.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/layout.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/graph_analysis.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/winning_state_representatives.jsonl
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/required_relations_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/active_agency_graph_checks.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/solution_family_self_check.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_gate_brazier.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_gate_brazier_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_douse_wall.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_douse_wall_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_reignite_source.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_reignite_source_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/prelit_receiver.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/prelit_receiver_audit.json
+
+forbidden_inputs:
+  - v001/v002 的 Evidence Reviewer、Critic、Designer 或 Controller 结论
+  - Designer 体验核心、包装、自评、难度判断、player_reread、active_agency_audit 与 submission packet 叙事
+  - Explorer 材料、归档校准、旧 Candle reports、既有待玩关、任何 Critic 输入或结论
+  - 自动指标对审美、难度或待玩价值的解释
+
+required_output_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/evidence/v003/evidence_review.yml

@@ -1,0 +1,41 @@
+runId: batch_001_blocker_to_fuel
+title: "共享格 blocker 到退焰 fuel 的局部结构谱"
+notes: >-
+  比较旧来源端帽格是否同时是接收烛的烛芯格和下一次轴推目的格；
+  紧邻火盆只消费接收烛是否被点燃，不承担完整关卡包装。
+defaults:
+  maxExploreDepth: 16
+  maxStates: 300000
+cases:
+  - id: surviving_source_shared_cell
+    family: shared_cell_blocker_to_fuel
+    variant: surviving_source
+    changed_variable: "来源烛长度为三格，边界缩短后仍保留燃烧烛身"
+    contrast_with: [burnout_source_shared_cell, unlit_source_shared_cell, one_cell_gap]
+    notes: "旧端帽格在边界前挡住接收烛向上轴推；边界后成为退焰并点燃接收烛；接收烛进入旧格后点亮上方火盆。"
+    layout_ref: layouts/surviving_source_shared_cell.txt
+    actions: [up, up, down, down, right, up]
+  - id: burnout_source_shared_cell
+    family: shared_cell_blocker_to_fuel
+    variant: burnout_source
+    changed_variable: "将三格来源烛换成单格燃烛"
+    contrast_with: surviving_source_shared_cell
+    notes: "来源在边界燃尽；旧格释放但没有存活退焰，接收烛仍未燃，推进后不能点亮火盆。"
+    layout_ref: layouts/burnout_source_shared_cell.txt
+    actions: [up, up, down, down, right, up]
+  - id: unlit_source_shared_cell
+    family: shared_cell_blocker_to_fuel
+    variant: unlit_source
+    changed_variable: "保留三格形状但将来源烛改为未燃"
+    contrast_with: surviving_source_shared_cell
+    notes: "燃烧边界不缩短该来源烛；旧端帽格继续是实体，接收烛的向上轴推仍被阻挡。"
+    layout_ref: layouts/unlit_source_shared_cell.txt
+    actions: [up, up, down, down, right, up]
+  - id: one_cell_gap
+    family: shared_cell_blocker_to_fuel
+    variant: one_cell_gap
+    changed_variable: "接收烛向下错开一格，取消释放格、烛芯格与下一推目的格的同格重合"
+    contrast_with: surviving_source_shared_cell
+    notes: "来源烛照常缩短，但旧端帽格既不点燃接收烛，也不是接收烛下一次轴推进入的格。"
+    layout_ref: layouts/one_cell_gap.txt
+    actions: [up, up, down, down, right, up]

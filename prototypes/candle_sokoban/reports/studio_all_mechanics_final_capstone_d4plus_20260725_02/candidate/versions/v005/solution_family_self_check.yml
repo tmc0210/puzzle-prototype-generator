@@ -1,0 +1,46 @@
+schema_version: 1
+artifact_kind: solution_family_self_check
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v005
+result: equivalent_variants_only
+
+search:
+  status: complete
+  max_states: 300000
+  max_depth: 200
+  reachable_states: 98961
+  legal_transitions: 276326
+  raw_winning_states: 2
+  shortest_depth: 22
+  max_observed_depth: 79
+  budget_hit: false
+
+winning_representatives:
+  - win_state_index: 9220
+    bfs_depth: 22
+    role: canonical
+  - win_state_index: 11959
+    bfs_depth: 24
+    role: equivalent_opening_phase_variant
+
+equivalence_account: >-
+  两个胜态代表都恰好下推 candle#2 两次、让 candle#1 烧成两格后执行 d4 下滚、在同一滚动内墙灭/
+  火盆复燃、以 shrink_ignite 点亮 candle#2、再让 candle#2 缩成 y8 单格并 d6 左滚点亮 (2,7)。
+  深度 24 代表只把第二次轴推跨到 writer 第一次缩短之后；早期写入值、对象位置计划、接触顺序、
+  参与集合与最终目标分配均不变。
+
+all_winning_path_requirements:
+  relay_axis_push_minimum_two: true
+  selected_writer_roll_d4: true
+  writer_same_roll_wall_then_brazier_reignite: true
+  writer_retreat_transfer_to_relay: true
+  relay_second_boundary_to_len1: true
+  relay_final_d6_lights_target: true
+
+known_non_equivalent_winning_family: none
+evidence_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/winning_state_representatives.jsonl
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/downstream_coupling_audit.json
+limits:
+  - 完整图与全胜路必要关系证明机械胜族；“两个调相代表体验等价”仍是 Designer 的玩家侧判断。

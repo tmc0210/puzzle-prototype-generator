@@ -1,0 +1,30 @@
+batch_id: batch_001_retreat_roll_readout
+exploration_id: candle_full_exposure_compact_20260726
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+cases:
+  - id: receiver_on_vacated_cap
+    family: vacated_cap_to_long_roll_readout
+    variant: receiver_on_vacated_cap
+    changed_variable: 竖烛向上芯位落在横烛本轮缩短腾出的末端格
+    contrast_with: receiver_under_surviving_tail
+    notes: 五步到边界时横烛缩短、竖烛接火；下一步向右长侧滚在中途点亮火盆。
+    layout_ref: receiver_on_vacated_cap.txt
+    actions: [left, right, left, right, up, right, right]
+  - id: receiver_under_surviving_tail
+    family: vacated_cap_to_long_roll_readout
+    variant: receiver_under_surviving_tail
+    changed_variable: 保持竖烛、跑道、火盆与输入不变，把交叉格从横烛末端改为缩短后仍保留的尾部格
+    contrast_with: receiver_on_vacated_cap
+    notes: 五步到边界后竖烛仍被横烛尾部遮住；下一步向右长侧滚第一小步只重曝，经过同一火盆但不能点亮。
+    layout_ref: receiver_under_surviving_tail.txt
+    actions: [left, right, left, right, up, right, right]
+  - id: receiver_one_cell_early_failed_probe
+    family: vacated_cap_to_long_roll_readout
+    variant: receiver_one_cell_early_failed_probe
+    changed_variable: 竖烛芯向横烛尾部错一格
+    contrast_with: receiver_on_vacated_cap
+    notes: 边界不接火，但向右长滚第一小步撞上横烛缩短后的外露火焰而补点燃；仅作为 shortcut 证据。
+    layout_ref: receiver_one_cell_early.txt
+    actions: [left, right, left, right, up, right, right]

@@ -1,0 +1,83 @@
+schema_version: 1
+request_id: l13_designer_request_001_one_shot_transfer
+exploration_id: candle_curriculum_l13_shrink_interface_fire_20260726
+design_task_id: candle_curriculum_l13_shrink_interface_fire_20260726
+requested_by_role: designer
+intent: mechanism_explore
+publication_scope: task_local
+
+design_space: >-
+  展开退焰交接的“一次性接口”局部关系：来源烛 A 在目标边界缩短后必须继续存活，接收烛 B
+  必须在同格获得 shrink_ignite，随后一次直接轴推消费通道与火；但完整可达关系中，第一次交接
+  之后不得通过再次移动、遮蔽、重曝或等待 A 形成第二次退焰交接或普通复燃，也不得让 B 错过
+  首个 consumer 后通过缩短和多推补救。边界前仍须保留一个真实可执行的错误对象处置方向，
+  不能用完全钉死 A 代替玩家选择。探索对象是可移植的局部一次性约束，不是完整候选、玩家起点、
+  墙形包装、目标难度或指定 structure family。
+
+abstract_question: >-
+  在退焰交接中，来源烛 A 必须于目标边界缩短后继续存活，接收烛 B 必须在同格获得
+  shrink_ignite，随后一次直接轴推消费通道与火。请探索最小的“一次性交接”局部结构：完整可达图中，
+  第一次交接之后不得通过再次移动、遮蔽、重曝或等待 A，形成第二次 shrink_ignite、普通 wick
+  reignition，或把 B 的一次 consumer 退化成多推补救；同时边界前仍须存在一个真实可执行的
+  错误对象处置方向，而非把 A 完全钉死。
+
+why_needed: >-
+  已知材料证明 blocker->fuel 的正向六步关系，但尚未覆盖“来源存活后可被再次推回接口”的
+  recycling 旁路，也未覆盖“接收烛缩短后以多次轴推补救”的长解。Designer 需要的是可复用的
+  局部一次性约束，不是某个候选布局的坐标修补。
+
+sampling_axes:
+  - 来源烛在目标边界前后的最小长度，以及长度变化对再次占入共享接口的影响。
+  - 接收烛为单格或多格时，错过首个 consumer 窗口后是否仍可通过缩短与多推获胜。
+  - 静态墙、已退出的支撑烛身体或接收烛自身占入，能否在不阻止首次 consumer 的前提下关闭来源回收。
+  - 开局可移动/可墙灭来源作为错误承诺时，怎样保证该操作不可在更晚边界恢复为等价交接。
+  - 只允许一步轴推和无中间接触的一步侧滚作为局部旋钮；任何 rolling_contact_chain later event 必须关闭。
+
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/batch.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/explain_surviving_source_shared_cell.json
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/replay_surviving_source_shared_cell.json
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/replay_burnout_source_shared_cell.json
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/replay_one_cell_gap.json
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+do_not_repeat:
+  - >-
+    只复现已知 blocker->fuel 六步正例，却不在首次交接后实际尝试移动来源、再次等待边界和重复点火。
+  - >-
+    只证明接收烛的最短下一推可点盆，却不实际让接收烛错过窗口、缩短后尝试一推或多推补救。
+  - >-
+    以完全封死来源烛或删除开局错误处置方向关闭回收，从而把玩家判断改成唯一合法走廊。
+  - >-
+    通过长路线、空等、重复搬运或完整关卡包装制造一次性；局部材料必须由对象接触、存活、占格或火路承担约束。
+  - >-
+    只给事件计数、预算内搜索或单条最短解，未执行正例与回收/补救对照的连续非空输入串。
+
+materialization_target: >-
+  每张正向材料提供一个可运行开始局面与连续非空输入串，覆盖目标 shrink_ignite、紧随其后的单次
+  直接 consumer，以及首次交接后的来源回收尝试和接收者错窗补救尝试。逐步保存动作前后 layout、
+  倒计时、相关蜡烛的长度/明灭/烛芯投影、玩家站位、合法性和完整事件。若声称关闭回收或补救，
+  提供局部完整图；图不完整时只能标为待 Designer 自证的假设。只发布抽象局部卡片与近邻对照，
+  不制作完整关卡，不指定候选坐标、墙形、玩家起点、包装或 exact version。
+
+required_contrasts:
+  - 首次交接后立即直接推 B 的正例。
+  - 首次交接后先移动 A、再等待边界的回收尝试。
+  - 错过首推窗口后让 B 缩短、再尝试一推或多推的补救。
+  - 边界前提前移动或墙灭 A 的错误处置。
+
+acceptance_evidence:
+  - 每个可用结构给出非空 direct replay 与关键事件顺序。
+  - 对回收和补救对照给出明确可胜/不可胜结论及 runtime 原因。
+  - 若声称关闭旁路，需提供局部完整图；若图不完整，只能标为待 Designer 自证的假设。
+  - 结论必须保持抽象，不引用当前候选的坐标、墙形、玩家起点、关卡包装或 exact version。
+
+forbidden_scope:
+  - 不设计完整关卡，不给出候选布局或起点包装。
+  - 不评价难度、审美、课程位置、唯一性或待玩准入。
+  - 不修改候选、账本、assignment、experience brief 或 prototype 通用代码。

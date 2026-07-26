@@ -1,0 +1,48 @@
+sketch_id: candle_full_exposure_compact_reasoning_sketch_006
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/candidate_design_006.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+designer_instance_id: level_designer_revision_006_20260726
+
+human_feedback_response: >-
+  revision_004/005 只否定了“十步内开放火盆作源”和“双 shrink_ignite 后靠可移动余身永久筛选”两个近邻实现，
+  不足以推出整个体验核心或全部结构族应放弃。本轮由 Designer 独立继续，并把局部事实保留为恢复 probe，
+  不把旧撤回结论当停止授权。
+
+structure_judgment:
+  decision: split_and_transform_family
+  new_family: shared_immediate_goal_two_boundary_operations
+  retained_core: >-
+    同一未燃接收烛仍必须在共享边界从交叉供体接到退焰，随后以一次不可中止长侧滚在终点前点亮远端火盆。
+  removed_hypothesis: >-
+    不再要求错误分支也完成 shrink_ignite，也不再用错误供体余身本身充当永久筛选器；batch_005 已证明这一近邻容易换线恢复。
+
+player_relationship:
+  early_choices:
+    - >-
+      操作辅助燃烛，在边界行动内点亮近端开放火盆；交叉供体保持遮芯到燃烧结算，缩短后把退焰交给接收烛。
+    - >-
+      直接把交叉供体侧滚退出；它在同一行动的滚动途中也点亮同一个近端火盆，但接收烛先未燃重曝，
+      供体随后在远处失火或失去对交叉芯位的供火职责。
+  local_equivalence: 两个对象操作都立即清楚地点亮同一个可见目标，因此不能只靠“眼前是否推进”判断。
+  later_filter: >-
+    远端火盆只接受已经在边界接火的同一接收烛；错误分支虽然保留近端目标进展，却没有可把火重新送回交叉芯位的对象职责。
+  active_phase_change: 两条分支的共享边界都由移动蜡烛的行动提交，不由走到操作位或空等触发。
+
+compactness_and_roles:
+  - 交叉供体同时是遮芯器、退焰供体和错误分支的即时目标点火器。
+  - 辅助燃烛只在正确分支承担同一即时目标点火器，并在边界燃尽或退出后不形成独立后题。
+  - 接收烛同时承担交叉接火与远端长滚 consumer；高潮动作收束最后目标。
+  - 近端火盆必须远离接收烛可换线到达的芯轨迹，避免退化为普通恢复源。
+
+mechanical_hypotheses_to_test:
+  - 倒数为 1 的局部状态有两条不同蜡烛的合法操作边，两边都含 light_brazier 指向同一近端火盆。
+  - 保留交叉供体的边同时在边界产生 shrink_ignite；退出边先产生 wick_reexposed_unlit，边界不产生 shrink_ignite。
+  - 正确分支随后由同一接收烛长滚，在终点前点亮远端火盆并正常胜利。
+  - 错误分支完整可达子图无胜；原因是辅助烛在边界消耗、退出供体失去火态/交叉供火操作面，近端已亮火盆无法给接收烛或剩余对象换线补火。
+  - 全部胜解族保持“辅助烛点近盆、交叉供体退焰接收、接收烛长滚点远盆”的职责，不含顺滚普通补火。
+
+publication_gate: >-
+  先由实际布局证明两个边界对象操作对玩家都构成局部进展；再完成 canonical replay、逐步布局、错误分支恢复、
+  complete graph、solution family、对象参与、required-winning 事件与 rolling_contact_chain exposure。任一不成立就继续修改，
+  不发布 exact_005。
+

@@ -1,0 +1,94 @@
+review_attempt_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004_review_001
+reviewer_role: sokoban-evidence-reviewer
+prototype_id: candle_sokoban
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004
+
+solve_instance:
+  ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solve_instance.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/layout.txt
+  layout_sha256: 6050e5ead4203586ce19b5269b207d97ff7877a184e05c923110a695693fd3ba
+  win_type: all_braziers_lit
+  global_burn_cycle: 5
+  allowed_exposure_through: rolling_contact_chain
+
+rules_and_contract_refs:
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+solution_uniqueness_claim:
+  declared_result: unique_complete
+  search_scope: complete
+  search_budget: max_states=300000; actual_states=3974; actual_edges=11126
+  transparent_variant_account:
+    terminal_winning_state_count: 1
+    winning_terminal_index: 247
+    known_non_equivalent_win_refs: []
+  evidence_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solution_family_audit.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_003/work/solution_family_audit.ts
+
+mechanical_claims:
+  - claim_id: candidate_exact_layout_alignment
+    claim: candidate、exact、layout、solve instance 与全部 current-exact evidence 对齐，layout SHA-256 为 6050e5ead4203586ce19b5269b207d97ff7877a184e05c923110a695693fd3ba。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exact_manifest.yml
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/layout.txt
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solve_instance.yml
+  - claim_id: canonical_normal_win
+    claim: 10 个 canonical inputs 均合法，玩家存活并以 all_braziers_lit 正常胜利。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/canonical_replay.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exposure_audit.json
+  - claim_id: graph_complete_current_exact
+    claim: 当前 exact 完整可达图 complete，3974 states、11126 edges、1 win。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exposure_audit.json
+  - claim_id: first_boundary_keeps_both_targets_open
+    claim: canonical 第 5 步第一次燃烧边界完成供体与横烛缩短及接收烛 shrink_ignite，但两个火盆仍均未点亮。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/canonical_replay.json
+  - claim_id: required_winning_events_roles_and_order
+    claim: >-
+      全部胜路均要求供体侧滚、供体对接收烛的 shrink_ignite、接收烛在同一左滚中先被 candle#3 烛身灭火、
+      再由其远端芯火复燃并点亮左盆 (1,3)，随后 candle#3 上滚点亮上盆 (3,1)；目标分配固定且左盆必先于上盆。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exposure_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solution_family_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_003/work/solution_family_audit.ts
+  - claim_id: early_bridge_displacement_is_reachable_loss
+    claim: >-
+      开局提前下滚 candle#3 后，仍可在第 5 步点燃接收烛且两盆保持未亮；complete graph 中满足“接收烛已燃、两盆未亮、
+      candle#3 已离开火桥位”的 54 个状态全部不可再到达胜态。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exposure_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solution_family_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_003/work/solution_family_audit.ts
+  - claim_id: strict_exposure_gate
+    claim: exposure graph complete，verdict=pass，forbidden_hits 为空，允许暴露到 rolling_contact_chain。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exposure_audit.json
+
+allowed_evidence_sources:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_005/input.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/**
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_003/work/solution_family_audit.ts
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+forbidden_inputs:
+  - exact_001、exact_002、delivery_001、exact_003 及其任何旧 evidence、review、replay 或布局
+  - 完整 submission packet、experience brief、human feedback、player read、Designer reasoning/响应/自评/归档
+  - Explorer 材料、旧 Candle studio、难度/审美/包装/待玩判断
+  - prototypes/candle_sokoban/docs/curriculum_planning_context.md 及相关内容
+
+output_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_005/evidence_review.yml

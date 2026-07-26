@@ -1,0 +1,64 @@
+schema_version: 1
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/revision_008_post_archive_reassessment.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+status: working
+
+rejected_basis:
+  versions: [CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_delivery_002, CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006]
+  player_failure: >-
+    强制开局后只有第五步普通二择；正确选择完成后，单格供体的上盆路线和接收者最终长滚都是单向兑现，
+    没有第二个需要比较的可行构造，落入 Candle 新归档的普通二择与承诺后坍塌边界。
+  reassessment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/post_archive_reassessment_001.yml
+
+new_structure_hypothesis:
+  retained_core: >-
+    第一次共享边界仍由玩家选择移动辅助烛、保留交叉供体，让接收者在供体腾出的末端格取得退焰；
+    同一接收者最终以不可中止长滚途中点盆。
+  changed_relationship: >-
+    供体首次边界后保留两格。玩家在交接完成后面对两种都利用已掌握机制的构造：立即侧滚两格供体，
+    或先挪辅助烛取得供体轴推面，让供体回占交叉芯位、熄灭接收者并在下一边界第二次交接。
+  later_filter: >-
+    上方滚动端点在供体尾格列设墙、帽格列留孔。两格供体被尾格墙截停在点盆行；
+    第二次交接后只剩单格供体，它会穿过帽格孔滚到更高一行，且左侧是墙，无法轴推到上盆。
+  player_reason: >-
+    玩家必须预见“是否保留供体长度”会改变后继整根侧滚的停止行和轴推操作面；
+    这不是避免显然破坏，而是在两种交接策略之间分配供体的长度、交叉职责与远端点盆职责。
+
+archive_calibration_target:
+  beyond_CANDLE_CAND_0002: 不只一次写入/读回二择；首次承诺后还有供体长度与重交接策略选择。
+  avoid_CANDLE_CAND_0003: 后继不是盲推；必须从上方不对称墙孔反读供体应保持两格。
+  beyond_CANDLE_CAND_0001_0004_lower_bound: 同一供体连续承担交接、可选重交接与长度敏感滚动端点，关系发生重读而非重复流程。
+  forbidden_quality_proxies:
+    - forced-viable 数量、比例或连续段
+    - win-reachable outdegree
+    - 唯一解、事件数、图规模或机械链长度
+
+working_layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_008/work/layout_v001.layout
+planned_direct_inputs: [up, left, up, up, left, up, left, up, right, down, down, down, right, right]
+known_rehandoff_probe_inputs: [up, left, up, up, left, left, up, right, down, right, up]
+
+v001_player_side_result:
+  mechanical_result: complete graph clean, one winning state, rehandoff branch filtered by singleton wall-pocket endpoint
+  player_result: not_publishable
+  reason: >-
+    正确路线仍是首次交接后立即把两格供体送向可见上盆；长度端点只惩罚主动尝试重交接的旁路，
+    没有迫使正确路线本身建立更深假设，仍可能只达到常规流程下界。
+
+v002_structure_hypothesis:
+  working_layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_008/work/layout_v002.layout
+  inversion: >-
+    首次交接后，直接把两格供体滚走会让接收者在第二边界过早缩成单格；正确路线反而要先挪辅助烛、
+    让供体回占交叉芯位熄灭接收者，并在第二边界以第二次 shrink_ignite 保留接收者两格长度。
+  two_length_receiver_readout: >-
+    两格接收者向右侧滚，被上身行墙截停，并用 y=4 的芯行点亮中层消费者；下一边界缩为单格后，
+    玩家从其右侧向左长滚，改用 y=5 的芯行点亮终盆。相同接收者的长度改变同时改变停止列和消费者行。
+  donor_singleton_payoff: >-
+    第二次交接后的单格供体穿过尾格墙孔，直接以芯火点亮最上盆；直接路线的两格供体无法进入该行。
+  planned_inputs: [up, left, up, up, left, left, up, right, down, right, up, down, right, down, down, right, right, right, up, left]
+
+publication_gate:
+  - 规范解逐步状态与事件实际成立。
+  - 重交接策略确实形成第二次 shrink_ignite，且其单格供体进入错误停止行后不可恢复。
+  - 完整胜解族只保留一次交接、两格供体端点与最终接收者长滚的同一因果类。
+  - 所有对象参与、恢复反事实、玩家侧重读与 exposure 均完成。
+  - 不以机械唯一性替代新增主动决策的玩家侧判断。

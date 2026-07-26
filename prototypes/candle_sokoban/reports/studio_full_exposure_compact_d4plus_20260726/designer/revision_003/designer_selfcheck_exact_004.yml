@@ -1,0 +1,72 @@
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/review_response_003.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004
+
+source_boundary:
+  observed: true
+  forbidden_sources_read: []
+  notes:
+    - 只读取 assignment 的 input_refs、技能强制 authority、design_handoff required docs、规则/runtime 与当前工作产物。
+    - 未访问 prototypes/candle_sokoban/docs/curriculum_planning_context.md 及其相关规划内容。
+
+player_side_read:
+  first_boundary_keeps_two_open_roles: true
+  first_boundary_state: >-
+    第 5 步仅完成供体与横烛同步缩短、接收烛退焰点火；上盆 (3,1) 与左盆 (1,3) 都保持未亮。
+    接收烛的左盆职责与横烛的“先做火桥、后点上盆”双重职责都尚未退休。
+  opening_choice_consumed_later: >-
+    第一动作把供体滚入交叉位后，玩家可以向右保留横烛原位，也可以向左并在边界前把横烛滚走。
+    后者仍让接收烛在第 5 步点燃且双盆未亮，但 complete graph 中 54 个这类火桥移位状态都无法再胜；
+    中段长滚需要横烛身体先灭火、远端芯位再复燃，因而后继真实筛选开局安排。
+  middle_reframe: >-
+    接收烛长滚第一小步被横烛身体灭火，第三小步由横烛远端芯位复燃，第五小步点左盆；
+    这把横烛从“就近上盆执行烛”重读为必须暂留的火桥。接收烛滚离后才释放横烛下侧操作面。
+  ending: 横烛向上两格长滚点上盆并在同一行动正常胜利，无后续清理。
+  step_count_vs_exact_003: 10_vs_11_not_increased
+  added_automatic_events_or_hidden_counts: false
+
+canonical_replay:
+  ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/canonical_replay.json
+  completed: true
+  legal_through_step: 10
+  final_win: true
+  normal_win: all_braziers_lit
+
+solution_family:
+  ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solution_family_audit.json
+  graph_status: complete
+  reachable_states: 3974
+  legal_edges: 11126
+  winning_states: 1
+  result: unique_complete
+  all_wins_require:
+    - donor_side_roll
+    - receiver_shrink_ignite
+    - receiver_body_douse
+    - receiver_bridge_reignite
+    - receiver_roll_lights_left_brazier
+    - bridge_roll_lights_upper_brazier
+    - left_brazier_before_upper_brazier
+  known_non_equivalent_wins: []
+
+exposure:
+  ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exposure_audit.json
+  allowed_exposure_through: rolling_contact_chain
+  graph_status: complete
+  verdict: pass
+  forbidden_hits: []
+
+tool_checks:
+  npm_run_check: pass
+  candle_conformance:
+    status: warning
+    implemented_checks: all_pass
+    unavailable_capabilities:
+      - raw_sampler
+      - candidate_seed_factories
+      - curated_miner
+      - puzzlescript_exporter
+      - puzzlescript_checker
+
+designer_self_verdict: submit_for_independent_review
+

@@ -1,0 +1,32 @@
+sketch_id: candle_full_exposure_compact_reasoning_sketch_005
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/structure_rebuild_005.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+structure_family: boundary_fork_between_transfer_and_visible_goal
+
+player_relationship:
+  opening_commitments:
+    - 安排已燃供体，使下一次对象操作能把本轮将缩掉的末端送到未燃接收烛芯位。
+    - 安排另一根仍承担目标职责的燃烛，使它能在同一早段直接推进一个可见开放火盆。
+  boundary_decision: >-
+    第一次燃烧边界前，玩家到达一个同时能操作两种对象承诺的局部站位；边界行动必须主动选择滚入供体完成
+    退焰接收，或先滚目标烛点盆。两者都改变对象关系并产生局部进展，不存在“走一步等边界”的正确动作。
+  later_filter: >-
+    正确分支让接收烛获得火态并保留目标烛的后续操作面；接收烛的不可中止长滚消费该火态并改变目标烛或供体
+    的操作面，随后由保留对象收束另一盆。错误分支虽然先点一盆，但供体在错误位置丢失末端；已亮盆、供体余芯
+    与滚动路线均不能给接收烛补火，剩余目标因此反向否定早段承诺。
+
+compactness_contract:
+  - 版面保持单一开放房间或少量结构挡块，不使用墙廊与长绕位。
+  - 新增动作必须移动蜡烛、改变火态/长度/遮蔽、建立或释放操作面，或在两种承诺之间主动选择相位。
+  - 两个火盆都参与同一职责冲突；不追加与交叉口无关的第三段验收。
+  - 允许跨越多次共享边界，但每次边界必须由对象操作提交或改写职责，不能由自动期限淘汰错误分支。
+
+mechanical_hypotheses_to_test:
+  - 倒数为 1 的选择节点至少有两条不同对象的合法移动边；正确边含 shrink_ignite，错误边含目标推进或明确建立其操作面。
+  - 错误边后的完整可达子图不可胜，且失败原因是供体末端/操作面永久丢失，不是仅仅晚一轮或步数更长。
+  - 全部胜路都要求同一接收烛先 shrink_ignite、后不可中止长滚，并在途中而非终点后点亮指定火盆。
+  - 长滚方向远离供体余芯和已亮火盆，完整图中不存在途中 ignite_from_wick / ignite_from_brazier 恢复旁路。
+
+publication_gate: >-
+  玩家侧先能从实际初始布局读出双承诺、主动边界和后继反筛选；随后 replay、完整解族、错误分支反事实、
+  对象参与、必经事件和 complete exposure 全部支持，才发布 exact_005。

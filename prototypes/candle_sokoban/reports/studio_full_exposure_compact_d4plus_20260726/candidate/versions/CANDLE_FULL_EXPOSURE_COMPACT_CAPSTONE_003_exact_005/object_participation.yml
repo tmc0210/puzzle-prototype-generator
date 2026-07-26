@@ -1,0 +1,49 @@
+schema_version: 1
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005
+graph_scope: complete
+objects:
+  - id: candle#1
+    role: cross_donor_then_upper_goal_lighter
+    required_winning_events:
+      - shrink:candle#1:len2
+      - roll_candle:candle#1
+      - push_axis:candle#1
+      - light_brazier:7,3
+    responsibility: >-
+      开局遮住接收烛芯并在第一个正确边界缩短交火；缩后余身再进入上方相位行并点亮上盆。
+  - id: candle#2
+    role: constructed_receiver_then_phase_gated_long_roll_consumer
+    required_winning_events:
+      - push_axis:candle#2
+      - shrink_ignite:candle#2
+      - shrink:candle#2:len1
+      - roll_multi_cell_one_turn:candle#2
+      - light_brazier:7,5
+      - light_brazier:10,5
+      - roll_last_brazier_before_endpoint:candle#2
+    forbidden_on_all_winning_paths:
+      - wick_reexposed_unlit:candle#2
+      - ignite_from_brazier:candle#2
+      - ignite_from_wick:candle#2
+    responsibility: >-
+      玩家首步把它构造成退焰接收位；它必须从供体取得退焰，再缩成单格，最后以同一长滚点亮中盆与远盆。
+  - id: candle#3
+    role: near_goal_commitment_and_delayed_wrong_progress
+    required_winning_events:
+      - push_axis:candle#3
+      - light_brazier:1,5
+      - shrink:candle#3:len1
+      - burn_out:candle#3
+    responsibility: >-
+      正确边界点亮左盆并缩成单格；错误边界后仍可补亮左盆，使错误不在第一次边界立刻显形。
+braziers:
+  - coordinate: [1, 5]
+    role: auxiliary_candle_target
+  - coordinate: [7, 3]
+    role: donor_second_phase_target
+  - coordinate: [7, 5]
+    role: pre_shrink_body_blocker_and_post_shrink_first_roll_consumer
+  - coordinate: [10, 5]
+    role: penultimate_roll_consumer_and_final_goal
+evidence_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005/solution_family_audit.json

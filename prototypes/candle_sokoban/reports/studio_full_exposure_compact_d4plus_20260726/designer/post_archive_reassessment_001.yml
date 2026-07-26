@@ -1,0 +1,88 @@
+schema_version: 1
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/revision_008_post_archive_reassessment.yml
+designer_instance_id: candle_full_exposure_compact_designer_continuous_001
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+reviewed_delivery_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_delivery_002
+reviewed_exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006
+
+archive_inputs_read:
+  index: prototypes/candle_sokoban/design_archive/index.yml
+  candidate_cards:
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0001.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0002.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0003.md
+    - prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0004.md
+  complete_read: true
+
+actual_player_route_read:
+  opening_steps_1_to_4: >-
+    第一步把接收烛推入交叉芯位；其后三步沿唯一短通道到达同时邻接辅助烛和交叉供体的位置。
+    对已掌握全部规则的玩家，这段只建立倒数与操作位，没有尚待比较的构造假设。
+  only_material_choice_step_5: >-
+    玩家在左推辅助烛与上滚交叉供体之间二择。左推同时点左盆、保留供体到边界并让接收烛接火；
+    上滚供体则让接收烛未燃重曝。这一选择真实且机械有后果，但正确关系直接表现为
+    “不要先移走正在遮住接收烛芯的供体”，对完整掌握退焰接收的玩家只是普通二择。
+  steps_6_to_10_after_commitment: >-
+    第五步正确后，供体只剩单格，唯一正向用途是上滚一格后轴推点亮唯一上盆。
+    让它回占接收烛芯位只会显然熄火且下一边界燃尽；这不是与正解竞争的可行构造，
+    不能把“没有主动破坏已建立火态”计作新的玩家决策。
+  steps_11_to_14_after_commitment: >-
+    第二边界后只剩已燃单格接收烛。玩家走到其左侧并向右滚；五格长滚点亮两个末行火盆后胜利。
+    这是第五步状态的清楚读出，但滚动前没有新的对象职责分配、路线比较或承诺条件。
+  decision_shape: >-
+    完整作品由一次普通二择加一条确定性兑现链组成；第五步之后决策空间坍塌。
+
+clean_archive_comparison:
+  CANDLE_CAND_0002:
+    human_boundary: 开局下推一次或两次的普通二择；机械链成立但几乎无玩家洞见，难度 2。
+    current_relation: >-
+      当前版本同样先经短强制开局，再用一次二择写入后续是否可完成；较长事件链和远端长滚
+      只延迟读回该选择，没有增加需要玩家建立的第二层关系。
+  CANDLE_CAND_0003:
+    human_boundary: 先推左上还是右下的二择；开局承诺后便可盲目执行，审美 1、难度 2。
+    current_relation: >-
+      当前版本不至于完全盲推，且交叉退焰本身比该反例更有结构含义；但第五步以后同样只有
+      单向供体点盆和最终长滚，因此触及“承诺后决策坍塌”的核心失败边界。
+  CANDLE_CAND_0001:
+    human_boundary: 侧滚串联灭火、重曝、后段复燃和退焰，有一定洞见，但只达到常规流程难度 3。
+    current_relation: >-
+      当前版本的退焰接收与长滚消费关系清楚，却没有比该难度 3 下界更多的主动构造层；
+      不能因 shrink_ignite 与双盆长滚事件更整齐就上调到难度 4。
+  CANDLE_CAND_0004:
+    human_boundary: 主动墙灭保长，再处理右上蜡烛并复燃；顺序锁和空间复用构成常规流程难度 3。
+    current_relation: >-
+      当前版本的供体上盆复用了同一供体，但它在第一次边界后只剩唯一明显去处，
+      不像该下界那样要求玩家在两个阶段主动维护顺序责任。即使保持紧凑，也未超出难度 3。
+
+target_reassessment:
+  compact: true
+  mechanical_identity_and_exposure: supported_by_current_artifacts
+  final_high_difficulty_4_plus: false
+  player_reason: >-
+    熟练玩家只需识别一次局部二择；后继虽机械消费首次交接状态，却没有反向筛选多个
+    眼前可行的交接完成态，也没有在承诺后继续要求对象职责、顺序或操作面的主动分配。
+  positive_evidence_not_used:
+    - 唯一胜态
+    - 胜可达分支数量或比例
+    - 事件覆盖或事件数量
+    - 机械链长度
+    - exposure pass
+
+designer_verdict: rejected_continue_design
+
+designer_side_submission_status:
+  CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_delivery_002: do_not_submit
+  CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006: do_not_submit
+  immutability: >-
+    旧 delivery 与 exact 保持不可变；do_not_submit 只记录于本 Designer 复评，不改写版本目录、
+    Controller 账本或待玩状态。
+
+continuation_direction:
+  status: continue_same_candidate_workbench
+  required_player_relation: >-
+    重建第五步之后的主动决策：首次交接完成后至少保留两种眼前可行的供体/接收者职责分配或顺序，
+    后继长滚必须只接受其中一种，并把筛选责任反向传回交叉构造；不能再以“不要显然熄火”充当决策。
+  structure_family_choice: designer_owned
+  next_exact_gate: >-
+    只有实际 replay、完整解族、玩家侧重读、对象参与、恢复反事实和 exposure 自查全部通过后，
+    才发布同一 candidate 的下一不可变 exact。

@@ -1,0 +1,69 @@
+review_attempt_id: candle_wall_reignite_hard_review_001
+prototype_id: candle_sokoban
+candidate_id: candle_shared_fire_wall_timing_20260725_1428
+exact_version: candle_shared_fire_wall_timing_20260725_1428.exact.004
+review_integrity: independent_fresh_reviewer_required
+
+rules_contract:
+  source: prototypes/candle_sokoban/docs/designer_contract.md
+  win_condition: all_braziers_lit_and_player_alive_after_full_turn_settlement
+  global_burn_cycle: 5
+  allowed_exposure_through: shared_fire_and_reignition
+  forbidden_later_branches:
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+    - rolling_contact_chain
+
+mechanical_claims_to_audit:
+  - claim_id: normal_win
+    claim: 当前 exact 使用正常 all_braziers_lit 胜利，而非 event_occurs。
+  - claim_id: canonical_replay_wins
+    claim: 当前 exact 的非空 canonical replay 合法并在完整结算后获胜。
+  - claim_id: complete_reachable_graph
+    claim: 当前 exact 的完整可达图状态为 complete，且 graph/raw edges 与 exact 版本一致。
+  - claim_id: solution_uniqueness
+    claim: Designer 声明 unique_within_budget；需核对其预算、完整图、胜终局与非等价胜路边界。
+  - claim_id: required_wall_douse_timing
+    claim: canonical 与对象反事实支持墙体遮芯灭火、灭火后共享倒数继续推进，并改变后续燃烧参与时机。
+  - claim_id: required_reignition_timing
+    claim: canonical 与对象反事实支持已点亮火盆作为复燃火源，复燃不重置共享倒数，并包含边界复燃参与缩短。
+  - claim_id: object_and_target_participation
+    claim: 送审包列出的墙、火源、蜡烛与目标对象参与声明均有当前 exact 的原始反事实或 replay 支持。
+  - claim_id: strict_exposure_gate
+    claim: exposure audit 的 exact/layout/sequence 对齐，graph complete，verdict pass，forbidden_hits 为空。
+
+solution_uniqueness:
+  declared_result: unique_within_budget
+  search_scope: budget_limited
+  budget:
+    max_states: 300000
+    max_depth: 200
+  source: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solution_uniqueness_self_check.yml
+
+allowed_evidence_sources:
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/manifest.yml
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/layout.layout
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solve_instance.json
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/canonical_replay.md
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/complete_graph.json
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/graph_summary.json
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/object_participation_counterfactuals.yml
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solution_uniqueness_self_check.yml
+  - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/submission_packet.yml
+
+artifact_roles:
+  layout: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/layout.layout
+  solve_instance: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solve_instance.yml
+  canonical_replay: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/canonical_replay.json
+  graph: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/complete_graph.json
+  graph_summary: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/graph_summary.json
+  exposure_audit: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/exposure_audit.json
+  object_counterfactuals: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/object_participation_counterfactuals.yml
+  uniqueness: prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solution_uniqueness_self_check.yml

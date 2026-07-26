@@ -1,0 +1,144 @@
+review_attempt_id: CANDLE_CURRICULUM_L13_001_exact_002_hard_001
+reviewer_instance_id: l13-evidence-reviewer-exact-002
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version: CANDLE_CURRICULUM_L13_001_exact_002
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/manifest.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/layout.txt
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/level.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/evidence/**
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - docs/21-level-design-studio-standard.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - terminal node 32，最短深度 6；规范输入为 right,down,right,right,right,up。
+    - terminal node 59，最短深度 8；只增加纯移动时序。
+    - terminal node 112，最短深度 10；终局同拍另有 burn_out:candle#single3 与 boundary_extinguish_avoids_burn:candle#1，胜态无后继边。
+  equivalence_evidence_basis:
+    - complete_graph.json 的实际数组含 3619 个唯一 node、9424 条 endpoint 有效的 edge、3 个 terminal win；全部 3619 个 node 从 node 0 可达。
+    - complete_graph.json 与 exposure_audit.json/raw_graph 逐 node、逐 edge 一致；三个胜态为 32、59、112，均无 outgoing edge。
+    - 对完整图独立执行有序里程碑乘积检查：全部 3 个 winning product state 均以 phase=3、bad=false 到达；不存在 bad winning product state。
+    - 胜路共可达子图含 28 nodes、49 edges；其中 1 条 C 准备边、10 条 A->B 原子交接边、3 条 B 直接消费胜利边、35 条纯移动时序边，无其它显著对象边或不完整事件束。
+    - scc_raw.json 的胜路共可达范围含 28 个单节点 SCC，循环 SCC 为 0；与独立胜路子图读取一致。
+    - solution_equivalence_all_wins.json
+    - solution_equivalence_all_wins.yml
+    - solution_family.json
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 支持的是玩家逻辑类的生产性对象因果等价，不是严格逐事件串相等；深度 10 终局还携带与同一边界时序绑定的 A 避免燃烧诊断事件。
+    - complete 结论使用规则合同规定的 terminal win、player dead 与 zero-candle non-win loss 终止边界。
+
+claims:
+  - claim_id: exact_integrity
+    claim: 所有主要 artifact 均绑定当前 candidate、exact、solve instance 与 layout digest，正式胜利为 all_braziers_lit。
+    status: supported
+    evidence_basis:
+      - layout.txt 的独立 SHA-256 为 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb，与 manifest.yml、level.yml、solve_instance.yml 和主要 evidence provenance 一致。
+      - candidate_id=CANDLE_CURRICULUM_L13_001、exact_version=CANDLE_CURRICULUM_L13_001_exact_002 与 solve_instance_ref 在 canonical replay、complete graph、solution family、all-win equivalence、SCC、event query、object participation、counterfactual summary 和 exposure enriched artifact 中一致。
+      - level.yml、solve_instance.yml、canonical_replay.json 与规则合同均声明 all_braziers_lit；runtime isWin 要求玩家存活且全部火盆在完整结算后点亮。
+      - exposure_audit_raw.json 绑定 exact_002 与当前 layout digest；其 raw graph 与 enriched exposure_audit.json 逐 node、逐 edge 一致。
+    limits:
+      - counterfactual artifact 的 layout digest 应对应各自变体；其 source_exact_layout_sha256 才绑定当前 exact，不要求变体 digest 等于当前布局 digest。
+
+  - claim_id: canonical_solve
+    claim: 规范输入 right,down,right,right,right,up 全部合法，并在第 6 拍完整结算后由存活玩家点亮全部火盆。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json 记录 6/6 步合法、final.isWin=true、玩家状态 D:0，且第 6 拍含 push_axis B、light_brazier:6,1、countdown 与 win_all_braziers_lit。
+      - 规范 replay 的六组 before/after state key、events 与 complete_graph.json 的 0->1->3->8->14->20->32 边逐项一致，terminal node 32 为 winning=true。
+    limits: []
+
+  - claim_id: complete_graph_scope
+    claim: 可达图搜索 complete，含 3619 nodes、9424 legal edges、3 terminal win states。
+    status: supported
+    evidence_basis:
+      - complete_graph.json status=complete；实际 node/edge/win 数分别为 3619/9424/3，与声明字段一致。
+      - 3619 个 node id 与 state key 均唯一；全部 endpoint 有效，全部 node 从初态可达，BFS depth 记录一致。
+      - exposure graph budget max_states=300000，实际只到 3619 states，reason=null；三个 win node 均无后继边。
+    limits:
+      - 完备性按 Candle 正式 graph terminalization 合同解释，不扩展胜利、玩家死亡或无蜡烛且未胜利后的尾部。
+
+  - claim_id: equivalent_variants_only
+    claim: 全部胜路只有同一生产性对象因果骨架；允许差异仅为纯移动时序与终局同拍 B 是否燃尽，无已知非等价胜解。
+    status: supported
+    evidence_basis:
+      - 完整图的全部三个 terminal win 均通过 C 准备 -> A 缩短并 shrink_ignite B -> B 轴推直接点盆获胜的有序乘积检查。
+      - 胜路共可达子图无其它显著对象边；三个 win edge 中两条不燃尽 B，一条在终局边界同拍燃尽 B，且胜态均无后继。
+      - solution_family.json known_non_equivalent_wins 为空，all_winning_paths_productively_causally_equivalent=true；独立图检查未发现 bad winning product state。
+    limits:
+      - 该声明不等于 strict event trace uniqueness；深度 10 终局还随同一边界时序出现 boundary_extinguish_avoids_burn:candle#1。
+
+  - claim_id: required_winning_event_chain
+    claim: 所有胜路都按 C 首拍侧滚并由 A 尾遮灭、A 从 len2 缩为 len1 且同拍 shrink_ignite B、B 下一次对象操作轴推并同拍 light_brazier 与 win 的顺序完成。
+    status: supported
+    evidence_basis:
+      - 在完整图上分别删除含 roll C、douse C、shrink A、shrink_ignite B、push B、light brazier 或 win 事件的边，七次均不存在 avoiding win。
+      - 胜路子图只有 1 个完整 C 准备事件束、10 个完整 A->B 原子交接事件束与 3 个完整 B 直接消费事件束；其它 35 条边均为纯移动时序。
+      - 有序乘积检查的三个 win product state 全部 phase=3 且未违规，排除了乱序、缺束或重复里程碑胜路。
+    limits:
+      - “首拍”是当前完整图中所有可胜路径的第一条 runtime edge，不外推为反事实布局的性质。
+
+  - claim_id: no_transfer_or_ignition_bypass
+    claim: 任一胜路均不存在第二次 shrink_ignite、普通 wick/brazier 点火 B、rolling-contact 点火、C 再参与、交接后其它对象任务或多推修复链。
+    status: supported
+    evidence_basis:
+      - 胜路共可达 49 条边中没有里程碑外显著对象边，且有序乘积检查对重复、乱序或其它显著对象边均会进入 bad；bad winning product state 为 0。
+      - 完整 exposure graph 对 rolling_contact_chain 的五个 later event pattern 独立扫描命中 0。
+      - 主图 reachable event counts 中不存在 ignite_from_wick 或 ignite_from_brazier；全部胜路唯一接收点火事件为 shrink_ignite:candle#single3。
+      - prepared node 1 之后虽在不可胜分支可再操作 C，但胜路共可达子图中 later C significant edge 为 0。
+    limits:
+      - 结论只针对当前 exact 的 all_braziers_lit 完整图，不外推到反事实布局。
+
+  - claim_id: one_shot_object_participation
+    claim: A、B、C 与唯一火盆在全部胜路中按已声明对象职责参与，required-winning 事件组是 win cut。
+    status: supported
+    evidence_basis:
+      - 七项 exact event-instance cut 独立复核均无 avoiding win：C 的 roll/douse、A 的 len1 shrink、B 的 shrink_ignite/push、火盆 light 与正式 win。
+      - 全部胜路保持同一对象 id 分工：A=candle#1，C=candle#single2，B=candle#single3，required consumer=brazier:6,1。
+      - support_removed 完整变体仍有 3 个胜态，反证不被误写成“C 对裸可解性必要”；它只支持当前 exact 内参与和准备身份差异。
+    limits:
+      - event cut 证明当前图内每条胜路的事件实例必要，不等于每个对象删除后都不可解。
+
+  - claim_id: mechanical_identity_counterfactuals
+    claim: 证据所列提前推/墙灭 A、A 单格燃尽、A 未燃、B 错列、移除 C、A 加长、错过 B 火窗、交接后先操作 A、预点 B、移位 consumer 与一格间隙均破坏对应身份条件或标准胜利链。
+    status: unknown
+    evidence_basis:
+      - 当前 exact 的 endpoint 13、100、25 均不在 win-coaccessible 集，支持提前推/墙灭 A、错过 B 火窗和交接后先操作 A 会进入不可恢复失败分支。
+      - source_burnout、source_unlit 与 consumer_shifted 的 enriched/raw graph 均逐 node、逐 edge 一致且 complete，实际胜态均为 0。
+      - support_removed 图 complete 且有 3 个胜态，首拍退化为 walk；source_long 图 complete 且出现二次交接、C 接管等非等价胜路；两者支持相应身份条件变化。
+      - receiver_prelit runtime rejection 与 parseLevel 初始 contact settlement 语义一致：B 的 wick 被 A 烛身遮蔽，预点状态在正式初态前会被熄灭并拒绝。
+      - receiver_one_cell_gap artifact 自身 provenance 字段和 counterfactual digest 一致，图为 complete 39007/120795/22，且确有避开 shrink_ignite 的胜路。
+    limits:
+      - receiver_one_cell_gap/layout.txt 不是当前 exact 只将 B 错开一格的单变量变体：画布由 10x6 改为 9x9，墙形与玩家/火盆位置改变，C 被移除，A 从 len2 改为 len3，B 从 singleton 改为 len3 且整体换位。其图不能隔离证明当前 exact 的 B 错列或一格间隙反事实。
+      - 该复合布局的完整图还存在 6 拍避开 shrink_ignite、由 A 侧滚直接点盆的胜路；因此其行为也不能窄化为仅“普通 ignite B”这一种退化。
+      - review input 同时点名“B 错列”与“一格间隙”，白名单中没有另一份当前 exact 单变量 artifact 可分别支持两者。
+
+  - claim_id: exposure_gate
+    claim: 当前 exact 的完整 exposure graph status=complete、verdict=pass、forbidden_hits 为空，rolling_contact_chain later event 全不可达。
+    status: supported
+    evidence_basis:
+      - mechanic_exposure_sequence.yml 的独立 SHA-256 与 exposure gate sequence_sha256 32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c 一致。
+      - exposure_audit_raw.json 与 exposure_audit.json 的 graph、gate、event counts、forbidden hits、verdict 及全部 raw node/edge 一致，并绑定 exact_002 与当前 layout digest。
+      - 对 9424 条主图边独立扫描五个 rolling_contact_chain 禁止事件 pattern，命中数为 0；artifact forbidden_hits 也为空，verdict=pass。
+    limits:
+      - pass 只表示 later-event 全图不可达，不支持难度、审美或玩家体验价值判断。
+
+hard_failures: []
+evidence_gaps:
+  - 缺少从当前 exact_002 仅移动/错列 B 一格而保持其它布局、对象长度与位置不变的 counterfactual layout、完整图和必要 replay；现有 receiver_one_cell_gap 是多因素复合变体，不能支持该因果声明。
+  - 若“B 错列”与“一格间隙”是两个不同声明，白名单只提供一份且为复合变体的 artifact，没有第二份可核验的 current-exact evidence。
+overall_hard_status: incomplete
+required_action: rerun_or_supply_evidence

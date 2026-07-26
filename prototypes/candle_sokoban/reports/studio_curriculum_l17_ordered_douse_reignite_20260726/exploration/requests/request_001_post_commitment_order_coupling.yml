@@ -1,0 +1,41 @@
+request_id: candle_l17_post_commitment_order_coupling_001
+design_task_id: candle_curriculum_l17_ordered_douse_reignite_20260726
+candidate_id: CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+requested_by_role: sokoban-level-designer
+requested_skill: sokoban-mechanism-lab
+request_status: controller_dispatched
+controller_dispatch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/dispatch_002_post_commitment.yml
+
+reason: >-
+  新增 Candle clean human-reviewed archive 后，已物化 exact_001 被玩家侧否决：
+  它把全部洞见压在开局上/下二择，正确 d4 后只剩连续轴推与唯一 d8，
+  直接落入 CANDLE_CAND_0003 的“首次承诺后决策空间坍塌”失败族。
+
+local_exploration_question: >-
+  在不制作完整关卡的前提下，寻找紧凑局部关系：同一根初始燃烛仍须在一次连续长滚中执行
+  墙→火源 / 火源→墙的非交换写入，并由终点火焰插口读取；但玩家完成第一次方向、对象或位置承诺后，
+  仍必须作第二个非盲推的实质判断，而且第二判断的需求会反向筛选第一次承诺。
+
+preferred_local_families_to_probe:
+  - movable_body_contact_as_player_placed_dousing_write
+  - player_placed_stop_that_both_selects_roll_endpoint_and_preserves_terminal_consumer
+  - two_locally_successful_pre_core_output_states_filtered_by_later_order_readback
+  - compact_track_selection_where_initial_commitment_does_not_determine_the_only_remaining_action
+
+required_evidence:
+  - 至少两个第一次承诺后都能完成局部目标/合法准备、但在第二判断处命运不同的原始非空 trace。
+  - 正确 trace 的核心仍是一记连续长滚，严格途中先灭后燃，终点 consumer 立即读取最终燃态。
+  - 反序/错误组合必须保留相近反馈，不以长 deadend、额外清理或不可见倒数惩罚区分。
+  - 删除第二判断的读取关系后，第一次选择的正确性或局部输出等价类必须实质改变；不能只让同一前缀提前胜利。
+  - 记录若 movable body、stopper 或 secondary candle 只是普通挡块/装饰，则明确负结果。
+
+hard_boundaries:
+  - 不要返回只有开局上/下、左/右或一次/两次的普通二择镜像 probe。
+  - 不要把更多墙、更多轨道、更多途中事件、重复轴推或燃烧边界计时当作第二判断。
+  - 不要制作完整 candidate、exact、submission packet 或难度/审美结论。
+  - allowed_exposure_through 固定为 rolling_contact_chain；正常规则语义以 Candle runtime 为准。
+
+requested_output_scope: task_local_lexicon_material_and_raw_runtime_artifacts
+consumer_note: >-
+  Designer 会把材料重新包装成单一候选；Explorer 只需证明局部结构是否存在、何处失败，
+  不复用 exact_001 的布局或端帽几何。

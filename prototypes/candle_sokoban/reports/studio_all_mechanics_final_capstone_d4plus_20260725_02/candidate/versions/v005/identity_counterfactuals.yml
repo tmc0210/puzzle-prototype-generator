@@ -1,0 +1,40 @@
+schema_version: 1
+artifact_kind: work_identity_counterfactual_audit
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v005
+result: pass
+
+identity_claim: >-
+  玩家以 relay 纵坐标写入 writer 止距与未来火焰行；writer 必须在同滚墙灭后火盆复燃，再以退焰
+  把该值传给 relay；较晚终盆只接受两推输出。
+
+counterfactuals:
+  - id: remove_writer_dousing_wall_6_4
+    graph: {status: complete, states: 92870, edges: 263031, raw_wins: 2}
+    canonical_inputs_legal: true
+    canonical_normal_win: true
+    identity_effect: >-
+      相同 22 步仍胜，但 extinguish_by_wall、ignite_from_brazier 与 roll_reignite_after_extinguish 全部
+      消失；作品退化为预燃直达，证明墙承担身份而不只是可解性。
+    layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/counterfactuals/no_writer_wall.txt
+  - id: remove_reignite_source_6_5
+    graph: {status: complete, states: 220398, edges: 622728, raw_wins: 0}
+    identity_effect: writer 经墙熄灭后没有复燃来源，完整图不可解；火盆是必需的跨对象写入源。
+    layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/counterfactuals/no_reignite_source.txt
+  - id: retain_full_exact_but_choose_one_push_local_success
+    local_core_completed: true
+    global_win_reachable: false
+    identity_effect: d3 同样完成墙灭、复燃和退焰点 relay，却因未来 wick 行错误被终盆排除。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/downstream_coupling_audit.json
+  - id: delete_left_lower_readout_region_and_redirect_normal_win
+    graph: {status: complete, states: 30117, edges: 81972, raw_wins: 25}
+    one_push_history: normal_win
+    two_push_history: normal_win
+    identity_effect: >-
+      一推与两推由“局部同成功、全局异命运”变成同属正常胜利，早期输出等价类实质扩大；证明下游
+      不是消费唯一状态的可拆尾段。
+    audit_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/whole_region_suffix_deletion_audit.yml
+
+evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/identity_counterfactual_audit.json
+limits:
+  - 反事实证明作品身份与结构耦合，不替代难度或审美判断。

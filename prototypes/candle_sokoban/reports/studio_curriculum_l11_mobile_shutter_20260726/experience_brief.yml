@@ -1,0 +1,209 @@
+schema_version: 1
+design_task_id: candle_curriculum_l11_mobile_shutter_20260726
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/assignments/designer_candidate_design_001.yml
+candidate_id: CANDLE_CURRICULUM_L11_MOBILE_SHUTTER_001
+
+prototype_context:
+  confirmed_rules:
+    - 每次合法行动先完成走动、轴推或侧滚，再结算遮蔽灭火与递归点火，随后推进共享五拍倒计时。
+    - 燃烧边界只缩短当时仍点燃的蜡烛；已由墙或烛身遮蔽而熄灭的蜡烛避开该次缩短。
+    - 另一根蜡烛的实体烛身可以遮住已燃烛芯并使其熄灭；被遮目标不需要移动。
+    - 遮体移开后目标烛芯重曝但保持未燃；本关不要求移开遮体或主动使用重曝窗口。
+    - 侧滚的移动距离不改变行动成本；无效输入不是 runtime edge，也不推进倒计时。
+  win_condition: all_braziers_lit；玩家存活且完整回合结算后全部火盆点亮。
+  object_and_event_semantics:
+    - 多格蜡烛是刚性可轴推、可侧滚实体；cap 外一格是非实体烛芯投影。
+    - 两格移动遮板 C 的一个实体格可占住 B 的烛芯投影，另一个实体格仍可承担碰撞或操作面职责。
+    - extinguish_by_candle_body 只证明烛身遮芯事件发生，不证明玩家选择、对象双职责或作品质量。
+    - wick_reexposed_unlit 属于当前允许家族，但作品身份不要求 C 在规范解中移开。
+  allowed_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+  tool_boundary:
+    - Candle runtime adapter、ASCII parser/renderer、solver、完整图、layout analyzer、try-inputs 与 exposure audit 已实现。
+    - 正式证据只接受 Candle runtime；不得用其它原型的 PuzzleScript 结果替代。
+    - Candle 专属 miner、candidate factory 与 PuzzleScript exporter/checker 未实现。
+    - exact 的 later-event 缺席只在 exposure audit graph.status=complete、verdict=pass、forbidden_hits 为空时成立。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - 已掌握基础轴推、侧滚、烛芯点盆、火焰危险与全火盆目标。
+    - 已掌握共享倒计时、缩短、燃尽、同步燃烧及跨对象时序规划。
+    - 已会用墙体灭火让对象退出燃烧集合，并能用火盆或烛芯使对象复燃。
+    - 已做过边界保长、错峰退出、有限火源窗口和暂停—恢复参与史。
+    - 尚不知道烛身可以遮芯灭火，也不知道遮体移开后烛芯保持未燃。
+  prerequisite_mechanisms:
+    - 共享五拍倒计时与边界缩短
+    - 墙体灭火与边界保长
+    - 火盆/烛芯复燃且加入不重置倒计时
+  known_prior_level_refs:
+    - slot: L01
+      role: opening_axis_wick_goal
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/selections/stage_01_basic_countdown.yml
+    - slot: L02
+      role: early_countdown_reveal
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/selections/stage_01_basic_countdown.yml
+    - slot: L03
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S01_T03_BURNOUT_REMOVES_ROLL_STOP
+    - slot: L04
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY
+    - slot: L05
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH
+    - slot: L06
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+    - slot: L07
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+    - slot: L08
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN
+    - slot: L09
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T02_DYING_SOURCE_IGNITION_WINDOW
+    - slot: L10
+      ref: prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T03_PAUSE_RESUME_BURN_INTERVALS
+  prior_delivery_status: >-
+    L01-L10 正由其它线程并行制作；设计阶段使用 Controller 授权的有序槽位知识。
+    Critic 组包前必须由 Controller 替换为十个实际 delivery refs。
+
+experience_seed:
+  human_seed: >-
+    课程 L11 首次主动学习烛身遮蔽：玩家移动两格遮板 C，使燃烛 B 不平移而原地退出、
+    冻结完整轮廓；C 的同一终点还必须建立同一任务链的后继空间接口，后续分别读取
+    B 的原位保形与 C 的终点占格。固定墙可复现静态形状不是反例，价值来自可选移动的双重结果。
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  dispatch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon.md
+  task_index_ref: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_001_shutter_adjacent_stop/batch.yml
+  selected_material_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon.md#两格移动遮板写入邻格停块
+    - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_001_shutter_adjacent_stop/proposed_families.md#两格移动遮板写入邻格停块
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_001_mobile_shutter_douses_in_place/proposed_families.md#细粒度材料-A遮体退出保留目标原占格
+  selected_material_validation:
+    scene_cards_present: true
+    nonempty_inputs_present: true
+    minimal_uses_present: true
+    original_evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_001_shutter_adjacent_stop/raw_artifacts/input_replay_l11_b001_axis_two_cell.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_001_shutter_adjacent_stop/raw_artifacts/input_replay_l11_b001_axis_two_cell.md
+      - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_001_shutter_adjacent_stop/raw_artifacts/input_replay_l11_b001_single_cell.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_001_shutter_adjacent_stop/raw_artifacts/input_replay_l11_b001_single_cell.md
+
+archive_calibration:
+  full_index_or_retrieval_summaries_read: true
+  calibration_ref: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/designer/archive_calibration.yml
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+    - ICE_CAND_0002
+    - ICE_CAND_0004
+    - ICE_CAND_0011
+    - ICE_CAND_0037
+  related_positive_records_read:
+    - RA_CAND_0022
+    - RA_CAND_0029
+    - ICE_CAND_0019
+  related_lower_bound_or_boundary_records_read:
+    - RA_CAND_0019
+    - RA_CAND_0020
+    - ICE_CAND_0012
+  additional_human_reviewed_records_read:
+    - RA_CAND_0017
+  human_comment_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/designer/archive_calibration.yml#all_aesthetic_1_records_read
+    - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/designer/archive_calibration.yml#related_positive_records_read
+    - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/designer/archive_calibration.yml#related_lower_bound_or_boundary_records_read
+
+experience_core:
+  experience_statement: >-
+    玩家第一次把另一根蜡烛当作可移动遮板：为保住燃烛 B 的原坐标和完整轮廓，
+    选择把两格 C 送到 B 的烛芯处；同一终点不只让 B 原地熄灭，还留下一个必须由后继对象读取的停块格。
+    后继的离散停位再让玩家回读：早先选择的不是普通灭火，也不是普通挡块，而是一次同时写入两种必要结果的移动。
+  visible_setup: >-
+    开局能同时看见需要跨过燃烧边界仍保留完整原轮廓的燃烛 B、可抵达其烛芯的两格遮板 C、
+    与 C 终点共列的后继滚动物，以及由正确停位继续完成的目标关系。
+  player_action: >-
+    玩家必须在边界前主动把 C 移到 B 的烛芯投影，使 B 不移动而退出燃烧；之后保留 C 在终点，
+    推动同列后继对象，让它由 C 的邻格取得正确停位，并继续使用 B 保住的原位实体格完成同一胜利链。
+  visible_payoff: >-
+    C 到位时 B 在原地由燃转未燃且完整轮廓不变；跨界后 B 没有缩短，后继对象又被 C 邻格提前一格截停。
+    正确停位与 B 保住的原位格连续参与最终目标，而错误退出方式分别失去其中一种接口。
+  why_level_exists: >-
+    墙体灭火只能教“把目标移到墙边退出”；本关让玩家发现灭火装置本身可以是可移动空间对象，
+    一次位置选择能同时冻结另一对象并构造后继几何。这是烛身遮蔽相对墙灭的首个独立玩家价值。
+  core_boundary:
+    central_objects:
+      - 目标燃烛 B 的原坐标、完整轮廓与边界参与状态
+      - 两格可移动遮板 C 的遮芯格与相邻实体格
+      - 同一链中读取 C 邻格离散停位的后继对象
+      - 同一链中读取 B 原位完整轮廓的后继接口
+    supporting_objects:
+      - 把核心链闭合到 all_braziers_lit 的火盆
+      - 约束操作面、阻止旁路并保持可读性的墙与必要空地
+      - 只在确有跨对象职责时使用的额外火源或蜡烛
+
+work_identity:
+  conditions:
+    - C 必须由玩家从非遮蔽位置移动到 B 的烛芯投影；初态不能静默遮蔽，规范解中 C 到位后不再移开。
+    - C 到位必须触发 B 的 extinguish_by_candle_body，且 B 在不改变原坐标的情况下保持完整轮廓跨过至少一个燃烧边界。
+    - C 的相邻实体格必须让后继对象取得一个离散且机械必要的停位或操作面；只读取灭火事件不成立。
+    - B 保住的原尾格或原端帽格必须在同一胜利链中机械必要；只读取 C 的停块不成立。
+    - 玩家在移动 C 前必须存在至少一个局部可行但无法同时保留两项结果的选择，目标难度来自预见后继关系，而非唯一强制动作。
+    - 所有胜解都必须保留同一对象职责、目标分配和依赖因果；纯走位差异可以等价。
+  counterfactuals:
+    - 若让 B 自己贴墙退出，B 可保长但会丢失原坐标，B 原位 consumer 必须失败。
+    - 若不让 B 在边界前退出，B 会缩短并丢失原端帽格，B 完整轮廓 consumer 必须失败。
+    - 若把 C 缩为只占遮芯格的单格对象，B 仍可原地熄灭，但后继应多走一格并失去正确接口。
+    - 若删除 C 终点 consumer，作品退化为普通烛身灭火 witness；若删除 B 原位 consumer，作品退化为普通移动停块题。
+    - 若把终态直接预置成固定两格墙与未燃 B，静态形状可以相同，但玩家不再亲自作出一次同时写入两项结果的选择，因此不是同一作品。
+
+level_brief:
+  packaging_intent: complete_single_level
+  expected_difficulty: 5
+  expected_scale: >-
+    紧凑中型单关；围绕 B、C 与一个连续 consumer 链组织，避免复刻上游三只诊断探针或堆积无关对象。
+  expected_player_load: >-
+    玩家需要同时追踪边界前 B 是否退出、B 的原坐标/长度、C 终点的相邻占格及后继对象的离散停位；
+    执行本身应稳定，难点是较早选择为何能同时满足稍后的两种读取。
+
+allowed_design_sources:
+  - prototypes/candle_sokoban/mechanic.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/prior_course.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/designer/archive_calibration.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_001_shutter_adjacent_stop/
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+  - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_001_mobile_shutter_douses_in_place/proposed_families.md
+
+prototype_specific_routing:
+  - allowed_exposure_through 固定为 body_concealment_and_reexposure。
+  - 正式候选固定使用 all_braziers_lit，禁止 event_occurs。
+  - exact 必须具有完整非空 replay、complete 可达图、完整解族/旁路/对象参与/身份反事实和 complete/pass exposure audit。
+  - 所有可达边必须没有 shrink_ignite 或 rolling_contact_chain 家族的 later-event hit。
+  - L11 不要求 C 移开或主动使用未燃重曝窗口；该体验留给 L12。
+
+human_review_constraints:
+  - 不能把 C 到位设计成无选择的开场动画或唯一显然操作。
+  - 不能用重复遮蔽、冗余走位、对象堆积或延迟 deadend 制造难度。
+  - C 到位后不能退休为普通挡块；B 也不能只贡献一次事件标签后退休。
+  - 后继必须消费早期移动留下的具体状态并把约束传回，不得把遮蔽 witness 与独立挡块子题拼接。
+  - 高事件覆盖、完整图或唯一解只提供机械否决条件，不能补偿缺乏玩家洞见或明确审美缺点。
+
+brief_validation:
+  archive_calibration_valid: true
+  task_exploration_valid: true
+  selected_materials_have_scene_card_nonempty_inputs_minimal_use_and_raw_evidence: true
+  experience_core_is_player_perceptible: true
+  work_identity_is_counterfactually_falsifiable: true
+  single_candidate_only: true

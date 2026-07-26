@@ -1,0 +1,24 @@
+request_id: request_006_shared_goal_boundary_choice
+exploration_id: candle_full_exposure_compact_20260726
+design_space: >-
+  在共享倒数为 1 的局部状态中，横向燃烛末端遮住异轴未燃接收烛芯；另有一根即将燃尽的辅助燃烛和一个近端未亮火盆。
+  寻找两条操作不同燃烛的非空边界行动：一条移动辅助烛并在滚动途中点亮近端火盆，同时让交叉供体留驻到边界缩短、
+  对接收烛产生 shrink_ignite；另一条侧滚交叉供体退出，也在同一行动点亮同一个近端火盆，但接收烛只未燃重曝，
+  且退出供体在动作末失火、燃尽或失去返回交叉芯位的操作职责。只研究局部对象关系与恢复边界，不设计完整候选。
+sampling_axes:
+  - 近端火盆分别由辅助烛与退出供体的哪一个滚动小步点亮；两条行动后的玩家站位与对象终点。
+  - 交叉供体退出后由墙遮芯失火、边界燃尽，或被自身终点操作面锁定的差异。
+  - 辅助烛在正确行动后燃尽；在错误行动中未移动但同一边界燃尽，避免成为后续恢复源。
+  - 近端已亮火盆与交叉芯位、接收烛长滚轴正交分离；显式尝试轴推换线、移动退出供体、利用近端火盆复燃的恢复路径。
+  - 正确与错误局部状态都保留实际对象操作，不以普通走动或无效输入触发边界。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon.md#边界行动先退出会截断退焰接收
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_005_dual_transfer_later_filter/report.md
+do_not_repeat:
+  - 只让留驻分支以普通走动触发边界，而退出分支才移动对象。
+  - 只证明首次长滚失败，不执行移动供体、轴推换线、跨周期与近端火盆复燃 probes。
+  - 用已亮火盆直接放在接收烛长滚芯轨迹上，令错误分支普通补火。
+  - 用墙廊、长绕位、隐藏倒数或重复滚动验收制造不可恢复性。
+materialization_target: >-
+  至少一组 runtime-backed 局部结构，使两个不同对象操作都在边界行动点亮同一火盆，而只有留驻交叉供体的分支 shrink_ignite；
+  同时给出退出分支的轴推换线、移动供体和近端火盆恢复 probes。若无不可恢复正例，也要保存最短明确恢复 witness 与结构原因。

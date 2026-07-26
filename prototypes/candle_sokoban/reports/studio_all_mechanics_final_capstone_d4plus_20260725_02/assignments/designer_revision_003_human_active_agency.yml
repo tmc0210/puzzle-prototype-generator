@@ -1,0 +1,64 @@
+assignment_id: candle_all_mechanics_002_revision_003_human_active_agency
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: controller_candle_all_mechanics_002_20260725
+task_root: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02
+candidate_ledger_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate_ledger.yml
+
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version_basis: v002
+
+design_brief: >-
+  人类已把 delivery v002 退回同一候选：writer 之后的右下 candle#6 → candle#2 → candle#3
+  主要靠普通走步跨边界自动 shrink_ignite，除最终 consumer 搬运外没有相称的玩家主动操作，属于
+  “一大串毫无意义的动画”。这不是局部清理，而是同一候选的结构性返工。保留 experience brief
+  中玩家主动写入、跨边界传递和较晚读取的作品核心，不保留旧几何或旧对象链。writer 之后至少
+  两个关键下游状态转换必须由玩家通过有意义的对象操作、位置选择或时序选择主动构造或触发，
+  且错误选择须真实改变后续几何、参与集合或可解性；普通步行倒数与最终 consumer 的单独搬运均
+  不足以充当主动接力。可优先变形 batch_002 的“玩家轴推 relay 同时写入滚动停块与退焰接收位”
+  材料；若缺少非死亡 consumer 或第二个主动中继，可在 task-local requests 下提交抽象探索请求。
+  目标难度 5、最低难度 4；机制无使用配额，宁可删除被动对象，也不要追求事件数量。持续修改唯一
+  workbench，亲自读取实际 replay/diagnostics；完整作品、主动性审计、正常胜利、解族自查、对象责任、
+  作品身份与 strict exposure gate 同时成立后，才发布下一个不可变 exact 与送审包。
+input_refs:
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/docs/redundant_element_prune.md
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/prior_course.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/designer/archive_calibration.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/experience_brief.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/human_feedback/human_feedback_001.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v002/layout.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v002/level.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v002/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v002/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v002/delivery_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/dispatch.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/requests/request_001_player_authored_roll_contact_order.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/runs/batch_002_player_placed_relay_stop/batch.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/runs/batch_002_player_placed_relay_stop/results.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/runs/batch_002_player_placed_relay_stop/report.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/runs/batch_002_player_placed_relay_stop/proposed_families.md
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/designer/workbench
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions
+exploration_request_root: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/requests
+required_outputs:
+  - 维护同一候选的难度 5 reasoning sketch；明确玩家关系怎样取代 v002 的被动右下链。
+  - 在唯一工作布局上持续制作、实跑和结构修订；不得把 v002 的坐标、对象数量或事件覆盖当作保留目标。
+  - >-
+    产出主动性审计：逐项标出 writer 之后至少两个关键状态转换对应的玩家对象操作/位置或时序选择、
+    错误选择的可见后果，以及它如何把约束反向传回较早准备；普通 walk/countdown 不计。
+  - >-
+    发布下一个可送审 exact：layout、level/solve instance、canonical inputs、逐步结构化 replay、完整图或
+    预算边界、解族自查、exposure audit、对象参与、身份反事实、玩家侧重读与 artifact manifest。
+  - >-
+    为新 exact 填写完整 submission packet；存在被动动画链、已知非等价胜解、正常胜利不成立、
+    作品身份失败或 exposure 非 complete/pass 时不得送审，也不得写 Controller 状态或全局待玩文件。

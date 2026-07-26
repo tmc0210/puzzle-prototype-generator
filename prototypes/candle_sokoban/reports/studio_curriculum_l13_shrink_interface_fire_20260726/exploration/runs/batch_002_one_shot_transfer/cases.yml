@@ -1,0 +1,50 @@
+runId: batch_002_one_shot_transfer
+title: "两格来源与单格接收构成的一次性交接"
+notes: >-
+  首次交接后分别实际尝试来源回占、接收者错窗和边界前错误处置；
+  三格来源与两格接收作为可回收、可补救近邻反例。
+defaults:
+  maxStates: 300000
+cases:
+  - id: one_shot_direct_consumer
+    family: one_shot_transfer_interface
+    variant: direct_consumer
+    changed_variable: "两格来源在目标边界缩成单格；单格接收同格点燃并立即消费"
+    contrast_with: [one_shot_source_recycle_attempt, one_shot_receiver_missed_window, long_source_second_transfer, long_receiver_multi_push_salvage]
+    layout_ref: layouts/one_shot_local_win.txt
+    actions: [down, down, right, right, right, up]
+  - id: one_shot_source_recycle_attempt
+    family: one_shot_transfer_interface
+    variant: source_recycle_attempt
+    changed_variable: "首次交接后把单格来源推回共享格并等到下一边界"
+    contrast_with: long_source_second_transfer
+    layout_ref: layouts/one_shot_local_win.txt
+    actions: [down, up, down, up, down, up, right, right, left, left]
+  - id: one_shot_receiver_missed_window
+    family: one_shot_transfer_interface
+    variant: receiver_missed_window
+    changed_variable: "单格接收错过首推并等到下一边界后尝试继续向上"
+    contrast_with: long_receiver_multi_push_salvage
+    layout_ref: layouts/one_shot_local_win.txt
+    actions: [down, down, right, right, right, left, right, left, right, left, right, up, up, up]
+  - id: one_shot_early_source_douse
+    family: one_shot_transfer_interface
+    variant: early_source_douse
+    changed_variable: "目标边界前把来源向右推入墙灭位"
+    contrast_with: one_shot_direct_consumer
+    layout_ref: layouts/one_shot_local_win.txt
+    actions: [right, right, left, left, down, down, right, right, right, up]
+  - id: long_source_second_transfer
+    family: one_shot_transfer_interface
+    variant: long_source_recycles
+    changed_variable: "来源从两格加长为三格，使第一次缩短后仍有两格"
+    contrast_with: one_shot_source_recycle_attempt
+    layout_ref: layouts/recyclable_long_source_local_win.txt
+    actions: [down, up, down, up, down, up, right, left, down, up]
+  - id: long_receiver_multi_push_salvage
+    family: one_shot_transfer_interface
+    variant: long_receiver_salvages
+    changed_variable: "接收从单格加长为两格，使错窗边界后仍留单格燃烛"
+    contrast_with: one_shot_receiver_missed_window
+    layout_ref: layouts/salvageable_long_receiver_local_win.txt
+    actions: [down, down, down, right, right, left, right, left, right, left, right, up, up]

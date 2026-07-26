@@ -1,0 +1,35 @@
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004
+prototype: candle_sokoban
+layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/layout.txt
+layout_sha256: 6050e5ead4203586ce19b5269b207d97ff7877a184e05c923110a695693fd3ba
+win_condition:
+  type: all_braziers_lit
+  description: All braziers are lit and the player is alive after full turn settlement.
+global_burn_cycle: 5
+inputs:
+  - down
+  - right
+  - right
+  - down
+  - down
+  - left
+  - left
+  - left
+  - left
+  - up
+expected:
+  legal_through_step: 10
+  final_win: true
+  first_boundary_step: 5
+  first_boundary_braziers_lit: []
+  required_events:
+    - roll_candle:candle#1:d1
+    - shrink_ignite:candle#single3
+    - extinguish_by_candle_body:candle#single3
+    - ignite_from_wick:candle#single3:3,3
+    - light_brazier:1,3
+    - light_brazier:3,1
+    - win_all_braziers_lit
+allowed_exposure_through: rolling_contact_chain
+

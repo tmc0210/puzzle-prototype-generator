@@ -1,0 +1,125 @@
+runId: batch_l16_001_long_roll_path_output_endpoint_stop
+title: "四格长侧滚的途中火盆输出与终点尾格停块"
+notes: >-
+  向左燃烧的四格横烛向下滚四小步；第二小步火焰扫过火盆，第四小步尾格到达另一根单格竖烛左侧。
+  后续竖烛向左侧滚时由该尾格截停，并只在准确列拥有向上轴推接口。
+defaults:
+  maxExploreDepth: 18
+  maxReturnDepth: 24
+  maxStates: 300000
+  maxTransitions: 1200000
+cases:
+  - id: composed_long_roll
+    family: long_roll_path_output_endpoint_stop
+    variant: four_step_path_and_tail_stop
+    changed_variable: "基准正例"
+    contrast_with: [prelit_path_output, near_stop_at_brazier, endpoint_consumer_removed, alternate_lane_misses_output, axis_push_surrogate]
+    notes: "A 在 d2 点亮 (3,4) 火盆，d4 后尾格 (7,6) 截停 Q；Q 随后在 x=8 向上轴推。"
+    layout_ref: layouts/composed_long_roll.txt
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #..o.........#
+      ##...........#
+      #.........u..#
+      #...#........#
+      #...........o#
+      ##############
+    actions: [down, right, right, right, right, down, down, down, down, left, down, left, left, up]
+  - id: prelit_path_output
+    family: long_roll_path_output_endpoint_stop
+    variant: endpoint_chain_without_path_creation
+    changed_variable: "途中火盆由未亮改为预亮"
+    contrast_with: composed_long_roll
+    notes: "A 与 Q 的实体动作不变，但滚动不再创造永久火盆输出。"
+    layout_ref: layouts/prelit_path_output.txt
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #..O.........#
+      ##...........#
+      #.........u..#
+      #...#........#
+      #...........o#
+      ##############
+    actions: [down, right, right, right, right, down, down, down, down, left, down, left, left, up]
+  - id: near_stop_at_brazier
+    family: long_roll_path_output_endpoint_stop
+    variant: two_step_stop_at_output
+    changed_variable: "停止墙从 y=7 提前到 y=5"
+    contrast_with: composed_long_roll
+    notes: "A 只滚两格并在火盆行结束；没有抵达 Q 的 y=6 身体行。"
+    layout_ref: layouts/near_stop_at_brazier.txt
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #..o.........#
+      ##..#........#
+      #.........u..#
+      #............#
+      #...........o#
+      ##############
+    actions: [down, right, right, right, right, down, down, down, down, left]
+  - id: endpoint_consumer_removed
+    family: long_roll_path_output_endpoint_stop
+    variant: path_output_without_endpoint_read
+    changed_variable: "删除 Q 及其后续上推口"
+    contrast_with: composed_long_roll
+    notes: "A 仍在 d2 点盆并继续到 d4 终点，但没有对象读取尾格。"
+    layout_ref: layouts/endpoint_consumer_removed.txt
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #..o.........#
+      ##...........#
+      #............#
+      #...#........#
+      #...........o#
+      ##############
+    actions: [down]
+  - id: alternate_lane_misses_output
+    family: long_roll_path_output_endpoint_stop
+    variant: endpoint_chain_without_flame_lane
+    changed_variable: "火盆从火焰列 x=3 横移到 x=2"
+    contrast_with: composed_long_roll
+    notes: "A 与 Q 的终点接口不变，但火焰扫过 x=3，不能点亮 x=2 火盆。"
+    layout_ref: layouts/alternate_lane_misses_output.txt
+    layout: |
+      ##############
+      #......@.....#
+      #...L444.....#
+      #............#
+      #.o..........#
+      ##...........#
+      #.........u..#
+      #...#........#
+      #...........o#
+      ##############
+    actions: [down, right, right, right, right, down, down, down, down, left, down, left, left, up]
+  - id: axis_push_surrogate
+    family: long_roll_path_output_endpoint_stop
+    variant: axial_translation_stays_on_start_row
+    changed_variable: "把垂直侧滚替换为同一横烛的连续水平轴推"
+    contrast_with: composed_long_roll
+    notes: "连续向左轴推只改变 x；火焰不经过 y=4 火盆，烛身也不进入 y=6 的 Q 接口行。"
+    layout_ref: layouts/axis_push_surrogate.txt
+    layout: |
+      ##############
+      #............#
+      #...L444@....#
+      #............#
+      #..o.........#
+      ##...........#
+      #.........u..#
+      #...#........#
+      #...........o#
+      ##############
+    actions: [left, left]

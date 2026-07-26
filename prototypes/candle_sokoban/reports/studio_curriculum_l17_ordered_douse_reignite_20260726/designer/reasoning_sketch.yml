@@ -1,0 +1,88 @@
+candidate_id: CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/assignments/designer_candidate_design_001.yml
+status: revision_001_parallel_design_workbench_active_qualification_gate_closed
+target_difficulty: 5
+
+player_relation:
+  opening_question: >-
+    同一根燃烛可以先送到上端或下端；两个端点都能以相同步骤先点亮一个目标，
+    玩家必须预见随后贯穿全轨时墙和火源的相对次序，不能只追逐眼前目标。
+  structural_hypothesis: >-
+    上端发车后，核心长滚按墙→火源到达下端，留下燃烧终态并点亮第二盆；
+    下端发车后，同距长滚按火源→墙到达上端，最后写成未燃并留下第二盆未亮。
+    两路起点准备、初次目标回报、滚距、长度和倒计时保持同构。
+  payoff: >-
+    正确路在同一记贯穿滚动里从中途墙灭恢复到燃烧，并在另一端立即完成 all_braziers_lit；
+    错误路同样先取得一盆，却在另一端以未燃烛芯停住，直接揭示最后写入覆盖前态。
+
+packaging_claim:
+  opening: 中央长燃烛与上下同构端点同时可见；玩家可主动选择先去上端或下端。
+  preparation: >-
+    端点定位与轴推直接点亮第一只目标，并把缩短后的蜡烛对齐到共同写入列；
+    不添加独立子题，两个方向使用同构输入骨架。
+  core: 一次连续贯穿侧滚经过严格非终点墙 / 火源接触，并在另一端由同构未亮火盆读取。
+  ending: 正确滚动的终点点盆即刻满足 all_braziers_lit，不追加回程或清理。
+
+counterfactual_targets:
+  - 删除墙后两种发车都退化为常燃输出，错误路也可点亮第二盆。
+  - 删除中途火源后，正确路墙灭后无法复燃。
+  - 预亮任一端点目标会削弱“先取一盆、再预见另一端”的顺序选择。
+  - 移开终点盆后仍可写出终态，但作品没有直接 consumer。
+  - 若存在不经过墙→火源核心滚动的胜解，当前 family 必须继续修订。
+
+current_structure_family: coupled_main_endpoint_and_movable_body_contact_commitments
+pause_checkpoint_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/designer/revision_001_pause_checkpoint.yml
+revision_001_resume_boundary:
+  permitted_now:
+    - 新结构工作布局、runtime replay、完整图、解族、exposure、反事实与 Designer 自查。
+    - 自查确实通过时发布同 candidate 的新 exact。
+  gated_until_controller_updates_prior:
+    - mandatory prior-impact audit
+    - Evidence Reviewer
+    - Puzzle Critic
+    - pre_submission workflow
+    - playable delivery
+  explorer_increment: 未经 Controller 明确选择，不读取或吸收 dispatch_002 的增量发布物。
+
+revision_001_structure_hypothesis:
+  proposition: >-
+    主烛 A 初始未燃；先滚向上端或下端时，在靠近该端的固定火源处点燃并点亮第一只 consumer。
+    随后玩家把横向单格烛 Q 先侧滚到上/下端邻行，再沿轴推入 A 的 wick-only 程序列。
+    A 与 Q 放在同一端时，回程长滚先被 Q 烛身灭火、再经过固定火源复燃，另一端 consumer 读取燃态；
+    放在异端时，最后一次 Q 遮芯发生在最后火源之后，另一端保持未亮。
+  post_commitment_judgment: >-
+    第一次选择 A 的端点后，Q 的上/下位置仍未决定；Q 的正确位置由 A 的回程方向决定。
+    反过来，若玩家先只把 Q 侧滚到候选端侧但尚未推入程序列，之后 A 的端点也必须与之配对。
+  structural_compaction: >-
+    两只 endpoint consumer 同时作为 Q 侧滚的纵向 stopper；Q 的 body 只进入 A 的 wick 投影列，
+    不实体截停主滚；两端固定火源同时负责首次端点点燃与回程复燃。
+  principal_risk: >-
+    即使机械真值表成立，玩家也可能只读到“主烛与小烛放同一边”的显眼配对，仍仅属难度3；
+    若玩家侧没有非局部的最后写入预见，不发布新 exact。
+structure_change_history:
+  - version: workbench_001
+    proposition: >-
+      以两端真实目标取代 Explorer 的双测量盆问题：任一路先点亮出发端，
+      只有上→下的墙→火源贯穿滚动能立即点亮另一端并胜利。
+  - version: workbench_005
+    proposition: >-
+      压缩为 11x13 后局部关系和完整 exposure 均成立，但完整图发现错列长滚后可在终点横推补点，
+      因而没有达到作品身份。
+  - version: workbench_006
+    proposition: >-
+      上下端帽用 x=2/x=8 双 stopper 分别截停初始 body 与正确对齐 body；
+      错列 body 越过 consumer 行并被端墙锁住，完整图中所有胜解开始强制同一顺序程序。
+  - version: workbench_007
+    proposition: >-
+      删除端帽后方四个无职责单格地板；canonical、反序、完整 exposure、解族与八项近邻对照重跑通过，
+      玩家侧重读认为可送独立审查，难度 5 仍明确留给 fresh Critic 校准。
+  - version: exact_001_post_archive_reassessment
+    proposition: >-
+      新增 Candle 专属人评档案后撤销送审判断。exact_001 虽机械闭合，但玩家只在开局做上/下二择，
+      上向 d4 后决策空间坍塌，直接落入 CANDLE_CAND_0003 的审美1/难度2失败族；
+      保持 exact_001 不可变，后续必须在同一 candidate 内换结构族。
+  - version: revision_001_workbench_008
+    proposition: >-
+      从暂停点概念改为双端固定火源 + 可移动横向单格烛 Q。A 初始未燃以避免准备期计时漂移；
+      A 首次到端由该端火源点燃并取得 consumer，Q 再进入同端邻行作为回程的首个灭火写入。
+      当前仅物化最小工作布局，尚未获得 runtime 支持。

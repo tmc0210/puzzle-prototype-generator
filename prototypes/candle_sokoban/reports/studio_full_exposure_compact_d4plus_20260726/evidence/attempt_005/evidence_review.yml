@@ -1,0 +1,115 @@
+review_attempt_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004_review_001
+reviewer_instance_id: fresh_evidence_reviewer_005_20260726
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_005/input.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/**
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_003/work/solution_family_audit.ts
+    - docs/21-level-design-studio-standard.md
+    - prototypes/candle_sokoban/docs/design_handoff.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_complete
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - terminal_node: 247
+      inputs: [down, right, right, down, down, left, left, left, left, up]
+      node_chain: [0, 1, 4, 8, 15, 23, 41, 63, 113, 177, 247]
+      edge_chain: [0, 3, 9, 17, 32, 57, 95, 167, 277, 477]
+  equivalence_evidence_basis:
+    - "raw complete graph 的逆向胜可达子图只有 11 个节点与 10 条内部边，且从 node 0 到唯一胜态 node 247 构成无分叉单链；因此只有一个原始合法输入串，无需借助走位、回环、对称或独立步骤换序的等价合并。"
+    - "对 3974 个 raw nodes 与 11126 条 raw edges 独立重建 incoming/outgoing 和逆向胜可达集合；唯一 winning node 为 247，win-reachable 节点数为 11，结果与 solution_family_audit.json 一致。"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "完整性结论取自当前 exact 的 exposure_audit.json：graph.status=complete、reason=null、max_states=300000、实际 3974 states/11126 edges；按任务约束未补跑生成工具。"
+    - "图按权威合同 terminalize_wins=true 且 terminalize_zero_candle_loss=true；后者只适用于 all_braziers_lit、玩家存活且蜡烛不会新生的当前规则。"
+
+claims:
+  - claim_id: candidate_exact_layout_alignment
+    claim: candidate、exact、layout、solve instance 与全部 current-exact 机械 evidence 对齐，layout SHA-256 为 6050e5ead4203586ce19b5269b207d97ff7877a184e05c923110a695693fd3ba。
+    status: supported
+    evidence_basis:
+      - "exact_manifest.yml、solve_instance.yml、canonical_replay.json、exposure_audit.json 与 solution_family_audit.json 均指向 CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004；manifest 与 solution-family artifact 的 candidate_id 均为 CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003。"
+      - "独立计算 layout.txt SHA-256 得 6050e5ead4203586ce19b5269b207d97ff7877a184e05c923110a695693fd3ba；manifest、solve instance、exposure level 与 canonical replay 内嵌布局一致。"
+      - "独立计算 solve_instance、canonical_replay、exposure_audit、solution_family_audit 的 SHA-256，依次为 ca3529122ea4f6f39f8e1cf4735ea5d468cea77aecdac1ecca98fcc152e38252、3e3bff5f4077adef0835215fabe33be1edc8ceebf1773305b50d7513821eeda6、06c8e53d41ff0507973427a120b6b314068c9453ee51f2b0752b9ff2fcf108b0、e2ca7d9ac9e63edac06616984de4f306602876836de097820c5664bd777272e5，与 manifest 完整相符。"
+    limits:
+      - "按 forbidden_inputs 未读取 player_readthrough 内容；本条只支持送审机械 evidence 的版本与布局对齐。"
+
+  - claim_id: canonical_normal_win
+    claim: 10 个 canonical inputs 均合法，玩家存活并以 all_braziers_lit 正常胜利。
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json 记录 completed=true、executedSteps=10、legalThroughStep=10，10 个 step 的 legal 均为 true。"
+      - "最终 node key 为 P:4,3|D:0|T:5/5|C:|B:3,1:1;1,3:1，final.isWin=true；D:0 证明玩家存活，两盆均为 1。"
+      - "solve_instance.yml、exposure_audit.json 与 mechanic.yml 均使用 all_braziers_lit；mechanics.ts 的 isWin 要求玩家未死亡且所有火盆已点亮。"
+    limits: []
+
+  - claim_id: graph_complete_current_exact
+    claim: 当前 exact 完整可达图 complete，3974 states、11126 edges、1 win。
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json 的 exact_version、level.id 与 layout_sha256 均匹配当前 exact；graph.status=complete、reason=null、reachable_state_count=3974、legal_transition_count=11126、win_state_count=1。"
+      - "raw_graph 实际含 3974 nodes 与 11126 edges；node/edge index 均连续且唯一，state key 无重复，全部端点有效，除 node 0 外每个节点均有入边且存在 depth-1 前驱，没有 depth leap。"
+      - "唯一 winning node 为 247；44 个按当前合同识别的终局节点均无出边，raw graph 摘要与终局化策略一致。"
+    limits:
+      - "Reviewer 只审计既有 raw artifact 的身份、完备标志和结构一致性，不补跑 runtime 图枚举。"
+
+  - claim_id: first_boundary_keeps_both_targets_open
+    claim: canonical 第 5 步第一次燃烧边界完成供体与横烛缩短及接收烛 shrink_ignite，但两个火盆仍均未点亮。
+    status: supported
+    evidence_basis:
+      - "canonical edge 32（node 15 -> 23，step 5, down）依次含 countdown:1->5、simultaneous_burn:candle#1+candle#3、shrink:candle#1:len1、shrink:candle#3:len1、shrink_ignite:candle#single3。"
+      - "node 23 key 中 candle#1 与 candle#3 均为单格、candle#single3 已燃，且 B:3,1:0;1,3:0；canonical step 1-4 的倒数为 5->4->3->2->1，因此 step 5 是第一次燃烧边界。"
+      - "按 mechanics.ts 的退焰点火条件，edge 32 前 candle#1 占 5,3;6,3，缩短后释放 6,3；接收烛 candle#single3 的上向芯恰在 6,3 由遮蔽转为外露，因此该 shrink_ignite 的供体对象为 candle#1。"
+    limits: []
+
+  - claim_id: required_winning_events_roles_and_order
+    claim: >-
+      全部胜路均要求供体侧滚、供体对接收烛的 shrink_ignite、接收烛在同一左滚中先被 candle#3 烛身灭火、
+      再由其远端芯火复燃并点亮左盆 (1,3)，随后 candle#3 上滚点亮上盆 (3,1)；目标分配固定且左盆必先于上盆。
+    status: supported
+    evidence_basis:
+      - "raw complete graph 的胜可达子图是唯一边链 0,3,9,17,32,57,95,167,277,477；对 donor_side_roll、receiver_shrink_ignite、receiver_body_douse、receiver_bridge_reignite、receiver_roll、bridge_roll、light_a、light_b 八组分别删除匹配边后，从 node 0 均不可达胜态。"
+      - "edge 0 必含 roll_candle:candle#1；edge 32 必含 shrink_ignite:candle#single3；edge 95 的同一次 left 行动按事件序列先出现 extinguish_by_candle_body:candle#single3，再出现 ignite_from_wick:candle#single3:3,3，再出现 light_brazier:1,3 与 roll_candle:candle#single3:d5。"
+      - "edge 95 前 candle#3 位于 4,3 且 wickDir=left，其外露芯坐标为 3,3；因此 ignite_from_wick 的 3,3 来源由 candle#3 提供。"
+      - "win subgraph 点亮 (1,3) 的转换仅 edge 95，滚动对象为 candle#single3；点亮 (3,1) 的转换仅 edge 477，且含 roll_candle:candle#3:d2。完整图中 B(3,1)=1 且 B(1,3)=0 的可达状态数为 0，故目标分配固定且 (1,3) 必先于 (3,1)。"
+    limits:
+      - "这里的必经、对象参与和顺序只作机械断言，不推出玩家体验、难度或作品价值。"
+
+  - claim_id: early_bridge_displacement_is_reachable_loss
+    claim: >-
+      开局提前下滚 candle#3 后，仍可在第 5 步点燃接收烛且两盆保持未亮；complete graph 中满足“接收烛已燃、两盆未亮、
+      candle#3 已离开火桥位”的 54 个状态全部不可再到达胜态。
+    status: supported
+    evidence_basis:
+      - "最短见证 node 20 深度为 5，输入为 [down,left,left,down,up]；edge 14 在第 4 步下滚 candle#3，edge 26 在第 5 步含 shrink_ignite:candle#single3，node 20 key 为 candle#3 位于 4,4、接收烛已燃、B:3,1:0;1,3:0。"
+      - "按 solution_family_audit.ts 的明示筛选（两盆未亮、candle#single3:-:up:1、candle#3 仍燃且不在 4,3 火桥位）独立扫描 3974 个 raw nodes，精确得到 54 个节点：20,21,29,32,33,34,35,36,47,48,52,53,54,58,69,72,76,77,78,79,80,85,86,87,88,89,90,91,99,100,101,122,123,125,126,127,132,133,134,138,143,144,145,146,147,156,157,158,159,160,161,162,163,169。"
+      - "从唯一胜态 node 247 对全部 raw edges 反向闭包得到 11 个 win-reachable 节点；上述 54 节点与该集合的交集为 0，因此 54 个状态全部不可胜。"
+    limits:
+      - "不可胜结论依赖当前 exact 的 complete graph；它不说明这些状态对玩家是否显著、是否困难或是否具有审美价值。"
+
+  - claim_id: strict_exposure_gate
+    claim: exposure graph complete，verdict=pass，forbidden_hits 为空，允许暴露到 rolling_contact_chain。
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json 记录 graph.status=complete、allowed_exposure_through=rolling_contact_chain、forbidden_hits=[]、verdict=pass。"
+      - "exposure artifact 的 sequence_sha256 为 32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c；独立计算当前 mechanic_exposure_sequence.yml 得到同一摘要。"
+      - "当前序列六个 branch 全部列入 allowed_branches；rolling_contact_chain 是最后一个 branch，因此 forbidden_branches 与 forbidden_event_patterns 均为空。"
+    limits:
+      - "本次 pass 的 later-event 排除边界为空，因为 rolling_contact_chain 已是当前序列最后一族；pass 不证明事件必经、体验有效、难度或作品质量。"
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

@@ -1,0 +1,361 @@
+schema_version: 1
+design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/assignments/designer_experience_brief_002.yml
+assignment_kind: experience_brief
+brief_status: finalized_after_task_local_material_selection
+candidate_id: null
+exact_version: null
+
+prototype_context:
+  confirmed_rules:
+    - 玩家可沿长轴推动蜡烛一格，也可从侧面触发完整侧滚，直到下一小步被实体阻挡。
+    - 侧滚每个小步立即结算灭火、递归点火和点盆；途中变化不会让滚动提前停止。
+    - 一次多格侧滚仍只算一个合法行动，并只在整次行动后推进一次共享五拍倒计时。
+    - 完整行动末尾先结算共享燃烧与缩短，再判玩家死亡，最后检查标准胜利。
+    - 已点亮火盆永久保持点亮并可作为火源；外露已燃烛芯可点盆、点火，也会杀死玩家。
+    - 初始布局不得静默点火、灭火或点盆；无效输入不形成 runtime edge，也不推进倒计时。
+  win_condition: 玩家存活，并在完整回合结算后点亮全部火盆（all_braziers_lit）。
+  object_and_event_semantics:
+    - 多格蜡烛是刚性实体；cap 方向外一格为非实体烛芯投影。
+    - 墙或其它烛身遮住已燃烛芯会先使其熄灭；重曝烛芯保持未燃，除非同格火源再点燃。
+    - 当前关首次正式教授滚动小步逐次接触；核心机械现象是 roll_intermediate_light_brazier。
+    - 中途点亮的火盆状态会保留到滚动终点，滚烛的最终烛身占格则继续作为实体参与后继动作。
+  allowed_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+    - rolling_contact_chain
+  allowed_exposure_through: rolling_contact_chain
+  tool_boundary:
+    - 当前已实现 Candle runtime、ASCII parser/renderer、solver、完整图、layout analyzer、replay、诊断 probes 与 exposure audit。
+    - Candle 专属 miner、candidate factory、PuzzleScript exporter/checker 未实现，不得用其它原型证据替代。
+    - 本阶段不制作布局、不运行 candidate solve/replay，也不发布 exact。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - 已掌握轴推、侧滚、烛芯点盆、危险火焰与共享五拍倒计时。
+    - 已会用燃尽改变占格，用共享时钟规划跨对象顺序。
+    - 已会用墙体灭火选择退出燃烧集合，并安排及时退出与错峰长度向量。
+    - 已会控制点火加入相位、有限火源窗口和存火—暂停—取火。
+    - 已会使用烛身遮蔽、未燃重曝及延后复燃窗口。
+    - 已会使用退焰点火的完整接班、blocker→fuel 同格翻转和跨边界接力。
+    - 尚未正式学习侧滚每个小步逐次结算；不能假定玩家已知途中点盆会保留且滚动继续。
+  prerequisite_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+  actual_prior_delivery_boundary: >-
+    assignment 没有提供 L01-L15 的已交付 exact、布局或 replay；以下只登记课程规划先验。
+    设计上按玩家已掌握这些能力处理，但不得把规划槽位虚构成 actual prior level。
+  known_prior_level_refs: []
+  planned_prior_slots:
+    - slot: L01
+      planning_identity: 轴推、烛芯位置与全火盆目标的短教学入口
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/course_brief.yml#human_constraints.fixed_opening"
+      actual_exact_ref: null
+    - slot: L02
+      planning_identity: 首次跨过共享五拍边界并观察蜡烛缩短
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/course_brief.yml#human_constraints.fixed_opening"
+      actual_exact_ref: null
+    - slot: L03
+      planning_identity: S01_T03_BURNOUT_REMOVES_ROLL_STOP
+      planning_title: 燃尽闸门改写侧滚终点
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S01_T03_BURNOUT_REMOVES_ROLL_STOP"
+      actual_exact_ref: null
+    - slot: L04
+      planning_identity: S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY
+      planning_title: 共享时钟跨对象保形顺序锁
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S01_T04_SIMULTANEOUS_SHRINK_GEOMETRY"
+      actual_exact_ref: null
+    - slot: L05
+      planning_identity: S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH
+      planning_title: 墙前择一把尾端挡块格分给 A/B
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T01_BOUNDARY_EXIT_ALLOCATES_LENGTH"
+      actual_exact_ref: null
+    - slot: L06
+      planning_identity: S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE
+      planning_title: 先点盆再墙灭保尾窗口
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T02_JUST_IN_TIME_DUAL_USE_THEN_FREEZE"
+      actual_exact_ref: null
+    - slot: L07
+      planning_identity: S02_T03_STAGGERED_EXIT_LENGTH_VECTOR
+      planning_title: 错峰墙灭写成三阶尾端通路
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S02_T03_STAGGERED_EXIT_LENGTH_VECTOR"
+      actual_exact_ref: null
+    - slot: L08
+      planning_identity: S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN
+      planning_title: 在边界前后加入，选择是否支付当前周期
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T01_MIDCYCLE_JOIN_ALLOCATES_BURN"
+      actual_exact_ref: null
+    - slot: L09
+      planning_identity: S03_T02_DYING_SOURCE_IGNITION_WINDOW
+      planning_title: 有限火源夹出的唯一接火窗口
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T02_DYING_SOURCE_IGNITION_WINDOW"
+      actual_exact_ref: null
+    - slot: L10
+      planning_identity: S03_T03_PAUSE_RESUME_BURN_INTERVALS
+      planning_title: 存火—暂停—取火闭环
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S03_T03_PAUSE_RESUME_BURN_INTERVALS"
+      actual_exact_ref: null
+    - slot: L11
+      planning_identity: S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+      planning_title: 移动遮板同时冻结目标原轮廓并建立空间接口
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE"
+      actual_exact_ref: null
+    - slot: L12
+      planning_identity: S04_T02_REEXPOSED_UNLIT_STAGING_WINDOW
+      planning_title: 移开遮板后先利用未燃窗口，再主动复燃
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S04_T02_REEXPOSED_UNLIT_STAGING_WINDOW"
+      actual_exact_ref: null
+    - slot: L13
+      planning_identity: S05_T01_BOUNDARY_HANDOFF_PRESERVES_RECEIVER
+      planning_title: 旧载体支付边界，接火者以完整燃烧态接班
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T01_BOUNDARY_HANDOFF_PRESERVES_RECEIVER"
+      actual_exact_ref: null
+    - slot: L14
+      planning_identity: S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE
+      planning_title: 让实体封口在边界上翻成携火通道
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE"
+      actual_exact_ref: null
+    - slot: L15
+      planning_identity: S05_T03_RETREATING_FLAME_RELAY
+      planning_title: 把中继摆成双链接，让火每个边界前进一步
+      planning_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S05_T03_RETREATING_FLAME_RELAY"
+      actual_exact_ref: null
+
+experience_seed:
+  human_seed: >-
+    为 Candle Sokoban 课程第 16 关固定玩家侧体验核心：一记长侧滚既在途中扫过并点亮一个
+    标准胜利必要火盆，又把最终烛身落点留成后继对象必须使用的实体接口。
+  planning_core_ref: "prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S06_T01_PATH_OUTPUT_ENDPOINT_BODY_DUTY"
+  course_slot: L16
+  expected_relative_difficulty: 5
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  publication_status: published_and_authorized_by_assignment
+  dispatch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/lexicon.md
+  task_index_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/batch.yml
+  selected_material_refs:
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/lexicon.md#long-roll-path-output-endpoint-tail-stop"
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/cases.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/results.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_composed.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_composed.md
+  designer_boundary: >-
+    本轮只选择已发布局部关系并固定体验简报；task-local probe 不是正式候选。
+    不复制其完整布局，不开始 Designer 工作布局，不运行 candidate solve，不创建 candidate_id 或 exact。
+  provenance_account:
+    dispatch_contract: >-
+      dispatch 明确 required_skill=sokoban-mechanism-lab、intent=mechanism_explore、
+      publication_scope=task_local，并把本任务 lexicon 与 index 设为发布目标。
+    batch_contract: >-
+      batch_l16_001_long_roll_path_output_endpoint_stop 标记 status=published，
+      publication_scope=task_local，列出 lexicon 条目与 raw artifact；本 assignment 明确声明
+      Controller 已完成 provenance 检查并把整批加入 input_refs。
+    evidence_scope: >-
+      六个指定输入均完整合法回放；graph 未枚举。材料只支持当前局部状态差、消费关系与反事实对照，
+      不支持正式关卡必经性、解族、难度或审美结论。
+  selected_materials:
+    - material_id: long-roll-path-output-endpoint-tail-stop
+      title: 四格长侧滚的途中火盆—终点尾格双接口
+      lexicon_ref: "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/lexicon.md#long-roll-path-output-endpoint-tail-stop"
+      scene_card_present: true
+      source_scene_summary: >-
+        来源 probe 中，向左燃烧的四格横烛 A 向下侧滚 d4，在 d2 的严格非终点火焰列点亮火盆；
+        A 到 d4 后留下反烛芯端尾格。转场和一次缩短后，该尾格仍把单格竖烛 Q 的左滚从 d9 截成 d2，
+        使 Q 停在可从下方沿轴上推的列。
+      nonempty_inputs:
+        - down
+        - right
+        - right
+        - right
+        - right
+        - down
+        - down
+        - down
+        - down
+        - left
+        - down
+        - left
+        - left
+        - up
+      nonempty_input_ref: "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/cases.yml#composed_long_roll"
+      minimum_use: >-
+        一记严格非终点点盆的长侧滚留下反烛芯端实体尾格；后继对象必须被该尾格截停到一个
+        具体操作列，并紧接使用由此取得的轴推面。若长滚只在火盆行近停，后继对象越过该列远滚，接口消失。
+      raw_evidence_refs:
+        - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/results.json
+        - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_composed.json
+        - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_composed.md
+      supporting_contrast_refs:
+        - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_prelit.json
+        - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_near_stop.json
+        - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_no_endpoint_consumer.json
+        - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_wrong_lane.json
+        - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/exploration/runs/batch_l16_001_long_roll_path_output_endpoint_stop/raw/input_replay_l16_batch001_axis_push.json
+      selected_relations:
+        - 严格非终点小步写入永久火盆输出，滚动继续到更远终点。
+        - 终点反烛芯端尾格可在一次缩短后继续承担后继停块职责。
+        - 后继停点不是静态展示；它直接交出一个轴推动作面。
+        - 近停只能得到路径输出，错列或预亮只能留下终点链，删除 Q 只剩路径 witness，轴推不能复现双接口。
+      not_adopted_as_formal_design:
+        - 四格长度、向左燃烧、向下滚、d2/d4、具体坐标与墙位。
+        - probe 中滚后九步开放转场及其用走位跨燃烧边界的时间线。
+        - Q 必须是单格向上未燃蜡烛，或 consumer 必须使用当前 x=8 上推列。
+        - 只为阻止提前胜利而放置、尚未被 Q 实际完成的远端火盆。
+        - 对必经性、唯一解、完整图、难度或审美的任何推断。
+
+archive_calibration:
+  full_index_or_retrieval_summaries_read: true
+  calibration_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/designer/archive_calibration.yml
+  all_aesthetic_1_records_read:
+    - ICE_CAND_0002
+    - ICE_CAND_0004
+    - ICE_CAND_0011
+    - ICE_CAND_0037
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+  related_positive_records_read:
+    - ICE_CAND_0019
+    - ICE_CAND_0024
+    - ICE_CAND_0033
+    - RA_CAND_0001
+    - RA_CAND_0022
+    - RA_CAND_0029
+  related_lower_bound_or_boundary_records_read:
+    - ICE_CAND_0012
+    - ICE_CAND_0020
+    - RA_CAND_0019
+    - RA_CAND_0020
+  additional_human_reviewed_records_read: []
+  human_comment_refs:
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/designer/archive_calibration.yml#human_comment_refs"
+
+experience_core:
+  experience_statement: >-
+    玩家面对一个“路径目标不在停点、后继接口又要求远端实体落点”的同动作双重规划题：
+    亲手触发一记长侧滚，看到燃烧烛芯在滚动途中点亮标准胜利必要火盆而滚动不停，
+    随后用停在终点的烛身直接改写后继对象的动作结果，并由该后继继续完成剩余标准胜利链。
+  prior_expectation: >-
+    玩家已会按最终停点规划侧滚，但尚未正式知道每个滚动小步都会结算接触；
+    因而容易把途中火盆视为不能与远端停点同时取得的目标。
+  visible_setup: >-
+    开局应同时可读地展示一根可长侧滚的燃烛、位于非终点小步上的未点火盆、
+    远端停止区域，以及一个其后滚动终点与操作面明确依赖该终点烛身占格的后继对象。
+    玩家应能从后继对象的轴推需求反读出它必须被截停在哪一列；两项职责必须在滚动前共同可推理，
+    不能把后继藏成高潮后的新题。
+  player_action: >-
+    玩家先决定并建立能兼得两项结果的滚道与停止关系，再从正确操作侧触发同一记不可中止长侧滚：
+    烛芯途中扫过必要火盆，烛身继续前进到反烛芯尾格可截停后继对象的位置；随后用后继对象的
+    侧滚读取停块，并从得到的操作面沿轴推动它进入剩余胜利链。
+  visible_payoff: >-
+    火焰在途中越过火盆格时将其点亮，蜡烛没有停下；滚动结束后，终点反烛芯尾格把后继对象的
+    侧滚截停到准确列，玩家随即从新取得的操作面沿轴推动该对象，进入完成剩余标准目标所需的局面。
+  why_level_exists: >-
+    本关首次把侧滚读成两套同时写入的接口：烛芯路径可以留下永久火焰输出，烛身终点可以留下
+    持续空间责任。它让玩家学会规划整条滚道而不只看终点，并证明一拍动作可以同时经营途中状态与落点实体。
+  core_boundary:
+    central_objects:
+      - 执行唯一核心长侧滚的燃烧多格蜡烛。
+      - 位于严格非终点小步、由该滚动途中点亮的标准胜利必要火盆。
+      - 长滚终点的烛身占格与该占格形成的实体接口。
+      - 必须直接消费终点接口的后继可动对象。
+      - 由后继链继续完成的至少一个剩余标准胜利义务。
+    supporting_objects:
+      - 只为建立长滚距离、操作侧和明确终点所需的墙、实体挡块或通路。
+      - 只在必要时提供初始火焰、倒计时相位或玩家安全操作面的辅助对象。
+
+work_identity:
+  conditions:
+    - 核心动作必须是同一根多格蜡烛的一次多小步侧滚，不能拆成多次推动或多次短滚。
+    - 标准胜利必要火盆必须在终点之前的小步被点亮，且滚动在点盆后继续。
+    - 滚烛终点的反烛芯端实体占格必须保留到后继动作，并把后继对象截停到一个明确、可立即使用的轴推操作面。
+    - 若存在转场或一次缩短，必须保留负责停块的尾格；不能让接口职责落在先被缩短删掉的烛芯端。
+    - 途中火盆与后继消费都必须属于同一条 all_braziers_lit 胜利链；完成其中一项而不完成另一项不能胜利。
+    - 后继关系必须把约束传回滚动前，使玩家必须同时选择正确路径和正确终点，而非顺序执行两个独立任务。
+    - 同一初始局面必须包含至少一个玩家可理解的错误构造：它能取得路径输出或终点链之一，却不能兼得两者；难度不能由相邻 probe 的作者对照代替。
+    - 核心回报后应尽快收束，不追加与终点接口无关的清理段。
+  counterfactuals:
+    - >-
+      若把途中火盆预亮、删除或移到终点，长滚只剩实体落点职责，滚动小步路径输出不再构成作品核心。
+    - >-
+      若删除后继对象、让它不再接触终点接口，或预置到无需该占格也能完成的位置，
+      长滚终点只剩装饰，路径—终点双重规划消失。
+    - >-
+      若把长滚拆成“先在火盆处短停、再另一次滚到终点”，一拍同时累积两项必要结果的作品身份消失。
+    - >-
+      若普通轴推、预置终点或不扫过途中火盆的替代路线也能建立同一后继局面并胜利，
+      侧滚路径职责没有被隔离。
+    - >-
+      若长滚在火盆行近停后，后继对象仍能在别处取得同一轴推操作面，或远滚后仍能回到所需列，
+      终点尾格没有真实消费责任。
+    - >-
+      若拿掉后继后所有能点亮途中火盆的滚动状态重新等价，说明后继原本确实参与同一谜题；
+      若拿掉后仍需完全相同的终点判断，则后继只是追加子题，必须重构。
+
+level_brief:
+  packaging_intent: complete_single_level
+  expected_difficulty: 5
+  expected_scale: >-
+    紧凑到中等的一屏单关；规模只需容纳一次清楚长滚、一个直接后继消费和短收束，
+    不以对象数量或走廊长度扩充体量。
+  expected_player_load: >-
+    主要负担是同时反推烛芯路径、最终烛身占格、后继对象动作面与标准胜利义务；
+    允许首次看到途中结算带来惊喜，但难度不能建立在规则遗忘、读图失误、操作不准、空走计时或机械试错上。
+  opening_intent: >-
+    同屏暴露“近处路径火盆”和“远处终点 consumer”的表面矛盾，让玩家知道这两个目标必须由同一滚烛解决。
+  preparation_intent: >-
+    只保留会改变核心滚动操作侧、路径对齐、终点位置或后继操作面的必要准备；
+    每个较早决定都应因预见后继接口而被压缩。正式单关必须把 probe 中固定的近停/远停对照
+    改写为同一初始局面内的玩家选择或构造结果，不能把作者换墙后的两个局面冒充玩家分支。
+  climax_and_ending_intent: >-
+    长滚途中点盆与终点落位形成连续高潮，紧接一次或极短后继消费兑现实体接口，随后结束标准胜利链。
+  selected_material_transformation_requirements:
+    - 缩短 probe 中长滚后到 Q 读取之间的开放转场，或把转场中的行动全部变成准备同一后继接口的必要工作。
+    - 把 Q 的停点与轴推接入标准胜利所需的具体输出；“轴推合法”本身不能作为完整 consumer。
+    - 给玩家提供同图可理解的错误构造，使只完成路径输出、只完成终点链或短滚近停成为实际可比较的失败关系。
+    - 删除或赋予 probe 远端火盆真实责任；不得保留只为阻止局部测试提前胜利的附带对象。
+    - 正式布局完成后重新运行当前 exact 的完整 replay、解族、对象责任与 complete graph；局部材料证据不随变形继承。
+
+allowed_design_sources:
+  - 当前 assignment 的 input_refs 与 design_handoff required docs。
+  - prototypes/ice_slide_escape/design_archive/index.yml 与其本简报明确读取的人类原评语，仅用于抽象审美校准。
+  - prototypes/reality_anchor/design_archive/index.yml 与其本简报明确读取的人类原评语，仅用于抽象审美校准。
+  - 当前 assignment 明确提供、具有 mechanism_explore/task_local publication provenance 的 task lexicon、索引、首批 run 与原始 runtime evidence。
+
+prototype_specific_routing:
+  - 正式候选胜利条件固定为 all_braziers_lit，禁止 event_occurs。
+  - 当前关 allowed_exposure_through 固定为 rolling_contact_chain；后续 exact 仍须以 complete reachable graph 通过 exposure audit。
+  - 途中火盆必须是标准胜利必要目标；事件出现本身不证明必经、有效使用、难度或质量。
+  - 当前任务首批已验证 lexicon 已取得；选用的是局部关系，不是课程探索 optional direction 或 Explorer probe 的完整布局。
+  - 候选接受后的 redundant_element_prune、严格 exposure 重检、conformance 与 playable build 由 Controller 执行，不属于 Designer 阶段。
+
+human_review_constraints:
+  - 不把一次滚动中的大量事件或多格距离视为难度与亮点。
+  - 不用重复长滚、重复点盆、空走计时、大地图或大量对象填充难度 5。
+  - 不让前序在核心前独立退休，也不让后继成为高潮后的割裂子题。
+  - 不保留高 affordance 但无职责的蜡烛、火盆、墙体接口或可见机制可能性。
+  - 不从跨原型归档复制具体布局、坐标、对象形态或动作链。
+
+stage_boundary:
+  experience_brief_complete: true
+  experience_brief_finalized: true
+  archive_calibration_complete: true
+  formal_layout_started: false
+  candidate_id_created_by_designer: false
+  task_local_material_selection_complete: true
+  next_designer_gate: >-
+    等待 Controller 提供绑定唯一 candidate_id 的后续 candidate_design assignment；在此之前不建立工作布局、solve instance 或 exact。

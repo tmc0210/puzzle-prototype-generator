@@ -1,0 +1,25 @@
+import { readFile } from "node:fs/promises";
+import { enumerateRuntimeGraph } from "../../../../../../src/core/runtimeGraph.js";
+import { loadPrototypePackage } from "../../../../../../src/core/io.js";
+import { solveWithRuntime } from "../../../../../../src/core/solver.js";
+import type { LevelDoc } from "../../../../../../src/core/types.js";
+import { replayInputSequence } from "../../../../../../src/workflows/inputSequenceReplay.js";
+import { getRuntimeAdapter } from "../../../../../../src/prototypes/runtimeAdapter.js";
+
+const source = (await readFile(process.argv[2]!, "utf8")).replace(/\r/g, "").trimEnd();
+const rows = source.split("\n");
+rows[4] = `${rows[4]!.slice(0, 6)}.${rows[4]!.slice(7)}`;
+const layout = `${rows.join("\n")}\n`;
+const pkg = await loadPrototypePackage("prototypes/candle_sokoban");
+const adapter = getRuntimeAdapter(pkg.mechanic);
+const runtime = adapter.createRuntime(pkg.mechanic);
+const level: LevelDoc = { id: "remove-top-target", title: "remove-top-target", layout, global_burn_cycle: 5, win: pkg.mechanic.win };
+const initial = adapter.parseLevel(level);
+const options = { winCondition: pkg.mechanic.win };
+const solution = solveWithRuntime(runtime, initial, { ...options, maxStates: 140000, maxDepth: 180 });
+const replay = solution.found ? replayInputSequence(adapter, runtime, initial, solution.inputs, options, pkg.mechanic.win) : undefined;
+const graph = enumerateRuntimeGraph(runtime, initial, pkg.mechanic.win, options, { maxStates: 140000, terminalizeWins: true });
+const forbidden = graph.edges.flatMap((edge) => edge.events.filter((event) => /^(roll_intermediate_|roll_reignite_after_extinguish|wick_reexposed_unlit|shrink_ignite)/.test(event)));
+const wins = [...graph.winStateIndexes].map((index) => graph.keys[index]!);
+const signatures = [...new Set(wins.map((key) => key.split("|C:")[1]?.split("|B:")[0] ?? key))];
+console.log(JSON.stringify({ layout, solver: { found: solution.found, inputs: solution.inputs }, replay: replay && { finalWin: replay.final.isWin, events: replay.steps.flatMap((step) => step.events) }, graph: { status: graph.status, states: graph.keys.length, edges: graph.edges.length, wins: wins.length, signatures }, forbidden: [...new Set(forbidden)] }, null, 2));

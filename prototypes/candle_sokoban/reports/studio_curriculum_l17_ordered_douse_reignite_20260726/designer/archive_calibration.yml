@@ -1,0 +1,278 @@
+calibration_id: candle_curriculum_l17_archive_calibration_002
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/assignments/designer_experience_brief_001.yml
+designer_role: sokoban-level-designer
+status: complete_updated_with_candle_specific_human_archive
+
+archive_scope:
+  rule: >-
+    只使用 clean_archive 且 human_reviewed=true 的 retrieval summary 和候选中的人类原评做审美校准；
+    未归档报告、旧 Critic、Designer 自评和工具结论不进入审美样本。
+  indexes:
+    - ref: prototypes/candle_sokoban/design_archive/index.yml
+      source_of_truth: candidate_records
+      status: experimental
+      clean_human_reviewed_records_read: 4
+      record_ids:
+        - CANDLE_CAND_0001
+        - CANDLE_CAND_0002
+        - CANDLE_CAND_0003
+        - CANDLE_CAND_0004
+    - ref: prototypes/ice_slide_escape/design_archive/index.yml
+      sha256: 7b6ee9e98c8fea77004e596e1c3210b2b412942bbc116c082aeb7ade4fdfc18a
+      clean_human_reviewed_retrieval_summaries_read: 14
+      record_ids:
+        - ICE_CAND_0002
+        - ICE_CAND_0004
+        - ICE_CAND_0006
+        - ICE_CAND_0011
+        - ICE_CAND_0012
+        - ICE_CAND_0015
+        - ICE_CAND_0019
+        - ICE_CAND_0020
+        - ICE_CAND_0022
+        - ICE_CAND_0024
+        - ICE_CAND_0033
+        - ICE_CAND_0034
+        - ICE_CAND_0035
+        - ICE_CAND_0037
+    - ref: prototypes/reality_anchor/design_archive/index.yml
+      sha256: aa61c31fd65609a776437bd12218a5b4bdd9a19b3706ba32ee061fed6e609304
+      clean_human_reviewed_retrieval_summaries_read: 32
+      record_ids:
+        - RA_CAND_0001
+        - RA_CAND_0002
+        - RA_CAND_0003
+        - RA_CAND_0004
+        - RA_CAND_0005
+        - RA_CAND_0006
+        - RA_CAND_0007
+        - RA_CAND_0008
+        - RA_CAND_0009
+        - RA_CAND_0010
+        - RA_CAND_0011
+        - RA_CAND_0012
+        - RA_CAND_0013
+        - RA_CAND_0014
+        - RA_CAND_0015
+        - RA_CAND_0016
+        - RA_CAND_0017
+        - RA_CAND_0018
+        - RA_CAND_0019
+        - RA_CAND_0020
+        - RA_CAND_0021
+        - RA_CAND_0022
+        - RA_CAND_0023
+        - RA_CAND_0024
+        - RA_CAND_0025
+        - RA_CAND_0026
+        - RA_CAND_0027
+        - RA_CAND_0028
+        - RA_CAND_0029
+        - RA_CAND_0030
+        - RA_CAND_0031
+        - RA_CAND_0032
+  source_of_truth_note: >-
+    Candle 与 Ice index 均声明 candidate_records 为 source_of_truth；若索引摘要分数与候选记录不一致，
+    本校准采用候选记录及其人类原评，索引只作完整检索入口。
+
+all_aesthetic_1_records_read:
+  - candidate_id: CANDLE_CAND_0003
+    candidate_ref: prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0003.md
+    human_comment_ids: [HP_CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001_exact_001_001]
+    layout_read: true
+    calibration_read: >-
+      这是与当前课程和 runtime 完全同域的最高权重反例：L16 虽有长滚路径输出、尾端接口和完整硬证据，
+      人类实际只读到“先推左上还是右下”的开局二择；一旦先推左上，后续盲目右推，决策空间坍塌。
+      审美1、难度2直接否定把单次开局选择后的自动机械链声称为难度5。
+  - candidate_id: ICE_CAND_0002
+    candidate_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0002.md
+    human_comment_ids: [HC_001]
+    layout_read: true
+    calibration_read: >-
+      工具支持、事件命中和局部 dead commitment 没有转化为玩家思考；玩家只需按直觉推眼前对象，
+      且可达 d5 是致命规则外溢。L17 不能让正确滚道成为唯一显然动作。
+  - candidate_id: ICE_CAND_0004
+    candidate_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0004.md
+    human_comment_ids: [HC_001]
+    layout_read: true
+    calibration_read: >-
+      三次简单 d4 的重复仍只是教学。L17 即使连续出现多次灭火/复燃，也不能把重复事件当作难度或应用。
+  - candidate_id: ICE_CAND_0011
+    candidate_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0011.md
+    human_comment_ids: [HC_ICE_CAND_0011_001]
+    layout_read: true
+    calibration_read: >-
+      顺序逻辑成立仍可因冗余墙地、可删开局、未披露多解与正例形状污染而整体失败；
+      L17 的必要准备必须参与同一顺序判断，画布和解族声明都要干净。
+  - candidate_id: ICE_CAND_0037
+    candidate_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0037.md
+    human_comment_ids: [HC_ICE_CAND_0037_001]
+    layout_read: true
+    calibration_read: >-
+      三个无洞见步骤的拼接和接口外溢不能靠完整图、required event 或 review-ready 补偿；
+      L17 必须有真实的顺序比较与严密终点读取。
+  - candidate_id: RA_CAND_0024
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md
+    human_comment_ids: [HP_RA_FRESH_2026_07_08_PULL_BRUSH_RETURN_v4_wall_trim_001]
+    layout_read: true
+    calibration_read: >-
+      高 affordance 对象会抬高玩家期待；若最终只兑现普通腾挪，机制利用率再高也失败。
+      L17 出现的轨道、火源和可动接触体都必须承担实际顺序选择责任。
+  - candidate_id: RA_CAND_0027
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md
+    human_comment_ids: [HP_RA_FRESH_2026_07_09_VACATE_MATERIAL_LOCK_v4_001]
+    layout_read: true
+    calibration_read: >-
+      事件标签齐全但没有使用对象的结构性质，是 affordance 污染。L17 的接触链要由玩家操纵，
+      不能只在 replay 中自动触发漂亮标签。
+  - candidate_id: RA_CAND_0030
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md
+    human_comment_ids: [HP_RA_FRESH_2026_07_12_CUT_REBIND_ORTHOGONAL_v7_001]
+    layout_read: true
+    calibration_read: >-
+      大地图、多对象和反馈迟缓 deadend 若没有相称亮点，就是高设计成本低回报；
+      L17 应让错误顺序的反馈接近且可读，不用大量迟滞分支堆难度。
+  - candidate_id: RA_CAND_0031
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md
+    human_comment_ids: [HP_RA_FRESH_2026_07_11_TWIN_LOOM_RESECTION_v31_001]
+    layout_read: true
+    calibration_read: >-
+      单行道前奏即使覆盖很多机制也只是过场；核心若只是显然重复顺序锁仍不值其规模。
+      L17 的准备段必须改变玩家对最终接触顺序的选择。
+  - candidate_id: RA_CAND_0032
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md
+    human_comment_ids: [HP_RA_FRESH_2026_07_12_DUAL_ANCHOR_CROSS_RELAY_v4_001]
+    layout_read: true
+    calibration_read: >-
+      前段对象退休、后段另起 witness 会形成割裂子题。L17 的开局、顺序选择和终点 consumer 必须是同一因果链。
+
+selected_positive_records:
+  - candidate_id: RA_CAND_0022
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md
+    human_comment_ids: [HP_RA_LEX_2026_07_08_PULL_CUT_ANCHOR_HANDOFF_v2_001]
+    layout_read: true
+    score: {aesthetic: 5, difficulty: 4}
+    relevance: >-
+      短步骤中先做看似危险的反直觉操作，随后由紧凑结构直接揭示其必要性；
+      L17 的“先灭后燃”应有类似可预见但非显然的选择回报。
+  - candidate_id: ICE_CAND_0019
+    candidate_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0019.md
+    human_comment_ids: [HC_ICE_CAND_0019_001]
+    layout_read: true
+    score: {aesthetic: 4, difficulty: 4}
+    relevance: >-
+      删除即时目标回报后，早期动作的意义延迟到后续 stopper 读取才显现，增强非局部回读；
+      L17 难度 5 应让终点 consumer 解释先前的接触顺序，而非当场发答案。
+  - candidate_id: RA_CAND_0017
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0017.md
+    human_comment_ids: [HP_RA_LEX_2026_07_06_VACATE_BIND_RETURN_v3_opening_comfort_001]
+    layout_read: true
+    score: {aesthetic: 4, difficulty: 5}
+    relevance: >-
+      高难成立于机制密度和要素强耦合，而不是动作多；L17 只能在滚烛、接触序列和终点读取互相负责时追求难度 5。
+
+selected_lower_bound_or_boundary_records:
+  - candidate_id: CANDLE_CAND_0002
+    candidate_ref: prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0002.md
+    human_comment_ids: [HP_CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002_v006_001]
+    layout_read: true
+    score: {aesthetic: 3, difficulty: 2}
+    boundary_read: >-
+      开局下推一次或两次的普通二择，即使写入/读回与未燃蜡烛阻挡机械链完整，也几乎没有玩家洞见。
+      L17 不能只把“一次/两次”换成“上/下”并靠事件更华丽来抬高难度。
+  - candidate_id: CANDLE_CAND_0001
+    candidate_ref: prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0001.md
+    human_comment_ids: [HP_CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_001_v2_001]
+    layout_read: true
+    score: {aesthetic: 3, difficulty: 3}
+    boundary_read: >-
+      一次不可中止侧滚串联烛身灭火、重曝、复燃、燃烧边界与退焰，只有退焰构造被人类认可为“一定洞见”，
+      整体仍只是审美3/难度3。L17 单靠更纯的灭→燃长滚不会自然达到难度5。
+  - candidate_id: CANDLE_CAND_0004
+    candidate_ref: prototypes/candle_sokoban/design_archive/candidates/CANDLE_CAND_0004.md
+    human_comment_ids: [HP_CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001_V4_001]
+    layout_read: true
+    score: {aesthetic: 3, difficulty: 3}
+    boundary_read: >-
+      主动墙灭保长、右上蜡烛顺序锁、复燃边界与紧凑路径复用只达到常规流程 3/3；
+      若 L17 想到难度5，必须让首次承诺之后仍有新的、与顺序终态强耦合的玩家判断，而非自动收束。
+  - candidate_id: RA_CAND_0019
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0019.md
+    human_comment_ids: [HP_RA_LEX_2026_07_07_STROKE_SELECT_CMM_PAIR_v1_001]
+    layout_read: true
+    score: {aesthetic: 2, difficulty: 2}
+    boundary_read: >-
+      首推和后续两拉过于显然，只能算功能库存；L17 若玩家只沿唯一轨道完成指定顺序，也只能是机制展示。
+  - candidate_id: RA_CAND_0020
+    candidate_ref: prototypes/reality_anchor/design_archive/candidates/RA_CAND_0020.md
+    human_comment_ids: [HP_RA_LEX_2026_07_08_SPLIT_BRIDGE_DUAL_ENDPOINT_v1_001]
+    layout_read: true
+    score: {aesthetic: 3, difficulty: 2}
+    boundary_read: >-
+      三个分支本质重复，清晰几何只能把它抬到可用下界；同构终点可以帮助 L17 读图，
+      但不能让两条实际同解的重复滚道冒充深度。
+  - candidate_id: ICE_CAND_0012
+    candidate_ref: prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0012.md
+    human_comment_ids: [HC_ICE_CAND_0012_001, HC_ICE_CAND_0012_002]
+    layout_read: true
+    score_note: >-
+      候选记录为审美 2、难度 3；索引当前摘要字段显示审美 3。按索引声明采用候选记录为 source_of_truth。
+    boundary_read: >-
+      清楚逻辑与强复用仍会因“把眼前对象推到最远即可”而缺乏洞见；
+      L17 必须让两个方向或轨道都局部合理，并要求预见最后一次有效写入。
+
+l17_calibration_conclusions:
+  positive_requirements:
+    - 玩家在长滚发生前面对至少两个局部合理的顺序方案，并亲自选择方向、轨道或接触体安排。
+    - 早先选择的意义由终点的同构 consumer 直接揭示；正确顺序不是唯一可走线的被动演出。
+    - 同一根滚烛、两次接触和终点读取形成紧凑因果链，主要对象不在核心前后退休。
+    - 难度 5 来自预见“最后一次有效写入覆盖前态”的非局部计划，而非步数、事件数或慢反馈 deadend。
+    - 首次方向/对象承诺后必须仍保留至少一个非盲推、非重复输入的实质判断，并让它与终态读取共同约束前一步；不能只在开局做一次二择。
+    - 若使用多对象或顺序锁，后段必须重读前段留下的关系，且达到比 CANDLE_CAND_0004 的紧凑常规流程更高的耦合度。
+  rejection_signals:
+    - 只需按可见轨道或唯一合法方向滚动。
+    - 把多次灭火、点火或途中事件的覆盖数当成玩家内容。
+    - 两条同构路径只是重复动作，或一条路径明显是装饰性假分支。
+    - 终点火盆已预亮、可被别的火源完成，或 consumer 不区分滚烛最终亮灭。
+    - 无关前序、高潮后清理、冗余空间或高 affordance 但无职责的对象抬高规模与期待。
+    - 开局二择后，剩余动作只是沿墙走位、连续同轴推或触发已经唯一的长滚；这是 CANDLE_CAND_0003 的直接失败族。
+    - 把普通二择包装成写入/读回，或用完整图强制事件掩盖玩家洞见弱；这是 CANDLE_CAND_0002 的下界。
+  course_specific_boundary: >-
+    L16 已实际教会逐小步接触与路径/终点双职责；L17 只把“接触顺序覆盖并由终态读取”作为新意。
+    同一输入在燃烧边界立即触发缩短/避烧属于后续 S06_T03 方向，不应抢占本关体验核心。
+
+candle_archive_records_read:
+  - candidate_id: CANDLE_CAND_0001
+    layout_read: true
+    human_original_read: true
+    human_score: {aesthetic: 3, difficulty: 3}
+    decisive_text: 退焰构造有一定洞见，正常流程可用。
+  - candidate_id: CANDLE_CAND_0002
+    layout_read: true
+    human_original_read: true
+    human_score: {aesthetic: 3, difficulty: 2}
+    decisive_text: 普通二择，机制硬证据满足但几乎无玩家洞见。
+  - candidate_id: CANDLE_CAND_0003
+    layout_read: true
+    human_original_read: true
+    human_score: {aesthetic: 1, difficulty: 2}
+    decisive_text: 开局二择后盲目右推，毫无后续抉择点；难度声明失真。
+  - candidate_id: CANDLE_CAND_0004
+    layout_read: true
+    human_original_read: true
+    human_score: {aesthetic: 3, difficulty: 3}
+    decisive_text: 主动灭火加顺序锁因紧凑路径复用而达标，但只属常规流程。
+
+current_candidate_recalibration:
+  assessed_version: exact_001
+  submission_status: rejected_before_dispatch
+  direct_similarity_to_negative_archive: >-
+    exact_001 的玩家内容同样集中在开局“先上还是先下”的单次二择。正确上端发车后，
+    余下是沿左边回到端行、连续右推直到对齐、绕到操作面并触发唯一向下 d8；
+    虽然 d8 内的墙→火源覆盖比 L16 机械主题更纯，但玩家决策空间在首个 d4 后已经坍塌。
+  revised_difficulty_prediction: 2
+  revised_aesthetic_prediction: 1_to_2
+  verdict: do_not_submit_exact_001
+  required_next_structure: >-
+    同一 candidate 必须换结构族；首次承诺后仍要有至少一个会反向约束开局选择的实质判断，
+    且不能依赖燃烧边界、重复轴推或更多静态轨道把规模伪装成难度。

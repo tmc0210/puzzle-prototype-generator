@@ -63,4 +63,31 @@ assert.deepEqual(
   },
 );
 
+const afterVacatedObjectWallify = `
+##############
+#####O..44R.o#
+###.L111.#####
+##O......#####
+##..#O...#####
+##..o....#####
+#.L3333#@#####
+##############
+`;
+const leafPocket = discoverCandleRedundancyCandidates(
+  afterVacatedObjectWallify,
+  "fixture-v3-after-vacated-object-wallify",
+);
+assert.ok(leafPocket.candidates.some((candidate) =>
+  candidate.kind === "single_entry_floor_region"
+  && JSON.stringify(candidate.cells) === JSON.stringify([
+    { x: 2, y: 4 },
+    { x: 3, y: 4 },
+    { x: 2, y: 5 },
+    { x: 3, y: 5 },
+  ]),
+));
+assert.ok(!leafPocket.candidates.some((candidate) =>
+  candidate.kind === "single_entry_floor_region" && candidate.cells.length === 19,
+));
+
 console.log("candle redundancy candidate tests passed");

@@ -1,0 +1,40 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v001
+result: equivalent_variants_only
+graph:
+  status: complete
+  reachable_states: 11231
+  legal_transitions: 36043
+  event_only_illegal_transitions: 0
+  winning_states: 2
+  max_states: 500000
+shortest_solution:
+  cost: 28
+  depth: 28
+winning_state_representatives:
+  - win_state_index: 4308
+    depth: 28
+    equivalence: canonical_timing
+  - win_state_index: 4939
+    depth: 30
+    equivalence: extra_two_step_phase_wait_and_equivalent_consumer_push_distribution
+required_on_every_winning_path:
+  opening_guard_roll: true
+  same_roll_wall_douse_reignite_and_bridge_write: true
+  bridge_retreat_ignites_relay: true
+  relay_retreat_ignites_consumer: true
+  final_consumer_roll_lights_brazier: true
+minimum_event_counts_on_any_winning_path:
+  consumer_axis_pushes: 5
+  writer_rolls: 1
+  consumer_final_rolls: 1
+equivalence_account: >-
+  两个胜态都先把 guard 从 x=4 侧滚并锁在 x=6，经过同一 writer 滚动边、同一 bridge→relay→consumer
+  两次退焰点火、五次 consumer 轴推和最后点盆侧滚。较长代表路径只多一次上下往返，并把 consumer
+  的部分轴推安排到相邻相位；没有不同火源、不同目标烛、不同接触顺序或不同胜利读出。
+known_non_equivalent_winning_family: none
+evidence_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/winning_state_representatives.jsonl
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/required_relations_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/graph_analysis.md

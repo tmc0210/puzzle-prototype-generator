@@ -1,0 +1,49 @@
+schema_version: 1
+design_task_id: candle_curriculum_l17_ordered_douse_reignite_20260726
+candidate_id: CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+exact_version: exact_001
+target_difficulty: 5
+difficulty_status: designer_prediction_pending_fresh_critic
+
+opening_read: >-
+  中央一根向右燃烧的长烛，上下各有一枚未亮火盆；右侧同列还清楚放着上方遮芯墙和下方已亮火盆。
+  玩家在长烛左端，向上或向下绕一格都能把同一根蜡烛等距送到对应端点，两个选择都合法。
+
+intended_reasoning:
+  - 两只未亮火盆都要完成，因此先选端点也在选择之后贯穿全轨的读取方向。
+  - 若先去下端，轴推可点亮下盆；随后向上 d8 先经过已亮火盆，但对原本燃烧的蜡烛只是幂等接触，后到的墙把火写灭，上盆保持未亮。
+  - 若先去上端，轴推点亮上盆；随后向下 d8 在 d2 被墙写灭、d6 被已亮火盆重新写燃，d8 下盆直接读取最终燃态。
+  - 上端轴推点盆时恰逢一次可见缩短，烛芯退回一格；玩家再推一格恢复 x=9 对齐，然后从端帽操作面触发核心滚动。
+
+understandable_wrong_construction:
+  construction: 先到下端，再向上执行同距主滚
+  preserved_responsibility: >-
+    同一根烛、同一 x=9 接触列、一次起点点盆、相同准备动作数、相同四格烛身与相同 d8 都成立。
+  missing_responsibility: >-
+    接触顺序为火源→墙；第一次火源接触没有新点燃，最后一次墙接触决定未燃终态。
+  feedback: >-
+    d8 完整结束在上端，烛芯明确未燃且上盆保持暗；错误在核心动作终点立即显现，没有长清理或迟滞 deadend。
+
+climax_and_ending: >-
+  高潮是一记 d8：严格途中先灭、重曝、后复燃，滚动不停，最后在下端点盆并同回合触发 all_braziers_lit。
+  高潮后没有回程、补火或额外目标。
+
+major_element_roles:
+  - candle#1：开局方向选择、起点 consumer 写入、两次燃态覆盖和终点读取的唯一主体。
+  - 未亮火盆 (9,2)：上端同构 consumer；迫使玩家先取得上端并建立正确发车端。
+  - 墙 (9,4)：d2 严格途中灭火写入；删除后逆序会退化为常燃胜解。
+  - 已亮火盆 (9,8)：d6 严格途中复燃写入，也是全程唯一后序火源。
+  - 未亮火盆 (9,10)：d8 终点 consumer 与标准胜利收束。
+  - 上下 x=2 墙点：让初始 body x=2..7 停在同构 staging 行。
+  - 上下 x=8 墙点：让正确主滚 body x=5..8 恰停在 consumer 行；删除后 consumer 退化为 d9 的严格途中输出。
+  - 其余墙与地板：提供两端等距操作面、容纳刚体扫掠，并删除端帽后方无职责单格。
+
+difficulty_read: >-
+  难度来自在行动前把两个端点目标反向接成一条非交换程序，预见“最后有效写入”而非试唯一合法动作；
+  执行仅 14 步且错误反馈近。右侧程序列对强玩家较清楚，是否确实达到相对难度 5 仍交由 fresh Critic 校准。
+
+designer_known_perceptible_defects:
+  - id: clear_program_column_may_reduce_search
+    account: 因果关系高度可读，熟练玩家可能较快比较出上→下；未用视觉噪声人为抬难度。
+  - id: visible_boundary_realignment
+    account: 起点点盆伴随缩短并多一次右推；它有直接画面反馈，不作为本关新意或难度主因。

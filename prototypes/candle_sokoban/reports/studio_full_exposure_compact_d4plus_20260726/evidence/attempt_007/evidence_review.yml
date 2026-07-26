@@ -1,0 +1,171 @@
+review_attempt_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006_review_001
+reviewer_instance_id: /root/evidence_reviewer_007
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_007/input.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/layout.txt
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/graph_analysis.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/recovery_counterfactuals.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/object_participation.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exposure_audit.json
+    - docs/21-level-design-studio-standard.md
+    - prototypes/candle_sokoban/docs/design_handoff.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_complete
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - inputs: [up, left, up, up, left, right, up, left, up, right, down, down, down, right]
+      terminal_state_index: 1818
+      depth: 14
+      ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exposure_audit.json
+  equivalence_evidence_basis:
+    - >-
+      exposure_audit.json 的 complete raw graph 含 51042 个索引唯一节点和 147660 条索引唯一合法边；
+      边端点全部有效，且每个 from-state/action 至多一条边。
+    - >-
+      唯一 winning node 为 state 1818（depth 14）；从该胜态沿全部 raw edges 反向闭包仅得到
+      15 个 win-reachable 节点和 14 条边，恰构成从初态到胜态的单链，因此不仅玩家逻辑类唯一，
+      连 raw winning input sequence 也只有一条。
+    - >-
+      单链的 14 条 raw edges 与 canonical_replay.json 每步 before key、after key、action 和 events
+      逐项一致；graph_analysis.json 与 solution_family_audit.json 的 complete/count/win 摘要相互一致。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 完整性按允许的 current-exact raw graph artifact 核验；Reviewer 未重跑搜索或补枚举。
+
+claims:
+  - claim_id: candidate_exact_layout_alignment
+    claim: >-
+      candidate、exact、layout、solve instance 与全部 current-exact mechanical evidence 对齐；layout SHA-256 为
+      ded3ad725893d82ed8100e806a3825f83bfd945a8188da608d7110898f06522a。
+    status: supported
+    evidence_basis:
+      - >-
+        对 layout.txt 实际计算的 SHA-256 为
+        ded3ad725893d82ed8100e806a3825f83bfd945a8188da608d7110898f06522a，与 input、exact_manifest、
+        solution_family_audit 和 exposure_audit 的 digest 一致。
+      - >-
+        exact_manifest、solve_instance、canonical_replay、graph_analysis、solution_family_audit、
+        recovery_counterfactuals、object_participation 与 exposure_audit 的 candidate/exact/id 字段均指向
+        CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003 / CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006。
+      - graph_analysis.initialState、canonical_replay.layout 与 layout.txt 逐字符布局一致。
+    limits: []
+
+  - claim_id: canonical_normal_win
+    claim: 14 个 canonical inputs 全部合法，玩家存活并以 all_braziers_lit 正常胜利。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json 记录 completed=true、executedSteps=14、legalThroughStep=14。
+      - >-
+        canonical 的 14 个 action、每步 before/after state key 与 events 均逐项匹配 exposure_audit raw graph
+        中从 state 0 到 state 1818 的 14 条边。
+      - >-
+        终态 key 为 D:0，四个 brazier 位均为 lit；raw node 1818 标记 winning=true，最后一边发出
+        win_all_braziers_lit。规则合同规定死亡优先且 all_braziers_lit 仅在玩家存活时成立。
+    limits: []
+
+  - claim_id: unique_complete_current_exact
+    claim: 当前 exact 完整可达图 status=complete，51042 states、147660 legal transitions、唯一 terminal winning state，胜态深度 14。
+    status: supported
+    evidence_basis:
+      - >-
+        exposure_audit.graph 记录 status=complete、reachable_state_count=51042、
+        legal_transition_count=147660、win_state_count=1、max_states=700000。
+      - >-
+        raw_graph 实际包含 51042 nodes 与 147660 edges；node/edge index 各自无重复，所有 edge from/to
+        都落在有效 node index 内，raw winning node 恰一项：state 1818，depth 14。
+      - graph_analysis.graph 与 solution_family_audit.graph 给出相同 complete/count/win 结果。
+    limits: []
+
+  - claim_id: exactly_one_receiver_shrink_ignite_on_all_winning_paths
+    claim: >-
+      全部胜路对 candle#2 恰好发生一次 shrink_ignite；不存在 candle#2 被烛身熄灭、未燃重曝、
+      从火盆补火、从普通烛芯补火或第二次退焰接火的胜路。
+    status: supported
+    evidence_basis:
+      - >-
+        complete raw graph 的全部 win-reachable 子图是唯一 14-edge 单链；其中
+        shrink_ignite:candle#2 恰出现一次（state 8 -> 13，edge 16）。
+      - >-
+        同一全部胜路子图中 wick_reexposed_unlit:candle#2、extinguish_by_candle_body:candle#2、
+        ignite_from_brazier:candle#2 与 ignite_from_wick:candle#2 的出现次数均为 0。
+      - solution_family_audit 的 exact_once_checks 与 forbidden_winning_events 和 raw graph 复核结果一致。
+    limits: []
+
+  - claim_id: required_roles_events_and_order
+    claim: >-
+      全部胜路必经 candle#2 首次轴推、candle#3 点 (1,5)、candle#1 缩成单格并向 candle#2 退焰、
+      candle#1 点 (7,3) 后燃尽、candle#2 缩成单格，以及 candle#2 在同一次多格长滚中先后点亮
+      (7,5) 与 (10,5)；声明的事件次序不存在胜路违反。
+    status: supported
+    evidence_basis:
+      - >-
+        唯一 complete winning chain 的 step 1/edge 0 为 push_axis:candle#2；step 5/edge 16 依次包含
+        push_axis:candle#3、light_brazier:1,5、shrink:candle#1:len1、shrink:candle#3:len1、
+        shrink_ignite:candle#2。
+      - >-
+        step 10/edge 693 依次包含 push_axis:candle#1、light_brazier:7,3、burn_out:candle#1、
+        shrink:candle#2:len1、burn_out:candle#3。
+      - >-
+        step 14/edge 3754 是 candle#2 的同一次 d5 roll；raw events 先在 d1 发出 light_brazier:7,5，
+        再在 d4 发出 light_brazier:10,5，随后记录 roll_multi_cell_one_turn:candle#2 与
+        roll_last_brazier_before_endpoint:candle#2:d4。
+      - >-
+        三根 candle 与四个 brazier 的 object-tagged required events 全部位于唯一胜链，故不存在绕过
+        这些对象参与关系的胜路；object_participation.yml 的 required event 列表与 raw graph 一致。
+    limits:
+      - 这里只支持对象参与、事件实例与次序；不支持 object_participation.yml 中角色叙述的审美或玩家体验解释。
+
+  - claim_id: three_recovery_counterfactuals_are_nonwinning
+    claim: >-
+      第 5 步错误边界状态、第 8 步错误分支已点亮两盆的状态，以及正确首次交接后用单格供体重遮并在
+      下一边界燃尽供体的状态，均位于 complete graph 内且不能再到达胜态。
+    status: supported
+    evidence_basis:
+      - >-
+        inputs [up,left,up,up,up] 在 raw graph 中合法到达 state 12；第五边包含
+        wick_reexposed_unlit:candle#2 而无 shrink_ignite:candle#2。state 12 不在唯一胜态的反向闭包内。
+      - >-
+        inputs [up,left,up,up,up,down,left,left] 合法到达 state 92；state key 显示 (7,3) 与 (1,5)
+        两盆已亮，且 state 92 不在胜态反向闭包内。
+      - >-
+        inputs [up,left,up,up,left,up,right,down,left,right] 合法到达 state 352；路径先发出
+        shrink_ignite:candle#2，随后发出 extinguish_by_candle_body:candle#2，并在下一边界发出
+        burn_out:candle#1；结果 state key 中 candle#2 未燃，state 352 不在胜态反向闭包内。
+      - recovery_counterfactuals.yml 与 solution_family_audit.json 中的三个 state index 和 win_reachable=false 均与 raw graph 复核一致。
+    limits: []
+
+  - claim_id: strict_exposure_gate
+    claim: exposure graph complete，verdict=pass，forbidden_hits 为空，允许暴露到 rolling_contact_chain。
+    status: supported
+    evidence_basis:
+      - >-
+        exposure_audit 的 exact_version、level.id 与 layout digest 均匹配 current exact；实际计算的
+        mechanic_exposure_sequence.yml SHA-256 也与 exposure_gate.sequence_sha256
+        32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c 一致。
+      - >-
+        exposure_gate.allowed_exposure_through=rolling_contact_chain；graph.status=complete，raw node/edge
+        数量与摘要一致，verdict=pass，forbidden_hits 实际为空。
+    limits:
+      - rolling_contact_chain 是当前序列最后一个 branch，因此 forbidden_branches 与 forbidden_event_patterns 为空；later-event absence 在此门位上是空集检查。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

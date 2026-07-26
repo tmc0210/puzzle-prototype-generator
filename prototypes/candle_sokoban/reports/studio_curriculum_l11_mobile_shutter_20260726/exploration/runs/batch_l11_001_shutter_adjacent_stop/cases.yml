@@ -1,0 +1,34 @@
+runId: batch_l11_001_shutter_adjacent_stop
+title: "两格移动遮板终点的相邻停块"
+notes: >-
+  C 的一格烛身遮住 B 烛芯，另一格烛身紧邻遮芯格；后继单格横烛沿同列向上侧滚，
+  用滚动终点读取这格是否存在。每个 case 都以非空输入交给 Candle runtime。
+cases:
+  - id: axis_two_cell_cover_with_stop_probe
+    family: shutter_adjacent_stop
+    variant: two_cell_axis_arrival
+    changed_variable: 两格竖烛 C 轴推到遮芯终点
+    contrast_with: [single_cell_cover_without_adjacent_body, fixed_wall_without_adjacent_body]
+    layout_ref: axis_two_cell_cover_with_stop_probe.txt
+    inputs: up,right,down,left,right,down,down,left,up
+  - id: roll_two_cell_cover_with_stop_probe
+    family: shutter_adjacent_stop
+    variant: two_cell_roll_arrival
+    changed_variable: 两格竖烛 C 改从右侧滚到同一终点
+    contrast_with: axis_two_cell_cover_with_stop_probe
+    layout_ref: roll_two_cell_cover_with_stop_probe.txt
+    inputs: left,down,right,up,down,down,down,down,down,left,left,left,up
+  - id: single_cell_cover_without_adjacent_body
+    family: shutter_adjacent_stop
+    variant: one_cell_axis_arrival
+    changed_variable: 遮板 C 从两格缩为单格
+    contrast_with: axis_two_cell_cover_with_stop_probe
+    layout_ref: single_cell_cover_without_adjacent_body.txt
+    inputs: up,right,down,down,down,down,left,up
+  - id: fixed_wall_without_adjacent_body
+    family: shutter_adjacent_stop
+    variant: fixed_single_cell_concealer
+    changed_variable: 用烛芯格单格墙替代可移动 C
+    contrast_with: axis_two_cell_cover_with_stop_probe
+    layout_ref: fixed_wall_without_adjacent_body.txt
+    inputs: up

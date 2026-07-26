@@ -1,0 +1,56 @@
+schema_version: 1
+design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/assignments/designer_candidate_design_002.yml
+candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+target_difficulty: 5
+status: published_exact_001
+published_exact_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001
+
+player_relation_hypothesis: >-
+  开局的未燃四格横烛必须先向右轴推一格：这一个平移同时把左向烛芯投影对准 d1 的已亮火盆和
+  d2 的必要途中火盆，也把反烛芯尾端对准后继竖烛的水平滚道。玩家随后从上方触发 d4 长侧滚，
+  看见 A 在 d1 途中取火、d2 点盆而仍继续到 y=6。后继 Q 必须从右向左滚，先在 d1 途中取火，
+  再在 d2 被 A 保留的尾端 (6,6) 截停到 x=7；Q 随后从下方两次轴推，点亮最后火盆并收束。
+
+structure_hypothesis:
+  aligned_long_roll:
+    object: 未燃左向四格横烛 A
+    preparation: 只允许的一次向右轴推把 A 从 x=2..5 对齐到 x=3..6
+    path_output: A 向下 d4；d1 在 (2,3) 取火，d2 严格途中点亮必要火盆 (2,4)
+    endpoint_duty: 反烛芯尾端 (6,6) 在 A 缩短后仍保留，并成为 Q 左滚的唯一实体停止来源
+  endpoint_consumer:
+    object: 未燃上向三格竖烛 Q，初始在 x=9, y=4..6
+    required_relation: Q 从右向左滚，d1 经 (8,3) 已亮火盆取火，d2 被 A 尾端截停在 x=7
+    win_output: Q 在截停列从下方连续上推两次，以烛芯点亮 (7,2) 最后火盆
+  wrong_constructions:
+    - A 未先右推时，下滚第一小步被 (2,3) 火盆实体挡住，不能取得路径输出或终点接口。
+    - A 已正确长滚后，Q 若从左向右滚到 x=10，会保留已取得的路径火盆，但失去 A 尾端、途中取火和最终轴推链。
+
+reasoning_load:
+  - 从 d1 火源、d2 路径火盆的同列关系反推 A 的烛芯列必须是 x=2。
+  - 从 Q 最终要在 x=7 上推并点亮 (7,2)，反推 Q 必须被截停在 x=7。
+  - 再从 Q 的左滚下一格 x=6 反推 A 的反烛芯尾端必须留在 (6,6)，因此开局只可右推 A 一格。
+  - 区分 Q 向右滚的路径输出已完成假进展与向左滚的尾端消费；不能用空走计时或事件数量代替该判断。
+
+packaging_constraints:
+  - 开局同屏显示 A 的唯一右移格、d1 火源、d2 途中目标、远端 Q、Q 的取火盆和最后火盆。
+  - A 的一次右轴推是核心双对齐准备；A 长滚后只保留到 Q 的短转场，不另起子题。
+  - Q 左滚把终点停块、途中取火和后续轴推合成一个后继；两次轴推后立即标准胜利。
+  - Q 的右滚是同图可执行且不可恢复的路径输出-only 错误构造。
+
+self_check_targets:
+  - all_braziers_lit 正常胜利，非空 canonical replay。
+  - 所有胜解都包含 A 的一次右轴推、A d4 长滚、d2 严格途中点盆、Q 左滚 d2、Q d1 取火和最终轴推点盆。
+  - 所有胜解中的 Q 左滚前，A 只可能保留 (6,6) 或 (5,6)..(6,6)，因此 Q 的下一小步只由反烛芯尾端 (6,6) 阻挡。
+  - complete reachable graph；rolling_contact_chain exposure complete/pass。
+  - 解族只允许走位与等待相位、Q 剩余长度造成的同列轴推次数、以及 A 已完成双职责后的无效尾声移动等价差异；不得存在非等价胜解。
+  - 预亮路径火盆、未对齐 A、Q 向右滚、删除 Q，以及逐类移除尾端消费与轴推事件边均需有当前候选证据。
+
+open_risks:
+  - A 与 Q 各有一次途中取火；Q 的取火只服务终点 consumer，不得抢走 A 的路径输出核心。
+  - 顶部对齐准备和底部 Q 方向选择必须读作同一尾端坐标的前后呼应，而不是两个顺序开关。
+  - 转场较长但承担共享倒数下尾端保留与到达 Q 正确侧；不得再增加清理或重复长滚。
+
+revision_rule: >-
+  坐标微调只覆盖工作布局；若 A 的点火—点盆列、反烛芯尾端、Q 的滚向或最终轴推关系改变，
+  才再次更新本文件。任何工作布局均不取得 exact 版本号。

@@ -1,0 +1,173 @@
+schema_version: 1
+artifact_kind: designer_evidence_only_revision_report
+assignment_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/assignments/designer_revision_001_counterfactual_evidence.yml
+designer_instance_id: designer_candle_all_mechanics_002_20260725
+design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725_02
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version_basis: v001
+status: completed
+
+revision_scope:
+  kind: evidence_supplement_only
+  reason: >-
+    Fresh Evidence Reviewer 对 v001 的唯一未通过项，是 guard_removed、wall_removed、
+    active_source_removed 三项已有身份反事实缺少可独立读取的原始 complete graph、solve、
+    representative-win 或 unsat artifact。
+  output_root: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001
+  new_exact_published: false
+  design_content_changed: false
+  work_identity_changed: false
+
+frozen_v001_verification:
+  candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+  exact_version: v001
+  files:
+    - ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/layout.txt
+      bytes: 156
+      sha256: 07f6b42d7fb8634537083b11acf60fc5ac28b2e38ef84370481f02a1175211ca
+    - ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/level.yml
+      bytes: 585
+      sha256: b789ed878fe5b600d1222d9f0c5c84c092acab4ac242e72471bdfd3864260bca
+    - ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/solve_instance.yml
+      bytes: 757
+      sha256: d9e00f3d4674ff07f3e6e147f4bb14a28587704318516978ed9289de36666dae
+    - ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/canonical_replay.md
+      bytes: 13856
+      sha256: 32c36fff0bb52a48933e8884ef1a48716484b58b44da50d752f56a8ae253e192
+    - ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/submission_packet.yml
+      bytes: 6452
+      sha256: 2c52dadf5c7f28731337b5cda7796d1f6eefd8b2b8dd33d78f8f4ab68114c75d
+    - ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/identity_counterfactuals.yml
+      bytes: 2656
+      sha256: e2fc134b744143c1e63456f7ef6fe0e2d2cdf3465fa7d614721918efac035aef
+  verification_result: exact_files_match_v001_manifest
+
+common_solve_contract:
+  prototype: candle_sokoban
+  win_condition: all_braziers_lit
+  global_burn_cycle: 5
+  max_states: 500000
+  v001_declared_max_depth: 200
+  raw_graph_depth_cutoff: null
+  terminalize_wins: true
+  terminalize_zero_candle_loss: true
+  allowed_exposure_through: rolling_contact_chain
+  graph_completeness_required: complete
+  budget_binding: >-
+    标准 exposure audit 未设置深度截断并完整枚举全部可达图；三图最大观测深度分别为
+    64、63、66，均小于 v001 solve_instance 声明的 max_depth=200，因此同时覆盖该预算。
+
+counterfactual_results:
+  - id: guard_removed
+    mutation_layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_guard.txt
+    mutation_layout_sha256: bbd83ce9f5cd8c5cabdf299699197d642c03ba2ecbf1f9a827bcf15fa8d0d31a
+    raw_complete_graph_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/raw_complete_graph.json
+    solve_result_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/solve_result.json
+    representative_win_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/winning_state_representatives.jsonl
+    reproduction_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/reproduction.json
+    graph:
+      status: complete
+      reachable_states: 12755
+      legal_transitions: 41007
+      winning_states: 5
+      shortest_cost: 26
+      max_observed_depth: 64
+    representative_coverage: all_five_terminal_winning_nodes
+    shortest_representative:
+      win_state_index: 2396
+      depth: 26
+      inputs: [left, up, up, up, up, right, down, right, right, right, down, right, down, right, down, down, right, down, left, left, left, left, left, down, left, up]
+    finding: >-
+      现有汇总结论精确成立：整根删除 guard 后仍可解，完整图有 5 个胜态，最短解从
+      baseline 的 28 降到 26；最短代表不再包含开局 guard 右滚准备。
+
+  - id: wall_removed
+    mutation_layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_wall.txt
+    mutation_layout_sha256: 774815d2a4dc981d6c59c2b52add8d578bbfb68dab24b45671a8750b515debaf
+    raw_complete_graph_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/raw_complete_graph.json
+    solve_result_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/solve_result.json
+    representative_win_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/winning_state_representatives.jsonl
+    reproduction_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/reproduction.json
+    graph:
+      status: complete
+      reachable_states: 29148
+      legal_transitions: 93119
+      winning_states: 2
+      shortest_cost: 28
+      max_observed_depth: 63
+    representative_coverage: both_terminal_winning_nodes
+    shortest_representative:
+      win_state_index: 13738
+      depth: 28
+      inputs: [right, left, left, up, up, up, up, right, down, right, right, right, down, right, down, right, down, down, right, down, left, left, left, left, left, down, left, up]
+    representative_event_checks:
+      win_state_13738_depth_28:
+        any_extinguish_by_wall: false
+        writer_extinguish_by_wall: false
+        writer_ignite_from_wick: false
+        any_roll_reignite_after_extinguish: false
+        writer_roll_reignite_after_extinguish: false
+      win_state_16379_depth_30:
+        any_extinguish_by_wall: false
+        writer_extinguish_by_wall: false
+        writer_ignite_from_wick: false
+        any_roll_reignite_after_extinguish: false
+        writer_roll_reignite_after_extinguish: false
+    finding: >-
+      现有汇总结论精确成立：删除核心墙后完整图有 2 个胜态、最短 28；两个 terminal
+      winning node 的 BFS 代表均不含任何 extinguish_by_wall、ignite_from_wick:candle#1
+      或 roll_reignite_after_extinguish，writer 以预燃状态直接完成 bridge 写入。
+
+  - id: active_source_removed
+    mutation_layout_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_source.txt
+    mutation_layout_sha256: 9ac9a0c758386a5fc85488392444162373241984b2babf654bb1f28f0a163f39
+    raw_complete_graph_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/raw_complete_graph.json
+    solve_result_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/solve_result.json
+    unsat_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/unsat_certificate.json
+    reproduction_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/reproduction.json
+    graph:
+      status: complete
+      reachable_states: 64065
+      legal_transitions: 200681
+      winning_states: 0
+      shortest_cost: null
+      max_observed_depth: 66
+    finding: >-
+      现有汇总结论精确成立：删除 active source 后，正常胜利完整可达图无任何 winning
+      node；该反事实在当前 runtime 与正式终局合同下不可解。
+
+commands:
+  guard_removed_raw_graph: >-
+    npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts
+    'prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_guard.txt'
+    --id CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002_COUNTERFACTUAL_GUARD_REMOVED
+    --exact-version v001 --allowed-exposure-through rolling_contact_chain --max-states 500000
+    --out 'prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/guard_removed/raw_complete_graph.json'
+  wall_removed_raw_graph: >-
+    npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts
+    'prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_wall.txt'
+    --id CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002_COUNTERFACTUAL_WALL_REMOVED
+    --exact-version v001 --allowed-exposure-through rolling_contact_chain --max-states 500000
+    --out 'prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/wall_removed/raw_complete_graph.json'
+  active_source_removed_raw_graph: >-
+    npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts
+    'prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_source.txt'
+    --id CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002_COUNTERFACTUAL_ACTIVE_SOURCE_REMOVED
+    --exact-version v001 --allowed-exposure-through rolling_contact_chain --max-states 500000
+    --out 'prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/active_source_removed/raw_complete_graph.json'
+  summaries: >-
+    node 'prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/generate_counterfactual_summaries.mjs'
+
+evidence_boundaries:
+  - >-
+    mutation graph 的 exact_version=v001 只声明其基于冻结 v001；三份 mutation layout
+    均不是新 exact，也不替换 v001 的 layout、solve、replay、submission 或作品身份。
+  - >-
+    winning_state_representatives.jsonl 为每个 terminal winning node 提供一个确定性 BFS
+    代表，不声称逐条列出全部原始输入路径；全部状态、合法边与事件保存在 raw graph。
+  - >-
+    active_source_removed 的不可解结论受当前 Candle runtime、正常 all_braziers_lit 胜利、
+    terminal win 与 zero-candle loss 合同约束。
+  - 这些补证只核验既有身份反事实机械声明，不评价审美、难度或待玩价值。
+
+designer_revision_verdict: evidence_gap_filled_without_exact_change

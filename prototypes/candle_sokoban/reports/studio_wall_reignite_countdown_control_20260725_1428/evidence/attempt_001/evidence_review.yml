@@ -1,0 +1,133 @@
+review_attempt_id: candle_wall_reignite_hard_review_001
+reviewer_instance_id: sokoban-evidence-reviewer-fresh-candle-wall-reignite-001
+candidate_id: candle_shared_fire_wall_timing_20260725_1428
+exact_version: candle_shared_fire_wall_timing_20260725_1428.exact.004
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - docs/21-level-design-studio-standard.md
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/manifest.yml
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/layout.layout
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solve_instance.json
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/complete_graph.json
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/graph_summary.json
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/object_participation_counterfactuals.yml
+    - prototypes/candle_sokoban/reports/studio_wall_reignite_countdown_control_20260725_1428/designer/workbench/candle_shared_fire_wall_timing_20260725_1428/candle_shared_fire_wall_timing_20260725_1428.exact.004/solution_uniqueness_self_check.yml
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: unique_within_budget
+  search_scope: budget_limited
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "canonical_replay.json: 65-step legal replay reaches a winning state"
+    - "solve_instance.json: 41-step legal route reaches graph node 26517, which is winning"
+    - "complete_graph.json: 37 winning states and 37 winning terminal edges"
+  equivalence_evidence_basis:
+    - "complete_graph.json: solve_instance.json matches 41 of 41 raw graph edges from the initial state"
+    - "complete_graph.json and canonical_replay.json: the 41-step route ends at P:10,14|D:0|T:4/5|C:candle#1:1:down:1:9,14|B:7,1:1;9,4:1;9,15:1;10,18:1, while the 65-step canonical route ends with C: empty and T:5/5"
+    - "solve_instance.json and canonical_replay.json: raw event sequences differ, including ignite_midcycle:candle#3:t1 versus ignite_midcycle:candle#3:t3 and a canonical-only burn_out:candle#1 at step 65"
+  known_non_equivalent_win_refs:
+    - "solve_instance.json: independently matched 41-step winning route with a different raw event sequence and surviving lit candle#1 at the winning state"
+    - "complete_graph.json: winning node 26517 at depth 41 differs mechanically from the canonical depth-65 terminal win path"
+  status: contradicted
+  limits:
+    - solution_uniqueness_self_check.yml reports non_equivalent_winning_family_found=false, but that Designer self-report is not used as support against the raw winning route
+    - complete_graph.json contains raw nodes and edges but no SCC/equivalence-class annotation; no SCC verdict is inferred
+
+claims:
+  - claim_id: normal_win
+    claim: "当前 exact 使用正常 all_braziers_lit 胜利，而非 event_occurs。"
+    status: supported
+    evidence_basis:
+      - "prototypes/candle_sokoban/docs/designer_contract.md: formal win condition requires player alive and all braziers lit after full turn settlement"
+      - "canonical_replay.json: winCondition.type=all_braziers_lit and final.isWin=true"
+      - "canonical_replay.json: final key has D:0 and all four braziers at :1, with win_all_braziers_lit in the final settled events"
+    limits: []
+
+  - claim_id: canonical_replay_wins
+    claim: "当前 exact 的非空 canonical replay 合法并在完整结算后获胜。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json: id matches exact_version, replay.completed=true, executedSteps=65, legalThroughStep=65"
+      - "canonical_replay.json: all 65 replay steps are legal and the final state isWin=true"
+      - "canonical_inputs.json: step_count=65 and final_win=true"
+      - "complete_graph.json: all 65 canonical steps match raw graph edges from the exact initial node to the final winning node"
+    limits: []
+
+  - claim_id: complete_reachable_graph
+    claim: "当前 exact 的完整可达图状态为 complete，且 graph/raw edges 与 exact 版本一致。"
+    status: supported
+    evidence_basis:
+      - "manifest.yml: exact_version, candidate_id, graph_status=complete and layout_sha256=f582e5827ff025dc8fa0adcc60159025a1a7b0eca7711e515ab629ee65ffb2b0"
+      - "complete_graph.json: exact_version matches and status=complete; 43876 indexed unique nodes and 110999 raw legal edges with valid endpoints"
+      - "graph_summary.json: status=complete, state_count=43876, legal_transition_count=110999, winning_state_count=37, max_observed_depth=79"
+      - "exposure_audit.json: exact layout digest matches and raw_graph has the same 43876 nodes and 110999 edges as complete_graph.json"
+      - "exposure_audit.json: reachable event counts equal the independently counted raw edge events, including 37 win_all_braziers_lit edges"
+    limits:
+      - complete_graph.json has no SCC fields; this review makes no SCC-derived claim
+
+  - claim_id: solution_uniqueness
+    claim: "Designer 声明 unique_within_budget；需核对其预算、完整图、胜终局与非等价胜路边界。"
+    status: contradicted
+    evidence_basis:
+      - "solution_uniqueness_self_check.yml: declared unique_within_budget and graph check cites max-state budget context, but its non-equivalent=false conclusion is not accepted as support"
+      - "solve_instance.yml and solve_instance.json: predeclared maxStates=300000 and maxDepth=200; found=true with a 41-step route"
+      - "complete_graph.json: the 41-step solve route matches 41/41 raw edges and terminates at winning node 26517"
+      - "canonical_replay.json: the submitted canonical route is a distinct 65-step winning route; its final state has no candles and includes burn_out:candle#1, unlike the 41-step winning route"
+    limits:
+      - the contradiction is based on the actual raw alternate winning route and raw state/event differences, not on route length or Designer declaration
+
+  - claim_id: required_wall_douse_timing
+    claim: "canonical 与对象反事实支持墙体遮芯灭火、灭火后共享倒数继续推进，并改变后续燃烧参与时机。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json: the canonical sequence contains extinguish_by_wall and subsequent countdown_without_lit_candle, followed by boundary ignition and shrink events"
+      - "complete_graph.json: raw graph contains extinguish_by_wall=356, countdown_without_lit_candle=37178, boundary_extinguish_avoids_burn=93 and boundary_ignite_participates=183"
+      - "object_participation_counterfactuals.yml: baseline records the top-wall extinguish at step 2; remove_top_wall changes the trace to player death and no win"
+    limits: []
+
+  - claim_id: required_reignition_timing
+    claim: "canonical 与对象反事实支持已点亮火盆作为复燃火源，复燃不重置共享倒数，并包含边界复燃参与缩短。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json: canonical events contain ignite_from_brazier for candle#3 and candle#1, countdown:1->5 in the same turns, boundary_ignite_participates, and shrink"
+      - "complete_graph.json and exposure_audit.json: raw graph contains ignite_from_brazier=861, ignite_midcycle=697 and boundary_ignite_participates=183"
+      - "object_participation_counterfactuals.yml: baseline identifies top_fire_source and late_fire_source; removing either makes the corresponding replay non-winning"
+    limits: []
+
+  - claim_id: object_and_target_participation
+    claim: "送审包列出的墙、火源、蜡烛与目标对象参与声明均有当前 exact 的原始反事实或 replay 支持。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.json: raw replay includes wall douse, both brazier-source ignitions, candle pushes/rolls/shrinks/burnouts, and light_brazier:9,15"
+      - "object_participation_counterfactuals.yml: baseline is bound to the exact layout digest and covers top wall, top fire source, late fire source, late target and late candle"
+      - "object_participation_counterfactuals.yml: removing the top wall, top fire source, late fire source or late candle changes the replay to non-winning/dead outcomes"
+      - "object_participation_counterfactuals.yml: remove_late_target remains a valid win only under the changed target set; baseline replay still directly records light_brazier:9,15"
+    limits:
+      - this supports participation and mechanical counterfactual effects only; it does not assert per-object necessity for the removed late target under its altered win condition
+
+  - claim_id: strict_exposure_gate
+    claim: "exposure audit 的 exact/layout/sequence 对齐，graph complete，verdict pass，forbidden_hits 为空。"
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json: level.id matches exact_version, layout_sha256 matches the exact layout, graph.status=complete, verdict=pass and forbidden_hits=[]"
+      - "exposure_audit.json and mechanic_exposure_sequence.yml: exposure sequence digest is 32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c and matches the current sequence file"
+      - "exposure_audit.json: raw graph has 43876 states and 110999 legal transitions; all forbidden branch event patterns have zero hits"
+      - "complete_graph.json: independent raw-edge scan finds zero occurrences of extinguish_by_candle_body, wick_reexposed_unlit, shrink_ignite or rolling-contact-chain events"
+    limits:
+      - generic events explicitly excluded by the exposure contract remain present as raw runtime events and are not treated as later-branch hits
+
+hard_failures:
+  - "solution_uniqueness: actual exact graph contains a known non-equivalent winning route in solve_instance.json, contradicting unique_within_budget"
+
+evidence_gaps: []
+overall_hard_status: contradicted
+required_action: revise_candidate

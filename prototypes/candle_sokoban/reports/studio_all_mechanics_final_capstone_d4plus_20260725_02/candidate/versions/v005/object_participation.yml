@@ -1,0 +1,44 @@
+schema_version: 1
+artifact_kind: object_participation_audit
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v005
+result: pass
+
+graph_basis:
+  status: complete
+  reachable_states: 98961
+  legal_transitions: 276326
+  raw_winning_states: 2
+
+objects:
+  - object: candle#1
+    role: rolling_writer_and_retreat_source
+    required_use: >-
+      每条胜路先把它烧成两格，再执行 d4 下滚；同滚 d2 墙灭、d3 由 (6,5) 复燃，随后缩短释放
+      端帽格并 shrink_ignite candle#2。
+  - object: candle#2
+    role: player_authored_stop_value_and_delayed_reader
+    required_use: >-
+      每条胜路至少下推两次，既决定 writer 的 d4 止点也决定自身受火纵坐标；接火后缩成 y8 单格，
+      最终 d6 左滚并以 y7 火焰点亮终盆。
+  - object: brazier@6,5
+    role: unique_writer_reignite_source
+    required_use: 每条胜路均由它在墙灭之后复燃 candle#1；删除后完整图 220398 状态、零胜态。
+  - object: brazier@2,7
+    role: late_selector_and_normal_goal
+    required_use: 它以 y7 火焰行排除一推输出，并只在最终 candle#2 d6 横滚的 d5 中点被点亮。
+  - object: wall@6,4
+    role: writer_dousing_contact
+    required_use: >-
+      产生关键滚动的先灭后燃顺序；删除后相同 22 步仍胜，但灭火、火盆复燃与重燃写入事件全部消失，
+      作品退化为预燃直达。
+  - object: wall@8,7
+    role: relay_timing_lock
+    required_use: >-
+      封住两格 relay 在 y7 侧面的提前横滚操作面，使每条胜路必须先经过下一共享边界缩成 y8 单格，
+      再从 y8 右侧执行最终读出。
+
+evidence_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/object_participation_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/downstream_coupling_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/canonical_replay.json

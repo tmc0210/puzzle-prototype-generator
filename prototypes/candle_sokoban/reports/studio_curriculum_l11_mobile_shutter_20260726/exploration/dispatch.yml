@@ -1,0 +1,45 @@
+exploration_id: candle_curriculum_l11_mobile_shutter_exploration_20260726
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件。"
+experience_seed: >-
+  L11 / S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE：玩家移动遮板蜡烛 C，让其烛身
+  遮住目标燃烛 B 的烛芯，使 B 不移动却原地退出燃烧并冻结完整轮廓；C 的同一终点
+  还必须打开或建立一个紧接的空间接口，随后同一任务链分别读取 B 的原位保形与 C 的终点占格。
+player_prior:
+  - 玩家具备基础推箱子经验，并已掌握 Candle 的轴推、侧滚、烛芯投影、火焰危险和全火盆目标。
+  - 玩家已掌握共享五拍倒计时、缩短、燃尽、同步燃烧及跨对象时序规划。
+  - 玩家已会用墙体灭火让对象退出，并会用火盆或烛芯复燃让对象加入、规划多个参与区间。
+  - 玩家尚不知道另一根蜡烛的烛身可以遮芯灭火，也不知道移开遮体后的烛芯保持未燃。
+allowed_mechanisms:
+  - basic_candle_manipulation
+  - wall_dousing
+  - shared_fire_and_reignition
+  - body_concealment_and_reexposure
+allowed_tools:
+  - npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write
+  - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+  - npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts <layout-file|-> --id <id> --exact-version <exact> --allowed-exposure-through body_concealment_and_reexposure --max-states 300000 --out <report.json>
+source_boundary:
+  allowed:
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/mechanic.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/prior_course.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml#S04_T01_MOBILE_SHUTTER_DOUSES_IN_PLACE
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage04_001_mobile_shutter_douses_in_place/
+  forbidden:
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/studio/levels.yml
+    - prototypes/candle_sokoban/playable_queue.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - 任何审美归档、正式 exact、旧 review、Designer 设想或其它线程候选
+task_lexicon_ref: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon_index.md
+

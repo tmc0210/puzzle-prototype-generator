@@ -1,0 +1,100 @@
+submission_id: candle_curriculum_l17_ordered_douse_reignite_exact_001_submission
+design_task_id: candle_curriculum_l17_ordered_douse_reignite_20260726
+candidate_id: CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+exact_version: exact_001
+
+designer_claim:
+  player_experience_core: >-
+    玩家把同一根燃烛先送到上端或下端，并预见随后一次反向 d8 会按哪个方向读取同一列墙与火源；
+    上→下执行墙→火源，终点燃烧并点盆，反向执行火源→墙，终点未燃且同构火盆保持暗。
+  player_action: >-
+    先从下侧把中央长烛向上滚 d4，在上端右推点亮第一盆并完成 x=9 对齐；
+    再从上端操作面向下触发一次 d8，让同一烛芯在途中被墙写灭、由已亮火盆写燃并在下端直接输出。
+  visible_payoff: >-
+    正确 d8 在 d2 明确熄灭、d3 未燃重曝、d6 重新出现火焰，d8 立即点亮下盆并胜利；
+    对称反序同样滚满 d8，却在上端留下未燃烛芯和未亮上盆，最后写入差异可直接回读。
+  why_this_level_exists: >-
+    L16 已教逐小步结算与路径/终点双职责；L17 首次要求玩家把路径内部两次接触当成非交换状态程序，
+    并让端点只消费程序执行完后的最终亮灭，而不是把途中事件数量本身当成内容。
+  work_identity_conditions:
+    - 同一初态必须允许玩家把同一根初始燃烛等距送到上、下同构发车端；两种选择都实际可操作。
+    - 正确主滚必须是同一根蜡烛一次连续向下 d8，d2 墙灭、d6 火源复燃，途中不提前停止。
+    - 对称反序必须用相同准备骨架、相同四格主体、相同倒数相位和相同 d8，但以未燃状态抵达上端。
+    - 两端 consumer 必须位于同一 x=9 火焰插口；起点 consumer 先提供必要目标，终点 consumer 直接完成 all_braziers_lit。
+    - 不得存在错列滚动后轴推补点、别处补火、预亮终点或不经过 d2->d6 复燃链的胜解。
+    - x=2 stopper 必须形成初始 staging，x=8 stopper 必须让下盆是 d8 终点读取而非更长滚动的途中永久输出。
+
+packaging_account:
+  opening: >-
+    11x13 同屏显示中央横烛、上下未亮火盆、右侧上墙/下火源和对称双点端帽；
+    玩家从左端能以同样两步触发上滚或下滚，正确方向没有被唯一合法路直接标出。
+  preparation: >-
+    预备 d4 只选择发车端，不提前接触 x=9 程序列；回到端行的右推同时点亮第一盆并对齐主滚烛芯。
+    燃烧边界使点盆后烛芯可见退一格，随后同轴再推一格即恢复对齐，不开启独立子题。
+  reveal_or_use: >-
+    上端发车把同一静态接触列读成墙→火源；下端发车则把它读成火源→墙。
+    两条局部合理路线都能先点一盆并完整滚动，差异只在最后写入和终点 consumer 响应。
+  ending: 正确 d8 的最后一步点盆即标准胜利；没有回程、补火、第二对象或高潮后清理。
+  every_major_element_role:
+    - candle#1：方向选择、两端轴推写入、两次途中状态写入与终点读取的唯一连续主体。
+    - 上端火盆 (9,2)：同构起点 consumer，排除只去下端的一次近端输出旁路。
+    - 墙 (9,4)：严格途中灭火写入；无它时反序以常燃直接获胜。
+    - 已亮火盆 (9,8)：严格途中后序复燃写入，也是唯一可用的后序火源。
+    - 下端火盆 (9,10)：d8 最终状态 consumer 与胜利终点。
+    - 上下 x=2 墙点：截停初始 body x=2..7，形成等距 staging 行。
+    - 上下 x=8 墙点：截停主滚 body x=5..8，保证两端 consumer 读取滚动最终状态。
+    - 其余边界与地板：提供两条等距操作面、容纳刚体扫掠并删除端帽后方无职责单格。
+  known_perceptible_defects:
+    - 右侧程序列很清楚，强玩家可能较快读出上→下；未用视觉噪声人为抬高目标难度。
+    - 起点点盆伴随一次可见缩短并需要再推一格；它只负责反馈对齐，不作为顺序核心的新意。
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/canonical_replay.md
+  reverse_order_replay_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/reverse_order_replay.md
+  runtime_conformance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/runtime_conformance.md
+  exposure:
+    artifact_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+    result: pass
+    graph_status: complete
+    allowed_exposure_through: rolling_contact_chain
+    forbidden_hits: 0
+    graph_counts:
+      reachable_states: 45446
+      legal_transitions: 157249
+      winning_states: 5
+      max_observed_depth: 50
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: max_states=300000；实际 45446 states / 157249 legal transitions，完整结束
+    known_raw_winning_variants:
+      - 5 个 raw winning nodes，5 种燃烧终态签名。
+      - 等待跨越 0、1 或 2 个额外燃烧周期时，主滚主体为 4、3 或 2 格，轴推总数为 3、4 或 5。
+      - 所有变体仍恰好一次上向 d4、一次上端点盆、一次向下 d8、一次 d2 灭火、一次 d6 复燃和一次下端点盆。
+    equivalence_account: >-
+      完整图的事件移除检查证明上下 consumer、d8、d2 灭、d6 燃与 d2->d6 复燃链分别不可缺；
+      事件顺序检查全部通过。变体只改变等待、共享倒数相位、剩余长度和重复同轴对齐次数，
+      不改变对象、关系坐标、滚动方向、写入顺序或目标来源。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/solution_family_report.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/solution_family_account.yml
+    evidence_limits:
+      - 等价性是 Designer 对完整状态图与事件顺序的玩家逻辑归类，不替代 fresh Evidence Reviewer 的独立核验。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/summary.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/remove_wall_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/remove_source_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/move_bottom_consumer_off_socket_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/prelight_bottom_consumer_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/remove_top_consumer_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/remove_bottom_consumer_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/remove_x2_stoppers_analysis.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/counterfactuals/remove_x8_stoppers_analysis.md
+  player_readthrough_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/player_readthrough.yml
+  evidence_limits:
+    - runtime 证据确认机械身份、完整图和旁路，不把图规模、步数或事件数量当成难度与审美结论。
+    - 目标难度 5 及清楚程序列是否让强玩家过快读出，仍需 fresh Puzzle Critic 基于当前 exact 实际布局判断。
+
+designer_self_verdict: submit_for_independent_review

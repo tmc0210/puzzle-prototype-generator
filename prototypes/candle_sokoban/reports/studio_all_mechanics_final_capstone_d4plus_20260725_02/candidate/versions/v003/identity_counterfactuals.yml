@@ -1,0 +1,47 @@
+schema_version: 1
+artifact_kind: work_identity_counterfactuals
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v003
+result: pass
+
+counterfactuals:
+  no_gate_brazier:
+    mutation: 将 (6,6) 未亮火盆替换为空地
+    graph: { status: complete, states: 45461, edges: 130093, wins: 5 }
+    observed_identity_change: >-
+      胜态从 2 增为 5，并恢复“writer 先在 d2 被墙灭、稍后回推、再单独由火盆复燃”的非等价拆分历史；
+      当前 exact 中该火盆既封死回推位，也必须由主动 relay 横滚点亮。
+    raw_ref: counterfactuals/no_gate_brazier_audit.json
+  no_douse_wall:
+    mutation: 将 (4,4) 固定墙替换为空地
+    graph: { status: complete, states: 22696, edges: 64298, wins: 2 }
+    observed_identity_change: >-
+      正常胜路仍存在但 writer 不再经历墙灭火，作品退化为预燃直达复燃/缩短；证明墙不是装饰阻挡。
+    raw_ref: counterfactuals/no_douse_wall_audit.json
+  no_reignite_source:
+    mutation: 将 (4,5) 已亮火盆替换为空地
+    graph: { status: complete, states: 18236, edges: 50703, wins: 0 }
+    observed_identity_change: writer 被墙熄灭后无法恢复参与资格，完整胜利消失。
+    raw_ref: counterfactuals/no_reignite_source_audit.json
+  prelit_receiver:
+    mutation: 初始点燃 candle#2
+    graph: { status: complete, states: 6221, edges: 17290, wins: 0 }
+    observed_identity_change: >-
+      预燃 receiver 提前参与同步燃烧并破坏所需长度/相位，没有形成绕过 writer 的胜路；第一转移的时序职责不可预填。
+    raw_ref: counterfactuals/prelit_receiver_audit.json
+  wrong_extra_axis_push:
+    mutation: 开场连续两次 down，把 candle#2 多推一格
+    graph_state_index: 8
+    can_reach_win: false
+    observed_identity_change: receiver 的接火位与 writer 停点同时错位，后续不可恢复胜利。
+    raw_ref: active_agency_graph_checks.json
+  early_writer_before_receiver:
+    mutation: 不推 receiver，先执行 writer d2 下滚
+    graph_state_index: 148
+    can_reach_win: false
+    observed_identity_change: writer 以未燃态停在错误层，(6,6) 火盆封死回推操作位。
+    raw_ref: active_agency_graph_checks.json
+
+identity_conclusion: >-
+  当前 exact 的胜利必须把同一滚动中的先灭后燃写入第一边界，并由玩家主动移动已接火 relay，
+  同时消费封锁火盆和下一退焰覆盖位；删除任一相反接触或预填中继状态都会灭解或产生明确身份退化族。

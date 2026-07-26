@@ -1,0 +1,57 @@
+diagnosis_id: candle_full_exposure_compact_withdrawal_diagnosis_004
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/review_response_004.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version_withdrawn: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004
+designer_instance_id: level_designer_revision_004_20260726
+
+attempted_structure_family:
+  name: open_target_as_source_then_boundary_receiver
+  player_relation: >-
+    把第一个开放火盆从终点改成供体的可见火源：玩家先安排接收烛或供体位置，再在第 5 步主动滚动
+    另一根燃烛点亮该盆；火盆同一步点燃供体，供体参加边界缩短并把退焰交给接收烛，接收烛随后以
+    不可中止长滚点亮仍开放的第二盆。
+  intended_early_alternatives:
+    - 先移动接收烛或供体，建立边界接收位。
+    - 先滚动火源烛，立即点亮可见火盆并建立供体火源。
+  intended_phase_choice: 第 5 步用对象滚动同时点盆、点燃供体并触发共享边界，而不是走到操作位时自动过界。
+
+runtime_findings:
+  - ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_004/work/source_goal_ordering/layout.txt
+    finding: >-
+      十步输入 left,right,down,down,left,up,up,up,left,down 可正常点亮两盆，但单格供体在第 5 步只产生
+      burn_out，不产生 shrink_ignite；接收烛第 10 步实际由已亮火盆 ignite_from_brazier 后点亮第二盆。
+      因此前四步接收位安排不是胜利必要关系，不能发布。
+  - ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_004/work/source_goal_ordering/layout.txt
+    finding: >-
+      complete graph 为 112117 states、352885 legal transitions、5 winning states；工具返回的最短十步解
+      down,down,left,up,right,up,left,up,left,down 在第一次边界后才移动接收烛，并于末滚途中从已亮火盆补火。
+      这是完整的非等价旁路，不是走位变体。
+  - ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_004/work/search_source_transfer.ts
+    finding: >-
+      多格供体版本能形成 8 至 10 步的“开放火盆点燃供体 -> 第 5 步供体滚入并 shrink_ignite -> 接收烛长滚”
+      机械链；其中九步代表布局为玩家先滚火源烛点盆，再三步到供体侧，第 5 步滚入供体并接火。
+      这确实更换了 exact_004 的火桥骨架，但开局仍只有火源烛动作能维持十步内的主动边界。
+  - ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_004/work/search_source_transfer.ts
+    finding: >-
+      对三种最紧凑旋转族逐个枚举全部可站初始空格；满足“不超过十步、第 5 步对象行动含 shrink_ignite、
+      边界前至少两根不同对象被操作”的起点各只有原来的单一起点。把起点移到能在早段实际接触供体或接收烛
+      的位置后，所需边界关系或十步上限立即失效。
+  - finding: >-
+      多格供体错过第一次退焰后仍保留外露已燃芯；若允许玩家在第二轮补做接收位，错误顺序可由普通
+      ignite_from_wick 或已亮火盆在接收烛长滚途中恢复。要机械截断它，需要增加绝对期限对象、墙廊/绕位、
+      更多步骤或额外自动燃尽门，均是 assignment 明确禁止的修补方式。
+
+player_side_verdict:
+  - 新族最紧凑版本的第 5 步相位确由对象行动主动触发，不再是 exact_004 的自然赶路过界。
+  - 但能保持十步的所有版本仍把点第一盆规定成唯一有效开场；玩家没有同时面对两种局部可推进的对象承诺。
+  - 放宽出生位后虽然能实际先碰供体或接收烛，错误次序却可在下一燃烧周期恢复，后继目标没有真正反筛选早段。
+  - 继续增加墙、绕路、期限物或第三段事件只会把筛选器做成新走廊或自动 deadline，并重复已被退回的线性编排。
+
+publication_result:
+  next_exact_published: false
+  submission_packet_published: false
+  reason: >-
+    在不超过 exact_004 十步、不增加墙廊/绕路、不依赖自动期限或隐藏计数的边界内，未得到同时满足真实早段双承诺、
+    主动相位选择、后继目标反筛选与完整旁路自查的版本。拒绝把机械可解但玩家关系仍线性的工作布局发布为 exact。
+
+designer_outcome: withdraw_exact

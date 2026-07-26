@@ -1,0 +1,44 @@
+assignment_id: candle_full_exposure_compact_revision_001_evidence_completion
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: root-controller-20260726
+task_root: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726
+candidate_ledger_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate_ledger.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version_basis: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001
+design_brief: >-
+  Fresh Evidence Reviewer 未发现旁路或版本冲突，但当前 exact 的硬证据覆盖不足，不能进入 Critic。
+  只补两项：一，给出覆盖非最短胜路与可达循环的全胜路玩家逻辑类/因果等价性证据，或把声明合法收窄；
+  二，为供体预缩、删供体、删接力烛、预点燃 candle#2 反事实提供实际 mutation layouts、layout digests、
+  raw complete graphs/traces 与全胜路事件 probe，尤其独立证明预点燃分支仍必经遮熄与 shrink_ignite。
+  exact_001 的 layout、level、manifest、canonical replay、complete graph、exposure 与 submission packet 均冻结，
+  不得修改；补充证据写到 exact 外的 evidence_supplements/exact_001/。若证据反而揭示非等价胜解或身份失败，
+  回到同一候选工作台并仅在完整设计修订后发布下一 exact；不得修改原 exact。
+input_refs:
+  - docs/17-experience-core-level-design.md
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/experience_brief.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/layout.txt
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/level.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/manifest.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/complete_graph.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/solution_family.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/analysis.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/counterfactuals.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_001/evidence_review.yml
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/**
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/evidence_supplements/exact_001/**
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/**
+exploration_request_root: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/requests
+required_outputs:
+  - candidate/evidence_supplements/exact_001/solution_equivalence_all_wins.*，覆盖所有 win-reachable paths/SCC/cycles，明确工具定义、原始字段和等价判据。
+  - 每个身份反事实的实际 mutation layout、SHA256、complete raw graph 或 replay，以及可复核事件必要性结果。
+  - evidence_supplements/exact_001/supplement_manifest.yml，绑定 candidate/exact/original layout digest 并列出全部 artifact refs。
+  - 若 current exact 机械声明获得补足，回报“same exact evidence supplemented”，不得发布新 exact；若发现反例，继续设计并只在完整自查后发布 exact_002。

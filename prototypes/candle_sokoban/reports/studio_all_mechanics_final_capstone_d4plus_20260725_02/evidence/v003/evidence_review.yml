@@ -1,0 +1,232 @@
+review_attempt_id: candle_all_mechanics_002_v003_hard_001
+reviewer_instance_id: evidence_reviewer_candle_all_mechanics_002_v003_fresh_001
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v003
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - docs/21-level-design-studio-standard.md
+    - docs/30-scc-graph-diagnostic-reading.md
+    - prototypes/candle_sokoban/docs/design_handoff.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/artifact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/level.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/layout.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/graph_analysis.md
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/winning_state_representatives.jsonl
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/required_relations_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/active_agency_graph_checks.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/solution_family_self_check.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_gate_brazier.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_gate_brazier_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_douse_wall.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_douse_wall_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_reignite_source.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/no_reignite_source_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/prelit_receiver.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/counterfactuals/prelit_receiver_audit.json
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - win_state_index: 3936
+      bfs_depth: 28
+      state_key: "P:10,7|D:0|T:2/5|C:candle#3:3:left:1:10,1|B:9,2:1;4,5:1;6,6:1"
+    - win_state_index: 4784
+      bfs_depth: 30
+      state_key: "P:10,7|D:0|T:5/5|C:|B:9,2:1;4,5:1;6,6:1"
+  equivalence_evidence_basis:
+    - >-
+      exposure_audit.json 的 complete raw graph 只有上述两个 raw winning nodes；raw arrays
+      为 12254 nodes / 33533 edges，两个节点深度分别为 28、30。
+    - >-
+      winning_state_representatives.jsonl 的两条输入串均可沿 raw graph 的唯一同动作边逐步
+      到达各自声明胜态；两条代表都包含 candle#2 opening axis push、writer d3 复合滚动、
+      candle#2 d3 active relay、relay→candle#3 退焰与 candle#3 d6 终滚。
+    - >-
+      对 complete raw graph 逐关系移除后，任一缺少 opening、writer 同边墙灭/复燃/首次转移、
+      relay 点 gate、relay→consumer 退焰或 consumer 终滚的子图都不可达胜态；关系顺序乘积读取
+      仅得到 3936,stage5,no_violation 与 4784,stage5,no_violation。
+    - >-
+      两个 BFS 代表前 20 步相同；深度 30 代表只在 relay 完成后、consumer 燃尽边界前后
+      增加两步相位分配，不改变对象职责、目标分配或依赖顺序。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - >-
+      equivalent_variants_only 在此只表示玩家逻辑类的机械等价；不判断两条相位变体的体验价值。
+    - >-
+      500000 states / depth 200 的声明预算由 solve_instance.yml、graph_analysis.md 与
+      solution_family_self_check.yml 记录；可直接核读的 raw graph 来自 exposure_audit.json，
+      其 max_states=300000、无 maxDepth 截断且 status=complete，并得到完全相同的状态、边、胜态
+      与 max observed depth=67，因此完整性结论不依赖较大的摘要预算。
+
+claims:
+  - claim_id: exact_identity_and_normal_win
+    claim: >-
+      所有 exact artifact 均绑定 candidate=CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002、version=v003、
+      layout digest=f4e2...52e5；正式胜利为 all_braziers_lit，燃烧周期为 5。
+    status: supported
+    evidence_basis:
+      - >-
+        artifact_manifest.yml、level.yml 与 solve_instance.yml 的 candidate/version/ref 一致；
+        layout.txt 实际 SHA-256 为 f4e2e6fc3c9af719f4396f274c184bb57f7a59314b4c5a93e7467598511e52e5，
+        level.yml 和 exposure_audit.json 均记录同一 digest。
+      - >-
+        level.yml、canonical_replay.json、exposure_audit.json 与规则合同均使用 all_braziers_lit；
+        level.yml 固定 global_burn_cycle=5，replay 全程状态键为 T:n/5。
+      - >-
+        manifest 中所有本审查使用的 exact/graph/反事实文件之实际 bytes 与 SHA-256 均与登记值匹配。
+    limits: []
+
+  - claim_id: canonical_solve
+    claim: >-
+      规范 28 输入 replay 全部合法；step 1 直接轴推 candle#2，step 10 writer 侧滚，step 20
+      candle#2 侧滚，step 28 candle#3 侧滚；完整回合结算后玩家存活且三个火盆全部点亮。
+    status: supported
+    evidence_basis:
+      - >-
+        canonical_replay.json 记录 completed=true、executedSteps=28、legalThroughStep=28；其 inputs
+        与 solve_instance.yml 的 28 输入逐项一致。
+      - >-
+        step 1 含 push_axis:candle#2；step 10 含 roll_candle:candle#1:d3、extinguish_by_wall、
+        ignite_from_brazier 与 shrink_ignite:candle#2；step 20 含 roll_candle:candle#2:d3、
+        light_brazier:6,6 与 shrink_ignite:candle#3；step 28 含 roll_candle:candle#3:d6、
+        light_brazier:9,2 与 win_all_braziers_lit。
+      - >-
+        final state 为 D:0，三个 brazier 位均为 1 且 isWin=true；同一输入串在 complete raw graph
+        终止于 winning node 3936。
+    limits: []
+
+  - claim_id: complete_graph_shape
+    claim: >-
+      在 maxStates=500000、maxDepth=200 的声明预算下，完整枚举 12254 个可达状态、33533 条合法边、
+      2 个 raw winning state；max observed depth=67，graph status=complete，未命中预算边界。
+    status: supported
+    evidence_basis:
+      - >-
+        solution_family_self_check.yml 记录 search.status=complete、max_states=500000、max_depth=200、
+        budget_hit=false、12254 states、33533 transitions、2 wins 与 max_observed_depth=67。
+      - >-
+        exposure_audit.json 的 raw_graph 实际含 12254 个唯一 state keys 与 33533 条合法边，端点均有效，
+        BFS depth 不变量无冲突，max depth=67；只有 nodes 3936 与 4784 标记 winning。
+      - >-
+        exposure raw graph 在更小的 max_states=300000 下已 status=complete，未触及状态预算；其摘要计数
+        与 solve/search artifacts 完全一致。
+    limits:
+      - >-
+        500000/200 这一特定运行配置没有另存第二份 raw nodes/edges；完整可核读图来自同 exact、
+        更小状态预算且无深度截断的 exposure run。
+
+  - claim_id: solution_family
+    claim: >-
+      两个 raw winning state 的 BFS 代表深度为 28 与 30；二者都包含同一 opening receiver 轴推、
+      同一 writer 墙灭/火盆复燃/首次退焰、同一 candle#2 d3 侧滚点亮 (6,6)、同一 candle#2→candle#3
+      退焰与同一 candle#3 终滚点亮 (9,2)，差异只在 consumer 燃尽前后的两步相位分配。
+    status: supported
+    evidence_basis:
+      - >-
+        winning_state_representatives.jsonl 的两条代表已逐动作对入 exposure raw graph，并分别到达
+        nodes 3936/4784；关键事件与声明对象、距离、目标坐标一致。
+      - >-
+        两代表前 20 输入完全相同；其后仅深度 30 代表多出 up/down 的两步相位分配，核心对象位置
+        计划和事件依赖链不变。
+      - >-
+        required_relations_audit.json 与 complete raw graph 的关系移除/顺序读取共同支持所有胜路的
+        同一核心关系链；未发现已知非等价胜族。
+    limits:
+      - 不把机械等价解释为审美、难度或待玩价值相同。
+
+  - claim_id: all_wins_required_active_relation_chain
+    claim: >-
+      所有胜路都必经 opening candle#2 轴推、writer 同一滚动中的墙灭/火盆复燃/首次 shrink_ignite、
+      candle#2 主动 d3 侧滚点亮 gate brazier 并布置覆盖、candle#2→candle#3 退焰，以及 candle#3
+      终滚点盆；每条胜路至少各含一次 receiver axis push、writer roll、active relay roll 与
+      consumer final roll。
+    status: supported
+    evidence_basis:
+      - >-
+        required_relations_audit.json 在 complete 12254/33533/2 graph 上把五组 required_on_every_winning_path
+        全部标为 true，并给出四类对象行动的 minimum count=1。
+      - >-
+        直接读取 exposure raw graph：分别移除 push_axis:candle#2、writer 同边复合事件、
+        candle#2 roll+light_brazier:6,6、shrink_ignite:candle#3、candle#3 roll+light_brazier:9,2
+        后，初始状态均不可达任一胜态。
+      - >-
+        对五组关系做顺序乘积读取，唯一可达的胜态产品为 3936/4784 且均 stage=5、无缺组、无乱序；
+        分别移除任一 writer/relay/consumer roll 也均使胜态不可达。
+    limits:
+      - “布置覆盖”仅按该 relay edge 的状态后果及其后必经 shrink_ignite:candle#3 关系作机械读取。
+
+  - claim_id: active_choice_reachability
+    claim: >-
+      正确 opening 单推后的 state index 2 可达胜；连续多推一格后的 state index 8 不可达胜；
+      未推 receiver 而提前执行 writer 的 state index 148 不可达胜；规范首次转移后的 state index 156
+      与主动 relay 布置后的 state index 1215 均可达胜。
+    status: supported
+    evidence_basis:
+      - >-
+        active_agency_graph_checks.json 的五条 action prefix 均可沿 exposure raw graph 逐动作唯一对入；
+        结果 index、state_key 与最后一边 events 全部匹配。
+      - >-
+        从两个 winning nodes 对 raw graph 做反向可胜可达读取，indices 2/156/1215 为 true，
+        indices 8/148 为 false，与声明逐项一致。
+    limits:
+      - 这里只核验这些明确前缀的可达性，不把它们解释为体验价值或难度。
+
+  - claim_id: identity_counterfactuals
+    claim: >-
+      移除 (6,6) gate brazier 的完整图为 45461 states/130093 edges/5 wins，并恢复非等价拆分历史；
+      移除 (4,4) douse wall 的完整图为 22696/64298/2，胜路退化为无墙灭的预燃直达；
+      移除 (4,5) reignite source 的完整图为 18236/50703/0；预燃 candle#2 的完整图为 6221/17290/0。
+    status: supported
+    evidence_basis:
+      - >-
+        四个 counterfactual layout 与 v003 各只差一个声明单元：分别为 (6,6) o->.、(4,4) #->.、
+        (4,5) O->. 与 (5,5) u->U；各 audit 的 layout_sha256 与对应文件实际 digest 匹配。
+      - >-
+        四份 raw graph 均 status=complete、未触及 max_states=300000；raw nodes/edges/wins 分别为
+        45461/130093/5、22696/64298/2、18236/50703/0、6221/17290/0，端点、唯一 state key、
+        BFS depth 与报告 max depth 均自洽。
+      - >-
+        no_gate_brazier raw graph 的胜史产品同时存在以 shrink_ignite:candle#3 完成的历史和以
+        ignite_from_wick:candle#3 完成的历史，支持非等价转移历史恢复。
+      - >-
+        no_douse_wall raw graph 的两个胜态只能由未出现 extinguish_by_wall:candle#1 且未出现
+        ignite_from_brazier:candle#1 的历史到达；另两项 complete graphs 没有任何 winning node。
+    limits:
+      - 身份反事实只支持这些机械因果关系，不支持作品趣味、难度或包装判断。
+
+  - claim_id: exposure_gate
+    claim: >-
+      当前 exact 的 allowed_exposure_through=rolling_contact_chain；exposure audit 绑定当前布局，
+      graph complete、verdict pass、forbidden_hits=0，raw graph 为 12254 nodes/33533 edges。
+    status: supported
+    evidence_basis:
+      - >-
+        level.yml 与 exposure_audit.json 均声明 allowed_exposure_through=rolling_contact_chain；audit 的
+        exact_version=v003、layout digest=f4e2...52e5，sequence_sha256 与当前
+        mechanic_exposure_sequence.yml 实际 digest 32bf172b...00c 一致。
+      - >-
+        exposure_audit.json 记录 graph.status=complete、verdict=pass、forbidden_hits=[]；raw arrays
+        实际为 12254 nodes / 33533 edges，与摘要一致。
+    limits:
+      - >-
+        rolling_contact_chain 是当前序列最后一个 branch，因此 forbidden_branches 与
+        forbidden_event_patterns 本来就是空集；该 pass 核验的是 exact/sequence/complete-graph 边界一致性，
+        不额外证明不存在尚未定义的更晚机制家族。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

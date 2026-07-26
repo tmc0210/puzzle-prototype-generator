@@ -1,0 +1,336 @@
+runId: batch_l17_002_post_commitment_contact_stop_matrix
+title: "近远 stopper 读取反向筛选可移动遮芯位置"
+notes: >-
+  主烛从同一位置向下侧滚。单格未燃烛身在共享火源前 d1 或后 d5；
+  单格 stopper 在主烛体列上选择 d2 近停或 d7 远停。近 / 远火盆读取不同配对。
+cases:
+  - id: early_contact_far_stop
+    family: post_commitment_contact_stop_matrix
+    variant: early_contact_far
+    changed_variable: "前置 d1 遮芯配远端 stopper"
+    contrast_with: [late_contact_far_stop, early_contact_near_stop, early_far_without_far_reader]
+    notes: "正例：d1 烛身灭火，d3 固定火源复燃，d7 远端火盆读取燃态。"
+    layout_ref: layouts/early_contact_far_stop.txt
+    layout: |
+      ########
+      #..@...#
+      #..1R..#
+      #....r.#
+      #....o.#
+      #....O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #..r...#
+      ########
+    actions: [down]
+    inputs: [down]
+  - id: late_contact_far_stop
+    family: post_commitment_contact_stop_matrix
+    variant: late_contact_far
+    changed_variable: "把遮芯烛身从 d1 移到共享火源后的 d5，保留远 stopper"
+    contrast_with: [early_contact_far_stop, late_contact_near_stop, late_far_without_far_reader]
+    notes: "错误配对但保留相近反馈：d2 先点近端盆，d5 后置烛身灭火，d7 远盆不亮。"
+    layout_ref: layouts/late_contact_far_stop.txt
+    layout: |
+      ########
+      #..@...#
+      #..1R..#
+      #......#
+      #....o.#
+      #....O.#
+      #......#
+      #....r.#
+      #......#
+      #....o.#
+      #..r...#
+      ########
+    actions: [down]
+    inputs: [down]
+  - id: early_contact_near_stop
+    family: post_commitment_contact_stop_matrix
+    variant: early_contact_near
+    changed_variable: "前置 d1 遮芯配近端 stopper，滚程止于 d2"
+    contrast_with: [early_contact_far_stop, late_contact_near_stop]
+    notes: "d1 烛身灭火后在火源前停住，近端盆读取未燃。"
+    layout_ref: layouts/early_contact_near_stop.txt
+    layout: |
+      ########
+      #..@...#
+      #..1R..#
+      #....r.#
+      #....o.#
+      #..r.O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #......#
+      ########
+    actions: [down]
+    inputs: [down]
+  - id: late_contact_near_stop
+    family: post_commitment_contact_stop_matrix
+    variant: late_contact_near
+    changed_variable: "后置 d5 遮芯配近端 stopper，滚程止于 d2"
+    contrast_with: [late_contact_far_stop, early_contact_near_stop]
+    notes: "主烛在接触火源和后置烛身前停于 d2，近端盆读取初始燃态。"
+    layout_ref: layouts/late_contact_near_stop.txt
+    layout: |
+      ########
+      #..@...#
+      #..1R..#
+      #......#
+      #....o.#
+      #..r.O.#
+      #......#
+      #....r.#
+      #......#
+      #....o.#
+      #......#
+      ########
+    actions: [down]
+    inputs: [down]
+  - id: early_far_without_far_reader
+    family: post_commitment_contact_stop_matrix
+    variant: early_far_no_reader
+    changed_variable: "从前置遮芯＋远停组合删除 d7 远端火盆"
+    contrast_with: early_contact_far_stop
+    notes: "状态程序仍完成并以燃态远停，但不再产生远端永久输出。"
+    layout_ref: layouts/early_far_without_far_reader.txt
+    layout: |
+      ########
+      #..@..o#
+      #..1R..#
+      #....r.#
+      #....o.#
+      #....O.#
+      #......#
+      #......#
+      #......#
+      #......#
+      #..r...#
+      ########
+    actions: [down]
+    inputs: [down]
+  - id: late_far_without_far_reader
+    family: post_commitment_contact_stop_matrix
+    variant: late_far_no_reader
+    changed_variable: "从后置遮芯＋远停组合删除 d7 远端火盆"
+    contrast_with: late_contact_far_stop
+    notes: "近端盆仍在 d2 点亮，d5 仍灭火；远端没有读取接口。"
+    layout_ref: layouts/late_far_without_far_reader.txt
+    layout: |
+      ########
+      #..@..o#
+      #..1R..#
+      #......#
+      #....o.#
+      #....O.#
+      #......#
+      #....r.#
+      #......#
+      #......#
+      #..r...#
+      ########
+    actions: [down]
+    inputs: [down]
+  - id: place_early_contact_body
+    family: post_commitment_placement_witness
+    variant: place_contact_d1
+    changed_variable: "把单格横烛从 d1 烛芯列左一格轴推入列"
+    contrast_with: early_contact_far_stop
+    notes: "一步 `right` 后，单格未燃烛身位于主烛 d1 的烛芯投影格。"
+    layout_ref: layouts/place_early_contact_body.txt
+    layout: |
+      ########
+      #......#
+      #..1R..#
+      #..@r..#
+      #....o.#
+      #....O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #..r...#
+      ########
+    actions: [right]
+    inputs: [right]
+  - id: place_near_stopper
+    family: post_commitment_placement_witness
+    variant: place_stop_d2
+    changed_variable: "把单格横烛从近端主烛体列左一格轴推入 stopper 位"
+    contrast_with: early_contact_near_stop
+    notes: "一步 `right` 后，stopper 身体进入 x3,y5，使主烛最多滚到 d2。"
+    layout_ref: layouts/place_near_stopper.txt
+    layout: |
+      ########
+      #......#
+      #..1R..#
+      #....r.#
+      #....o.#
+      #@r..O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #......#
+      ########
+    actions: [right]
+    inputs: [right]
+  - id: place_far_stopper
+    family: post_commitment_placement_witness
+    variant: place_stop_d7
+    changed_variable: "把单格横烛从远端主烛体列左一格轴推入 stopper 位"
+    contrast_with: early_contact_far_stop
+    notes: "一步 `right` 后，stopper 身体进入 x3,y10，使主烛最多滚到 d7。"
+    layout_ref: layouts/place_far_stopper.txt
+    layout: |
+      ########
+      #......#
+      #..1R..#
+      #....r.#
+      #....o.#
+      #....O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #@r....#
+      ########
+    actions: [right]
+    inputs: [right]
+  - id: replace_contact_with_wall
+    family: post_commitment_fixed_object_boundary
+    variant: fixed_wall_dousing
+    changed_variable: "把 d1 单格遮芯烛身换成固定墙，保留远 stopper"
+    contrast_with: early_contact_far_stop
+    notes: "核验已放置烛身的灭火效果是否可由固定墙复现；差异只应在来源标签与可移动性。"
+    layout_ref: layouts/replace_contact_with_wall.txt
+    layout: |
+      ########
+      #..@...#
+      #..1R..#
+      #....#.#
+      #....o.#
+      #....O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #..r...#
+      ########
+    actions: [down]
+    inputs: [down]
+  - id: replace_stopper_with_wall
+    family: post_commitment_fixed_object_boundary
+    variant: fixed_wall_stop
+    changed_variable: "把远端单格 stopper 换成固定墙，保留 d1 遮芯烛身"
+    contrast_with: early_contact_far_stop
+    notes: "核验已放置 stopper 的止滚效果是否可由普通墙复现。"
+    layout_ref: layouts/replace_stopper_with_wall.txt
+    layout: |
+      ########
+      #..@...#
+      #..1R..#
+      #....r.#
+      #....o.#
+      #....O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #..#...#
+      ########
+    actions: [down]
+    inputs: [down]
+  - id: post_early_commit_choose_far
+    family: post_commitment_integrated_trace
+    variant: early_then_far
+    changed_variable: "d1 遮芯已承诺后，把近 stopper 向左推出主烛体列，保留远 stopper"
+    contrast_with: [post_early_commit_choose_near, post_late_commit_choose_far]
+    notes: "第二判断发生在首个输入；等步走位后主烛已同构缩成二格，再以一记 d7 滚动完成 d1 灭、d3 复燃、d7 远盆读取。"
+    layout_ref: layouts/post_early_commit_choose_far.txt
+    layout: |
+      ########
+      #......#
+      #..11R.#
+      #....r.#
+      #....o.#
+      #.r@.O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #..r...#
+      ########
+    actions: [left, up, up, up, up, right, down]
+    inputs: [left, up, up, up, up, right, down]
+  - id: post_early_commit_choose_near
+    family: post_commitment_integrated_trace
+    variant: early_then_near
+    changed_variable: "d1 遮芯已承诺后，把近 stopper 向右推入主烛体列"
+    contrast_with: [post_early_commit_choose_far, post_late_commit_choose_near]
+    notes: "第二判断发生在首个输入；等步走位后以一记 d2 侧滚在固定火源前停下，近盆读取未燃。"
+    layout_ref: layouts/post_early_commit_choose_near.txt
+    layout: |
+      ########
+      #......#
+      #..11R.#
+      #....r.#
+      #....o.#
+      #@r..O.#
+      #......#
+      #......#
+      #......#
+      #....o.#
+      #..r...#
+      ########
+    actions: [right, up, up, up, up, right, down]
+    inputs: [right, up, up, up, up, right, down]
+  - id: post_late_commit_choose_far
+    family: post_commitment_integrated_trace
+    variant: late_then_far
+    changed_variable: "d5 遮芯已承诺后，把近 stopper 向左推出主烛体列，保留远 stopper"
+    contrast_with: [post_late_commit_choose_near, post_early_commit_choose_far]
+    notes: "第二判断发生在首个输入；等步走位后 d7 侧滚在 d2 点近盆、d5 灭火，远盆不亮。"
+    layout_ref: layouts/post_late_commit_choose_far.txt
+    layout: |
+      ########
+      #......#
+      #..11R.#
+      #......#
+      #....o.#
+      #.r@.O.#
+      #......#
+      #....r.#
+      #......#
+      #....o.#
+      #..r...#
+      ########
+    actions: [left, up, up, up, up, right, down]
+    inputs: [left, up, up, up, up, right, down]
+  - id: post_late_commit_choose_near
+    family: post_commitment_integrated_trace
+    variant: late_then_near
+    changed_variable: "d5 遮芯已承诺后，把近 stopper 向右推入主烛体列"
+    contrast_with: [post_late_commit_choose_far, post_early_commit_choose_near]
+    notes: "第二判断发生在首个输入；等步走位后 d2 侧滚在接触后置烛身前点亮近盆。"
+    layout_ref: layouts/post_late_commit_choose_near.txt
+    layout: |
+      ########
+      #......#
+      #..11R.#
+      #......#
+      #....o.#
+      #@r..O.#
+      #......#
+      #....r.#
+      #......#
+      #....o.#
+      #..r...#
+      ########
+    actions: [right, up, up, up, up, right, down]
+    inputs: [right, up, up, up, up, right, down]

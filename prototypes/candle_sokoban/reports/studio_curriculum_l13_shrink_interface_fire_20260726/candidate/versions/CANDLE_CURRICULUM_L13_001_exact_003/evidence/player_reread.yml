@@ -1,0 +1,53 @@
+schema_version: candle_designer_player_reread.v2
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/solve_instance.yml
+provenance:
+  candidate_id: CANDLE_CURRICULUM_L13_001
+  exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+  layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/solve_instance.yml
+perspective: player_side
+
+initial_read:
+  - 两格燃烧 A 横在单格未燃 B 上方；A 端帽与 B 烛芯投影重合，B 推进方向的火盆全图可见。
+  - 燃烧 C 挡在玩家与核心之间；唯一首拍把 C 向右侧滚两格并由 A 尾部遮灭，玩家落在上下分叉点。
+  - 分叉后向上可绕到 A 尾侧并真实推走 A，向下则进入 B 尾侧站位线。
+
+canonical_read:
+  - 首拍退出 C，却由 A 烛身完成遮灭与夹持，使准备工序与核心实体关系绑定。
+  - 第 5 拍 A 从两格缩为单格；旧端帽格由实体 blocker 原子翻成退焰 fuel，并以 shrink_ignite 点燃 B。
+  - 第 6 拍直接轴推 B；B 占入旧端帽格，烛芯点亮 (6,1) 火盆并正常胜利。
+
+wrong_read:
+  - "`right, up, right, right` 会真实推动 A；A 新烛芯撞墙熄灭，错列身体继续堵住 B。"
+  - 该端点在完整图中不能到达胜利，失败反馈直接对应“把未来火源当成普通挡路物清走”。
+
+execution_observations:
+  solution_cost: 6
+  player_visits: 7
+  unique_player_visits: 7
+  revisit_rate: 0
+  wait_actions: 0
+  terminal_death: false
+
+solution_family_read:
+  terminal_winning_depths: [6, 8, 10]
+  productive_causal_family_count: 1
+  raw_significant_event_variant_count: 2
+  account: 变体只改变纯移动时序；最晚变体让最终 B 推恰落在燃尽边界，同拍已经胜利。
+
+quality_self_assessment:
+  intended_difficulty: 5
+  strengths:
+    - A 的两个身体格分别约束 C 与 B；保留完整 A 同时维持准备锁和最终 blocker->fuel 接口。
+    - 正确与错误路都让一根燃烛退出，玩家必须比较对象职责而不能把灭火本身当作答案。
+    - 六拍、零回访、高潮后一步收束；难度来自关系预见，不来自地图、重复 witness 或路线税。
+  residual_risks:
+    - 第一拍 C 侧滚是唯一合法进展；选择压力从落位后的上下分叉才开始。
+    - 正确方向一旦读懂，后四拍路径线性；体验强度主要押在小簇的空间—火焰关系。
+    - C 可能先被读成入口钥匙；删除反事实支持其机械准备职责，但玩家可感价值仍需 Critic 独立判断。
+    - 全胜等价是 Designer 的机械自查结论，不评价自然发现率与审美质量。
+
+verdict: ready_for_evidence_review

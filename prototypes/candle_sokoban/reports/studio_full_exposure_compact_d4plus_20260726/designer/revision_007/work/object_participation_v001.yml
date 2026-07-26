@@ -1,0 +1,83 @@
+schema_version: 1
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+work_version: revision_007_v001
+layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_007/work/layout_v001.layout
+complete_graph_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_007/work/audit_v001.json
+canonical_replay_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_007/work/canonical_replay_v001.json
+
+method:
+  graph_status: complete
+  claim_rule: >-
+    只有当完整 runtime 图中从初态到任一胜态都不能绕过对应对象事件时，才支持该对象参与声明。
+    这是机械职责声明，不是审美或难度评分。
+
+objects:
+  - object_id: candle#1
+    role: one_shot_cross_donor_then_upper_brazier_lighter
+    initial_form: lit horizontal length 2, facing right
+    required_winning_events:
+      - shrink:candle#1:len1
+      - shrink_ignite:candle#2
+      - roll_candle:candle#1
+      - push_axis:candle#1
+      - light_brazier:7,3
+      - burn_out:candle#1
+    participation_read: >-
+      它必须留驻第一次边界，腾出接收者芯位并点燃 candle#2；其剩余单格随后被玩家主动转向上方火盆，
+      点盆后燃尽。单格形态使它在重新遮住接收者后只能燃尽，不能再次退焰交接。
+
+  - object_id: candle#2
+    role: cross_receiver_and_final_long_roll_consumer
+    initial_form: unlit vertical length 2, facing up after the opening push
+    required_winning_events:
+      - push_axis:candle#2
+      - shrink_ignite:candle#2
+      - shrink:candle#2:len1
+      - light_brazier:7,5
+      - light_brazier:10,5
+      - roll_multi_cell_one_turn:candle#2
+      - roll_last_brazier_before_endpoint:candle#2
+    forbidden_on_winning_paths:
+      - wick_reexposed_unlit:candle#2
+      - extinguish_by_candle_body:candle#2
+      - ignite_from_brazier:candle#2
+      - ignite_from_wick:candle#2
+    participation_read: >-
+      同一根蜡烛接收唯一一次第一次边界 shrink_ignite，在供体再利用阶段持续保火，随后缩为单格，
+      再完成一次不可中止的五格长滚，点亮末行两个火盆。
+
+  - object_id: candle#3
+    role: boundary-choice helper_and_left_brazier_lighter
+    initial_form: lit horizontal length 2, facing left
+    required_winning_events:
+      - push_axis:candle#3
+      - light_brazier:1,5
+      - shrink:candle#3:len1
+      - burn_out:candle#3
+    participation_read: >-
+      第一次边界选择推动它，既点亮左盆，又有意让交叉供体留驻并完成唯一一次退焰交接；
+      若改为推动 candle#1，错误分支不可恢复。
+
+  - object_id: brazier@1,5
+    role: immediate_readout_of_the_correct_boundary_object_choice
+    required_event: light_brazier:1,5
+  - object_id: brazier@7,3
+    role: payoff_for_reusing_the_shortened_donor
+    required_event: light_brazier:7,3
+  - object_id: brazier@7,5
+    role: first_intermediate_consumer_on_the_final_long_roll
+    required_event: light_brazier:7,5
+  - object_id: brazier@10,5
+    role: last_brazier_before_endpoint_and_final_win_consumer
+    required_event: light_brazier:10,5
+
+identity_checks:
+  sole_receiver_transfer:
+    event: shrink_ignite:candle#2
+    required_on_all_winning_paths: true
+    exactly_once_on_all_winning_paths: true
+  continuous_receiver_fire:
+    receiver_body_extinguish_on_any_winning_path: false
+    receiver_unlit_reexposure_on_any_winning_path: false
+    later_reignite_on_any_winning_path: false
+  all_named_objects_participate_in_required_winning_relations: true

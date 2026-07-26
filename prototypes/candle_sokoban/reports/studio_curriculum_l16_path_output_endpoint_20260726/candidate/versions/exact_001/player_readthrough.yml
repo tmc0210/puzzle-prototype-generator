@@ -1,0 +1,48 @@
+schema_version: 1
+design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+exact_version: exact_001
+target_difficulty: 5
+
+opening_read: >-
+  开局把两支未燃蜡烛、两枚已亮火盆和两枚未亮火盆放在同一画面。横烛 A 的烛芯朝左；
+  它若原列下滚，会立刻被近处火盆挡住，因此玩家会先检查唯一可行的右向轴推。
+  远端竖烛 Q 的上方被墙封住，最终火盆则明确在它的潜在上推列附近。
+
+intended_reasoning:
+  - 玩家先看出 A 右推一格不是单纯让路：它同时把左烛芯对齐近端已亮火盆、必要未亮火盆，并把右端尾块对齐 Q 的水平滚道。
+  - 玩家从 A 上方触发一次 d4 长侧滚；A 在 d1 取火、d2 点亮必要火盆后仍继续两格，永久输出出现在严格途中。
+  - 长滚后的 A 虽在燃烧缩短，但反灯芯端仍留在 (6,6)。玩家需要把这个残局实体重新读成 Q 的停止接口。
+  - Q 向左滚时在 d1 取火，并在 d2 被 A 尾端截停到 x=7；此位置立刻允许从下方两次轴推，点亮最终火盆。
+
+understandable_wrong_constructions:
+  - construction: A 未对齐就尝试下滚
+    preserved_responsibility: 看见了 A 应向下穿过火盆列的意图
+    missing_responsibility: 第一小步被实体火盆挡住，既没有严格途中输出，也没有正确尾端坐标
+    feedback: roll_blocked，局面未被悄悄消耗
+  - construction: A 正确完成路径输出后让 Q 向右滚
+    preserved_responsibility: 必要途中火盆已经点亮，玩家保留路径输出这一半进展
+    missing_responsibility: Q 没有在途中取火，也没有消费 A 尾端形成最终上推列
+    feedback: Q 停在右边界且无法完成最终火盆，错误结构清楚可读
+
+climax_and_ending: >-
+  高潮是 A 的 d4 长滚：一次动作连续展示途中取火、严格途中点盆、继续位移和尾端落位。
+  之后只有到达 Q 正确侧、一次 d2 滚动和两次同轴推进；结尾复用 A 的尾端成果，不开启独立清理题。
+
+major_element_roles:
+  - A：核心长滚对象；同一滚动生产必要路径火盆与终点停止实体。
+  - 近端已亮火盆 (2,3)：A 的 d1 途中火源，同时物理否定未对齐滚动。
+  - 近端未亮火盆 (2,4)：必须由 A 在 d2 严格途中点亮的永久路径输出。
+  - A 下方墙 (3,7)：把 d4 端点定在 y=6，使反灯芯尾端落到 Q 的下一步。
+  - Q：终点 consumer；左滚同时取火并消费 A 尾端，随后直接完成标准胜利。
+  - 远端已亮火盆 (8,3)：Q 左滚 d1 的途中火源。
+  - Q 上方墙 (9,3)：阻止 Q 在消费尾端前直接向上轴推。
+  - 最终未亮火盆 (7,2)：把 Q 的截停列转化为立即可用的上推终点。
+  - 其余墙与地板：限定可读站位、保留错误滚向，并承载短转场。
+
+difficulty_read: >-
+  难度主要来自同一格尾端的前后推理：开局要为尚未发生的 Q 截停预先对齐 A，高潮后又要把燃烧中的残余尾块重读为接口。
+  操作量不高，但关系跨越一次长滚与共享倒数，符合目标难度 5；实际难度仍交由独立 Critic 校准。
+
+designer_known_perceptible_defects:
+  - none_identified

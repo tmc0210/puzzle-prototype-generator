@@ -1,0 +1,158 @@
+workflow_id: redundant_element_prune
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+reviewed_exact_version: v2
+previous_delivery_version: v3
+delivery_exact_version: v4
+checked_on: 2026-07-25
+authority_ref: prototypes/candle_sokoban/docs/redundant_element_prune.md
+redundant_element_prune:
+  status: normalized
+  candidate_discovery:
+    method: candle_redundancy_units_v2
+    fixed_stage_order:
+      - whole_candle_to_floor
+      - single_brazier_to_floor
+      - vacated_object_floor_region_to_wall
+      - detached_or_single_entry_floor_region_to_wall
+      - outer_outline_band_trim
+    stage_artifacts:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/canonical_probe_stage_1.json
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/canonical_probe_stage_2_vacated_regions.json
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/canonical_probe_stage_3_structural.json
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/canonical_probe_stage_4_post_space_wallify.json
+    candidate_units:
+      - {kind: whole_candle, id: candle#4, cells: [[8,1], [9,1], [10,1]]}
+      - {kind: whole_candle, id: candle#1, cells: [[4,2], [5,2], [6,2], [7,2]]}
+      - {kind: whole_candle, id: candle#3, cells: [[2,6], [3,6], [4,6], [5,6], [6,6]]}
+      - {kind: single_brazier, id: brazier_5_1, cells: [[5,1]]}
+      - {kind: single_brazier, id: brazier_12_1, cells: [[12,1]]}
+      - {kind: single_brazier, id: brazier_2_3, cells: [[2,3]]}
+      - {kind: single_brazier, id: brazier_3_4, cells: [[3,4]]}
+      - {kind: single_brazier, id: brazier_4_4, cells: [[4,4]]}
+      - {kind: single_brazier, id: brazier_5_4, cells: [[5,4]]}
+      - {kind: single_brazier, id: brazier_4_5, cells: [[4,5]]}
+      - {kind: single_brazier, id: brazier_1_6, cells: [[1,6]]}
+      - {kind: vacated_object_floor_region, id: removed_brazier_3_4, cells: [[3,4]]}
+      - {kind: vacated_object_floor_region, id: removed_brazier_4_4, cells: [[4,4]]}
+      - {kind: vacated_object_floor_region, id: removed_brazier_1_6, cells: [[1,6]]}
+      - {kind: detached_empty_region, id: detached_6_1_7_1, cells: [[6,1], [7,1]]}
+      - {kind: detached_empty_region, id: detached_11_1, cells: [[11,1]]}
+      - {kind: detached_empty_region, id: detached_1_6, cells: [[1,6]]}
+      - {kind: single_entry_floor_region, id: leaf_3_2, cells: [[3,2]]}
+      - {kind: single_entry_floor_region, id: leaf_8_2, cells: [[8,2]]}
+      - {kind: single_entry_floor_region, id: lower_candle_upper_left_pocket, cells: [[2,4], [3,4], [2,5], [3,5]]}
+      - {kind: single_entry_floor_region, id: leaf_5_5, cells: [[5,5]]}
+  candidates_checked:
+    - {candidate_unit: whole_candle:candle#4, operation: remove, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [], exposure_verdict: not_run}
+    - {candidate_unit: whole_candle:candle#1, operation: remove, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [], exposure_verdict: not_run}
+    - {candidate_unit: whole_candle:candle#3, operation: remove, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [], exposure_verdict: not_run}
+    - candidate_unit: single_brazier:5,1
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: false
+      new_contact_events: []
+      exposure_verdict: pass
+      details: 删除后完整可胜状态与边集合改变，不是可擦除的失败后游走。
+      artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/full/single_brazier_5_1/preservation_audit.json]
+    - {candidate_unit: 'single_brazier:12,1', operation: remove, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [], exposure_verdict: not_run, details: 规范回放缺少原有 light_brazier 目标义务事件。}
+    - {candidate_unit: 'single_brazier:2,3', operation: remove, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [], exposure_verdict: not_run, details: 规范输入只合法通过 20/25 步。}
+    - candidate_unit: 'single_brazier:3,4'
+      operation: remove
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/full/single_brazier_3_4/preservation_audit.json]
+    - candidate_unit: 'single_brazier:4,4'
+      operation: remove
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/full/sequential_single_brazier_4_4/preservation_audit.json]
+    - candidate_unit: 'single_brazier:5,4'
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: false
+      solution_family_preserved: false
+      new_contact_events:
+        - extinguish_by_candle_body:candle#3
+        - ignite_from_brazier:candle#1:1,6
+        - roll_intermediate_ignite:candle#1:d1
+      exposure_verdict: pass
+      details: 累计布局上产生新解族与新接触链，明确保留中部右盆。
+      artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/full/sequential_single_brazier_5_4/preservation_audit.json]
+    - {candidate_unit: 'single_brazier:4,5', operation: remove, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: false, new_contact_events: [], exposure_verdict: not_run, details: 删除后规范路线在第 15 步提前胜利。}
+    - candidate_unit: 'single_brazier:1,6'
+      operation: remove
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      details: 只新增 110 个不能到达胜态且不产生新事件 payload 的失败后状态。
+      artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/full/sequential_single_brazier_1_6/preservation_audit.json]
+    - candidate_unit: vacated_object_floor_region:removed_brazier_3_4
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: [extinguish_by_wall:candle#1]
+      exposure_verdict: pass
+      details: 单格墙化会在失败分支新增墙灭火；保留到后续结构区域重扫。
+      artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/full/vacated_brazier_3_4_wallify/preservation_audit.json]
+    - candidate_unit: vacated_object_floor_region:removed_brazier_4_4
+      operation: wallify
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/full/vacated_brazier_4_4_wallify/preservation_audit.json]
+    - {candidate_unit: vacated_object_floor_region:removed_brazier_1_6, operation: wallify, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [extinguish_by_wall:candle#3], exposure_verdict: not_run, details: 新墙在初始静默结算直接熄灭下方蜡烛。}
+    - {candidate_unit: detached_empty_region:detached_6_1_7_1, operation: wallify, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [], exposure_verdict: not_run, details: 规范输入只合法通过 5/25 步。}
+    - {candidate_unit: detached_empty_region:detached_11_1, operation: wallify, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [extinguish_by_wall:candle#4], exposure_verdict: not_run, details: 新墙改变初始静默结算。}
+    - {candidate_unit: detached_empty_region:detached_1_6, operation: wallify, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [extinguish_by_wall:candle#3], exposure_verdict: not_run, details: 与腾空格复检一致，初始即熄灭下方蜡烛。}
+    - {candidate_unit: single_entry_floor_region:leaf_3_2, operation: wallify, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [extinguish_by_wall:candle#1], exposure_verdict: not_run}
+    - {candidate_unit: single_entry_floor_region:leaf_8_2, operation: wallify, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [], exposure_verdict: not_run, details: 规范输入只合法通过 3/25 步。}
+    - candidate_unit: single_entry_floor_region:lower_candle_upper_left_pocket
+      operation: wallify
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      details: 四格 leaf pocket 整体墙化；完整可胜状态和带事件边双向一致，且没有任何新增墙接触。
+      artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/full/single_entry_floor_region_2_2_4_4_wallify/preservation_audit.json]
+    - {candidate_unit: single_entry_floor_region:leaf_5_5, operation: wallify, result: retained_counterfactual_failed, cheap_check: fail, complete_graph: not_run, canonical_timing_preserved: false, solution_family_preserved: unknown, new_contact_events: [], exposure_verdict: not_run, details: 规范输入在第 25 步前中断且不胜。}
+  post_wallify_outline_rescan:
+    source_ref: prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2/canonical_probe_stage_4_post_space_wallify.json
+    outer_outline_band_count: 0
+    trim_applied: false
+  retained_aesthetic: []
+  delivery_layout_changed: true
+  version_effect: review_preserving_change
+  preservation_basis: >-
+    五个实际变换按固定顺序逐项取得 canonical、complete graph、完整可胜子图、最短成本、事件时机与
+    exposure 保持证明；最终 v4 为 7985 状态、21192 边、1 胜态，25 步规范解与 t1/t3 复燃类保持，
+    所有应用墙化均无新增墙接触事件。其余候选因便宜反例或完整图反例原样保留。
+status: completed

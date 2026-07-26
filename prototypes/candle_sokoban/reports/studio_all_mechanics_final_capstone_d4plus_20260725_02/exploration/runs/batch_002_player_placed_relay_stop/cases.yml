@@ -1,0 +1,108 @@
+runId: batch_002_player_placed_relay_stop
+prototype: candle_sokoban
+evidenceTool: npx tsx src/cli.ts try-inputs
+title: "玩家放置 relay 停块写入横烛最后接触"
+notes: >-
+  三格已燃横烛会在准备阶段先过一次边界缩成两格；玩家把未燃 relay 竖烛下推一格或两格，
+  再让横烛侧滚。relay 停靠位决定横烛在火盆后停下，还是继续撞上末墙；正例的下一边界
+  同时验证 writer 缩短、relay 退焰点火和退焰格的火焰 consumer。
+cases:
+  - id: correct_one_push_stop_after_reignite
+    family: player_placed_relay_stop
+    variant: correct_one_push
+    changed_variable: "relay 从初始位向下轴推一格"
+    contrast_with:
+      - wrong_two_push_overrun_to_wall
+      - no_brazier_no_reignite
+      - no_first_wall_prelit_degenerate
+    notes: "正确准备：一格停靠使 writer 在首墙灭火、火盆复燃后立即停下；writer 帽压 relay wick，边界退焰点火。"
+    layout: |
+      #########
+      #.......#
+      #..L11..#
+      #..#@...#
+      #..Ou...#
+      #..#2...#
+      #...2...#
+      #.......#
+      #......o#
+      #########
+    actions: [down, right, up, right, up, up, left, down, up, down, down, left, down]
+
+  - id: wrong_two_push_overrun_to_wall
+    family: player_placed_relay_stop
+    variant: wrong_two_push
+    changed_variable: "relay 比正例多向下轴推一格"
+    contrast_with:
+      - correct_one_push_stop_after_reignite
+      - wrong_two_push_without_final_wall
+    notes: "错误准备：两格停靠让 writer 越过火盆后多滚一格，最后由末墙熄灭；边界不缩短、不点 relay。"
+    layout: |
+      #########
+      #.......#
+      #..L11..#
+      #..#@...#
+      #..Ou...#
+      #..#2...#
+      #...2...#
+      #.......#
+      #......o#
+      #########
+    actions: [down, down, right, up, up, right, up, up, left, down, down, left, down]
+
+  - id: no_brazier_no_reignite
+    family: player_placed_relay_stop
+    variant: no_middle_source
+    changed_variable: "把正确轨道中间的已亮火盆换成空地"
+    contrast_with: correct_one_push_stop_after_reignite
+    notes: "少源对照：正确停靠仍让 writer 停在 relay 前，但首墙灭火后没有复燃，边界不应点 relay。"
+    layout: |
+      #########
+      #.......#
+      #..L11..#
+      #..#@...#
+      #...u...#
+      #..#2...#
+      #...2...#
+      #.......#
+      #......o#
+      #########
+    actions: [down, right, up, right, up, up, left, down, up, down, down, left, down]
+
+  - id: wrong_two_push_without_final_wall
+    family: player_placed_relay_stop
+    variant: wrong_without_final_wall
+    changed_variable: "移除错误分支最后接触的末墙"
+    contrast_with: wrong_two_push_overrun_to_wall
+    notes: "边界修正：两格停靠仍多滚一格，但没有末墙时 writer 保持复燃，错误准备退化为可点 relay。"
+    layout: |
+      #########
+      #.......#
+      #..L11..#
+      #..#@...#
+      #..Ou...#
+      #...2...#
+      #...2...#
+      #.......#
+      #......o#
+      #########
+    actions: [down, down, right, up, up, right, up, up, left, down, down, left, down]
+
+  - id: no_first_wall_prelit_degenerate
+    family: player_placed_relay_stop
+    variant: no_first_wall
+    changed_variable: "移除正确分支第一次滚动接触的首墙"
+    contrast_with: correct_one_push_stop_after_reignite
+    notes: "预燃退化：writer 不先灭火，火盆接触不改变其点燃身份；后续退焰点 relay 不能归因于接触顺序写入。"
+    layout: |
+      #########
+      #.......#
+      #..L11..#
+      #...@...#
+      #..Ou...#
+      #..#2...#
+      #...2...#
+      #.......#
+      #......o#
+      #########
+    actions: [down, right, up, right, up, up, left, down, up, down, down, left, down]

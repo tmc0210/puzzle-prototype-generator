@@ -1,0 +1,216 @@
+candidate_id: CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+workbench_status: mutable
+
+iterations:
+  - version: workbench_001
+    layout_shape: symmetric_staging_then_full_track_order_program
+    actual_runtime_check:
+      command: >-
+        npx tsx src/cli.ts try-inputs prototypes/candle_sokoban
+        prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/designer/workbench/layout.txt
+        --id CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+        --inputs right,down,right,up,left,up,up,up,up,right,right,up,right,down
+      result: failed_as_expected_after_geometry_review
+      legal_through_step: 9
+      stopped_at_step: 10
+      stop_reason: axis_push_blocked
+      decisive_events:
+        - step_4_roll_d4_crossed_main_wall_at_d2
+        - extinguish_by_wall:candle#1
+        - endpoint_consumer_remained_unlit
+    diagnosis: >-
+      初始 wick 已在主程序列 x=9；预备上滚先经过灭火墙，错误地提前执行一次写状态，
+      并以未燃、未收缩的长度抵达上端，随后端侧轴推被 consumer 挡住。
+    disposition: replaced_in_place_same_candidate
+
+  - version: workbench_002
+    change: >-
+      将初始横烛及首段 consumer 整体左移一列，使预备滚在 x=8 只点亮所选端点；
+      三次端侧右推配合两个燃烧边界，把最终 wick 对齐到独立的主程序列 x=9。
+    intended_top_sequence:
+      - down
+      - right
+      - up
+      - left
+      - up
+      - up
+      - up
+      - up
+      - right
+      - right
+      - right
+      - up
+      - right
+      - down
+    intended_bottom_sequence:
+      - up
+      - right
+      - down
+      - left
+      - down
+      - down
+      - down
+      - down
+      - right
+      - right
+      - right
+      - down
+      - right
+      - up
+    pending_checks:
+      - actual_runtime_replay_both_orders
+      - solver_complete_graph
+      - no_bypass_and_solution_family
+    actual_runtime_check:
+      result: both_routes_blocked_at_step_10
+      stop_reason: axis_push_blocked
+      diagnosis: >-
+        端点 consumer 虽允许 wick 投影重叠，却是 solid；首次右推后它位于下一次 body
+        平移目标格，因而阻断后续对齐。两路都在预备 roll 正常点亮所选 consumer，
+        说明预备轨与主程序列已经成功分离，但端点必须从轴推行移走。
+    disposition: replaced_in_place_same_candidate
+
+  - version: workbench_003
+    change: >-
+      把两枚预备 consumer 从 staging 终点移到各自 d3 的严格途中格；
+      它们仍在对称预备 roll 中提供相同即时奖励，却不再阻塞终点行的三次轴推。
+    pending_checks:
+      - actual_runtime_replay_both_orders
+      - exact_core_event_order_and_terminal_read
+      - solver_complete_graph
+    actual_runtime_check:
+      result: both_routes_reached_step_13_but_core_roll_blocked
+      stop_reason: roll_blocked
+      diagnosis: >-
+        最终主滚 body 覆盖 x=5..8，因此 x=8 的途中 consumer 会在第一小步成为实体阻挡；
+        永久目标不能同时作为预备奖励并留在主滚的 body 扫掠带内。
+    disposition: replaced_in_place_same_candidate
+
+  - version: workbench_004
+    change: >-
+      删除途中预备 consumer；改在 x=9 的上、下 staging 行各放同构终点插口。
+      初始 wick 在 x=8，因此预备滚不会读它们；三次右推后的最后一次轴推把起点插口点亮，
+      随后的全轨主滚仅以 body x=5..8 经过通道，在另一端由 wick x=9 读取最终亮灭。
+    expected_core:
+      top_to_bottom: wall_y5_then_source_y9_then_bottom_consumer_lit
+      bottom_to_top: source_y9_idempotent_then_wall_y5_then_top_consumer_unlit
+    pending_checks:
+      - actual_runtime_replay_both_orders
+      - exact_core_event_order_and_terminal_read
+      - solver_complete_graph
+    actual_runtime_check:
+      result: local_core_pass
+      top_to_bottom: completed_at_step_14_with_all_braziers_lit
+      bottom_to_top: legal_through_step_14_but_top_consumer_remained_unlit
+      top_core_events:
+        - roll_candle:candle#1:d8
+        - extinguish_by_wall:candle#1
+        - ignite_from_brazier:candle#1:9,9
+        - roll_reignite_after_extinguish:candle#1:d2->d6
+        - light_brazier:9,11
+        - win_all_braziers_lit
+      reverse_core_events:
+        - roll_candle:candle#1:d8
+        - extinguish_by_wall:candle#1
+        - roll_intermediate_extinguish:candle#1:d6
+      complete_graph:
+        status: complete
+        states: 186455
+        transitions: 640094
+        winning_states: 11
+        shortest_cost: 14
+      exposure_audit_attempt:
+        status: tool_failed_before_artifact
+        error: Maximum call stack size exceeded
+        likely_trigger: >-
+          audit 在返回结构中对过大的 depthByIndex 使用 spread；无论原因，正式 exact 必须让原始工具命令直接完成，
+          因此不把 explain-layout 的完整图当作 exposure gate 替代品。
+
+  - version: workbench_005
+    change: >-
+      保持全部相对几何和动作序列，只删除上下各一行、右侧一列纯地板，
+      将画布从 12x15 压到 11x13；核心端点改为 y=2/y=10，主墙 y=4、火源 y=8，
+      相对接触仍为 d2/d6、全滚仍为 d8。
+    purpose:
+      - 删除无职责地板
+      - 降低完整图规模，使正式 exposure CLI 可直接生成原始 artifact
+    pending_checks:
+      - actual_runtime_replay_both_orders
+      - solver_complete_graph
+      - exposure_audit_complete_pass
+    actual_runtime_check:
+      local_core: pass
+      complete_graph:
+        status: complete
+        states: 51603
+        transitions: 176798
+        winning_states: 11
+      exposure_audit:
+        status: complete
+        verdict: pass
+        forbidden_hits: 0
+        artifact_ref: >-
+          prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/
+          designer/workbench/exposure_workbench_005.json
+      solution_family:
+        status: fail_identity_bypass
+        artifact_ref: >-
+          prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/
+          designer/workbench/solution_family_workbench_005.json
+        diagnosis: >-
+          获胜路径可在错误 wick 列执行 d8，再于下端轴推补点 consumer；
+          因此 d2 灭火、d6 复燃和 d2->d6 复燃链都不是所有胜解必经。
+    disposition: replaced_in_place_same_candidate
+
+  - version: workbench_006
+    change: >-
+      上下 stopper 行各改为 x=2 与 x=8 两个墙点：初始 body x=2..7 由 x=2 停在 staging 行，
+      正确主滚 body x=5..8 由 x=8 停在 consumer 行；错列 body x=4..7 同时错过两点，
+      会滚到边界行且因 x=8 端墙无法再右推补点。
+    player_reason: >-
+      两个墙点不是额外开关；它们把“先选端、再对齐程序列”的同一几何关系压成可见端帽，
+      让 consumer 真正只读取主滚终态。
+    pending_checks:
+      - canonical_and_reverse_replay
+      - complete_graph_and_exposure
+      - solution_family_no_bypass
+    actual_runtime_check:
+      local_core: pass
+      complete_graph:
+        status: complete
+        states: 46445
+        transitions: 159257
+        winning_states: 5
+      exposure_audit:
+        status: complete
+        verdict: pass
+        forbidden_hits: 0
+      solution_family:
+        status: identity_pass_equivalent_timing_variants
+        winning_states: 5
+        required_events_all_mandatory: true
+        required_order_all_pass: true
+        winning_occurrences:
+          top_stage_d4: [1]
+          top_goal_lit: [1]
+          core_d8: [1]
+          core_extinguish_d2: [1]
+          core_ignite_d6: [1]
+          core_reignite_d2_d6: [1]
+          bottom_goal_lit: [1]
+        equivalent_variants: >-
+          只因开局等待跨燃烧边界，产生 3、4、5 次轴推与长度 4、3、2 的主滚主体；
+          全部仍以同一上端 d4、同一 x=9 上端写入、同一 d8 的 d2 墙灭/d6 火源复燃、
+          同一下端 consumer 终结。
+      player_side_concern: >-
+        核心顺序关系清楚且错误反馈近，但开放端帽后方四个单格地板没有玩家职责；
+        在决定 exact 前先做纯空间裁剪，不以图规模作为美学理由。
+
+  - version: workbench_007
+    change: >-
+      依据 redundancy unit 候选与实际站位重读，把上下端帽行 x=1、x=9 的四个无职责单格改墙；
+      保留 x=3..7 操作面、x=2 初始 stopper 与 x=8 主滚 stopper。
+    pending_checks:
+      - canonical_and_reverse_replay
+      - complete_graph_exposure_solution_family
+      - player_readthrough_and_counterfactual_summary

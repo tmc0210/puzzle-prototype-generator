@@ -1,0 +1,56 @@
+request_id: request_001_player_authored_roll_contact_order
+exploration_id: candle_all_mechanics_final_capstone_materials_20260725_02
+requested_by: Designer
+prototype: candle_sokoban
+
+design_space:
+  object_shapes:
+    - "一根点燃的横向滚动蜡烛，侧滚中至少经历两个可区分的 wick 接触步"
+    - "可由玩家提前移动、构造或定位的遮蔽物与火源；火源可以是 candle wick、已点燃 brazier，或先被玩家点亮的 brazier"
+    - "滚动蜡烛在第一次燃烧边界后用 retreating flame 点燃下游 relay wick"
+  player_authored_choice:
+    - "玩家在关键侧滚前至少拥有两条局部合法且表面合理的准备历史"
+    - "正确准备使最后有效接触顺序为先遮蔽、后复燃；错误准备使顺序反转或退化为最终未点燃"
+    - "顺序差异来自玩家较早的空间决定，而不是固定轨道上唯一可执行动作"
+  isolation_requirement:
+    - "准备火源在关键侧滚或第一次燃烧边界前不得直接点燃下游 relay wick"
+    - "错误准备不得靠同一火源提前启动 relay，形成绕过 rolling write 的胜利路径"
+  timing_requirement:
+    - "准备动作、到达滚动接触位和关键侧滚必须能在 candle countdown 语义下形成可玩的时序，而非纯走步填充"
+    - "记录 writer/source/relay 的长度与相位约束，以及错误时序为什么会失效"
+
+sampling_axes:
+  - "火源类型：现成 lit wick / 玩家刚点亮的 brazier / 移动后才暴露的 wick"
+  - "遮蔽物类型：wall / lit candle body / unlit candle body"
+  - "玩家决定：轴向推移次数 / 侧滚方向 / 火源停靠位 / 遮蔽物停靠位"
+  - "正确与错误历史：同一滚动终点 / 相邻终点 / 同轨反向穿越"
+  - "隔离方式：空间错位 / 物体阻挡 / 仅在 writer 停靠后才暴露 relay wick"
+  - "writer 与 relay 的长度组合，以及第一次边界时 writer 必须存活而 source 可以烧尽的组合"
+
+materialization_target:
+  minimum_runtime_backed_cards: 1
+  each_card_should_show:
+    - "精确初始局部布局与玩家动作序列"
+    - "正确准备和至少一个错误准备的逐步事件差异"
+    - "writer 在关键滚动末尾的 lit/unlit 状态"
+    - "第一次燃烧边界是否只通过 retreating flame 启动 relay"
+    - "火源没有提前接触或点燃 relay wick 的机械证据"
+    - "可供 Designer 变形、压缩和接入后续 delayed-fire consumer 的拼接接口"
+
+do_not_repeat:
+  - "完全固定的 wall→fire 轨道，玩家没有更早的空间决定"
+  - "仅靠预点燃状态区分正确与错误、无需玩家写入接触顺序的退化方案"
+  - "错误分支只用死亡惩罚而没有 candle-state 差异"
+  - "准备火源横扫 relay wick，导致 rolling write 可被绕过"
+  - "用大面积空房或长距离走步解决 countdown，而没有局部结构作用"
+
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/runs/batch_001_rolling_order_delayed_source/batch.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/runs/batch_001_rolling_order_delayed_source/results.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/exploration/runs/batch_001_rolling_order_delayed_source/report.md
+
+candidate_specific_coordinates_included: false
+difficulty_label_included: false
+packaging_request_included: false

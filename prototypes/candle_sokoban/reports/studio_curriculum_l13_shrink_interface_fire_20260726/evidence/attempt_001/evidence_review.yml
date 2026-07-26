@@ -1,0 +1,152 @@
+review_attempt_id: CANDLE_CURRICULUM_L13_001_exact_001_hard_001
+reviewer_instance_id: candle_l13_exact001_evidence_reviewer_001_fresh
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version: CANDLE_CURRICULUM_L13_001_exact_001
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/manifest.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/layout.txt
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/level.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/**
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - docs/21-level-design-studio-standard.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "complete_graph.json winning node 32：终止胜态最短深度 6，最短成本 6。"
+    - "complete_graph.json winning node 59：终止胜态最短深度 8。"
+    - "complete_graph.json winning node 112：终止胜态最短深度 10；终局边额外同拍 burn_out:candle#single3。"
+  equivalence_evidence_basis:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/complete_graph.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/solution_equivalence_all_wins.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/solution_equivalence_all_wins.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/scc_raw.json
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "三条终止胜态代表的是三个 terminal win state，不是全部原始输入串；完整 win-coaccessible 子图含 28 nodes、49 edges。"
+    - "严格事件串并不相同：node 112 的终局边多出 burn_out:candle#single3；胜利后无后继，且对象职责、目标分配与依赖因果不变，因此仅支持 productive causal equivalence。"
+    - "scc_raw.json 自身缺少 candidate/exact/layout 元数据；其 28 个节点、28 个单节点 SCC 与全部 successor 关系已逐项对齐 exact-bound complete_graph.json，但该 provenance 缺陷另计入 exact_integrity。"
+
+claims:
+  - claim_id: exact_integrity
+    claim: 所有主要 artifact 均绑定当前 candidate、exact、solve instance 与 layout digest，正式胜利为 all_braziers_lit。
+    status: contradicted
+    evidence_basis:
+      - "layout.txt 的实际 SHA-256 为 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb，与 manifest.yml、level.yml、review_input.yml、complete_graph.json 一致。"
+      - "manifest.yml、level.yml、solve_instance.yml 与 complete_graph.json 均指向 CANDLE_CURRICULUM_L13_001 / CANDLE_CURRICULUM_L13_001_exact_001；胜利条件均为 all_braziers_lit。"
+      - "exposure_audit.json 的 level.id 与 layout_sha256 对齐当前 exact，但顶层 exact_version 明确为 null。"
+      - "baseline_event_queries.json 的 candidate_id 正确且 layout_sha256 对齐，但显式 work_version 为 CANDLE_CURRICULUM_L13_001_WORK_13，而非当前 exact。"
+      - "scc_raw.json 只有 schema_version、scope、node_component、components，没有 candidate_id、exact_version、solve instance 或 layout digest。"
+    limits:
+      - "内容交叉核对能把 exposure raw graph 与 exact-bound complete_graph.json 逐节点、逐边对齐，也能把 SCC 拓扑对齐；这不把“所有主要 artifact 均已绑定 exact”这一绝对声明变成真。"
+
+  - claim_id: canonical_solve
+    claim: 规范输入 right,down,right,right,right,up 全部合法，并在第 6 拍完整结算后由存活玩家点亮全部火盆。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/solve_instance.yml
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/canonical_replay.json
+      - "canonical_replay.json 记录 completed=true、executedSteps=6、legalThroughStep=6；第 6 拍先 push/light/countdown，随后产生 win_all_braziers_lit，final state 为 D:0 且 B:6,1:1。"
+    limits: []
+
+  - claim_id: complete_graph_scope
+    claim: 可达图搜索 complete，含 3619 nodes、9424 legal edges、3 terminal win states。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/complete_graph.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/exposure_audit.json
+      - "complete_graph.json status=complete，声明计数与实际数组长度 3619/9424 一致；winning=true 的节点恰为 32、59、112。"
+      - "exposure_audit.json graph budget max_states=300000，status=complete，raw_graph 与 complete_graph.json 映射后 0 node mismatch、0 edge mismatch。"
+    limits: []
+
+  - claim_id: equivalent_variants_only
+    claim: 全部胜路只有同一生产性对象因果骨架；允许差异仅为纯移动时序与终局同拍 B 是否燃尽，无已知非等价胜解。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/solution_equivalence_all_wins.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/solution_equivalence_all_wins.yml
+      - "从 exact-bound complete_graph.json 反向核对得到 28 个 win-coaccessible nodes 与 49 条 win-coaccessible edges，和 all-wins artifact 一致；其中所有非纯移动生产性边只形成 M1、M2、M3 三组及 node 112 终局 burn_out B 伴随事件。"
+      - "scc_raw.json 的 28 个 component 全为单节点、无 internal edge，successor 关系与 complete graph 的 win 子图逐项一致。"
+    limits:
+      - "支持的是 docs/21 所定义的玩家逻辑类等价，不是原始输入串唯一或严格事件串唯一。"
+
+  - claim_id: required_winning_event_chain
+    claim: 所有胜路都按 C 首拍侧滚并由 A 尾遮灭、A 从 len2 缩为 len1 且同拍 shrink_ignite B、B 下一次对象操作轴推并同拍 light_brazier 与 win 的顺序完成。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/complete_graph.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/baseline_event_queries.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/solution_equivalence_all_wins.json
+      - "在 exact graph 上分别删除包含七个 required event instance 的边后，从 node 0 均不能到达任何 winning node。"
+      - "win 子图唯一首条生产性边为 node 0->1 的 C roll+douse；随后十条可选时序边都把 M2 作为同一拍 bundle；之后唯一对象操作类胜边为 B axis push + light_brazier + win。"
+    limits: []
+
+  - claim_id: no_transfer_or_ignition_bypass
+    claim: 任一胜路均不存在第二次 shrink_ignite、普通 wick/brazier 点火 B、rolling-contact 点火、C 再参与、交接后其它对象任务或多推修复链。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/complete_graph.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/solution_equivalence_all_wins.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/baseline_event_queries.json
+      - "49 条 win-coaccessible edges 的事件类型不含 ignite、ignite_from_wick、ignite_from_brazier 或任一 rolling_contact_chain later event；C 只出现在 node 0->1，M2 后到 M3 前无其它对象事件。"
+      - "all-winning-path automaton 的 bad_winning_product_states 为空，significant_non_milestone_edges 与 unexpected_milestone_companions 均为空。"
+    limits: []
+
+  - claim_id: one_shot_object_participation
+    claim: A、B、C 与唯一火盆在全部胜路中按已声明对象职责参与，required-winning 事件组是 win cut。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/object_participation.yml
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/complete_graph.json
+      - "七项逐事件 edge-cut 均不存在 avoiding win；对象 instance 分别由 candle#1、candle#single2、candle#single3 与 brazier:6,1 的 exact events 锁定。"
+    limits:
+      - "这支持当前 exact 胜路中的职责参与，不支持 C 对裸 all_braziers_lit 可解性的 per-object necessity；删除 C 的反事实仍有 3 个胜态。"
+
+  - claim_id: mechanical_identity_counterfactuals
+    claim: 证据所列提前推/墙灭 A、A 单格燃尽、A 未燃、B 错列、移除 C、A 加长、错过 B 火窗、交接后先操作 A、预点 B 与移位 consumer 均破坏对应身份条件或标准胜利链。
+    status: unknown
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/counterfactuals.yml
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/counterfactuals/cf_source_burnout_graph.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/counterfactuals/cf_source_unlit_graph.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/counterfactuals/cf_support_removed_graph.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/counterfactuals/cf_source_long_graph.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/counterfactuals/cf_receiver_prelit_runtime_rejection.txt
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/counterfactuals/cf_consumer_shifted_graph.json
+      - "白名单 raw evidence 支持：A 单格、A 未燃和 consumer 移位均 complete 且 0 wins；移除 C complete 且仍可解但同六输入首拍仅为 walk；A 加长 complete 且 raw winning witnesses 135/218/233 出现二次交接或 C 接管；exact nodes 13/100/25 均不可达胜利；预点 B 被 runtime 初态结算拒绝。"
+    limits:
+      - "B 错列（receiver_one_cell_gap）的唯一 raw ref 位于 exploration/runs/...，不在 allowed_evidence_sources 且属于明确 forbidden input；白名单 counterfactuals.yml 只给结论摘要，不能据此核验。由于原声明是十项合取，整项只能为 unknown。"
+
+  - claim_id: exposure_gate
+    claim: 当前 exact 的完整 exposure graph status=complete、verdict=pass、forbidden_hits 为空，rolling_contact_chain later event 全不可达。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/exposure_audit.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_001/evidence/complete_graph.json
+      - "exposure sequence 的实际 SHA-256 与 audit 中 sequence_sha256 同为 32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c。"
+      - "audit graph status=complete、3619 states、9424 edges、3 wins、verdict=pass、forbidden_hits=[]；其 raw graph 与 exact-bound complete_graph.json 逐项一致。"
+      - "独立扫描 exact complete graph 全部 9424 条边，对五个 rolling_contact_chain forbidden patterns 的 hit edge 数均为 0。"
+    limits:
+      - "exposure_audit.json 顶层 exact_version=null 的 provenance 冲突不被忽略；本条机械结论依靠 level.id/layout digest 及与 exact-bound complete_graph.json 的逐节点逐边同一性成立。"
+
+hard_failures:
+  - "exact_integrity contradicted：exposure_audit.json.exact_version=null，baseline_event_queries.json.work_version=CANDLE_CURRICULUM_L13_001_WORK_13；因此“所有主要 artifact 均绑定当前 exact”直接不成立。"
+evidence_gaps:
+  - "mechanical_identity_counterfactuals.receiver_one_cell_gap：白名单内缺少 raw replay/graph；现有摘要指向明确禁止读取的 exploration ref，必须提供当前送审白名单内的原始 artifact，或从声明中收窄删除该分项。"
+  - "scc_raw.json 缺少 candidate_id、exact_version、solve instance 与 layout digest 元数据；其内容虽已与 exact complete graph 完全交叉对齐，仍不能支持“artifact 自身已绑定 exact”的声明。"
+overall_hard_status: contradicted
+required_action: rerun_or_supply_evidence

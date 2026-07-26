@@ -1,0 +1,40 @@
+schema_version: 1
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+reviewed_exact_version: v2
+previous_delivery_version: v3
+delivery_exact_version: v4
+immutable: true
+layout_ref: layout.txt
+layout_sha256: 926688b9c149e2b3a9e19ff676ad1926ae3557db02a5446343786329f6db2cf0
+version_effect: review_preserving_change
+normalization:
+  - 删除三个机械冗余的初始已亮火盆：零基坐标 (3,4)、(4,4)、(1,6)。
+  - 墙化 (4,4) 腾空格，并墙化下方蜡烛左上四格单入口 pocket：(2,4)、(3,4)、(2,5)、(3,5)。
+  - (1,6) 墙化会在初始结算熄灭 candle#3，因此保留为空地小缺口；最终外轮廓重扫没有可裁 band。
+artifacts:
+  - {file: level.yml, bytes: 716, sha256: 039078903a8ceb2be98ca27a2a0c91e3d063dce575f52702c08dc3e70d734ba0}
+  - {file: solve_instance.yml, bytes: 826, sha256: cd689d64a2e6bc2596e962c9ac7be7d34d7137369c6cf9a3d3b7ac50e0a65735}
+  - {file: layout.txt, bytes: 120, sha256: 926688b9c149e2b3a9e19ff676ad1926ae3557db02a5446343786329f6db2cf0}
+  - {file: canonical_replay.json, bytes: 25244, sha256: 2054c34a81b3ec953722de52e7398be4ec9dde4c19ce6f7fd8f9a1c38c31cd9b}
+  - {file: canonical_replay.md, bytes: 10744, sha256: 8f889ea730bccfa84a2e4b1ebb1fc62dcc6716f6f6e7a3b4feea26e4264ccde8}
+  - {file: diagnostics/exposure_audit.json, bytes: 5977642, sha256: 2431da5dd4e1abdca4094dc8c605441a57f7905c99848891337983219feadfce}
+  - {file: diagnostics/redundancy_candidates.json, bytes: 4196, sha256: 905a2f297a92058bda6b047f2bc53939fcbd70824680b1fd81ccd360057609fc}
+  - {file: diagnostics/review_preservation_chain.yml, bytes: 1981, sha256: a0b628ec5d263cb3e525a3d995e36f580cd8e7416b6d083e736d45385ae9d0f9}
+review_provenance:
+  submission_packet_ref: ../v2/submission.yml
+  evidence_review_ref: ../../../evidence/v2/evidence_review.yml
+  critic_review_ref: ../../../critic/v2/critic_review.md
+preservation_contract:
+  canonical_projection_equal: true
+  winning_family_projection_equal: true
+  shortest_cost_preserved: 25
+  required_winning_relations_preserved: true
+  reignite_countdown_classes_preserved: [t1, t3]
+  graph_status: complete
+  graph_states: 7985
+  graph_edges: 21192
+  graph_wins: 1
+  exposure_verdict: pass
+  forbidden_hits: 0
+  new_wall_contact_events: 0
+manifest_self_hash: intentionally_omitted

@@ -1,0 +1,124 @@
+redundant_element_prune:
+  status: retained
+  candidate_discovery:
+    method: candle_redundancy_units_v2
+    artifact_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/pre_submission/redundancy_candidates.json
+    candidate_units:
+      - kind: whole_candle
+        id: whole_candle:candle#4
+        cells: [[2, 2], [3, 2], [4, 2], [5, 2]]
+      - kind: whole_candle
+        id: whole_candle:candle#2
+        cells: [[9, 4], [9, 5], [9, 6]]
+      - kind: single_brazier
+        id: single_brazier:7,2
+        cells: [[7, 2]]
+      - kind: single_brazier
+        id: single_brazier:2,3
+        cells: [[2, 3]]
+      - kind: single_brazier
+        id: single_brazier:8,3
+        cells: [[8, 3]]
+      - kind: single_brazier
+        id: single_brazier:2,4
+        cells: [[2, 4]]
+      - kind: single_entry_floor_region
+        id: single_entry_floor_region:1:10,4:5
+        cells: [[10, 4], [10, 5], [10, 6], [9, 7], [10, 7]]
+  candidates_checked:
+    - candidate_unit: whole_candle:candle#4
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      failure: canonical 23 输入虽全部合法，但不再胜利；核心长滚、途中点盆与终点挡块职责全部消失。
+      artifact_refs:
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_C4.json
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_C4.md
+    - candidate_unit: whole_candle:candle#2
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      failure: canonical 23 输入不再胜利；后继接火、截停后轴推及终盆义务无法完成。
+      artifact_refs:
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_C2.json
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_C2.md
+    - candidate_unit: single_brazier:7,2
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      failure: 第 4 步长滚后即提前胜利，删除了后继终点职责与完整胜利链。
+      artifact_refs:
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_B_7_2.json
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_B_7_2.md
+    - candidate_unit: single_brazier:2,3
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      failure: 长烛失去滚动途中接火来源，canonical 不再胜利，路径输出链断裂。
+      artifact_refs:
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_B_2_3.json
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_B_2_3.md
+    - candidate_unit: single_brazier:8,3
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      failure: 后继蜡烛不再滚动途中接火，第 23 输入变为非法且不能完成终盆。
+      artifact_refs:
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_B_8_3.json
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_B_8_3.md
+    - candidate_unit: single_brazier:2,4
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      failure: canonical 仍在第 23 步胜利，但第 4 步的必要路径火盆输出及 roll_intermediate_light_brazier 核心里程碑消失。
+      artifact_refs:
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_B_2_4.json
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_REMOVE_B_2_4.md
+    - candidate_unit: single_entry_floor_region:1:10,4:5
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      failure: 玩家右侧转场被封，第 15 输入即 destination_blocked，canonical 无法到达后继侧滚操作面。
+      artifact_refs:
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_WALLIFY_10_4_5.json
+        - prototypes/candle_sokoban/reports/input_replay_L16_PRUNE_WALLIFY_10_4_5.md
+  delivery_layout_changed: false
+  preservation_basis: >-
+    固定算法只枚举出两根整烛、四个单火盆和一个单入口空地区域；七个反事实都在便宜检查阶段破坏
+    canonical 胜利、合法性、胜利时机或已接受的核心事件，故全部原样保留，不创建新 delivery exact。
+

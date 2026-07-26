@@ -1,0 +1,40 @@
+exploration_id: candle_curriculum_l17_post_commitment_order_coupling_002
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration
+request_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/requests/request_001_post_commitment_order_coupling.yml
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore/task_local 模式执行 request_ref；发布增量材料，不制作完整关卡。"
+controller_decision: authorized
+decision_basis: >-
+  请求聚焦首次承诺后的第二个局部判断及其反向约束，属于明确的局部机制探索；
+  它不要求完整候选、难度或审美判断，且直接回应当前结构族被新增人评归档否决的问题。
+allowed_tools:
+  - npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write
+  - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+source_boundary:
+  allowed:
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/mechanic.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/dispatch.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon_index.md
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/runs/batch_l17_001_ordered_endpoint_fire_socket
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/requests/request_001_post_commitment_order_coupling.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration
+  forbidden:
+    - prototypes/candle_sokoban/design_archive
+    - prototypes/candle_sokoban/playtest_reviews.yml
+    - prototypes/candle_sokoban/studio/levels.yml
+    - prototypes/candle_sokoban/playable_queue.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/designer
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate
+    - 任何 Reviewer、Critic、审美分、难度判断或完整关卡设计
+required_publication:
+  - 增量 lexicon/index 条目，明确局部关系与负结果边界。
+  - 至少一个 published batch，含非空 raw traces、scene card、最小用法与反事实。
+  - 若所请求关系不可成立，发布可复核的负结果，而不是拼装完整关卡。
+

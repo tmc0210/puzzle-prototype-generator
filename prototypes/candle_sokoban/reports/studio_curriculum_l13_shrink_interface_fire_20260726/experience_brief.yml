@@ -1,0 +1,262 @@
+schema_version: 1
+design_task_id: candle_curriculum_l13_shrink_interface_fire_20260726
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/assignments/designer_experience_brief_001.yml
+
+prototype_context:
+  confirmed_rules:
+    - 正式关卡使用 global_burn_cycle=5；每次合法行动推进一次共享倒计时，无效输入不产生 edge 或倒计时。
+    - >-
+      单次行动先结算走动、轴推或侧滚，再按“先熄灭被遮烛芯、后递归点火与点盆”结算接触，
+      随后推进共享倒计时并在边界同步缩短当前仍燃烧的蜡烛，最后结算死亡与胜利。
+    - 燃烛从烛芯端缩短；单格燃烛在边界燃尽消失，存活燃烛旧端帽格成为退后的烛芯投影格。
+    - >-
+      退焰点火只在燃烧缩短释放格与另一根刚重曝的未燃烛芯同格时发生；接火者在该边界的
+      燃烧结算之后加入，不继续为同一次边界支付长度。
+    - 墙或另一根蜡烛的烛身遮住已燃烛芯时会先熄灭；移开烛身后烛芯重曝但保持未燃。
+    - 外露火焰会杀死玩家；本关的退焰共享格只允许接收烛身体占入，不作为玩家站位。
+  win_condition: 玩家存活，并在完整回合结算后点亮全部火盆（all_braziers_lit）。
+  object_and_event_semantics:
+    - A 表示边界前仍燃烧且缩短后必须存活的来源蜡烛；A 旧端帽格是本关共享接口格。
+    - B 表示初始未燃接收蜡烛；其烛芯投影格与下一次直接轴推的端帽目的格必须和共享接口格同格。
+    - >-
+      正确边界同一步出现 A 的 shrink 与 B 的 shrink_ignite；随后的直接轴推必须同时出现
+      B 的 push_axis 与必要火焰输出。
+    - >-
+      A 在 B 推入后是否因 B 烛身遮芯而熄灭不是作品身份；若后续仍要求 A 保火，必须另行证明结构，
+      不能从当前局部材料外推。
+  allowed_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+    - retreating_flame_transfer
+  tool_boundary:
+    - 当前可用 runtime adapter、ASCII parser/renderer、solver、完整图、layout analyzer、direct replay、playable 与 exposure audit。
+    - Candle 专属 miner、candidate factory 与 PuzzleScript exporter/checker 当前不可用；不得用其它原型证据替代。
+    - >-
+      后续 exact 只有 exposure graph=complete、verdict=pass 且 rolling_contact_chain 全部 later event 不可达，
+      才能通过 L13 暴露门。
+
+player_context:
+  basic_sokoban_experience_assumed: true
+  player_prior:
+    - L01：轴推、烛芯投影位置与点盆目标。
+    - L02：共享五拍边界、同步缩短与燃尽。
+    - L03：燃尽前后选择会改写另一根蜡烛的侧滚停点。
+    - L04：一处必要工序会通过共享时钟远程消耗另一对象的形状。
+    - L05：墙体灭火可在边界前让指定对象退出，并把保住的一格分配给具体对象。
+    - L06：同一对象先履行燃烧态职责，再及时墙灭保存实体职责。
+    - L07：跨多个边界错峰退出可写成由同一后继连续读取的长度向量。
+    - L08：对象在边界前后加入燃烧集合，会决定它是否支付当前周期。
+    - L09：有限火源形成过早、准确、过晚三档接火窗口。
+    - L10：火可存入永久节点；原蜡烛可暂停燃烧、完成必要工作后再取回火。
+    - L11：可移动烛身可作为遮板，使另一根蜡烛原地退出燃烧并同时建立空间接口。
+    - L12：遮板移开后，重曝烛芯保持未燃；玩家可先利用安全窗口完成准备，再主动复燃。
+  prerequisite_mechanisms:
+    - basic_candle_manipulation
+    - wall_dousing
+    - shared_fire_and_reignition
+    - body_concealment_and_reexposure
+  known_prior_level_refs: []
+  prior_evidence_boundary: >-
+    当前 prior_course 记录的是课程规划槽位与知识边界，并非 L01-L12 已完成 delivery 的实际布局。
+    本简报只据此固定玩家知识；后续 Critic 组包前必须由 Controller 重新核对实际可用前序，不能伪称已读前序实物。
+
+experience_seed:
+  human_seed: >-
+    S05_T02_SHRINK_RELEASES_INTERFACE_AND_FIRE：让实体封口在共享燃烧边界上翻成携火通道。
+    玩家主动选择让仍可存活的 A 保持在 B 前方直到边界；A 旧端帽格同时遮住 B 烛芯并阻挡 B
+    下一次轴推。边界后同格由实体 blocker 原子翻成非实体退焰 fuel，B 接火并立刻推入该格完成输出。
+
+task_exploration:
+  required_skill: sokoban-mechanism-lab
+  intent: mechanism_explore
+  publication_scope: task_local
+  dispatch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/dispatch.yml
+  task_lexicon_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/lexicon.md
+  task_index_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/lexicon_index.md
+  first_material_batch_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/batch.yml
+  selected_material_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/lexicon.md#mat-l13-001-同格端帽从实体封口缩成退焰引火口
+  selected_material_evidence:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/explain_surviving_source_shared_cell.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/replay_surviving_source_shared_cell.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/replay_burnout_source_shared_cell.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/replay_unlit_source_shared_cell.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/exploration/runs/batch_001_blocker_to_fuel/raw/replay_one_cell_gap.json
+  material_reading:
+    nonempty_input: [up, up, down, down, right, up]
+    observed_core_step: >-
+      第 5 步记录 countdown:1->5、shrink:candle#1:len2 与 shrink_ignite:candle#2；
+      第 6 步直接 up 记录 push_axis:candle#2 与 light_brazier:4,1，并以正常胜利结束。
+    contrast_reading:
+      - 单格燃尽来源：第 5 步只 burn_out；第 6 步推进合法但 B 未燃、火盆不亮。
+      - 三格未燃来源：第 5 步不缩短；第 6 步 axis_push_blocked。
+      - 错开一格：第 5 步只缩短；第 6 步推进后才 ignite_from_wick，已退化成先开门、后普通接火。
+  material_limits:
+    - MAT-L13-001 只验证三格横向燃烧来源、三格竖向接收烛、侧墙和紧邻火盆这一局部摆法。
+    - 两格存活来源、四向镜像、接收烛长度变化、移除侧墙与非火盆 consumer 尚未采样。
+    - >-
+      fixture 的完整图虽为 complete（36769 states / 114009 legal transitions），但 exposure audit
+      命中 36 条 roll_intermediate_extinguish，verdict=fail；它不是 exposure-clean 候选。
+    - >-
+      fixture 的最短解前五步只是开放走位凑边界，且完整图有 16 个胜利状态；它只证明局部关系，
+      不提供完整关卡包装、难度、唯一解或审美背书。
+
+archive_calibration:
+  full_index_or_retrieval_summaries_read: true
+  calibration_record_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/designer/archive_calibration.yml
+  all_aesthetic_1_records_read:
+    - RA_CAND_0024
+    - RA_CAND_0027
+    - RA_CAND_0030
+    - RA_CAND_0031
+    - RA_CAND_0032
+    - ICE_CAND_0002
+    - ICE_CAND_0004
+    - ICE_CAND_0011
+    - ICE_CAND_0015
+    - ICE_CAND_0037
+  related_positive_records_read:
+    - RA_CAND_0022
+    - RA_CAND_0025
+    - RA_CAND_0029
+    - ICE_CAND_0024
+    - ICE_CAND_0033
+  related_lower_bound_or_boundary_records_read:
+    - RA_CAND_0006
+    - RA_CAND_0019
+    - ICE_CAND_0012
+    - ICE_CAND_0015
+  additional_human_reviewed_records_read: []
+  human_comment_refs:
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0024.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0027.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0030.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0031.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0032.md#human-verdict
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0002.md#human-verdict
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0004.md#human-verdict
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0011.md#human-verdict
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0015.md#human-verdict
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0037.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0022.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0025.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0029.md#human-verdict
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0024.md#human-verdict
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0033.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0006.md#human-verdict
+    - prototypes/reality_anchor/design_archive/candidates/RA_CAND_0019.md#human-verdict
+    - prototypes/ice_slide_escape/design_archive/candidates/ICE_CAND_0012.md#human-verdict
+  applied_calibration:
+    - >-
+      目标难度 5 不能靠路线税、目标位置硬化、大地图、重复 witness 或反馈迟缓 deadend 获得；
+      它必须来自玩家预见边界后的同格身份翻转，并为此前的对象处置与操作侧作选择。
+    - >-
+      核心若由唯一通路自然触发，就只是线性开锁；前序必须提供多个局部可行方向，只有预见共享接口
+      才能压缩选择。
+    - >-
+      高事件密度不能补偿玩家体验不足；可见 A、B、火源、遮蔽和倒计时所承诺的关系都必须在同一因果链兑现。
+    - >-
+      正例迁移的是紧凑因果、主动构造、同一对象换职与小反转；不迁移跨原型布局、坐标或机制形状。
+
+experience_core:
+  experience_statement: >-
+    玩家保留一个看似应该提前清走的实体封口直到共享燃烧边界，亲眼看见同一格从挡住 B 的 A 端帽
+    原子翻成点燃 B 的非实体退焰，并立刻把 B 直接推入这格，让刚获得的火完成必要输出。
+  visible_setup: >-
+    共享接口格、A 的存活长度与燃烧状态、B 的未燃烛芯、B 的前推方向和前方必要火焰输出都应在全图中可读。
+    包装还要让玩家看见若提前移动 A、让 A 过短或错列，通道与火焰职责会分离。
+  player_action: >-
+    玩家主动选择让仍可存活的 A 保持对齐到准确边界，同时用必要的对象工作把自己交到 B 尾侧；
+    边界翻转后，不经另一个对象步骤，下一次行动直接沿 B 长轴推进。
+  visible_payoff: >-
+    边界前被 A 端帽占住且遮住 B 烛芯的格子，在同一结算后清空实体并出现退焰关系，B 同格点燃；
+    紧接轴推让 B 端帽占入旧封口，新烛芯立即点亮必要火盆或等价直接火焰 consumer。
+  why_level_exists: >-
+    此前玩家已会主动控制退出、加入、遮蔽和未燃重曝；本关第一次把这些知识压缩成一个不可拆的空间—火焰接口：
+    旧载体的实体占格与火源不是两把可分别持有的许可，而是在边界上由同一格完成 blocker->fuel 身份翻转。
+  core_boundary:
+    central_objects:
+      - 边界后仍存活的燃烧来源蜡烛 A
+      - 初始未燃且沿轴直接推进的接收蜡烛 B
+      - A 旧端帽格、B 初始烛芯格与 B 下一推身体目的格重合的共享接口格
+      - 共享燃烧边界与 shrink_ignite 交接
+      - B 下一次直接轴推所消费的必要火焰输出
+    supporting_objects:
+      - 只为制造真实时机选择、保留 A 对齐或交出 B 尾侧站位而存在的最少墙与对象
+      - 若完整胜利需要多个火盆，其余火盆只能把约束传回核心，不得成为独立子题
+
+work_identity:
+  conditions:
+    - 玩家必须在边界前主动选择保留仍可存活且对齐的 A，而不是由唯一走廊自动触发翻转。
+    - 共享接口格在边界前同时承担遮住 B 烛芯和实体阻挡 B 轴推两项责任。
+    - 同一共享接口格在边界后同时失去实体阻挡并以 A 的退焰点燃刚重曝的 B。
+    - B 获火后的下一次有效对象操作必须是沿长轴直接推入该共享格，不插入另一个对象任务。
+    - 该直接轴推必须同时消费通行与火：进入旧封口，并以 B 当前火焰完成标准胜利所需输出。
+    - 正确路的必要工序必须在边界前准备同一接口或 B 尾侧站位，不能只是开放走路凑拍。
+    - 后续所有允许胜解族都必须保留上述对象职责与因果依赖；旋转、尺寸或具体 consumer 可变，但同格原子翻转不可变。
+  counterfactuals:
+    - >-
+      A 在边界前移开或错列：通道可以开放，但 B 不在同一边界从退焰接火；相同直接轴推几何不能完成火焰输出。
+    - >-
+      A 在边界只剩一格而燃尽：共享格开放、B 可推进，但没有存活缩短留下的退焰，B 保持未燃。
+    - A 初始未燃或已提前退出：它不在目标边界缩短，共享格仍被实体封住，B 不能直接轴推。
+    - >-
+      B 与 A 旧端帽格错开一格：边界只负责开门，B 在下一推后才通过普通 ignite_from_wick 接火，
+      已不再是本作品的同格原子翻转。
+    - >-
+      移除 B 直接轴推后的必要火焰 consumer：接口转换仍发生，但退焰所得火没有玩家可感职责，作品核心不完整。
+    - >-
+      试图在 A 仍占共享格时预先令 B 燃烧：A 烛身会在接触结算中遮芯熄灭 B，不能形成“有火但仍封路”的稳定双钥匙状态。
+
+level_brief:
+  packaging_intent: complete_single_level
+  expected_difficulty: 5
+  expected_scale: >-
+    紧凑到中等；只容纳让玩家为最终共享接口作选择的必要前序、一次集中翻转和紧接的直接 consumer，
+    高潮后尽快以标准胜利结束。
+  expected_player_load: >-
+    高规划、低执行噪声。玩家需同时预见 A 的存活与对齐、边界拍、B 的尾侧站位和翻转后的直接轴推；
+    不以长路线、空走、重复事件或高潮后清理制造难度。
+  opening_intent: >-
+    让 A/B/共享格/输出构成一个可读矛盾：A 既是挡路物又是唯一未来火源。至少提供一个提前清 A、
+    让 A 过短或错列的局部诱惑，使玩家必须以最终接口反向判断，而不是顺走唯一通道。
+  preparation_intent: >-
+    边界前的合法行动必须是保留 A 对齐、安排必要对象或取得 B 尾侧操作面的实际工作；
+    删除这些动作会改变核心完成状态，不能复用 fixture 的来回空走。
+  payoff_and_ending_intent: >-
+    边界动画与 B 点燃是集中 payoff，下一次直接轴推马上兑现火与通路；若不是最终火盆，剩余内容只能是
+    同一状态的一步收束，不得另起清理段。
+
+allowed_design_sources:
+  - 当前 assignment 明列的 Candle runtime、规则、暴露序列、课程槽位与 prior_course。
+  - 当前任务正式发布的 task-local lexicon/index 与其 runtime-backed raw evidence。
+  - Controller 明确提供的 Reality Anchor 与 Ice Slide Escape clean archive，仅用于抽象审美校准。
+  - docs/17 与 docs/21 的玩家体验核心、作品身份、完整单关包装和 Design Studio 合同。
+
+prototype_specific_routing:
+  - allowed_exposure_through 固定为 retreating_flame_transfer；rolling_contact_chain 任一 later event 在完整可达图中都必须不可达。
+  - 正式候选胜利条件只能是 all_braziers_lit；不得使用 event_occurs。
+  - fixture exposure fail 只否定其作为完整候选，不否定 MAT-L13-001 的局部 replay 事实。
+  - knowledge.yml、curriculum.yml、诊断 levels.yml、旧 Candle 报告和未发布实验材料不得进入后续设计来源。
+  - 退焰共享格只供 B 身体进入，不能诱导或要求玩家踩入火焰。
+  - 后续 exact 必须重新固定 layout/solve instance，运行完整非空 replay、解族自查与 complete/pass exposure audit。
+
+human_review_constraints:
+  - 机械事件出现、图完整、唯一解或对象数量不能提供正向审美价值。
+  - 玩家无法或无必要选择的 shrink_ignite 不构成体验核心；唯一走廊代做角色翻转时必须重构。
+  - 长走路和来回耗拍在 Candle 中不自动是审美缺点，但本关的边界准备若只是空耗倒计时，就没有设计职责。
+  - 不用路线税、目标位置硬化、重复 witness、无反馈 deadend 或拼接子题把相对难度抬到 5。
+  - 不让 A/B 的可见 affordance 承诺未兑现的侧滚、复燃或多段任务；每个主要对象都要在同一因果链中履职。
+  - optional direction 只作起点；若它不能产生真实玩家选择或封闭 later exposure，可在同一体验核心下更换结构族。
+
+next_phase_boundary:
+  archive_calibration_complete: true
+  task_exploration_valid: true
+  selected_material_has_scene_card_nonempty_input_minimal_use_and_raw_evidence: true
+  candidate_id_assigned: false
+  layout_designed: false
+  exact_published: false
+  controller_state_written: false
+  instruction: 后续只建立一个 candidate_id；当前文件不授权开始 layout 或 exact。

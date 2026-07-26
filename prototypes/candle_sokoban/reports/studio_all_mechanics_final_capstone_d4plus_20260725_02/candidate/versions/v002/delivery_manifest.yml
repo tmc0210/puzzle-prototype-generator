@@ -1,0 +1,58 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+reviewed_exact_version: v001
+delivery_exact_version: v002
+immutable: true
+layout_ref: layout.txt
+layout_sha256: 8794d0aec5f1657fd3c4a133fcbc288a4f918aaa1c072892bf6e010e91c43703
+version_effect: review_preserving_change
+normalization:
+  - >-
+    把初始单入口空地 x1,y1 墙化；它是只连接到唯一火盆格的单格死端，不含玩家、蜡烛或火盆。
+  - >-
+    canonical 的 28 步状态与事件逐步完全相同；complete win-reaching 子图仍为 88 状态、160 边，
+    其 state-key 集和 edge 集与 reviewed v001 双向一致。
+  - 墙化后的结构重扫未发现 outer_outline_band，因此没有裁边或坐标平移。
+artifacts:
+  - file: level.yml
+    bytes: 660
+    sha256: d1f1029d760dc319fb05b2d6e126384d809d5d754ccb1f842bb6902cc764ba62
+  - file: solve_instance.yml
+    bytes: 823
+    sha256: 58c27f949f6923e262cabb7e3e1a719dc318413cc9bc1a61ff7c2c2de1fc6513
+  - file: layout.txt
+    bytes: 156
+    sha256: 8794d0aec5f1657fd3c4a133fcbc288a4f918aaa1c072892bf6e010e91c43703
+  - file: canonical_replay.json
+    bytes: 31742
+    sha256: 85d732edd3397923d3bb205ad4cfe34d58af0a61404192343e4decbacd55cc59
+  - file: canonical_replay.md
+    bytes: 13768
+    sha256: c007daa0798cbd64fde01c9965ca37b00cb4e93d4b791fe8464fa1fb20ea1dd3
+  - file: diagnostics/exposure_audit.json
+    bytes: 10357409
+    sha256: 4582e337bdc1ed3483d8f58b063deb0520d95420976cfbeba73363147eb402d9
+  - file: diagnostics/redundancy_candidates.json
+    bytes: 5042
+    sha256: bef3b806f2627bc6adf92871db5d15742e23216d5d243e995186e21e386600f3
+  - file: diagnostics/review_preservation_projection.json
+    bytes: 3649
+    sha256: fbb3c7e0b274d5ad2ade81319e280ae684eb79d6f7f69fdee6875be5ab9cdd2d
+review_provenance:
+  submission_packet_ref: ../v001/submission_packet.yml
+  evidence_review_ref: ../../../evidence/v001/recheck/evidence_review.yml
+  critic_review_ref: ../../../critic/v001/critic_review.md
+preservation_contract:
+  canonical_projection_equal: true
+  winning_family_projection_equal: true
+  shortest_cost_preserved: 28
+  required_winning_relations_preserved: true
+  minimum_consumer_axis_pushes: 5
+  graph_status: complete
+  graph_states: 11102
+  graph_edges: 35775
+  graph_wins: 2
+  exposure_verdict: pass
+  forbidden_hits: 0
+  new_mechanism_events: 0
+manifest_self_hash: intentionally_omitted

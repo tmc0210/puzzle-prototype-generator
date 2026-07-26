@@ -1,0 +1,56 @@
+schema_version: 1
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v001
+scope: complete_winning_family
+objects:
+  - runtime_id: candle#1
+    player_name: rolling writer
+    participation:
+      - 跨准备边界由两格缩成单格。
+      - 被玩家侧滚；同一 edge 上先触发 extinguish_by_wall，再由 candle#5 wick 复燃，并点亮 candle#6。
+    necessary_basis: same_roll_wall_douse_reignite_and_bridge_write is required on every winning path
+  - runtime_id: candle#5
+    player_name: active source
+    participation:
+      - 跨准备边界缩成单格，使 wick 从初始列移动到 writer 的关键滚动接触列。
+      - 在关键滚动 d2 产生 ignite_from_wick:candle#1:4,5。
+    necessary_basis: 删除后的完整 64065 状态反事实无胜态
+  - runtime_id: candle#single3
+    player_name: movable trailing guard
+    participation:
+      - 初始覆盖在 source 之后的 writer wick 轨道；不移动会让 writer 复燃后再次熄灭。
+      - canonical step 1 被侧滚两格并锁在 x=6 的凹位。
+    necessary_basis: opening_guard_roll is required on every winning path; whole-object deletion creates a 26-step shortcut
+  - runtime_id: candle#6
+    player_name: bridge
+    participation:
+      - 在 writer 同次滚动 d4 由 wick 接火。
+      - 下一边界缩短并以 shrink_ignite:candle#2 点 relay，随后燃尽。
+    necessary_basis: writer-to-bridge write and bridge-to-relay retreat transfer are required on every winning path
+  - runtime_id: candle#2
+    player_name: relay
+    participation:
+      - wick 初始被 bridge cap 覆盖；bridge 退焰后点燃。
+      - 下一边界缩短并以 shrink_ignite:candle#3 点 consumer。
+    necessary_basis: relay_retreat_ignites_consumer is required on every winning path
+  - runtime_id: candle#3
+    player_name: delayed consumer
+    participation:
+      - 由 relay 的第二次退焰点火接收延迟状态。
+      - 每条胜路至少五次轴推，并在烧成单格后侧滚点亮唯一火盆。
+    necessary_basis: minimum five push_axis events and final roll/light edge on every winning path
+  - runtime_id: brazier@2,1
+    player_name: final brazier
+    participation:
+      - 唯一正常胜利目标；只由 consumer 最终左侧 wick 点亮。
+    necessary_basis: final_consumer_roll_lights_brazier is required on every winning path
+terrain_roles:
+  - cells: [[4,4]]
+    role: writer 同次滚动的前置墙灭火接触；删除会产生无灭火/复燃的预燃退化胜路。
+  - cells: [[5,4], [6,5], [7,6], [7,7]]
+    role: 锁定 source、guard 与 bridge，排除失败历史里的无关对象漫游，并保持关键轨道可读。
+  - cells: [[6,9], [6,10], [5,11]]
+    role: 锁定 relay，使其只有退焰火源职责，不可侧滚改写 consumer。
+  - cells: [[4,4], [5,4]]
+    role: 阻止两格 consumer 直接穿过目标走廊；只有单格阶段可完成终滚。
+known_nonparticipating_major_elements: none

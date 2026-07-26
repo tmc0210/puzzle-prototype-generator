@@ -1,0 +1,30 @@
+workflow_id: playable_delivery_build
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+reviewed_exact_version: v005
+delivery_exact_version: v006
+checked_on: 2026-07-25
+delivery_source:
+  level_source: prototypes/candle_sokoban/studio/levels.yml
+  level_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002_v006
+  layout_sha256: 787d14a5648da7d14f44d5dbf6cc1fb17cc21f1d441d0a01a3b01f4a9000680f
+  playable_queue: prototypes/candle_sokoban/playable_queue.yml
+  queue_status: pending_playtest
+operations:
+  - command: npm run candle:playable:build
+    status: pass
+    details:
+      - runtime-backed playable 已重建。
+      - build 内置 candle:playable:check-replays 通过。
+      - Replay coverage complete for 5 playable level(s).
+  - check: source_and_id_resolution
+    status: pass
+    details:
+      - studio/levels.yml 只包含一个本候选条目，id 为 v006，不包含已撤回 v004。
+      - playable_queue.yml 只包含一个 source=studio、相同 id、pending_playtest 的 v006 条目。
+      - playable/data.json 只解析到一个 v006 条目。
+version_effect: unchanged
+acceptance_preserved: true
+preservation_basis: 交付接线和 runtime-backed 构建不改变 v006 delivery exact。
+playable_ref: prototypes/candle_sokoban/playable/index.html
+status: completed
+

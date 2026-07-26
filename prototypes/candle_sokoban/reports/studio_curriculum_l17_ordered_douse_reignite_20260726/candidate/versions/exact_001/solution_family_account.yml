@@ -1,0 +1,47 @@
+schema_version: 1
+design_task_id: candle_curriculum_l17_ordered_douse_reignite_20260726
+candidate_id: CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+exact_version: exact_001
+result: equivalent_variants_only
+search_scope: complete
+raw_graph_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+mechanical_report_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/candidate/versions/exact_001/solution_family_report.json
+
+complete_graph:
+  reachable_states: 45446
+  legal_transitions: 157249
+  winning_states: 5
+  win_reaching_states: 389
+  win_reaching_edges: 978
+
+mandatory_structure:
+  - 同一根 candle#1 必须恰好一次向上 d4，先把它送到 y=2 发车端；向下 d4 在所有胜解中出现 0 次。
+  - 上端 consumer (9,2) 必须恰好点亮一次，并发生在主程序滚动之前。
+  - 同一根 candle#1 必须恰好一次向下 d8；d2 由墙灭火，d6 由 (9,8) 已亮火盆复燃。
+  - 同一 d8 必须产生 d2->d6 的 roll_reignite_after_extinguish，并在 d8 点亮下端 consumer (9,10)。
+  - 上下两个 consumer、d8、d2 灭火、d6 点火与完整复燃链分别从图中移除时，均不再有胜解。
+
+mechanical_checks:
+  baseline_win_reachable: true
+  all_identity_events_mandatory: true
+  all_required_order_checks_pass: true
+  occurrence_counts:
+    top_stage_d4: [1]
+    bottom_stage_d4: [0]
+    top_goal_lit: [1]
+    core_d8: [1]
+    core_extinguish_d2: [1]
+    core_ignite_d6: [1]
+    core_reignite_d2_d6: [1]
+    bottom_goal_lit: [1]
+    axis_push: [3, 4, 5]
+
+variant_account:
+  - 5 个 winning nodes 对应 5 种燃烧终态签名；核心对象、坐标、方向、事件来源与顺序完全一致。
+  - 最短解在第一次边界后以四格烛身完成主滚；玩家若先等待一个或两个燃烧周期，主滚可剩三格或两格。
+  - 烛芯随等待多退一格时，端侧需要多一次轴推重新对齐，因此胜解轴推计数为 3、4 或 5。
+  - 这些差异只改变共享倒数相位、剩余烛长与重复同轴对齐次数；不产生另一条轨道、另一种接触顺序或另一处目标来源。
+
+designer_conclusion: >-
+  完整图中没有错列滚动后补推、逆序复燃、绕过 d2 墙灭或绕过 d6 火源的胜解；
+  所有原始胜态属于同一玩家逻辑的燃烧相位等价变体，因此报告 equivalent_variants_only。

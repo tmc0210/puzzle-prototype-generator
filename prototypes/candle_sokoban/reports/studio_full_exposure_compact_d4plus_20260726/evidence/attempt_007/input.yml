@@ -1,0 +1,104 @@
+review_attempt_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006_review_001
+reviewer_role: sokoban-evidence-reviewer
+prototype_id: candle_sokoban
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006
+
+solve_instance:
+  ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solve_instance.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/layout.txt
+  layout_sha256: ded3ad725893d82ed8100e806a3825f83bfd945a8188da608d7110898f06522a
+  win_type: all_braziers_lit
+  global_burn_cycle: 5
+  allowed_exposure_through: rolling_contact_chain
+
+rules_and_contract_refs:
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+solution_uniqueness_claim:
+  declared_result: unique_complete
+  search_scope: complete
+  search_budget: max_states=700000; actual_states=51042; actual_edges=147660; terminal_winning_states=1
+  transparent_variant_account:
+    terminal_winning_state_count: 1
+    winning_depth: 14
+    known_non_equivalent_win_refs: []
+  evidence_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/graph_analysis.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+
+mechanical_claims:
+  - claim_id: candidate_exact_layout_alignment
+    claim: >-
+      candidate、exact、layout、solve instance 与全部 current-exact mechanical evidence 对齐；layout SHA-256 为
+      ded3ad725893d82ed8100e806a3825f83bfd945a8188da608d7110898f06522a。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exact_manifest.yml
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/layout.txt
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solve_instance.yml
+  - claim_id: canonical_normal_win
+    claim: 14 个 canonical inputs 全部合法，玩家存活并以 all_braziers_lit 正常胜利。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/canonical_replay.json
+  - claim_id: unique_complete_current_exact
+    claim: 当前 exact 完整可达图 status=complete，51042 states、147660 legal transitions、唯一 terminal winning state，胜态深度 14。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/graph_analysis.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+  - claim_id: exactly_one_receiver_shrink_ignite_on_all_winning_paths
+    claim: >-
+      全部胜路对 candle#2 恰好发生一次 shrink_ignite；不存在 candle#2 被烛身熄灭、未燃重曝、从火盆补火、从普通烛芯补火或第二次退焰接火的胜路。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/recovery_counterfactuals.yml
+  - claim_id: required_roles_events_and_order
+    claim: >-
+      全部胜路必经 candle#2 首次轴推、candle#3 点 (1,5)、candle#1 缩成单格并向 candle#2 退焰、
+      candle#1 点 (7,3) 后燃尽、candle#2 缩成单格，以及 candle#2 在同一次多格长滚中先后点亮 (7,5) 与 (10,5)；
+      声明的事件次序不存在胜路违反。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/object_participation.yml
+  - claim_id: three_recovery_counterfactuals_are_nonwinning
+    claim: >-
+      第 5 步错误边界状态、第 8 步错误分支已点亮两盆的状态，以及正确首次交接后用单格供体重遮并在下一边界燃尽供体的状态，
+      均位于 complete graph 内且不能再到达胜态。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/recovery_counterfactuals.yml
+  - claim_id: strict_exposure_gate
+    claim: exposure graph complete，verdict=pass，forbidden_hits 为空，允许暴露到 rolling_contact_chain。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exposure_audit.json
+
+allowed_evidence_sources:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_007/input.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/layout.txt
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/canonical_replay.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/graph_analysis.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/recovery_counterfactuals.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/object_participation.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/exposure_audit.json
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+forbidden_inputs:
+  - 任何旧 exact、旧 delivery、旧 evidence、旧 review、旧 replay 或旧布局
+  - submission packet、experience brief、human feedback、player read、Designer reasoning/响应/自评/归档
+  - Explorer 材料、旧 Candle studio、难度/审美/包装/待玩判断
+  - forced-viable、agency 或其他图指标的质量解释；只核验机械声明
+  - prototypes/candle_sokoban/docs/curriculum_planning_context.md 及相关内容
+
+output_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_007/evidence_review.yml

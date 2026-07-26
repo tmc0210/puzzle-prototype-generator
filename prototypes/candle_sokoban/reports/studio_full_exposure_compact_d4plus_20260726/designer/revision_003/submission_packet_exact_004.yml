@@ -1,0 +1,75 @@
+submission_id: candle_full_exposure_compact_submission_exact_004
+design_task_id: candle_full_exposure_compact_d4plus_20260726
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004
+
+designer_claim:
+  player_experience_core: >-
+    玩家在第一次边界前亲自把供体滚入接收位，同时必须保留看似可立即去点上盆的横烛；
+    边界后两盆仍未亮，接收烛长滚会穿过横烛，先被烛身灭火、再从横烛远端芯位复燃并点左盆；
+    接收烛滚离后才释放横烛，使它改任上盆执行烛。后段的火桥职责反向筛选开局对横烛的安排。
+  player_action: >-
+    第一步向下侧滚供体，拒绝在边界前移动横烛；绕到接收烛右侧等待边界退焰接收，随后提交
+    接收烛向左不可中止长滚；再走到横烛下侧，提交向上长滚点亮余盆。
+  visible_payoff: >-
+    接收烛在一次长滚中可见地灭火、复燃并点亮左盆；横烛随后离开火桥位，在第二小步点亮上盆并立即胜利。
+  why_this_level_exists: >-
+    本关把同一横烛的身体与远端芯火压成一座可搬走的火桥：它既是接收烛长滚中必须保留的
+    灭火/复燃结构，又是后续上盆执行烛。玩家必须从后半关系反推出开局不能先处理显眼的横烛目标。
+  work_identity_conditions:
+    - 供体必须由玩家第一步向下侧滚到接收位，并在第一次边界缩短触发 shrink_ignite:candle#single3。
+    - 第一次边界后两盆均未亮，接收烛与横烛的职责都仍开放。
+    - 接收烛向左长滚必须先由横烛身体灭火，再由横烛位于 (3,3) 的远端芯火复燃，最后点亮左盆 (1,3)。
+    - 横烛在左盆点亮前不得离开火桥位；接收烛滚离后才从下侧把横烛向上滚动点亮上盆 (3,1)。
+    - 全部胜路保持左盆由接收烛、上盆由横烛的目标分配及左盆先于上盆的因果顺序。
+
+packaging_account:
+  opening: >-
+    两盆、三烛、接收跑道与横烛上滚终点同时可见。第一步供体下滚后，向右绕位与向左提前移动横烛
+    都是局部合法构造；只有预见中段火桥关系才能保留横烛原位。
+  preparation: >-
+    正确路线用四个后续走位到达接收烛右侧，第 5 步边界只完成供体/横烛缩短和接收烛退焰点火，
+    不点亮任何火盆。错误路线也能在同一边界点燃接收烛，但会把火桥滚到下方而永久失去胜路。
+  reveal_or_use: >-
+    接收烛长滚第一小步被横烛身体灭火，第三小步在横烛远端芯位复燃，第五小步点左盆；
+    接收烛离开后横烛下侧操作面开放，原火桥再被向上滚去点上盆。
+  ending: 横烛两格向上长滚在第二小步点亮上盆并正常胜利，无高潮后清理。
+  every_major_element_role:
+    - candle#1：开局可动供体；下滚建立交叉覆盖，第一次边界退焰点燃接收烛。
+    - candle#single3：边界接收者与左盆执行烛；不可中止长滚实际消费横烛的身体遮蔽和远端芯火。
+    - candle#3：第一次边界缩成单格；先以烛身/芯火承担灭火复燃桥，后改任上盆执行烛。
+    - brazier(1,3)：消费接收烛在火桥之后仍保持点燃的状态，并迫使接收烛先滚离横烛操作面。
+    - brazier(3,1)：横烛离开火桥位后的唯一目标，保证最后一次上滚即收束。
+    - 顶部墙组：形成供体下滚入口、横烛两格上滚终点与紧凑的两个操作侧，不引入额外自动事件。
+  known_perceptible_defects:
+    - none_identified
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete
+    search_budget: max_states=300000; actual_reachable_states=3974; legal_edges=11126
+    known_raw_winning_variants:
+      - one_terminal_winning_state
+      - one_required_event_and_target_assignment_signature
+    equivalence_account: >-
+      complete graph 只有一个 terminal winning state。逐事件组移除可胜边后，供体下滚、退焰接收、
+      接收烛烛身灭火、横烛芯位复燃、两次对象指定长滚与两个目标点亮均不可缺失；不存在需归并的第二逻辑类。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/exposure_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solution_family_audit.json
+    evidence_limits:
+      - task-local audit 从完整 raw graph 按事件组与目标坐标检查胜路必要性；独立 Evidence Reviewer 仍需复核脚本、原始节点与边。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solution_family_audit.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solution_family_audit.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/player_readthrough.yml
+  evidence_limits:
+    - layout analyzer 的 instance-level object participation 当前未实现；对象职责来自 current exact complete graph 上的事件必要性与目标转换审计。
+    - exposure pass 只证明没有越过 rolling_contact_chain；不证明难度或审美价值。
+    - 难度 4 与待玩价值留给 fresh Critic 按完整前序和校准材料判断。
+
+designer_self_verdict: submit_for_independent_review

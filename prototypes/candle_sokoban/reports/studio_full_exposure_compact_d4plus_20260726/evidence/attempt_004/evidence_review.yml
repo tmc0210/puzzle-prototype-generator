@@ -1,0 +1,123 @@
+review_attempt_id: "CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003_review_001"
+reviewer_instance_id: "fresh_evidence_reviewer_attempt_004_20260726"
+candidate_id: "CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003"
+exact_version: "CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003"
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_004/input.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/**
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_002/work/solution_family_audit.ts
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_002/work/counterfactual_no_face_lock.txt
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_002/work/counterfactual_no_face_lock_audit.json
+    - docs/21-level-design-studio-standard.md
+    - prototypes/candle_sokoban/docs/design_handoff.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "complete raw graph 中有 9 个 terminal winning states：node 432、448、547、590、714、758、897、983、1111。"
+    - "独立从 raw_graph 边传播 task-local 职责/相位位掩码，5793 个 state-signature pairs 与产物一致；9 个胜态均且仅带 mask=205。"
+    - "mask=205 flags：receiver_shrink_ignited、a_lit_by_worker_push、b_lit_by_receiver_roll、receiver_rolled_len2、receiver_rolled_left。"
+  equivalence_evidence_basis:
+    - "prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/exposure_audit.json：graph.status=complete；raw 5542 nodes、17912 edges、9 wins，所有节点由 node 0 可达，节点键唯一，记录深度与独立 BFS 深度完全一致。"
+    - "prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_002/work/solution_family_audit.ts：无预算截断地枚举四方向全部合法边，按 (state, mask) 传播到全部 terminal wins；mask 明确覆盖接收蜡烛点火、两盆对象职责、接收蜡烛滚动长度与方向。"
+    - "prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/solution_family_audit.json：reachable_states=5542、legal_edges=17912、winning_states=9、propagated_state_signatures=5793，与 raw graph 独立读取结果逐项一致，winning_signatures 仅 mask=205。"
+    - "对 raw graph 的全部可成胜边独立分类：candle#2 的胜路滚动只出现 left/len2 且同边点亮 (4,2)；(9,1) 的胜路点亮边只出现 push_axis:candle#3；所有胜路上的 shrink_ignite:candle#2 均可由前后 state key 与 mechanics.ts 的退焰规则反推出唯一来源 candle#1。"
+    - "标准等价边界采用 docs/21-level-design-studio-standard.md：纯走位、完整回返环及不改变对象职责、目标分配和依赖因果的原始输入变体可归为同一玩家逻辑类。"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "9 表示 terminal winning state 数，不表示原始输入串只有 9 条；图允许纯走位与回返变体，并按胜态、死亡、正常胜利前零蜡烛失败终局停止扩展。"
+    - "等价结论严格限于当前 task-local signature 所声明的对象职责、目标分配与两次燃烧边界相位关系，不外推为审美、难度或待玩价值。"
+
+claims:
+  - claim_id: candidate_exact_layout_alignment
+    claim: "candidate、exact、layout、solve instance 与所有 evidence layout 对齐，layout SHA-256 为 c9fe50581aac5bb53e73bf6955e9300c7924d443a4ae22ca8ea46fde1c1df6e6。"
+    status: supported
+    evidence_basis:
+      - "layout.txt 原始字节 SHA-256 独立计算为 c9fe50581aac5bb53e73bf6955e9300c7924d443a4ae22ca8ea46fde1c1df6e6，与 exact_manifest.yml、solve_instance.yml、exposure_audit.json 一致。"
+      - "canonical_replay.json、layout_analysis.json、solution_family_audit.json、counterfactual_wrong_role.json 的嵌入初始布局逐字符等于 layout.txt 去除末尾换行后的布局。"
+      - "exact_manifest.yml、solve_instance.yml、canonical_replay.json、layout_analysis.json 与 exposure_audit.json 的 candidate/exact/id 字段均指向 CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003；task-local 解族产物虽不携带 exact 字段，但其嵌入布局逐字符匹配当前 exact。"
+    limits:
+      - "SHA-256 是 layout.txt 原始文件字节摘要，包含文件末尾换行；不是 trimEnd 后字符串摘要。"
+
+  - claim_id: canonical_normal_win
+    claim: "11 个 canonical inputs 均合法，玩家存活并以 all_braziers_lit 正常胜利。"
+    status: supported
+    evidence_basis:
+      - "solve_instance.yml 固定 all_braziers_lit、global_burn_cycle=5 与 11 个 inputs。"
+      - "沿 exposure_audit.json raw_graph 从 node 0 独立逐输入跟随 11 条边，全部存在；每步 before/after key 与事件数组逐项等于 canonical_replay.json。"
+      - "终点 node 432 为 winning=true，state key 为 D:0，且等于 canonical_replay.json final.key。"
+    limits: []
+
+  - claim_id: graph_complete_current_exact
+    claim: "当前 exact 完整可达图 complete，5542 states、17912 edges、9 wins。"
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json 声明 graph.status=complete，预算 max_states=300000，实际 raw_graph 为 5542 nodes、17912 edges、9 winning nodes。"
+      - "独立遍历 raw_graph：5542 个节点键唯一、节点与边索引连续、全部边端点有效、同一状态每个 action 至多一条边、全部 5542 节点从 node 0 可达、BFS 深度零差异、最大深度 45。"
+      - "9 个胜态、63 个死亡态与 122 个非胜零蜡烛失败态均无外出边，符合 mechanics.ts 与 mechanic_exposure_sequence.yml 的 terminal 合同。"
+      - "layout_analysis.json 独立汇总同样为 status=complete、5542 states、17912 transitions、9 wins。"
+    limits:
+      - "完整性按正式 all_braziers_lit 搜索合同终止胜态、死亡态和正常胜利前零蜡烛失败态；不包含这些终局之后的无意义尾部输入。"
+
+  - claim_id: required_winning_role_phase_signature
+    claim: >-
+      全部 9 个胜态都要求 candle#1 对 candle#2 产生 shrink_ignite；右盆 (9,1) 由 candle#3 轴推点亮；
+      左盆 (4,2) 由缩短至 len2 的 candle#2 向左侧滚点亮。全部胜路保持同一对象职责、目标分配和两边界相位关系。
+    status: supported
+    evidence_basis:
+      - "从 complete raw_graph 独立传播 solution_family_audit.ts 定义的 9-bit mask，得到 5793 个 state-signature pairs，全部 9 个胜态均且仅为 mask=205。"
+      - "对所有能到达胜态的 raw edges 直接分类：candle#2 的滚动边只有 11 条 left/len2/点亮 (4,2)；右盆点亮边只有 3 条 up/push_axis:candle#3；不存在胜路上的 candle#2 右滚、len3 滚或其它目标分配。"
+      - "胜路上 10 条 shrink_ignite:candle#2 边的前后 state key 均显示退焰目标格为 (5,1)，唯一缩短后火焰来源为 candle#1；这与 mechanics.ts 的 vacatedBySurvivingFlame/shrink_ignite 规则一致。"
+      - "mechanics.ts 先完成当次已燃蜡烛缩短，再以退焰点燃 candle#2；candle#2 后续必须在另一燃烧边界缩至 len2 才执行唯一胜路左滚，因此两边界相位关系由状态与结算顺序共同支持。"
+    limits:
+      - "事件实例数大于胜态数，因为多个可达前缀可汇入同一胜解族；结论来自完整 win-reachable 子图而非单条 canonical trace。"
+
+  - claim_id: wrong_role_branch_is_reachable_loss
+    claim: "玩家可选择让 candle#2 右滚点亮右盆并以烛身熄灭 candle#3；该 6 步分支全部合法，终态不是胜利且不能再到达任何胜态。"
+    status: supported
+    evidence_basis:
+      - "counterfactual_wrong_role.json 与 solution_family_audit.json 给出 inputs=[left,left,up,up,up,right]、6 步全合法；第 6 步同时包含 roll_candle:candle#2、extinguish_by_candle_body:candle#3 与 light_brazier:9,1。"
+      - "在 exact raw_graph 中独立跟随同一 6 步到 node 70，所有边事件与 counterfactual artifact 一致；node 70 非胜。"
+      - "从全部 9 个胜态在 raw_graph 上反向遍历，node 70 不在 win-reachable 集合中，故该终态不能再到达胜态。"
+    limits: []
+
+  - claim_id: face_lock_identity_counterfactual
+    claim: >-
+      删除 (5,5) 的操作面锁墙后，完整图扩大为 17330 states、58067 edges、12 wins，并出现三个职责/相位签名；
+      其中包含 candle#2 先右滚后再左滚，以及 len1 才完成左盆的非等价胜路。
+    status: supported
+    evidence_basis:
+      - "counterfactual_no_face_lock.txt 与当前 layout 的逐格差异仅为 (5,5) 从 # 变为 .，其余字符完全一致。"
+      - "solution_family_audit.ts 对输入布局进行无 max-state 截断的四方向合法边 BFS，直到 queue 完全耗尽，再传播全部 (state, mask) 并统计全部 terminal wins。"
+      - "counterfactual_no_face_lock_audit.json 的输出为 17330 states、58067 edges、12 wins、24674 state-signature pairs；三个 signatures 为 mask 141/205/461，winning_state_count 分别 2/9/1，总和 12。"
+      - "mask 461 witness 明列 candle#2 先 right roll 后 left roll；mask 141 witness 在 shrink:candle#2:len1 后才以 left roll 点亮 (4,2) 并胜利，均直接改变当前 exact 的相位/行动职责签名。"
+    limits:
+      - "该反事实产物保存了穷举脚本、嵌入布局、汇总计数和每类胜路 witness，但未保存逐节点 raw_graph；因此本次可独立核验枚举算法、布局变换、汇总内部一致性与非等价见证，不能像当前 exact 一样再次逐节点审计 17330/58067 的索引与深度。"
+      - "此结论只证明 (5,5) 锁墙与当前胜解族机械身份的关系，不评价该墙或关卡的审美价值。"
+
+  - claim_id: strict_exposure_gate
+    claim: "exposure graph complete，verdict=pass，forbidden_hits 为空，允许暴露到 rolling_contact_chain。"
+    status: supported
+    evidence_basis:
+      - "exposure_audit.json 的 exact、layout digest、allowed_exposure_through=rolling_contact_chain、graph.status=complete、verdict=pass 与 forbidden_hits=[] 均对齐。"
+      - "mechanic_exposure_sequence.yml 原始字节 SHA-256 独立计算为 32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c，与 exposure_gate.sequence_sha256 一致。"
+      - "rolling_contact_chain 是当前序列最后一个 branch；报告 allowed_branches 包含全部六个家族，forbidden_branches 与 forbidden_event_patterns 均为空。"
+      - "独立汇总 17912 条 raw edges 的全部事件类型，reachable_event_counts 无任何计数差异；通用 walk/win 与 generic ignite/extinguish/roll_step 按 sequence explicitly_excluded 处理。"
+    limits:
+      - "pass 只证明没有超出允许暴露边界；不证明这些事件必经、有效使用、具有难度或值得试玩。"
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

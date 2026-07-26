@@ -1,0 +1,81 @@
+review_attempt_id: CANDLE_CURRICULUM_L13_001_exact_002_hard_001
+reviewer_instance_id: l13-evidence-reviewer-exact-002
+prototype_id: candle_sokoban
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version: CANDLE_CURRICULUM_L13_001_exact_002
+review_role: independent_hard_evidence_only
+
+exact:
+  manifest_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/manifest.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/layout.txt
+  level_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/level.yml
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/solve_instance.yml
+  layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+  win_condition: all_braziers_lit
+  global_burn_cycle: 5
+  allowed_exposure_through: retreating_flame_transfer
+
+rule_contract_refs:
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - docs/21-level-design-studio-standard.md
+
+solution_uniqueness_claim:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  search_budget: max_states=300000
+  actual_scope:
+    reachable_nodes: 3619
+    reachable_edges: 9424
+    terminal_wins: 3
+  known_raw_winning_variants:
+    - 三个终止胜态最短深度分别为 6、8、10，最短成本为 6。
+    - 两种显著事件签名只差深度 10 终局边界同拍 burn_out B；胜利后无后继边。
+  equivalence_basis_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/evidence/complete_graph.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/evidence/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/evidence/solution_equivalence_all_wins.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/evidence/solution_equivalence_all_wins.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/evidence/scc_raw.json
+
+mechanical_claims:
+  - claim_id: exact_integrity
+    claim: 所有主要 artifact 均绑定当前 candidate、exact、solve instance 与 layout digest，正式胜利为 all_braziers_lit。
+  - claim_id: canonical_solve
+    claim: 规范输入 right,down,right,right,right,up 全部合法，并在第 6 拍完整结算后由存活玩家点亮全部火盆。
+  - claim_id: complete_graph_scope
+    claim: 可达图搜索 complete，含 3619 nodes、9424 legal edges、3 terminal win states。
+  - claim_id: equivalent_variants_only
+    claim: 全部胜路只有同一生产性对象因果骨架；允许差异仅为纯移动时序与终局同拍 B 是否燃尽，无已知非等价胜解。
+  - claim_id: required_winning_event_chain
+    claim: 所有胜路都按 C 首拍侧滚并由 A 尾遮灭、A 从 len2 缩为 len1 且同拍 shrink_ignite B、B 下一次对象操作轴推并同拍 light_brazier 与 win 的顺序完成。
+  - claim_id: no_transfer_or_ignition_bypass
+    claim: 任一胜路均不存在第二次 shrink_ignite、普通 wick/brazier 点火 B、rolling-contact 点火、C 再参与、交接后其它对象任务或多推修复链。
+  - claim_id: one_shot_object_participation
+    claim: A、B、C 与唯一火盆在全部胜路中按已声明对象职责参与，required-winning 事件组是 win cut。
+  - claim_id: mechanical_identity_counterfactuals
+    claim: 证据所列提前推/墙灭 A、A 单格燃尽、A 未燃、B 错列、移除 C、A 加长、错过 B 火窗、交接后先操作 A、预点 B、移位 consumer 与一格间隙均破坏对应身份条件或标准胜利链。
+  - claim_id: exposure_gate
+    claim: 当前 exact 的完整 exposure graph status=complete、verdict=pass、forbidden_hits 为空，rolling_contact_chain later event 全不可达。
+
+allowed_evidence_sources:
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/manifest.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/layout.txt
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/level.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/evidence/**
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - docs/21-level-design-studio-standard.md
+forbidden_inputs:
+  - submission_packet.yml 中 hard_evidence.solution_uniqueness 之外的 Designer 体验、包装、自评或缺点叙事
+  - experience_brief.yml
+  - exploration/**
+  - Designer working files
+  - archive calibration、难度或审美材料
+  - exact_001 的旧送审包、旧证据与旧审查结论
+required_output_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/evidence/attempt_002/evidence_review.yml

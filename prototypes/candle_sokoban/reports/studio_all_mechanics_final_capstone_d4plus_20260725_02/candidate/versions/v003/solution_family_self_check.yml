@@ -1,0 +1,45 @@
+schema_version: 1
+artifact_kind: solution_family_self_check
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v003
+result: equivalent_variants_only
+
+search:
+  status: complete
+  max_states: 500000
+  max_depth: 200
+  reachable_states: 12254
+  legal_transitions: 33533
+  raw_winning_states: 2
+  shortest_depth: 28
+  max_observed_depth: 67
+  budget_hit: false
+
+winning_representatives:
+  - win_state_index: 3936
+    bfs_depth: 28
+    role: canonical
+  - win_state_index: 4784
+    bfs_depth: 30
+    role: equivalent_consumer_phase_variant
+
+equivalence_account: >-
+  两个胜态代表都使用同一次 opening receiver 轴推、同一 writer d3 侧滚 edge 中的墙灭火/火盆复燃/
+  shrink_ignite candle#2、同一 candle#2 d3 横滚点亮 (6,6)、同一 candle#2→candle#3 退焰以及
+  同一 candle#3 d6 点亮 (9,2)。深度 30 代表只在 consumer 燃尽前后多分配两步相位，
+  不改变对象位置计划、参与集合、接触顺序或最终读出。
+
+all_winning_path_requirements:
+  opening_receiver_axis_choice: true
+  same_edge_writer_order_and_first_transfer: true
+  active_relay_roll_and_gate_light: true
+  relay_retreat_transfer: true
+  final_consumer_readout: true
+
+known_non_equivalent_winning_family: none
+evidence_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/exposure_audit.json
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/winning_state_representatives.jsonl
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/required_relations_audit.json
+limits:
+  - 完整图证明机械胜族与必经边组，不替代人类对两个相位变体是否体验等价的判断。

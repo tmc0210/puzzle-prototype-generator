@@ -1,0 +1,48 @@
+schema_version: candle_designer_repair_comparison.v1
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/assignments/designer_revision_002_remove_repair_win_family.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+revision_basis: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001
+published_revision: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002
+exact_001_replays:
+  expected_direct:
+    terminal_node: 1533
+    cost: 17
+    inputs: [down, down, left, left, left, down, down, down, down, right, right, up, right, right, right, right, up]
+    responsibility: 首次 shrink_ignite 后供体不再回占交叉芯位；受体在下一边界直接缩为 len2。
+  repair_witness:
+    terminal_node: 4423
+    cost: 23
+    inputs: [down, down, right, right, down, left, up, left, left, left, down, left, down, down, down, right, right, up, right, right, right, right, up]
+    split:
+      - step: 5
+        events: [shrink:candle#1:len2, shrink_ignite:candle#2]
+      - step: 6
+        events: [push_axis:candle#1, extinguish:candle#2:concealed, extinguish_by_candle_body:candle#2]
+      - step: 10
+        events: [shrink:candle#1:len1, shrink_ignite:candle#2]
+      - step: 15
+        events: [burn_out:candle#1, shrink:candle#2:len2]
+    changed_responsibility: 供体新增回推遮熄与再次退焰修复；受体缩短被推迟一个边界。
+structural_revision:
+  preserved: 首次退焰接收、受体缩短后的不可中止长滚、途中点盆/点燃接力烛、接力烛缩短后的终局长滚。
+  excluded: 首次接火后从缩短供体后侧将其轴推回交叉芯位。
+  implementation: 收回供体后操作位；下游接力结构右移一列，避免筛选墙承担接力烛灭火职责。
+exact_002_results:
+  graph: {status: complete, states: 8846, edges: 26443, winning_states: 2}
+  productive_causal_family_count: 1
+  raw_significant_event_family_count: 2
+  raw_variant_boundary: 只在终局胜利同回合是否伴随 candle#3 缩为 len1 上不同。
+  repair_signature_edge_count_on_some_winning_path: 0
+  known_non_equivalent_wins: []
+  exact_001_repair_inputs_on_exact_002: {legal_through_step: 4, step_5_result: destination_blocked}
+filter_removal_counterfactual:
+  graph: {status: complete, states: 28076, edges: 85655, winning_states: 3}
+  raw_significant_event_family_count: 3
+  non_equivalent_player_logic_family_count: 2
+  repair_terminal_node: 8061
+  repair_cost: 24
+  repair_signature_edge_count_on_some_winning_path: 1
+evidence_refs:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/evidence_supplements/exact_001/solution_equivalence_all_wins.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/solution_equivalence_all_wins.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002/evidence/counterfactuals/cf_repair_filter_removed/equivalence/solution_equivalence_all_wins.json

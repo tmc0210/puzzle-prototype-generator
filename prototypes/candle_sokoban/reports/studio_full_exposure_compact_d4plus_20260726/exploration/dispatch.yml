@@ -1,0 +1,49 @@
+exploration_id: candle_full_exposure_compact_20260726
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件。"
+experience_seed: >-
+  在全部机制已掌握的终盘语境中，探索两根异轴蜡烛把同一狭窄交叉口交替用作烛身遮芯器与
+  退焰接收器：玩家先决定哪根蜡烛在共享燃烧边界退出交叉口，随后由一次不可中止长侧滚
+  读出这个先后次序。只研究小结构与可拼接关系，不规定完整候选、包装或最终体验核心。
+player_prior:
+  - 玩家已掌握 basic_candle_manipulation 及其衍生技巧。
+  - 玩家已掌握 wall_dousing 及其衍生技巧。
+  - 玩家已掌握 shared_fire_and_reignition 及其衍生技巧。
+  - 玩家已掌握 body_concealment_and_reexposure 及其衍生技巧。
+  - 玩家已掌握 retreating_flame_transfer 及其衍生技巧。
+  - 玩家已掌握 rolling_contact_chain 及其衍生技巧。
+  - 玩家能计算 global_burn_cycle=5 的共享倒数、边界缩短与多对象时序。
+allowed_mechanisms:
+  - basic_candle_manipulation
+  - wall_dousing
+  - shared_fire_and_reignition
+  - body_concealment_and_reexposure
+  - retreating_flame_transfer
+  - rolling_contact_chain
+allowed_tools:
+  - npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write
+  - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+  - npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts <layout-file|-> --id <id> --exact-version <exact> --allowed-exposure-through rolling_contact_chain --max-states 300000 --out <report.json>
+source_boundary:
+  allowed:
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - .agents/skills/sokoban-mechanism-lab/**
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/**
+  forbidden:
+    - prototypes/candle_sokoban/docs/curriculum_planning_context.md
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/**
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/mechanism_lab/cases.yml
+    - prototypes/candle_sokoban/reports/studio_*/**
+    - C:/Users/ASUS/Downloads/CANDLE_SOKOBAN_KNOWLEDGE.md
+task_lexicon_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon_index.md

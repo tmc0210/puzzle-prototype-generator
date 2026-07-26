@@ -1,0 +1,127 @@
+review_attempt_id: candle_curriculum_l16_exact_001_hard_review_001
+reviewer_role: sokoban-evidence-reviewer
+prototype_id: candle_sokoban
+candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+exact_version: exact_001
+
+solve_instance:
+  ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solve_instance.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/layout.txt
+  layout_sha256: 61e8934282bc48a21ae200ea7ec2c99309ab24617df79a0f8c5673f13fa34d2b
+  win_type: all_braziers_lit
+  global_burn_cycle: 5
+  allowed_exposure_through: rolling_contact_chain
+
+rules_and_contract_refs:
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+solution_uniqueness_claim:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  search_budget: max_states=300000; actual_states=17337; actual_transitions=54606
+  known_raw_winning_variants:
+    - 13 个原始 winning states，7 种燃烧终态签名。
+    - Q 在同一 x=7 列上推 1 至 3 次；另有时序、走位和已消费对象尾声动作差异。
+  equivalence_account: >-
+    声明全部胜路保持同一 A 右推对齐、同一 A d4 长滚、同一 d2 严格途中点盆、
+    同一 Q 左滚 d2、同一 A 尾端 (6,6) 截停与同一最终上推目标关系；
+    原始变体只改变倒数相位、燃烧长度、终局上推次数或职责完成后的动作。
+  known_non_equivalent_win_refs: []
+  evidence_refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_account.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/designer/workbench/analyze_solution_family.mjs
+
+mechanical_claims:
+  - claim_id: candidate_exact_layout_alignment
+    claim: >-
+      candidate、exact、layout、solve instance、complete graph 与 solution-family artifacts 全部绑定 exact_001，
+      layout SHA-256 为 61e8934282bc48a21ae200ea7ec2c99309ab24617df79a0f8c5673f13fa34d2b。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/exact_manifest.yml
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/layout.txt
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solve_instance.yml
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/self_check_report.json
+  - claim_id: canonical_normal_win
+    claim: 23 个 canonical inputs 全部合法，玩家存活并以 all_braziers_lit 正常胜利。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/canonical_replay.md
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/layout_analysis.md
+  - claim_id: graph_complete_current_exact
+    claim: 当前 exact 完整可达图 complete，共 17337 states、54606 legal transitions、13 winning states。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+  - claim_id: required_winning_path_output
+    claim: >-
+      所有胜解都要求 A 的同一次 d4 侧滚在严格中间 d2 由 A 点亮火盆 (2,4)，并继续到 d4 终点；
+      预亮该盆的反事实会删除这项 required-winning 路径职责。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/prelit_path_analysis.md
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/designer/workbench/analyze_solution_family.mjs
+  - claim_id: required_winning_endpoint_body_duty
+    claim: >-
+      所有胜解中 A 的反灯芯尾端 cell (6,6) 都是 Q 左滚 d2 的实体停止来源；删除 Q 后完整图无胜，
+      Q 反向滚和 A 未对齐分支都不能完成相同目标关系。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_account.yml
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/delete_q_analysis.md
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/unaligned_a_replay.md
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/q_wrong_direction_replay.md
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/designer/workbench/analyze_solution_family.mjs
+  - claim_id: required_winning_q_output
+    claim: >-
+      所有胜解都由 Q 在滚动途中从 (8,3) 既亮火盆取火，并从截停后的 x=7 列轴推点亮最终火盆 (7,2)。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_account.yml
+  - claim_id: strict_exposure_gate
+    claim: >-
+      exposure graph complete，verdict=pass，forbidden_hits 为空，exact 与 layout digest 对齐，
+      允许暴露到 rolling_contact_chain。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+      - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/self_check_report.json
+
+allowed_evidence_sources:
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/evidence/attempt_001/input.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/exact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/layout.txt
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/canonical_replay.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/layout_analysis.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_account.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/self_check_report.json
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/summary.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/prelit_path_layout.txt
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/prelit_path_analysis.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/delete_q_layout.txt
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/delete_q_analysis.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/unaligned_a_replay.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/q_wrong_direction_replay.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/designer/workbench/analyze_solution_family.mjs
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+forbidden_inputs:
+  - 完整 submission packet、experience brief、player_readthrough、reasoning sketch、archive calibration 与 Designer 审美/包装/自评叙事
+  - Explorer 语料、课程规划、旧 Candle reports、旧 exact、旧 evidence、旧 review 与其它候选
+  - 难度、审美、作品排名、待玩准入和提交前规范化判断
+
+output_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/evidence/attempt_001/evidence_review.yml

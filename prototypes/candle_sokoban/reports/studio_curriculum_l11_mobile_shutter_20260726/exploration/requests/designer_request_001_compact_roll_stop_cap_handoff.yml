@@ -1,0 +1,65 @@
+schema_version: 1
+request_id: l11_designer_request_001_compact_roll_stop_cap_handoff
+exploration_id: candle_curriculum_l11_mobile_shutter_exploration_20260726
+design_task_id: candle_curriculum_l11_mobile_shutter_20260726
+requested_by_role: designer
+intent: mechanism_explore
+publication_scope: task_local
+
+design_space: >-
+  展开“两格移动遮板的邻格自动截停后继侧滚，后继再直接读取被遮目标烛 B 的原端帽”这一局部连续关系。
+  C 的第二格必须改变同一输入造成的侧滚终点，不能只把下一次轴推变成 blocked、再由玩家自愿少推一格；
+  后继从 C 写入的近停位出发，最多经一次离散重定位就必须由 B 的原端帽再次截停或取得唯一操作面。
+  同一局部结构还应保留一个 C 到位前真实可执行、会丢掉 C 近停或 B 原端帽职责的对象选择；错误不得只是空等、
+  长走廊或把所有非 C 输入钉死。探索对象是可移植局部耦合，不是完整关卡或候选包装。
+
+abstract_question: >-
+  能否把已验证的“C 第二格让横烛侧滚 d2 而非 d3”近停，直接接成对 B 原端帽的第二次机械读取，
+  并让玩家在 C 到位前拥有一个紧邻、真实且不可补救的对象处置方向？优先寻找后继从近停位只需一次轴推、
+  一次短侧滚或一次操作面转换就触发 B 原端帽 consumer 的结构；不得靠玩家自愿停止多次轴推来伪造 C 的必要性。
+
+why_needed: >-
+  已有 task-local batch 证明 C 邻格可自动改变侧滚距离，也证明 C 邻格可让下一次轴推 blocked；但完整候选实跑显示，
+  若胜利链只要求“推一次后不再推”，删除 C 第二格仍可由玩家自愿停在同位，作品身份反事实失败。另一批完整布局
+  虽能同时消费 B/C，却只能靠 20 余步绕行或边界前空等关闭 B 缩短旁路，违反当前单关的人类约束。
+
+sampling_axes:
+  - 后继从 C 近停到 B 原端帽 consumer 的转换：一次轴推、一次垂直/水平短侧滚、同一对象换操作面。
+  - B 为左右朝向或上下朝向时，原端帽从近停位的相对位置。
+  - C 以轴推或侧滚到位；仅保留两格 C 与单格 C 的最小对照。
+  - C 到位前的错误对象处置：移动后继、移动 B 去墙灭、或破坏唯一操作面；不得采用空等或无关死亡陷阱。
+  - 后继为单格或两格；优先减少重复轴推和纯走位。
+
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/lexicon_index.md
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_001_shutter_adjacent_stop/batch.yml
+  - prototypes/candle_sokoban/reports/studio_curriculum_l11_mobile_shutter_20260726/exploration/runs/batch_l11_002_shutter_axis_push_face/batch.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+
+do_not_repeat:
+  - 只复现 C 两格使侧滚 d2、单格使 d3，却不把 d2 终点接到 B 原端帽 consumer。
+  - 用下一次 axis_push_blocked 当作 C consumer，但获胜者可以在删除 C 第二格后自愿停止轴推并保持同一职责。
+  - 用长走廊、反复绕行、空等倒计时或无关对象堆积把两个局部探针串起来。
+  - 把 C 到位变成唯一合法输入，或用纯死亡格替代可理解的错误对象处置。
+  - 只给单条 replay，不跑两格 C、单格 C、B 端帽移除/缩短三个最小对照。
+
+materialization_target: >-
+  每张可用材料给出一个紧凑局部开始局面和连续非空输入串：C 到位并触发 extinguish_by_candle_body，
+  后继由 C 第二格自动取得近停，随后最多一次离散重定位就由 B 原端帽取得第二停位或操作面。保存两格 C 正例、
+  单格 C 对照、B 原端帽缺失对照，以及 C 到位前的错误对象处置。若声称错误不可补救或职责必经，提供局部完整图；
+  图不完整时明确标为待 Designer 自证。只发布抽象局部卡片，不设计完整候选、玩家起点包装或难度。
+
+acceptance_evidence:
+  - 两格 C 正例包含非空 replay、明确的 d2/dN 终点和后续 B 原端帽 consumer。
+  - 单格 C 对照不能仅靠选择少推一次恢复同一终点与职责。
+  - 删除或缩短 B 原端帽后，后继不能维持同一终点、目标分配与对象角色。
+  - 开局错误是对象状态差异，不是空等、纯走位填拍或唯一合法动作的反面。
+  - 所有侧滚中间步不产生 rolling_contact_chain later event；不得产生 shrink_ignite。
+
+forbidden_scope:
+  - 不制作完整关卡，不指定候选墙形、玩家起点、目标难度或 exact version。
+  - 不评价审美、唯一性、课程准入或待玩交付。
+  - 不修改候选、账本、assignment、experience brief、通用流程或 prototype 代码。

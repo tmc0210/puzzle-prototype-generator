@@ -1,0 +1,113 @@
+schema_version: 1
+submission_id: candle_all_mechanics_final_capstone_002_v005_submission_001
+design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725_02
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v005
+revision_basis: v004
+assignment_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/assignments/designer_revision_004_human_non_stitched_successor.yml
+
+designer_claim:
+  player_experience_core: >-
+    玩家把 relay 下推一格或两格，写入未来的纵坐标。两种写入都能让 writer 在一次下滚中墙灭后
+    火盆复燃，并在下一边界以退焰点亮 relay；局部反馈故意同为成功。较晚终盆要求 relay 再缩一次后
+    body 在 y8、wick 在 y7，因此只接受两推输出，并把答案反向传回开场选择。
+  human_feedback_response: >-
+    v004 的 gate、第三根 consumer 与整块右翼已经删除，没有换皮或延长。新 family 只用 writer、relay
+    和一个左下读出：后继不是消费唯一既成状态，而是筛选一推 d3 与两推 d4 两个局部成功输出。
+    整块左下区域删除并将正常胜利重定向到中段后，两条历史会重新等价，直接回应“非拼接”退回。
+  visible_payoff: >-
+    关键 d4 下滚依次显示墙灭、火盆复燃；下一边界显示 writer 退焰点亮 relay。最终 relay 缩成单格
+    后左滚，外露火焰在终点前扫过整行并点亮远端终盆，立即正常胜利。
+  work_identity_conditions:
+    - 每条胜路至少需要两次 push_axis:candle#2；一推局部成功输出不可达胜。
+    - 每条胜路需要 candle#1 d4 同滚墙灭、由 (6,5) 火盆复燃及随后 shrink_ignite candle#2。
+    - 每条胜路需要 candle#2 再经一个边界缩成 y8 单格，再以 d6 横滚点亮 (2,7)。
+    - 删除左下读出整区并重定向正常胜利后，一推、两推历史必须重新等价。
+
+packaging_account:
+  opening: 同屏展示 writer、灭火墙、已亮复燃源、可下推两格的 relay 与远端 y7 终盆。
+  preparation: relay 纵坐标写入未来止距；writer 经两次缩短把端帽/灯芯列移到 relay 列。
+  reveal_or_use: writer d4 同滚先灭后燃，下一边界以 shrink_ignite 把早期纵坐标保存到 lit relay。
+  ending: relay 再缩一界，正确输出的 wick 落在终盆行；d6 左滚点盆并立即 all_braziers_lit。
+  every_major_element_role:
+    - candle#1：滚动 writer、同滚墙灭/火盆复燃载体与退焰源。
+    - candle#2：玩家写入的 stop、受火状态载体与较晚横滚 reader。
+    - brazier@6,5：writer 墙灭后的唯一复燃源。
+    - brazier@2,7：筛选早期纵坐标的较晚需求与正常胜利目标。
+    - wall@6,4：writer 的灭火接触，删除后身份退化为预燃直达。
+    - wall@8,7：封住两格 relay 的提前侧滚操作面，要求第二边界后再读出。
+
+downstream_coupling_gate:
+  result: pass
+  local_success_outputs:
+    - id: relay_pushed_once_writer_d3
+      local_events: ["extinguish_by_wall:candle#1", "ignite_from_brazier:candle#1:6,5", "shrink_ignite:candle#2"]
+      output: relay lit,len2,cells=(7,7)(7,6)
+      full_exact_win_reachable: false
+    - id: relay_pushed_twice_writer_d4
+      local_events: ["extinguish_by_wall:candle#1", "ignite_from_brazier:candle#1:6,5", "shrink_ignite:candle#2"]
+      output: relay lit,len2,cells=(7,8)(7,7)
+      full_exact_win_reachable: true
+      shortest_remaining_actions: 7
+  downstream_reader: 第二边界后只接受 body y8 / wick y7 的两推输出；一推输出 body y7 被终盆挡住且再等即燃尽。
+  evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/downstream_coupling_audit.json
+
+whole_region_suffix_deletion_gate:
+  result: pass
+  removed_region: 左下终盆、其 y7 火焰行、y8 relay 横滚通道与左端点
+  redirected_win: audit-only 在 writer 公共轨道 (6,3) 设置未亮火盆，仍使用 all_braziers_lit
+  counterfactual_graph: {status: complete, states: 30117, edges: 81972, raw_wins: 25}
+  classification_change: 完整 exact 只接受两推；删区重定向后，一推 d3 与两推 d4 两条历史都正常胜利。
+  same_prefix_only_early_win: false
+  evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/whole_region_suffix_deletion_audit.yml
+
+hard_evidence:
+  normal_win:
+    result: pass
+    canonical_cost: 22
+    player_alive: true
+    all_braziers_lit: true
+    replay_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/canonical_replay.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/canonical_replay.md
+  complete_graph:
+    status: complete
+    reachable_states: 98961
+    legal_transitions: 276326
+    raw_winning_states: 2
+    max_observed_depth: 79
+    budget: maxStates=300000; maxDepth=200
+  solution_family:
+    result: equivalent_variants_only
+    known_non_equivalent_winning_family: none
+    representatives: [9220, 11959]
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/solution_family_self_check.yml
+  required_relations:
+    all_pass: true
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/downstream_coupling_audit.json
+  exposure:
+    allowed_exposure_through: rolling_contact_chain
+    verdict: pass
+    graph_status: complete
+    reachable_states: 98961
+    legal_transitions: 276326
+    forbidden_hits: 0
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/exposure_audit.json
+  object_participation:
+    result: pass
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/object_participation.yml
+  identity_counterfactuals:
+    result: pass
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/identity_counterfactuals.yml
+
+difficulty_and_aesthetic_boundary:
+  target: 5
+  minimum: 4
+  designer_estimate: 4_to_5
+  player_reread_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/player_reread.yml
+  known_perceptible_defects:
+    - 开场有两步可逆调相，两个 raw 胜态只在第二次轴推跨不跨第一次 writer 缩短上不同，未达到逐输入唯一。
+    - 看懂 y7 wick 行后两推方向较明确；难度主要来自较晚需求对两个局部成功输出的反推。
+  review_boundary: 难度是否达到 5、整体是否值得待玩，留给 fresh Puzzle Critic；机械图不替代审美。
+
+designer_self_verdict: submit_for_independent_review

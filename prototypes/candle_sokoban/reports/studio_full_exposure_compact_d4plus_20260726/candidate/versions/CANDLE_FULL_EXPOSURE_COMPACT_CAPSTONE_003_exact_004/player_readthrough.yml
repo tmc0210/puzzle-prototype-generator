@@ -1,0 +1,43 @@
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004
+
+opening_read:
+  visible_objects:
+    - 上盆 (3,1) 与左盆 (1,3) 同时未点亮。
+    - 已燃两格供体位于接收烛上方，可由玩家第一步向下侧滚到交叉位。
+    - 已燃两格横烛直接位于左盆与上盆之间；未燃单格接收烛位于其右下方。
+  active_choice: >-
+    第一动作把供体向下滚入接收位后，玩家可以向右绕到接收烛操作侧，也可以向左接近横烛并在
+    第一次边界前把横烛滚离原位。两者都能在第 5 个行动让接收烛点燃、且两盆仍未亮；只有前者
+    保留横烛身体与远端芯位，能承担后续长滚火桥。
+
+first_boundary:
+  step: 5
+  events:
+    - simultaneous_burn:candle#1+candle#3
+    - shrink:candle#1:len1
+    - shrink:candle#3:len1
+    - shrink_ignite:candle#single3
+  visible_state: >-
+    供体与横烛同时缩成单格，接收烛在供体腾出的末端格接到退焰；两只火盆都保持未亮，
+    接收烛的左盆职责与横烛的“火桥后再点上盆”职责同时仍开放。
+
+middle_reframe:
+  step: 7
+  player_action: 从右侧让已燃接收烛向左不可中止长滚。
+  relation: >-
+    第一小步接收烛的芯被横烛身体遮住而熄灭；第三小步越过横烛身体后，它恰在横烛远端芯位
+    复燃；第五小步继续点亮左盆。横烛因此不能先去点上盆：它的原位首先是接收烛的唯一复燃桥。
+  visible_payoff: 左盆点亮，接收烛滚到左端并离开横烛下侧操作面。
+
+ending:
+  step: 10
+  player_action: 从下方让已完成火桥职责的横烛向上长滚。
+  visible_payoff: 第二小步点亮上盆，同一行动正常胜利。
+  cleanup_after_payoff: none
+
+counterfactual_read:
+  ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004/solution_family_audit.json
+  fact: >-
+    inputs=[down,left,left,down,up] 会在第一次边界前把横烛滚到 (4,4)，仍使接收烛点燃且两盆保持未亮；
+    complete graph 中这样的 54 个“接收已燃、双目标未亮、火桥已移位”状态没有一个能再到达胜态。

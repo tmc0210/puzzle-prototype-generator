@@ -1,0 +1,54 @@
+runId: batch_006_shared_goal_boundary_choice
+title: "同一近端火盆的双对象边界行动与恢复边界"
+notes: >-
+  横向三格交叉供体末端遮住竖向未燃接收烛芯；单格辅助燃烛与交叉供体分别能在第 5 个合法行动
+  的滚动途中点亮同一近端火盆。比较留驻退焰接收、退出未燃重曝、端点封面和轴推换线恢复。
+cases:
+  - id: helper_roll_holds_cross
+    family: shared_goal_boundary_choice
+    variant: helper_roll_and_hold
+    changed_variable: "第 5 步滚动辅助烛，交叉供体留驻"
+    contrast_with: cross_roll_exits_locked_doused
+    notes: "辅助烛右滚点同一火盆并燃尽；交叉供体缩短，接收烛 shrink_ignite。"
+    layout_ref: layout_locked.txt
+    actions: [left, right, up, up, right, down, down, right, right, right]
+  - id: cross_roll_exits_locked_doused
+    family: shared_goal_boundary_choice
+    variant: cross_exit_to_doused_locked_endpoint
+    changed_variable: "第 5 步改滚交叉供体；终点上侧操作面与芯位由墙封住"
+    contrast_with: helper_roll_holds_cross
+    notes: "交叉供体上滚途中点同一火盆，终点失火；接收烛只未燃重曝；辅助烛燃尽。"
+    layout_ref: layout_locked.txt
+    actions: [down, up, right, right, up]
+  - id: cross_exit_then_direct_readout
+    family: shared_goal_boundary_choice
+    variant: original_wick_row_readout
+    changed_variable: "退出后不换芯行，直接让接收烛向右侧滚"
+    contrast_with: cross_exit_then_axis_shift_basin_recovery
+    notes: "验证位于 y=2 的近端火盆不会给原始 y=4 芯行普通补火。"
+    layout_ref: layout_locked.txt
+    actions: [down, up, right, right, up, down, right, right]
+  - id: cross_exit_then_axis_shift_basin_recovery
+    family: shared_goal_boundary_choice
+    variant: axis_shift_to_near_brazier
+    changed_variable: "退出后先沿轴上推接收烛，把芯行换到近端火盆所在 y=2，再向右侧滚"
+    contrast_with: cross_exit_then_direct_readout
+    notes: "恢复 probe；若接收烛从同一近端火盆复燃，则不可恢复性不成立。"
+    layout_ref: layout_locked.txt
+    actions: [down, up, right, right, up, down, down, down, down, right, right, up, up, left, up, right]
+  - id: cross_roll_exits_open_endpoint_return
+    family: shared_goal_boundary_choice
+    variant: open_endpoint_allows_donor_return
+    changed_variable: "把退出后供体的上侧操作面改为开放，并把玩家放到可触发回滚的位置"
+    contrast_with: cross_roll_exits_locked_doused
+    notes: "供体保持燃烧并缩短；显式尝试从开放上侧把它向下滚回交叉行。"
+    layout_ref: layout_open_return_probe.txt
+    actions: [down]
+  - id: locked_exit_donor_axis_attempt
+    family: shared_goal_boundary_choice
+    variant: locked_endpoint_blocks_axis_move
+    changed_variable: "退出后走到供体左侧，尝试沿轴向右推动"
+    contrast_with: cross_roll_exits_open_endpoint_return
+    notes: "恢复 probe：终点芯墙同时占住右向目标格，预期轴推为非法；供体上侧三格也被墙封住。"
+    layout_ref: layout_locked.txt
+    actions: [down, up, right, right, up, left, up, up, up, right]

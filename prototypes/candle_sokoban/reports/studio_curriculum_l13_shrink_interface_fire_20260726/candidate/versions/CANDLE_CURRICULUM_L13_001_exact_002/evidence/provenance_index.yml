@@ -1,0 +1,44 @@
+schema_version: candle_exact_evidence_provenance_index.v1
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version: CANDLE_CURRICULUM_L13_001_exact_002
+layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/solve_instance.yml
+provenance_tuple:
+  candidate_id: CANDLE_CURRICULUM_L13_001
+  exact_version: CANDLE_CURRICULUM_L13_001_exact_002
+  layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_002/solve_instance.yml
+
+major_artifacts:
+  - {ref: canonical_replay.json, role: exact_runtime_replay, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: exposure_audit.json, role: exact_complete_exposure_audit, provenance_fields_present: [candidate_id, exact_version, source_exact_layout_sha256, solve_instance_ref]}
+  - {ref: complete_graph.json, role: exact_complete_graph, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: solution_family.json, role: exact_solution_family, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: solution_equivalence_all_wins.json, role: exact_all_winning_path_raw, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: solution_equivalence_all_wins.yml, role: exact_all_winning_path_summary, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: scc_raw.json, role: exact_win_coaccessible_scc, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: baseline_event_queries.json, role: exact_event_cut_and_branch_queries, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: mutation_graph_summary.json, role: exact_counterfactual_graph_summary, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: object_participation.yml, role: exact_object_participation, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+  - {ref: counterfactuals.yml, role: exact_identity_counterfactual_summary, provenance_fields_present: [candidate_id, exact_version, source_layout_sha256, solve_instance_ref]}
+  - {ref: player_reread.yml, role: exact_player_reread, provenance_fields_present: [candidate_id, exact_version, layout_sha256, solve_instance_ref]}
+
+receiver_one_cell_gap_whitelist_artifacts:
+  counterfactual_id: receiver_one_cell_gap
+  counterfactual_layout_sha256: 8c2dbc00cbc48814d70ccba2e38103a620ab8ffec48df83374fa1eac7bca0abd
+  refs:
+    - counterfactuals/receiver_one_cell_gap/layout.txt
+    - counterfactuals/receiver_one_cell_gap/replay.json
+    - counterfactuals/receiver_one_cell_gap/replay.md
+    - counterfactuals/receiver_one_cell_gap/complete_graph.json
+    - counterfactuals/receiver_one_cell_gap/identity_analysis.json
+  raw_claim: >-
+    六拍 replay 的第 5 拍只有 shrink A，第 6 拍才 push B + ignite_from_wick；39007/120795/22 的完整图中
+    存在一条 7 拍胜路完全避开 shrink_ignite，证明错位版仍可解但退化为普通点火逻辑。
+
+supporting_raw_tool_outputs:
+  policy: >-
+    `*_audit_raw.json` 是 CLI 原始输出，均以 --exact-version 绑定 exact_002；candidate 与 solve-instance
+    由对应的 enriched 主 artifact 自证。主 claims 只引用 enriched artifact，不把 raw tool schema 的字段边界隐藏。
+  main_exposure_raw_ref: exposure_audit_raw.json
+  counterfactual_raw_pattern: counterfactuals/*_audit_raw.json

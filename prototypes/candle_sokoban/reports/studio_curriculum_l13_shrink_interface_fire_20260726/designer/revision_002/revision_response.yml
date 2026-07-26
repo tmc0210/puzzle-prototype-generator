@@ -1,0 +1,64 @@
+schema_version: candle_designer_revision_response.v1
+assignment_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/assignments/designer_revision_002_single_variable_counterfactual.yml
+designer_instance_id: l13_designer
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version_answered: CANDLE_CURRICULUM_L13_001_exact_002
+new_exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+evidence_review_refs:
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/evidence/attempt_002/evidence_review.yml
+response: revise_candidate
+
+revision_scope:
+  layout_changed: false
+  player_relationship_changed: false
+  aesthetic_narrative_changed: false
+  mechanical_evidence_changed: true
+  frozen_basis_modified: false
+
+single_variable_counterfactual:
+  id: receiver_b_shift_down_one_cell
+  source_exact_layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+  counterfactual_layout_sha256: 780f0371316d97d4828262268592f5317a6aed75cc5319b8cfe473cf21dfd34e
+  intervention:
+    object: candle#single3
+    field: body_position
+    source: [6, 3]
+    target: [6, 4]
+    displacement: [0, 1]
+    manhattan_distance: 1
+  invariants:
+    - 10x6 画布不变。
+    - 全部墙、玩家、火盆、A 与 C 的位置不变。
+    - 全部对象方向、长度与燃烧态不变。
+  graph: {status: complete, states: 278, edges: 718, winning_states: 0}
+  winning_path_families: []
+  winning_bypasses: []
+  exact_receiver_events:
+    shrink_ignite_edges: 0
+    push_axis_edges: 0
+    ordinary_ignite_edges: 0
+  disclosed_downstream_effects:
+    - B 不再截停 C，C 首拍由 d2 改为 d3。
+    - 反事实命中一条 roll_intermediate_extinguish later-event 边。
+    - A 的退焰可在 11 条边上转交 C；该变化不通向胜利。
+  claim_narrowing: >-
+    只保留“当前 exact 的 B 精确对齐不可移除”这一由单变量证据支持的作品身份声明；删除“错列版仍可解、
+    下一推才普通点燃 B”的外推，也不声称该位移只改变火焰而保持 C 的滚动终点或 B 的操作面。
+  refs:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/counterfactuals/cf_receiver_b_shift_down/layout.txt
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/counterfactuals/cf_receiver_b_shift_down/replay.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/counterfactuals/cf_receiver_b_shift_down/complete_graph.json
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/counterfactuals/cf_receiver_b_shift_down/identity_analysis.json
+
+exact_003_account:
+  immutable_snapshot: true
+  revision_basis: CANDLE_CURRICULUM_L13_001_exact_002
+  main_layout_sha256: 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb
+  canonical_inputs: [right, down, right, right, right, up]
+  main_graph: {status: complete, states: 3619, edges: 9424, winning_states: 3}
+  main_exposure: {status: complete, verdict: pass, forbidden_hits: 0}
+  solution_family: equivalent_variants_only
+  all_winning_paths_productively_causally_equivalent: true
+  verification_ref: prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/verification.json
+
+handoff: submit_exact_to_controller_for_fresh_hard_evidence_review

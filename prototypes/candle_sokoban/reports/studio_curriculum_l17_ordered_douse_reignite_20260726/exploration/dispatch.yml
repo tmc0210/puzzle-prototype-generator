@@ -1,0 +1,49 @@
+exploration_id: candle_curriculum_l17_ordered_douse_reignite_20260726
+prototype_id: candle_sokoban
+required_skill: sokoban-mechanism-lab
+intent: mechanism_explore
+publication_scope: task_local
+workspace: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration
+dispatch_prompt: "使用 $sokoban-mechanism-lab，以 mechanism_explore 的 task_local 模式执行本文件。"
+experience_seed: >-
+  为课程第 17 关展开“让滚道接触顺序写出终点亮灭”：同一根滚烛在一次多步侧滚中依次接触遮芯墙位与火源，
+  墙→火源应把终点写成燃烧，火源→墙应把终点写成未燃；玩家必须选择方向、轨道或接触体顺序，
+  随后由同构终点 consumer 直接读取最终亮灭。核心是最后一次有效写入覆盖前态，不是接触事件计数。
+player_prior:
+  - 已掌握前五阶段全部机制，以及滚动每个小步即时结算接触。
+  - 已在 L16 使用同一长滚同时经营路径输出与终点实体接口。
+  - 尚未被正式教学“同一滚道上的灭火与复燃接触是有序、非交换的状态写入程序”。
+allowed_mechanisms:
+  - basic_candle_manipulation
+  - wall_dousing
+  - shared_fire_and_reignition
+  - body_concealment_and_reexposure
+  - retreating_flame_transfer
+  - rolling_contact_chain
+allowed_tools:
+  - npx tsx src/cli.ts explain-layout prototypes/candle_sokoban <layout-file|-> --id <id> --max-states 300000 --graph-max-states 300000 --write
+  - npx tsx src/cli.ts try-inputs prototypes/candle_sokoban <layout-file|-> --id <id> --inputs <input1,input2,...> --write
+  - npx tsx src/prototypes/candle_sokoban/exposureAuditCli.ts <layout-file|-> --id <id> --exact-version <exact> --allowed-exposure-through rolling_contact_chain --max-states 300000 --out <report.json>
+source_boundary:
+  allowed:
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/mechanic.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/course_brief.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/stage_ledger.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/experience_cores.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/selections/stage_06_rolling_contact_chain.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/requests/stage06_request_002_ordered_douse_reignite.yml
+    - prototypes/candle_sokoban/reports/curriculum_planning_20260725/exploration/runs/batch_stage06_002_ordered_douse_reignite
+    - prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration
+  forbidden:
+    - prototypes/candle_sokoban/knowledge.yml
+    - prototypes/candle_sokoban/curriculum.yml
+    - prototypes/candle_sokoban/levels.yml
+    - prototypes/candle_sokoban/studio/levels.yml
+    - prototypes/candle_sokoban/playable_queue.yml
+    - 审美归档、人类评语、Designer 工作台、正式 exact、送审包与任何 review
+task_lexicon_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon.md
+task_index_ref: prototypes/candle_sokoban/reports/studio_curriculum_l17_ordered_douse_reignite_20260726/exploration/lexicon_index.md
+

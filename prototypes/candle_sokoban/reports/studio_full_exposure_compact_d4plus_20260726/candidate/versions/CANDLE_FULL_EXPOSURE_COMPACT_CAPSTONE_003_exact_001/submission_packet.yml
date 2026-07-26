@@ -1,0 +1,87 @@
+submission_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001_submission_001
+design_task_id: candle_full_exposure_compact_d4plus_20260726
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001
+
+designer_claim:
+  player_experience_core: >-
+    玩家把同一根竖烛先读成完整横烛的长度敏感止挡，再读成帽端退焰的接收器；接到的火态经过一次缩短后由五格长滚送入近盆并交给第三烛，第三烛再跨边界缩短，以改变后的火头列完成第二次长滚。
+  player_action: >-
+    先向下侧滚 candle#1 构造帽端/芯位交叉；沿左侧走到 candle#2 缩短后的操作侧，向右长滚 candle#2；随后移动到 candle#3 缩短后的受力格，向上长滚 candle#3。
+  visible_payoff: >-
+    第一次边界可见 candle#1 退焰点燃 candle#2；candle#2 的五格滚在第二小步同时点亮近盆并点燃 candle#3；最终 candle#3 的四格滚在倒数第二小步点亮远盆并立即正常胜利。
+  why_this_level_exists: >-
+    把已掌握的止挡、退焰接收、共享倒计时、缩短后火头换列和滚动中接触压缩成一个连续火态接力，检验玩家能否跨三个边界预演同一状态，而不是逐个触发独立机制见证。
+  work_identity_conditions:
+    - candle#1 必须以三格完整长度侧滚到 candle#2 上方，并由 candle#2 帽端止挡。
+    - candle#2 必须由 shrink_ignite 接火，随后缩为两格并完成五格侧滚。
+    - candle#2 五格滚必须在途中点亮 brazier:6,5 并点燃 candle#3，不能由残余火头或火盆补火替代。
+    - candle#3 必须跨下一次边界缩为两格，再以新的火头列完成四格侧滚并点亮 brazier:7,2。
+    - 正常胜利必须是 all_braziers_lit 且玩家存活；死亡、事件胜利或删除对象均不等价。
+
+packaging_account:
+  opening: >-
+    11x9 紧凑画面中，三格 candle#1 位于 candle#2 上方，candle#2 的帽端明显阻挡其向下侧滚；入口只有向下侧滚这一项合法进展，先建立作品的共享交叉关系。
+  preparation: >-
+    candle#1 落位后，玩家沿不回访路线前往 candle#2 在第二次边界缩短后的操作侧；两次边界依次完成退焰点火与接收器火头下移。
+  reveal_or_use: >-
+    candle#2 向右五格滚，把先前不可见的火态用途一次展示为近盆点亮、candle#3 接力点燃和自身被体段遮火；玩家随后继续走向 candle#3 新受力格。
+  ending: >-
+    第三次边界令 candle#3 从三格缩为两格，玩家向上侧滚它；其新火头列在倒数第二小步点亮远盆，正常胜利在同一动作结算，无死亡或墙熄灭尾声。
+  every_major_element_role:
+    - candle#1：完整长度供体、candle#2 的止挡测试对象、首次退焰火源及后续边界相位标记。
+    - candle#2：candle#1 的几何止挡、退焰接收器、第二次边界的缩短对象和五格长滚火态载体。
+    - candle#3：由 candle#2 途中点燃的接力烛、第三次边界的缩短对象及最终四格长滚载体。
+    - brazier:6,5：candle#2 第二滚动小步的途中消费者，使接收火态必须由长滚兑现。
+    - brazier:7,2：candle#3 缩短后新火头列的远端消费者和正常胜利收束点。
+    - candle#2 左侧约束墙：阻止无贡献的回访操作侧，删除后胜态由 4 增至 8 且出现更弱的等价路线族。
+    - 紧凑通道：把三轮倒计时转化为前往下一操作侧的连续移动，使 canonical 无等待、无回访。
+  known_perceptible_defects:
+    - 入口侧滚受紧凑墙形约束为唯一合法动作，首步本身缺少选择压力。
+    - 难度 4 主要来自三次边界、两次长滚和火头列变化的联合预演；若玩家立即读懂止挡关系，执行段会较顺。
+    - canonical 的空间路线较线性，审美价值依赖火态接力是否足以抵消较少的操作分支。
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/level.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: max_states=300000; actual_states=13893; actual_legal_transitions=41106
+    known_raw_winning_variants:
+      - 完整图含 4 个终止胜态；最短成本为 17。
+      - 共有 20 条最短输入序列，归并为 1 个因果事件家族；差异只来自同一阶段内步行次序。
+      - 完整图删边检查未发现绕过供体侧滚、shrink_ignite、两次关键长滚、接力点火或任一火盆的胜路。
+    equivalence_account: >-
+      20 条最短输入序列的核心事件顺序完全一致：candle#1:d2 侧滚、candle#1 缩为两格并 shrink_ignite candle#2、candle#2 缩为两格、candle#2:d5 长滚并点盆/点燃 candle#3、candle#3 缩为两格、candle#3:d4 长滚并点亮终盆。完整图的 4 个胜态没有产生另一套可绕过上述事件的作品身份；输入级差异只是在相同边界相位内交换步行路线。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/complete_graph.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/solution_family.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/analysis.json
+    evidence_limits:
+      - 完整有限状态图已穷尽，但含循环的任意长度输入字符串不作为有限列表逐条展开；等价性由最短序列因果归并和全胜路核心事件删边必要性共同支持。
+      - "`equivalent_variants_only` 是 Designer 的机械自查结论，仍需独立 Evidence Reviewer 核验。"
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/analysis.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/exposure_audit.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/counterfactuals.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/object_participation.json
+  evidence_limits:
+    - Object participation 由 canonical 事件引用与完整图核心事件必要性共同说明，不是审美质量判断。
+    - Exposure audit 只证明 allowed_exposure_through=rolling_contact_chain 的机械边界 complete/pass，不证明难度或玩家体验。
+    - 供体预缩、删除供体、删除接力烛和预点燃接收器反事实已覆盖核心身份，但未声称穷尽所有可能的任意布局改写。
+
+designer_self_verdict: submit_for_independent_review
+
+additional_metadata:
+  title: 退焰接力
+  prototype: candle_sokoban
+  win_type: all_braziers_lit
+  intended_difficulty: 4
+  allowed_exposure_through: rolling_contact_chain
+  layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/layout.txt
+  layout_sha256: 080a65f20be11c841dbb95f6868b200c90e3dfe0da9fc65670c035a6fbcfc90c
+  graph_summary: complete; states=13893; legal_transitions=41106; winning_states=4
+  exposure_summary: complete/pass; forbidden_hits=0

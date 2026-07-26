@@ -1,0 +1,221 @@
+review_attempt_id: candle_all_mechanics_002_v005_hard_001
+reviewer_instance_id: fresh_evidence_reviewer_candle_002_v005_20260725_01
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v005
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - docs/21-level-design-studio-standard.md
+    - docs/30-scc-graph-diagnostic-reading.md
+    - prototypes/candle_sokoban/docs/design_handoff.yml
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/docs/redundant_element_prune.md
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/artifact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/level.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/layout.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/canonical_replay.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/graph_analysis.md
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/winning_state_representatives.jsonl
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/downstream_coupling_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/whole_region_suffix_deletion_audit.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/counterfactuals/suffix_deleted_redirected.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/solution_family_self_check.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/object_participation_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/identity_counterfactual_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/counterfactuals/no_writer_wall.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/counterfactuals/no_reignite_source.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/designer/workbench/audit_v005_coupling.ts
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/designer/workbench/emit_v005_workbench_artifacts.ts
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/evidence/v005/independent_verify.ts
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/evidence/v005/independent_reproduction.json
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "win_state_index=9220; bfs_depth=22"
+    - "win_state_index=11959; bfs_depth=24"
+  equivalence_evidence_basis:
+    - >-
+      独立重枚举 frozen layout 得到 complete 图 98961 states / 276326 edges / 2 raw wins，
+      max observed depth=79，两个胜态深度恰为 22 与 24；maxStates=300000、maxDepth=200
+      均未成为截断边界。
+    - >-
+      两个胜态代表均含两次 push_axis:candle#2、writer d4、同滚墙灭与 (6,5) 火盆复燃、
+      shrink_ignite:candle#2、relay len1 与 d6 终滚点亮 (2,7)；完整图上的删边可达性审计也表明
+      任一胜路都不能缺少这些关系。
+    - >-
+      深度 24 代表只把第二次 relay 轴推移到 writer 第一次缩短之后；早期写入坐标、对象职责、
+      接触次序、目标分配与后续必经链不变，属于标准允许的必要步骤换序/调相变体。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - >-
+      结论是玩家逻辑类等价，不把纯走位差异、完整回返环或同一必要步骤的可逆调相当作新解族；
+      不据此作任何体验或质量判断。
+
+claims:
+  - claim_id: exact_identity_and_normal_win
+    claim: >-
+      所有 exact artifact 均绑定 candidate=CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002、version=v005、
+      layout digest=e898...fda4；正式胜利为 all_braziers_lit，燃烧周期为 5。
+    status: supported
+    evidence_basis:
+      - >-
+        level.yml、solve_instance.yml、artifact_manifest.yml 的 candidate/version/win/cycle 一致；layout.txt
+        实算 SHA-256=e898e0dc102d62dc64c6bd741814a75f077e914ffd96e37a5bf89f293210fda4。
+      - >-
+        manifest 列出的本轮核心 exact artifact 与三份 counterfactual 文件均逐项重算 hash 并匹配；
+        exposure audit 也绑定同一 exact_version 与 layout digest。
+    limits: []
+
+  - claim_id: canonical_solve
+    claim: >-
+      规范 22 输入 replay 全部合法；完整回合结算后玩家存活且两个火盆全部点亮，并包含声明的
+      两推、d4 写入链、退焰转移、第二边界与 d6 终滚。
+    status: supported
+    evidence_basis:
+      - >-
+        独立 runtime replay 22 个输入全部合法并以 win_all_braziers_lit 结束；最终 state key 为
+        P:7,8|D:0|T:3/5|C:candle#2:2:up:1:1,8|B:6,5:1;2,7:1。
+      - >-
+        replay 逐步出现两次 push_axis:candle#2、roll_candle:candle#1:d4、
+        extinguish_by_wall:candle#1、ignite_from_brazier:candle#1:6,5、
+        shrink_ignite:candle#2、shrink:candle#2:len1、light_brazier:2,7 与
+        roll_candle:candle#2:d6。
+    limits: []
+
+  - claim_id: complete_graph_shape
+    claim: >-
+      声明预算内完整枚举 98961 个可达状态、276326 条合法边、2 个 raw winning state；
+      max observed depth=79，未命中预算边界。
+    status: supported
+    evidence_basis:
+      - >-
+        independent_verify.ts 从 frozen layout 直接重枚举得到 status=complete、reason=null、
+        states=98961、edges=276326、wins=2、max_observed_depth=79、win depths=[22,24]。
+      - >-
+        exposure_audit.json 保存 98961 raw nodes 与 276326 raw edges，并记录 budget max_states=300000、
+        graph status=complete。
+    limits: []
+
+  - claim_id: solution_family
+    claim: >-
+      两个 raw 胜态代表深度为 22 与 24，均使用同一二推、writer d4 写入链、退焰转移、第二边界
+      与 d6 终滚；未发现非等价胜解族。
+    status: supported
+    evidence_basis:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v005/winning_state_representatives.jsonl
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/evidence/v005/independent_reproduction.json
+      - 完整图只有两个 raw 胜态，且所有胜路的核心对象、事件依赖与目标分配一致；两代表仅有开场调相换序。
+    limits:
+      - 只支持 equivalent_variants_only 的机械解族结论，不支持关于人类体验是否等价的更强陈述。
+
+  - claim_id: downstream_selects_between_two_local_successes
+    claim: >-
+      一推与两推历史都完成同组局部成功事件，但完整 exact 中仅两推输出可达胜；两推输出最短余 7 输入，
+      且所有完整胜路至少含两次 candle#2 轴推。
+    status: supported
+    evidence_basis:
+      - >-
+        独立 replay 中一推 d3 与两推 d4 都出现 extinguish_by_wall:candle#1、
+        ignite_from_brazier:candle#1:6,5 与 shrink_ignite:candle#2；输出分别为 lit len2
+        cells=(7,7)(7,6) 与 cells=(7,8)(7,7)。
+      - >-
+        在 complete baseline 图上反向标记 win-reachable：一推输出 state index 2243 不在集合内且
+        distanceToWin=null；两推输出 state index 2348 在集合内且 shortest_remaining=7。
+      - 独立最小事件计数审计得到任一胜路 push_axis:candle#2 的最小次数为 2。
+    limits: []
+
+  - claim_id: whole_region_deletion_changes_early_equivalence
+    claim: >-
+      删除左下读出区并在 (6,3) 放置 audit-only 未亮火盆、仍使用 all_braziers_lit 后，完整图为
+      30117 states/81972 edges/25 wins；一推与两推历史都正常胜，因而改变早期正确选择/输出等价类，
+      不是同一唯一前缀单纯提前胜。
+    status: supported
+    evidence_basis:
+      - >-
+        suffix_deleted_redirected.txt 实际移除 (2,7) 终盆及左下 y7/y8 读出带，并在 (6,3) 设置 o；
+        parser 仍使用 mechanic 的 all_braziers_lit。
+      - >-
+        独立重枚举得到 complete 30117 states / 81972 edges / 25 raw wins；一推 d3 历史和两推 d4
+        历史的终步都直接产生 light_brazier:6,3 与 win_all_braziers_lit。
+      - >-
+        baseline 中一推局部成功输出已由 complete 图证明不可达任何胜态，而 deletion 版该一推历史成为
+        正常胜路；因此新增的是原先被下游排除的早期选择类，不可能只是原唯一两推胜前缀提前终止。
+    limits:
+      - 此反事实只证明机械分类改变，不评价删除区的体验价值。
+
+  - claim_id: all_wins_required_relation_chain
+    claim: >-
+      所有胜路均需要 writer d4 同滚墙灭/复燃、退焰点亮 relay、relay 第二边界成为 y8 单格并以 d6
+      左滚点亮终盆；全胜路至少两次 relay 轴推。
+    status: supported
+    evidence_basis:
+      - >-
+        在 complete baseline 图上逐项删除含目标事件的边后均无法到达胜态：同滚墙灭+火盆复燃、
+        writer d4、shrink_ignite:candle#2、shrink:candle#2:len1、d6+light_brazier:2,7 全部为 required。
+      - 最小事件计数得到 relay_axis_pushes=2、writer d4=1、relay d6=1。
+    limits:
+      - 事件组必要性按完整图边事件解释，不把唯一 win state 数量误当作事件路径证明。
+
+  - claim_id: identity_counterfactuals
+    claim: >-
+      移除 (6,4) writer 墙后完整图 92870/263031/2，规范解仍胜但写入链事件消失；移除 (6,5)
+      复燃火盆后完整图 220398/622728/0。
+    status: supported
+    evidence_basis:
+      - >-
+        独立重枚举 no_writer_wall.txt 得到 complete 92870 states / 263031 edges / 2 wins；22 输入仍正常胜，
+        且 extinguish_by_wall:candle#1、ignite_from_brazier:candle#1:6,5、
+        roll_reignite_after_extinguish 均缺席。
+      - >-
+        独立重枚举 no_reignite_source.txt 得到 complete 220398 states / 622728 edges / 0 wins。
+    limits:
+      - 只支持这些对象与声明事件链的机械关系，不作作品质量判断。
+
+  - claim_id: exposure_gate
+    claim: >-
+      allowed_exposure_through=rolling_contact_chain；audit 绑定当前 exact，graph complete、verdict pass、
+      forbidden_hits=0，raw graph 为 98961 nodes/276326 edges。
+    status: supported
+    evidence_basis:
+      - >-
+        exposure_audit.json 的 exact_version=v005、layout_sha256=e898...fda4、
+        sequence_sha256=32bf...f00c 均与当前文件实算值一致。
+      - >-
+        该 audit 记录 allowed_exposure_through=rolling_contact_chain、verdict=pass、graph.status=complete、
+        forbidden_hits=[]、raw_graph nodes=98961/edges=276326。
+    limits:
+      - rolling_contact_chain 是当前序列最后一支，forbidden_branches 为空；该 pass 不证明事件必经或质量。
+
+  - claim_id: object_participation
+    claim: >-
+      两根蜡烛、两个火盆、(6,4) 墙与 (8,7) timing-lock 墙均承担声明机械职责；不存在第三 consumer
+      或独立右翼对象。
+    status: supported
+    evidence_basis:
+      - >-
+        layout 与 runtime state 只有 candle#1、candle#2、(6,5)/(2,7) 两火盆；全部胜路必要性与
+        no-source/no-writer-wall 反事实分别绑定两蜡烛、两火盆和 (6,4) 墙的职责。
+      - >-
+        reviewer 独立移除 (8,7) 墙后，完整图的 win-reachable 子图由 131 states/286 edges 扩大为
+        153 states/357 edges，状态键与边签名集合均改变，证明其确实约束可胜路线/时机空间。
+      - frozen layout 不含第三蜡烛、第三火盆或独立右翼 consumer。
+    limits:
+      - >-
+        (8,7) 墙不是 per-object necessity：删除后仍有 2 个同键胜态、最短深度仍为 22，且核心事件链
+        仍全部 required；本结论只支持其路线/时机约束参与，不支持“删除即不可胜”的更强说法。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

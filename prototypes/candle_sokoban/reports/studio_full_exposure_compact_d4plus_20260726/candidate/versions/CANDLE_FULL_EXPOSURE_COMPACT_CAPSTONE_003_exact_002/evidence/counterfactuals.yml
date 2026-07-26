@@ -1,0 +1,58 @@
+schema_version: candle_designer_counterfactuals.v2
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_002
+source_layout_sha256: c456c3873943e4d8f35efbd3a6b51942b83d3c0967cf68549de024b97e128cf4
+tests:
+  - id: donor_preshortened
+    mutation: candle#1 由三格预缩为两格，保持左向火头与其余布局。
+    layout_sha256: e052192e8e3e13f94f98adae5b25a486cd03037b3e96b5178a0cae1bd5f1247d
+    graph: {status: complete, states: 6223, edges: 18583, winning_states: 0}
+    result: unsolvable
+    refs:
+      - evidence/counterfactuals/cf_donor_preshortened/layout.txt
+      - evidence/counterfactuals/cf_donor_preshortened/complete_graph.json
+      - evidence/counterfactuals/cf_donor_preshortened/event_probes.json
+  - id: donor_deleted
+    mutation: 删除 candle#1，保留两只火盆和其余对象。
+    layout_sha256: 148cfef2fff51ef299a2a991b33baef60e6d0c69081dc73d205c0a5706a6359b
+    graph: {status: complete, states: 1330, edges: 3880, winning_states: 0}
+    result: unsolvable
+    refs:
+      - evidence/counterfactuals/cf_without_donor/layout.txt
+      - evidence/counterfactuals/cf_without_donor/complete_graph.json
+      - evidence/counterfactuals/cf_without_donor/event_probes.json
+  - id: relay_deleted
+    mutation: 删除 candle#3，保留两只火盆和其余对象。
+    layout_sha256: a65e24cb5beddc12cead80be45ae72cf4e9f27a991ee79eaf9ba5faf37889dd1
+    graph: {status: complete, states: 3140, edges: 9358, winning_states: 0}
+    result: unsolvable
+    refs:
+      - evidence/counterfactuals/cf_without_relay/layout.txt
+      - evidence/counterfactuals/cf_without_relay/complete_graph.json
+      - evidence/counterfactuals/cf_without_relay/event_probes.json
+  - id: receiver_prelit
+    mutation: candle#2 初始点燃。
+    layout_sha256: 03f104a0d5bbb8882136318f46400a1495bd07d112062407aea9b7a59aa1b0b8
+    graph: {status: complete, states: 8846, edges: 26443, winning_states: 2, shortest_cost: 18}
+    result: identity_preserved
+    all_winning_path_claim: 所有胜路先发生 extinguish:candle#2:concealed，之后才发生 shrink_ignite:candle#2。
+    ordered_probe_bad_winning_states: 0
+    refs:
+      - evidence/counterfactuals/cf_receiver_prelit/layout.txt
+      - evidence/counterfactuals/cf_receiver_prelit/complete_graph.json
+      - evidence/counterfactuals/cf_receiver_prelit/canonical_replay.json
+      - evidence/counterfactuals/cf_receiver_prelit/event_probes.json
+  - id: repair_filter_removed
+    mutation: 删除阻止缩短供体后侧操作的单格筛选墙。
+    layout_sha256: 8a7ab7228724b5e2a5244bce7982ad2ff2b2a429ffa55cdcb723299d39b1de55
+    graph: {status: complete, states: 28076, edges: 85655, winning_states: 3}
+    result: repair_family_reappears
+    repair_terminal: {node: 8061, shortest_cost: 24}
+    repair_signature_edge_count_on_some_winning_path: 1
+    raw_significant_event_family_count: 3
+    non_equivalent_player_logic_family_count: 2
+    refs:
+      - evidence/counterfactuals/cf_repair_filter_removed/layout.txt
+      - evidence/counterfactuals/cf_repair_filter_removed/complete_graph.json
+      - evidence/counterfactuals/cf_repair_filter_removed/equivalence/solution_equivalence_all_wins.json
+conclusion: 三根蜡烛和两只火盆维持原作品身份；修订筛选墙对排除非等价 repair 胜路具有直接、可复核的结构职责。

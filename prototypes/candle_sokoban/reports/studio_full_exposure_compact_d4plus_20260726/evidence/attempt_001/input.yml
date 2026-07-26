@@ -1,0 +1,91 @@
+review_attempt_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001_review_001
+reviewer_role: sokoban-evidence-reviewer
+prototype_id: candle_sokoban
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001
+
+solve_instance:
+  ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/level.yml
+  layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/layout.txt
+  layout_sha256: 080a65f20be11c841dbb95f6868b200c90e3dfe0da9fc65670c035a6fbcfc90c
+  win_type: all_braziers_lit
+  global_burn_cycle: 5
+  allowed_exposure_through: rolling_contact_chain
+
+rules_and_contract_refs:
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+solution_uniqueness_claim:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  search_budget: max_states=300000
+  known_raw_winning_variants:
+    - complete graph 含 4 个终止胜态，最短成本 17。
+    - 共有 20 条最短输入序列，被当前 artifact 归为 1 个因果事件家族。
+  equivalence_account: >-
+    输入级差异声明只来自同一核心事件顺序内的步行换序；所有胜路仍须经过相同对象职责、
+    两次关键长滚、退焰接收、接力点火和两个火盆目标。请只按原始 graph/solution-family/
+    analysis artifacts 核验，不读取 Designer 的包装或审美叙事。
+  evidence_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/complete_graph.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/solution_family.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/analysis.json
+
+mechanical_claims:
+  - claim_id: canonical_normal_win
+    claim: 17 个 canonical inputs 均合法；完整回合结算后玩家存活并以 all_braziers_lit 正常胜利。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/canonical_replay.json
+  - claim_id: graph_complete_current_exact
+    claim: 当前 exact 的完整可达图为 complete，含 13893 states、41106 legal edges、4 winning states。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/complete_graph.json
+  - claim_id: required_winning_event_instances
+    claim: >-
+      所有胜路都必须经过 candle#1:d2 侧滚、candle#1 缩为 len2、shrink_ignite candle#2、
+      candle#2 缩为 len2、candle#2:d5 侧滚、点燃 candle#3、点亮 brazier:6,5、
+      candle#3 缩为 len2、candle#3:d4 侧滚、点亮 brazier:7,2。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/analysis.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/complete_graph.json
+  - claim_id: object_participation
+    claim: candle#1、candle#2、candle#3、brazier:6,5、brazier:7,2 均在全部允许胜解族中承担所声明机械职责。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/object_participation.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/analysis.json
+  - claim_id: identity_counterfactuals
+    claim: 供体预缩、删除供体、删除接力烛会破坏可胜性；预点燃 candle#2 仍会先被供体遮熄并继续需要 retreat shrink_ignite。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/counterfactuals.yml
+  - claim_id: strict_exposure_gate
+    claim: 当前 exact 的 exposure graph complete，verdict=pass，forbidden_hits 为空，允许暴露到 rolling_contact_chain。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/exposure_audit.json
+
+allowed_evidence_sources:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_001/input.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/layout.txt
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/level.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/manifest.yml
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/evidence/**
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+
+forbidden_inputs:
+  - 完整 submission_packet.yml 与其中体验核心、包装、已知缺点或审美叙事
+  - experience_brief.yml
+  - Designer player_reread、reasoning sketch 与 archive calibration
+  - Explorer lexicon、runs 与设计材料
+  - 旧 review、旧 exact 或其它 Candle studio 报告
+  - 难度、审美、包装、版本取舍与待玩准入判断
+
+output_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/evidence/attempt_001/evidence_review.yml

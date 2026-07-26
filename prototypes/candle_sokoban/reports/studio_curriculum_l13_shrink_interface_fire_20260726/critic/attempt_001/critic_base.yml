@@ -1,0 +1,163 @@
+review_attempt_id: CANDLE_CURRICULUM_L13_001_exact_003_critic_001
+prototype_id: candle_sokoban
+prototype_rules:
+  confirmed_rules:
+    - 正式关卡使用 global_burn_cycle=5；每次合法行动推进一次共享倒计时，无效输入不产生 edge 或倒计时。
+    - 单次行动先结算走动、轴推或侧滚，再按“先熄灭被遮烛芯、后递归点火与点盆”结算接触， 随后推进共享倒计时并在边界同步缩短当前仍燃烧的蜡烛，最后结算死亡与胜利。
+    - 燃烛从烛芯端缩短；单格燃烛在边界燃尽消失，存活燃烛旧端帽格成为退后的烛芯投影格。
+    - 退焰点火只在燃烧缩短释放格与另一根刚重曝的未燃烛芯同格时发生；接火者在该边界的 燃烧结算之后加入，不继续为同一次边界支付长度。
+    - 墙或另一根蜡烛的烛身遮住已燃烛芯时会先熄灭；移开烛身后烛芯重曝但保持未燃。
+    - 外露火焰会杀死玩家；本关的退焰共享格只允许接收烛身体占入，不作为玩家站位。
+  win_condition: 玩家存活，并在完整回合结算后点亮全部火盆（all_braziers_lit）。
+  object_and_event_semantics:
+    - A 表示边界前仍燃烧且缩短后必须存活的来源蜡烛；A 旧端帽格是本关共享接口格。
+    - B 表示初始未燃接收蜡烛；其烛芯投影格与下一次直接轴推的端帽目的格必须和共享接口格同格。
+    - 正确边界同一步出现 A 的 shrink 与 B 的 shrink_ignite；随后的直接轴推必须同时出现 B 的 push_axis 与必要火焰输出。
+    - A 在 B 推入后是否因 B 烛身遮芯而熄灭不是作品身份；若后续仍要求 A 保火，必须另行证明结构， 不能从当前局部材料外推。
+  player_prior:
+    - L01：轴推、烛芯投影位置与点盆目标。
+    - L02：共享五拍边界、同步缩短与燃尽。
+    - L03：燃尽前后选择会改写另一根蜡烛的侧滚停点。
+    - L04：一处必要工序会通过共享时钟远程消耗另一对象的形状。
+    - L05：墙体灭火可在边界前让指定对象退出，并把保住的一格分配给具体对象。
+    - L06：同一对象先履行燃烧态职责，再及时墙灭保存实体职责。
+    - L07：跨多个边界错峰退出可写成由同一后继连续读取的长度向量。
+    - L08：对象在边界前后加入燃烧集合，会决定它是否支付当前周期。
+    - L09：有限火源形成过早、准确、过晚三档接火窗口。
+    - L10：火可存入永久节点；原蜡烛可暂停燃烧、完成必要工作后再取回火。
+    - L11：可移动烛身可作为遮板，使另一根蜡烛原地退出燃烧并同时建立空间接口。
+    - L12：遮板移开后，重曝烛芯保持未燃；玩家可先利用安全窗口完成准备，再主动复燃。
+prior_course_refs: []
+target_difficulty: 5
+stage_difficulty_calibration_refs:
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/calibration/stage_difficulty_view.md
+cross_stage_aesthetic_calibration_refs:
+  - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/calibration/cross_stage_aesthetic_view.md
+candidate:
+  candidate_id: CANDLE_CURRICULUM_L13_001
+  exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+  solve_instance:
+    layout: |-
+      ##########
+      ######o###
+      ###..1R.##
+      ##@U..u#.#
+      ###....###
+      ##########
+    player_start:
+      - 2
+      - 3
+    win_condition:
+      type: all_braziers_lit
+  canonical_solution:
+    exact_inputs:
+      - right
+      - down
+      - right
+      - right
+      - right
+      - up
+    mechanically_derived_trace:
+      - step: 1
+        input: right
+        before_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##@U..u#.#
+          ###....###
+          ##########
+        event: roll_step:candle#single2:d1, roll_step:candle#single2:d2, extinguish:candle#single2:concealed, extinguish_by_candle_body:candle#single2, roll_candle:candle#single2:d2, roll_multi_cell_one_turn:candle#single2:d2, countdown:5->4
+        after_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##.@.uu#.#
+          ###....###
+          ##########
+      - step: 2
+        input: down
+        before_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##.@.uu#.#
+          ###....###
+          ##########
+        event: walk, countdown:4->3
+        after_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##...uu#.#
+          ###@...###
+          ##########
+      - step: 3
+        input: right
+        before_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##...uu#.#
+          ###@...###
+          ##########
+        event: walk, countdown:3->2
+        after_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##...uu#.#
+          ###.@..###
+          ##########
+      - step: 4
+        input: right
+        before_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##...uu#.#
+          ###.@..###
+          ##########
+        event: walk, countdown:2->1
+        after_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##...uu#.#
+          ###..@.###
+          ##########
+      - step: 5
+        input: right
+        before_layout: |-
+          ##########
+          ######o###
+          ###..1R.##
+          ##...uu#.#
+          ###..@.###
+          ##########
+        event: walk, countdown:1->5, shrink:candle#1:len1, shrink_ignite:candle#single3
+        after_layout: |-
+          ##########
+          ######o###
+          ###..R..##
+          ##...uU#.#
+          ###...@###
+          ##########
+      - step: 6
+        input: up
+        before_layout: |-
+          ##########
+          ######o###
+          ###..R..##
+          ##...uU#.#
+          ###...@###
+          ##########
+        event: push_axis:candle#single3, extinguish:candle#1:concealed, extinguish_by_candle_body:candle#1, light_brazier:6,1, countdown:5->4, win_all_braziers_lit
+        after_layout: |-
+          ##########
+          ######O###
+          ###..rU.##
+          ##...u@#.#
+          ###....###
+          ##########
+mechanical_evidence_status: supported

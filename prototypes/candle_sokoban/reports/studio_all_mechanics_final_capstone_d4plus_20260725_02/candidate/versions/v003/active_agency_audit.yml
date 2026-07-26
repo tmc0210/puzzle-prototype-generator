@@ -1,0 +1,58 @@
+schema_version: 1
+artifact_kind: candle_active_agency_audit
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v003
+result: pass
+
+graph_scope:
+  status: complete
+  reachable_states: 12254
+  legal_transitions: 33533
+  raw_winning_states: 2
+  source_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/active_agency_graph_checks.json
+
+writer_after_conversion_1:
+  state_change: writer 的已燃写入态跨边界转成 candle#2 的点燃参与资格
+  player_authored_construction: >-
+    step 1 玩家把 candle#2 沿轴向下推恰好一格，同时写入 writer 的物理止点和退焰接收位；
+    step 10 的 writer 侧滚才会在同一 edge 中按墙灭火、火盆复燃、停在 receiver 前并 shrink_ignite candle#2。
+  meaningful_choice:
+    correct: 单推后状态 index 2 可达胜。
+    wrong: 连推两格后状态 index 8 不可达任何胜态；几何变为 cap/body=(5,7..9)，第一接火位消失。
+    early_execution: >-
+      未先推 receiver 就执行 writer 的下滚会停在 d2、以未燃态结束；所得状态 index 148 不可达胜，
+      未亮火盆 (6,6) 实体封住旧版可用的回推操作位。
+  visible_consequence: writer 少滚一格只见墙灭火；正确位置多出火盆复燃与 candle#2 点燃。
+  required_on_every_winning_path: true
+
+writer_after_conversion_2:
+  state_change: 已燃 candle#2 被主动横滚后点亮封锁火盆，并把端帽放到 candle#3 灯芯上；随后退焰点亮 candle#3
+  player_authored_construction: >-
+    玩家必须在 candle#2 已接火并缩成两格后，从尾端向右横滚三格；这不是最终 consumer 搬运，
+    而是把中继烛同时用作移动火源、灯盆消费者和下一退焰覆盖体。
+  meaningful_operation:
+    action_edge_events:
+      - light_brazier:6,6
+      - roll_candle:candle#2:d3
+    constructed_state_index: 1215
+    constructed_state_can_reach_win: true
+    later_or_same_edge_event: shrink_ignite:candle#3
+  wrong_or_omitted_effect: >-
+    不完成该横滚时封锁火盆仍未亮、candle#3 灯芯仍未被覆盖；继续普通步行只会烧掉 candle#2，
+    不能由倒数自动生成正确覆盖关系。多余轴推或错过两格窗口会改变长度/位置并丢失可解性。
+  required_on_every_winning_path:
+    active_roll_and_gate_light: true
+    placed_relay_retreat_transfer: true
+
+excluded_false_agency:
+  - 普通 walk/countdown 只推进既有状态，不计作主动转换。
+  - writer、relay、consumer 的自动 shrink 本身不计作玩家操作。
+  - candle#3 的最终上滚只负责读取，未被拿来充当两次下游主动转换之一。
+
+complete_graph_required_groups:
+  opening_receiver_axis_choice: true
+  same_roll_wall_douse_reignite_and_first_transfer: true
+  active_relay_roll_lights_gate_and_places_cover: true
+  placed_relay_retreat_transfers_to_consumer: true
+  final_consumer_roll_lights_brazier: true
+  evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/required_relations_audit.json

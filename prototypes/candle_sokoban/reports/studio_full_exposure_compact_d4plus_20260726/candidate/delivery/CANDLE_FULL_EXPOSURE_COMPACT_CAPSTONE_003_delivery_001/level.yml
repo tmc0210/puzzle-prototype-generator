@@ -1,0 +1,145 @@
+id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_DELIVERY_001
+title: 退焰接力
+global_burn_cycle: 5
+layout: |-
+  ###########
+  ####@#....#
+  #..L11.o..#
+  #.........#
+  #.....#...#
+  #.#u..ol33#
+  #.#2......#
+  #..2......#
+  ###########
+win:
+  type: all_braziers_lit
+expected_trace:
+  - input: down
+    events:
+      - roll_step:candle#1:d1
+      - roll_step:candle#1:d2
+      - roll_candle:candle#1:d2
+      - roll_multi_cell_one_turn:candle#1:d2
+      - countdown:5->4
+  - input: down
+    events:
+      - walk
+      - countdown:4->3
+  - input: left
+    events:
+      - walk
+      - countdown:3->2
+  - input: left
+    events:
+      - walk
+      - countdown:2->1
+  - input: left
+    events:
+      - walk
+      - countdown:1->5
+      - shrink:candle#1:len2
+      - shrink_ignite:candle#2
+  - input: down
+    events:
+      - walk
+      - countdown:5->4
+  - input: down
+    events:
+      - walk
+      - countdown:4->3
+  - input: down
+    events:
+      - walk
+      - countdown:3->2
+  - input: down
+    events:
+      - walk
+      - countdown:2->1
+  - input: right
+    events:
+      - walk
+      - countdown:1->5
+      - simultaneous_burn:candle#1+candle#2
+      - shrink:candle#1:len1
+      - shrink:candle#2:len2
+  - input: right
+    events:
+      - roll_step:candle#2:d1
+      - roll_step:candle#2:d2
+      - roll_step:candle#2:d3
+      - ignite:candle#3
+      - ignite_from_wick:candle#3:6,5
+      - light_brazier:6,5
+      - roll_step:candle#2:d4
+      - extinguish:candle#2:concealed
+      - extinguish_by_candle_body:candle#2
+      - roll_step:candle#2:d5
+      - roll_step:candle#2:d6
+      - roll_candle:candle#2:d6
+      - roll_multi_cell_one_turn:candle#2:d6
+      - roll_intermediate_light_brazier:candle#2:d3
+      - roll_intermediate_ignite:candle#2:d3
+      - roll_intermediate_extinguish:candle#2:d4
+      - countdown:5->4
+  - input: up
+    events:
+      - walk
+      - countdown:4->3
+  - input: right
+    events:
+      - walk
+      - countdown:3->2
+  - input: right
+    events:
+      - walk
+      - countdown:2->1
+  - input: right
+    events:
+      - walk
+      - countdown:1->5
+      - simultaneous_burn:candle#1+candle#3
+      - burn_out:candle#1
+      - shrink:candle#3:len2
+  - input: right
+    events:
+      - walk
+      - countdown:5->4
+  - input: right
+    events:
+      - walk
+      - countdown:4->3
+  - input: up
+    events:
+      - roll_step:candle#3:d1
+      - wick_reexposed_unlit:candle#2
+      - roll_step:candle#3:d2
+      - roll_step:candle#3:d3
+      - light_brazier:7,2
+      - roll_step:candle#3:d4
+      - roll_candle:candle#3:d4
+      - roll_multi_cell_one_turn:candle#3:d4
+      - roll_intermediate_light_brazier:candle#3:d3
+      - roll_last_brazier_before_endpoint:candle#3:d3
+      - countdown:3->2
+      - win_all_braziers_lit
+expected_events:
+  - roll_step
+  - roll_candle
+  - roll_multi_cell_one_turn
+  - countdown
+  - walk
+  - shrink
+  - shrink_ignite
+  - simultaneous_burn
+  - ignite
+  - ignite_from_wick
+  - light_brazier
+  - extinguish
+  - extinguish_by_candle_body
+  - roll_intermediate_light_brazier
+  - roll_intermediate_ignite
+  - roll_intermediate_extinguish
+  - burn_out
+  - wick_reexposed_unlit
+  - roll_last_brazier_before_endpoint
+  - win_all_braziers_lit

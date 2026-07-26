@@ -1,0 +1,79 @@
+submission_id: candle_full_exposure_compact_capstone_003_exact_006_submission
+design_task_id: candle_full_exposure_compact_d4plus_20260726
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006
+
+designer_claim:
+  player_experience_core: >-
+    玩家在共享边界前从两个可操作燃烛中主动选择辅助烛，借此保留交叉供体到燃烧结算，
+    让供体腾出的末端格把火一次性交给接收者；随后持续保留这份火，并由同一接收者的
+    不可中止长滚在途中两个火盆上集中读出。
+  player_action: >-
+    推接收者进入交叉芯位；第五步推辅助烛而不滚走供体；把首次缩短后剩下的单格供体
+    转到上行点盆，同时不让它回占交叉芯位；最后从接收者侧面提交五格长滚。
+  visible_payoff: >-
+    第一次边界同时出现左盆点亮、供体缩短和接收者接火；第二阶段上盆点亮且供体燃尽；
+    最终接收者一次长滚先后点亮末行两盆并立即胜利。
+  why_this_level_exists: >-
+    作品把熟悉的边界退焰、烛身遮芯与长滚途中点盆压成一次不可撤回的关系：
+    玩家不仅建立首次交接，还必须在供体再利用时保留接收者持续带火，远端消费者才成立。
+  work_identity_conditions:
+    - 第五步必须是辅助烛与交叉供体之间的主动对象选择。
+    - 交叉供体必须留到第一次边界，且接收者必须从其本轮腾出的末端格取得唯一一次 shrink_ignite。
+    - 同一接收者必须持续保火、缩为单格并完成最终不可中止长滚；获胜路径不得依赖第二次交接或其它补火。
+    - 缩短供体必须被再利用去点上盆，使“保留供体”不是单纯等待；其重遮接收者的分支必须不可恢复。
+    - 最终长滚必须在终点前消费接收者火态并点亮两个末行火盆，随后立即结束。
+
+packaging_account:
+  opening: >-
+    一次轴推把接收者送入交叉芯位，短通道把玩家送到辅助烛与供体的共同决策面，
+    并使共享倒数到达边界前一拍。
+  preparation: >-
+    第五步左推辅助烛，既点左盆，又保留供体完成首次退焰交接；此处建立后续必须保留的接收者火态。
+  reveal_or_use: >-
+    玩家把已缩为单格的供体滚到上行并轴推点上盆，第二边界将接收者缩为单格；
+    最终五格长滚连续点亮两个末行火盆，完整消费此前关系。
+  ending: 末个远盆在长滚终点前点亮后立即正常胜利，无额外清理。
+  every_major_element_role:
+    - 两格交叉供体：第一次边界一次性交火，缩为单格后再利用点上盆，并机械封死第二次 shrink_ignite。
+    - 两格接收者：先进入交叉位接火、持续保火、第二边界缩单格，再完成最终长滚读出。
+    - 两格辅助烛：构成第五步对象选择，点左盆并让供体留驻；第二边界燃尽。
+    - 左盆：第五步正确对象选择的即时回报。
+    - 上盆：消费缩短供体，迫使玩家在保留接收者火态期间完成供体再利用。
+    - 末行两盆：同一最终长滚的中途消费者，第二盆承担终点前胜利收束。
+    - 墙体与走廊：提供交叉站位、上盆轴推面和五格不可中止长滚终点。
+  known_perceptible_defects:
+    - 开局三次走位本身不是独立洞见，但它们连接接收者入位与第五步双对象选择，并精确形成共享边界时机。
+    - 缩短后的供体只侧滚一格，视觉运动较短；其玩家责任是主动分配给上盆并避免重遮，高潮仍集中在接收者五格长滚。
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/canonical_replay.json
+  solution_uniqueness:
+    result: unique_complete
+    search_scope: complete
+    search_budget: 700000 states；实际 51042 states、147660 legal transitions
+    known_raw_winning_variants:
+      - 唯一胜态，最短代表为固定 14 步 canonical inputs。
+    equivalence_account: >-
+      无需合并等价变体。完整图只有一个胜态；所有获胜路径都恰好一次 shrink_ignite:candle#2，
+      且不存在 candle#2 烛身熄灭、未燃重曝或随后从火盆/烛芯补火的获胜路径。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/graph_analysis.json
+    evidence_limits:
+      - 完整图与唯一胜态只核验解族和作品身份，不被用作质量、难度或线性度代理。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/recovery_counterfactuals.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/recovery_counterfactuals.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/object_participation.yml
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/player_readthrough.yml
+  evidence_limits:
+    - 事件必经与对象参与是 runtime 机械声明，不产生独立审美 verdict。
+    - exposure audit 只证明允许机制门内全图无更晚事件命中；不证明关卡值得进入待玩。
+    - Designer 玩家侧重读仍需 fresh Puzzle Critic 以独立审美判断核验，但必须先由 fresh Evidence Reviewer 审核硬证据。
+
+designer_self_verdict: submit_for_independent_review
+

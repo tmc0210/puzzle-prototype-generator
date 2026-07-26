@@ -1,0 +1,48 @@
+schema_version: candle_designer_counterfactuals.v1
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001
+source_layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_001/layout.txt
+tests:
+  - id: donor_preshortened
+    mutation: candle#1 由三格预缩为两格，保持其左向火头语义
+    layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/work/cf_donor_preshortened.txt
+    graph_status: complete
+    reachable_states: 19627
+    winning_states: 0
+    result: unsolvable
+    identity_reading: 完整长度供体才能被 candle#2 止挡；预缩后失去交叉构造。
+  - id: receiver_prelit
+    mutation: candle#2 初始点燃
+    layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/work/cf_receiver_prelit.txt
+    graph_status: complete
+    reachable_states: 13893
+    winning_states: 4
+    shortest_cost: 17
+    result: identity_preserved
+    identity_reading: candle#1 落位时先以体段遮熄 candle#2，随后仍必须由 shrink_ignite 重新点燃；预点燃不是旁路。
+  - id: donor_deleted
+    mutation: 删除 candle#1，保留两个火盆和其余对象
+    layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/work/cf_without_donor.txt
+    graph_status: complete
+    reachable_states: 1170
+    winning_states: 0
+    result: unsolvable
+  - id: relay_deleted
+    mutation: 删除 candle#3，保留两个火盆和其余对象
+    layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/work/cf_without_relay.txt
+    graph_status: complete
+    reachable_states: 5705
+    winning_states: 0
+    result: unsolvable
+  - id: receiver_side_wall_opened
+    mutation: 打开 candle#2 左侧第六行约束格
+    layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/work/cf_open_receiver_side.txt
+    graph_status: complete
+    reachable_states: 19632
+    winning_states: 8
+    shortest_cost: 17
+    result: weaker_equivalent_route_family
+    identity_reading: 因果链仍在，但额外回访路线和胜态翻倍；保留该墙以压掉无贡献走位。
+runtime_no_candle_movement:
+  solvable: false
+  explored_states: 371
+conclusion: exact 中每个蜡烛和两次长滚均参与同一退焰火态接力；未发现替代点火、预点燃或对象删除旁路。

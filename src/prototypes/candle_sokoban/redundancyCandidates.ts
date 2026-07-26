@@ -178,13 +178,29 @@ function singleEntryFloorRegions(
   const sides = bridgeSides
     .map((side) => new Set([...side].filter((key) => ordinary.has(key))))
     .filter((side) => side.size > 0);
-  const maximal = sides.filter((side, index) =>
-    !sides.some((other, otherIndex) =>
-      otherIndex !== index && other.size > side.size && isSubset(side, other),
+  const uniqueSides = deduplicateCellSets(sides);
+  const terminalSides = uniqueSides.filter((side, index) =>
+    !uniqueSides.some((other, otherIndex) =>
+      otherIndex !== index && other.size < side.size && isSubset(other, side),
     ),
   );
+  const leafBranches = terminalSides.map((terminal) => {
+    let branch = terminal;
+    while (true) {
+      const parent = uniqueSides
+        .filter((side) => side.size > branch.size && isSubset(branch, side))
+        .sort((left, right) => left.size - right.size)[0];
+      if (!parent) break;
+      const added = [...parent].filter((key) => !branch.has(key));
+      if (added.length !== 1) break;
+      const addedDegree = neighborKeys(added[0]!).filter((key) => walkableKeys.has(key)).length;
+      if (addedDegree > 2) break;
+      branch = parent;
+    }
+    return branch;
+  });
 
-  return deduplicateCellSets(maximal).map((keys, index) => {
+  return deduplicateCellSets(leafBranches).map((keys, index) => {
     const cells = sortCells([...keys].map(parsePointKey));
     return {
       id: `single_entry_floor_region:${index + 1}:${cellListId(cells)}`,

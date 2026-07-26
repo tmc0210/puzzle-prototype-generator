@@ -1,0 +1,182 @@
+review_attempt_id: candle_all_mechanics_002_v001_hard_001
+reviewer_instance_id: fresh_evidence_reviewer_candle_all_mechanics_002_v001_001
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v001
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - docs/21-level-design-studio-standard.md
+    - docs/30-scc-graph-diagnostic-reading.md
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/artifact_manifest.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/level.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/layout.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/canonical_replay.md
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/graph_analysis.md
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/winning_state_representatives.jsonl
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/required_relations_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/solution_family_self_check.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/exposure_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/identity_counterfactuals.yml
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_guard.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_wall.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/counterfactuals/no_source.txt
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/object_participation.yml
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "win_state_index=4308; bfs_depth=28; state_key=P:3,8|D:0|T:2/5|C:candle#3:3:left:1:3,1|candle#single3:-:up:0:6,6|B:2,1:1"
+    - "win_state_index=4939; bfs_depth=30; state_key=P:3,8|D:0|T:5/5|C:candle#single3:-:up:0:6,6|B:2,1:1"
+  equivalence_evidence_basis:
+    - >-
+      exposure_audit.json 将 raw_graph 绑定到 candidate id、v001、layout
+      sha256=07f6b42d7fb8634537083b11acf60fc5ac28b2e38ef84370481f02a1175211ca；图为
+      complete，含 11231 nodes、36043 edges 和恰好两个 terminal winning nodes 4308/4939。
+    - >-
+      对 raw_graph 的 win-reachable 子图复核得到 88 nodes、160 edges，且该子图无环；两个胜态的全部胜路
+      都只有同一个对象移动签名：guard 右滚 d2、writer 下滚 d8、consumer 连续五次左轴推、consumer 上滚 d7。
+    - >-
+      winning_state_representatives.jsonl 给出两个实际代表输入串与事件；两者保持同一 guard 终位、同一 writer
+      灭火/复燃/写入边、同一 bridge→relay→consumer 退焰链、五次 consumer 左推与同一终滚点盆。30 步代表
+      只加入一次完整上下回返，并改变相邻燃烧相位中的 consumer 推动分配。
+    - >-
+      required_relations_audit.json 的五项 all-win 关系与 consumer 最小五推均可由 exposure_audit.json 的原始边
+      复核：逐项删除相应事件边后均不可达胜态；以 push_axis:candle#3 为代价的最小胜路计数为 5。
+    - >-
+      solution_family_self_check.yml 将上述两条代表路径归为 canonical_timing 与
+      extra_two_step_phase_wait_and_equivalent_consumer_push_distribution，并明确没有已知非等价胜族。
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 完整图支持的是玩家逻辑类机械等价；不判断人类是否会把全部走位、等待和相位分配变体体验为等价。
+
+claims:
+  - claim_id: exact_identity_and_normal_win
+    claim: >-
+      所有 exact artifact 均绑定 candidate=CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002、version=v001、
+      layout digest=07f6...5211ca；正式胜利为 all_braziers_lit，燃烧周期为 5。
+    status: supported
+    evidence_basis:
+      - artifact_manifest.yml、level.yml 与 solve_instance.yml 的 candidate/exact/ref 一致。
+      - layout.txt 实际 SHA-256 为 07f6b42d7fb8634537083b11acf60fc5ac28b2e38ef84370481f02a1175211ca，且 manifest 中全部白名单 artifact 的 bytes/SHA-256 均与实物相符。
+      - exposure_audit.json 的 level.id、exact_version 与 layout_sha256 同当前 exact 一致。
+      - designer_contract.md、mechanic.yml 与 mechanics.ts 均规定正常胜利为完整回合结算后玩家存活且全部火盆点亮，global burn cycle 固定为 5。
+    limits: []
+
+  - claim_id: canonical_solve
+    claim: 规范 28 输入 replay 全部合法，完整回合结算后玩家存活并点亮唯一火盆。
+    status: supported
+    evidence_basis:
+      - solve_instance.yml 固定非空 28 输入与 cost/depth=28。
+      - canonical_replay.md 记录 Legal through step=28；最终 state key 为 D:0、B:2,1:1，末步含 light_brazier:2,1 与 win_all_braziers_lit。
+      - layout.txt 只有一个未点亮火盆 o；replay 最终布局将其变为 O。
+    limits: []
+
+  - claim_id: complete_graph_shape
+    claim: >-
+      在 maxStates=500000、maxDepth=200、terminalize wins 与 zero-candle losses 的声明预算下，
+      完整枚举 11231 个可达状态、36043 条合法边与 2 个胜态；graph status 为 complete。
+    status: supported
+    evidence_basis:
+      - solve_instance.yml 声明 max_states=500000、max_depth=200、result=complete。
+      - exposure_audit.json 记录 status=complete、11231 states、36043 legal transitions、2 wins、max_observed_depth=64，并记录 terminalize_wins=true 与 terminalize_zero_candle_loss=true。
+      - exposure_audit.json raw_graph 实含 11231 个唯一 node index、36043 个唯一 edge index、两个无出边 winning nodes 4308/4939。
+      - graph_analysis.md 与 solution_family_self_check.yml 的独立摘要数值一致。
+    limits:
+      - exposure_audit.json 的 budget 对象未单列 max_depth；该值由 solve_instance.yml 声明。raw graph 的最大观测深度为 64，且 artifact 自报 complete。
+
+  - claim_id: solution_family
+    claim: >-
+      两个 raw winning state 的代表深度为 28 与 30；二者具有同一 guard 终位、同一 writer 核心滚动边、
+      同一 bridge→relay→consumer 两次退焰链、五次 consumer 轴推与同一终滚点盆，只含两步调相/推烛分配差异。
+    status: supported
+    evidence_basis:
+      - solution_uniqueness_review 的 complete raw-graph、两条实际代表路径与 win-subgraph 移动签名复核。
+      - winning_state_representatives.jsonl 与 solution_family_self_check.yml。
+    limits:
+      - “等价”仅按 docs/21 的玩家逻辑类机械口径，不产生体验价值判断。
+
+  - claim_id: all_wins_required_relation_chain
+    claim: >-
+      所有胜路都必经 opening guard roll、同一 writer edge 上的 wall douse/source-wick reignition/bridge write、
+      bridge 退焰点 relay、relay 退焰点 consumer，以及 consumer 终滚点盆；任一胜路至少五次 consumer 轴推。
+    status: supported
+    evidence_basis:
+      - required_relations_audit.json 对 complete graph 声明五项 required_on_every_winning_path=true 与 consumer minimum=5。
+      - >-
+        对 exposure_audit.json raw_graph 独立做事件边删除可达性复核：分别移除 guard roll、writer 同边复合事件、
+        shrink_ignite:candle#2、shrink_ignite:candle#3、consumer roll+light edge 后，初态均不可达任何胜态。
+      - 对同一 raw graph 的最小事件计数复核得到任一胜路 push_axis:candle#3 至少 5 次。
+    limits: []
+
+  - claim_id: object_participation
+    claim: >-
+      writer、active source、movable guard、bridge、relay、delayed consumer 与唯一 brazier 都在完整胜解族中承担
+      object_participation.yml 声明的具体机械职责；没有已知不参与的主要对象。
+    status: supported
+    evidence_basis:
+      - object_participation.yml 将 runtime id、职责与 complete-winning-family basis 对齐。
+      - >-
+        raw win-subgraph 的必经 writer edge 同时含 candle#1 wall douse、来自坐标 4,5 的复燃和 candle#6 点火；
+        layout/replay 状态与 mechanics.ts 的 wick 规则将坐标 4,5 的 active source 绑定为 candle#5。
+      - >-
+        raw graph 证明 candle#single3 的 opening roll、candle#6→candle#2 与 candle#2→candle#3 的两次
+        shrink_ignite、candle#3 至少五推与最终 roll/light edge 全部位于每条胜路。
+      - canonical_replay.md 的逐步状态与事件支持各对象在这些边上的实例级参与。
+    limits:
+      - 本结论支持 object participation；不把缺少原始输出的整物删除汇总提升为 per-object necessity 证明。
+
+  - claim_id: identity_counterfactuals
+    claim: >-
+      guard 不移动时无胜路；整根删除 guard 得到完整的 12755 状态/5 胜态/最短 26 的退化图；删除核心墙得到
+      完整的 29148 状态/2 胜态/最短 28 预燃退化图；删除 active source 得到完整的 64065 状态/0 胜态图；
+      baseline 胜路不能绕过 bridge→relay、relay→consumer 或最终 consumer readout。
+    status: unknown
+    evidence_basis:
+      - baseline exposure_audit.json raw_graph 支持 guard_not_moved 无胜路，以及 bridge→relay、relay→consumer、final consumer readout 均不可旁路。
+      - identity_counterfactuals.yml 给出 guard_removed、wall_removed、active_source_removed 的汇总数值和结论。
+      - no_guard.txt、no_wall.txt、no_source.txt 与 manifest hash 支持三份变异布局的精确身份。
+    limits:
+      - >-
+        三项变异的 evidence_ref 都只指向变异布局；allowed evidence 中没有相应原始 graph/solve/tool report，因而无法独立核验
+        12755/5/26、29148/2/28、64065/0、各自 complete 状态，以及 no_wall 的无灭火/复燃代表胜路。
+
+  - claim_id: no_candle_movement_counterfactual
+    claim: 禁用 candle movement 的反事实完整枚举 540 状态且不可解。
+    status: supported
+    evidence_basis:
+      - graph_analysis.md 的 Counterfactuals 表将 no_candle_movement 记录为 unsolvable、explored=540、status=complete。
+      - manifest 将该 graph_analysis.md 的 hash 绑定到当前 v001；报告初始布局与当前 exact 相同。
+      - mechanic.yml 与 mechanics.ts 将 no_candle_movement 明确定义为禁用 move_candle。
+    limits: []
+
+  - claim_id: exposure_gate
+    claim: >-
+      当前 exact 的 allowed_exposure_through=rolling_contact_chain；exposure audit 绑定 exact/layout/sequence digest，
+      raw graph 有 11231 nodes/36043 edges，graph complete、verdict pass、forbidden_hits 为空。
+    status: supported
+    evidence_basis:
+      - level.yml 声明 allowed_exposure_through=rolling_contact_chain。
+      - >-
+        exposure_audit.json 绑定 v001、candidate id、layout SHA-256 与 sequence SHA-256，记录 complete/pass、
+        forbidden_hits=[]，raw_graph 实际节点/边数为 11231/36043。
+      - mechanic_exposure_sequence.yml 实际 SHA-256 为 32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c，与 audit 一致。
+    limits:
+      - rolling_contact_chain 是当前序列最后一个 branch，因此 forbidden_branches 与 forbidden_event_patterns 为空；pass 不证明事件必经、难度或质量。
+
+hard_failures: []
+evidence_gaps:
+  - guard_removed 只有精确变异布局与 identity_counterfactuals.yml 汇总结论，缺原始 complete graph/solve artifact，无法核验 12755 states、5 wins、shortest 26。
+  - wall_removed 只有精确变异布局与 identity_counterfactuals.yml 汇总结论，缺原始 complete graph 与代表胜路，无法核验 29148 states、2 wins、shortest 28 及无 wall-douse/reignition 的预燃退化。
+  - active_source_removed 只有精确变异布局与 identity_counterfactuals.yml 汇总结论，缺原始 complete graph/solve artifact，无法核验 64065 states、0 wins。
+overall_hard_status: incomplete
+required_action: rerun_or_supply_evidence

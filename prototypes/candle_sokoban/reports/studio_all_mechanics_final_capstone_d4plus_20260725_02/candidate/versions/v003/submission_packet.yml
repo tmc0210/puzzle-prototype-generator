@@ -1,0 +1,106 @@
+schema_version: 1
+submission_id: candle_all_mechanics_final_capstone_002_v003_submission_001
+design_task_id: studio_all_mechanics_final_capstone_d4plus_20260725_02
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v003
+revision_basis: v002
+assignment_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/assignments/designer_revision_003_human_active_agency.yml
+
+designer_claim:
+  player_experience_core: >-
+    玩家把 opening receiver 的一格轴推读成两项未来写入：既决定 writer 能否在同一滚动里以“墙灭后火盆复燃”
+    的末态结束，也决定该末态跨界后落到哪根烛上。receiver 接火后不会自动退休；玩家还要把它横滚三格，
+    途中点亮封锁错误历史的火盆，再把端帽放到 consumer 灯芯上，最后由较晚 consumer 正常点终盆。
+  human_feedback_response: >-
+    v002 的 candle#6→candle#2→candle#3 被动 shrink_ignite 链已整体删除。v003 只有三根蜡烛；writer 后的
+    第一转换由 opening 轴推预先构造且错误多推不可解，第二转换由接火 receiver 的实际横滚构造，
+    同时产生可见点盆与 consumer 覆盖。普通 walk/countdown 与最终 consumer 上滚均未计作两次主动接力。
+  visible_payoff: >-
+    writer 的关键 edge 显示墙灭、火盆复燃和 receiver 点燃；稍后 receiver 横滚立刻点亮原先封路的火盆，
+    并在边界中点亮 consumer。最终 consumer 只保留一个短延迟读出。
+  work_identity_conditions:
+    - opening receiver 必须恰好轴推一格；多推一格后的完整图状态不可达胜。
+    - writer 墙灭、火盆复燃、d3 侧滚和 shrink_ignite candle#2 必须在同一 edge。
+    - 未亮火盆 (6,6) 必须封死提前 writer 回推，并由已接火 candle#2 的主动横滚点亮。
+    - candle#2 横滚布置与后继 shrink_ignite candle#3 必须出现在每条胜路。
+    - candle#3 必须延迟烧成单格并独占点亮 (9,2)。
+
+packaging_account:
+  opening: 同屏显示两格选择、多推空间、writer 相反接触、封锁火盆、consumer 与终盆。
+  preparation: 一格轴推同时写物理停点和退焰接收位；玩家再走到 writer 端帽操作面。
+  reveal_or_use: writer 写入跨界点 receiver；receiver 再由玩家横滚消费封锁火盆并布置 consumer 接火。
+  ending: consumer 延迟一界烧成单格，上滚 d6 点终盆并立即 all_braziers_lit。
+  every_major_element_role:
+    - candle#1：同一 edge 先灭后燃的 rolling writer。
+    - candle#2：开场停块/第一接收者/主动移动火源/第二退焰覆盖体。
+    - candle#3：延迟 consumer 与独占终盆读出。
+    - brazier@4,5：writer 后置复燃源。
+    - brazier@6,6：错误历史回推锁与主动 relay 横滚的即时目标。
+    - brazier@9,2：最终正常胜利目标。
+
+active_agency_gate:
+  result: pass
+  first_downstream_conversion:
+    player_operation: push_axis:candle#2
+    correct_prefix_state_can_reach_win: true
+    extra_push_state_can_reach_win: false
+    writer_transfer_required_on_every_win: true
+  second_downstream_conversion:
+    player_operation: roll_candle:candle#2:d3
+    direct_output: light_brazier:6,6
+    constructed_relation: candle#2 cap covers candle#3 wick
+    retreat_transfer_required_on_every_win: true
+  excluded: [walk, countdown_only, final_consumer_roll_as_relay_agency]
+  evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/active_agency_audit.yml
+
+hard_evidence:
+  normal_win:
+    result: pass
+    canonical_cost: 28
+    player_alive: true
+    all_braziers_lit: true
+    replay_refs:
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/canonical_replay.json
+      - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/canonical_replay.md
+  complete_graph:
+    status: complete
+    reachable_states: 12254
+    legal_transitions: 33533
+    raw_winning_states: 2
+    max_observed_depth: 67
+    budget: maxStates=500000; maxDepth=200
+  solution_family:
+    result: equivalent_variants_only
+    known_non_equivalent_winning_family: none
+    representatives: [3936, 4784]
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/solution_family_self_check.yml
+  required_relations:
+    all_pass: true
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/required_relations_audit.json
+  exposure:
+    allowed_exposure_through: rolling_contact_chain
+    verdict: pass
+    graph_status: complete
+    reachable_states: 12254
+    legal_transitions: 33533
+    forbidden_hits: 0
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/exposure_audit.json
+  object_participation:
+    result: pass
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/object_participation.yml
+  identity_counterfactuals:
+    result: pass
+    evidence_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/identity_counterfactuals.yml
+
+difficulty_and_aesthetic_boundary:
+  target: 5
+  minimum: 4
+  designer_estimate: 4_to_5
+  player_reread_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/player_reread.yml
+  known_perceptible_defects:
+    - 正解仍有普通相位走位；它们未被计作主动性或难度。
+    - 两个胜态有等价 consumer 相位差异，未达到逐输入唯一。
+    - 正确 relay 操作方向较清楚，主要洞见在早先构造与非局部职责复用。
+  review_boundary: 难度是否达到 5、作品是否值得待玩，留给 fresh Puzzle Critic；硬证据不替代审美。
+
+designer_self_verdict: submit_for_independent_review

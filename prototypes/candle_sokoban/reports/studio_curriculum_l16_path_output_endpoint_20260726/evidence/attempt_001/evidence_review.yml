@@ -1,0 +1,138 @@
+review_attempt_id: "candle_curriculum_l16_exact_001_hard_review_001"
+reviewer_instance_id: "l16_evidence_reviewer_001"
+candidate_id: "CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001"
+exact_version: "exact_001"
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/evidence/attempt_001/input.yml"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/exact_manifest.yml"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/layout.txt"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solve_instance.yml"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/canonical_replay.md"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/layout_analysis.md"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_account.yml"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/self_check_report.json"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/summary.yml"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/prelit_path_layout.txt"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/prelit_path_analysis.md"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/delete_q_layout.txt"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/delete_q_analysis.md"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/unaligned_a_replay.md"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/q_wrong_direction_replay.md"
+    - "prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/designer/workbench/analyze_solution_family.mjs"
+    - "docs/21-level-design-studio-standard.md"
+    - "prototypes/candle_sokoban/docs/design_handoff.yml"
+    - "prototypes/candle_sokoban/docs/designer_contract.md"
+    - "prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml"
+    - "prototypes/candle_sokoban/mechanic.yml"
+    - "src/prototypes/candle_sokoban/mechanics.ts"
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - "完整图含 13 个 winning state；它们归并为 7 种 candle/brazier 机械终态签名，且全部火盆签名一致。"
+    - "A 的轴推计数为 1 至 4：胜路上的开局轴推都只把 A 从 x=2..5 对齐到 x=3..6；额外左推只出现在 Q 已完成尾端消费之后。"
+    - "Q 的轴推计数为 1 至 3；胜路上的 Q 轴推全部沿 x=7 向上，并以同一 (7,2) 火盆点亮关系结束。"
+    - "其余已知差异是走位/倒数相位、燃烧后剩余长度、燃尽状态及职责已完成后的 A 尾声动作；13 个 winning state 不等于仅有 13 条原始输入串。"
+  equivalence_evidence_basis:
+    - "complete_graph_exposure.json：graph.status=complete；原始图为 17337 nodes、54606 edges、13 winning nodes，逐边索引和引用有效，且全部节点从 node 0 可达。"
+    - "solution_family_report.json 与 analyze_solution_family.mjs：对完整原始图重算后的结构化结果与已存报告完全一致；10 类 mandatory-event removal 均使胜点不可达，5 组 edge-level 顺序检查均无违反胜路。"
+    - "完整图 win-reaching 子图只有 A 向下 d4 与 Q 向左 d2 两类滚动；A 的 d4 边全部在 d1 从 (2,3) 取火、d2 点亮 (2,4)，随后继续 d3、d4；Q 的 d2 边全部在 d1 从 (8,3) 取火。"
+    - "完整图中所有 Q d2 胜路边都从 x=9 滚到 x=7，源状态 A 形态只为 (6,6) 或 (6,6);(5,6)，并包含阻止下一小步的 (6,6) 尾端；其它胜路滚动形态不存在。"
+    - "solution_family_account.yml：candidate_id、exact_version、完整图计数、对象职责与已知变体归类均指向当前 exact_001。"
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - "结论是当前 runtime 完整状态图下的玩家逻辑类唯一，不主张原始输入串唯一；完整图按合同 terminalize wins 与 zero-candle no-win 终局。"
+    - "solution_family_report.required_event_order 是 edge 粒度检查；同一滚动 edge 内的微观先后必须以 raw edge events 读取。本轮已直接核验 A 的真实顺序为 d1 取火、d2 点盆、d3、d4、随后发出 d4 滚动摘要。"
+    - "单条 unaligned / wrong-direction replay 只支持对应精确尝试；更广的无旁路结论来自当前 exact 的 complete win-reaching subgraph，而不是由单条 probe 外推。"
+
+claims:
+  - claim_id: "candidate_exact_layout_alignment"
+    claim: >-
+      candidate、exact、layout、solve instance、complete graph 与 solution-family artifacts 全部绑定 exact_001，
+      layout SHA-256 为 61e8934282bc48a21ae200ea7ec2c99309ab24617df79a0f8c5673f13fa34d2b。
+    status: supported
+    evidence_basis:
+      - "exact_manifest.yml 与 solve_instance.yml 均给出 candidate_id=CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001、exact_version=exact_001 及同一 layout_ref。"
+      - "对 layout.txt 独立计算的 SHA-256 为 61e8934282bc48a21ae200ea7ec2c99309ab24617df79a0f8c5673f13fa34d2b，与 complete_graph_exposure.json.level.layout_sha256 及 self_check_report.json 一致。"
+      - "complete_graph_exposure.json 标记 exact_version=exact_001、level.id 为当前 candidate；solution_family_report.json.input_artifact 指向该 exact 的完整图，solution_family_account.yml 再显式绑定 candidate/exact。"
+    limits: []
+
+  - claim_id: "canonical_normal_win"
+    claim: "23 个 canonical inputs 全部合法，玩家存活并以 all_braziers_lit 正常胜利。"
+    status: supported
+    evidence_basis:
+      - "canonical_replay.md 记录 Completed=yes、Legal through step=23；最终 state key 为 D:0，四个火盆全为 1，step 23 发出 win_all_braziers_lit。"
+      - "在 complete_graph_exposure.json 原始边上按 canonical_inputs 逐步跟随，每个 state/action 都有唯一合法边，终点为 winning node 3446。"
+      - "solve_instance.yml 与 layout_analysis.md 均记录 found=true、shortest_cost/depth=23、win=all_braziers_lit。"
+    limits: []
+
+  - claim_id: "graph_complete_current_exact"
+    claim: "当前 exact 完整可达图 complete，共 17337 states、54606 legal transitions、13 winning states。"
+    status: supported
+    evidence_basis:
+      - "complete_graph_exposure.json.graph 为 status=complete、reason=null、reachable_state_count=17337、legal_transition_count=54606、win_state_count=13。"
+      - "raw_graph 实际含 17337 个连续索引节点和 54606 条连续索引边；无越界引用，从 node 0 可达的节点数为 17337，winning 节点实数为 13，最大实际 depth=63。"
+      - "solution_family_report.json、solution_family_account.yml、layout_analysis.md 与 self_check_report.json 的图计数一致。"
+    limits:
+      - "完整性按 artifact 声明的 max_states=300000、terminalize_wins=true、terminalize_zero_candle_loss=true 范围解释。"
+
+  - claim_id: "required_winning_path_output"
+    claim: >-
+      所有胜解都要求 A 的同一次 d4 侧滚在严格中间 d2 由 A 点亮火盆 (2,4)，并继续到 d4 终点；
+      预亮该盆的反事实会删除这项 required-winning 路径职责。
+    status: supported
+    evidence_basis:
+      - "完整图上分别移除 A d4、A d1 途中取火、A d2 途中点盆或 light_brazier:2,4 边后，起点均不可达任何 winning node。"
+      - "全部 20 条 win-reaching A d4 边的 action 都为 down，源 A 均为 x=3..6/y=2 对齐；raw events 顺序均含 d1 取火、d2 light_brazier:2,4、d3、d4，并到达 y=6 终点。"
+      - "prelit_path_layout.txt 只把 (2,4) 改为已亮；prelit_path_analysis.md 的完整图为 16107 states/50816 transitions/13 wins，最短解仍为 23 步，但 A 滚动不再发出 light_brazier:2,4 或 roll_intermediate_light_brazier:candle#4:d2。"
+    limits:
+      - "预亮反事实证明该路径输出的机械身份关系被删除，不产生审美或价值结论。"
+
+  - claim_id: "required_winning_endpoint_body_duty"
+    claim: >-
+      所有胜解中 A 的反灯芯尾端 cell (6,6) 都是 Q 左滚 d2 的实体停止来源；删除 Q 后完整图无胜，
+      Q 反向滚和 A 未对齐分支都不能完成相同目标关系。
+    status: supported
+    evidence_basis:
+      - "全部 24 个 win-reaching Q d2 源状态的 A body 只为 (6,6) 或 (6,6);(5,6)，Q action 全为 left，Q 从 x=9 到 x=7；runtime 的下一次左移目标包含 (6,6)，该格在 layout 中不是墙或火盆，故停止实体来源为 A 尾端。"
+      - "solution_family_report.json 的 endpoint source 审计与独立 raw-graph 读取一致；移除 Q_endpoint_roll_d2 事件边后无胜路。"
+      - "delete_q_analysis.md 完整结束于 3163 states、9878 transitions、0 winning states。"
+      - "unaligned_a_replay.md 的未对齐下滚在 step 3 以 roll_blocked 非法结束；完整图同时证明所有胜路必含唯一的对齐后 A d4。"
+      - "q_wrong_direction_replay.md 的 Q 向右仅滚 d1，不取火且不胜；complete win-reaching 子图中没有任何 Q 向右滚边，所有可继续获胜的 Q 滚动均为向左 d2。"
+    limits:
+      - "对象必要性、停止来源与方向旁路是机械结论；不推导该关系是否有趣。"
+
+  - claim_id: "required_winning_q_output"
+    claim: "所有胜解都由 Q 在滚动途中从 (8,3) 既亮火盆取火，并从截停后的 x=7 列轴推点亮最终火盆 (7,2)。"
+    status: supported
+    evidence_basis:
+      - "完整图 mandatory-event removal 分别证明 Q d2、Q d1 途中取火、ignite_from_brazier:candle#2:8,3、Q 轴推和 light_brazier:7,2 均为所有胜路必经。"
+      - "全部 win-reaching Q 滚动边均为 action=left、x=9 到 x=7、d1 发出 ignite_from_brazier:candle#2:8,3；全部 win-reaching Q 轴推边均为 action=up 且 body 保持在 x=7。"
+      - "15 条最终点盆边全部是 Q 在 x=7 向上轴推并同时发出 light_brazier:7,2 与 win_all_braziers_lit；Q 轴推次数的 1 至 3 次变体不改变目标关系。"
+    limits: []
+
+  - claim_id: "strict_exposure_gate"
+    claim: >-
+      exposure graph complete，verdict=pass，forbidden_hits 为空，exact 与 layout digest 对齐，
+      允许暴露到 rolling_contact_chain。
+    status: supported
+    evidence_basis:
+      - "complete_graph_exposure.json 标记 exact_version=exact_001、graph.status=complete、verdict=pass、forbidden_hits=[]、allowed_exposure_through=rolling_contact_chain。"
+      - "artifact 的 layout_sha256 与 layout.txt 独立 digest 一致；sequence_sha256=32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c，与当前 mechanic_exposure_sequence.yml 独立 digest 一致。"
+      - "design_handoff.yml 的通过条件为 graph.status=complete、verdict=pass 且 forbidden_hits 为空；self_check_report.json 对三项均记录 pass。"
+    limits:
+      - "rolling_contact_chain 是当前暴露序列的最后一个 branch，因此本 exact 的 forbidden_branches 与 forbidden_event_patterns 均为空；本结论只确认合同字段与完整图审计结果。"
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

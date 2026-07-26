@@ -1,0 +1,54 @@
+redundant_element_prune:
+  status: normalized
+  reviewed_exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006
+  delivery_exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_delivery_002
+  candidate_discovery:
+    method: candle_redundancy_units_v2
+    artifact_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/pre_submission/exact_006/redundancy_candidates.json
+    candidate_count: 11
+    counts:
+      whole_candle: 3
+      single_brazier: 4
+      detached_empty_region: 3
+      outer_outline_band: 1
+  candidates_checked:
+    - candidate_units: three_whole_candles
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+    - candidate_units: four_single_braziers
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+    - candidate_units: three_detached_empty_regions
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      new_contact_events:
+        - 两个区域在初始静默结算制造新的墙遮芯灭火。
+        - 一个区域令 canonical 首步非法。
+    - candidate_unit: outer_outline_band:top:0,0:13
+      operation: trim
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      artifact_refs:
+        - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/pre_submission/exact_006/redundancy_checks/outer_outline_band_top_0_0_13/graph_isomorphism.json
+        - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/pre_submission/exact_006/redundancy_checks/outer_outline_band_top_0_0_13/exposure_audit.json
+  delivery_layout_changed: true
+  version_effect: review_preserving_change
+  preservation_basis: >-
+    裁去一行全墙外框后，canonical 的状态、事件、倒数与胜利时间线保持；完整图的 51042 个状态、
+    唯一胜态及 147660 条 action/event 边在 delivery y+1=reviewed y 的坐标投影后完全相同。
+    exposure 为 complete/pass 且 forbidden_hits 为空；重扫后没有剩余 outer_outline_band。
+  artifact_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/pre_submission/exact_006/redundancy_audit.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/pre_submission/exact_006/post_trim_candidates.json
+

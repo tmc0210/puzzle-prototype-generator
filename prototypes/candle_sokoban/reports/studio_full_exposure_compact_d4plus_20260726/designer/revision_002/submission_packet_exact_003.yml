@@ -1,0 +1,75 @@
+submission_id: candle_full_exposure_compact_submission_exact_003
+design_task_id: candle_full_exposure_compact_d4plus_20260726
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003
+
+designer_claim:
+  player_experience_core: >-
+    玩家在首个共享边界前从两条局部可行准备方向中分配三根蜡烛的职责：保留交叉口供体
+    完成退焰接收，把右盆交给独立工作烛，并把接收烛保留到第二边界；此后同一左盆从
+    三格接收烛的身体挡块变成两格接收烛的芯位 consumer。
+  player_action: >-
+    玩家选择工作烛路线，跨首个边界推动它点亮右盆，同时让供体缩短点燃接收烛；随后
+    保存接收烛的右侧操作面到第二边界，再从右侧提交一次向左不可中止长滚。
+  visible_payoff: >-
+    第二边界后左盆不再挡住烛身，并在长滚第一小步被刚下移的燃芯点亮；接收烛继续滚到左端，立即胜利。
+  why_this_level_exists: >-
+    本关把退焰接收、对象职责、实体阻挡、操作面和燃烧相位压成一个全局筛选：玩家必须
+    拒绝“接收烛立刻点右盆”的显眼局部成功，因为后继左盆只接受保存到正确相位的同一对象。
+  work_identity_conditions:
+    - candle#1 在首个共享边界缩短并对 candle#2 产生 shrink_ignite。
+    - 右盆 (9,1) 只由 candle#3 的轴推点亮。
+    - 左盆 (4,2) 在 candle#2 长三格时阻挡其左滚，在 candle#2 长两格时由其左滚芯位点亮。
+    - candle#2 必须保留右侧操作面到第二边界；全部胜路保持三对象职责与两个边界的先后依赖。
+
+packaging_account:
+  opening: >-
+    起点到工作烛下方和接收烛左侧各有一条五行动准备路线；全部对象与两只火盆同时可见。
+  preparation: >-
+    正确分支主动推动工作烛，首个边界同时完成右盆点亮、供体缩短与接收烛退焰接收；
+    错误分支则让接收烛立刻右滚点盆，但从该状态再无胜路。
+  reveal_or_use: >-
+    第二边界把左盆从身体挡块改写为芯行 consumer；玩家由右侧提交一次向左长滚消费此前职责选择。
+  ending: 左盆在第一滚动小步点亮并于同一行动正常胜利，无高潮后清理。
+  every_major_element_role:
+    - candle#1：交叉口退焰供体，必须留驻至首个边界。
+    - candle#2：交叉口接收者与左盆唯一 consumer，必须保存至第二边界。
+    - candle#3：右盆唯一工作烛；错误分支中会被接收烛烛身熄灭，明确反馈职责冲突。
+    - brazier(9,1)：制造“接收烛立刻成功”与“交给工作烛”的目标分配选择。
+    - brazier(4,2)：三格时为身体挡块、两格时为芯位 consumer，把相位约束传回前序。
+    - wall(5,5)：锁定接收烛后期操作面，排除上推后多烧一轮的第二逻辑类；规范解中不接触火焰。
+  known_perceptible_defects:
+    - none_identified
+
+hard_evidence:
+  solve_instance_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/solve_instance.yml
+  canonical_replay_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/canonical_replay.json
+  solution_uniqueness:
+    result: equivalent_variants_only
+    search_scope: complete
+    search_budget: max_states=300000; actual_reachable_states=5542; legal_edges=17912
+    known_raw_winning_variants:
+      - nine_terminal_winning_states
+      - one_role_phase_signature_mask_205
+    equivalence_account: >-
+      完整状态图的九个胜利终态全部传播到同一签名：receiver_shrink_ignited、
+      a_lit_by_worker_push、b_lit_by_receiver_roll、receiver_rolled_len2、receiver_rolled_left。
+      差异只来自开放走位、倒数状态或终局玩家位置，不改变目标分配、对象职责、边界次序或操作方向。
+    evidence_refs:
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/layout_analysis.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/solution_family_audit.json
+      - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/exposure_audit.json
+    evidence_limits:
+      - task-local family audit 以对象事件、长度和滚动方向抽象逻辑类；独立 Evidence Reviewer 仍需核验原始节点、边与等价解释。
+  bypass_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/counterfactual_wrong_role.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/solution_family_audit.json
+  identity_counterfactual_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_002/work/counterfactual_no_face_lock.txt
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_002/work/counterfactual_no_face_lock_audit.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_003/counterfactual_wrong_role.json
+  evidence_limits:
+    - layout analyzer 的 object participation 当前未实现，职责结论来自 exact complete graph 上的 task-local signature propagation，需独立核验。
+    - 难度 4 与待玩价值不是机械证据结论，留给 fresh Critic 按完整前序和校准判断。
+
+designer_self_verdict: submit_for_independent_review

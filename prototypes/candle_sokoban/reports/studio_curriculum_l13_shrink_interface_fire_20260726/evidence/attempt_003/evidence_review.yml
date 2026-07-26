@@ -1,0 +1,142 @@
+review_attempt_id: CANDLE_CURRICULUM_L13_001_exact_003_hard_001
+reviewer_instance_id: l13-evidence-reviewer-exact-003
+candidate_id: CANDLE_CURRICULUM_L13_001
+exact_version: CANDLE_CURRICULUM_L13_001_exact_003
+review_integrity: independent
+
+evidence_scope:
+  allowed_sources:
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/evidence/attempt_003/review_input.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/manifest.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/layout.txt
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/level.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/solve_instance.yml
+    - prototypes/candle_sokoban/reports/studio_curriculum_l13_shrink_interface_fire_20260726/candidate/versions/CANDLE_CURRICULUM_L13_001_exact_003/evidence/**
+    - prototypes/candle_sokoban/docs/designer_contract.md
+    - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    - prototypes/candle_sokoban/mechanic.yml
+    - src/prototypes/candle_sokoban/mechanics.ts
+    - docs/21-level-design-studio-standard.md
+  graph_completeness: complete
+
+solution_uniqueness_review:
+  declared_result: equivalent_variants_only
+  search_scope: complete
+  exact_version_match: true
+  known_raw_winning_variants:
+    - terminal_node_32: shortest_depth=6, countdown=4/5, B 存活
+    - terminal_node_59: shortest_depth=8, countdown=2/5, B 存活
+    - terminal_node_112: shortest_depth=10, countdown=5/5, B 在终局燃烧边界同拍燃尽
+    - 当前完整图的 win-coaccessible 子图含 28 nodes、49 edges、150 条有限初态到终止胜态路径；原始输入串多于三个，但都归入同一生产性因果类。
+  equivalence_evidence_basis:
+    - complete_graph.json 实际含 3619 个唯一节点记录、9424 条合法边记录和 terminal nodes 32/59/112；全部节点从 node 0 可达，三个胜态出度均为 0。
+    - 从三个胜态反向重算得到 28-node/49-edge win-coaccessible 子图；该子图为 DAG，故全部有限胜路可完整枚举而无循环尾部遗漏。
+    - 独立枚举 150 条有限胜路后，每条都依次经过 C 首拍退出与遮灭、A len2->len1 同拍 shrink_ignite B、B 轴推同拍 light_brazier 与 win；纯移动边可换序或回返。
+    - 胜路生产性事件束只有 C 退出、A->B 原子交接、B 直接消费三段；终局边界变体只增加无后继的燃烧边界伴随结果，不产生新的对象任务、目标分配或修复链。
+    - solution_equivalence_all_wins.json
+    - solution_equivalence_all_wins.yml
+    - solution_family.json
+    - scc_raw.json
+  known_non_equivalent_win_refs: []
+  status: supported
+  limits:
+    - 该结论是玩家逻辑类与生产性因果等价，不是原始输入串唯一，也不是逐事件字符串严格相同。
+    - terminal node 112 的原始终局边除 burn_out:candle#single3 外，还伴随 boundary_extinguish_avoids_burn:candle#1；它与同边已发生的 A 烛身遮灭及终局燃烧边界同源，不引入额外职责、任务或后继。因此证据支持生产性因果等价，但不能外推成“两个原始 runtime 事件串只相差一个事件”。
+
+claims:
+  - claim_id: exact_integrity
+    claim: 所有主要硬证据 artifact 均绑定当前 candidate、exact、solve instance 与 layout digest，正式胜利为 all_braziers_lit。
+    status: supported
+    evidence_basis:
+      - layout.txt 的实际 SHA-256 为 9cbc87a1177c5168f65d42fe5a0a6cb23efad0c2b7993b747c517f3b271e15eb，与 manifest.yml、level.yml、solve_instance.yml、provenance_index.yml 及主要硬证据 artifact 一致。
+      - candidate_id=CANDLE_CURRICULUM_L13_001、exact_version=CANDLE_CURRICULUM_L13_001_exact_003、solve_instance_ref 在 canonical replay、complete graph、exposure、solution-family、event-query、mutation 与 counterfactual 硬证据中一致。
+      - level.yml 与 solve_instance.yml 均指定 all_braziers_lit、global_burn_cycle=5；mechanics.ts 的 isWin 要求玩家存活且至少一个火盆全部点亮。
+    limits:
+      - Designer 玩家侧重读材料未进入本审查；“主要 artifact”在此只按允许的硬证据范围解释。
+
+  - claim_id: canonical_solve
+    claim: 规范输入 right,down,right,right,right,up 全部合法，并在第 6 拍完整结算后由存活玩家点亮全部火盆。
+    status: supported
+    evidence_basis:
+      - canonical_replay.json 记录 completed=true、executedSteps=6、legalThroughStep=6，六步均 legal。
+      - 第 6 步依次含 push_axis:candle#single3、A 被烛身遮灭、light_brazier:6,1、countdown:5->4、win_all_braziers_lit。
+      - final state key 为 D:0、B:6,1:1 且 isWin=true，与 complete_graph terminal node 32 相同。
+    limits: []
+
+  - claim_id: complete_graph_scope
+    claim: 可达图搜索 complete，含 3619 nodes、9424 legal edges、3 terminal win states。
+    status: supported
+    evidence_basis:
+      - exposure_audit.json graph.status=complete，预算 max_states=300000，实际 3619 states、9424 transitions、3 wins，且按正式合同 terminalize_wins=true、terminalize_zero_candle_loss=true。
+      - complete_graph.json 的实际数组计数为 3619/9424，节点 id 全部唯一，全部节点由 node 0 可达，winning nodes 为 32、59、112 且三者出度均为 0。
+      - complete_graph.json 经字段归一化后与 exposure_audit.json.raw_graph 的全部 nodes/edges 逐项一致。
+    limits: []
+
+  - claim_id: equivalent_variants_only
+    claim: 全部胜路只有同一生产性对象因果骨架；允许差异仅为纯移动时序与终局燃烧边界伴随差异，无已知非等价胜解。
+    status: supported
+    evidence_basis:
+      - win-coaccessible 子图重算为 28 nodes、49 edges、DAG；完整枚举 150 条有限胜路均通过同一三阶段因果自动机，无坏终局。
+      - 全部胜路只有三类非纯移动生产性边束：C 退出、A->B 原子交接、B 直接点盆胜利；终局共有两个生产性签名，差异只位于无后继的燃烧边界终局。
+      - solution_family.json known_non_equivalent_wins 为空；完整图未发现其它对象职责、目标分配或依赖因果的胜路。
+    limits:
+      - 原始终局事件串的精确差异同时包含 node 112 的 boundary_extinguish_avoids_burn:A 与 burn_out:B；等价性只按生产性因果类成立。
+
+  - claim_id: required_winning_event_chain
+    claim: 所有胜路都按 C 首拍侧滚并由 A 尾遮灭、A 从 len2 缩为 len1 且同拍 shrink_ignite B、B 下一次对象操作轴推并同拍 light_brazier 与 win 的顺序完成。
+    status: supported
+    evidence_basis:
+      - 在完整图中分别删除 roll C、遮灭 C、shrink A、shrink_ignite B、push B、light_brazier、win 事件边后，七次独立可达性检查均不存在 avoiding win。
+      - 28-node win-coaccessible DAG 的全部 150 条胜路均按 M1->M2->M3 顺序通过；没有逆序、遗漏或其它显著事件边束。
+      - C 相关胜路边只发生在初态边；A->B 交接后通向胜利的下一次对象移动事件只有 push_axis:candle#single3。
+    limits: []
+
+  - claim_id: no_transfer_or_ignition_bypass
+    claim: 任一胜路均不存在第二次 shrink_ignite、普通 wick/brazier 点火 B、rolling-contact 点火、C 再参与、交接后其它对象任务或多推修复链。
+    status: supported
+    evidence_basis:
+      - 49 条 win-coaccessible edges 中，非 B 的 shrink_ignite edge=0，普通 ignite/ignite_from_wick/ignite_from_brazier edge=0，rolling_contact_chain edge=0。
+      - 初态之后含 C 的 win-coaccessible edge=0；胜路中除 C 首拍侧滚和 B 终局轴推外无其它 push/roll 对象操作。
+      - significant_non_milestone_edges 与 unexpected_milestone_companions 均为空，三个 terminal wins 均在直接消费边结束。
+    limits:
+      - 这里只证明当前 exact 的全部胜路无旁路；不把 counterfactual 变体的事件或可解性外推回当前 exact。
+
+  - claim_id: one_shot_object_participation
+    claim: A、B、C 与唯一火盆在全部胜路中按已声明对象职责参与，required-winning 事件组是 win cut。
+    status: supported
+    evidence_basis:
+      - 七项 required event 逐项删边后均无胜路，证明这些 event instances 在当前 exact 中分别构成 win cut。
+      - C 只在首拍 roll+douse 参与；A 必须 len2->len1 并提供 B 的 shrink_ignite，B 必须直接轴推点亮唯一火盆；全部胜路维持相同对象 id 与 consumer 坐标 6,1。
+      - support-C 删除反事实仍有 3 个胜态，但首拍退化为 walk，恰好支持 C 的作品身份参与而不把它误称为裸可解性必要对象。
+    limits:
+      - event cut 是当前图内事件必经，不等同于逐对象删除后的不可解性；C 删除版仍可解，故不声明 C 对 all_braziers_lit 裸可解性必要。
+
+  - claim_id: mechanical_identity_counterfactuals
+    claim: 所列反事实破坏对应身份条件或标准胜利链；严格只将 B 下移一个正交格会消除 B 的 shrink_ignite、轴推与全部标准胜利，因而当前 exact 的 B 精确对齐不可移除。
+    status: supported
+    evidence_basis:
+      - baseline_event_queries.json 证实提前推/墙灭 A、错过 B 火窗、交接后先操作 A 三条 exact branch 的终点均不能再到达胜态。
+      - 五份 mutation complete graph 的实际记录与声明一致：A 单格 555/1469/0、A 未燃 241/591/0、移除 C 550/1444/3、A 加长 4359/11320/6、consumer 移位 10936/28475/0；A 加长版实际出现二次交接与 C 接管非等价胜路。
+      - B 预点布局被 runtime 的静默初始接触检查拒绝，错误为 B 被 A 烛身遮灭，不能形成稳定预点旁路。
+      - B 下移反事实的布局逐格比较只有 (6,3) u->. 与 (6,4) .->u，其他画布内容不变；实际 SHA-256 为 780f0371316d97d4828262268592f5317a6aed75cc5319b8cfe473cf21dfd34e。
+      - B 下移 complete graph status=complete，实际 278 nodes、718 edges、0 wins；全部边中 B 相关事件为 0，B shrink_ignite=0、普通点火=0、轴推=0，而 C shrink_ignite edge=11。
+      - B 下移五拍 replay 直接显示 C 首拍多滚一格、rolling-contact later event 可达，目标边界由 A shrink_ignite C 而非 B，且不胜利。
+    limits:
+      - B 下移同时改变 C 的滚动终点、触发 roll_intermediate_extinguish，并封闭 B 的操作面；证据只支持“当前 exact 的 B 精确对齐不可移除”。
+      - 不声明 B 下移版仍可解、只改变火焰，或会在下一推普通点燃 B；其 exposure verdict 为 fail 也只描述该反事实，不污染当前 exact 的 exposure 结论。
+      - C 删除版可解；其反事实只证明准备工序的作品身份职责被移除，不证明 C 对正式胜利条件的裸可解性必要。
+
+  - claim_id: exposure_gate
+    claim: 当前 exact 的完整 exposure graph status=complete、verdict=pass、forbidden_hits 为空，rolling_contact_chain later event 全不可达。
+    status: supported
+    evidence_basis:
+      - mechanic_exposure_sequence.yml 当前实际 SHA-256 为 32bf172b2358a676a1a2f65bdf91ec9ebb16b5cb2827a8b7e30ef443995cf00c，与 exposure_audit.json 绑定值一致。
+      - allowed_exposure_through=retreating_flame_transfer；唯一 later branch 为 rolling_contact_chain，对应五个 forbidden patterns。
+      - 在 exposure_audit.json.raw_graph 全部 9424 条边上独立扫描，五个 rolling-contact forbidden pattern 的命中数均为 0；artifact forbidden_hits=[]、verdict=pass。
+    limits:
+      - exposure pass 只证明 later-event 不可达，不证明事件必经、使用价值、难度或作品质量。
+
+hard_failures: []
+evidence_gaps: []
+overall_hard_status: supported
+required_action: none

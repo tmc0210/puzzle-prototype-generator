@@ -1,0 +1,4 @@
+import { readFile } from "node:fs/promises";
+import { loadPrototypePackage } from "../../../../../../src/core/io.js";
+import { getRuntimeAdapter } from "../../../../../../src/prototypes/runtimeAdapter.js";
+const layout=`${(await readFile(process.argv[2]!,'utf8')).replace(/\r/g,'').trimEnd()}\n`;const actions=(process.argv[3]??'').split(/\s+/).filter(Boolean) as any;const pkg=await loadPrototypePackage('prototypes/candle_sokoban');const adapter=getRuntimeAdapter(pkg.mechanic);const rt=adapter.createRuntime(pkg.mechanic);const init=adapter.parseLevel({id:'replay-key',title:'replay-key',layout,global_burn_cycle:5,win:pkg.mechanic.win});let s=init;const all:any[]=[];for(const a of actions){const r=rt.step(s,a);all.push({a,legal:r.legal,events:r.events,key:rt.key(r.state)});if(r.legal)s=r.state;}console.log(JSON.stringify({steps:all,final:rt.key(s)},null,2));

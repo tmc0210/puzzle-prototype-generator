@@ -1,0 +1,34 @@
+runId: batch_l11_002_shutter_axis_push_face
+title: "移动遮板邻格成为轴推阻挡面"
+notes: >-
+  C 到达 B 的烛芯格并使 B 原地熄灭；另一根单格竖烛 D 从同列下方向上轴推，
+  以最后一次 up 的 legal/illegal 读取 C 是否有第二格。
+cases:
+  - id: moving_two_cell_cover_blocks_next_axis_push
+    family: shutter_axis_push_face
+    variant: moving_two_cell_cover
+    changed_variable: 两格 C 到达后保留 y=4 邻格
+    contrast_with: moving_single_cell_cover_allows_next_axis_push
+    layout_ref: moving_two_cell_cover_blocks_next_axis_push.txt
+    inputs: up,right,down,down,down,left,up,up,up
+  - id: moving_single_cell_cover_allows_next_axis_push
+    family: shutter_axis_push_face
+    variant: moving_single_cell_cover
+    changed_variable: C 缩为单格，遮芯后 y=4 为空
+    contrast_with: moving_two_cell_cover_blocks_next_axis_push
+    layout_ref: moving_single_cell_cover_allows_next_axis_push.txt
+    inputs: up,right,down,down,down,down,left,up,up,up
+  - id: fixed_two_cell_wall_blocks_next_axis_push
+    family: shutter_axis_push_face
+    variant: fixed_two_cell_geometry
+    changed_variable: 用 y=3..4 两格墙复现 C 静态终点
+    contrast_with: fixed_single_cell_wall_allows_next_axis_push
+    layout_ref: fixed_two_cell_wall_blocks_next_axis_push.txt
+    inputs: up
+  - id: fixed_single_cell_wall_allows_next_axis_push
+    family: shutter_axis_push_face
+    variant: fixed_single_cell_geometry
+    changed_variable: 只保留 y=3 遮芯墙，y=4 为空
+    contrast_with: fixed_two_cell_wall_blocks_next_axis_push
+    layout_ref: fixed_single_cell_wall_allows_next_axis_push.txt
+    inputs: up

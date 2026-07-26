@@ -1,0 +1,65 @@
+diagnosis_id: candle_full_exposure_compact_withdrawal_diagnosis_005
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/structure_rebuild_005.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version_basis: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_004
+designer_instance_id: level_designer_revision_005_20260726
+verdict: withdraw_without_exact_005
+
+player_side_result:
+  intended_structure: >-
+    早段让两种供体安排都在共享边界把同一接收烛 shrink_ignite；正确供体缩后余身留在接收烛长滚后方，
+    错误供体余身留在首格烛芯轨迹。两边局部都完成退焰接收，只有后继长滚才读出余身职责。
+  positive_local_read: >-
+    正确 stage 中，1R 在交叉芯位缩成后方 R，接收烛右滚途中点亮两个开放火盆；错误 stage 中，L1
+    缩成前方 L，接收烛第一小步发生 extinguish_by_candle_body，首次滚动不点盆。
+  why_not_a_level: >-
+    首次滚动的可见差异不等于不可恢复的早段承诺。开放结构允许玩家移开遮芯烛、移动烛身行挡块，或轴推
+    接收烛换线后跨周期补火；把这些恢复逐一封死后，玩家读到的是固定操作面锁和目标位置硬化，不再是两个
+    都自然推进、由远端职责冲突反筛的对象安排。
+
+runtime_findings:
+  local_positive_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_005/work/dual_transfer_filter/correct_stage.layout
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_005/work/dual_transfer_filter/wrong_stage.layout
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_005/work/dual_transfer_filter/probe_notes.yml
+  explorer_negative_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_005_dual_transfer_later_filter/report.md
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_005_dual_transfer_later_filter/results.json
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/runs/batch_005_dual_transfer_later_filter/proposed_families.md
+  explorer_result: >-
+    两条非空输入都在第 5 步 shrink_ignite，但可移动挡块版本存在 19 步恢复；固定已亮火盆挡块版本存在
+    24 步轴推换线、跨周期恢复，且火盆自身退化为补火源。三个图均在 300000 states exhausted，
+    Explorer 明确未发布新材料。
+  locked_work_refs:
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_005/work/dual_transfer_filter/correct_stage_locked.layout
+    - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_005/work/dual_transfer_filter/wrong_stage_locked.layout
+  locked_wrong_graph: >-
+    在错误余烛上方 (8,2) 与接收烛下方 (7,5) 加局部固定锁后，错误 stage 的完整图为 complete，
+    reachable_states=3497、legal_transitions=10981、winning_states=0。
+  locked_correct_bypass: >-
+    同一锁族的正确 stage 完整图为 complete，reachable_states=5728、legal_transitions=18034、
+    winning_states=12；最短 5 步胜路不依赖 shrink_ignite，而是先轴推供体、滚开挡位，再让未燃接收烛
+    在长滚第 2 小步从供体余芯 ignite_from_wick，随后途中点两盆。该旁路正是体验核心明列必须截断的
+    “顺滚补火”，不能作为 exact 基础。
+
+structure_rebuild_assessment:
+  - >-
+    开放操作面保留玩家选择时，错误分支仍能移动遮芯对象、换线或利用剩余火源恢复；失败只是延迟，不是职责丢失。
+  - >-
+    用固定墙位把错误分支做成 complete 无胜时，墙位直接规定余烛和接收烛的操作轴，早段反筛退化为位置硬化。
+  - >-
+    给正确分支开放操作面又会恢复长滚途中普通补火；继续加锁、加火源或加边界只会引入自动期限、重复验收或独立筛选器。
+  - >-
+    因而当前结构族不能同时满足真实早段双承诺、主动职责变化、后继不可恢复反筛、紧凑高密度与作品身份。
+
+publication_decision:
+  exact_005_published: false
+  submission_packet_published: false
+  evidence_review_requested: false
+  critic_review_requested: false
+  reason: >-
+    没有一个工作布局同时通过玩家侧关系、实际 replay、complete solution family、恢复反事实、对象参与、
+    事件与 exposure 自查。工作 probe 不取得 exact 身份，也不交给 Reviewer、Critic 或人类试玩。
+  controller_note: >-
+    exact_004 维持撤回；本轮结构重建不再继续给同一候选补筛选器。请 Controller 将本次结果记录为
+    withdraw_exact，并决定是否结束 CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003，而不是再派生 exact_005。

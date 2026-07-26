@@ -1,0 +1,210 @@
+schema_version: 1
+exact_version: candle_shared_fire_wall_timing_20260725_1428.exact.003
+baseline:
+  top_wall: step 2 extinguish_by_wall:candle#3; preserves the active candle
+    through the next t1 boundary
+  top_fire_source: step 11 ignite_from_brazier:candle#3:7,1
+  late_fire_source: late canonical phase ignite_from_brazier:candle#1:10,18
+  late_target: late canonical phase light_brazier:9,15
+  late_candle: candle#1 supplies the late source-to-target timing phase
+counterfactuals:
+  - id: baseline
+    description: 原始 exact canonical replay
+    layout_sha256: e54b6f1482396234e8bd8bb6bd73d5243fc7566ecda8cd9a455bcc7b51ae88c3
+    replay:
+      completed: false
+      executed_steps: 65
+      legal_through_step: 64
+      final_win: false
+      final_state_key: P:11,14|D:0|T:1/5|C:candle#1:1:down:1:10,14|B:7,1:1;9,4:0;9,15:0;10,18:1
+      event_types:
+        - walk
+        - countdown
+        - push_axis
+        - extinguish
+        - extinguish_by_wall
+        - countdown_without_lit_candle
+        - roll_step
+        - ignite
+        - ignite_from_brazier
+        - ignite_midcycle
+        - roll_candle
+        - shrink
+        - burn_out
+      event_counts:
+        walk: 56
+        countdown: 64
+        push_axis: 5
+        extinguish: 1
+        extinguish_by_wall: 1
+        countdown_without_lit_candle: 22
+        roll_step: 3
+        ignite: 2
+        ignite_from_brazier: 2
+        ignite_midcycle: 2
+        roll_candle: 3
+        shrink: 7
+        burn_out: 1
+  - id: remove_top_wall
+    description: 移除顶端墙口，检验墙灭火职责
+    layout_sha256: 300771ec068d9b712f059a1e0faa529ba119349a06f879b6aa5a16c34cc36c83
+    replay:
+      completed: false
+      executed_steps: 15
+      legal_through_step: 14
+      final_win: false
+      final_state_key: P:8,3|D:1|T:1/5|C:candle#1:1:down:0:11,10;11,11;11,12;11,13|candle#3:3:up:1:8,6;8,5;8,4|B:7,1:1;9,4:0;9,15:0;10,18:1
+      event_types:
+        - walk
+        - countdown
+        - push_axis
+        - shrink
+        - player_died
+      event_counts:
+        walk: 13
+        countdown: 14
+        push_axis: 1
+        shrink: 2
+        player_died: 1
+  - id: remove_top_fire_source
+    description: 移除顶端已燃火盆，检验第一根蜡烛复燃职责
+    layout_sha256: a1a415a669d7f6df6575ed94b728ec3d5441ea77d213e16ce877370c3b493918
+    replay:
+      completed: false
+      executed_steps: 28
+      legal_through_step: 27
+      final_win: false
+      final_state_key: P:7,3|D:0|T:3/5|C:candle#1:1:down:0:11,10;11,11;11,12;11,13|candle#3:3:up:0:8,6;8,5;8,4;8,3;8,2|B:9,4:0;9,15:0;10,18:1
+      event_types:
+        - walk
+        - countdown
+        - push_axis
+        - extinguish
+        - extinguish_by_wall
+        - countdown_without_lit_candle
+        - roll_step
+        - wick_reexposed_unlit
+        - roll_candle
+      event_counts:
+        walk: 24
+        countdown: 27
+        push_axis: 1
+        extinguish: 1
+        extinguish_by_wall: 1
+        countdown_without_lit_candle: 26
+        roll_step: 2
+        wick_reexposed_unlit: 1
+        roll_candle: 2
+  - id: remove_late_fire_source
+    description: 移除下方已燃火盆，检验后继蜡烛接火职责
+    layout_sha256: 7cc7a1941038d2c4524ffe3212e8887bb4ac8560c87ffed473b3de2388ebef81
+    replay:
+      completed: false
+      executed_steps: 65
+      legal_through_step: 64
+      final_win: false
+      final_state_key: P:11,14|D:0|T:1/5|C:candle#1:1:down:0:10,14;10,15;10,16;10,17|B:7,1:1;9,4:0;9,15:0
+      event_types:
+        - walk
+        - countdown
+        - push_axis
+        - extinguish
+        - extinguish_by_wall
+        - countdown_without_lit_candle
+        - roll_step
+        - ignite
+        - ignite_from_brazier
+        - ignite_midcycle
+        - roll_candle
+        - shrink
+        - burn_out
+        - wick_reexposed_unlit
+      event_counts:
+        walk: 56
+        countdown: 64
+        push_axis: 5
+        extinguish: 1
+        extinguish_by_wall: 1
+        countdown_without_lit_candle: 40
+        roll_step: 3
+        ignite: 1
+        ignite_from_brazier: 1
+        ignite_midcycle: 1
+        roll_candle: 3
+        shrink: 4
+        burn_out: 1
+        wick_reexposed_unlit: 1
+  - id: remove_late_target
+    description: 移除后继目标火盆并保留其它对象，检验末端回报职责
+    layout_sha256: 0984a8b5577a5afd9298474fba668625150b1834457210ed421ea0321d24fdec
+    replay:
+      completed: false
+      executed_steps: 65
+      legal_through_step: 64
+      final_win: false
+      final_state_key: P:11,14|D:0|T:1/5|C:candle#1:1:down:1:10,14|B:7,1:1;9,4:0;10,18:1
+      event_types:
+        - walk
+        - countdown
+        - push_axis
+        - extinguish
+        - extinguish_by_wall
+        - countdown_without_lit_candle
+        - roll_step
+        - ignite
+        - ignite_from_brazier
+        - ignite_midcycle
+        - roll_candle
+        - shrink
+        - burn_out
+      event_counts:
+        walk: 56
+        countdown: 64
+        push_axis: 5
+        extinguish: 1
+        extinguish_by_wall: 1
+        countdown_without_lit_candle: 22
+        roll_step: 3
+        ignite: 2
+        ignite_from_brazier: 2
+        ignite_midcycle: 2
+        roll_candle: 3
+        shrink: 7
+        burn_out: 1
+  - id: remove_late_candle
+    description: 移除后继未燃蜡烛，检验对象身份职责
+    layout_sha256: c26b06ae92f477c4e2acb24b0a054c432f3ac27aa35ba0aa4782f0ca31e8a528
+    replay:
+      completed: true
+      executed_steps: 65
+      legal_through_step: 65
+      final_win: false
+      final_state_key: P:10,14|D:0|T:5/5|C:|B:7,1:1;9,4:0;9,15:0;10,18:1
+      event_types:
+        - walk
+        - countdown
+        - push_axis
+        - extinguish
+        - extinguish_by_wall
+        - countdown_without_lit_candle
+        - roll_step
+        - ignite
+        - ignite_from_brazier
+        - ignite_midcycle
+        - roll_candle
+        - shrink
+        - burn_out
+      event_counts:
+        walk: 62
+        countdown: 65
+        push_axis: 1
+        extinguish: 1
+        extinguish_by_wall: 1
+        countdown_without_lit_candle: 11
+        roll_step: 2
+        ignite: 1
+        ignite_from_brazier: 1
+        ignite_midcycle: 1
+        roll_candle: 2
+        shrink: 4
+        burn_out: 1

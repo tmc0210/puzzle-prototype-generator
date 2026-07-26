@@ -1,0 +1,42 @@
+schema_version: 1
+design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+exact_version: exact_001
+result: equivalent_variants_only
+search_scope: complete
+raw_graph_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/complete_graph_exposure.json
+mechanical_report_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json
+
+complete_graph:
+  reachable_states: 17337
+  legal_transitions: 54606
+  winning_states: 13
+  win_reaching_states: 809
+  win_reaching_edges: 2082
+
+mandatory_structure:
+  - A 至少一次轴推并在长滚前完成 x=3..6 对齐。
+  - A 恰好一次 d4 长滚，d1 途中取火、d2 严格途中点亮 (2,4)。
+  - Q 恰好一次向左 d2 滚动，d1 途中取火，并在 d2 消费 A 的 (6,6) 反灯芯尾端。
+  - Q 随后沿 x=7 向上轴推，最终点亮 (7,2)。
+
+mechanical_checks:
+  mandatory_event_removal_checks: 10
+  every_removal_eliminates_all_wins: true
+  required_event_order_checks: 5
+  every_order_violation_eliminates_all_wins: true
+  every_Q_endpoint_roll_uses_A_tail_at_6_6: true
+  observed_A_tail_forms_at_Q_roll:
+    - "(6,6)"
+    - "(6,6);(5,6)"
+  alternative_structural_rolls_on_win_reaching_subgraph: none
+
+variant_account:
+  - 13 个终局节点压成 7 种燃烧终态签名；差异来自到达 Q 前的走位相位、A 是否已燃尽、Q 剩余长度。
+  - Q 在尾端截停时可能剩 3、2 或 1 格，因此沿同一 x=7 轴推 1 至 3 次才让退行火焰点亮最终火盆；玩家关系不变。
+  - A 的轴推计数可为 1 至 4；首个右推是强制对齐，额外次数只发生在 A 已完成路径输出且已被 Q 消费为停止块之后，是无后续职责的尾声操作。
+  - 空走、共享倒数相位、已消费 A 的尾声移动以及 Q 因剩余长度产生的同轴推进次数，均不产生另一种结构解。
+
+designer_conclusion: >-
+  完整图中没有另一组对象、另一种长滚、另一条点盆来源或不用尾端消费的胜解；
+  已知原始胜解差异属于同一玩家逻辑的时序与无效尾声变体，因此报告 equivalent_variants_only。

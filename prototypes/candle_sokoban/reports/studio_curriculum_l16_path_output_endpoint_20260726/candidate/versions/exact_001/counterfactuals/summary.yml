@@ -1,0 +1,43 @@
+schema_version: 1
+design_task_id: candle_curriculum_l16_path_output_endpoint_20260726
+candidate_id: CANDLE_CURRICULUM_L16_PATH_OUTPUT_ENDPOINT_001
+exact_version: exact_001
+
+counterfactuals:
+  - id: prelit_path_brazier
+    change: 把必要途中火盆 (2,4) 预先设为已亮，其他布局不变。
+    result: solvable_complete
+    graph:
+      reachable_states: 16107
+      legal_transitions: 50816
+      winning_states: 13
+    reading: >-
+      最短解仍可完成，但 A 的 d2 不再产生 light_brazier:2,4 或
+      roll_intermediate_light_brazier:candle#4:d2；作品失去“长滚严格途中永久输出”身份。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/prelit_path_analysis.md
+  - id: delete_Q
+    change: 删除终点 consumer Q，其他布局不变。
+    result: unsolvable_complete
+    graph:
+      reachable_states: 3163
+      legal_transitions: 9878
+      winning_states: 0
+    reading: 路径火盆即使可由 A 点亮，仍没有对象可消费尾端并点亮最终火盆。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/delete_q_analysis.md
+  - id: unaligned_A_roll
+    change: 不做开局右轴推，直接到 A 上方尝试下滚。
+    result: illegal_at_step_3
+    reading: 原列第一小步被 (2,3) 火盆实体挡住，roll_blocked；双对齐准备不可省。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/unaligned_a_replay.md
+  - id: Q_wrong_direction
+    change: A 正确完成路径输出后，让 Q 向右滚。
+    result: legal_nonwinning_dead_construction
+    reading: >-
+      Q 只滚 d1 到右边界，不在途中取火、不消费 A 尾端，也不进入 x=7 最终上推列；
+      它保留“路径火盆已亮”这一半进展而失去终点职责。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/counterfactuals/q_wrong_direction_replay.md
+  - id: remove_required_event_edges
+    change: 在当前 exact 的完整原始图上，分别删除 10 类身份事件边并重做起点到胜点可达性。
+    result: all_ten_unsolvable
+    reading: A 对齐、A d4、严格途中点盆、Q d2、Q 途中取火、Q 轴推及最终点盆均为胜解必经。
+    evidence_ref: prototypes/candle_sokoban/reports/studio_curriculum_l16_path_output_endpoint_20260726/candidate/versions/exact_001/solution_family_report.json

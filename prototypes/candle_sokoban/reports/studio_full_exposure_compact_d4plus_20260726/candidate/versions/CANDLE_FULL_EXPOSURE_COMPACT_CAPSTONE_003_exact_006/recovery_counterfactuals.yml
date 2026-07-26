@@ -1,0 +1,47 @@
+schema_version: 1
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006
+graph_scope: complete
+graph_status: complete
+probes:
+  - id: wrong_boundary_step5
+    inputs: [up, left, up, up, up]
+    state_index: 12
+    observed_relation: >-
+      第五步改推交叉供体，使它在边界前先退出接收者芯位；接收者只发生未燃重曝，
+      没有取得首次 shrink_ignite。
+    win_reachable_from_result: false
+
+  - id: wrong_branch_delayed_after_two_braziers
+    inputs: [up, left, up, up, up, down, left, left]
+    state_index: 92
+    observed_progress:
+      - light_brazier:7,3
+      - light_brazier:1,5
+    remaining_failure: >-
+      即使错误分支后来点亮上盆与左盆，接收者仍未取得第一次边界的火；完整后继子图不存在胜态。
+      已亮火盆补火、供体返回、轴推换线与跨周期恢复均包含在 complete graph 的否定范围内。
+    win_reachable_from_result: false
+
+  - id: reconceal_receiver_then_donor_burnout
+    inputs: [up, left, up, up, left, up, right, down, left, right]
+    state_index: 352
+    observed_relation: >-
+      正确首次交接后，玩家把已缩为单格的供体沿轴推回交叉芯位，烛身先熄灭接收者；
+      下一边界供体事件是 burn_out:candle#1，而不是 shrink，因此不会产生第二次 shrink_ignite。
+    identity_filter: >-
+      接收者失火后完整后继子图不存在胜态，exact_005 的第二次交接获胜因果链已被布局结构消除。
+    win_reachable_from_result: false
+
+  - id: alternative_receiver_reignition_on_winning_paths
+    forbidden_events:
+      - wick_reexposed_unlit:candle#2
+      - extinguish_by_candle_body:candle#2
+      - ignite_from_brazier:candle#2
+      - ignite_from_wick:candle#2
+    occurs_on_any_winning_path: false
+
+evidence_refs:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/solution_family_audit.json
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/candidate/versions/CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006/graph_analysis.json
+

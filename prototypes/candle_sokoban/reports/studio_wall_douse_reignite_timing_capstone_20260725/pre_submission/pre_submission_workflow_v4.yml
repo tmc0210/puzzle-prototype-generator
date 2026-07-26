@@ -1,0 +1,100 @@
+design_task_id: candle_wall_douse_reignite_timing_capstone_20260725
+candidate_id: CANDLE_WALL_REIGNITION_TIMING_CAPSTONE_001
+reviewed_exact_version: v2
+delivery_exact_version: v4
+workflow_results:
+  - workflow_id: redundant_element_prune
+    applicability: applicable
+    applicability_basis: Candle delivery 前固定运行；本轮从既有 delivery v3 补跑现行 v2 顺序清理。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/redundant_element_prune.md
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery:
+      method: candle_redundancy_units_v2
+      stage_order:
+        - remove_whole_objects_to_floor
+        - wallify_vacated_or_structural_floor_regions
+        - trim_redundant_outer_wall_bands
+      candidate_units:
+        - whole_candle:candle#4
+        - whole_candle:candle#1
+        - whole_candle:candle#3
+        - single_brazier:5,1
+        - single_brazier:12,1
+        - single_brazier:2,3
+        - single_brazier:3,4
+        - single_brazier:4,4
+        - single_brazier:5,4
+        - single_brazier:4,5
+        - single_brazier:1,6
+        - vacated_object_floor_region:removed_brazier_3_4
+        - vacated_object_floor_region:removed_brazier_4_4
+        - vacated_object_floor_region:removed_brazier_1_6
+        - detached_empty_region:6,1:2
+        - detached_empty_region:11,1:1
+        - detached_empty_region:1,6:1
+        - single_entry_floor_region:3,2:1
+        - single_entry_floor_region:8,2:1
+        - single_entry_floor_region:2,4:4
+        - single_entry_floor_region:5,5:1
+      applied_units:
+        - single_brazier:3,4
+        - single_brazier:4,4
+        - single_brazier:1,6
+        - vacated_object_floor_region:removed_brazier_4_4
+        - single_entry_floor_region:lower_candle_upper_left_pocket
+    operations_performed:
+      - 删除三个机械冗余的已亮火盆并留下普通空地。
+      - 对腾空格逐来源墙化；只应用 (4,4)，其余失败项保留。
+      - 在更新布局上墙化下方蜡烛左上四格单入口 pocket。
+      - 重扫外轮廓；outer_outline_band 为 0，不再裁边。
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/redundant_element_prune_v2.yml
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v4/diagnostics/review_preservation_chain.yml
+    version_effect: review_preserving_change
+    acceptance_preserved: true
+    preservation_basis: 逐项完整证明保持 25 步规范解、全部可胜解族、核心时机、对象参与与 exposure；应用墙化没有新增接触事件。
+    status: completed
+  - workflow_id: strict_exposure_gate_recheck
+    applicability: applicable
+    applicability_basis: delivery v4 必须核对当前 layout digest 与 complete exposure。
+    authority_docs:
+      - prototypes/candle_sokoban/docs/designer_contract.md
+      - prototypes/candle_sokoban/docs/mechanic_exposure_sequence.yml
+    candidate_discovery: null
+    operations_performed: [核对 v4 digest、complete graph、pass verdict 与零 forbidden hit。]
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/strict_exposure_gate_recheck_v4.yml
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/candidate/versions/v4/diagnostics/exposure_audit.json
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 只读核对 delivery v4，不改变布局。
+    status: completed
+  - workflow_id: runtime_conformance_recheck
+    applicability: applicable
+    applicability_basis: delivery v4 准备进入待玩列表。
+    authority_docs: [prototypes/candle_sokoban/docs/designer_contract.md]
+    candidate_discovery: null
+    operations_performed: [npm run check 通过, npm run candle:conformance 的所有已实现检查通过]
+    artifact_refs: [prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/runtime_conformance_recheck_v4.yml]
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 只读类型与 runtime 一致性检查，不改变 v4。
+    status: completed
+  - workflow_id: playable_delivery_build
+    applicability: applicable
+    applicability_basis: v4 已写入 studio level 并替换 queue 中唯一入口。
+    authority_docs: [prototypes/candle_sokoban/docs/designer_contract.md]
+    candidate_discovery: null
+    operations_performed: [重建 runtime-backed playable, 完成 4 个待玩关的 replay coverage]
+    artifact_refs:
+      - prototypes/candle_sokoban/reports/studio_wall_douse_reignite_timing_capstone_20260725/pre_submission/playable_delivery_build_v4.yml
+      - prototypes/candle_sokoban/studio/levels.yml
+      - prototypes/candle_sokoban/playable_queue.yml
+      - prototypes/candle_sokoban/playable/data.json
+    version_effect: unchanged
+    acceptance_preserved: true
+    preservation_basis: 交付接线与 playable 构建不改变 v4 exact。
+    status: completed
+overall_status: completed

@@ -1,0 +1,70 @@
+schema_version: 1
+assignment_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/assignments/revision_007_exact005_identity.yml
+candidate_id: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003
+basis_exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_005
+status: exact_006_published
+
+identity_failure_read:
+  mechanical_issue: >-
+    exact_005 的供体首次边界后仍剩两格；它能沿轴回占接收者芯位、以烛身熄灭接收者，
+    并在下一边界再次缩短、再次 shrink_ignite。这个重交接族改变了获胜所依赖的因果链，
+    不能与持续带火的直接族视为等价。
+  player_side_issue: >-
+    第二种胜法把原本应一次性提交并保留的边界选择改成可撤回、可重新交接的循环，削弱了
+    第五步关系建立对最终长滚的持续约束。
+
+revision_hypothesis:
+  layout_change: >-
+    把初始交叉供体从三格缩为两格，并相应把供体左端右移一格；交叉芯位、接收者、辅助烛、
+    三个火盆和最终跑道都保持不变。
+  intended_mechanical_effect: >-
+    正确第五步后，供体首次缩短为单格，仍可被玩家侧滚到上方并轴推点亮上盆；若玩家把它
+    沿轴推回交叉芯位遮住接收者，下一边界只会 burn_out，不再腾出有烛身继续退让的末端格，
+    因而无法第二次 shrink_ignite。
+  intended_player_effect: >-
+    玩家仍需在第五步主动选择辅助烛而不是供体、保留供体到边界完成首次交接；随后还要保留
+    接收者的火并把已缩为单格的供体转去上盆。最终长滚继续读取这次一次性交接是否被正确保留。
+  quality_basis:
+    - 第五步仍是两个可操作对象之间的主动取舍，而非强制走位。
+    - 正确分支建立的火态必须跨越供体再利用阶段持续保留，最终才由接收者长滚消费。
+    - 错误分支与重遮分支若不可恢复，是对前序选择与保留责任的机械筛选。
+    - 不以 forced-viable 数量、比例或 win-reachable outdegree 评价品质、难度或线性。
+
+working_layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_007/work/layout_v001.layout
+planned_canonical_inputs:
+  - up
+  - left
+  - up
+  - up
+  - left
+  - right
+  - up
+  - left
+  - up
+  - right
+  - down
+  - down
+  - down
+  - right
+expected_decision_sequence:
+  - 前四步把玩家送到两个燃烛操作面共邻的决策位，并把共享倒数送到边界前。
+  - 第五步推辅助烛，点左盆且让交叉供体留驻到边界，完成唯一一次 shrink_ignite。
+  - 第六至十步把缩为单格的供体滚到上行并轴推点亮上盆；第二边界让供体烧毁、接收者缩为单格。
+  - 第十一至十四步到达接收者左侧并提交不可中止长滚，同时点亮两个远盆并获胜。
+
+publication_gate:
+  - 实际 canonical replay 获胜且逐步状态、事件非空并已读取。
+  - 完整可达图 complete。
+  - 全部胜态的最短代表保持同一一次性交接、持续保火与最终长滚因果链。
+  - 错误第五步、延迟错误状态和重遮后等待燃尽状态均不可达胜利。
+  - 对象参与、事件必经、顺序、recovery counterfactual 与 exposure audit 均完成。
+
+publication_result:
+  exact_version: CANDLE_FULL_EXPOSURE_COMPACT_CAPSTONE_003_exact_006
+  canonical_replay_steps: 14
+  complete_graph: {reachable_states: 51042, legal_transitions: 147660, winning_states: 1}
+  solution_family_result: unique_complete
+  sole_receiver_shrink_ignite_on_all_winning_paths: true
+  receiver_extinguished_on_any_winning_path: false
+  recovery_probes_all_win_unreachable: true
+  exposure_verdict: pass

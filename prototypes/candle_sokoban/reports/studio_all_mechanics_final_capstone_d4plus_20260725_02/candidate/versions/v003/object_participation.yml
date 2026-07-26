@@ -1,0 +1,49 @@
+schema_version: 1
+artifact_kind: object_participation_audit
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version: v003
+result: pass
+
+objects:
+  candle_1_writer:
+    initial: 三格已燃朝左横烛
+    necessary_roles:
+      - 首界烧成两格后，由玩家从端帽操作面执行 d3 侧滚。
+      - 同一 edge 中先被墙灭、后由 (4,5) 已亮火盆复燃。
+      - 边界缩短退焰点亮 candle#2；完整胜路无法跳过该 edge。
+  candle_2_active_receiver:
+    initial: 三格未燃朝上竖烛
+    necessary_roles:
+      - 开场轴推同时构造 writer 停点与第一接火位。
+      - 接火、缩短后由玩家横滚 d3，途中点亮 (6,6) 并覆盖 candle#3 灯芯。
+      - 退焰点亮 candle#3；完整胜路至少一次轴推、一次 d3 横滚。
+  candle_3_delayed_consumer:
+    initial: 两格未燃朝左横烛
+    necessary_roles:
+      - 只接受主动布置后的 candle#2 退焰。
+      - 延迟一界烧成单格后，以 d6 上滚独占点亮 (9,2) 并正常胜利。
+  brazier_4_5_reignite_source:
+    initial: lit
+    necessary_roles:
+      - writer 墙灭后的后置复燃源；删除后完整图零胜态。
+      - 不直接点 candle#2、candle#3 或最终目标。
+  brazier_6_6_gate_and_active_output:
+    initial: unlit
+    necessary_roles:
+      - 实体封住提前下滚 writer 的回推位，删除会恢复非等价拆分历史。
+      - 由已接火 candle#2 的主动横滚途中点亮，是第二次主动转换的即时可见输出。
+  brazier_9_2_final_target:
+    initial: unlit
+    necessary_roles:
+      - 只在 candle#3 缩成单格后的独占灯芯列上被点亮。
+
+terrain:
+  wall_4_4: writer d2 的固定灭火接触；删除会保留胜路但退化为预燃直达。
+  wall_4_6: 多推 receiver 后 writer 的后置灭火面，并限制错误中继方向。
+  wall_6_1_and_7_2: 锁死过晚 singleton writer 的下滚/轴移操作面。
+  lower_corridor: 只提供 candle#2 尾端操作位与 consumer 的短结束路线，不承担难度计数。
+
+participation_evidence:
+  required_relations_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/required_relations_audit.json
+  counterfactual_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/identity_counterfactuals.yml
+  active_agency_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v003/active_agency_audit.yml

@@ -1,0 +1,77 @@
+work_id: shared_goal_boundary_choice_v001
+status: work_only
+layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_006/work/shared_goal_boundary_choice/layout_v001.layout
+player_read:
+  common_approach: "玩家四步到达 (4,5)，倒数为 1；左侧辅助 L 与上方交叉供体 11R 都可立即操作。"
+  correct_commitment: >-
+    左推 L 点亮 (1,5) 近盆；边界烧尽 L，同时 11R 留驻缩短并把退焰交给竖向接收烛。
+  tempting_commitment: >-
+    上滚 11R 清空交叉口并点亮 (6,3) 上盆；它被上方结构挡在第二相位行，边界缩短，但接收烛只未燃重曝。
+  later_reinterpretation: >-
+    正确分支把缩后供体主动上滚到同一第二相位行，再轴推点亮 (6,3)；下一共享边界让接收烛自身缩短，
+    将烛芯轨迹改到 (1,5)/(9,5) 所在行，随后一次右向长滚点亮 (9,5) 并收束。
+canonical_hypothesis:
+  inputs: [right, right, right, up, left, up, left, up, right, down, down, down, right, right]
+  required_relations:
+    - step5_light_near_brazier_and_shrink_ignite
+    - step6_donor_enters_locked_second_phase
+    - step9_donor_lights_upper_brazier
+    - step10_receiver_self_shrinks_to_new_wick_row
+    - step14_receiver_long_roll_lights_far_brazier_before_endpoint
+wrong_branch_hypothesis:
+  boundary_input: up
+  expected: "点亮上盆但无 shrink_ignite；辅助 L 同边界燃尽，接收烛轴向由下边界固定，供体由上方结构与上盆固定在第二相位行。"
+  recovery_probes:
+    - 供体在第二相位行全部轴推位置后的侧滚与交叉回火。
+    - 接收烛轴推换线、未燃长滚、跨周期缩短与上盆普通复燃。
+    - 点亮上盆后让供体或接收烛尝试抵达左盆与远盆。
+
+v002:
+  status: work_only
+  layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_006/work/shared_goal_boundary_choice/layout_v002.layout
+  reason_for_change: >-
+    v001 虽有 complete graph 与 14 步胜解，但交叉芯位开局自动满足，前四步只是强制走到选择位，
+    不满足“玩家亲自构造退焰接收关系”。v002 把二格接收烛下移一格，玩家第一步必须从尾端轴推，
+    才把其芯送入横烛末端格；其余三步是从构造位转入同一倒数为 1 的双对象提交位。
+  canonical_hypothesis:
+    inputs: [up, left, up, up, left, up, left, up, right, down, down, down, right, right]
+    required_relations:
+      - step1_player_constructs_cross_wick_relation
+      - step5_light_near_brazier_and_shrink_ignite
+      - step6_donor_enters_locked_second_phase
+      - step9_donor_lights_upper_brazier
+      - step10_receiver_self_shrinks_to_singleton_wick_row
+      - step14_receiver_long_roll_lights_far_brazier_before_endpoint
+  wrong_branch_hypothesis:
+    inputs: [up, left, up, up, up]
+    expected: >-
+      玩家先完成相同交叉构造，再在边界把横烛上滚：上盆立即点亮，接收烛只未燃重曝；
+      辅助单烛同边界燃尽，留下两个未亮目标而无等价补火链。
+
+v003:
+  status: work_only
+  layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_006/work/shared_goal_boundary_choice/layout_v003.layout
+  reason_for_change: >-
+    v002 的正确 replay 成立，但完整图因接收烛下方大面积无责任空间超过 500000 状态。
+    v003 只保留首步轴推、转入交叉操作位、末段接收烛长滚所必需的格；不改变任何核心对象、目标或 canonical 输入。
+  canonical_inputs: [up, left, up, up, left, up, left, up, right, down, down, down, right, right]
+  tempting_inputs: [up, left, up, up, up]
+
+v004:
+  status: work_only
+  layout_ref: prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/designer/revision_006/work/shared_goal_boundary_choice/layout_v004.layout
+  reason_for_change: >-
+    v003 的 complete graph 仍有 11/14 forced-viable commitments，且错误边界会立刻烧尽辅助单烛，
+    熟练玩家很容易把它读成一次性的目标分配。v004 把辅助烛改为朝左两格：正确第5步点左盆后缩成单格，
+    错误第5步则只缩成仍可移动的单格，允许下一轮继续补亮左盆，失败不在边界立即揭晓。
+    另在 (7,5) 加入同一核心 consumer：接收烛缩短前它是侧滚实体挡块，缩成单格后则与 (10,5)
+    一起在最终不可中止长滚途中被点亮；这不是额外 witness，而是把“必须先接火并再缩短”的责任传回前序。
+  canonical_hypothesis:
+    inputs: [up, left, up, up, left, up, left, up, right, down, down, down, right, right]
+    expected_final_roll: "接收单烛右滚五格，先点 (7,5)，再点 (10,5)，最后停在 (11,6)。"
+  delayed_wrong_hypothesis:
+    prefix: [up, left, up, up, up, down, left, left]
+    expected: >-
+      第5步先点上盆但无 shrink_ignite；第6至8步把缩后辅助单烛继续左推并点左盆。
+      此时两盆已亮，接收烛仍未燃且保持两格；(7,5) 对其侧滚是实体挡块，
+      后续轴推换线、上盆复燃与供体返回仍须由完整图排查。

@@ -1,0 +1,93 @@
+candidate_id: CANDLE_CURRICULUM_L17_ORDERED_DOUSE_REIGNITE_001
+baseline_version: workbench_007
+baseline:
+  solvable: true
+  shortest_cost: 14
+  graph_status: complete
+  reachable_states: 45446
+  legal_transitions: 157249
+  winning_states: 5
+  identity: >-
+    所有胜解均强制一次上向 d4 发车、上端 consumer 点亮、一次 d8 中 d2 墙灭/d6 火源复燃、
+    下端 consumer 点亮；事件顺序一致，仅等待造成烛长与轴推次数差异。
+
+counterfactuals:
+  - id: remove_wall
+    layout_ref: remove_wall.txt
+    analysis_ref: remove_wall_analysis.md
+    graph_status: complete
+    solvable: true
+    shortest_cost: 14
+    shortest_inputs: [up, right, down, down, down, down, left, down, right, right, right, down, right, up]
+    result: >-
+      反序下端发车在没有任何 extinguish/reignite 的情况下全程常燃，并于上端获胜；
+      非交换覆盖退化为普通滚烛输出。
+
+  - id: remove_source
+    layout_ref: remove_source.txt
+    analysis_ref: remove_source_analysis.md
+    graph_status: complete
+    solvable: false
+    winning_states: 0
+    result: 墙后没有任何可达复燃来源，完整图无胜态。
+
+  - id: move_bottom_consumer_off_socket
+    layout_ref: move_bottom_consumer_off_socket.txt
+    analysis_ref: move_bottom_consumer_off_socket_analysis.md
+    graph_status: complete
+    solvable: false
+    winning_states: 0
+    result: >-
+      保留墙→火源程序与燃烧终态，只把下端目标从 x=9 移到 x=1；完整图无胜态，
+      说明胜利读取依赖终点火焰插口，而非“到达下方”的空间标签。
+
+  - id: prelight_bottom_consumer
+    layout_ref: prelight_bottom_consumer.txt
+    analysis_ref: prelight_bottom_consumer_analysis.md
+    graph_status: complete
+    solvable: true
+    shortest_cost: 10
+    result: 上端轴推点盆即胜，d8 核心完全消失；下端不得预亮。
+
+  - id: remove_top_consumer
+    layout_ref: remove_top_consumer.txt
+    analysis_ref: remove_top_consumer_analysis.md
+    graph_status: complete
+    solvable: true
+    shortest_cost: 4
+    shortest_inputs: [right, up, right, down]
+    result: >-
+      玩家可先轴推把 wick 直接对齐 x=9，再向下 d4 点亮唯一未亮目标；
+      上端 consumer 是阻止“只取近端一次输出”、迫使完整正序链的真实目标。
+
+  - id: remove_bottom_consumer
+    layout_ref: remove_bottom_consumer.txt
+    analysis_ref: remove_bottom_consumer_analysis.md
+    graph_status: complete
+    solvable: true
+    shortest_cost: 10
+    result: 上端点盆后立即获胜，完整主滚无须发生；下端 consumer 是终态读取与高潮收束。
+
+  - id: remove_x2_stoppers
+    layout_ref: remove_x2_stoppers.txt
+    analysis_ref: remove_x2_stoppers_analysis.md
+    graph_status: complete
+    solvable: false
+    winning_states: 0
+    result: >-
+      初始 body x=2..7 不再停在 staging 行，越滚到边界后失去端侧轴推接口；
+      x=2 墙点负责把开局方向选择落到同构发车端。
+
+  - id: remove_x8_stoppers
+    layout_ref: remove_x8_stoppers.txt
+    analysis_ref: remove_x8_stoppers_analysis.md
+    graph_status: complete
+    solvable: true
+    shortest_cost: 14
+    result: >-
+      主滚从 d8 consumer 继续到 d9，并在新终点墙再次熄灭；下盆只成为严格途中永久输出，
+      不再读取滚动最终状态。x=8 墙点因此是 endpoint consumer 身份条件，不以“仍可解”判冗余。
+
+conclusion: >-
+  墙、后序火源、两端 consumer 与两类 stopper 都各自承担可区分职责；
+  baseline 的完整胜解不存在错列端点补推或其它复燃旁路。

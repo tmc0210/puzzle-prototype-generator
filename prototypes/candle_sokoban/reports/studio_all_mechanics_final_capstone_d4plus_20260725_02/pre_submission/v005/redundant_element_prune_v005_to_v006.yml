@@ -1,0 +1,148 @@
+workflow_id: redundant_element_prune
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+reviewed_exact_version: v005
+delivery_exact_version: v006
+checked_on: 2026-07-25
+authority_ref: prototypes/candle_sokoban/docs/redundant_element_prune.md
+redundant_element_prune:
+  status: normalized
+  candidate_discovery:
+    method: candle_redundancy_units_v2
+    fixed_stage_order:
+      - whole_candle_to_floor
+      - single_brazier_to_floor
+      - vacated_object_floor_region_to_wall
+      - detached_or_single_entry_floor_region_to_wall
+      - outer_outline_band_trim
+    counts:
+      whole_candle: 2
+      single_brazier: 2
+      vacated_object_floor_region: 0
+      detached_empty_region: 1
+      single_entry_floor_region: 4
+      outer_outline_band: 1
+    source_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/v005/redundancy/candidates.json
+  candidates_checked:
+    - candidate_unit: whole_candle:candle#1
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范 22 输入虽可执行但最终不胜；writer、墙灭复燃及退焰转移链全部消失。
+    - candidate_unit: whole_candle:candle#2
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范 22 输入最终不胜；二推写入、接火、缩短和终滚职责全部消失。
+    - candidate_unit: single_brazier:6,5
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范 22 输入最终不胜；writer 墙灭后无法复燃，后续退焰转移失效。
+    - candidate_unit: single_brazier:2,7
+      operation: remove
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: false
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 删除后初态已经满足 all_braziers_lit，胜利义务和一推/两推下游筛选全部消失。
+    - candidate_unit: detached_empty_region:1:4,2:1
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events:
+        - extinguish_by_wall:candle#1
+      exposure_verdict: not_run
+      details: parser 检出初始静默接触结算改变，新增 writer 墙灭。
+    - candidate_unit: single_entry_floor_region:4:6,1:5
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范输入只合法通过 9/22 步，上方操作路线被封死。
+    - candidate_unit: single_entry_floor_region:3:6,3:1
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events:
+        - roll_intermediate_extinguish:candle#1:d1
+        - roll_reignite_after_extinguish:candle#1:d1->d3
+      exposure_verdict: not_run
+      details: 虽仍在第 22 步胜利，但墙灭从 d2 提前到 d1，改变已接受的同滚接触时间线。
+    - candidate_unit: single_entry_floor_region:2:6,6:1
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events:
+        - extinguish_by_wall:candle#1
+      exposure_verdict: not_run
+      details: 规范 22 输入最终不胜，退焰转移与终局读出被破坏。
+    - candidate_unit: single_entry_floor_region:1:1,7:3
+      operation: wallify
+      result: retained_counterfactual_failed
+      cheap_check: fail
+      complete_graph: not_run
+      canonical_timing_preserved: false
+      solution_family_preserved: unknown
+      new_contact_events: []
+      exposure_verdict: not_run
+      details: 规范 22 输入最终不胜，relay 终滚由 d6 缩为 d4 且无法点亮终盆。
+    - candidate_unit: outer_outline_band:right:11,0:10
+      operation: trim
+      result: applied
+      cheap_check: pass
+      complete_graph: complete
+      canonical_timing_preserved: true
+      solution_family_preserved: true
+      new_contact_events: []
+      exposure_verdict: pass
+      details: >-
+        裁去最右侧一列纯外墙；全部保留坐标不变。v005 与 v006 的规范 22 步状态键、输入、事件逐步相同；
+        complete graph 均为 98961 状态/276326 边/2 胜态/最短 22，全部状态键和边签名严格相同；
+        已接受的双局部成功筛选、整区删除分类、解族与必经关系全部保持，exposure complete/pass。
+  post_trim_outline_rescan:
+    source_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/v005/redundancy/candidates_after_trim.json
+    outer_outline_band_count: 0
+  retained_aesthetic: []
+  artifact_refs:
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/v005/redundancy/candidates.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/v005/redundancy/canonical_probe.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/v005/redundancy/right_trim_identity_audit.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/pre_submission/v005/redundancy/candidates_after_trim.json
+    - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v006/delivery_manifest.yml
+  delivery_layout_changed: true
+  version_effect: review_preserving_change
+  preservation_basis: >-
+    只裁去最右侧一列纯外墙；完整图全状态、全边键严格相同，规范时间线、最短成本、两个胜态、
+    双局部成功的全局分类、整区删除反事实、全部已接受关系、对象参与和 exposure 均保持，且无新增事件。
+status: completed

@@ -1,0 +1,24 @@
+request_id: candle_full_exposure_compact_dual_transfer_later_filter_005
+exploration_id: candle_full_exposure_compact_d4plus_20260726
+design_space: >-
+  在同一未燃接收烛与共享边界周围，探索两种都能由玩家主动完成 shrink_ignite 的局部对象安排；两种安排在
+  边界当下都产生相同的“接收烛已燃”局部进展，但供体余身、未选对象或操作面位于不同位置。随后让同一接收烛
+  沿远离原火源的不可中止长侧滚进入一个共同 consumer：其中一种余身位置先遮灭再由保留芯火复燃并点盆，
+  另一种只遮灭、阻挡操作面或使后继目标不可达。错误分支不得靠下一周期、途中补火或把余身简单移开恢复等价。
+sampling_axes:
+  - 两根相反朝向供体争用同一接收芯位，与同一供体在两个接收芯位之间选择。
+  - 供体选择后余身位于接收烛滚向之前 / 之后 / 芯线相邻格，对首次小步的遮蔽与后续复燃差异。
+  - 未选对象保留为远端火源、操作面挡块或第二目标执行者时，错误分支移动它的恢复 probe。
+  - 接收烛滚向远离全部初始火源，并分别测试轴推、侧滚、延后一轮能否恢复错误分支。
+  - 不依赖墙廊的最小实体挡块：火盆、另一根需保留的蜡烛余身、边界轮廓。
+current_material_refs:
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon.md#末端格退焰接收后由长侧滚读出
+  - prototypes/candle_sokoban/reports/studio_full_exposure_compact_d4plus_20260726/exploration/lexicon.md#边界行动先退出会截断退焰接收
+do_not_repeat:
+  - 只比较“末端格 / surviving tail”而错误分支根本没有 shrink_ignite。
+  - 让已亮火盆或供体余芯位于接收烛顺滚路径，导致错误分支途中普通补火。
+  - 用固定五步等待、唯一走廊、额外燃尽 deadline 或隐藏倒数淘汰错误分支。
+  - 只证明事件差异，不测试错误分支在移动余身、换序或下一周期后的恢复能力。
+materialization_target: >-
+  发布至少一个 runtime-backed 局部结构谱：两条非空输入都在共享边界主动完成 shrink_ignite；给出共同接收烛
+  长滚后的可见差异、错误分支完整恢复 probes，以及哪些余身/操作面关系使差异不可逆。只发布局部材料，不制作完整关卡。

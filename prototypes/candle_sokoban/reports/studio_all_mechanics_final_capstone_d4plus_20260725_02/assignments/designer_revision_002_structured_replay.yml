@@ -1,0 +1,39 @@
+assignment_id: candle_all_mechanics_002_revision_002_structured_replay
+required_skill: sokoban-level-designer
+assignment_kind: revision
+controller_instance_id: controller_candle_all_mechanics_002_20260725
+task_root: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02
+candidate_ledger_ref: prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate_ledger.yml
+
+candidate_id: CANDLE_ALL_MECHANICS_FINAL_CAPSTONE_002
+exact_version_basis: v001
+
+design_brief: >-
+  v001 的 fresh Evidence Reviewer 已给出 overall_hard_status=supported；布局、规则、既有 canonical replay、
+  submission packet、作品身份与全部 hard claim 保持冻结。Studio 的 Critic review-artifact builder 还需要与
+  既有 canonical_replay.md 完全同轨的一份机器可读逐步 JSON 回放。仅在 task-local evidence supplement 下
+  补齐 canonical_replay.json 与复现/manifest 记录；不得发布 v002，不得改变输入序列、布局、机制事件、
+  胜利状态或任何设计内容，也不得写 Controller 状态。
+input_refs:
+  - docs/21-level-design-studio-standard.md
+  - prototypes/candle_sokoban/docs/design_handoff.yml
+  - prototypes/candle_sokoban/docs/designer_contract.md
+  - prototypes/candle_sokoban/mechanic.yml
+  - src/prototypes/candle_sokoban/mechanics.ts
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/artifact_manifest.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/layout.txt
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/level.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/solve_instance.yml
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/versions/v001/canonical_replay.md
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/evidence/v001/recheck/evidence_review.yml
+allowed_output_refs:
+  - prototypes/candle_sokoban/reports/studio_all_mechanics_final_capstone_d4plus_20260725_02/candidate/evidence_supplements/v001/structured_replay
+exploration_request_root: null
+required_outputs:
+  - >-
+    canonical_replay.json：prototype=candle_sokoban；layout 与 v001 layout.txt 逐字一致；inputs 为既有
+    canonical_replay.md 的同一动作序列；steps 对每步记录 step、action、legal=true、before.render、events、
+    after.render；completed=true；final.isWin=true；并包含实际 winCondition。
+  - 通过 candle_sokoban 实际 runtime 从初始布局重新执行全部输入生成或核验 JSON，不得手工虚构事件或状态。
+  - 发布 supplement manifest/reproduction 记录，包含 candidate、exact、layout hash、输入 hash、工具命令与输出 ref。
+  - 再次核验 v001 目录内全部既有 artifact hash 不变，并在报告中明示 exact 未变。
