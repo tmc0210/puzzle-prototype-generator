@@ -24,6 +24,7 @@ import {
   candleDragKind,
   paintDraggedCandle,
   type CandleDragAxis,
+  type CandleDragDirection,
   type CandleDragPoint,
 } from "../prototypes/candle_sokoban/editorPaint.js";
 import {
@@ -184,6 +185,7 @@ let paintChanged = false;
 let candlePaintStart: CandleDragPoint | null = null;
 let candlePaintBaseLayout = "";
 let candlePaintAxis: CandleDragAxis | undefined;
+let candlePaintDirection: CandleDragDirection | undefined;
 let candlePaintPreviewCells: CandleDragPoint[] = [];
 let pendingScrollSelected = false;
 let sourceSearchRenderTimer: number | undefined;
@@ -1201,6 +1203,7 @@ function beginPaint(x: number, y: number): void {
     candlePaintStart = { x, y };
     candlePaintBaseLayout = draft.layout;
     candlePaintAxis = undefined;
+    candlePaintDirection = undefined;
     candlePaintPreviewCells = [];
     updateDraggedCandle(x, y);
     return;
@@ -1257,6 +1260,7 @@ function updateDraggedCandle(x: number, y: number): void {
     { x, y },
     kind,
     candlePaintAxis,
+    candlePaintDirection,
   );
   if (!result) {
     return;
@@ -1265,6 +1269,7 @@ function updateDraggedCandle(x: number, y: number): void {
   const cellsToRender = [...candlePaintPreviewCells, ...result.cells];
   draft.layout = editorAdapter.serializeBoard(result.board);
   candlePaintAxis = result.axis;
+  candlePaintDirection = result.direction;
   candlePaintPreviewCells = result.cells;
   paintChanged = draft.layout !== candlePaintBaseLayout;
   renderCellButtons(cellsToRender);
@@ -1274,6 +1279,7 @@ function clearCandlePaintGesture(): void {
   candlePaintStart = null;
   candlePaintBaseLayout = "";
   candlePaintAxis = undefined;
+  candlePaintDirection = undefined;
   candlePaintPreviewCells = [];
 }
 

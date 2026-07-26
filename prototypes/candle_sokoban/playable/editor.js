@@ -3019,7 +3019,7 @@ function candleDragKind(tool4) {
   }
   return void 0;
 }
-function paintDraggedCandle(baseBoard, start, cursor, kind, lockedAxis) {
+function paintDraggedCandle(baseBoard, start, cursor, kind, lockedAxis, retainedDirection) {
   if (!isInBounds(baseBoard, start) || !isInBounds(baseBoard, cursor)) {
     return void 0;
   }
@@ -3028,19 +3028,20 @@ function paintDraggedCandle(baseBoard, start, cursor, kind, lockedAxis) {
   const cells = pointsBetween(start, end);
   const board = cloneBoard(baseBoard);
   if (cells.length === 1) {
-    paintMechanism(board, cells[0], `cap_${kind === "lit" ? "R" : "r"}`);
-    return { board, axis, cells };
+    const direction2 = retainedDirection ?? "r";
+    paintMechanism(board, cells[0], `cap_${capGlyph2(direction2, kind)}`);
+    return { board, axis, direction: retainedDirection, cells };
   }
   const digit = nextAvailableDigit(baseBoard);
   if (!digit) {
     return void 0;
   }
-  const capGlyph2 = capForDirection(start, end, kind);
+  const direction = directionFromPoints(start, end);
   for (const bodyCell of cells.slice(0, -1)) {
     paintMechanism(board, bodyCell, `body_${digit}`);
   }
-  paintMechanism(board, cells.at(-1), `cap_${capGlyph2}`);
-  return { board, axis, cells };
+  paintMechanism(board, cells.at(-1), `cap_${capGlyph2(direction, kind)}`);
+  return { board, axis, direction, cells };
 }
 function inferAxis(start, cursor) {
   const deltaX = Math.abs(cursor.x - start.x);
@@ -3071,9 +3072,11 @@ function pointsBetween(start, end) {
     y: start.y + deltaY * index
   }));
 }
-function capForDirection(start, end, kind) {
-  const glyph = end.x > start.x ? "r" : end.x < start.x ? "l" : end.y > start.y ? "d" : "u";
-  return kind === "lit" ? glyph.toUpperCase() : glyph;
+function directionFromPoints(start, end) {
+  return end.x > start.x ? "r" : end.x < start.x ? "l" : end.y > start.y ? "d" : "u";
+}
+function capGlyph2(direction, kind) {
+  return kind === "lit" ? direction.toUpperCase() : direction;
 }
 function nextAvailableDigit(board) {
   const used = new Set(
@@ -3321,7 +3324,7 @@ if (!appRoot) {
 }
 var app = appRoot;
 var boardFitController = new BoardFitController();
-var buildId = true ? "ms1hlwox" : String(Date.now());
+var buildId = true ? "ms1i3sa3" : String(Date.now());
 var data = await loadPlayableData();
 var adapter = getRuntimeAdapter(data.mechanic);
 var editorAdapter = requireEditorAdapter(adapter);
@@ -3345,6 +3348,7 @@ var paintChanged = false;
 var candlePaintStart = null;
 var candlePaintBaseLayout = "";
 var candlePaintAxis;
+var candlePaintDirection;
 var candlePaintPreviewCells = [];
 var pendingScrollSelected = false;
 var sourceSearchRenderTimer;
@@ -4247,6 +4251,7 @@ function beginPaint(x, y) {
     candlePaintStart = { x, y };
     candlePaintBaseLayout = draft.layout;
     candlePaintAxis = void 0;
+    candlePaintDirection = void 0;
     candlePaintPreviewCells = [];
     updateDraggedCandle(x, y);
     return;
@@ -4298,7 +4303,8 @@ function updateDraggedCandle(x, y) {
     candlePaintStart,
     { x, y },
     kind,
-    candlePaintAxis
+    candlePaintAxis,
+    candlePaintDirection
   );
   if (!result) {
     return;
@@ -4306,6 +4312,7 @@ function updateDraggedCandle(x, y) {
   const cellsToRender = [...candlePaintPreviewCells, ...result.cells];
   draft.layout = editorAdapter.serializeBoard(result.board);
   candlePaintAxis = result.axis;
+  candlePaintDirection = result.direction;
   candlePaintPreviewCells = result.cells;
   paintChanged = draft.layout !== candlePaintBaseLayout;
   renderCellButtons(cellsToRender);
@@ -4314,6 +4321,7 @@ function clearCandlePaintGesture() {
   candlePaintStart = null;
   candlePaintBaseLayout = "";
   candlePaintAxis = void 0;
+  candlePaintDirection = void 0;
   candlePaintPreviewCells = [];
 }
 function paintCell(x, y) {

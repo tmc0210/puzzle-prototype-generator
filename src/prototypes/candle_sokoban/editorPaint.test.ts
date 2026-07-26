@@ -84,6 +84,29 @@ assert.deepEqual(lockedHorizontal?.cells, [
   point(3, 2),
 ]);
 
+for (const [end, expectedCap] of [
+  [point(4, 2), "cap_R"],
+  [point(0, 2), "cap_L"],
+  [point(2, 4), "cap_D"],
+  [point(2, 0), "cap_U"],
+] as const) {
+  const baseBoard = board(5, 5);
+  const start = point(2, 2);
+  const dragged = paintDraggedCandle(baseBoard, start, end, "lit");
+  const collapsed = paintDraggedCandle(
+    baseBoard,
+    start,
+    start,
+    "lit",
+    dragged?.axis,
+    dragged?.direction,
+  );
+  assert.equal(
+    collapsed?.board.cells[start.y * baseBoard.width + start.x]?.mechanism,
+    expectedCap,
+  );
+}
+
 function board(width: number, height: number): EditorBoard {
   return {
     width,

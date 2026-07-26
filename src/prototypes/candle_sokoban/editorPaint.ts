@@ -6,6 +6,7 @@ import type {
 
 export type CandleDragKind = "unlit" | "lit";
 export type CandleDragAxis = "horizontal" | "vertical";
+export type CandleDragDirection = "u" | "r" | "d" | "l";
 
 export type CandleDragPoint = {
   x: number;
@@ -15,6 +16,7 @@ export type CandleDragPoint = {
 export type CandleDragPaintResult = {
   board: EditorBoard;
   axis?: CandleDragAxis;
+  direction?: CandleDragDirection;
   cells: CandleDragPoint[];
 };
 
@@ -37,6 +39,7 @@ export function paintDraggedCandle(
   cursor: CandleDragPoint,
   kind: CandleDragKind,
   lockedAxis?: CandleDragAxis,
+  retainedDirection?: CandleDragDirection,
 ): CandleDragPaintResult | undefined {
   if (!isInBounds(baseBoard, start) || !isInBounds(baseBoard, cursor)) {
     return undefined;
@@ -48,8 +51,9 @@ export function paintDraggedCandle(
   const board = cloneBoard(baseBoard);
 
   if (cells.length === 1) {
-    paintMechanism(board, cells[0]!, `cap_${kind === "lit" ? "R" : "r"}`);
-    return { board, axis, cells };
+    const direction = retainedDirection ?? "r";
+    paintMechanism(board, cells[0]!, `cap_${capGlyph(direction, kind)}`);
+    return { board, axis, direction: retainedDirection, cells };
   }
 
   const digit = nextAvailableDigit(baseBoard);
@@ -57,13 +61,13 @@ export function paintDraggedCandle(
     return undefined;
   }
 
-  const capGlyph = capForDirection(start, end, kind);
+  const direction = directionFromPoints(start, end);
   for (const bodyCell of cells.slice(0, -1)) {
     paintMechanism(board, bodyCell, `body_${digit}`);
   }
-  paintMechanism(board, cells.at(-1)!, `cap_${capGlyph}`);
+  paintMechanism(board, cells.at(-1)!, `cap_${capGlyph(direction, kind)}`);
 
-  return { board, axis, cells };
+  return { board, axis, direction, cells };
 }
 
 function inferAxis(
@@ -109,19 +113,24 @@ function pointsBetween(
   }));
 }
 
-function capForDirection(
+function directionFromPoints(
   start: CandleDragPoint,
   end: CandleDragPoint,
-  kind: CandleDragKind,
-): string {
-  const glyph = end.x > start.x
+): CandleDragDirection {
+  return end.x > start.x
     ? "r"
     : end.x < start.x
       ? "l"
       : end.y > start.y
         ? "d"
         : "u";
-  return kind === "lit" ? glyph.toUpperCase() : glyph;
+}
+
+function capGlyph(
+  direction: CandleDragDirection,
+  kind: CandleDragKind,
+): string {
+  return kind === "lit" ? direction.toUpperCase() : direction;
 }
 
 function nextAvailableDigit(board: EditorBoard): string | undefined {
