@@ -1,125 +1,52 @@
-# Sokoban-Like Prototype Generator
+# Sokoban-like Logic Puzzle R&D
 
-本项目的目标不是制作某一款推箱子游戏，而是构建一个可复用的逻辑解谜原型生成系统。
+本项目研究并建设可泛化的类推箱子逻辑解谜能力，覆盖机制语义落地、原型运行时、求解与机械分析、关卡设计、独立审查以及试玩交付。
 
-设计者可以用自然语言描述一组机制，例如“玩家只能拉箱子，关卡中有成组传送门，传送门出口被堵时会推动入口传送门”。系统应辅助 Codex 将其转化为可玩的 PuzzleScript Next 原型、结构化机制说明、玩家模型、循序渐进关卡组、求解报告和评分报告。
+仓库由共享基础设施、多个机制原型和面向 agent 的设计工具组成。不同分支与原型的成熟度并不相同；具体规则、工具能力和设计状态以对应原型目录中的文档为准。
 
-## 核心循环
+## 仓库索引
 
-```text
-机制想法
--> 机制 IR
--> 玩家模型
--> 学习目标排序
--> 课程规划
--> 关卡候选
--> 求解器验证
--> 评分器筛选
--> PuzzleScript Next 导出
-```
+| 路径 | 内容 |
+| --- | --- |
+| `src/core/` | 与具体机制无关的运行时接口、求解与分析基础能力 |
+| `src/prototypes/` | 各原型的机制实现、runtime adapter 与专属工具 |
+| `src/playable/`、`src/web/` | runtime-backed 网页试玩与编辑器 |
+| `prototypes/<mechanic_id>/` | 原型规则包、关卡数据、设计交接、报告与试玩产物 |
+| `.agents/skills/` | 当前分支提供的关卡设计、局部机制探索和独立审查 skills |
+| `docs/` | 通用能力规范、当前执行标准与历史 casebook |
+| `templates/` | 新机制接入与设计归档模板 |
+| `schemas/` | 结构化数据 schema |
 
-## 第一阶段 MVP
+## 从哪里开始
 
-第一阶段先跑通一个小而完整的闭环：
+开始任务前先读取 [AGENTS.md](AGENTS.md)，明确本轮是在实现特定原型、设计特定原型关卡，还是修改泛化能力。
 
-1. 基于 PuzzleScript Next 的快速原型导出。
-2. 基于机制 IR 的 step runtime 和求解器。
-3. 基于机制分支、事件和反事实模型的玩家模型生成。
-4. 基于学习目标排序的关卡规划和候选生成。
-5. 使用求解器和评分器筛选出递进关卡组。
+### 新机制或原型实现
 
-## 基本原则
+- [Agent Preflight](docs/09-agent-preflight.md)
+- [机制语义确认与 ASCII Probe](docs/28-mechanic-disambiguation-and-ascii-probes.md)
+- [Runtime Adapter 边界](docs/24-runtime-adapter-boundary.md)
+- [新机制实现 Playbook](docs/25-new-mechanic-implementation-playbook.md)
+- [工具契约与 Conformance](docs/26-tool-contracts-and-conformance.md)
+- [新机制模板](templates/new_mechanic/README.md)
 
-- 机制 IR 是机制真相，PuzzleScript Next 是试玩和分享输出。
-- Codex/LLM 负责提出机制、命名知识、生成草案和解释报告。
-- 求解器负责证明可解性、目标知识必要性和核心解结构。
-- 评分器只基于明确分析范围内的证据工作，不把启发式结果伪装成证明。
-- 第一阶段优先生成小而紧凑、可以完整分析的教学关和应用关。
+### 特定原型的关卡设计
 
-## 文档索引
+读取当前分支的 `.agents/skills/`、对应原型的 `README.md`、规则文档与 `docs/design_handoff.yml`。提供当前工作室 skills 的分支中，完整单关设计统一从 `$sokoban-level-design-studio` 启动；其它角色 skills 不作为端到端入口。
 
-文档分三类维护，完整逐文件归属见：
+### 查阅项目文档
 
 - [文档地图与归档计划](docs/27-document-map-and-archive-plan.md)
+- `docs/` 中的通用规范与当前执行标准
+- `prototypes/<mechanic_id>/reports/` 中的原型证据和历史产物
 
-三类边界：
+历史报告、旧候选和 casebook 用于查证与回归，不代表当前通用流程。原型 runtime 是机械事实权威；工具证据不替代玩家侧设计判断和人类试玩。
 
-- 通用能力规范：未来可抽象进 skill/plugin 的稳定规则。
-- 当前验证标准：实际可执行、仍需继续测试优化的设计 / 审查 / 工具验证流程。
-- 归档 / casebook：MVP、`pull_portal_fallback`、旧尝试和中间实验记录。
-
-不要把一次性迁移脚手架、旧格式兼容信息或错误尝试写进通用能力规范；只有已经收敛成 guardrail 的经验才进入通用文档。
-
-常用入口：
-
-- 新机制 runtime + tools bring-up: [Agent Preflight](docs/09-agent-preflight.md), [机制语义确认与 ASCII Probe](docs/28-mechanic-disambiguation-and-ascii-probes.md), [Runtime Adapter 边界](docs/24-runtime-adapter-boundary.md), [新机制实现 Playbook](docs/25-new-mechanic-implementation-playbook.md), [工具契约与 Conformance](docs/26-tool-contracts-and-conformance.md), [新机制 Prompt + 代码模板](templates/new_mechanic/README.md)
-- 当前 designer 验证流程: [Current Level Design And Review Standard](docs/21-current-workflow-standard.md), [Multi-Agent Prompt Templates](docs/20-multi-agent-prompt-templates.md), [Validated Level Design Loop](docs/18-validated-level-design-loop.md)
-- 人类设计师参与的候选归档实验: [Design Archive Contract](docs/29-design-archive-contract.md), [Design Archive Templates](templates/design_archive/README.md)
-- 未来 knowledge / curriculum skill 化: [机制 IR](docs/02-mechanic-ir.md), [多实例对象模型](docs/19-multi-instance-object-model.md), [玩家模型轻量本体](docs/12-player-model-ontology.md), [玩家模型推导流程](docs/13-player-model-derivation.md), [课程排序规范](docs/14-curriculum-ordering.md), [关卡规格契约](docs/15-level-spec-contract.md)
-- pull-portal 归档 / casebook: [实现记录](docs/07-implementation-notes.md), [Pull Portal Casebook](docs/23-pull-portal-casebook-and-tool-notes.md), [reports index](prototypes/pull_portal_fallback/reports/README.md)
-
-## 当前草案产物
-
-- [mechanic schema](schemas/mechanic.schema.json)
-- [knowledge schema](schemas/knowledge.schema.json)
-- [player model schema](schemas/player_model.schema.json)
-- [curriculum schema](schemas/curriculum.schema.json)
-- [curriculum v2 schema](schemas/curriculum_v2.schema.json)
-- [level specs v2 schema](schemas/level_specs_v2.schema.json)
-- [levels schema](schemas/levels.schema.json)
-- [pull_portal_fallback 示例包](prototypes/pull_portal_fallback/README.md)
-
-## 当前可运行命令
+## 基础检查
 
 ```text
-npm run inspect
-npm run solve
-npm run explain:level -- L20
-npm run explain:layout -- path/to/layout.txt scratch
-npm run evaluate
-npm run evaluate:write
-npm run audit
-npm run audit:write
-npm run curriculum:v2
-npm run curriculum:v2:write
-npm run level-specs:v2
-npm run level-specs:v2:write
-npm run playable:build
-npm run playable:serve
-npm run ps:export
-npm run ps:check
-npm run validate
+npm install
+npm run check
 ```
 
-本地 playable 默认构建 Reality Anchor，也可显式传入 prototype 路径：
-
-```text
-npm run playable:build
-npm run playable:build -- prototypes/pull_portal_fallback
-```
-
-默认构建输出：
-
-[prototypes/reality_anchor/playable/index.html](prototypes/reality_anchor/playable/index.html)
-
-启动后访问：
-
-```text
-http://127.0.0.1:4173
-```
-
-PuzzleScript Next 导出：
-
-[prototypes/pull_portal_fallback/game.ps](prototypes/pull_portal_fallback/game.ps)
-
-当前 `pull_portal_fallback` 示例包包含 20 个 candidate fixture。它们可用于调试 runtime、solver、graph analyzer 和导出链路，但 certified curriculum coverage 仍是 0/9：只有 `accepted + evaluator pass + 玩家通关标准一致` 的关卡才会计入课程覆盖。
-
-MVP gate 审计报告：
-
-[prototypes/pull_portal_fallback/reports/audit.md](prototypes/pull_portal_fallback/reports/audit.md)
-
-新版课程与关卡规格报告：
-
-[prototypes/pull_portal_fallback/reports/curriculum_v2.md](prototypes/pull_portal_fallback/reports/curriculum_v2.md)
-
-[prototypes/pull_portal_fallback/reports/level_specs_v2.md](prototypes/pull_portal_fallback/reports/level_specs_v2.md)
+其它命令以当前分支的 `package.json` 和对应原型文档为准。
